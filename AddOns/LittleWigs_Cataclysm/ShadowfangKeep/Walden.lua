@@ -3,7 +3,7 @@
 --  Module Declaration
 --
 
-local mod, CL = BigWigs:NewBoss("Lord Walden", 33, 99)
+local mod, CL = BigWigs:NewBoss("Lord Walden", {33, 2849}, 99)
 if not mod then return end
 mod:RegisterEnableMob(46963)
 mod.engageId = 1073
@@ -50,6 +50,12 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED_DOSE", "ToxicCoagulant", 93617)
 
 	self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", nil, "boss1") -- USCS events let us distinguish between two different "Conjure Mystery Toxin" casts
+
+	if self:Difficulty() == 232 then -- Dastardly Duos
+		-- no encounter events in Dastardly Duos
+		self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
+		self:Death("Win", 46963)
+	end
 end
 
 function mod:OnEngage()

@@ -244,7 +244,8 @@ end
 function AF.SetEnabled(isEnabled, ...)
     if isEnabled == nil then isEnabled = false end
 
-    for _, w in pairs({...}) do
+    for i = 1, select("#", ...) do
+        local w = select(i, ...)
         if w:IsObjectType("FontString") then
             if isEnabled then
                 w:SetTextColor(AF.GetColorRGB("white"))
@@ -276,14 +277,40 @@ function AF.Disable(...)
 end
 
 ---------------------------------------------------------------------
+-- show / hide
+---------------------------------------------------------------------
+function AF.Show(...)
+    for i = 1, select("#", ...) do
+        local w = select(i, ...)
+        w:Show()
+    end
+end
+
+function AF.Hide(...)
+    for i = 1, select("#", ...) do
+        local w = select(i, ...)
+        w:Hide()
+    end
+end
+
+function AF.Toggle(...)
+    for i = 1, select("#", ...) do
+        local w = select(i, ...)
+        if w:IsShown() then
+            w:Hide()
+        else
+            w:Show()
+        end
+    end
+end
+
+---------------------------------------------------------------------
 -- frame level relative to parent
 ---------------------------------------------------------------------
 function AF.SetFrameLevel(frame, level, relativeTo)
-    if relativeTo then
-        frame:SetFrameLevel(AF.Clamp(relativeTo:GetFrameLevel() + level, 0, 10000))
-    else
-        frame:SetFrameLevel(AF.Clamp(frame:GetParent():GetFrameLevel() + level, 0, 10000))
-    end
+    relativeTo = relativeTo or frame:GetParent()
+    frame:SetFrameStrata(relativeTo:GetFrameStrata())
+    frame:SetFrameLevel(AF.Clamp(relativeTo:GetFrameLevel() + level, 0, 10000))
 end
 
 ---------------------------------------------------------------------
@@ -322,11 +349,11 @@ end
 ---@param frame Frame
 ---@param color string|table color name defined in Color.lua or color table
 ---@param borderColor string|table color name defined in Color.lua or color table
-function AF.ApplyDefaultBackdropWithColors(frame, color, borderColor)
+function AF.ApplyDefaultBackdropWithColors(frame, color, borderColor, borderSize)
     color = color or "background"
     borderColor = borderColor or "border"
 
-    AF.ApplyDefaultBackdrop(frame)
+    AF.ApplyDefaultBackdrop(frame, borderSize)
     if type(color) == "string" then
         frame:SetBackdropColor(AF.GetColorRGB(color))
     else

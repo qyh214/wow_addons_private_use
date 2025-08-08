@@ -229,8 +229,10 @@ local instanceDifficulties = {
     [2652] = { 205, 1,  2, 23 }, -- The Stonevault
     [2669] = { 205, 1,  2, 23 }, -- City of Threads
     [2773] = { 205, 1,  2, 23 }, -- Operation: Floodgate
+    [2830] = { 205, 1,  2, 23, }, -- Eco-Dome Al'dani
     [2657] = { 220, 17, 14, 15, 16 }, -- Nerub-ar Palace
-    [2769] = { 14, 15, 16, 17, 220 }, -- Liberation of Undermine
+    [2769] = { 220, 14, 15, 16, 17 }, -- Liberation of Undermine
+    [2810] = { 220, 14, 15, 16, 17 }, -- Manaforge Omega
 }
 if Internal.IsDragonflightSeason1 then
     instanceDifficulties[2515] = { 1, 2, 23, 8 } -- The Azure Vault
@@ -289,6 +291,16 @@ elseif Internal.IsTheWarWithinSeason2 then
     instanceDifficulties[2293] = { 8 } -- Theater of Pain
     instanceDifficulties[2097] = { 8 } -- Operation: Mechagon
     instanceDifficulties[1594] = { 8 } -- The MOTHERLODE!!
+elseif Internal.IsTheWarWithinSeason3 then
+    instanceDifficulties[2660] = { 205, 1, 2, 23, 8 } -- Ara-Kara, City of Echoes
+    instanceDifficulties[2662] = { 205, 1, 2, 23, 8 } -- The Dawnbreaker
+    instanceDifficulties[2773] = { 205, 1, 2, 23, 8 } -- Operation: Floodgate
+    instanceDifficulties[2649] = { 205, 1, 2, 23, 8, 216 } -- Priory of the Sacred Flame
+
+    instanceDifficulties[2830] = { 205, 1, 2, 23, 8 } -- Eco-Dome Al'dani
+
+    instanceDifficulties[2287] = { 8 } -- Halls of Atonement
+    instanceDifficulties[2441] = { 8 } -- Tazavesh, the Veiled Market
 end
 Internal.dungeonDifficultiesAll = { 205, 1, 2, 23, 8 };
 Internal.raidDifficultiesAll = { 220, 17, 14, 15, 16 };
@@ -480,6 +492,7 @@ local dungeonInfo = {
             2652, -- The Stonevault
             2669, -- City of Threads
             2773, -- Operation: Floodgate
+            2830, -- Eco-Dome Al'dani
         }
     },
 }
@@ -514,6 +527,10 @@ elseif Internal.IsTheWarWithinSeason2 then
     instances[#instances+1] = 2293 -- Theater of Pain
     instances[#instances+1] = 2097 -- Operation: Mechagon
     instances[#instances+1] = 1594 -- The MOTHERLODE!!
+elseif Internal.IsTheWarWithinSeason3 then
+    local instances = dungeonInfo[11].instances;
+    instances[#instances+1] = 2287 -- Halls of Atonement
+    instances[#instances+1] = 2441 -- Tazavesh, the Veiled Market
 end
 local raidInfo = {
     {
@@ -623,6 +640,7 @@ local raidInfo = {
         instances = {
             2657, -- Nerub-ar Palace
             2769, -- Liberation of Undermine
+            2810, -- Manaforge Omega
         }
     },
 }
@@ -2203,6 +2221,11 @@ local instanceBosses = {
         2650, -- Swampface
         2651, -- Geezle Gigazap
     },
+    [2830] = { -- Eco-Dome Al'dani
+        2675, -- Azhiccar
+        2676, -- Taah'bat and A'wazj
+        2677, -- Soul-Scribe
+    },
     [2657] = { -- Nerub-ar Palace
         2607, -- Ulgrax the Devourer
         2611, -- The Bloodbound Horror
@@ -2222,6 +2245,16 @@ local instanceBosses = {
         2644, -- The One-Armed Bandit
         2645, -- Mug'Zee, Heads of Security
         2646, -- Chrome King Gallywix
+    },
+    [2810] = { -- Manaforge Omega
+        2684, -- Plexus Sentinel
+        2686, -- Loom'ithar
+        2685, -- Soulbinder Naazindhri
+        2687, -- Forgeweaver Araz
+        2688, -- The Soul Hunters
+        2747, -- Fractillus
+        2690, -- Nexus-King Salhadaar
+        2691, -- Dimensius, the All-Devouring
     },
 }
 -- A map of npc ids to JournalInstanceID, this might not be the bosses npc id,
@@ -2428,13 +2461,16 @@ local InstanceAreaIDToBossID = {
     [2549] = { -- Amirdrassil, the Dream's Hope
         [15049] = 2557, -- Volcoross
     },
-    [2769] = { -- ALiberation of Undermine
+    [2769] = { -- Liberation of Undermine
         [15646] = 2639, -- Vexie and the Geargrinders
         [15652] = 2640, -- Cauldron of Carnage
         [15654] = 2641, -- Rik Reverb
         [15647] = 2642, -- Stix Bunkjunker
         [15648] = 2653, -- Sprocketmonger Lockenstock
     },
+    [2830] = { -- Manaforge Omega
+        [16572] = 2747, -- Fractillus
+    }
 };
 -- This is for bosses that have their own unique world map
 local uiMapIDToBossID = {
@@ -2812,6 +2848,14 @@ local uiMapIDToBossID = {
     [2408] = 2644, -- The One-Armed Bandit
     [2411] = 2645, -- Mug'Zee, Heads of Security
     [2409] = 2646, -- Chrome King Gallywix
+    -- Manaforge Omega
+    [2460] = 2684, -- Plexus Sentinel
+    [2462] = 2686, -- Loom'ithar
+    [2461] = 2685, -- Soulbinder Naazindhri
+    [2464] = 2687, -- Forgeweaver Araz
+    [2465] = 2688, -- The Soul Hunters
+    [2466] = 2690, -- Nexus-King Salhadaar
+    [2467] = 2691, -- Dimensius, the All-Devouring
 }
 Internal.instanceDifficulties = instanceDifficulties;
 Internal.dungeonInfo = dungeonInfo;
@@ -2893,11 +2937,18 @@ elseif Internal.IsTheWarWithinSeason1 then
         [7] = {152},
         [10] = {},
     }
-else -- if Internal.IsTheWarWithinSeason2 then
+elseif Internal.IsTheWarWithinSeason2 then
     affixesByLevel = {
         [2] = {148, 158, 162, 160, 147},
         [4] = {10, 9},
         [7] = {152},
+        [10] = {},
+    }
+else -- if Internal.IsTheWarWithinSeason3 then
+    affixesByLevel = {
+        [2] = {148, 158, 162, 160, 147},
+        [4] = {10, 9},
+        [7] = {},
         [10] = {},
     }
 end

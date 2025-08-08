@@ -46,7 +46,6 @@ end
 
 function mod:OnBossEnable()
 	-- self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage") -- you go into combat during the RP
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 
 	self:Log("SPELL_AURA_APPLIED", "BurnApplied", 46394)
 	self:Log("SPELL_AURA_REMOVED", "BurnRemoved", 46394)
@@ -61,6 +60,7 @@ end
 
 function mod:OnEngage()
 	meteorCounter = 1
+	self:CheckForWipe()
 	self:Berserk(360)
 	self:Bar(46394, 20) -- Burn
 	self:DelayedMessage(46394, 16, "yellow", CL.soon:format(self:SpellName(46394))) -- Burn

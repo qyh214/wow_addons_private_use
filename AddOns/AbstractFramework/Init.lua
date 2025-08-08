@@ -5,6 +5,7 @@ AF.name = "AbstractFramework"
 
 -- no operation
 AF.noop = function() end
+AF.noop_true = function() return true end
 
 ---------------------------------------------------------------------
 -- libs
@@ -18,13 +19,33 @@ AF.Libs.Comm = LibStub("AceComm-3.0")
 AF.Libs.LibDataBroker = LibStub("LibDataBroker-1.1")
 AF.Libs.LibDBIcon = LibStub("LibDBIcon-1.0")
 
-AF.Libs.MD5 = LibStub("MD5")
----@type fun(str: string): string
+AF.Libs.MD5 = LibStub("AF_MD5")
+---@type fun(str:string):string
 AF.MD5 = AF.Libs.MD5.sumhexa
 
-AF.Libs.SHA256 = LibStub("SHA256")
----@type fun(str: string): string
+AF.Libs.SHA256 = LibStub("AF_SHA256")
+---@type fun(str:string):string
 AF.SHA256 = AF.Libs.SHA256.hash
+
+AF.Libs.BASE64 = LibStub("AF_BASE64")
+---@type fun(str:string, encoder:table?, usecaching:boolean?):string
+AF.EncodeBase64 = AF.Libs.BASE64.encode
+---@type fun(str:string, decoder:table?, usecaching:boolean?):string
+AF.DecodeBase64 = AF.Libs.BASE64.decode
+
+AF.Libs.JSON = LibStub("AF_JSON")
+---@type fun(obj:any, options:table?):string
+AF.EncodeJson = AF.Libs.JSON.encode_json
+---@type fun(obj:any, options:table?):string
+AF.EncodeHJson = AF.Libs.JSON.encode_hjson
+---@type fun(str:string, options:table?):any
+AF.DecodeJson = AF.Libs.JSON.decode
+
+AF.Libs.QRCODE = LibStub("AF_QRCODE")
+---@type fun(parent:Frame, str:string, size:number?, padding:number?):Frame
+AF.GetQRCodeFrame = AF.Libs.QRCODE.GetQRCodeFrame
+---@type fun(str:string, white_pixel:string?, black_pixel:string?):string
+AF.GetQRCodeString = AF.Libs.QRCODE.GetQRCodeString
 
 ---------------------------------------------------------------------
 -- game version
@@ -44,6 +65,11 @@ elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
     AF.isVanilla = true
     AF.flavor = "vanilla"
 end
+
+---------------------------------------------------------------------
+-- game region
+---------------------------------------------------------------------
+AF.portal = GetCVar("portal")
 
 ---------------------------------------------------------------------
 -- UIParent
@@ -80,6 +106,7 @@ AF.UIParent:RegisterEvent("FIRST_FRAME_RENDERED")
 function AF.UIParent:FIRST_FRAME_RENDERED()
     AF.UIParent:UnregisterEvent("FIRST_FRAME_RENDERED")
     AF.UIParent:RegisterEvent("UI_SCALE_CHANGED")
+    AF.SetupPopups(AFConfig.popups)
 end
 
 function AF.UIParent:UI_SCALE_CHANGED()
@@ -91,6 +118,9 @@ AF.UIParent:RegisterEvent("ADDON_LOADED")
 function AF.UIParent:ADDON_LOADED(addon)
     if addon == AF.name then
         AF.UIParent:UnregisterEvent("ADDON_LOADED")
+
+        AF.version, AF.versionNum = AF.GetAddOnVersion(AF.name)
+
         if type(AFConfig) ~= "table" then AFConfig = {} end
 
         -- debug
@@ -101,12 +131,15 @@ function AF.UIParent:ADDON_LOADED(addon)
         AF.SetScale(AFConfig.scale)
         -- if type(AFConfig.uiScale) ~= "number" then AFConfig.uiScale = UIParent:GetScale() end
         -- UIParent:SetScale(AFConfig.uiScale)
+
+        --! AF_LOADED
+        AF.Fire("AF_LOADED", AF.version, AF.versionNum)
+        AF.InitMoverParent()
+
+        -- setup popups
+        if type(AFConfig.popups) ~= "table" then AFConfig.popups = {} end
     end
 end
-
--- function AF.SetIgnoreParentScale(ignore)
---     AF.UIParent:SetIgnoreParentScale(ignore)
--- end
 
 --! scale should NOT be TOO SMALL
 --! or it will result in abnormal display of borders
@@ -116,6 +149,7 @@ function AF.SetScale(scale)
     AF.scale = scale
     AF.UIParent:SetScale(scale)
     UpdatePixels()
+    AF.Fire("AF_SCALE_CHANGED", scale)
 end
 
 function AF.GetScale()
@@ -124,9 +158,6 @@ end
 
 function AF.SetUIParentScale(scale)
     UIParent:SetScale(scale)
-    -- if not AF.UIParent:IsIgnoringParentScale() then
-    --     UpdatePixels()
-    -- end
 end
 
 ---------------------------------------------------------------------

@@ -13,9 +13,7 @@ local BFC_UNPUBLISH_PREFIX = "BFC_UNPUB"
 local BFC_CHK_CRAFT_PREFIX = "BFC_CHK_CRAFT"
 local BFC_CAN_CRAFT_PREFIX = "BFC_CAN_CRAFT"
 local BFC_INSTANCE_PREFIX = "BFC_INSTANCE"
-local BFC_VER = "BFC_VER"
-
-local IsInInstance = IsInInstance
+local BFC_CHK_VER_PREFIX = "BFC_VER"
 
 ---------------------------------------------------------------------
 -- version check
@@ -26,11 +24,11 @@ local function VersionCheckReceived(version)
         AF.Print(L["New version (%s) available! Please consider updating."]:format("r" .. version))
     end
 end
-AF.RegisterComm(BFC_VER, VersionCheckReceived)
+AF.RegisterComm(BFC_CHK_VER_PREFIX, VersionCheckReceived)
 
 function BFC.BroadcastVersion()
     if BFC.channelID == 0 then return end
-    AF.SendCommMessage_Channel(BFC_VER, BFC.versionNum, BFC.channelName)
+    AF.SendCommMessage_Channel(BFC_CHK_VER_PREFIX, BFC.versionNum, BFC.channelName)
 end
 
 ---------------------------------------------------------------------
@@ -41,20 +39,25 @@ function BFC.ScheduleNextSync(useDelay)
     if useDelay then
         timer = C_Timer.NewTimer(BFC_PUBLISH_DELAY, function()
             if BFC_DB.publish.mode == "always" then
+                -- print("ScheduleNextSync() - always")
                 BFC.Publish()
                 BFC.ScheduleNextSync()
             elseif BFC_DB.publish.mode == "outdoors" then
-                if IsInInstance() then
+                if AF.IsInInstance() then
+                    -- print("ScheduleNextSync() - outdoors, in instance, unpublish")
                     BFC.Unpublish()
                 else
+                    -- print("ScheduleNextSync() - outdoors, not in instance, publish")
                     BFC.Publish()
                     BFC.ScheduleNextSync()
                 end
             else
+                -- print("ScheduleNextSync - disabled, unpublish")
                 BFC.Unpublish()
             end
         end)
     else
+        -- print("ScheduleNextSync() - default interval")
         timer = C_Timer.NewTimer(SYNC_INTERVAL, function()
             BFC.Publish()
             BFC.ScheduleNextSync()
@@ -172,18 +175,21 @@ AF.RegisterComm(BFC_CAN_CRAFT_PREFIX, CanCraftReceived)
 ---------------------------------------------------------------------
 -- in instance
 ---------------------------------------------------------------------
-local wasInInstance = false
 function BFC.UpdateInstanceStatus()
     if BFC.channelID == 0 or BFC_DB.publish.mode == "disabled" then return end
-    local inInstance = IsInInstance()
-    if inInstance ~= wasInInstance then
-        wasInInstance = inInstance
+    local inInstance = AF.IsInInstance()
+    if inInstance ~= BFC_DB.wasInInstance then
+        BFC_DB.wasInInstance = inInstance
         AF.SendCommMessage_Channel(BFC_INSTANCE_PREFIX, {BFC.versionNum, BFC.battleTag, inInstance}, BFC.channelName)
+        -- print("UpdateInstanceStatus - sending instance status:", inInstance)
         if BFC_DB.publish.mode == "outdoors" then
+            BFC.CancelNextSync()
             BFC.ScheduleNextSync(true)
+            -- print("ScheduleNextSync(true) - outdoors mode, rescheduling sync with delay")
         end
     end
 end
+AF.RegisterCallback("AF_INSTANCE_STATE_CHANGE", AF.GetDelayedInvoker(5, BFC.UpdateInstanceStatus))
 
 local function InstanceStatusReceived(data)
     local version, id, inInstance = AF.Unpack3(data)

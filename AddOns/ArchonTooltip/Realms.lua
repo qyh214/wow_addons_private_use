@@ -1124,15 +1124,27 @@ table.insert(Private.LoginFnQueue, function()
     Private.Realms[5843] = { name = "孤狼", slug = "孤狼", region = "TW", database = "TW_10236" }
     Private.Realms[5844] = { name = "生命烈焰", slug = "生命烈焰", region = "TW", database = "TW_10235" }
     Private.Realms[5845] = { name = "十字軍聖擊", slug = "十字軍聖擊", region = "TW", database = "TW_10234" }
+    Private.Realms[6103] = { name = "Dreamscythe", slug = "dreamscythe", region = "US", database = "US_5212" }
+    Private.Realms[6104] = { name = "Nightslayer", slug = "nightslayer", region = "US", database = "US_5213" }
+    Private.Realms[6107] = { name = "몰다르의투지", slug = "몰다르의-투지", region = "KR", database = "KR_5218" }
+    Private.Realms[6108] = { name = "펜구스의흉포", slug = "펜구스의-흉포", region = "KR", database = "KR_5219" }
+    Private.Realms[6111] = { name = "Thunderstrike", slug = "thunderstrike", region = "EU", database = "EU_5215" }
+    Private.Realms[6112] = { name = "Spineshatter", slug = "spineshatter", region = "EU", database = "EU_5216" }
+    Private.Realms[6115] = { name = "摩爾達的勇氣", slug = "摩爾達的勇氣", region = "TW", database = "TW_5220" }
+    Private.Realms[6116] = { name = "芬古斯的狂暴", slug = "芬古斯的狂暴", region = "TW", database = "TW_5221" }
+    Private.Realms[6122] = { name = "Годовщина", slug = "Годовщина", region = "EU", database = "EU_5217" }
+    Private.Realms[6131] = { name = "Maladath(AU)", slug = "maladath-au", region = "US", database = "US_5214" }
 
     local realmId = GetRealmID()
     local realm = Private.Realms[realmId]
-    local normalizedRealmName = GetNormalizedRealmName()
 
     if not realm then
+        local normalizedRealmName = GetNormalizedRealmName()
+
         if not IsOnTournamentRealm() and not IsTestBuild() and string.find(normalizedRealmName, "Dungeons") == nil then
-    	    print(format(Private.L.UnknownRealm, Private.GetAddOnNameWithIcon(), normalizedRealmName, realmId))
+    	    print(string.format(Private.L.UnknownRealm, Private.GetAddOnNameWithIcon(), normalizedRealmName, realmId))
     	end
+
       	-- best we can do to recover
        	Private.CurrentRealm = {
        	    name = GetRealmName(),

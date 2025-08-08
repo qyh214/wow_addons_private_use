@@ -87,7 +87,6 @@ function mod:OnBossEnable()
 	-- 70123 is the actual blistering cold
 	self:Log("SPELL_CAST_SUCCESS", "Grip", 70117)
 
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:BossYell("Warmup", L["engage_trigger"])
 	self:BossYell("AirPhase", L["airphase_trigger"])
 	self:BossYell("Phase2", L["phase2_trigger"])
@@ -100,6 +99,7 @@ function mod:Warmup()
 end
 
 function mod:OnEngage(diff)
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:SetStage(1)
 	phase = 1
 	beaconCount = 1

@@ -1,4 +1,3 @@
-
 --------------------------------------------------------------------------------
 -- Module Declaration
 --
@@ -6,16 +5,25 @@
 local mod, CL = BigWigs:NewBoss("Gara'jal the Spiritbinder", 1008, 682)
 if not mod then return end
 mod:RegisterEnableMob(60143, 60385) -- Gara'jal, Zandalari War Wyvern
+mod:SetEncounterID(1434)
+mod:SetRespawnTime(30)
+mod:SetStage(1)
+
+--------------------------------------------------------------------------------
+-- Locals
+--
 
 local totemCounter, shadowCounter = 1, 1
 local totemTime = 36.5
 local voodooList = {}
+local crossedOverOnMe = false
+local tempDollCheck = false
 
 --------------------------------------------------------------------------------
 -- Localization
 --
 
-local L = mod:NewLocale("enUS", true)
+local L = mod:GetLocale()
 if L then
 	L.engage_yell = "It be dyin' time, now!"
 
@@ -23,7 +31,6 @@ if L then
 	L.shadowy_message = "Attack (%d)"
 	L.banish_message = "Tank Banished"
 end
-L = mod:GetLocale()
 
 --------------------------------------------------------------------------------
 -- Initialization
@@ -31,12 +38,16 @@ L = mod:GetLocale()
 
 function mod:GetOptions()
 	return {
-		122151, 116174, 116272, {116161, "EMPHASIZE", "COUNTDOWN"},
-		-5759,
-		-6698, "berserk",
-	}, {
-		[122151] = CL["phase"]:format(1),
-		[-5759] = CL["phase"]:format(2),
+		122151,
+		116174,
+		116272,
+		{116161, "EMPHASIZE", "COUNTDOWN"},
+		117752, -- Frenzy
+		-6698,
+		"berserk",
+	},{
+		[122151] = CL.stage:format(1),
+		[117752] = CL.stage:format(2),
 		[-6698] = "general",
 	}
 end
@@ -52,14 +63,15 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_REMOVED", "CrossedOverRemoved", 116161, 116260)
 
 	self:RegisterMessage("BigWigs_BossComm")
-	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
 	self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", nil, "boss1")
-	self:Death("Win", 60143)
 end
 
-function mod:OnEngage(diff)
+function mod:OnEngage()
 	totemCounter, shadowCounter = 1, 1
 	voodooList = {}
+	crossedOverOnMe = false
+	tempDollCheck = false
+	local diff = self:Difficulty()
 	if diff == 3 or diff == 5 then
 		totemTime = 36.5 -- 10
 	elseif diff == 4 or diff == 6 then
@@ -67,6 +79,7 @@ function mod:OnEngage(diff)
 	elseif diff == 7 then
 		totemTime = 30 -- LFR
 	end
+	self:SetStage(1)
 	self:Bar(116174, totemTime, L["totem_message"]:format(totemCounter))
 	if not self:Solo() then
 		self:Bar(116272, self:Heroic() and 71 or 65, L["banish_message"])
@@ -77,7 +90,7 @@ function mod:OnEngage(diff)
 	if self:Heroic() then
 		self:Bar(-6698, 6.7, L["shadowy_message"]:format(shadowCounter), 117222)
 	end
-	self:RegisterUnitEvent("UNIT_HEALTH", "FrenzyCheck", "boss1")
+	self:RegisterUnitEvent("UNIT_HEALTH", nil, "boss1")
 end
 
 --------------------------------------------------------------------------------
@@ -128,12 +141,13 @@ do
 					shadowCounter = shadowCounter + 1
 					self:Bar(-6698, 8.3, L["shadowy_message"]:format(shadowCounter), 117222)
 				elseif msg == "Frenzy" then
-					self:MessageOld(-5759, "green", "long", CL["other"]:format(CL["phase"]:format(2), self:SpellName(-5759)))
 					if not self:LFR() then
 						self:StopBar(L["totem_message"]:format(totemCounter))
 						self:StopBar(L["banish_message"])
 					end
-					self:UnregisterUnitEvent("UNIT_HEALTH", "boss1")
+					self:SetStage(2)
+					self:Message(117752, "red", CL.percent:format(20, self:SpellName(117752)))
+					self:PlaySound(117752, "long")
 				elseif msg == "Banish" then
 					self:Bar(116272, self:Heroic() and 70 or 65, L["banish_message"])
 					self:MessageOld(116272, "orange", self:Tank() and "alarm" or nil, L["banish_message"])
@@ -146,6 +160,10 @@ end
 function mod:VoodooDollsApplied(args)
 	-- Using GUID instead of names for cross realm group compatibility
 	self:Sync("DollsApplied", args.destGUID)
+	if crossedOverOnMe and not tempDollCheck then
+		tempDollCheck = true
+		self:Message(122151, "red", "VD")
+	end
 end
 
 function mod:VoodooDollsRemoved(args)
@@ -155,18 +173,23 @@ end
 
 function mod:CrossedOver(args)
 	if self:Me(args.destGUID) then
+		crossedOverOnMe = true
 		self:Bar(116161, 30)
 	end
 end
 
 function mod:CrossedOverRemoved(args)
 	if self:Me(args.destGUID) then
-		self:StopBar(116161)
+		crossedOverOnMe = false
+		self:StopBar(args.spellName)
 	end
 end
 
 function mod:SpiritTotem()
 	self:Sync("Totem")
+	if crossedOverOnMe then
+		self:MessageOld(116174, "yellow", nil, L["totem_message"]:format(totemCounter))
+	end
 end
 
 function mod:Banishment(args)
@@ -182,15 +205,20 @@ function mod:SoulSeverRemoved(args)
 	end
 end
 
-function mod:FrenzyCheck(event, unit)
+function mod:UNIT_HEALTH(event, unit)
 	local hp = self:GetHealth(unit)
-	if hp < 25 then -- phase starts at 20
-		self:MessageOld(-5759, "green", "info", CL["soon"]:format(self:SpellName(-5759)))
+	if hp < 25 then
 		self:UnregisterUnitEvent(event, unit)
+		if hp > 20 then -- Make sure we're not too late
+			self:Message(117752, "red", CL.soon:format(self:SpellName(117752)))
+		end
 	end
 end
 
-function mod:Frenzy()
+function mod:Frenzy(args)
 	self:Sync("Frenzy")
+	if crossedOverOnMe then
+		self:Message(117752, "red", CL.percent:format(20, self:SpellName(117752)))
+		--self:PlaySound(117752, "long")
+	end
 end
-

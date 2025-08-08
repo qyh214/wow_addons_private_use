@@ -64,3 +64,16 @@ ns.RegisterPoints(ns.AZJKAHET, {
 ns.RegisterPoints(ns.CITYOFTHREADS, {
     [13323352] = {criteria=69269,}, -- Old Sacrificial Pit, Azj-Kahet
 }, GLYPH{achievement=40705, parent=true})
+
+ns.RegisterPoints(ns.KARESH, {
+    [60983883] = {criteria=106183}, -- Castigaar, K'aresh
+    [46495839] = {criteria=106184}, -- Eco-Dome: Primus, K'aresh
+    [54702338] = {criteria=106185}, -- Fracture of Laacuna, K'aresh
+    [76474629] = {criteria=106186}, -- North Sufaad, K'aresh
+    [54735317] = {criteria=106187}, -- Serrated Peaks, K'aresh
+    [43931704] = {criteria=106188}, -- Shadow Point, K'aresh
+    [74073252] = {criteria=106190}, -- The Oasis, K'aresh
+}, GLYPH{achievement=42727})
+ns.RegisterPoints(ns.KARESH_TAZAVESH, {
+    [55126762] = {criteria=106189}, -- Tazavesh, the Veiled Market, K'aresh
+}, GLYPH{achievement=42727, parent=true})

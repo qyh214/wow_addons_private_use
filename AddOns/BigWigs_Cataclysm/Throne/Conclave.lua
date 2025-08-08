@@ -86,22 +86,22 @@ end
 --
 
 function InitialBossCheck()
-	local unit = mod:GetUnitIdByGUID(45870) -- Anshal
-	if unit and mod:UnitWithinRange(unit, 100) then
+	local anshalUnit = mod:GetUnitIdByGUID(45870) -- Anshal
+	if anshalUnit and mod:UnitWithinRange(anshalUnit, 100) then
 		mod:Bar(86205, 15.2) -- Soothing Breeze
 		mod:Bar(85422, 26.3) -- Nurture
 		return
 	end
 
-	local unit = mod:GetUnitIdByGUID(45872) -- Rohash
-	if unit and mod:UnitWithinRange(unit, 100) then
+	local rohashUnit = mod:GetUnitIdByGUID(45872) -- Rohash
+	if rohashUnit and mod:UnitWithinRange(rohashUnit, 100) then
 		mod:Bar(93059, 28) -- Storm Shield
 		mod:Bar(86193, 31.1) -- Wind Blast
 		return
 	end
 
-	local unit = mod:GetUnitIdByGUID(45871) -- Nezir
-	if unit and mod:UnitWithinRange(unit, 100) then
+	local nezirUnit = mod:GetUnitIdByGUID(45871) -- Nezir
+	if nezirUnit and mod:UnitWithinRange(nezirUnit, 100) then
 		mod:CDBar(86082, 11) -- Permafrost
 		return
 	end

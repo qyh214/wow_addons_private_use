@@ -28,11 +28,24 @@ function Addon:MergeTables(...)
 	return mergedTable;
 end
 
-function Addon:CopyTable(data)
-	local copiedData = {};
-	for key, value in pairs(data) do
-		copiedData[key] = value;
+function Addon:GetNewName(name, isGroup, specTable)
+	local nameDictionary = {};
+	for _, data in pairs(specTable or Addon:GetSpecTable()) do
+		nameDictionary[data.name] = true;
 	end
 
-	return copiedData;
+	local prefix = name and #name > 0 and name or (isGroup and "New Group" or "New Config");
+	if not nameDictionary[prefix] then
+		return prefix;
+	end
+
+	local number = 1
+	while true do
+		number = number + 1;
+		local newName = string.format("%s %02d", prefix, number);
+		if not nameDictionary[newName] then
+			return newName;
+		end
+	end
 end
+

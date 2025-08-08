@@ -1,4 +1,4 @@
-﻿local addonName, Addon = ...;
+﻿local _, Addon = ...;
 
 function Addon:PostLink()
 	local data = Addon:GetData();

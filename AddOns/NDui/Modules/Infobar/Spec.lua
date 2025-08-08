@@ -23,7 +23,7 @@ local currentSpecIndex, currentLootIndex, newMenu, numSpecs, numLocal
 
 info.eventList = {
 	"PLAYER_ENTERING_WORLD",
-	"ACTIVE_TALENT_GROUP_CHANGED",
+	"ACTIVE_PLAYER_SPECIALIZATION_CHANGED",
 	"PLAYER_LOOT_SPEC_UPDATED",
 }
 
@@ -45,7 +45,7 @@ info.onEvent = function(self)
 end
 
 local pvpTalents
-local pvpIconTexture = C_CurrencyInfo.GetCurrencyInfo(DB.isNewPatch and 1792 or 104).iconFileID
+local pvpIconTexture = C_CurrencyInfo.GetCurrencyInfo(1792).iconFileID
 
 info.onEnter = function(self)
 	if not currentSpecIndex or currentSpecIndex == 5 then return end
@@ -209,19 +209,19 @@ local function BuildSpecMenu()
 	numLocal = #newMenu
 
 	refreshDefaultLootSpec()
-	B:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", refreshDefaultLootSpec)
+	B:RegisterEvent("ACTIVE_PLAYER_SPECIALIZATION_CHANGED", refreshDefaultLootSpec)
 
 	refreshAllTraits()
 	B:RegisterEvent("TRAIT_CONFIG_DELETED", refreshAllTraits)
 	B:RegisterEvent("TRAIT_CONFIG_UPDATED", refreshAllTraits)
-	B:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", refreshAllTraits)
+	B:RegisterEvent("ACTIVE_PLAYER_SPECIALIZATION_CHANGED", refreshAllTraits)
 end
 
 info.onMouseUp = function(self, btn)
 	if not currentSpecIndex or currentSpecIndex == 5 then return end
 
 	if btn == "LeftButton" then
-		--if InCombatLockdown() then UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT) return end -- fix by LibShowUIPanel
+		if InCombatLockdown() then UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT) return end -- fix by LibShowUIPanel
 		PlayerSpellsUtil.ToggleClassTalentOrSpecFrame()
 	else
 		BuildSpecMenu()

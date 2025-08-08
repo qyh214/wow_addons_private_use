@@ -107,7 +107,7 @@ function KeystoneLoot:CreateDungeonFrame(parent)
 		local TeleportButton = self.TeleportButton or CreateTeleportButton(self);
 		local teleportSpellId = self.teleportSpellId;
 
-		if (not self.initTeleport) then
+		if (not self.initTeleport and teleportSpellId > 0) then
 			local spellInfo = C_Spell.GetSpellInfo(teleportSpellId);
 			TeleportButton.Icon:SetTexture(spellInfo.iconID);
 

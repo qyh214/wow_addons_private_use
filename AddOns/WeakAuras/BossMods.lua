@@ -162,7 +162,7 @@ Private.ExecEnv.BossMods.DBM = {
 
   EventCallback = function(self, event, ...)
     if event == "DBM_Announce" then
-      local message, icon, _, spellId, _, count = ...
+      local message, icon, _, spellId, _, _, count = ...
       Private.ScanEvents("DBM_Announce", spellId, message, icon)
       if self.isGeneric then
         count = count and tostring(count) or "0"
@@ -361,7 +361,7 @@ Private.ExecEnv.BossMods.DBM = {
   end
 }
 
-if not WeakAuras.IsTWW() then
+if not WeakAuras.IsMistsOrRetail() then
   Private.event_prototypes["DBM Stage"] = {
     type = "addons",
     events = {},
@@ -1048,7 +1048,7 @@ Private.ExecEnv.BossMods.BigWigs = {
   end
 }
 
-if not WeakAuras.IsTWW() then
+if not WeakAuras.IsMistsOrRetail() then
   Private.event_prototypes["BigWigs Stage"] = {
     type = "addons",
     events = {},
@@ -1523,11 +1523,16 @@ Private.event_prototypes["Boss Mod Announce"] = {
       type = "string",
       preamble = "local counter = Private.ExecEnv.CreateTriggerCounter(%q)",
       test = "counter:SetCount(tonumber(count) or 0) == nil and counter:Match()",
+      conditionPreamble = function(input)
+        return Private.ExecEnv.CreateTriggerCounter(input)
+      end,
       conditionTest = function(state, needle, op, preamble)
-        return preamble:Check(state.count)
+        preamble:SetCount(tonumber(state.count) or 0)
+        return preamble:Match()
       end,
       store = true,
       conditionType = "string",
+      operator_types = "none"
     },
     {
       name = "cloneId",

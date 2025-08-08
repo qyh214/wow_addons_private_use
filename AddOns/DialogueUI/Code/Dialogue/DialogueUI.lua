@@ -371,6 +371,8 @@ function DUIDialogBaseMixin:OnLoad()
         fontString:SetText(nil);
         fontString:Hide();
         fontString:ClearAllPoints();
+        fontString.ttsFlag = nil;
+        fontString.isTranslation = nil;
     end
 
     local function OnAcquireFontString(fontString)
@@ -756,6 +758,7 @@ function DUIDialogBaseMixin:UseQuestLayout(state)
     elseif self.questLayout ~= false or forceUpdate then
         self.questLayout = false;
         self.questID = nil;
+        self.questIsFromGossip = nil;
         self.scrollViewHeight = self.scrollFrameBaseHeight;
         --self.ScrollFrame:SetPoint("TOPLEFT", self, "TOPLEFT", PADDING_H, -PADDING_TOP);
         self.ScrollFrame:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -42);
@@ -942,7 +945,12 @@ local function SortFunc_GossipPrioritizeQuest(a, b)
         return false
     end
 
-	return a.orderIndex < b.orderIndex;
+    if a.icon ~= b.icon and (a.icon == 132053 or b.icon == 132053) then
+        --Sort non-regular gossip icon to the top (e.g. Merchant)
+        return a.icon ~= 132053
+    end
+
+	return a.orderIndex < b.orderIndex
 end
 addon.SortFunc_GossipPrioritizeQuest = SortFunc_GossipPrioritizeQuest;
 
@@ -980,7 +988,7 @@ function DUIDialogBaseMixin:InsertParagraph(offsetY, paragraphText, fontObject)
 	return self:InsertText(offsetY + PARAGRAPH_SPACING, paragraphText, fontObject);
 end
 
-function DUIDialogBaseMixin:FormatParagraph(offsetY, text)
+function DUIDialogBaseMixin:FormatParagraph(offsetY, text, ttsFlag)
     local paragraphs = API.SplitParagraph(text);
 	local firstObject, lastObject;
     if paragraphs and #paragraphs > 0 then
@@ -994,6 +1002,7 @@ function DUIDialogBaseMixin:FormatParagraph(offsetY, text)
             fs:SetText(paragraphText);
             offsetY = Round(offsetY + fs:GetHeight() + PARAGRAPH_SPACING);
             lastObject = fs;
+            fs.ttsFlag = ttsFlag;
         end
         offsetY = offsetY - PARAGRAPH_SPACING;
     else
@@ -1033,6 +1042,7 @@ function DUIDialogBaseMixin:FormatDualParagraph(offsetY, text1, text2)
                         fs:SetText(para[i]);
                         offsetY = Round(offsetY + fs:GetHeight() + PARAGRAPH_SPACING);
                         lastObject = fs;
+                        fs.isTranslation = j == 2;
                     end
                 end
             end
@@ -1212,8 +1222,9 @@ function DUIDialogBaseMixin:HandleGossip()
         gossipText = self.hintText.."\n\n"..gossipText;
         self.hintText = nil;
     end
+
     gossipText = ConcatenateNPCName(gossipText);
-    offsetY, firstObject, lastObject = self:FormatParagraph(offsetY, gossipText);
+    offsetY, firstObject, lastObject = self:FormatParagraph(offsetY, gossipText, addon.TTSFlags.Gossip);
 
     local hotkeyIndex = 0;
     local hotkey;
@@ -1479,9 +1490,9 @@ function DUIDialogBaseMixin:HandleQuestDetail(playFadeIn)
 
         --Objective Texts
         if translatedObjectiveText then
-            offsetY = self:FormatDualParagraph(offsetY, objectiveText, translatedObjectiveText);
+            offsetY = self:FormatDualParagraph(offsetY, objectiveText, translatedObjectiveText, addon.TTSFlags.QuestObjective);
         else
-            offsetY = self:FormatParagraph(offsetY, objectiveText);
+            offsetY = self:FormatParagraph(offsetY, objectiveText, addon.TTSFlags.QuestObjective);
         end
 
         local groupNum = GetSuggestedGroupSize();
@@ -1541,8 +1552,6 @@ function DUIDialogBaseMixin:HandleQuestDetail(playFadeIn)
         AcceptButton:SetButtonAcceptQuest();
         ExitButton:SetButtonDeclineQuest(self.questIsFromGossip);
     end
-
-    self.questIsFromGossip = nil;
 
     if playFadeIn then
         self:FadeInContentFrame();
@@ -1675,7 +1684,6 @@ function DUIDialogBaseMixin:HandleQuestProgress(playFadeIn)
 
     local CancelButton = self:AcquireExitButton();
     CancelButton:SetButtonCancelQuestProgress(self.questIsFromGossip);
-    self.questIsFromGossip = nil;
 
     if not canComplete then
         KeyboardControl:SetAction("Confirm", CancelButton);
@@ -1716,7 +1724,7 @@ function DUIDialogBaseMixin:FormatQuestText(offsetY, method)
 
         if not processed then
             offsetY = offsetY + PARAGRAPH_SPACING;
-            offsetY = self:FormatParagraph(offsetY, text);
+            offsetY = self:FormatParagraph(offsetY, text, addon.TTSFlags.QuestObjective);
         end
     end
     return offsetY, translatedObjectiveText
@@ -1797,7 +1805,7 @@ function DUIDialogBaseMixin:HandleQuestGreeting()
 	--local material = QuestFrame_GetMaterial();
 
     local geetingText = ConcatenateNPCName(GetQuestText("Greeting"));
-    offsetY, firstObject, lastObject = self:FormatParagraph(offsetY, geetingText);
+    offsetY, firstObject, lastObject = self:FormatParagraph(offsetY, geetingText, addon.TTSFlags.Gossip);
 
 
     local questIndex = 0;
@@ -1816,7 +1824,7 @@ function DUIDialogBaseMixin:HandleQuestGreeting()
             index = i,
             title = title,
             isComplete = false,
-            questID = questID,
+            questID = questID or 0,
             isOnQuest = false,
             isTrivial = isTrivial,
             frequency = frequency,
@@ -1839,7 +1847,7 @@ function DUIDialogBaseMixin:HandleQuestGreeting()
         local title, isComplete = GetActiveTitle(i);
         local questID = GetActiveQuestID(i);
 
-        if autoCompleteQuest then
+        if GetDBBool("AutoCompleteQuest") then
             if GossipDataProvider:ShouldAutoCompleteQuest(questID) and SelectActiveQuest then
                 SelectActiveQuest(i);
                 return false
@@ -1924,9 +1932,11 @@ function DUIDialogBaseMixin:UpdateGossipQuests()
 
         tsort(activeQuests, SortFunc_PrioritizeCompleteQuest);
 
+        local rebuildQuestInfo = true;
+
         for i, activeQuestButton in ipairs(self.activeQuestButtons) do
             if activeQuests[i] and (activeQuestButton.questID == activeQuests[i].questID) then
-                activeQuestButton:SetQuestVisual(activeQuests[i]);
+                activeQuestButton:SetQuestVisual(activeQuests[i], rebuildQuestInfo);
             end
         end
     end
@@ -1944,7 +1954,7 @@ function DUIDialogBaseMixin:HandleGossipConfirm(gossipID, warningText, cost)
     local offsetY = 0;
 
     warningText = ThemeUtil:AdjustTextColor(warningText);
-    offsetY = self:FormatParagraph(offsetY, warningText);
+    offsetY = self:FormatParagraph(offsetY, warningText, addon.TTSFlags.Gossip);
 
     local lockDuration = CalulateLockDuration(cost);
 
@@ -2277,14 +2287,19 @@ function DUIDialogBaseMixin:ShowUI(event, ...)
 
     TooltipFrame:Hide();
 
-    CallbackRegistry:Trigger("DialogueUI.HandleEvent", event);
+    CallbackRegistry:Trigger("DialogueUI.HandleEvent", event, self.questID);
 end
 
-function DUIDialogBaseMixin:HideUI(cancelPopupFirst)
+function DUIDialogBaseMixin:HideUI(cancelPopupFirst, fromPressingKey)
     if not self:IsShown() then return end;
 
     if cancelPopupFirst and self.requireGossipConfirm then
         self:OnEvent("GOSSIP_CONFIRM_CANCEL");
+        return
+    end
+
+    if fromPressingKey and self.questIsFromGossip and GetDBBool("EscapeToDeclineQuest") and (not InCombatLockdown()) then
+        DeclineQuest();
         return
     end
 
@@ -2332,7 +2347,6 @@ function DUIDialogBaseMixin:OnHide()
 
     self:CloseDialogInteraction();
     self.keepGossipHistory = false;
-    self.requireGossipConfirm = false;
     self.selectedGossipIndex = nil;
     self.consumeGossipClose = nil;
     self.questIsFromGossip = nil;
@@ -2341,6 +2355,7 @@ function DUIDialogBaseMixin:OnHide()
     self.handlerArgs = nil;
     self.questID = nil;
     self.hintText = nil;
+    self.translatorEnabled = nil;
     self.contentHeight = 0;
 
     self:UnregisterEvent("GOSSIP_SHOW");
@@ -2371,6 +2386,11 @@ function DUIDialogBaseMixin:OnHide()
     if self.acknowledgeAutoAcceptQuest then
         self.acknowledgeAutoAcceptQuest = nil;
         AcknowledgeAutoAcceptQuest();
+    end
+
+    if self.requireGossipConfirm ~= nil then
+        self.requireGossipConfirm = nil;
+        API.CloseGossipStaticPopups();
     end
 end
 
@@ -2407,6 +2427,12 @@ function DUIDialogBaseMixin:HighlightButton(optionButton)
         self.GamePadFocusIndicator:Show();
     else
         self.GamePadFocusIndicator:Hide();
+    end
+end
+
+function DUIDialogBaseMixin:ClearButtonHighlight(optionButton)
+    if self.highlightedButton == optionButton then
+        self:HighlightButton(nil);
     end
 end
 
@@ -2463,13 +2489,16 @@ function DUIDialogBaseMixin:OnEvent(event, ...)
             CameraUtil:OnEnterCombatDuringInteraction();
         end
     elseif event == "GOSSIP_CONFIRM" then
+        --CallbackRegistry:Trigger("PlayerInteraction.ShowUI", true);
         local gossipID, text, cost = ...
         self:RegisterEvent("GOSSIP_CONFIRM_CANCEL");
         self:HandleGossipConfirm(gossipID, text, cost);
     elseif event == "GOSSIP_CONFIRM_CANCEL" then
+        --CallbackRegistry:Trigger("PlayerInteraction.ShowUI", true);
         self:UnregisterEvent(event);
         self:HideGossipConfirm();
     elseif event == "GOSSIP_ENTER_CODE" then
+        --CallbackRegistry:Trigger("PlayerInteraction.ShowUI", true);
         local gossipID = ...
         self:HandleGossipEnterCode(gossipID);
     elseif event == "LOADING_SCREEN_ENABLED" then
@@ -2655,41 +2684,79 @@ do  --Clipboard
     end
 
     function DUIDialogBaseMixin:GetContentForTTS()
-        local content = {};
+        local content;
 
-        local GetGossipText = API.GetGossipText;
-        local GetQuestText = API.GetQuestText;
-
-        local npcName, npcID = API.GetCurrentNPCInfo();
-        if npcName and npcID then
-            content.speaker = npcName;
+        if API.GetQuestTTSContentExternal then
+            content = API.GetQuestTTSContentExternal();
         end
 
-        local questID = GetQuestID();
-        if questID and questID ~= 0 then
-            content.title = GetQuestTitle();
-        end
+        if not content then
+            content = {};
 
-        if self.handler == "HandleGossip" then
-            content.body = GetGossipText();
+            if self:IsTranslationAvailable() and GetDBBool("TTSReadTranslation") and addon.IsTranslatorEnabled() then
+                local body, objective;
+                local text;
+                local flags = addon.TTSFlags;
+                for _, fs in self.fontStringPool:EnumerateActive() do
+                    if fs.isTranslation then
+                        text = fs:GetText();
+                        if text and text ~= "" then
+                            if fs.ttsFlag == flags.QuestObjective then
+                                if objective then
+                                    objective = objective.."\n"..text;
+                                else
+                                    objective = text;
+                                end
+                            else
+                                if body then
+                                    body = body.."\n"..text;
+                                else
+                                    body = text;
+                                end
+                            end
+                        end
+                    end
+                end
+                content.body = body;
+                content.objective = objective;
+            else
+                local GetGossipText = API.GetGossipText;
+                local GetQuestText = API.GetQuestText;
 
-        elseif self.handler == "HandleQuestDetail" then
-            content.body = GetQuestText("Detail");
+                local questID = GetQuestID();
+                if questID and questID ~= 0 then
+                    content.title = GetQuestTitle();
+                end
 
-            local objective = GetObjectiveText();
-            if objective and objective ~= "" then
-                content.objective = JoinText(L["Quest Objectives"], "", objective);
+                if self.handler == "HandleGossip" then
+                    content.body = GetGossipText();
+
+                elseif self.handler == "HandleQuestDetail" then
+                    content.body = GetQuestText("Detail");
+
+                    local objective = GetObjectiveText();
+                    if objective and objective ~= "" then
+                        content.objective = JoinText(L["Quest Objectives"], "", objective);
+                    end
+
+                elseif self.handler == "HandleQuestProgress" then
+                    content.body = GetQuestText("Progress");
+
+                elseif self.handler == "HandleQuestComplete" then
+                    content.body = GetQuestText("Complete");
+
+                elseif self.handler == "HandleQuestGreeting" then
+                    content.body = GetQuestText("Greeting");
+
+                end
             end
+        end
 
-        elseif self.handler == "HandleQuestProgress" then
-            content.body = GetQuestText("Progress");
-
-        elseif self.handler == "HandleQuestComplete" then
-            content.body = GetQuestText("Complete");
-
-        elseif self.handler == "HandleQuestGreeting" then
-            content.body = GetQuestText("Greeting");
-
+        if content then
+            local npcName, npcID = API.GetCurrentNPCInfo();
+            if npcName and npcID then
+                content.speaker = npcName;
+            end
         end
 
         return content
@@ -3157,13 +3224,37 @@ do  --TTS
         end
     end
     CallbackRegistry:Register("SettingChanged.TTSEnabled", Settings_TTSEnabled);
+
+
+    function DUIDialogBaseMixin:GetTTSTextFromFontStrings()
+        local text, str, title;
+
+        for _, fs in self.fontStringPool:EnumerateActive() do
+            if fs.ttsFlag then
+                text = fs:GetText();
+                if text and text ~= "" then
+                    if str then
+                        str = str.."\n"..text;
+                    else
+                        str = text;
+                    end
+                end
+            end
+        end
+
+        if self.questLayout then
+            title = self.FrontFrame.Header.Title:GetText();
+        end
+
+        return str, title
+    end
 end
 
 do  --Vignette
     SharedVignette:SetFrameStrata("BACKGROUND");
     SharedVignette:SetFixedFrameStrata(true);
-    SharedVignette:SetPoint("TOPLEFT", UIParent, "TOPLEFT", -1, 1);
-    SharedVignette:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 1, -1);
+    SharedVignette:SetPoint("TOPLEFT", WorldFrame, "TOPLEFT", -1, 1);
+    SharedVignette:SetPoint("BOTTOMRIGHT", WorldFrame, "BOTTOMRIGHT", 1, -1);
     SharedVignette:Hide();
     SharedVignette:SetAlpha(0);
 
@@ -3419,6 +3510,10 @@ do  --Translator Button
             self.translatorEnabled = false;
         end
         self:LayoutTopWidgets();
+    end
+
+    function DUIDialogBaseMixin:IsTranslationAvailable()
+        return self.translatorEnabled
     end
 
     function DUIDialogBaseMixin:LayoutTopWidgets()

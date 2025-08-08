@@ -10,7 +10,7 @@ local aboutFrame
 -- create
 ---------------------------------------------------------------------
 local function CreateAboutFrame()
-    aboutFrame = AF.CreateBorderedFrame(BFCMainFrame, "BFCAboutFrame", nil, 160, nil, "accent")
+    aboutFrame = AF.CreateBorderedFrame(BFCMainFrame, "BFCAboutFrame", nil, 200, nil, "accent")
     AF.SetPoint(aboutFrame, "TOPLEFT", BFCMainFrame, 10, -10)
     AF.SetPoint(aboutFrame, "TOPRIGHT", BFCMainFrame, -10, -10)
     AF.SetFrameLevel(aboutFrame, 100)
@@ -26,7 +26,7 @@ local function CreateAboutFrame()
     end)
 
     -- close
-    local closeBtn = AF.CreateCloseButton(aboutFrame)
+    local closeBtn = AF.CreateCloseButton(aboutFrame, nil, 20, 20)
     AF.SetPoint(closeBtn, "TOPRIGHT")
     closeBtn:SetBorderColor("accent")
 
@@ -60,6 +60,13 @@ local function CreateAboutFrame()
     local versionText = AF.CreateFontString(aboutFrame, AF.WrapTextInColor(AF.L["Version"] .. ": ", "accent") .. AF.GetAddOnMetadata("Version"))
     AF.SetPoint(versionText, "LEFT", aboutFrame, "BOTTOM", 10, 0)
     AF.SetPoint(versionText, "BOTTOM", authorText)
+
+    -- translators
+    local translatorsText = AF.CreateFontString(aboutFrame, AF.WrapTextInColor(AF.L["Translators"], "accent"))
+    AF.SetPoint(translatorsText, "TOPLEFT", authorText, "BOTTOMLEFT", 0, -20)
+    translatorsText:SetJustifyH("LEFT")
+    translatorsText:SetSpacing(5)
+    translatorsText:AppendText("  ruRU: ZamestoTV")
 end
 
 ---------------------------------------------------------------------

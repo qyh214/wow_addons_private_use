@@ -1,0 +1,39 @@
+## Interface: 50500
+
+## Title: BigWigs [|cffeda55fWrath of the Lich King|r]
+## Title-deDE: BigWigs [|cffeda55fWrath of the Lich King|r]
+## Title-esES: BigWigs [|cffeda55fWrath of the Lich King|r]
+## Title-esMX: BigWigs [|cffeda55fWrath of the Lich King|r]
+## Title-frFR: BigWigs [|cffeda55fWrath of the Lich King|r]
+## Title-itIT: BigWigs [|cffeda55fWrath of the Lich King|r]
+## Title-koKR: BigWigs [|cffeda55f리치 왕의 분노|r]
+## Title-ptBR: BigWigs [|cffeda55fWrath of the Lich King|r]
+## Title-ruRU: BigWigs [|cffeda55fWrath of the Lich King|r]
+## Title-zhCN: BigWigs [|cffeda55f巫妖王之怒|r]
+## Title-zhTW: BigWigs [|cffeda55f巫妖王之怒|r]
+## Notes: A collection of BigWigs modules from the Wrath of the Lich King era.
+## Notes-deDE: Eine Sammlung von BigWigs-Modulen aus der Ära Wrath of the Lich King.
+## Notes-esES: A collection of BigWigs modules from the Wrath of the Lich King era.
+## Notes-esMX: A collection of BigWigs modules from the Wrath of the Lich King era.
+## Notes-frFR: A collection of BigWigs modules from the Wrath of the Lich King era.
+## Notes-itIT: A collection of BigWigs modules from the Wrath of the Lich King era.
+## Notes-koKR: 리치 왕의 분노 BigWigs 모듈 모음집입니다.
+## Notes-ptBR: A collection of BigWigs modules from the Wrath of the Lich King era.
+## Notes-ruRU: A collection of BigWigs modules from the Wrath of the Lich King era.
+## Notes-zhCN: BigWigs 巫妖王之怒模块。
+## Notes-zhTW: A collection of BigWigs modules from the Wrath of the Lich King era.
+
+## LoadOnDemand: 1
+## Dependencies: BigWigs
+## Version: v11.1.7
+## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
+
+## X-Category: Raid
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
+## X-Curse-Project-ID: 50417
+## X-WoWI-ID: 22086
+## X-Wago-ID: 7nGvW2Nx
+## X-BigWigs-LoadOn-InstanceId: 249, 533, 603, 615, 616, 624, 631, 649, 724
+## X-BigWigs-Minimum: 378
+
+modules.xml

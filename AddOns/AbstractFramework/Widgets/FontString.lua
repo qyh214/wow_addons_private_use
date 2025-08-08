@@ -7,9 +7,19 @@ local AF = _G.AbstractFramework
 ---@class AF_FontString:FontString
 local AF_FontStringMixin = {}
 
----@param color string
+---@param color string|table
 function AF_FontStringMixin:SetColor(color)
     AF.ColorFontString(self, color)
+end
+
+---@param text string
+function AF_FontStringMixin:AppendText(text)
+    local currentText = self:GetText()
+    if currentText and currentText ~= "" then
+        self:SetText(currentText .. text)
+    else
+        self:SetText(text)
+    end
 end
 
 ---@param color string color name defined in Color.lua

@@ -1,4 +1,4 @@
-﻿local addonName, Addon = ...;
+﻿local _, Addon = ...;
 
 -- [specID] = { nodeID, nodeID, ...}
 local nodesList = {};

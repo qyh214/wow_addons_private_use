@@ -232,7 +232,6 @@ function ns.AutomaticProfessionDetection()
             ns.Addon.db.profile.showCapitalsTailoring = false
         end
 
-
         if cooking and ns.Addon.db.profile.showCapitalsCooking == false then
             ns.Addon.db.profile.showCapitalsCooking = true
         end
@@ -240,14 +239,12 @@ function ns.AutomaticProfessionDetection()
             ns.Addon.db.profile.showCapitalsCooking = false
         end
 
-
         if firstAid and ns.Addon.db.profile.showCapitalsFirstAid == false then
             ns.Addon.db.profile.showCapitalsFirstAid = true
         end
         if not firstAid then
             ns.Addon.db.profile.showCapitalsFirstAid = false
         end
-
 
         if fishing and ns.Addon.db.profile.showCapitalsFishing == false then
             ns.Addon.db.profile.showCapitalsFishing = true
@@ -457,7 +454,6 @@ function ns.AutomaticProfessionDetection()
             ns.Addon.db.profile.showZoneTailoring = false
         end
 
-
         if cooking and ns.Addon.db.profile.showZoneCooking == false then
             ns.Addon.db.profile.showZoneCooking = true
         end
@@ -465,14 +461,12 @@ function ns.AutomaticProfessionDetection()
             ns.Addon.db.profile.showZoneCooking = false
         end
 
-
         if firstAid and ns.Addon.db.profile.showZoneFirstAid == false then
             ns.Addon.db.profile.showZoneFirstAid = true
         end
         if not firstAid then
             ns.Addon.db.profile.showZoneFirstAid = false
         end
-
 
         if fishing and ns.Addon.db.profile.showZoneFishing == false then
             ns.Addon.db.profile.showZoneFishing = true
@@ -569,7 +563,6 @@ function ns.AutomaticProfessionDetection()
             ns.Addon.db.profile.showMiniMapTailoring = false
         end
 
-
         if cooking and ns.Addon.db.profile.showMiniMapCooking == false then
             ns.Addon.db.profile.showMiniMapCooking = true
         end
@@ -577,14 +570,12 @@ function ns.AutomaticProfessionDetection()
             ns.Addon.db.profile.showMiniMapCooking = false
         end
 
-
         if firstAid and ns.Addon.db.profile.showMiniMapFirstAid == false then
             ns.Addon.db.profile.showMiniMapFirstAid = true
         end
         if not firstAid then
             ns.Addon.db.profile.showMiniMapFirstAid = false
         end
-
 
         if fishing and ns.Addon.db.profile.showMiniMapFishing == false then
             ns.Addon.db.profile.showMiniMapFishing = true
@@ -595,9 +586,28 @@ function ns.AutomaticProfessionDetection()
 
     end
 
+    if not ns.Addon.db.profile.showZoneProfessionDetection then
+        ns.Addon.db.profile.showZoneAlchemy = true
+        ns.Addon.db.profile.showZoneArchaeology = true
+        ns.Addon.db.profile.showZoneBlacksmith = true
+        ns.Addon.db.profile.showZoneEnchanting = true
+        ns.Addon.db.profile.showZoneEngineer = true
+        ns.Addon.db.profile.showZoneHerbalism = true
+        ns.Addon.db.profile.showZoneInscription = true
+        ns.Addon.db.profile.showZoneJewelcrafting = true
+        ns.Addon.db.profile.showZoneMining = true
+        ns.Addon.db.profile.showZoneLeatherworking = true
+        ns.Addon.db.profile.showZoneSkinning = true
+        ns.Addon.db.profile.showZoneTailoring = true
+        ns.Addon.db.profile.showZoneCooking = true
+        ns.Addon.db.profile.showZoneFirstAid = true
+        ns.Addon.db.profile.showZoneFishing = true
+    end
+
     ns.Addon:FullUpdate()
     HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
 end
+
 
 local function ProfessionDetectionHook()
     AceTimer:ScheduleTimer(ns.AutomaticProfessionDetection, 0.2)

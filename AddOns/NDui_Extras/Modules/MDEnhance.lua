@@ -155,6 +155,7 @@ end
 
 function EX:MDEnhance_UpdateEnhance(parent, spellIDs)
 	if not parent then return end
+	parent.BScore:SetText("")
 
 	local spellID = self:MDEnhance_SelectSpellID(spellIDs)
 	parent.TButton:SetAttribute("type", "spell")
@@ -168,10 +169,8 @@ function EX:MDEnhance_UpdateEnhance(parent, spellIDs)
 	local color = C_ChallengeMode.GetSpecificDungeonOverallScoreRarityColor(bestScore) or HIGHLIGHT_FONT_COLOR
 	parent.BScore:SetText(bestScore and bestScore or "")
 	parent.BScore:SetTextColor(color.r, color.g, color.b)
---[[
-	parent.BScore:SetText(bestScore and bestScore or "")
-	parent.BScore:SetTextColor(0, 1, 0)
 
+--[[
 	parent.FScore:SetText(affixScores[1] and affixScores[1].score or "")
 	parent.FScore:SetTextColor(1, 1, 0)
 

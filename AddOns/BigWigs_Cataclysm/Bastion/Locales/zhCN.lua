@@ -71,7 +71,7 @@ end
 
 L = BigWigs:NewBossLocale("Ascendant Council", "zhCN")
 if L then
-	L.health_report = "%s生命值>%d%%<，即将阶段转换！"
+	L.health_report = "%s生命值 %d%%，即将阶段转换！"
 	L.switch = "转换"
 	L.switch_desc = "当首领转换时发出警报。"
 

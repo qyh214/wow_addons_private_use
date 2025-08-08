@@ -1,7 +1,6 @@
 -- Artifact Scenarios
 
 local L = BigWigs:NewBossLocale("Tugar Bloodtotem", "deDE")
-if not L then return end
 if L then
 	L.tugar = "Tugar Bluttotem"
 	L.jormog = "Jormog das Ungetüm"
@@ -26,8 +25,6 @@ if L then
 	--L.handFromBeyond = "Hand from Beyond"
 
 	--L.rune_desc = "Places a Rune of Summoning on the ground. If left unsoaked a Thing of Nightmare will spawn."
-
-	--L.killed = "%s killed"
 
 	--L.warmup_text = "Karam Magespear Active"
 	--L.warmup_trigger = "You were a fool to follow me, brother. The Twisting Nether feeds my strength. I have become more powerful than you could ever imagine!"
@@ -81,7 +78,6 @@ if L then
 	--L.warmup_trigger2 = "Even now, my sayaad tempt your weak-willed mages. Your allies will surrender willingly to the Legion!" -- 16
 	--L.warmup_trigger3 = "But first, you must be punished for taking away my little pet." -- 3
 
-	L.absorb = "Absorption"
 	L.stacks = "Stapel"
 end
 
@@ -92,15 +88,12 @@ if L then
 	L.faljar = "Runenseher Faljar"
 
 	--L.warmup_trigger = "What's this? The outsider has come to stop me?"
-
-	L.absorb = "Absorption"
 end
 
 -- Assault on Violet Hold
 
 L = BigWigs:NewBossLocale("Assault on Violet Hold Trash", "deDE")
 if L then
-	L.custom_on_autotalk = "Automatisch ansprechen"
 	L.custom_on_autotalk_desc = "Wählt direkt Leutnant Sinclaris Dialogoption zum Starten des Sturms auf die Violette Festung."
 	L.keeper = "Portalhüter"
 	L.guardian = "Portalwächter"
@@ -151,7 +144,6 @@ end
 
 L = BigWigs:NewBossLocale("Domatrax", "deDE")
 if L then
-	L.custom_on_autotalk = "Automatisch ansprechen"
 	L.custom_on_autotalk_desc = "Wählt direkt Aegis von Aggramars Dialogoption um den Kampf gegen Domatrax zu starten."
 
 	L.missing_aegis = "Du stehst nicht im Aegis" -- Aegis is a short name for Aegis of Aggramar
@@ -347,7 +339,6 @@ end
 L = BigWigs:NewBossLocale("Karazhan Trash", "deDE")
 if L then
 	-- Opera Event
-	L.custom_on_autotalk = "Automatisch ansprechen"
 	L.custom_on_autotalk_desc = "Wählt direkt Barnes' Dialogoption zum Starten des Bosskampfes im Opernsaal."
 	L.opera_hall_wikket_story_text = "Opernsaal: Wikket"
 	L.opera_hall_wikket_story_trigger = "Halt die Gotsche" -- Shut your jabber, drama man! The Monkey King got another plan!
@@ -429,7 +420,6 @@ end
 
 L = BigWigs:NewBossLocale("Viceroy Nezhar", "deDE")
 if L then
-	L.tentacles = "Tentakel"
 	L.guards = "Hüter"
 	L.interrupted = "%s unterbrach %s (%.1fs übrig)!"
 end
@@ -443,7 +433,6 @@ end
 
 L = BigWigs:NewBossLocale("Seat of the Triumvirate Trash", "deDE")
 if L then
-	L.custom_on_autotalk = "Automatisch ansprechen"
 	L.custom_on_autotalk_desc = "Wählt direkt Alleria Windläufers Dialogoption."
 	L.gossip_available = "Dialog verfügbar"
 	L.alleria_gossip_trigger = "Folgt mir!" -- Allerias yell after the first boss is defeated
@@ -475,14 +464,8 @@ if L then
 	L.light_dropped = "%s hat das Licht fallen gelassen."
 	L.light_picked = "%s hat das Licht aufgenommen."
 
-	L.warmup_text = "Cordana Teufelsang aktiv"
 	L.warmup_trigger = "Ich habe, wofür ich gekommen bin. Doch ich wollte Euch noch persönlich ein Ende setzen... ein für alle Mal."
 	L.warmup_trigger_2 = "Und jetzt sitzt Ihr Narren in meiner Falle. Sehen wir mal, wie Ihr im Dunkeln zurechtkommt."
-end
-
-L = BigWigs:NewBossLocale("Glazer", "deDE")
-if L then
-	L.radiation_level = "%s: %d%%"
 end
 
 L = BigWigs:NewBossLocale("Tirathon Saltheril", "deDE")

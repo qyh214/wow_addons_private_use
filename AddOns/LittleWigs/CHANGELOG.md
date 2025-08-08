@@ -1,15 +1,10 @@
 # LittleWigs
 
-## [v11.1.29](https://github.com/BigWigsMods/LittleWigs/tree/v11.1.29) (2025-04-14)
-[Full Changelog](https://github.com/BigWigsMods/LittleWigs/compare/v11.1.28...v11.1.29) [Previous Releases](https://github.com/BigWigsMods/LittleWigs/releases)
+## [v11.2.4](https://github.com/BigWigsMods/LittleWigs/tree/v11.2.4) (2025-08-08)
+[Full Changelog](https://github.com/BigWigsMods/LittleWigs/compare/v11.2.3...v11.2.4) [Previous Releases](https://github.com/BigWigsMods/LittleWigs/releases)
 
-- Refactor options (#1330)  
-    * 1122 lua files -> 979 lua files  
-- Refactor locale (#1329)  
-    * One locale file per expansion (except Classic)  
-    * 1924 lua files -> 1122 lua files  
-    * esMX fully split out from esES  
-- BfA/HorrificVisionOfStormwind/Trash: Mask of the Nemesis support  
-- Delves/ExcavationSite9/XelaneghTheMany: Update options  
-- Cleanups  
-- BfA/HorrificVisionOfStormwind/AlleriaWindrunner: Update encounter detection  
+- Update deDE (#1397)  
+- Delves/ArchivalAssault/CaptainNilhitan: Cosmic Waste under you  
+- Delves/Trash/Goblin: Additional gossip NPC, ability throttles  
+- Delves/Trash: Switch default rares module to Season 3  
+- WarWithin/TheDawnbreaker/Shadowcrown: Darkness Comes cast bar countdown  

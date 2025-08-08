@@ -40,6 +40,7 @@ local function ReskinSortButton(button)
 end
 
 local function ReskinBagSlot(bu)
+	if not bu then return end
 	bu:SetNormalTexture(0)
 	bu:SetPushedTexture(0)
 	if bu.Background then bu.Background:SetAlpha(0) end
@@ -121,40 +122,24 @@ end
 tinsert(C.defaultThemes, function()
 	if not C.db["Skins"]["BlizzardSkins"] then return end
 
-	local menu = AccountBankPanel and AccountBankPanel.TabSettingsMenu
-	if menu then
-		B.StripTextures(menu)
-		B.ReskinIconSelector(menu)
-		menu.DepositSettingsMenu:DisableDrawLayer("OVERLAY")
-
-		for _, child in pairs({menu.DepositSettingsMenu:GetChildren()}) do
-			if child:IsObjectType("CheckButton") then
-				B.ReskinCheck(child)
-				child:SetSize(24, 24)
-			elseif child.Arrow then
-				B.ReskinDropDown(child)
-			end
-		end
-	end
-
-	if C.db["Bags"]["Enable"] then return end
-
 	for i = 1, 13 do
 		local frameName = "ContainerFrame"..i
 		local frame = _G[frameName]
-		local name = frame.TitleText or _G[frameName.."TitleText"]
-		name:SetDrawLayer("OVERLAY")
-		name:ClearAllPoints()
-		name:SetPoint("TOP", 0, -10)
-		B.ReskinClose(frame.CloseButton)
+		if frame then
+			local name = frame.TitleText or _G[frameName.."TitleText"]
+			name:SetDrawLayer("OVERLAY")
+			name:ClearAllPoints()
+			name:SetPoint("TOP", 0, -10)
+			B.ReskinClose(frame.CloseButton)
 
-		B.StripTextures(frame)
-		B.SetBD(frame)
-		frame.PortraitContainer:Hide()
-		if frame.Bg then frame.Bg:Hide() end
-		createBagIcon(frame, i)
-		hooksecurefunc(frame, "Update", updateContainer)
-		hooksecurefunc(frame, "UpdateItemSlots", handleBagSlots)
+			B.StripTextures(frame)
+			B.SetBD(frame)
+			frame.PortraitContainer:Hide()
+			if frame.Bg then frame.Bg:Hide() end
+			createBagIcon(frame, i)
+			hooksecurefunc(frame, "Update", updateContainer)
+			hooksecurefunc(frame, "UpdateItemSlots", handleBagSlots)
+		end
 	end
 
 	B.StripTextures(BackpackTokenFrame)
@@ -184,77 +169,56 @@ tinsert(C.defaultThemes, function()
 
 	-- [[ Bank ]]
 
-	BankFrameMoneyFrameBorder:Hide()
-	B.StripTextures(BankSlotsFrame)
-	BankSlotsFrame.EdgeShadows:Hide()
+	handleMoneyFrame(BankPanel)
+	B.StripTextures(BankPanel)
+	BankPanel.EdgeShadows:Hide()
+	ReskinSortButton(BankPanel.AutoSortButton)
+	B.Reskin(BankPanel.AutoDepositFrame.DepositButton)
+	B.ReskinCheck(BankPanel.AutoDepositFrame.IncludeReagentsCheckbox)
+	B.Reskin(BankPanel.MoneyFrame.WithdrawButton)
+	B.Reskin(BankPanel.MoneyFrame.DepositButton)
 
-	B.ReskinPortraitFrame(BankFrame)
-	B.Reskin(BankFramePurchaseButton)
-	B.ReskinTab(BankFrameTab1)
-	B.ReskinTab(BankFrameTab2)
-	B.ReskinTab(BankFrameTab3)
-	B.ReskinInput(BankItemSearchBox)
+	hooksecurefunc(BankPanel, "GenerateItemSlotsForSelectedTab", handleBagSlots)
 
-	for i = 1, 28 do
-		ReskinBagSlot(_G["BankFrameItem"..i])
-	end
-
-	for i = 1, 7 do
-		ReskinBagSlot(BankSlotsFrame["Bag"..i])
-	end
-
-	ReskinSortButton(BankItemAutoSortButton)
-
-	hooksecurefunc("BankFrameItemButton_Update", function(button)
-		if not button.isBag and button.IconQuestTexture:IsShown() then
-			button.IconBorder:SetVertexColor(1, 1, 0)
-		end
-	end)
-
-	-- [[ Reagent bank ]]
-
-	ReagentBankFrame:DisableDrawLayer("BACKGROUND")
-	ReagentBankFrame:DisableDrawLayer("BORDER")
-	ReagentBankFrame:DisableDrawLayer("ARTWORK")
-	ReagentBankFrame.NineSlice:SetAlpha(0)
-	ReagentBankFrame.EdgeShadows:Hide()
-
-	B.Reskin(ReagentBankFrame.DespositButton)
-	B.Reskin(ReagentBankFrameUnlockInfoPurchaseButton)
-
-	-- make button more visible
-	B.StripTextures(ReagentBankFrameUnlockInfo)
-	ReagentBankFrameUnlockInfoBlackBG:SetColorTexture(.1, .1, .1)
-
-	local reagentButtonsStyled = false
-	ReagentBankFrame:HookScript("OnShow", function()
-		if not reagentButtonsStyled then
-			for i = 1, 98 do
-				local button = _G["ReagentBankFrameItem"..i]
-				ReskinBagSlot(button)
-				BankFrameItemButton_Update(button)
-			end
-			reagentButtonsStyled = true
-		end
-	end)
-
-	-- [[ Account bank ]]
-	AccountBankPanel.NineSlice:SetAlpha(0)
-	AccountBankPanel.EdgeShadows:Hide()
-	B.Reskin(AccountBankPanel.ItemDepositFrame.DepositButton)
-	B.ReskinCheck(AccountBankPanel.ItemDepositFrame.IncludeReagentsCheckbox)
-	handleMoneyFrame(AccountBankPanel)
-	B.Reskin(AccountBankPanel.MoneyFrame.WithdrawButton)
-	B.Reskin(AccountBankPanel.MoneyFrame.DepositButton)
-
-	hooksecurefunc(AccountBankPanel, "GenerateItemSlotsForSelectedTab", handleBagSlots)
-
-	hooksecurefunc(AccountBankPanel, "RefreshBankTabs", function(self)
+	hooksecurefunc(BankPanel, "RefreshBankTabs", function(self)
 		for tab in self.bankTabPool:EnumerateActive() do
 			handleBankTab(tab)
 		end
 	end)
-	handleBankTab(AccountBankPanel.PurchaseTab)
+	handleBankTab(BankPanel.PurchaseTab)
 
-	B.Reskin(AccountBankPanel.PurchasePrompt.TabCostFrame.PurchaseButton)
+	for i = 1, 3 do
+		local tab = select(i, BankFrame.TabSystem:GetChildren())
+		if tab then
+			B.ReskinTab(tab)
+		end
+	end
+
+	B.ReskinPortraitFrame(BankFrame)
+	B.ReskinInput(BankItemSearchBox)
+
+	local popup = BankCleanUpConfirmationPopup
+	if popup then
+		B.StripTextures(popup)
+		B.SetBD(popup)
+		B.Reskin(popup.AcceptButton)
+		B.Reskin(popup.CancelButton)
+		B.ReskinCheck(popup.HidePopupCheckbox.Checkbox)
+	end
+
+	local menu = BankPanel.TabSettingsMenu
+	if menu then
+		B.StripTextures(menu)
+		B.ReskinIconSelector(menu)
+		menu.DepositSettingsMenu:DisableDrawLayer("OVERLAY")
+
+		for _, child in pairs({menu.DepositSettingsMenu:GetChildren()}) do
+			if child:IsObjectType("CheckButton") then
+				B.ReskinCheck(child)
+				child:SetSize(24, 24)
+			elseif child.Arrow then
+				B.ReskinDropDown(child)
+			end
+		end
+	end
 end)

@@ -1,7 +1,6 @@
 -- De Other Side
 
 local L = BigWigs:NewBossLocale("De Other Side Trash", "esMX")
-if not L then return end
 if L then
 	-- [[ The ring ]] --
 	L.cultist = "Cultor renacido"
@@ -31,16 +30,17 @@ end
 
 L = BigWigs:NewBossLocale("Halls of Atonement Trash", "esMX")
 if L then
-	L.houndmaster = "Maestra de canes depravada"
-	L.gargon = "Gargon sañoso"
-	L.loyalstoneborn = "Natopiedra fiel"
-	L.darkblade = "Filoscuro depravada"
-	L.obliterator = "Obliterador depravado"
-	L.collector = "Recolectora depravada"
-	L.shard = "Fragmento de Halkias"
-	L.reaver = "Atracador natopiedra"
-	L.slasher = "Mutilador natopiedra"
-	L.sigar = "Inquisidor Sigar"
+	L.depraved_houndmaster = "Maestra de canes depravada"
+	L.vicious_gargon = "Gargon sañoso"
+	L.loyal_stoneborn = "Natopiedra fiel"
+	L.depraved_darkblade = "Filoscuro depravada"
+	L.depraved_obliterator = "Obliterador depravado"
+	L.depraved_collector = "Recolectora depravada"
+	L.stoneborn_slasher = "Mutilador natopiedra"
+	L.shard_of_halkias = "Fragmento de Halkias"
+	L.stoneborn_reaver = "Atracador natopiedra"
+	L.stoneborn_eviscerator = "Evisceradora petronato"
+	L.inquisitor_sigar = "Inquisidor Sigar"
 end
 
 -- Mists of Tirna Scithe
@@ -148,11 +148,6 @@ end
 
 -- Tazavesh, the Veiled Market
 
-L = BigWigs:NewBossLocale("Zo'phex the Sentinel", "esMX")
-if L then
-	L.zophex_warmup_trigger = "Entrega... todo... el contrabando..."
-end
-
 L = BigWigs:NewBossLocale("The Grand Menagerie", "esMX")
 if L then
 	L.achillite_warmup_trigger = "¿Las bestias devastadoras no os dejan vivir? ¡Tenemos la solución!"
@@ -170,16 +165,20 @@ if L then
 	--L.add_wave_killed = "Add wave killed (%d/%d)"
 end
 
+L = BigWigs:NewBossLocale("So'leah", "esMX")
+if L then
+	L.group = "GRUPO"
+end
+
 L = BigWigs:NewBossLocale("Tazavesh Trash", "esMX")
 if L then
+	L.zophex_warmup_trigger = "Entrega... todo... el contrabando..."
 	--L.menagerie_warmup_trigger = "Now for the item you have all been awaiting! The allegedly demon-cursed Edge of Oblivion!"
 	L.soazmi_warmup_trigger = "Disculpa la intrusión, So'leah. Espero que sea un momento inoportuno." -- TODO unverified
 	L.portal_authority = "Jefatura de Portales de Tazavesh"
-	L.custom_on_portal_autotalk = "Hablar automáticamente"
 	--L.custom_on_portal_autotalk_desc = "Instantly open portals back to the entrance when talking to Broker NPCs."
 	--L.trading_game = "Trading Game"
 	--L.trading_game_desc = "Alerts with the right password during the Trading Game."
-	L.custom_on_trading_game_autotalk = "Hablar automáticamente"
 	--L.custom_on_trading_game_autotalk_desc = "Instantly select the right password after the Trading Game has been completed."
 	L.password_triggers = {
 		["Caparazón de marfil"] = 53259,
@@ -193,29 +192,37 @@ if L then
 		["Flor pálida"] = 53267,
 		["Cuchillo carmesí"] = 53268
 	}
-
+	--L.gatewarden_zomazz = "Gatewarden Zo'mazz"
+	--L.customs_security = "Customs Security"
 	L.interrogation_specialist = "Especialista en interrogatorios"
 	L.portalmancer_zohonn = "Portalmante Zo'honn"
-	L.armored_overseer_tracker_zokorss = "Sobrestante acorazado / Rastreador Zo'korss"
+	L.armored_overseer = "Sobrestante acorazado"
+	L.support_officer = "Oficial de apoyo"
 	L.tracker_zokorss = "Rastreador Zo'korss"
 	L.ancient_core_hound = "Can del Núcleo anciano"
 	L.enraged_direhorn = "Cuernoatroz iracundo"
+	--L.cartel_skulker = "Cartel Skulker"
+	--L.cartel_wiseguy = "Cartel Wiseguy"
 	L.cartel_muscle = "Matón del cártel"
 	L.cartel_smuggler = "Contrabandista del cártel"
-	L.support_officer = "Oficial de apoyo"
 	L.defective_sorter = "Clasificador defectuoso"
+	--L.overloaded_mailemental = "Overloaded Mailemental"
+	--L.post_worker = "P.O.S.T. Worker"
+	--L.bazaar_overseer = "Bazaar Overseer"
 	L.market_peacekeeper = "Pacificador del mercado"
 	L.veteran_sparkcaster = "Chispaturgo veterano"
 	L.commerce_enforcer = "Déspota comercial"
-	L.commerce_enforcer_commander_zofar = "Déspota comercial / Comandante Zo'far"
 	L.commander_zofar = "Comandante Zo'far"
 
 	L.tazavesh_soleahs_gambit = "Tazavesh: Gambito de So'leah"
 	L.murkbrine_scalebinder = "Sujetascamas Salmuerasucia"
+	L.murkbrine_fishmancer = "Pescamante salsombría"
 	L.murkbrine_shellcrusher = "Rompeconchas Salmuerasucia"
 	L.coastwalker_goliath = "Goliat caminacostas"
 	L.stormforged_guardian = "Guardián Tronaforjado"
 	L.burly_deckhand = "Marinero de cubierta fornido"
+	L.hourglass_tidesage = "Maresabio de reloj de arena"
+	L.corsair_officer = "Oficial corsario"
 	L.adorned_starseer = "Vidente estelar adornado"
 	L.focused_ritualist = "Ritualista enfocado"
 	L.devoted_accomplice = "Cómplice devoto"

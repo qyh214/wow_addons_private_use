@@ -134,6 +134,7 @@ Addon.icons = {
 		{5912515, "The Stonevault", "SV"},
 	},
 	--]]
+	--[[
 	{
 		-- M+: TWW Season 2
 		{Addon.MYTHICPLUS_ICON,  "Mythic Keystone", "M+"},
@@ -145,6 +146,19 @@ Addon.icons = {
 		{6422372, "Operation: Floodgate", "FLOOD"},
 		{5912510, "Darkflame Cleft", "DFC"},
 		{5912508, "Cinderbrew Meadery", "BREW"},
+	},
+	--]]
+	{
+		-- M+: TWW Season 3
+		{Addon.MYTHICPLUS_ICON,  "Mythic Keystone", "M+"},
+		{5899326, "Ara-Kara, City of Echoes", "ARAK"},
+		{5899330, "The Dawnbreaker", "DAWN"},
+		{5899331, "Priory of the Sacred Flame", "PSF"},
+		{6422372, "Operation: Floodgate", "FLOOD"},
+		{6921877, "Eco-Dome Al'dani", "ECO"},
+		{3601526, "Halls of Atonement", "HOA"},
+		{4058847, "Tazavesh: Streets of Wonder", "STRT"},
+		{4062727, "Tazavesh: So'leah's Gambit", "GMBT"},
 	},
 	--[[
 	{
@@ -160,6 +174,7 @@ Addon.icons = {
 		{5779391, "Queen Ansurek"},
 	},
 	--]]
+	--[[
 	{
 		-- Raid: Liberation of Undermine
 		{6392621, "Liberation of Undermine"},
@@ -171,6 +186,19 @@ Addon.icons = {
 		{6392624, "The One-Armed Bandit"},
 		{6392623, "Mug'Zee, Heads of Security"},
 		{6392621, "Chrome King Gallywix"},
+	},
+	--]]
+	{
+		-- Raid: Manaforge Omega
+		{6997112, "Manaforge Omega"},
+		{6922080, "Plexus Sentinel"},
+		{6922087, "Loom'ithar"},
+		{6922081, "Soulbinder Naazindhri"},
+		{6922084, "Forgeweaver Araz"},
+		{6922082, "The Soul Hunters"},
+		{6922085, "Fractillus"},
+		{6922086, "Nexus-King Salhadaar"},
+		{6922083, "Dimensius, the All-Devouring"},
 	},
 };
 

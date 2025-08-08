@@ -1,3 +1,22 @@
+# v1.20.13
+
+- Updated for 11.2 and The War Within Season 3
+- Updated equipment management to handle new bank tabs
+- Fixed an issue where Single-Button Assistant would not be saved correctly
+
+# v1.20.12
+
+- Updated for 11.1.7
+
+# v1.20.11
+
+- Updated for 11.1.5
+- Fixed the add and remove icons in the loadouts tab
+
+# v1.20.10
+
+- Fixed an issue causing some talents to be partially treated as selection nodes
+
 # v1.20.9
 
 - Fixed an error switching specializations

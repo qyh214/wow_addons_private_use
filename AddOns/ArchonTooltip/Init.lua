@@ -2,8 +2,9 @@ local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local IsWrath = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 local IsCata = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
+local IsMists = WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC
 
-if not IsRetail and not IsClassic and not IsWrath and not IsCata then
+if not IsRetail and not IsClassic and not IsWrath and not IsCata and not IsMists then
 	return
 end
 
@@ -22,6 +23,7 @@ Private.IsRetail = IsRetail
 Private.IsClassicEra = IsClassic
 Private.IsWrath = IsWrath
 Private.IsCata = IsCata
+Private.IsMists = IsMists
 
 ---@type table<number, function>
 Private.LoginFnQueue = {}
@@ -36,11 +38,49 @@ Private.IsInitialized = false
 ---@type table<number, Realm>
 Private.Realms = {}
 
+---@class SavedVariablesSettings
+---@field ShowTooltipInCombat boolean
+---@field AllowShiftExpansionInCombat boolean
+---@field ShowRank boolean
+---@field ShowAsp boolean
+---@field ShowShiftHint boolean
+---@field MenuDropdownIntegration boolean
+
+---@class SavedVariables
+---@field Settings SavedVariablesSettings
+
 ---@class ArchonTooltip
 ArchonTooltip = {}
 
 local function OnAddonLoaded()
+	---@type SavedVariables
 	ArchonTooltipSaved = ArchonTooltipSaved or {}
+	ArchonTooltipSaved.Settings = ArchonTooltipSaved.Settings or {}
+
+	if ArchonTooltipSaved.Settings.ShowTooltipInCombat == nil then
+		ArchonTooltipSaved.Settings.ShowTooltipInCombat = false
+	end
+
+	if ArchonTooltipSaved.Settings.AllowShiftExpansionInCombat == nil then
+		ArchonTooltipSaved.Settings.AllowShiftExpansionInCombat = false
+	end
+
+	if ArchonTooltipSaved.Settings.ShowRank == nil then
+		ArchonTooltipSaved.Settings.ShowRank = false
+	end
+
+	if ArchonTooltipSaved.Settings.ShowAsp == nil then
+		ArchonTooltipSaved.Settings.ShowAsp = false
+	end
+
+	if ArchonTooltipSaved.Settings.ShowShiftHint == nil then
+		ArchonTooltipSaved.Settings.ShowShiftHint = true
+	end
+
+	if ArchonTooltipSaved.Settings.MenuDropdownIntegration == nil then
+		ArchonTooltipSaved.Settings.MenuDropdownIntegration = true
+	end
+
 	Private.db = ArchonTooltipSaved
 end
 
@@ -55,9 +95,13 @@ local function OnPlayerLogin()
 	Private.IsInitialized = Private.LoadAddOn(Private.CurrentRealm.database, Private.CurrentRealm.name)
 end
 
-if IsRetail then
+local function OnRaiderIoLoaded()
+	Private.AddOnUtils.RaiderIoLoaded = true
+end
+
+if EventUtil and EventUtil.ContinueOnAddOnLoaded then
 	EventUtil.ContinueOnAddOnLoaded(AddonName, OnAddonLoaded)
-	EventUtil.RegisterOnceFrameEventAndCallback("PLAYER_LOGIN", OnPlayerLogin)
+	EventUtil.ContinueOnAddOnLoaded("RaiderIO", OnRaiderIoLoaded)
 else
 	EventRegistry:RegisterFrameEventAndCallback(
 		"ADDON_LOADED",
@@ -70,6 +114,23 @@ else
 			end
 		end
 	)
+
+	EventRegistry:RegisterFrameEventAndCallback(
+		"ADDON_LOADED",
+		---@param ownerId number
+		---@param loadedAddonName string
+		function(ownerId, loadedAddonName)
+			if loadedAddonName == "RaiderIO" then
+				EventRegistry:UnregisterFrameEventAndCallback("ADDON_LOADED", ownerId)
+				OnRaiderIoLoaded()
+			end
+		end
+	)
+end
+
+if EventUtil and EventUtil.RegisterOnceFrameEventAndCallback then
+	EventUtil.RegisterOnceFrameEventAndCallback("PLAYER_LOGIN", OnPlayerLogin)
+else
 	EventRegistry:RegisterFrameEventAndCallback(
 		"PLAYER_LOGIN",
 		---@param ownerId number
@@ -87,6 +148,7 @@ end
 ---@field id number
 ---@field name string
 ---@field encounters table<number, Encounter>
+---@field hasMultipleDifficulties boolean
 ---@field hasMultipleSizes boolean
 ---@field difficultyIconMap table<number, number|string>|nil
 

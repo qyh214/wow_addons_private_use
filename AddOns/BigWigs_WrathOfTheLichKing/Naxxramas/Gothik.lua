@@ -78,8 +78,6 @@ function mod:OnBossEnable()
 	self:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE") -- Unlocalized phase2 trigger
 	self:Death("DeathKnightDeath", 16125) -- Death Knight
 	self:Death("RiderDeath", 16126) -- Rider
-
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 end
 
 function mod:OnEngage()
@@ -87,6 +85,7 @@ function mod:OnEngage()
 	traineeCount = 1
 	deathKnightCount = 1
 	riderCount = 1
+	--self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:SetStage(1)
 
 	self:Message("stages", "yellow", L.engage_message, false)

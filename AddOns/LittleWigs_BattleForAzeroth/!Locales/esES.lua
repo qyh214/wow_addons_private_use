@@ -1,7 +1,6 @@
 -- Atal'Dazar
 
 local L = BigWigs:NewBossLocale("Atal'Dazar Trash", "esES")
-if not L then return end
 if L then
 	L.skyscreamer = "Vociferador de cielos hambriento"
 	L.tlonja = "T'lonja"
@@ -16,9 +15,9 @@ if L then
 	L.augur = "Augur Dazar'ai"
 	L.reanimated_honor_guard = "Guardia de honor reanimado"
 
-	--L.stairs_open = "Stairs Open"
-	--L.stairs_open_desc = "Show a bar indicating when the stairs open to Yazma."
-	--L.stairs_open_trigger = "Impressive. You made it farther than I thought... but I will still be drinking your blood."
+	L.stairs_open = "Escaleras Abiertas"
+	L.stairs_open_desc = "Muestra una barra que indica que las escaleras hacia Yazma están abiertas."
+	L.stairs_open_trigger = "Impresionante. Habéih llegado máh lejoh de lo que creía... pero aun así me beberé vuehtra sangre."
 end
 
 -- Freehold
@@ -58,23 +57,29 @@ end
 L = BigWigs:NewBossLocale("Ring of Booty", "esES")
 if L then
 	-- Gather 'round and place yer bets! We got a new set of vict-- uh... competitors! Take it away, Gurgthok and Wodin!
-	--L.lightning_warmup = "new set of vict--"
+	L.lightning_warmup = "nuevo grupo de vícti..."
 	-- It's a greased up pig? I'm beginning to think this is not a professional setup. Oh well... grab the pig and you win
-	--L.lightning_warmup_2 = "not a professional setup"
+	L.lightning_warmup_2 = "no es muy profesional"
 
 	L.lightning = "Relámpago"
 	L.lightning_caught = "¡Relámpago atrapado después de %.1f segundos!"
 	L.ludwig = "Ludwig Von Tortollan"
 	L.trothak = "Trothak"
-
-	L.left = "%s (Izquierda)"
-	L.right = "%s (Derecha)"
 end
 
 -- Horrific Vision of Orgrimmar
 
 L = BigWigs:NewBossLocale("Horrific Vision of Orgrimmar Trash", "esES")
 if L then
+	L.sanity_change = "%d Cordura"
+	L.madnesses = "Locuras"
+	L.potions = "Pociones"
+	L.buffs = "Buffs"
+	L.slowed = "Ralentizado"
+	L.sluggish_potion_effect = "Cura 2% cada 5 segundos"
+	L.sickening_potion_effect = "5% reducción de daño"
+	L.spicy_potion_effect = "Aliento de fuego"
+
 	L.voidbound_shaman = "Chamán ligado al Vacío"
 	L.endless_hunger_totem = "Tótem de hambre insaciable"
 	L.crawling_corruption = "Corrupción trepadora"
@@ -100,6 +105,7 @@ if L then
 	L.aqir_bonecrusher = "Machacahuesos aqir"
 	L.aqir_mindhunter = "Cazamentes aqir"
 	L.aqir_venomweaver = "Tejeveneno aqir"
+	L.gamon = "Gamon"
 end
 
 L = BigWigs:NewBossLocale("Thrall", "esES")
@@ -125,15 +131,26 @@ end
 L = BigWigs:NewBossLocale("Rexxar", "esES")
 if L then
 	L.rexxar = "Rexxar"
-	--L.pet_trigger_1 = "Come, my pets! Serve your master!"
-	--L.pet_trigger_2 = "My beasts will devour you!"
-	--L.pet_trigger_3 = "Hunt them down!"
+	L.pet_trigger_1 = "¡Vengan, mascotas! ¡Sirvan a su maestro!"
+	L.pet_trigger_2 = "¡Mis bestias los devorarán!"
+	L.pet_trigger_3 = "¡Hora de cazar!"
 end
 
 -- Horrific Vision of Stormwind
 
 L = BigWigs:NewBossLocale("Horrific Vision of Stormwind Trash", "esES")
 if L then
+	L.sanity_change = "%d Cordura"
+	L.portal_closed = "Portal Cerrado"
+	L.portal_closed_desc = "Muestra un mensaje cuando un portal es cerrado en el Barrio de los Magos."
+	L.madnesses = "Locuras"
+	L.potions = "Pociones"
+	L.buffs = "Buffs"
+	L.slowed = "Ralentizado"
+	L.sluggish_potion_effect = "Heal 2% every 5 sec"
+	L.sickening_potion_effect = "5% reducción de daño"
+	L.spicy_potion_effect = "Aliento de fuego"
+
 	L.crawling_corruption = "Corrupción trepadora"
 	L.enthralled_footman = "Lacayo sometido"
 	L.fallen_voidspeaker = "Oravacío caído"
@@ -158,9 +175,10 @@ if L then
 	L.zardeth_of_the_black_claw = "Zardeth de los Zarpanegra"
 	L.unstable_servant = "Sirviente inestable"
 	L.hogger = "Hogger"
+	L.void_scarred_gryphon = "Grifo marcado por el Vacío"
 
-	--L.therum_deepforge_warmup_trigger = "So ye like tae play with explosives, do ye? Then let's play."
-	--L.alleria_windrunner_warmup_trigger = "Mother... do not listen to the whispers!"
+	L.therum_deepforge_warmup_trigger = "¿Así que os gusta jugar con explosivos? Juguemos pues."
+	L.alleria_windrunner_warmup_trigger = "Madre... ¡No hagas caso a los susurros!"
 end
 
 L = BigWigs:NewBossLocale("Alleria Windrunner", "esES")
@@ -220,9 +238,6 @@ if L then
 	L.beastmaster = "Maestra de bestias espectral"
 	L.brute = "Bruto espectral"
 	L.zul = "Sombra de Zul"
-
-	L.casting_on_you = "Lanzando %s en TI"
-	L.casting_on_other = "Lanzando %s: %s"
 end
 
 -- Operation: Mechagon
@@ -250,8 +265,8 @@ if L then
 	L.bomb_tonk = "Bomba potente"
 	L.rocket_tonk = "Tonque cohete"
 	L.waste_processing_unit = "Unidad de procesado de desperdicios"
-	--L.metal_gunk = "Metal Gunk"
-	--L.junkyard_d0g = "Junkyard D.0.G."
+	L.metal_gunk = "Mugre metálica"
+	L.junkyard_d0g = "P3RR0 de desguace."
 	L.mechagon_tinkerer = "Manitas de Mecandria"
 	L.anti_personnel_squirrel = "Ardilla antipersona"
 	L.defense_bot_mk_iii = "Robot de defensa Mk III"
@@ -262,33 +277,27 @@ end
 
 L = BigWigs:NewBossLocale("Tussle Tonks", "esES")
 if L then
-	--L.warmup_trigger = "Now this is a statistical anomaly! Our visitors are still alive!"
-end
-
-L = BigWigs:NewBossLocale("K.U.-J.0.", "esES")
-if L then
-	--L.safe = "Safe"
+	L.warmup_trigger = "¡Esto sí que es una anomalía estadística! ¡Nuestros visitantes siguen con vida!"
 end
 
 L = BigWigs:NewBossLocale("King Mechagon", "esES")
 if L then
-	--L.hardmode_desc = "Warning for when the Annihilo-tron 5000 starts displaying the button order."
-
-	--L.button = "Button"
-	--L.button_desc = "Show a warning when someone clicks a button."
+	L.hardmode_desc = "Aviso para cuando el Aniquilotrón 5000 empieza a mostrar el orden de los botones."
+	L.button = "Botón"
+	L.button_desc = "Muestra un aviso cuando alguien pulsa un botón."
 end
 
 -- Shrine of the Storm
 
 L = BigWigs:NewBossLocale("Aqu'sirr", "esES")
 if L then
-	--L.warmup_trigger = "How dare you sully this holy place with your presence!"
+	L.warmup_trigger = "¡Cómo osáis mancillar este lugar sagrado con vuestra presencia!"
 end
 
 L = BigWigs:NewBossLocale("Lord Stormsong", "esES")
 if L then
-	--L.warmup_trigger_horde = "Intruders?! I shall cast your bodies to the blackened depths, to be crushed for eternity!"
-	--L.warmup_trigger_alliance = "Master! Stop this madness at once! The Kul Tiran fleet must not fall to darkness!"
+	L.warmup_trigger_horde = "¡¿Intrusos?! ¡Lanzaré vuestros cuerpos a las negras profundidades para su tormento eterno!"
+	L.warmup_trigger_alliance = "¡Maestro! ¡Detén esta locura! ¡La flota de Kul Tiras no puede caer en la oscuridad!"
 end
 
 L = BigWigs:NewBossLocale("Shrine of the Storm Trash", "esES")
@@ -331,12 +340,12 @@ if L then
 	L.cutthroat = "Degollador de las Ratas de Pantoque"
 	L.invader = "Invasor de los Gobernalle"
 
-	--L.gate_open_desc = "Show a bar indicating when the gate to the next area will open after defeating each boss."
+	L.gate_open_desc = "Muestra una barra que indica cuándo se abre la puerta a la siguiente zona después de derrotar cada jefe."
 end
 
 L = BigWigs:NewBossLocale("Dread Captain Lockwood", "esES")
 if L then
-	--L.ordnance_dropped = "Unstable Ordnance dropped"
+	L.ordnance_dropped = "Cae Artillería Inestable"
 end
 
 -- Temple of Sethraliss
@@ -351,11 +360,6 @@ if L then
 	L.incubator = "Incubador enloquecido"
 	L.nimbus = "Nimbo inquieto"
 	L.doctor = "Doctora de peste"
-end
-
-L = BigWigs:NewBossLocale("Galvazzt", "esES")
-if L then
-	--L.percent = "%s (%d%%)"
 end
 
 -- The MOTHERLODE!!
@@ -438,5 +442,5 @@ end
 
 L = BigWigs:NewBossLocale("Gorak Tul", "esES")
 if L then
-	--L.add_killed = "Add killed - Ready to burn"
+	L.add_killed = "Esbirro muerto - Listo para quemar"
 end

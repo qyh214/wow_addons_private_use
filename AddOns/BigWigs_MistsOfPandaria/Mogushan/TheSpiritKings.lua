@@ -1,4 +1,3 @@
-
 --------------------------------------------------------------------------------
 -- Module Declaration
 --
@@ -12,6 +11,7 @@ mod:RegisterEnableMob(
 	60710, 61427 -- Subetai the Swift
 )
 mod:SetEncounterID(1436)
+mod:SetRespawnTime(30)
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -31,7 +31,7 @@ local bossWarned = 0
 -- Localization
 --
 
-local L = mod:NewLocale("enUS", true)
+local L = mod:GetLocale()
 if L then
 	L.bosses = "Bosses"
 	L.bosses_desc = "Warnings for when a boss becomes active."
@@ -45,7 +45,6 @@ if L then
 	L.cowardice_desc = -5838
 	L.cowardice_icon = 117756
 end
-L = mod:GetLocale()
 
 --------------------------------------------------------------------------------
 -- Initialization
@@ -53,11 +52,27 @@ L = mod:GetLocale()
 
 function mod:GetOptions()
 	return {
-		117921, 119521, 117910, {117961, "FLASH"}, -- Qiang
-		{118303, "SAY", "ICON"}, {117697, "FLASH"}, -- Zian
-		118047, 118122, 118094, {118162, "FLASH"}, -- Subetai
-		"cowardice", 117708, {117837, "DISPEL"}, -- Meng
-		"bosses", "casting_shields", "berserk",
+		-- Qiang
+		117921,
+		119521,
+		117910,
+		{117961, "FLASH"},
+		-- Zian
+		{118303, "SAY", "ICON"},
+		{117697, "FLASH"},
+		 -- Subetai
+		118047,
+		118122,
+		118094,
+		{118162, "FLASH"},
+		-- Meng
+		"cowardice",
+		117708,
+		{117837, "DISPEL"},
+		-- General
+		"bosses",
+		"casting_shields",
+		"berserk",
 	}, {
 		[117921] = -5841,
 		[118303] = -5852,
@@ -97,17 +112,17 @@ function mod:OnBossEnable()
 end
 
 function mod:OnEngage()
-	self:Berserk(600)
 	bossActivated = {}
+	bossWarned = 0
+	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT")
 	if self:Heroic() then
+		self:RegisterUnitEvent("UNIT_HEALTH", nil, "boss1", "boss2", "boss3", "boss4")
 		self:Bar(117961, 40) -- Impervious Shield
-		self:RegisterUnitEvent("UNIT_HEALTH", "BossSwap", "boss1", "boss2", "boss3", "boss4")
-		bossWarned = 0
 	end
 	self:Bar(119521, 10) -- Annihilate
 	self:Bar(117910, 25) -- Flanking Orders
-	self:MessageOld("bosses", "green", nil, qiang, 117920) -- Massive Attack icon
-	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "BossCheck")
+	self:Message("bosses", "cyan", qiang, false)
+	self:Berserk(600, true)
 end
 
 --------------------------------------------------------------------------------
@@ -132,14 +147,14 @@ do
 	local prevPower = 0
 	function mod:CowardiceApplied()
 		prevPower = 0
-		self:RegisterUnitEvent("UNIT_POWER_FREQUENT", "SpellReflectWarn", "boss1", "boss2", "boss3", "boss4")
+		self:RegisterUnitEvent("UNIT_POWER_FREQUENT", nil, "boss1", "boss2", "boss3", "boss4")
 	end
 	function mod:CowardiceRemoved(args)
 		self:UnregisterUnitEvent("UNIT_POWER_FREQUENT", "boss1", "boss2", "boss3", "boss4")
 		prevPower = 0
 		self:MessageOld("cowardice", "green", nil, CL["over"]:format(spellReflect), L.cowardice_icon)
 	end
-	function mod:SpellReflectWarn(_, unitId)
+	function mod:UNIT_POWER_FREQUENT(_, unitId)
 		local id = self:MobId(self:UnitGUID(unitId))
 		if id == 60708 or id == 61429 then
 			local power = UnitPower(unitId)
@@ -257,35 +272,33 @@ function mod:ShieldRemoved(args)
 	self:MessageOld(args.spellId, "green", "info", L["shield_removed"]:format(args.spellName))
 end
 
-function mod:BossCheck()
-	for i=1, 5 do
+function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
+	for i = 1, 5 do
 		local unitId = ("boss%d"):format(i)
-		if UnitExists(unitId) then
-			local id = self:MobId(self:UnitGUID(unitId))
-			-- this is needed because of heroic
-			if (id == 60701 or id == 61421) and not bossActivated[60701] then -- Zian
-				bossActivated[60701] = true
-				if self:Heroic() then
-					self:Bar(117697, 40) -- Shield of Darkness
-				end
-				self:MessageOld("bosses", "green", nil, zian, 117628) -- Shadow Blast icon
-			elseif (id == 60710 or id == 61427) and not bossActivated[60710] then -- Subetai
-				bossActivated[60710] = true
-				if self:Heroic() then
-					self:Bar(118162, 15) -- Sleight of Hand
-				end
-				self:Bar(118094, 5) -- Volley
-				self:Bar(118047, 26) -- Pillage
-				self:Bar(118122, self:Heroic() and 40 or 15) -- Rain of Arrows
-				self:MessageOld("bosses", "green", nil, subetai, 118122) -- Rain of Arrows icon
-			elseif (id == 60708 or id == 61429) and not bossActivated[60708] then -- Meng
-				bossActivated[60708] = true
-				self:Bar(117708, self:Heroic() and 40 or 21) -- Maddening Shout
-				if self:Heroic() then
-					self:Bar(117837, 20) -- Delirious
-				end
-				self:MessageOld("bosses", "green", nil, meng, 117833) -- Crazy Thought icon
+		local id = self:MobId(self:UnitGUID(unitId))
+		-- This is needed because of heroic
+		if (id == 60701 or id == 61421) and not bossActivated[60701] then -- Zian
+			bossActivated[60701] = true
+			if self:Heroic() then
+				self:Bar(117697, 40) -- Shield of Darkness
 			end
+			self:Message("bosses", "cyan", zian, false)
+		elseif (id == 60710 or id == 61427) and not bossActivated[60710] then -- Subetai
+			bossActivated[60710] = true
+			if self:Heroic() then
+				self:Bar(118162, 15) -- Sleight of Hand
+			end
+			self:Bar(118094, 5) -- Volley
+			self:Bar(118047, 26) -- Pillage
+			self:Bar(118122, self:Heroic() and 40 or 15) -- Rain of Arrows
+			self:Message("bosses", "cyan", subetai, false)
+		elseif (id == 60708 or id == 61429) and not bossActivated[60708] then -- Meng
+			bossActivated[60708] = true
+			self:Bar(117708, self:Heroic() and 40 or 21) -- Maddening Shout
+			if self:Heroic() then
+				self:Bar(117837, 20) -- Delirious
+			end
+			self:Message("bosses", "cyan", meng, false)
 		end
 	end
 end
@@ -319,21 +332,23 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(_, unitId, _, spellId)
 	end
 end
 
-function mod:BossSwap(event, unit)
+function mod:UNIT_HEALTH(event, unit)
 	local hp = self:GetHealth(unit)
 	if hp < 38 then -- next boss at 30% (Qiang -> Subetai -> Zian -> Meng)
 		local id = self:MobId(self:UnitGUID(unit))
 		if bossWarned == 0 and (id == 60709 or id == 61423) then -- Qiang
-			self:MessageOld("bosses", "green", "info", CL["soon"]:format(subetai), false)
 			bossWarned = 1
+			self:Message("bosses", "cyan", CL.soon:format(subetai), false)
+			self:PlaySound("bosses", "info")
 		elseif bossWarned == 1 and (id == 60710 or id == 61427) then -- Subetai
-			self:MessageOld("bosses", "green", "info", CL["soon"]:format(zian), false)
 			bossWarned = 2
+			self:Message("bosses", "cyan", CL.soon:format(zian), false)
+			self:PlaySound("bosses", "info")
 		elseif bossWarned == 2 and (id == 60701 or id == 61421) then -- Zian
-			self:MessageOld("bosses", "green", "info", CL["soon"]:format(meng), false)
 			bossWarned = 3
 			self:UnregisterUnitEvent(event, "boss1", "boss2", "boss3", "boss4")
+			self:Message("bosses", "cyan", CL.soon:format(meng), false)
+			self:PlaySound("bosses", "info")
 		end
 	end
 end
-

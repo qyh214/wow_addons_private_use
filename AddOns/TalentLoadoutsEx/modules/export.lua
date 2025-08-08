@@ -1,4 +1,4 @@
-﻿local addonName, Addon = ...;
+﻿local _, Addon = ...;
 
 function Addon:GetExportText()
 	local talentsFrame = Addon.TalentsFrame;

@@ -46,7 +46,7 @@ map.nodes[68508078] = Rare({
     quest = 84917,
     rewards = {
         Achievement({id = 41216, criteria = 71591}),
-        Reputation({id = 2653, gain = 20}),
+        Reputation({id = 2653, gain = 20, quest = 84917}), -- The Cartels of Undermine
         Transmog({item = 235301, slot = L['cloak']}), -- Drape of the Dazzling Feather
         Transmog({item = 235305, slot = L['cloth']}), -- Golfer's Truestrike Gloves
         Transmog({item = 235321, slot = L['mail']}) -- Feather-Spike Girdle
@@ -60,7 +60,7 @@ map.nodes[25243675] = Rare({
     quest = 84918,
     rewards = {
         Achievement({id = 41216, criteria = 71592}),
-        Reputation({id = 2653, gain = 20}),
+        Reputation({id = 2653, gain = 20, quest = 84918}), -- The Cartels of Undermine
         Transmog({item = 235308, slot = L['cloth']}), -- Filthtread Boots
         Transmog({item = 235326, slot = L['leather']}) -- Ratspit's Heirloom Wristwraps
     }
@@ -71,7 +71,7 @@ map.nodes[37684448] = Rare({
     quest = 84919,
     rewards = {
         Achievement({id = 41216, criteria = 71593}),
-        Reputation({id = 2653, gain = 20}),
+        Reputation({id = 2653, gain = 20, quest = 84919}), -- The Cartels of Undermine
         Transmog({item = 235328, slot = L['leather']}), -- Boots of the Silver Tongue
         Transmog({item = 235355, slot = L['staff']}), -- Gossi-blin's Baton
         Spacer(), Section(L['shared_drops']),
@@ -88,7 +88,7 @@ map.nodes[36877815] = Rare({
     sublabel = L['and_slimesby'],
     rewards = {
         Achievement({id = 41216, criteria = {71595, 71594}}),
-        Reputation({id = 2653, gain = 20}),
+        Reputation({id = 2653, gain = 20, quest = 84920}), -- The Cartels of Undermine
         Transmog({item = 235306, slot = L['cloth']}), -- Ooze-fused Mantle
         Transmog({item = 235329, slot = L['leather']}), -- Cowl of Acidic Mire
         Spacer(), Section(L['shared_drops']),
@@ -104,7 +104,7 @@ map.nodes[54015023] = Rare({
     quest = 84921,
     rewards = {
         Achievement({id = 41216, criteria = 71596}),
-        Reputation({id = 2653, gain = 20}),
+        Reputation({id = 2653, gain = 20, quest = 84921}), -- The Cartels of Undermine
         Transmog({item = 235317, slot = L['plate']}), -- Chestplate of the Ultimatum
         Transmog({item = 235353, slot = L['1h_axe']}), -- Debtsmasher Axe
         Spacer(), Section(L['shared_drops']),
@@ -120,7 +120,7 @@ map.nodes[41922563] = Rare({
     quest = 84922,
     rewards = {
         Achievement({id = 41216, criteria = 71597}),
-        Reputation({id = 2653, gain = 20}),
+        Reputation({id = 2653, gain = 20, quest = 84922}), -- The Cartels of Undermine
         Transmog({item = 235356, slot = L['offhand']}), -- Sapper's Spark Reactor
         Spacer(), Section(L['shared_drops']),
         Transmog({item = 235300, slot = L['cloak']}), -- Cloak of Mecha Shards
@@ -135,7 +135,7 @@ map.nodes[46915565] = Rare({
     quest = 84926,
     rewards = {
         Achievement({id = 41216, criteria = 71598}),
-        Reputation({id = 2653, gain = 20}),
+        Reputation({id = 2653, gain = 20, quest = 84926}), -- The Cartels of Undermine
         Transmog({item = 235318, slot = L['plate']}), -- Ironfang Plate Legguards
         Transmog({item = 235324, slot = L['mail']}), -- Scavenger's Lost Bind
         Transmog({item = 235325, slot = L['leather']}) -- Rusthide Gloves
@@ -147,7 +147,7 @@ map.nodes[42227735] = Rare({
     quest = 84927,
     rewards = {
         Achievement({id = 41216, criteria = 71599}),
-        Reputation({id = 2653, gain = 20}),
+        Reputation({id = 2653, gain = 20, quest = 84927}), -- The Cartels of Undermine
         Transmog({item = 235304, slot = L['cloth']}), -- Gutter Rat Mask
         Transmog({item = 235348, slot = L['dagger']}), -- Back Alley Shank
         Spacer(), Section(L['shared_drops']),
@@ -163,7 +163,7 @@ map.nodes[67333353] = Rare({
     quest = 84928,
     rewards = {
         Achievement({id = 41216, criteria = 71600}),
-        Reputation({id = 2653, gain = 20}),
+        Reputation({id = 2653, gain = 20, quest = 84928}), -- The Cartels of Undermine
         Transmog({item = 235319, slot = L['mail']}), -- Tidebomb Chestpiece
         Transmog({item = 235323, slot = L['mail']}) -- Blastshell Bracers
     }
@@ -174,7 +174,7 @@ map.nodes[41354357] = Rare({
     quest = 85004,
     rewards = {
         Achievement({id = 41216, criteria = 71601}),
-        Reputation({id = 2653, gain = 20}),
+        Reputation({id = 2653, gain = 20, quest = 85004}), -- The Cartels of Undermine
         Transmog({item = 235307, slot = L['cloth']}), -- Smoketrail Belt
         Transmog({item = 235314, slot = L['plate']}), -- Knightrider's Steelfists
         Spacer(), Section(L['shared_drops']),
@@ -188,9 +188,10 @@ map.nodes[41354357] = Rare({
 map.nodes[26516830] = Rare({
     id = 230746,
     quest = 84877,
+    vignette = 6593,
     rewards = {
         Achievement({id = 41216, criteria = 71602}),
-        Reputation({id = 2653, gain = 50}),
+        Reputation({id = 2653, gain = 50, quest = 84877}), -- The Cartels of Undermine
         Transmog({item = 235309, slot = L['cloth']}), -- Gloomshroud Robe
         Transmog({item = 235350, slot = L['1h_mace']}), -- Void-forged Cudgel
         Transmog({item = 235352, slot = L['wand']}) -- Netherflare Wand
@@ -200,9 +201,10 @@ map.nodes[26516830] = Rare({
 map.nodes[63354975] = Rare({
     id = 230793,
     quest = 84884,
+    vignette = 6594,
     rewards = {
         Achievement({id = 41216, criteria = 71603}),
-        Reputation({id = 2653, gain = 50}),
+        Reputation({id = 2653, gain = 50, quest = 84884}), -- The Cartels of Undermine
         Transmog({item = 235313, slot = L['plate']}), -- Shockproof Helm
         Transmog({item = 235354, slot = L['polearm']}), -- Scrapblaster Lance
         Spacer(), Section(L['shared_drops']),
@@ -217,9 +219,10 @@ map.nodes[63354975] = Rare({
 map.nodes[52354107] = Rare({
     id = 230800,
     quest = 84895,
+    vignette = 6595,
     rewards = {
         Achievement({id = 41216, criteria = 71604}),
-        Reputation({id = 2653, gain = 20}),
+        Reputation({id = 2653, gain = 50, quest = 84895}), -- The Cartels of Undermine
         Transmog({item = 235349, slot = L['1h_mace']}), -- Shadowfume Club
         Spacer(), Section(L['shared_drops']),
         Transmog({item = 235310, slot = L['cloth']}), -- Flashy Patchwork Trousers
@@ -232,9 +235,10 @@ map.nodes[52354107] = Rare({
 map.nodes[58488643] = Rare({
     id = 230828,
     quest = 84907,
+    vignette = 6596,
     rewards = {
         Achievement({id = 41216, criteria = 71605}),
-        Reputation({id = 2653, gain = 50}),
+        Reputation({id = 2653, gain = 50, quest = 84907}), -- The Cartels of Undermine
         Transmog({item = 235311, slot = L['plate']}), -- Rocket-Powered Shoulderguards
         Transmog({item = 235357, slot = L['shield']}), -- Bulletscar Barricade
         Spacer(), Section(L['shared_drops']),
@@ -250,6 +254,7 @@ map.nodes[60580989] = Rare({
     quest = 84911,
     rewards = {
         Achievement({id = 41216, criteria = 71606}),
+        Reputation({id = 2653, gain = 50, quest = 84911}), -- The Cartels of Undermine
         Transmog({item = 235312, slot = L['plate']}), -- Snooty's Aviator Bindings
         Transmog({item = 235316, slot = L['plate']}), -- Whirly-Giggle Windwhir Wrap
         Spacer(), Section(L['shared_drops']),
@@ -264,12 +269,14 @@ map.nodes[60580989] = Rare({
 map.nodes[40002232] = Rare({
     id = 234480,
     note = format(L['complete_event'], 234819), -- Ragzy Cashgrab
-    quest = 86298,
+    quest = 90488, -- 86298
+    vignette = 6689,
     requires = {
         ns.requirement.Reputation(2653, 6, true) -- The Cartels of Undermine
     },
     rewards = {
         Achievement({id = 41216, criteria = 71608}),
+        Reputation({id = 2653, gain = 100, quest = 90488}), -- The Cartels of Undermine
         Transmog({item = 235835, type = L['cloak']}), -- Braided Wire Wrap
         Transmog({item = 235836, type = L['2h_sword']}), -- Gas-Powered Chainblade
         Spacer(), Section(L['shared_drops']),
@@ -284,12 +291,14 @@ map.nodes[40002232] = Rare({
 map.nodes[32027652] = Rare({
     id = 234499,
     note = format(L['complete_event'], 234751), -- Noggenfogger Recall Technician
-    quest = 86307,
+    quest = 90489, -- 86307
+    vignette = {6710, 6694},
     requires = {
         ns.requirement.Reputation(2653, 6, true) -- The Cartels of Undermine
     },
     rewards = {
         Achievement({id = 41216, criteria = 71609}),
+        Reputation({id = 2653, gain = 100, quest = 90489}), -- The Cartels of Undermine
         Transmog({item = 235823, type = L['leather']}), -- Scrap-Plated Pants
         Transmog({item = 235824, type = L['gun']}), -- Flame Sputterer
         Spacer(), Section(L['shared_drops']),
@@ -304,12 +313,14 @@ map.nodes[32027652] = Rare({
 map.nodes[57207860] = Rare({
     id = 233471,
     note = format(L['complete_event'], 236035), -- Scrapminer Krazzik
-    quest = 86431,
+    quest = 90491, -- 85778
+    vignette = {6667, 6752},
     requires = {
         ns.requirement.Reputation(2653, 6, true) -- The Cartels of Undermine
     },
     rewards = {
         Achievement({id = 41216, criteria = 71610}),
+        Reputation({id = 2653, gain = 100, quest = 90491}), -- The Cartels of Undermine
         Transmog({item = 235829, type = L['mail']}), -- Welded Scrap Hood
         Transmog({item = 235830, type = L['mail']}), -- Unstable Missilecaps
         Transmog({item = 235831, type = L['1h_sword']}) -- Battery-Powered Longshank
@@ -320,12 +331,14 @@ map.nodes[57207860] = Rare({
 map.nodes[64162556] = Rare({
     id = 233472,
     note = format(L['complete_event'], 234834), -- Boatwright Frankle
-    quest = 86428,
+    quest = 90490, -- 85777
+    vignette = {6668, 6753},
     requires = {
         ns.requirement.Reputation(2653, 6, true) -- The Cartels of Undermine
     },
     rewards = {
         Achievement({id = 41216, criteria = 71611}),
+        Reputation({id = 2653, gain = 100, quest = 90490}), -- The Cartels of Undermine
         Transmog({item = 235826, type = L['cloth']}), -- Electric Wristrags
         Transmog({item = 235827, type = L['leather']}), -- Statically Charged Vest
         Transmog({item = 235828, type = L['staff']}) -- Electrocution Warning
@@ -336,13 +349,15 @@ map.nodes[64162556] = Rare({
 map.nodes[40209190] = Rare({
     id = 231310,
     note = format(L['complete_event'], 231329), -- De-Pollution Station X1119
-    quest = 90492,
+    quest = 90492, -- 85010
+    vignette = {6613, 6614},
     requires = {
         ns.requirement.Reputation(2653, 6, true), -- The Cartels of Undermine
         ns.requirement.Item(229823) -- Canister of Darkfuse Solution
     },
     rewards = {
         Achievement({id = 41216, criteria = 71612}),
+        Reputation({id = 2653, gain = 100, quest = 90492}), -- The Cartels of Undermine
         Transmog({item = 235832, type = L['cloak']}), -- Oil-Splattered Cloak
         Transmog({item = 235833, type = L['polearm']}), -- Serrated Slickgrip
         Transmog({item = 235834, type = L['warglaive']}), -- Rocketgrip Turboslicer
@@ -429,7 +444,7 @@ map.nodes[74677988] = Treasure({
     quest = 85424,
     rewards = {
         Achievement({id = 41217, criteria = 71629}),
-        Transmog({item = 234821, slot = L['trinket']}) -- Papa's Prized Putter
+        Item({item = 234821, note = L['trinket']}) -- Papa's Prized Putter
     }
 }) -- Papa's Prized Putter
 
@@ -471,7 +486,10 @@ map.nodes[43665154] = Treasure({
 map.nodes[42308231] = Treasure({
     location = L['in_building'],
     quest = 86487,
-    rewards = {Achievement({id = 41217, criteria = 71635})}
+    rewards = {
+        Achievement({id = 41217, criteria = 71635}),
+        Item({item = 235037, quest = 86630, profession = 202}) -- Crumpled Schematic: Wormhole Generator: Undermine
+    }
 }) -- Crumpled Schematics
 
 -------------------------------------------------------------------------------
@@ -667,8 +685,10 @@ local function GetScrapRewards(criteriaID)
         Transmog({item = 236181, type = L['1h_sword']}), -- Center-Stage Remover
         Transmog({item = 236191, type = L['1h_mace']}), -- Mechanic's Best Motivator
         Spacer(), Section('{npc:234621}'), -- Gallagio Garbage <Luxury Trash>
+        Reputation({id = 2653, gain = 20, quest = 87007}), -- The Cartels of Undermine
         Transmog({item = 235821, type = L['mail']}), -- Pressed-Gold Pantaloons
         Transmog({item = 235822, type = L['cloak']}), -- Coin-Woven Shawl
+        Transmog({item = 235854, type = L['cosmetic']}), -- Gold-Inlaid Jetpack
         Mount({item = 229953, id = 2291}) -- Salvaged Goblin Gazillionaire's Flying Machine
     }
 end
@@ -689,8 +709,8 @@ map.nodes[52498333] = ScrapHeap({criteriaID = 103185}) -- The Heaps
 map.nodes[69577652] = ScrapHeap({criteriaID = 103186}) -- Emerald Hills Golf Course
 map.nodes[67482929] = ScrapHeap({criteriaID = 103187}) -- Blackwater Marina
 
-ns.tooltip.addRewardsToVignetteTooltip(map, ns.groups.SCRAP_REWARDS, 6687)
-ns.tooltip.addRewardsToVignetteTooltip(map, ns.groups.SCRAP_REWARDS, 6757)
+ns.hook.Vignette({group = ns.groups.SCRAP_REWARDS, vignetteID = 6687})
+ns.hook.Vignette({group = ns.groups.SCRAP_REWARDS, vignetteID = 6757})
 
 -------------------------------------------------------------------------------
 --------------------- ACHIEVEMENT: NINE-TENTHS OF THE LAW ---------------------
@@ -833,6 +853,7 @@ local DiscardedCan = Class('DiscardedCan', Collectible, {
 map.nodes[28624761] = DiscardedCan()
 map.nodes[30674249] = DiscardedCan()
 map.nodes[31334208] = DiscardedCan()
+map.nodes[35874872] = DiscardedCan()
 map.nodes[39172768] = DiscardedCan()
 map.nodes[41693493] = DiscardedCan()
 map.nodes[45098122] = DiscardedCan()
@@ -843,6 +864,9 @@ map.nodes[52715868] = DiscardedCan()
 map.nodes[56135245] = DiscardedCan()
 map.nodes[56563837] = DiscardedCan()
 map.nodes[56923313] = DiscardedCan()
+map.nodes[41524238] = DiscardedCan()
+map.nodes[41313863] = DiscardedCan()
+map.nodes[48995316] = DiscardedCan()
 
 -------------------------------------------------------------------------------
 ----------------------------- WORLDSOUL MEMORIES ------------------------------
@@ -895,7 +919,7 @@ map.nodes[38058868] = Collectible({
         ns.requirement.Profession(185, 2873, 35) -- The War Within Cooking 35
     },
     rewards = {
-        ns.reward.Recipe({item = 235800, profession = 185}) -- Recipe:
+        Recipe({item = 235800, profession = 185}) -- Recipe: Authentic Undermine Clam Chowder
     }
 }) -- Authentic Undermine Clam Chowder
 
@@ -929,15 +953,3 @@ zul.nodes[17576104] = HunterPetNode({
         Path({22845943, 21715939, 21526072, 20445985, 19156043, 17576104})
     }
 }) -- George <The Big Pinch>
-
--------------- CRUMPLED SCHEMATIC: WORMHOLE GENERATOR: UNDERMINE --------------
-
-map.nodes[42508220] = Collectible({
-    label = '{item:235037}',
-    icon = 'peg_bl',
-    scale = 2.0,
-    requires = ns.requirement.Profession(202, 2875), -- Khaz Algar Engineering
-    location = L['crumpled_schematic_location'],
-    note = L['crumpled_schematic_note'],
-    rewards = {Recipe({item = 235037, profession = 202})}
-}) -- Crumpled Schematic

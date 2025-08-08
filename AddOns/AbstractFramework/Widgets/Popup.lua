@@ -1,5 +1,6 @@
 ---@class AbstractFramework
 local AF = _G.AbstractFramework
+local L = AF.L
 
 local parent, mover
 local popups = {}
@@ -10,9 +11,9 @@ local DEFAULT_OFFSET = 10
 local DEFAULT_NOTIFICATION_TIMEOUT = 10
 local DEFAULT_PROGRESS_TIMEOUT = 5
 
-local settings = {
-    ["position"] = "BOTTOMLEFT,0,420",
-    ["orientation"] = "bottom_to_top"
+local DEFAULT_SETTINGS = {
+    position = {"BOTTOMLEFT", 1, 420},
+    orientation = "bottom_to_top"
 }
 
 local notificationPool, confirmPool, progressPool
@@ -28,7 +29,7 @@ local function CreateParent()
     AF.SetSize(parent, DEFAULT_WIDTH, 60)
     AF.SetPoint(parent, "BOTTOMLEFT", 0, 420)
     parent:SetFrameStrata("DIALOG")
-    parent:SetFrameLevel(666)
+    parent:SetFrameLevel(1000)
     parent:SetClampedToScreen(true)
 
     function parent:UpdatePixels()
@@ -36,17 +37,6 @@ local function CreateParent()
     end
 
     AF.AddToPixelUpdater(parent)
-end
-
----------------------------------------------------------------------
--- mover
----------------------------------------------------------------------
--- TODO:
-function AF.CreatePopupMover(group, text)
-    if not parent then CreateParent() end
-    AF.CreateMover(parent, group, text, function(p, x, y)
-        settings["position"] = p..","..x..","..y
-    end)
 end
 
 ---------------------------------------------------------------------
@@ -65,7 +55,7 @@ local function ShowPopups(stopMoving)
 
         -- set point
         local point, relativePoint, offset
-        if settings["orientation"] == "bottom_to_top" then
+        if parent.orientation == "bottom_to_top" then
             point, relativePoint = "BOTTOMLEFT", "TOPLEFT"
             offset = DEFAULT_OFFSET
         else
@@ -77,33 +67,9 @@ local function ShowPopups(stopMoving)
         if i == 1 then
             AF.SetPoint(popups[i], point)
         else
-            AF.SetPoint(popups[i], point, popups[i-1], relativePoint, 0, offset)
+            AF.SetPoint(popups[i], point, popups[i - 1], relativePoint, 0, offset)
         end
     end
-end
-
----------------------------------------------------------------------
--- orientation
----------------------------------------------------------------------
-function AF.SetPopupOrientation(orientation)
-    settings["orientation"] = strlower(orientation)
-    ShowPopups()
-end
-
----------------------------------------------------------------------
--- position
----------------------------------------------------------------------
-function AF.SetPopupSettingsTable(t)
-    assert(type(t)=="table")
-
-    -- validate
-    if not t["position"] then t["position"] = settings["position"] end
-    if not t["orientation"] then t["orientation"] = settings["orientation"] end
-
-    settings = t -- save reference
-
-    -- load position
-    AF.LoadPosition(parent, t["position"])
 end
 
 ---------------------------------------------------------------------
@@ -146,9 +112,42 @@ local function WipeHidingQueue()
     wipe(hidingQueue)
 end
 
+---------------------------------------------------------------------
+-- OnShow, OnHide
+---------------------------------------------------------------------
+local function OnPopupShow(p)
+    -- play sound
+    if p.sound then
+        PlaySoundFile(p.sound, "Master")
+    else
+        AF.PlaySound("pop")
+    end
+
+    -- icon
+    if p.icon then
+        p.iconTex:SetTexture(p.icon)
+
+        if type(p.icon) == "number" then
+            AF.ApplyDefaultTexCoord(p.iconTex) -- for blizzard item/spell icons
+        else
+            AF.ClearTexCoord(p.iconTex)
+        end
+
+        if strmatch(p.icon, "^!") then
+            AF.Show(p.iconTex)
+        else
+            AF.Show(p.iconTex, p.iconBGTex)
+        end
+        AF.SetPoint(p.text, "LEFT", p._textLeftX + 7 + 32, p._textLeftY)
+    else
+        AF.Hide(p.iconTex, p.iconBGTex)
+        AF.SetPoint(p.text, "LEFT", p._textLeftX, p._textLeftY)
+    end
+end
+
 local function OnPopupHide(p)
     -- update index
-    for i = p.index+1, #popups do
+    for i = p.index + 1, #popups do
         popups[i].index = popups[i].index - 1
     end
     tremove(popups, p.index)
@@ -171,7 +170,7 @@ local function OnPopupHide(p)
             else
                 popups[i]:SetOnMoveFinished()
             end
-            popups[i]:Move(Round(p:GetHeight())+DEFAULT_OFFSET)
+            popups[i]:Move(Round(p:GetHeight()) + DEFAULT_OFFSET)
         end
 
         if not hooked then
@@ -180,6 +179,7 @@ local function OnPopupHide(p)
     end
 
     p.index = nil
+    p.sound = nil
 end
 
 ---------------------------------------------------------------------
@@ -195,7 +195,7 @@ local function CreateAnimation(p)
     function p:Move(offset)
         if not p:IsShown() then p:FadeIn() end
         if not move_ag:IsPlaying() then
-            if settings["orientation"] == "bottom_to_top" then
+            if parent.orientation == "bottom_to_top" then
                 move_a:SetOffset(0, -offset)
             else
                 move_a:SetOffset(0, offset)
@@ -216,22 +216,45 @@ local function CreateAnimation(p)
 end
 
 ---------------------------------------------------------------------
+-- icon
+---------------------------------------------------------------------
+local function CreateIcon(p)
+    local iconTex = AF.CreateTexture(p, nil, nil, "OVERLAY")
+    p.iconTex = iconTex
+    iconTex:Hide()
+    AF.SetSize(iconTex, 32, 32)
+    AF.SetPoint(iconTex, "LEFT", 7, p._textLeftY)
+
+    local iconBGTex = AF.CreateTexture(p, nil, "black", "BORDER")
+    p.iconBGTex = iconBGTex
+    iconBGTex:Hide()
+    AF.SetOnePixelOutside(iconBGTex, iconTex)
+end
+
+---------------------------------------------------------------------
 -- notificationPool
 ---------------------------------------------------------------------
 local npCreationFn = function()
     local p = AF.CreateBorderedFrame(parent)
     p:Hide()
 
+    AF.ShowNormalGlow(p, "shadow", 2)
+
     CreateAnimation(p)
     p:EnableMouse(true)
 
-    -- text ------------------------------------------------------------------ --
+    -- text ---------------------------------------------------------
     local text = AF.CreateFontString(p)
     p.text = text
+    p._textLeftX = 7
+    p._textLeftY = 0
     AF.SetPoint(p.text, "LEFT", 7, 0)
     AF.SetPoint(p.text, "RIGHT", -7, 0)
 
-    -- timerBar -------------------------------------------------------------- --
+    -- icon ---------------------------------------------------------
+    CreateIcon(p)
+
+    -- timerBar -----------------------------------------------------
     local timerBar = CreateFrame("StatusBar", nil, p)
     p.timerBar = timerBar
     timerBar:SetStatusBarTexture(AF.GetPlainTexture())
@@ -240,34 +263,36 @@ local npCreationFn = function()
     AF.SetPoint(timerBar, "BOTTOMRIGHT", -1, 1)
     AF.SetHeight(timerBar, 1)
 
-    -- OnMouseUp ------------------------------------------------------------- --
-    p:SetScript("OnMouseUp", function(self, button)
-        if button ~= "RightButton" then return end
-        if p.timer then
-            p.timer:Cancel()
-            p.timer = nil
+    -- OnMouseUp ----------------------------------------------------
+    p:SetOnMouseUp(function(_, button)
+        if button == "LeftButton" then
+            if p.onClick then p:onClick(button, unpack(p.onClickArgs)) end
+        elseif button == "RightButton" then
+            if p.timer then
+                p.timer:Cancel()
+                p.timer = nil
+            end
+            AddToHidingQueue(p)
         end
-        AddToHidingQueue(p)
     end)
 
-    -- OnHide --------------------------------------------------------------- --
-    p:SetScript("OnHide", function()
+    -- OnHide -------------------------------------------------------
+    p:SetOnHide(function()
         OnPopupHide(p)
         -- release
         notificationPool:Release(p)
     end)
 
-    -- SetTimeout ------------------------------------------------------------ --
+    -- OnUpdate -----------------------------------------------------
+    p:SetOnUpdate(function()
+        -- update height
+        p:SetHeight(Round(p.text:GetStringHeight()) + 40)
+    end)
+
+    -- SetTimeout ---------------------------------------------------
     function p:SetTimeout(timeout)
-        p:SetScript("OnShow", function()
-            -- update height
-            p:SetScript("OnUpdate", function()
-                p.text:SetWidth(Round(p:GetWidth()-14))
-                p:SetHeight(Round(p.text:GetHeight())+40)
-                p:SetScript("OnUpdate", nil)
-            end)
-            -- play sound
-            PlaySoundFile(AF.GetSound("pop"))
+        p:SetOnShow(function()
+            OnPopupShow(p)
             -- timer bar
             p.timer = C_Timer.NewTimer(timeout, function()
                 p.timer = nil
@@ -302,53 +327,86 @@ local cpCreationFn = function()
     local p = AF.CreateBorderedFrame(parent)
     p:Hide()
 
+    AF.ShowNormalGlow(p, "shadow", 2)
+
     CreateAnimation(p)
     p:EnableMouse(true)
 
-    -- text ------------------------------------------------------------------ --
+    -- text ---------------------------------------------------------
     local text = AF.CreateFontString(p)
     p.text = text
+    p._textLeftX = 7
+    p._textLeftY = 5
     AF.SetPoint(p.text, "LEFT", 7, 5)
     AF.SetPoint(p.text, "RIGHT", -7, 5)
 
-    -- button ---------------------------------------------------------------- --
-    local no = AF.CreateButton(p, _G.NO, "red", 40, 15, nil, nil, nil, "AF_FONT_SMALL")
+    -- icon ---------------------------------------------------------
+    CreateIcon(p)
+
+    -- button -------------------------------------------------------
+    -- local no = AF.CreateButton(p, nil, "red", 30, 15)
+    local no = AF.CreateIconButton(p, AF.GetIcon("Fluent_Color_No"), 16, 16, 1, "gray", "white")
     p.no = no
     AF.SetPoint(no, "BOTTOMRIGHT")
-    no:SetScript("OnClick", function()
+    -- no:SetTexture(AF.GetIcon("Close"), {13, 13})
+    no:SetOnClick(function()
         if p.onCancel then p.onCancel() end
-        AF.Disable(p.yes, p.no)
+        -- AF.Disable(p.yes, p.no)
         AddToHidingQueue(p)
     end)
 
-    local yes = AF.CreateButton(p, _G.YES, "green", 40, 15, nil, nil, nil, "AF_FONT_SMALL")
+    -- local yes = AF.CreateButton(p, nil, "green", 30, 15)
+    local yes = AF.CreateIconButton(p, AF.GetIcon("Fluent_Color_Yes"), 16, 16, 1, "gray", "white")
     p.yes = yes
-    AF.SetPoint(yes, "BOTTOMRIGHT", no, "BOTTOMLEFT", 1, 0)
-    yes:SetScript("OnClick", function()
+    AF.SetPoint(yes, "BOTTOMRIGHT", no, "BOTTOMLEFT", -2, 0)
+    -- yes:SetTexture(AF.GetIcon("Tick"), {16, 16})
+    yes:SetOnClick(function()
         if p.onConfirm then p.onConfirm() end
-        AF.Disable(p.yes, p.no)
+        -- AF.Disable(p.yes, p.no)
         AddToHidingQueue(p)
     end)
 
-    -- OnShow ---------------------------------------------------------------- --
-    p:SetScript("OnShow", function()
-        AF.Enable(yes, no)
-        -- update height
-        p:SetScript("OnUpdate", function()
-            p.text:SetWidth(Round(p:GetWidth()-14))
-            p:SetHeight(Round(p.text:GetHeight())+50)
-            p:SetScript("OnUpdate", nil)
-        end)
-        -- play sound
-        PlaySoundFile(AF.GetSound("pop"))
+    local ok = AF.CreateIconButton(p, AF.GetIcon("Fluent_Color_Yes"), 16, 16, 1, "gray", "white")
+    p.ok = ok
+    AF.SetPoint(ok, "BOTTOMRIGHT", -1, 0)
+    ok:SetOnClick(function()
+        if p.onConfirm then p.onConfirm() end
+        AddToHidingQueue(p)
     end)
 
-    -- OnHide --------------------------------------------------------------- --
-    p:SetScript("OnHide", function()
+    -- OnShow -------------------------------------------------------
+    p:SetOnShow(function()
+        OnPopupShow(p)
+        -- AF.Enable(yes, no)
+        if p.onCancel == false then
+            p.yes:Hide()
+            p.no:Hide()
+            p.ok:Show()
+        else
+            p.yes:Show()
+            p.no:Show()
+            p.ok:Hide()
+        end
+    end)
+
+    -- OnHide -------------------------------------------------------
+    p:SetOnHide(function()
         OnPopupHide(p)
         -- release
         confirmPool:Release(p)
     end)
+
+    -- OnUpdate -----------------------------------------------------
+    p:SetOnUpdate(function()
+        -- update height
+        p:SetHeight(Round(p.text:GetStringHeight()) + 45)
+    end)
+
+    -- OnClick ------------------------------------------------------
+    p:SetOnMouseUp(function(_, button)
+        if button == "LeftButton" and p.onClick then p:onClick(button, unpack(p.onClickArgs)) end
+    end)
+
 
     return p
 end
@@ -361,31 +419,34 @@ local ppCreationFn = function()
     local p = AF.CreateBorderedFrame(parent)
     p:Hide()
 
+    AF.ShowNormalGlow(p, "shadow", 2)
+
     CreateAnimation(p)
     p:EnableMouse(true)
 
-    -- text ------------------------------------------------------------------ --
+    -- text ---------------------------------------------------------
     local text = AF.CreateFontString(p)
     p.text = text
+    p._textLeftX = 7
+    p._textLeftY = 0
     AF.SetPoint(p.text, "LEFT", 7, 0)
     AF.SetPoint(p.text, "RIGHT", -7, 0)
 
-    -- progressBar ----------------------------------------------------------- --
+    -- icon ---------------------------------------------------------
+    CreateIcon(p)
+
+    -- progressBar --------------------------------------------------
     local bar = AF.CreateBlizzardStatusBar(p, nil, nil, 5, 5, "accent", nil, "percentage")
     p.bar = bar
     AF.SetPoint(bar, "BOTTOMLEFT")
     AF.SetPoint(bar, "BOTTOMRIGHT")
 
     AF.ClearPoints(bar.progressText)
-    AF.SetPoint(bar.progressText, "BOTTOMRIGHT", -1, 1)
+    AF.SetPoint(bar.progressText, "BOTTOMRIGHT", -2, 2)
     bar.progressText:SetFontObject("AF_FONT_SMALL")
 
     p.callback = function(value)
-        if p.isSmoothedBar then
             p.bar:SetSmoothedValue(value)
-        else
-            p.bar:SetBarValue(value)
-        end
         if value >= bar.maxValue then
             if p:IsShown() then
                 C_Timer.After(DEFAULT_PROGRESS_TIMEOUT, function()
@@ -395,16 +456,9 @@ local ppCreationFn = function()
         end
     end
 
-    -- OnShow ---------------------------------------------------------------- --
-    p:SetScript("OnShow", function()
-        -- update height
-        p:SetScript("OnUpdate", function()
-            p.text:SetWidth(Round(p:GetWidth()-14))
-            p:SetHeight(Round(p.text:GetHeight())+40)
-            p:SetScript("OnUpdate", nil)
-        end)
-        -- play sound
-        PlaySoundFile(AF.GetSound("pop"))
+    -- OnShow -------------------------------------------------------
+    p:SetOnShow(function()
+        OnPopupShow(p)
         -- check if is done
         if bar:GetValue() >= bar.maxValue then
             C_Timer.After(DEFAULT_PROGRESS_TIMEOUT, function()
@@ -413,11 +467,22 @@ local ppCreationFn = function()
         end
     end)
 
-    -- OnHide --------------------------------------------------------------- --
-    p:SetScript("OnHide", function()
+    -- OnHide -------------------------------------------------------
+    p:SetOnHide(function()
         OnPopupHide(p)
         -- release
         progressPool:Release(p)
+    end)
+
+    -- OnUpdate -----------------------------------------------------
+    p:SetOnUpdate(function()
+        -- update height
+        p:SetHeight(Round(p.text:GetStringHeight()) + 40)
+    end)
+
+    -- OnClick ------------------------------------------------------
+    p:SetOnMouseUp(function(_, button)
+        if button == "LeftButton" and p.onClick then p:onClick(button, unpack(p.onClickArgs)) end
     end)
 
     return p
@@ -427,13 +492,26 @@ progressPool = CreateObjectPool(ppCreationFn)
 ---------------------------------------------------------------------
 -- notification popup
 ---------------------------------------------------------------------
-function AF.ShowNotificationPopup(text, timeout, width, justify)
+---@param text string
+---@param timeout? number default 10 seconds
+---@param icon? string|number if starts with "!", will show a transparent icon bg instead of black
+---@param sound? string
+---@param width? number default 220
+---@param justify? string default "CENTER"
+---@param onClick? fun(popup:AF_BorderedFrame, button:string, ...:any)
+---@param ... any arguments to pass to the onClick function
+function AF.ShowNotificationPopup(text, timeout, icon, sound, width, justify, onClick, ...)
     local p = notificationPool:Acquire()
     p.text:SetText(text)
     AF.SetWidth(p, width or DEFAULT_WIDTH)
     p:SetTimeout(timeout or DEFAULT_NOTIFICATION_TIMEOUT)
-    p.text:SetJustifyH("CENTER" or justify)
+    p.text:SetJustifyH(justify or "CENTER")
     -- AF.ApplyDefaultBackdropWithColors(p, color, borderColor)
+
+    p.icon = icon
+    p.sound = sound
+    p.onClick = onClick
+    p.onClickArgs = {...}
 
     tinsert(popups, p)
     p.index = #popups
@@ -443,13 +521,27 @@ end
 ---------------------------------------------------------------------
 -- confirm popup
 ---------------------------------------------------------------------
-function AF.ShowConfirmPopup(text, onConfirm, onCancel, width, justify)
+---@param text string
+---@param onConfirm? function
+---@param onCancel? function|false if false, the popup will show single ok button instead of yes/no
+---@param icon? string|number if starts with "!", will show a transparent icon bg instead of black
+---@param sound? string
+---@param width? number default 220
+---@param justify? string default "CENTER"
+---@param onClick? fun(popup:AF_BorderedFrame, button:string, ...:any)
+---@param ... any arguments to pass to the onClick function
+function AF.ShowConfirmPopup(text, onConfirm, onCancel, icon, sound, width, justify, onClick, ...)
     local p = confirmPool:Acquire()
     p.text:SetText(text)
+    AF.SetWidth(p, width or DEFAULT_WIDTH)
+    p.text:SetJustifyH(justify or "CENTER")
+
     p.onConfirm = onConfirm
     p.onCancel = onCancel
-    AF.SetWidth(p, width or DEFAULT_WIDTH)
-    p.text:SetJustifyH("CENTER" or justify)
+    p.icon = icon
+    p.sound = sound
+    p.onClick = onClick
+    p.onClickArgs = {...}
 
     tinsert(popups, p)
     p.index = #popups
@@ -459,18 +551,51 @@ end
 ---------------------------------------------------------------------
 -- progress popup
 ---------------------------------------------------------------------
-function AF.ShowProgressPopup(text, maxValue, isSmoothedBar, width, justify)
+---@param text string
+---@param maxValue number
+---@param icon? string|number if starts with "!", will show a transparent icon bg instead of black
+---@param sound? string
+---@param width? number default 220
+---@param justify? string default "CENTER"
+---@param onClick? fun(popup:AF_BorderedFrame, button:string, ...:any)
+---@param ... any arguments to pass to the onClick function
+function AF.ShowProgressPopup(text, maxValue, icon, sound, width, justify, onClick, ...)
     local p = progressPool:Acquire()
     AF.SetWidth(p, width or DEFAULT_WIDTH)
     p.text:SetText(text)
-    p.text:SetJustifyH("CENTER" or justify)
-    p.bar:SetMinMaxValues(0, maxValue)
+    p.text:SetJustifyH(justify or "CENTER")
+    p.bar:SetMinMaxSmoothedValue(0, maxValue)
     p.bar:SetBarValue(0)
-    p.isSmoothedBar = isSmoothedBar
+
+    p.icon = icon
+    p.sound = sound
+    p.onClick = onClick
+    p.onClickArgs = {...}
 
     tinsert(popups, p)
     p.index = #popups
     ShowPopups(true)
 
     return p.callback
+end
+
+---------------------------------------------------------------------
+-- setup
+---------------------------------------------------------------------
+---@private
+---@param config table {position = {anchor, x, y}, orientation = "bottom_to_top"|"top_to_bottom"}
+function AF.SetupPopups(config)
+    if not parent then
+        CreateParent()
+        AF.CreateMover(parent, L["Popups"], L["Popups"], AFConfig.popups.position)
+    end
+
+    assert(type(config) == "table", "AF.SetupPopups: config must be a table")
+    AFConfig.popups.position = config.position or DEFAULT_SETTINGS.position
+    AFConfig.popups.orientation = config.orientation or DEFAULT_SETTINGS.orientation
+
+    AF.LoadPosition(parent, AFConfig.popups.position)
+    parent.orientation = AFConfig.popups.orientation
+
+    ShowPopups(true)
 end

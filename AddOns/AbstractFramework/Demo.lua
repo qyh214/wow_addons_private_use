@@ -10,9 +10,12 @@ function AF.ShowDemo()
     -----------------------------------------------------------------------------
     --                              headered frame                             --
     -----------------------------------------------------------------------------
-    local demo = AF.CreateHeaderedFrame(AF.UIParent, "AF_DEMO", AF.GetIconString("AF", 16) .. AF.GetGradientText("AbstractFramework", "accent", "accent_alt") .. AF.WrapTextInColor(" Demo", "white"), 710, 500)
-    AF.SetPoint(demo, "LEFT", 100, 0)
-    demo:SetFrameLevel(100)
+    local demo = AF.CreateHeaderedFrame(AF.UIParent, "AF_DEMO",
+        AF.GetIconString("AF", 16) .. AF.GetGradientText("AbstractFramework", "blazing_tangerine", "vivid_raspberry")
+        .. " " .. AF.WrapTextInColor(AF.GetAddOnVersion(AF.name) .. " Demo", "white"), 710, 500)
+    -- AF.SetPoint(demo, "LEFT", 100, 0)
+    demo:SetPoint("CENTER")
+    demo:SetFrameLevel(500)
     demo:SetTitleJustify("LEFT")
 
     local moverTestFrames = {}
@@ -52,6 +55,16 @@ function AF.ShowDemo()
     local fps = AF.CreateFPSPane(demo.header, "RIGHT")
     AF.SetPoint(fps, "RIGHT", ns, "LEFT", -230, 0)
 
+    -----------------------------------------------------------------------------
+    --                                 github                                  --
+    -----------------------------------------------------------------------------
+    local github = AF.CreateEditBox(demo, nil, 350, 20)
+    AF.SetPoint(github, "TOPRIGHT", demo, "BOTTOMRIGHT")
+    github:SetBackdropBorderColor(AF.GetColorRGB("accent"))
+    github:SetText("https://github.com/enderneko/AbstractFramework")
+    github:SetNotUserChangable(true)
+    github:SetCursorPosition(0)
+
 
     -----------------------------------------------------------------------------
     --                         apply combat protection                         --
@@ -89,7 +102,7 @@ function AF.ShowDemo()
     AF.SetPoint(b6, "TOPLEFT", b5, "TOPRIGHT", 10, 0)
     b6:SetEnabled(false)
 
-    local iconBtn = AF.CreateIconButton(demo, AF.GetIcon("Info1"), 20, 20, 2, "gray")
+    local iconBtn = AF.CreateIconButton(demo, AF.GetIcon("Info_Square"), 20, 20, 2, "gray")
     AF.SetPoint(iconBtn, "TOPLEFT", b6, "TOPRIGHT", 10, 0)
 
 
@@ -118,9 +131,7 @@ function AF.ShowDemo()
     eb1:SetOnTextChanged(function(text)
         AF.Print("TextChanged:", text)
     end)
-    eb1:SetText("https://github.com/enderneko/AbstractFramework")
-    eb1:SetNotUserChangable(true)
-    eb1:SetCursorPosition(0)
+    eb1:SetText("Hello!")
 
     local eb2 = AF.CreateEditBox(demo, "Number Only", 200, 20, "number")
     AF.SetPoint(eb2, "TOPLEFT", eb1, "BOTTOMLEFT", 0, -10)
@@ -621,7 +632,7 @@ function AF.ShowDemo()
     b9:SetScript("OnClick", function()
         local text = AF.WrapTextInColor("NOTICE", "orange") .. "\n" .. "One day, when what has happened behind the scene could be told, developers and gamers will have a whole new level understanding of how much damage a jerk can make."
         local dialog = AF.ShowNotificationDialog(demo, text, 200, true, 3)
-        AF.ShowNormalGlow(dialog, nil, nil, true)
+        AF.ShowNormalGlow(dialog, "accent", 3)
         AF.SetNotificationDialogPoint("TOPLEFT", 255, -120)
     end)
 
@@ -807,8 +818,6 @@ function AF.ShowDemo()
     -----------------------------------------------------------------------------
     --                                  popups                                 --
     -----------------------------------------------------------------------------
-    AF.CreatePopupMover("general", "Popups")
-
     local bf5 = AF.CreateBorderedFrame(demo, nil, 370, 20)
     AF.SetPoint(bf5, "BOTTOMLEFT", b10, "BOTTOMRIGHT", 10, 0)
 
@@ -819,7 +828,7 @@ function AF.ShowDemo()
     AF.SetPoint(b14, "BOTTOMRIGHT")
     AF.SetTooltips(b14, "ANCHOR_TOPLEFT", 0, 2, "Progress Popup", "With progress bar", "Hide in 5 sec after completion")
     b14:SetScript("OnClick", function()
-        local callback = AF.ShowProgressPopup("In Progress...", 100, true)
+        local callback = AF.ShowProgressPopup("In Progress...", 100)
         local v = 0
         C_Timer.NewTicker(2, function()
             v = v + 25
@@ -853,7 +862,7 @@ function AF.ShowDemo()
     -----------------------------------------------------------------------------
     --                                 calendar                                --
     -----------------------------------------------------------------------------
-    local dw = AF.CreateCalendarButton(demo, time(), 150, "TOPLEFT")
+    local dw = AF.CreateCalendarButton(demo, 150, "TOPLEFT")
     AF.SetPoint(dw, "TOPLEFT", b9, "BOTTOMLEFT", 0, -7)
     local niceDays = {}
     local colors = {"firebrick", "hotpink", "chartreuse", "vividblue"}
@@ -864,7 +873,7 @@ function AF.ShowDemo()
             niceDays[str] = {color = colors[random(1, 4)], tooltips = {"Nice Day", str}}
         end
     end
-    dw:SetMarksInfo(niceDays)
+    dw:SetMarks(niceDays)
     dw:SetOnDateChanged(function(dt)
         AF.Print(dt.year, dt.month, dt.day, dt.timestamp)
     end)
@@ -904,21 +913,21 @@ function AF.ShowDemo()
             end,
         },
         {
-            ["text"] = "General",
+            ["text"] = "Popups",
             ["onClick"] = function()
-                AF.ShowMovers("general")
+                AF.ShowMovers("Popups")
             end,
         },
         {
-            ["text"] = "Group 1",
+            ["text"] = "Test 1",
             ["onClick"] = function()
-                AF.ShowMovers("group1")
+                AF.ShowMovers("Test 1")
             end,
         },
         {
-            ["text"] = "Group 2",
+            ["text"] = "Test 2",
             ["onClick"] = function()
-                AF.ShowMovers("group2")
+                AF.ShowMovers("Test 2")
             end,
         },
     })
@@ -932,17 +941,17 @@ function AF.ShowDemo()
     end
 
     -- group1
-    CreateMoverTestFrame(1, "test1", "TOPLEFT")
-    CreateMoverTestFrame(2, "test1", "LEFT")
-    CreateMoverTestFrame(3, "test1", "BOTTOMLEFT")
-    CreateMoverTestFrame(4, "test1", "TOP")
-    CreateMoverTestFrame(5, "test1", "CENTER")
+    CreateMoverTestFrame(1, "Test 1", "TOPLEFT")
+    CreateMoverTestFrame(2, "Test 1", "LEFT")
+    CreateMoverTestFrame(3, "Test 1", "BOTTOMLEFT")
+    CreateMoverTestFrame(4, "Test 1", "TOP")
+    CreateMoverTestFrame(5, "Test 1", "CENTER")
 
     -- group2
-    CreateMoverTestFrame(6, "test2", "TOPRIGHT")
-    CreateMoverTestFrame(7, "test2", "RIGHT")
-    CreateMoverTestFrame(8, "test2", "BOTTOM")
-    CreateMoverTestFrame(9, "test2", "BOTTOMRIGHT")
+    CreateMoverTestFrame(6, "Test 2", "TOPRIGHT")
+    CreateMoverTestFrame(7, "Test 2", "RIGHT")
+    CreateMoverTestFrame(8, "Test 2", "BOTTOM")
+    CreateMoverTestFrame(9, "Test 2", "BOTTOMRIGHT")
 
 
     -----------------------------------------------------------------------------

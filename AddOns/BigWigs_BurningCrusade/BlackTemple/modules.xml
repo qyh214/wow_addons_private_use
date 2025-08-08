@@ -12,7 +12,7 @@
 <Script file="Illidan.lua"/>
 
 <Include file="Locales\locales.xml"/>
-<Include file="Options\options.xml"/>
+<Script file="!Options.lua"/>
 
 </Ui>
 

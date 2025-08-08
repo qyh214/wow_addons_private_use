@@ -1,4 +1,4 @@
-﻿local addonName, Addon = ...;
+﻿local _, Addon = ...;
 
 local StaticPopupDialogs = _G["StaticPopupDialogs"];
 

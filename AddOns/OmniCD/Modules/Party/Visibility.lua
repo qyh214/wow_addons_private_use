@@ -39,7 +39,7 @@ local INSTANCETYPE_EVENTS = {
 	}
 }
 
-if E.preCata then
+if E.preMoP then
 	if E.preBCC then
 		INSTANCETYPE_EVENTS.raid = nil
 	end
@@ -196,7 +196,7 @@ function P:PLAYER_ENTERING_WORLD(isInitialLogin, isReloadingUi, isRefresh)
 	self.zone = instanceType
 	self.isInArena = instanceType == "arena"
 	self.isInPvPInstance = self.isInArena or instanceType == "pvp"
-	self.isPvP = E.preCata or self.isInPvPInstance or (instanceType == "none" and C_PvP.IsWarModeDesired())
+	self.isPvP = E.preMoP or (self.isInPvPInstance or instanceType == "none" and C_PvP.IsWarModeDesired())
 	self.effectivePixelMult = nil
 
 	self:RegisterZoneEvents()
@@ -223,7 +223,16 @@ function P:PLAYER_ENTERING_WORLD(isInitialLogin, isReloadingUi, isRefresh)
 
 
 
-	self:GROUP_ROSTER_UPDATE(true, isRefresh)
+
+	if isRefresh then
+		self:UpdateDelayedZoneData()
+		self:GROUP_ROSTER_UPDATE(true)
+	else
+		C_Timer.After(1, function()
+			self:UpdateDelayedZoneData()
+			self:GROUP_ROSTER_UPDATE(true)
+		end)
+	end
 end
 
 P.ZONE_CHANGED_NEW_AREA = P.PLAYER_ENTERING_WORLD
@@ -375,14 +384,9 @@ function P:UpdateRosterInfo(force, clearSession)
 	end
 end
 
-function P:GROUP_ROSTER_UPDATE(isPEW, isRefresh)
-	if isRefresh or GetNumGroupMembers() == 0 then
+function P:GROUP_ROSTER_UPDATE(isPEWOrRefresh)
+	if isPEWOrRefresh or GetNumGroupMembers() == 0 then
 		self:UpdateRosterInfo(true)
-	elseif isPEW then
-		C_Timer.After(1, function()
-			self:UpdateDelayedZoneData()
-			self:UpdateRosterInfo(true, true)
-		end)
 	else
 		C_Timer.After(0, function()
 			self:UpdateRosterInfo()

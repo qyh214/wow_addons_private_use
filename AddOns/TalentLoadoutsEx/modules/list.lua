@@ -120,7 +120,7 @@ local function InitListButton(button, elementData)
 		else
 			-- Config
 			local importStream = ExportUtil.MakeImportDataStream(button.data.text);
-			local errorMessage = Addon:GetValidationError(treeID, importStream);
+			local errorMessage = Addon:GetValidationError(treeID, importStream, true);
 
 			if button.data.isInGroup then
 				button.Icon:AdjustPointsOffset(10, 0);
@@ -155,20 +155,24 @@ end
 local function InitDataProvider()
 	local dataProvider = CreateDataProvider();
 
-	Addon.loadedData = nil;
+	if Addon.loadedDataList then
+		table.wipe(Addon.loadedDataList);
+	else
+		Addon.loadedDataList = {};
+	end
 
 	local isVisible = true;
 	local isInGroup = false;
 	for index, data in ipairs(Addon:MergeTables(Addon:GetSpecTable(), Addon:GetPresetData())) do
 		if data.text then
 			-- Config
+			local isDataLoaded = Addon:IsDataLoaded(data);
+			if isDataLoaded then
+				table.insert(Addon.loadedDataList, data);
+			end
+
 			if isVisible then
 				data.isInGroup = isInGroup;
-				local isDataLoaded = Addon:IsDataLoaded(data);
-				if isDataLoaded and not Addon.loadedData then
-					Addon.loadedData = data;
-				end
-
 				dataProvider:Insert({index = index, data = data, isDataLoaded = isDataLoaded});
 			elseif Addon.selectedIndex and Addon.selectedIndex == index then
 				Addon.selectedIndex = nil;
@@ -187,6 +191,7 @@ local function InitDataProvider()
 	return dataProvider;
 end
 
+local specIndex = nil;
 local function UpdateDataProvider()
 	local scrollBox = Addon.frame.ScrollBox;
 
@@ -194,24 +199,25 @@ local function UpdateDataProvider()
 
 	local oldDataProvider = scrollBox:GetDataProvider();
 	if not oldDataProvider then
+		specIndex = GetSpecialization();
 		scrollBox:SetDataProvider(newDataProvider);
 		return;
 	end
 
-	local scrollPercentage = 0;
-	local indexDiff = scrollBox:GetDataIndexEnd() - scrollBox:GetDataIndexBegin();
-	scrollPercentage = scrollBox:GetScrollPercentage() * (#oldDataProvider.collection - indexDiff) / (#newDataProvider.collection - indexDiff);
+	local scrollPercentage = scrollBox:GetScrollPercentage();
+	local scrollTargetOffset = select(5, scrollBox:GetScrollTarget():GetPoint(1));
 
-	local scrollTarget = scrollBox:GetScrollTarget();
-	local scrollTargetOffset = select(5, scrollTarget:GetPoint(1));
+	local viewSize = scrollBox:GetDataIndexEnd() - scrollBox:GetDataIndexBegin() + 1;
+	local newScrollSize = #newDataProvider.collection - viewSize;
+	local oldScrollSize = #oldDataProvider.collection - viewSize;
 
 	scrollBox:SetDataProvider(newDataProvider);
 
-	if scrollPercentage > 0 then
-		scrollBox:SetScrollPercentage(scrollPercentage);
-	end
-
-	if scrollTargetOffset > 0 then
+	local newSpecIndex = GetSpecialization();
+	if specIndex ~= newSpecIndex then
+		specIndex = newSpecIndex;
+	elseif oldScrollSize > 0 and newScrollSize > 0 then
+		scrollBox:SetScrollPercentage(scrollPercentage * oldScrollSize / newScrollSize);
 		scrollBox:SetScrollTargetOffset(scrollTargetOffset);
 	end
 end

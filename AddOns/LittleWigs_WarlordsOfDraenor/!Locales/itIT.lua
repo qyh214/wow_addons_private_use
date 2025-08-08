@@ -1,7 +1,14 @@
 -- Auchindoun
 
-local L = BigWigs:NewBossLocale("Auchindoun Trash", "itIT")
+local L = BigWigs:NewBossLocale("Teron'gor", "itIT")
 if not L then return end
+if L then
+	L.affliction = "Afflizione"
+	L.demonology = "Demonologia"
+	L.destruction = "Distruzione"
+end
+
+L = BigWigs:NewBossLocale("Auchindoun Trash", "itIT")
 if L then
 	L.abyssal = "Abissale della Stirpe Vile"
 end
@@ -77,12 +84,6 @@ end
 
 -- Shadowmoon Burial Grounds
 
-L = BigWigs:NewBossLocale("Sadana Bloodfury", "itIT")
-if L then
-	--L.custom_on_markadd = "Mark the Dark Communion Add"
-	--L.custom_on_markadd_desc = "Mark the add spawned by Dark Communion with {rt8}, requires promoted or leader."
-end
-
 L = BigWigs:NewBossLocale("Bonemaw", "itIT")
 if L then
 	--L.summon_worms = "Summon Carrion Worms"
@@ -112,10 +113,8 @@ end
 
 L = BigWigs:NewBossLocale("High Sage Viryx", "itIT")
 if L then
-	--L.custom_on_markadd = "Mark the Solar Zealot"
-	--L.custom_on_markadd_desc = "Mark the Solar Zealot with {rt8}, requires promoted or leader."
-
-	L.construct = "Costrutto dello Scudo di Vetta dei Cieli" -- NPC ID 76292
+	L.solar_zealot = "Zelota del Sole"
+	L.construct = "Costrutto dello Scudo di Vetta dei Cieli"
 end
 
 -- The Everbloom

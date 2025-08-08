@@ -4,12 +4,12 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 function ns.LoadZoneMapNodesLocationinfo(self)
 local db = ns.Addon.db.profile
 local nodes = ns.nodes
+ns._currentSourceFile = "RetailZoneNodesLocation.lua"
 
 --#####################################################################################################
 --##########################        function to hide all nodes below         ##########################
 --#####################################################################################################
-if not db.activate.HideMapNote then
-
+  if not db.activate.HideMapNote then
     
     --#####################################################################################################
     --################################         Continent / Zone Map        ################################
@@ -609,14 +609,14 @@ if not db.activate.HideMapNote then
             nodes[971][24952789] = { name = "", type = "Portal", mnID = 629, showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Portal"] .. " ==> " .. DUNGEON_FLOOR_DALARANCITY1 } -- Portal to Dalaran
     
             if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
-              nodes[652][46176383] = { mnID = 85, name = "" , type = "HPortal", showInZone = true, TransportName = L["Portal"] .. " ==> " .. ORGRIMMAR } -- Thundertotem to Orgrimmar
-              nodes[680][58188734] = { mnID = 85, name = "" , type = "HPortal", showInZone = true, TransportName = L["Portal"] .. " ==> " .. ORGRIMMAR } -- Thundertotem to Orgrimmar
+              nodes[652][46176383] = { mnID = 85, name = "" , type = "HPortal", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Portal"] .. " ==> " .. ORGRIMMAR } -- Thundertotem to Orgrimmar
+              nodes[680][58188734] = { mnID = 85, name = "" , type = "HPortal", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Portal"] .. " ==> " .. ORGRIMMAR } -- Thundertotem to Orgrimmar
             end
 
             if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
               nodes[971][27992149] = { name = "", type = "APortal", mnID = 629, showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Portal"] .. " ==> " .. STORMWIND } -- Portal to Stormwind
-              nodes[941][43092506] = { mnID = 84, name = "" , type = "APortal", showInZone = false, TransportName = L["Portal"] .. " ==> " .. STORMWIND } --  Portal from Krokuun - Vindikaar to Stormwind
-              nodes[680][58678764] = { mnID = 84, name = "" , type = "APortal", showInZone = true, TransportName = L["Portal"] .. " ==> " .. STORMWIND } --  Portal from Krokuun - Vindikaar to Stormwind
+              nodes[941][43092506] = { mnID = 84, name = "" , type = "APortal", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Portal"] .. " ==> " .. STORMWIND } --  Portal from Krokuun - Vindikaar to Stormwind
+              nodes[680][58678764] = { mnID = 84, name = "" , type = "APortal", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Portal"] .. " ==> " .. STORMWIND } --  Portal from Krokuun - Vindikaar to Stormwind
             end
           end
 
@@ -818,12 +818,6 @@ if not db.activate.HideMapNote then
     
       if self.db.profile.showZoneKhazAlgar then
 
-        -- Khaz Algar MapNotesIcons
-          if self.db.profile.showZoneHordeAllyIcons then
-            nodes[2248][49764405] = { mnID = 2339, name = "", type = "MNL", showInZone = true, TransportName = L["Dornogal"] .. " - " .. FACTION_NEUTRAL .. "\n" .. "\n" .. L["Portals"] .. "\n" .. " ==> " .. ORGRIMMAR .. "\n" .. " ==> " .. STORMWIND .. "\n" .. "\n" .. L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. SPLASH_BATTLEFORAZEROTH_8_2_0_FEATURE1_TITLE .. "\n" .. " ==> " .. L["Maldraxxus"] .. "\n" .. " ==> " .. L["Zuldazar"] .."\n" .. "\n" .. CALENDAR_TYPE_DUNGEON .. "\n" .. " ==> " .. "The Rookery" } -- Dornogal
-            nodes[2255][49764405] = { mnID = 2339, name = "", type = "MNL", showInZone = true, TransportName = L["Dornogal"] .. " - " .. FACTION_NEUTRAL .. "\n" .. "\n" .. L["Portals"] .. "\n" .. " ==> " .. ORGRIMMAR .. "\n" .. " ==> " .. STORMWIND .. "\n" .. "\n" .. L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. SPLASH_BATTLEFORAZEROTH_8_2_0_FEATURE1_TITLE .. "\n" .. " ==> " .. L["Maldraxxus"] .. "\n" .. " ==> " .. L["Zuldazar"] .."\n" .. "\n" .. CALENDAR_TYPE_DUNGEON .. "\n" .. " ==> " .. "The Rookery" } -- Dornogal
-          end
-
         if db.activate.ZoneTransporting then
 
           -- Khaz Algar Portals
@@ -832,9 +826,11 @@ if not db.activate.HideMapNote then
             nodes[2255][57344184] = { mnID = 2339, name = L["Portal"], dnID = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=19559", achievementID = 19559, type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Portal from Azj-Kahet to Dornogal if u finished the achievement=19559
             nodes[2367][49953591] = { mnID = 2339, name = L["Portal"], dnID = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=40725", achievementID = 40725, type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Chamber of Memory
             nodes[2248][53024511] = { mnID = 2339, name = L["Portal"], dnID = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=19559", achievementID = 19559, type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Portal from Dornogal to Azj-Kahet if u finished the achievement=19559
-            nodes[2248][50554183] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. SPLASH_BATTLEFORAZEROTH_8_2_0_FEATURE1_TITLE .. "\n" .. " ==> " .. L["Maldraxxus"] .. "\n" .. " ==> " .. L["Zuldazar"] } --  Portal from Dornogal to the Timeways
+            nodes[2248][50554183] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. "Tazavesh" .. "\n" .. " ==> " .. "Revendreth" } --  Portal from Dornogal to the Timeways
             nodes[2248][44634679] = { mnID = 2367, name = L["Portal"], dnID = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=40725", achievementID = 40725, type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Chamber of Memory
             nodes[2346][27805398] = { mnID = 2339, name = L["Portal"], dnID = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com//quest=86535/test-run", questID = 86535, type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Portal from Undermine to Dornogal
+            nodes[2472][62549423] = { mnID = 2339, name = L["Portal"], dnID = "", type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Portal from Tazavesh to Dornogal
+            nodes[2371][69358829] = { mnID = 2339, name = L["Portal"], dnID = "", type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Portal from Tazavesh to Dornogal
 
             if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
               nodes[2248][46913872] = { mnID = 2339, name = "", type = "HPortal", TransportName = L["Portal"] .. "\n" .. ORGRIMMAR, showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dornogal to Orgrimmar
@@ -922,7 +918,7 @@ if not db.activate.HideMapNote then
           if self.db.profile.showZoneFishing then
             nodes[2216][51422519] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
             nodes[2213][51422519] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-
+            nodes[2371][75503411] = { npcID = 244485, name = "", type = "Fishing", showInZone = true, showOnContinent = false, showOnMinimap = false }
           end
 
           if self.db.profile.showZoneCooking then
@@ -966,4 +962,5 @@ if not db.activate.HideMapNote then
         
     end
   end
+
 end

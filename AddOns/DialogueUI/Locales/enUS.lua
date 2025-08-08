@@ -64,8 +64,8 @@ L["Collection Collected"] = COLLECTED or "Collected";
 
 --String Format
 L["Format Reputation Reward Tooltip"] = QUEST_REPUTATION_REWARD_TOOLTIP or "Awards %d reputation with the %s";
-L["Format You Have X"] = "- You have |cffffffff%d|r";
-L["Format You Have X And Y In Bank"] = "- You have |cffffffff%d|r (|cffffffff%d|r in your bank)";
+L["Format You Have X"] = "- You have |cffffffff%s|r";
+L["Format You Have X And Y In Bank"] = "- You have |cffffffff%s|r (|cffffffff%s|r in your bank)";
 L["Format Suggested Players"] = QUEST_SUGGESTED_GROUP_NUM or "Suggested Players [%d]";
 L["Format Current Skill Level"] = "Current Level: |cffffffff%d/%d|r";
 L["Format Reward Title"] = HONOR_REWARD_TITLE or "Title: %s";
@@ -184,6 +184,8 @@ L["Primary Control Key"] = "Confirm Button";
 L["Primary Control Key Desc"] = "Press this key to select the first available option like Accept Quest."
 L["Press Button To Scroll Down"] = "Press Button To Scroll Down";
 L["Press Button To Scroll Down Desc"] = "If the content is taller than the viewport, pressing the Confirm Button will scroll the page down instead of accepting quest.";
+L["Press Escape To Decline Quest"] = "Press Escape To Decline Quest";
+L["Press Escape To Decline Quest Desc"] = "When viewing a quest from an NPC that has other dialogues, pressing the Escape key leads you back to the previous page instead of closing the UI.";
 L["Right Click To Close UI"] = "Right Click To Close UI";
 L["Right Click To Close UI Desc"] = "Right click on the dialogue UI to close it.";
 L["Press Tab To Select Reward"] = "Press Tab To Select Reward";
@@ -222,7 +224,7 @@ L["Quest Item Display Reset Position Desc"] = "Reset the window's position.";
 L["Valuable Reward Popup"] = "Valuable Reward Popup";
 L["Valuable Reward Popup Desc"] = "When you receive a valuable item like an upgrade, a chest, or an uncollected cosmetic item, show a button that allows you to use it directly.";
 L["Auto Complete Quest"] = "Auto Complete Quest";
-L["Auto Complete Quest Desc"] = "Auto complete the following quest then display the dialogue and rewards in a separate window. If the rewards contain a chest, you can click to open it.\n\n- Candy Bucket (Hallow's End)\n- Khaz Algar Weekly";
+L["Auto Complete Quest Desc"] = "Auto complete the following quest then display the dialogue and rewards in a separate window. If the rewards contain a chest, you can click to open it.\n\n- Candy Bucket (Hallow's End)\n- Khaz Algar Weekly\n- Midsummer Bonfire";
 L["Press Key To Use Item"] = "Press Button To Use";
 L["Press Key To Use Item Desc PC"] = "Press [KEY:PC:SPACE] to use the item when you are out of combat.";
 L["Press Key To Use Item Desc Xbox"] = "Press [KEY:XBOX:PAD3] to use the item when you are out of combat.";
@@ -241,7 +243,7 @@ L["Nameplate Dialog"] = "Display Dialogue On Nameplate";
 L["Nameplate Dialog Desc"] = "Display the dialogue on the NPC nameplate if they offer no choice.\n\nThis option modifies CVar \"SoftTarget Nameplate Interact\".";
 L["Compatibility"] = "Compatibility";
 L["Disable DUI In Instance"] = "Use WoW's Default UI In Instance";
-L["Disable DUI In Instance Desc"] = "Disable Dialogue UI and use WoW's default one when you are in dungeon or raid.\n\nEnable this option if you cannot interact with an NPC that allows you to start or skip boss encounters.";
+L["Disable DUI In Instance Desc"] = "Disable Dialogue UI and use WoW's default one when you are in dungeon or raid.";
 
 L["Disable UI Motions"] = "Reduce UI Movements";
 L["Disable UI Motions Desc"] = "Reduce UI movements such as Unfolding UI or Nudging Button Text.";
@@ -280,6 +282,8 @@ L["TTS Include Content"] = "Include Content";
 L["TTS Content NPC Name"] = "NPC Name";
 L["TTS Content Quest Name"] = "Quest Title";
 L["TTS Content Objective"] = "Quest Objectives";
+L["TTS Button Read Original"] = "Change to Read Original Text";
+L["TTS Button Read Translation"] = "Change to Read Translation";
 
 --Book UI and Settings
 L["Readables"] = "Readables";   --Readable Objects
@@ -334,6 +338,10 @@ L["Translator No Quest Data Format"] = "No entry found for [Quest: %s]";
 L["Translator Click To Hide Translation"] = "Click to hide the translation";
 L["Translator Click To Show Translation"] = "Click to show the translation";
 
+--AddOn Compatibility for Voiceover AddOns
+L["VO Provider Format"] = "|cffffffff%s|r is handling the voiceover";
+L["VO No File Format"] = "|cffffffff%s|r could not find the voiceover file.";
+
 --DO NOT TRANSLATE
 L["Abbrev Breakpoint 1000"] = FIRST_NUMBER_CAP_NO_SPACE or "K";     --1,000 = 1K
 L["Abbrev Breakpoint 10000"] = FIRST_NUMBER_CAP_NO_SPACE or "K";    --Reserved for Asian languages that have words for 10,000
@@ -348,6 +356,8 @@ L["Match Stat DPS"] = "([,%d%.]+) damage per second";
 L["Show Answer"] = "Show answer.";
 L["Quest Failed Pattern"] = "^Turn in for";     --First few words of ERR_QUEST_FAILED_MAX_COUNT_S
 L["AutoCompleteQuest HallowsEnd"] = "Candy Bucket";     --Quest:28981
+L["AutoCompleteQuest Midsummer"] = "Honor the Flame";   --Quest:29031
+L["AutoCompleteQuest Midsummer2"] = "Desecrate this Fire!";     --Quest:11580
 
 --Asking for Directions-- (match the name to replace gossip icon)
 L["Pin Auction House"] = BUTTON_LAG_AUCTIONHOUSE or "Auction House";

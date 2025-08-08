@@ -13,7 +13,7 @@ Addon.AddonInfos = {}
 local AddonInfoInitialStates = {}
 for i = 1, C_AddOns.GetNumAddOns() do
     local name, title, notes, loadable, reason, security = C_AddOns.GetAddOnInfo(i)
-    local enabled = C_AddOns.GetAddOnEnableState(i, UnitName("player")) > 0
+    local enabled = C_AddOns.GetAddOnEnableState(i, UnitGUID("player")) > 0
     AddonInfoInitialStates[name] = {
         Enabled = enabled,
         Expired = (reason == "INTERFACE_VERSION")
@@ -163,7 +163,7 @@ function Addon:GetAddonInfoOrNil(query, addonInfo)
     -- 是否按需加载
     addonInfo.LoadOnDemand = C_AddOns.IsAddOnLoadOnDemand(query)
     -- 是否启用
-    addonInfo.Enabled = C_AddOns.GetAddOnEnableState(query, UnitName("player")) > Enum.AddOnEnableState.None
+    addonInfo.Enabled = C_AddOns.GetAddOnEnableState(query, UnitGUID("player")) > Enum.AddOnEnableState.None
     -- 初始启用状态
     addonInfo.InitialEnabled = AddonInfoInitialStates[name].Enabled
     -- 是否过期
@@ -359,7 +359,7 @@ end
 -- 启用插件
 local function enableAddon(addonName)
     if Addon:IsAddonEnableStatusCharacterOnly() then
-        C_AddOns.EnableAddOn(addonName, UnitName("player"))
+        C_AddOns.EnableAddOn(addonName, UnitGUID("player"))
     else
         C_AddOns.EnableAddOn(addonName)
     end
@@ -368,7 +368,7 @@ end
 -- 禁用插件
 local function disableAddon(addonName)
     if Addon:IsAddonEnableStatusCharacterOnly() then
-        C_AddOns.DisableAddOn(addonName, UnitName("player"))
+        C_AddOns.DisableAddOn(addonName, UnitGUID("player"))
     else
         C_AddOns.DisableAddOn(addonName)
     end

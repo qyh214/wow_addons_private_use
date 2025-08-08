@@ -18,6 +18,7 @@
 	<Script file="Party\Inspect.lua"/>
 	<Script file="Party\Sync.lua"/>
 	<Script file="Party\CD.lua"/>
+	<Script file="Party\CD_Mists.lua"/>
 
 	<!-- Blizzard -->
 	<Script file="Blizzard\Blizzard.lua"/>

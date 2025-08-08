@@ -11,7 +11,24 @@ mod:SetEncounterID(710)
 -- Locals
 --
 
-local deaths = 0
+local killedBosses = {}
+local UpdateInfoBoxList
+local bossList = {
+	[15543] = 1, -- Princess Yauj
+	[15544] = 3, -- Vem
+	[15511] = 5, -- Lord Kri
+}
+
+--------------------------------------------------------------------------------
+-- Localization
+--
+
+local L = mod:GetLocale()
+if L then
+	L[15543] = "Yauj"
+	L[15544] = "Vem"
+	L[15511] = "Kri"
+end
 
 --------------------------------------------------------------------------------
 -- Initialization
@@ -29,6 +46,21 @@ function mod:GetOptions()
 	}
 end
 
+if mod:Vanilla() then
+	function mod:GetOptions()
+		return {
+			{25807, "CASTBAR"}, -- Great Heal
+			26580, -- Fear
+			25812, -- Toxic Volley
+			25786, -- Toxic Vapors
+			"stages",
+			{"health", "INFOBOX"},
+		},nil,{
+			[26580] = CL.fear, -- Fear (Fear)
+		}
+	end
+end
+
 function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "GreatHeal", 25807)
 	self:Log("SPELL_INTERRUPT", "GreatHealInterrupted", "*")
@@ -44,7 +76,18 @@ function mod:OnBossEnable()
 end
 
 function mod:OnEngage()
-	deaths = 0
+	killedBosses = {}
+
+	if self:Vanilla() then
+		self:OpenInfo("health", CL.other:format("BigWigs", CL.health))
+		for npcId, line in next, bossList do
+			self:SetInfo("health", line, L[npcId])
+			self:SetInfoBar("health", line, 1)
+			self:SetInfo("health", line + 1, "100%")
+		end
+		self:SimpleTimer(UpdateInfoBoxList, 1)
+	end
+
 	self:CDBar(25807, 8.1) -- Great Heal
 	self:CDBar(26580, 11.3, CL.fear) -- Fear
 end
@@ -98,9 +141,47 @@ function mod:YaujDies(args)
 	self:Deaths(args)
 end
 
-function mod:Deaths(args)
-	deaths = deaths + 1
-	if deaths < 3 then
-		self:Message("stages", "cyan", CL.mob_killed:format(args.destName, deaths, 3), false)
+do
+	local unitTracker = {}
+	local currentHealth = {}
+	function mod:Deaths(args)
+		unitTracker[args.mobId] = nil
+		currentHealth[args.mobId] = nil
+		killedBosses[args.mobId] = true
+		local count = #killedBosses + 1
+		killedBosses[count] = true
+
+		if self:Vanilla() then
+			local line = bossList[args.mobId]
+			self:SetInfoBar("health", line, 0)
+			self:SetInfo("health", line + 1, CL.dead)
+		end
+
+		if count < 3 then
+			self:Message("stages", "cyan", CL.mob_killed:format(args.destName, count, 3), false)
+		else
+			unitTracker, currentHealth = {}, {}
+		end
+	end
+
+	function UpdateInfoBoxList()
+		if not mod:IsEngaged() then return end
+		mod:SimpleTimer(UpdateInfoBoxList, 0.5)
+
+		for npcId in next, bossList do
+			if not killedBosses[npcId] and (not unitTracker[npcId] or mod:MobId(mod:UnitGUID(unitTracker[npcId])) ~= npcId) then
+				unitTracker[npcId] = mod:GetUnitIdByGUID(npcId)
+			end
+		end
+
+		for npcId, unitToken in next, unitTracker do
+			local line = bossList[npcId]
+			local currentHealthPercent = math.floor(mod:GetHealth(unitToken))
+			if currentHealthPercent ~= currentHealth[npcId] then
+				currentHealth[npcId] = currentHealthPercent
+				mod:SetInfoBar("health", line, currentHealthPercent/100)
+				mod:SetInfo("health", line + 1, ("%d%%"):format(currentHealthPercent))
+			end
+		end
 	end
 end

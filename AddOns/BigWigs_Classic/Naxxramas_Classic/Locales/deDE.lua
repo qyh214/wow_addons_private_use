@@ -4,8 +4,6 @@ if L then
 	L.add_death = "Tod eines Adds"
 	L.add_death_desc = "Warnt, wenn ein Add stirbt."
 
-	L.wave = "%d/22: %s"
-
 	L.trainee = "Lehrling" -- Unrelenting Trainee NPC 16124
 	L.deathKnight = "Todesritter" -- Unrelenting Death Knight NPC 16125
 	L.rider = "Reiter" -- Unrelenting Rider NPC 16126

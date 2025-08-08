@@ -8,8 +8,8 @@ local iconLink = "Interface\\Addons\\" .. ADDON_NAME .. "\\Images\\"
 ns.icons = { 
 --Addon Logo
 ["MNL"] = iconLink .. "MNL4",
-["DarkMoon"] = iconLink .. "DarkMoon",
 --General
+["DarkMoon"] = iconLink .. "DarkMoon",
 ["Innkeeper"] = "interface/minimap/tracking/innkeeper.blp",
 ["InnkeeperN"] = iconLink .. "InnkeeperN",
 ["InnkeeperA"] = iconLink .. "InnkeeperA",
@@ -39,6 +39,7 @@ ns.icons = {
 ["StablemasterH"] = iconLink .. "StablemasterH",
 ["StablemasterA"] = iconLink .. "StablemasterA",
 ["TradingPost"] = iconLink .. "TradingPost",
+["MountMerchant"] = iconLink .. "MountMerchant",
 -- Icons if enemy faction is disabled for General zone icons
 ["OriginalInnkeeperA"] = iconLink .. "InnkeeperA",
 ["OriginalInnkeeperH"] = iconLink .. "InnkeeperH",
@@ -151,6 +152,7 @@ ns.icons = {
 ["PathLO"] = iconLink .. "PathLO",
 --instance
 ["LFR"] = iconLink .. "LFR",
+["PassageLFR"] = iconLink .. "PassageLFR",
 ["Dungeon"] = iconLink .. "Dungeon", 
 ["Raid"] = iconLink .. "Raid",
 ["Delves"] = iconLink .. "Delves",
@@ -243,6 +245,7 @@ ns.icons = {
 ["TorghastUp"] = iconLink .. "TorghastUp",
 ["MoleMachine"] = iconLink .. "MoleMachine",
 ["RocketDrill"] = iconLink .. "RocketDrill",
+["MoleMachineDwarf"] = iconLink .. "MoleMachine",
 --travel
 ["TravelL"] = iconLink .. "travelL",
 ["TravelM"] = iconLink .. "travelm",
@@ -283,6 +286,7 @@ ns.icons = {
 
 TextIcon = IconClass
 TextIconMNL4 = TextIcon(iconLink .. "MNL4", 50, 50, 1, 50, 1, 50)
+TextIconInfo = TextIcon("Interface\\FriendsFrame\\InformationIcon",50, 50, 1, 50, 1, 50)
 --General
 TextIconInnkeeper = TextIcon("interface/minimap/tracking/innkeeper.blpp", 50, 50, 1, 50, 1, 50)
 TextIconInnkeeperN = TextIcon(iconLink .. "InnkeeperN", 50, 50, 1, 50, 1, 50)
@@ -313,6 +317,7 @@ TextIconStablemasterN = TextIcon(iconLink .. "StablemasterN", 50, 50, 1 ,50, 1, 
 TextIconStablemasterH = TextIcon(iconLink .. "StablemasterH", 50, 50, 1 ,50, 1, 50)
 TextIconStablemasterA = TextIcon(iconLink .. "StablemasterA", 50, 50, 1 ,50, 1, 50)
 TextIconTradingPost = TextIcon(iconLink .. "TradingPost", 50, 50, 1 ,50, 1, 50)
+TextIconMountMerchant = TextIcon(iconLink .. "MountMerchant", 50, 50, 1 ,50, 1, 50)
 --Cities
 TextIconOrgrimmar = TextIcon("interface/icons/spell_arcane_teleportorgrimmar.blp", 50, 50, 1, 50, 1, 50)
 TextIconThunderBluff = TextIcon("interface/icons/spell_arcane_teleportthunderbluff.blp", 50, 50, 1, 50, 1, 50)
@@ -407,6 +412,7 @@ TextIconPathU = TextIcon(iconLink .. "PathU", 50, 50, 1, 50, 1, 50)
 TextIconPathL = TextIcon(iconLink .. "PathL", 50, 50, 1, 50, 1, 50)
 --instance
 TextIconLFR = TextIcon(iconLink .. "LFR", 50, 50, 1, 50, 1, 50)
+TextIconPassageLFR = TextIcon(iconLink .. "PassageLFR", 50, 50, 1, 50, 1, 50)
 TextIconDungeon = TextIcon(iconLink .. "Dungeon", 50, 50, 1, 50, 1, 50)
 TextIconRaid = TextIcon(iconLink .. "Raid", 50, 50, 1, 50, 1, 50)
 TextIconDelves = TextIcon(iconLink .. "Delves", 50, 50, 1, 50, 1, 50)
@@ -472,8 +478,10 @@ TextIconCheck = TextIcon("Interface/Buttons/UI-CheckBox-Up", 50, 50, 1, 50, 1, 5
 TextIconHorde = TextIcon("interface/pvprankbadges/pvprankhorde")
 TextIconAlliance = TextIcon("interface/pvprankbadges/pvprankalliance")
 TextIconTomTom = TextIcon(iconLink .."tomtompoint")
+TextIconWayPoint = TextIcon("interface/minimap/minimap-waypoint-mappin-untracked", 60, 60, 1, 50, 1, 50)
 TextIconJournal = TextIcon("interface/icons/inv_misc_book_09")
-TextIconKilledBosses = TextIcon("Interface/TargetingFrame/UI-RaidTargetingIcon_8")
+TextIconBosses = TextIcon("Interface/TargetingFrame/UI-RaidTargetingIcon_8")
+TextIconTarget = TextIcon("Interface/TargetingFrame/UI-RaidTargetingIcon_7")
 --expansions
 TextIconKalimdor = TextIcon("Interface/CharacterFrame/TemporaryPortrait-Female-Orc")
 TextIconEK = TextIcon("Interface/CharacterFrame/TemporaryPortrait-Female-Human")

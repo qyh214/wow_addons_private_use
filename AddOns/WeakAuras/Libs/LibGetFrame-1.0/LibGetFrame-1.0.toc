@@ -4,7 +4,7 @@
 ## Author: Buds
 ## X-Category: Library
 ## X-License: BSD
-## Version: 29a4d90
+## Version: 5c0d42c
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 

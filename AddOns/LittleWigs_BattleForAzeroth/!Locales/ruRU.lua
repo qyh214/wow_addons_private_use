@@ -1,7 +1,6 @@
 -- Atal'Dazar
 
 local L = BigWigs:NewBossLocale("Atal'Dazar Trash", "ruRU")
-if not L then return end
 if L then
 	L.skyscreamer = "Ненасытный небесный крикун"
 	L.tlonja = "Т'лонджа"
@@ -66,15 +65,21 @@ if L then
 	L.lightning_caught = "Молния поймана спустя %.1f секунд!"
 	L.ludwig = "Людвиг фон Тортоллен"
 	L.trothak = "Тротак"
-
-	L.left = "%s (Левая)"
-	L.right = "%s (Правая)"
 end
 
 -- Horrific Vision of Orgrimmar
 
 L = BigWigs:NewBossLocale("Horrific Vision of Orgrimmar Trash", "ruRU")
 if L then
+	--L.sanity_change = "%d Sanity"
+	--L.madnesses = "Madnesses"
+	--L.potions = "Potions"
+	--L.buffs = "Buffs"
+	--L.slowed = "Slowed"
+	--L.sluggish_potion_effect = "Heal 2% every 5 sec"
+	--L.sickening_potion_effect = "5% damage reduction"
+	--L.spicy_potion_effect = "Breathe fire"
+
 	L.voidbound_shaman = "Слуга Бездны - шаман"
 	L.endless_hunger_totem = "Тотем бесконечного голода"
 	L.crawling_corruption = "Ползучая порча"
@@ -100,6 +105,7 @@ if L then
 	L.aqir_bonecrusher = "Акир-костекрушитель"
 	L.aqir_mindhunter = "Акир - подчинитель разума"
 	L.aqir_venomweaver = "Акир - повелитель ядов"
+	L.gamon = "Гамон"
 end
 
 L = BigWigs:NewBossLocale("Thrall", "ruRU")
@@ -134,6 +140,17 @@ end
 
 L = BigWigs:NewBossLocale("Horrific Vision of Stormwind Trash", "ruRU")
 if L then
+	--L.sanity_change = "%d Sanity"
+	--L.portal_closed = "Portal Closed"
+	--L.portal_closed_desc = "Show a message when a portal is closed in the Mage Quarter."
+	--L.madnesses = "Madnesses"
+	--L.potions = "Potions"
+	--L.buffs = "Buffs"
+	--L.slowed = "Slowed"
+	--L.sluggish_potion_effect = "Heal 2% every 5 sec"
+	--L.sickening_potion_effect = "5% damage reduction"
+	--L.spicy_potion_effect = "Breathe fire"
+
 	L.crawling_corruption = "Ползучая порча"
 	L.enthralled_footman = "Порабощенный пехотинец"
 	L.fallen_voidspeaker = "Падший вестник Бездны"
@@ -158,6 +175,7 @@ if L then
 	L.zardeth_of_the_black_claw = "Зардет Черный Коготь"
 	L.unstable_servant = "Нестабильный слуга"
 	L.hogger = "Дробитель"
+	L.void_scarred_gryphon = "Зараженный Бездной грифон"
 
 	--L.therum_deepforge_warmup_trigger = "So ye like tae play with explosives, do ye? Then let's play."
 	--L.alleria_windrunner_warmup_trigger = "Mother... do not listen to the whispers!"
@@ -220,9 +238,6 @@ if L then
 	L.beastmaster = "Призрачная повелительница животных"
 	L.brute = "Призрачный громила"
 	L.zul = "Тень Зула"
-
-	L.casting_on_you = "Чтение %s на ТЕБЕ"
-	L.casting_on_other = "Чтение %s: %s"
 end
 
 -- Operation: Mechagon
@@ -263,11 +278,6 @@ end
 L = BigWigs:NewBossLocale("Tussle Tonks", "ruRU")
 if L then
 	L.warmup_trigger = "Что это? Ошибка в расчетах? Наши гости еще живы!"
-end
-
-L = BigWigs:NewBossLocale("K.U.-J.0.", "ruRU")
-if L then
-	--L.safe = "Safe"
 end
 
 L = BigWigs:NewBossLocale("King Mechagon", "ruRU")
@@ -351,11 +361,6 @@ if L then
 	L.incubator = "Бешеная наседка"
 	L.nimbus = "Беспокойное облако"
 	L.doctor = "Чумная знахарка"
-end
-
-L = BigWigs:NewBossLocale("Galvazzt", "ruRU")
-if L then
-	--L.percent = "%s (%d%%)"
 end
 
 -- The MOTHERLODE!!

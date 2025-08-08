@@ -6,11 +6,6 @@ if L then
 	L.ability_desc = "下一技能冷卻計時器。"
 end
 
-L = BigWigs:NewBossLocale("Salyis's Warband", "zhTW")
-if L then
-	L.engage_yell = "把他們的屍體帶給我!"
-end
-
 L = BigWigs:NewBossLocale("Ordos", "zhTW")
 if L then
 	--L.engage_yell = "You will take my place on the eternal brazier."
@@ -18,4 +13,3 @@ if L then
 	L.burning_soul_bar = "爆炸"
 	L.burning_soul_self_bar = ">你< 爆炸！"
 end
-

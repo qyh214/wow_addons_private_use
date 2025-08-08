@@ -2,14 +2,13 @@
 -- Module Declaration
 --
 
-local plugin = BigWigs:NewPlugin("Pull")
+local plugin, L = BigWigs:NewPlugin("Pull")
 if not plugin then return end
 
 -------------------------------------------------------------------------------
 -- Locals
 --
 
-local L = BigWigsAPI:GetLocale("BigWigs")
 local GetInstanceInfo = BigWigsLoader.GetInstanceInfo
 local DoCountdown = BigWigsLoader.DoCountdown
 local zoneTable = BigWigsLoader.zoneTbl
@@ -17,6 +16,20 @@ local isLogging = false
 local IsEncounterInProgress = IsEncounterInProgress
 local media = LibStub("LibSharedMedia-3.0")
 local SOUND = media.MediaType and media.MediaType.SOUND or "sound"
+
+local BWPull = CreateFrame("Button", "BWPull")
+BWPull:SetSize(1, 1)
+BWPull:Hide()
+BWPull:SetScript("OnClick", function()
+	DoCountdown(10)
+end)
+BWPull:SetScript("OnEvent", function(self, event)
+	self:UnregisterEvent(event)
+	ClearOverrideBindings(self)
+	if plugin.db.profile.keybind ~= "" then
+		SetOverrideBindingClick(self, true, plugin.db.profile.keybind, "BWPull")
+	end
+end)
 
 -------------------------------------------------------------------------------
 -- Options
@@ -43,6 +56,7 @@ do
 		startPullSound = "BigWigs: Long",
 		endPullSound = "BigWigs: Alarm",
 		voice = voiceMap[GetLocale()] or "English: Amy",
+		keybind = "",
 	}
 end
 
@@ -62,12 +76,13 @@ do
 		local list = BigWigsAPI:GetCountdownList()
 		local sorted = {}
 		for k in next, list do
-			if k ~= L.none then
+			if k ~= "none" and k ~= "simple" then
 				sorted[#sorted + 1] = k
 			end
 		end
-		sort(sorted, function(a, b) return list[a] < list[b] end)
-		tinsert(sorted, 1, L.none)
+		table.sort(sorted, function(a, b) return list[a] < list[b] end)
+		table.insert(sorted, 1, "none")
+		table.insert(sorted, 2, "simple")
 		return sorted
 	end
 
@@ -158,6 +173,30 @@ do
 				order = 10,
 				width = "full",
 			},
+			explainer = {
+				type = "description",
+				name = L.pullExplainer,
+				order = 11,
+				width = "full",
+				fontSize = "medium",
+			},
+			keybind = {
+				type = "keybinding",
+				name = L.keybinding,
+				desc = L.pullKeybindingDesc,
+				order = 12,
+				set = function(a, key)
+					plugin.db.profile.keybind = key
+					if not InCombatLockdown() then
+						ClearOverrideBindings(BWPull)
+						if key ~= "" then
+							SetOverrideBindingClick(BWPull, true, key, "BWPull")
+						end
+					else
+						BWPull:RegisterEvent("PLAYER_REGEN_ENABLED")
+					end
+				end,
+			},
 		},
 	}
 end
@@ -184,6 +223,15 @@ do
 		end
 		if db.countBegin < 5 or db.countBegin > 10 then
 			db.countBegin = plugin.defaultDB.countBegin
+		end
+
+		if not InCombatLockdown() then
+			ClearOverrideBindings(BWPull)
+			if plugin.db.profile.keybind ~= "" then
+				SetOverrideBindingClick(BWPull, true, plugin.db.profile.keybind, "BWPull")
+			end
+		else
+			BWPull:RegisterEvent("PLAYER_REGEN_ENABLED")
 		end
 	end
 
@@ -339,7 +387,7 @@ end
 -- Slash Handler
 --
 
-SlashCmdList.BIGWIGSPULL = function(input)
+BigWigsAPI.RegisterSlashCommand("/pull", function(input)
 	if IsEncounterInProgress() then BigWigs:Print(L.encounterRestricted) return end -- Doesn't make sense to allow this in combat
 
 	if not IsInGroup() or (IsInGroup(2) and UnitGroupRolesAssigned("player") == "TANK") or UnitIsGroupLeader("player") or UnitIsGroupAssistant("player") or (IsInGroup(1) and not IsInRaid()) then -- Solo, tank in LFG, leader, assist, anyone in 5m
@@ -357,5 +405,4 @@ SlashCmdList.BIGWIGSPULL = function(input)
 	else
 		BigWigs:Print(L.requiresLeadOrAssist)
 	end
-end
-SLASH_BIGWIGSPULL1 = "/pull"
+end)

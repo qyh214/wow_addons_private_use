@@ -121,7 +121,7 @@ local function UpdateLMFrame(self, event, ...)
 
 		local lootText, lootPlayer = ...
 		local itemLink
-		for link in string.gmatch(lootText, "|c%x+|Hitem:.-|h.-|h|r") do
+		for link in string.gmatch(lootText, "|c.-|h%[.-%]|h|r") do
 			if link then itemLink = link end
 		end
 
@@ -136,8 +136,11 @@ local function UpdateLMFrame(self, event, ...)
 			local playerName = UnitClassColor(string.split("-", lootPlayer))
 
 			local itemExtra, hasStat, hasMisc = B.GetItemExtra(itemLink)
-			if hasStat then itemExtra = "|cff00FF00"..itemExtra.."|r" end
-			if hasMisc then itemExtra = "|cff00FFFF"..itemExtra.."|r" end
+			if hasStat then
+				itemExtra = "|cff00FF00"..itemExtra.."|r"
+			elseif hasMisc then
+				itemExtra = "|cff00FFFF"..itemExtra.."|r"
+			end
 
 			if #LMFrame_Report >= LMFrame_CFG["maxLines"] then table.remove(LMFrame_Report, 1) end
 

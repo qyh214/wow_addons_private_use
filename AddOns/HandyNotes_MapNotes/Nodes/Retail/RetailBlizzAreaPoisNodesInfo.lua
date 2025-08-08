@@ -12,6 +12,7 @@ ns.BlizzAreaPoisInfo = {
     39, -- Ratchet
     1961, -- Shattrath
     2071, -- Area 52
+    2298, -- Wyrmresttempel
     2317, -- Dalaran City
     2837, -- Tonlongstepps PvE Vendor
     5056, -- The Dark Portal Blasted Lands
@@ -33,6 +34,7 @@ ns.BlizzAreaPoisInfo = {
     8250, -- Mole Machine from Siren Isle to Deeps
     8230, -- Portal from Dornogal to Undermine
     8231, -- Portal from Undermine to Dornogal
+    8414, -- Portal from K'arsh to Dornogal
 
     -- City Alliance
     8, -- Ironforge Icon
@@ -75,6 +77,7 @@ ns.BlizzAreaPoisInfo = {
     6138, -- Mechagon Zuldazar Travel
     7341, -- Zeppelin Durotar
     7339, -- Ship Icon The Waking Shores to OG
+    4587, -- Warspear PvP Vendors
 }
 
 ns.BlizzAreaPoisInfoZidormi = {

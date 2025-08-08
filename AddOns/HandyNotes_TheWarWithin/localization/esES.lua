@@ -249,6 +249,11 @@ L['nightfarm_growthling_note'] = 'Usa 3x {item:206350} en la {object:Llave ardie
 
 L['thunder_lynx_note'] = '1. Usa 3x {item:206350} en la {object:Llave ardiente inferior} de la {location:Mina Antorcha} para invocar a {npc:212419}.\n\n2. Habla con {npc:212419} y sigue todas las líneas de diálogo hasta que consigas la misión {quest:82007}.\n\n3. Localiza cada cría de lince: {npc:222373} ({dot:Blue}), {npc:222372} ({dot:Green}), {npc:222375} ({dot:Orange}), y {npc:222374} ({dot:Red}).\n\n{note:Asegúrate de empezar la misión {quest:76169} al mismo tiempo que consigas la {item:219198} o usa un objeto similar como la {item:219148}. Necesitarás una luz para conseguir a {npc:222373} dentro de la {location:Cueva Sombrafría}.}\n\n4. Rescata todos los gatitos lince y regresa con {npc:212419}.'
 
+L['options_icons_fighter'] = '{achievement:41999}'
+L['options_icons_fighter_desc'] = 'Muestra dónde están los élite del Ocaso para el logro {achievement:41999}.'
+L['suspicious_document_label'] = 'Documento sospechoso'
+L['suspicious_document_note'] = 'Abre el {object:Documento sospechoso} para invocar a un élite del Ocaso.'
+
 -------------------------------------------------------------------------------
 ---------------------------------- AZJ-KAHET ----------------------------------
 -------------------------------------------------------------------------------
@@ -298,6 +303,8 @@ Una vez que hayas caído, interactúa con el {object:Grimorio Carnoso} cercano p
 Localiza cada {npc:227421} e interactúa para hacerles volver al {object:Grimorio carnoso}.
 
 Una vez todos devueltos, regresa al {object:Grimorio carnoso} y habla con tu {npc:227421}.
+
+{note:Requiere pasar por el punto de vuelo para hacer aparecer a {npc:227421}.}
 ]]
 L['another_you_4_note'] = 'Patrulla por la ruta marcada.'
 
@@ -322,7 +329,7 @@ L['kej_pet_vendor_note'] = 'Hay una cantidad limitada de cada mascota y cuesta 2
 L['options_icons_back_to_the_wall'] = '{achievement:40620}'
 L['options_icons_back_to_the_wall_desc'] = 'Muestra dónde están los {npc:222119} para el logro {achievement:40620}.'
 L['arathi_prisoner_suffix'] = 'Prisioneros arathi rescatados'
-L['arathi_prisoner_note'] = 'Libera {npc:222119} envueltos en telarañas durante la misión del mundo {wq:Tarea especial: Más vale prevenir}.'
+L['arathi_prisoner_note'] = 'Libera {npc:222119} envueltos en telarañas.'
 
 -------------------------------------------------------------------------------
 ----------------------------------- DELVES ------------------------------------
@@ -457,7 +464,7 @@ L['peculiar_gem_note'] = 'Ves por la entrada del agujero oculto dentro de la cue
 
 -- KARAZHAN CATACOMBS
 L['karazhan_catacombs_label'] = 'Catacumbas de Karazhan'
-L['karazhan_catacombs_entrance_note'] = 'Coge la {item:44124} comenzando en el {location:Cráter de Un\'Goro} en {location:Kalimdor}\n\nCoge la {item:228938} comenzando en {location:Dornogal} en {location:Khaz Algar}\n\nCombina la gema y la llave para crear la {item:44124}.\n\nCon la {item:44124} en tu mochila y la {item:208092} activa, acércate a la puerta para revelar una entrada de instancia roja.'
+L['karazhan_catacombs_entrance_note'] = 'Coge la {item:228941} comenzando en el {location:Cráter de Un\'Goro} en {location:Kalimdor}\n\nCoge la {item:228938} comenzando en {location:Dornogal} en {location:Khaz Algar}\n\nCombina la gema y la llave para crear la {item:44124}.\n\nCon la {item:44124} en tu mochila y la {item:208092} activa, acércate a la puerta para revelar una entrada de instancia roja.'
 
 -- ORB 1
 L['orb_1_label'] = 'Orbe 1'
@@ -636,9 +643,32 @@ L['undermine_clam_chowder_label'] = 'La guía de la auténtica cocina de Minahon
 L['undermine_clam_chowder_location'] = 'Encima de un estante detrás de {npc:226728} en el callejón de la {location:Estación de Vapor}.'
 L['undermine_clam_chowder_note'] = '1. Para conseguir esta receta, primero debes saber {item:16767} que se puede comprar en dos vendedores {object:Clásicos} por %s.\n\n{npc:54232} de {location:Bahía del Botín} en {location:El Cabo de Tuercespina}\n\n{npc:48060} de {location:El Diodo} en las {location:Tierras Inhóspitas}\n\n2. Una vez que sepas la vieja receta, abre {object:La guía de la auténtica cocina de Minahonda} y lee la última página. Anota la receta para conseguir la {item:235800}.'
 
+L['breakneck_race_note'] = 'Se recomienda hacer las siguientes mejoras al {object:Rompecuellos G-99} para conseguir el |cFFFFD700Oro|r algo más fácil:\n\n%s\n\n%s\n\n%s'
+L['upgrade_the_pozzik_standard'] = '{item:232982} (motor): Consigue el |cFFCD7F32Bronce|r en todas las carreras normales e inversas del {object:Rompecuellos}.'
+L['upgrade_22h_slicks'] = '{item:232985} (ruedas): Hechas por ingenieros y vendidas en la Casa de Subastas.'
+L['upgrade_turbo_handcrank'] = '{item:232984} (turbo): Combina las 5 piezas de los raros o de la Casa de Subastas.'
+
 L['blazefeather_peacock_note'] = 'Después de completar la serie de misiones {quest:83421}, habla con {npc:226555} para pagar %s por invocar un {npc:226561} entrenable.'
 L['radioactive_subject_note'] = 'Usa las tuberías cercanas y, combinando {item:237276}, {item:109076}, {item:231099} o cualquier otro truco de rompecabezas, salta al techo del edificio de los {location:Laboratorios Bonvapor} en {location:Estación de Vapor}.'
 L['george_the_big_pinch_note'] = 'Haz click rápidamente en los 5 {npc:238189} para conseguir {spell:1219679} que te permitirá domesticar {npc:233938}.'
 
-L['crumpled_schematic_note'] = 'Despoja los {object:Esquemas arrugados} para conseguir {item:235037}.\n\nUna vez despojado estará disponible para la compra en proveedores de suministros de ingeniería como {npc:219098} en {location:Dornogal}.'
-L['crumpled_schematic_location'] = 'Primer piso de un edificio entre la {location:Estación de Vapor} y las {location:Chatarrerías}.'
+-------------------------------------------------------------------------------
+----------------------------------- K'ARESH -----------------------------------
+-------------------------------------------------------------------------------
+
+L['options_icons_karesh_lore_hunter'] = '{achievement:60890}'
+L['options_icons_karesh_lore_hunter_desc'] = 'Muestra dónde están los objetos históricos del logro {achievement:60890}.'
+
+L['options_icons_purrkins'] = '{achievement:42729}'
+L['options_icons_purrkins_desc'] = 'Muestra dónde están los ronroneadores para el logro {achievement:42729}.'
+L['purrkins_note'] = 'Teclea {emote:/acariciar} en el ronroneador.'
+L['kareshire_sublabel'] = 'Cambia de fases'
+L['in_a_tree'] = 'Encima del árbol.'
+L['little_ms_phaser_sublabel'] = 'Cambia de fases'
+
+L['mailroom_distribution_note'] = 'Interactúa con el carro de fuera y abre la puerta de la sala de correo. Párate en los círculos y usa el botón de acción adicional. El tesoro aparecerá cerca de la puerta.'
+L['gift_of_the_brothers_note'] = 'Interactúa con el {object:Farol chisporroteante} y habla con {npc:233881}. Después ves a buscar a {npc:234112} ({dot:Red}), {npc:234113} ({dot:Yellow}) y {npc:234075} ({dot:Green}). Por último, vuelve a {npc:233881} en el {object:Farol chisporroteante}.'
+L['ancient_coffer_note'] = 'Recoge el {item:233794}({dot:Red}) y la {item:233799}({dot:Yellow}). Devuélvelos a la {object:Arca antigua} para conseguir {item:245269}.'
+
+L['sthaarbs_note'] = 'Usa el teletransportador cerca del {object:Conducto de fase} para alcanzar a {npc:234845}.'
+L['heka_tamos_note'] = nil

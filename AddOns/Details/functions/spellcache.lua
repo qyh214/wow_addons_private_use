@@ -294,10 +294,31 @@ do
 		customItemList[443381] = {itemId = 219297, isPassive = true, onUse = false, castId = nil, defaultName = GetSpellInfo(443381), aura1 = 443381, aura2 = nil} --[Cinderbrew Stein]
 		customItemList[450960] = {itemId = 219311, isPassive = true, onUse = false, castId = nil, defaultName = GetSpellInfo(450960), aura1 = 450962, aura2 = nil} --[Void Pactstone] death effect has the same spellId --start|SPELL_DAMAGE|450960|"Void Pulse"|end
 
-		--customItemList[] = {itemId = , isPassive = , onUse = , castId = , defaultName = GetSpellInfo(), aura1 = , aura2 = } --
+		--11.2
+		customItemList[1234219] = {itemId = 242867, isPassive = true, onUse = false, castId = nil, defaultName = GetSpellInfo(1234219), aura1 = nil, aura2 = nil} --[Automatic Footbomb Dispenser]
+		customItemList[1245376] = {itemId = 246939, isPassive = true, onUse = false, castId = nil, defaultName = GetSpellInfo(1245376), aura1 = 1245376, aura2 = nil} --[Essence-Hunter's Eyeglass]
+		customItemList[1242875] = {itemId = 242399, isPassive = true, onUse = false, castId = nil, defaultName = GetSpellInfo(1242875), aura1 = nil, aura2 = nil} --[Screams of a Forgotten Sky]
+		customItemList[1239221] = {itemId = 242392, isPassive = true, onUse = false, castId = nil, defaultName = GetSpellInfo(1239221), aura1 = 1239221, aura2 = nil} --[Diamantine Voidcore]
+		customItemList[1244448] = {itemId = 242403, isPassive = false, onUse = true, castId = 1244448, defaultName = GetSpellInfo(1244448), aura1 = nil, aura2 = nil} --
+		customItemList[343393] = {itemId = 178826, isPassive = false, onUse = true, castId = 343393, defaultName = GetSpellInfo(343393), aura1 = nil, aura2 = nil} --[Sunblood Amethyst]
+
+
+
 		--customItemList[] = {itemId = , isPassive = , onUse = , castId = , defaultName = GetSpellInfo(), aura1 = , aura2 = } --
 
 		--[Ovinax's Mercurial Egg] couldn't detect the buffId
+
+	elseif (DetailsFramework.IsPandaWow()) then
+		defaultSpellCustomization = {
+			[1] = {name = Loc ["STRING_MELEE"], icon = [[Interface\ICONS\INV_Sword_04]]},
+			[2] = {name = Loc ["STRING_AUTOSHOT"], icon = [[Interface\ICONS\INV_Weapon_Bow_07]]},
+			[3] = {name = Loc ["STRING_ENVIRONMENTAL_FALLING"], icon = [[Interface\ICONS\Spell_Magic_FeatherFall]]},
+			[4] = {name = Loc ["STRING_ENVIRONMENTAL_DROWNING"], icon = [[Interface\ICONS\Ability_Suffocate]]},
+			[5] = {name = Loc ["STRING_ENVIRONMENTAL_FATIGUE"], icon = [[Interface\ICONS\Spell_Arcane_MindMastery]]},
+			[6] = {name = Loc ["STRING_ENVIRONMENTAL_FIRE"], icon = [[Interface\ICONS\INV_SummerFest_FireSpirit]]},
+			[7] = {name = Loc ["STRING_ENVIRONMENTAL_LAVA"], icon = [[Interface\ICONS\Ability_Rhyolith_Volcano]]},
+			[8] = {name = Loc ["STRING_ENVIRONMENTAL_SLIME"], icon = [[Interface\ICONS\Ability_Creature_Poison_02]]},
+		}
 
 	else --retail (dragonflight)
 		defaultSpellCustomization = {

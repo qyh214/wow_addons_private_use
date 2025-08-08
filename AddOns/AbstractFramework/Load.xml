@@ -4,8 +4,11 @@
     <Script file="Libs\utf8.lua"/>
     <Script file="Libs\LibStub\LibStub.lua"/>
     <Script file="Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua"/>
+    <Script file="Libs\base64.lua"/>
+    <Script file="Libs\json.lua"/>
     <Script file="Libs\md5.lua"/>
     <Script file="Libs\sha256.lua"/>
+    <Script file="Libs\qrcode.lua"/>
     <Include file="Libs\TaintLess\TaintLess.xml"/>
     <Include file="Libs\LibSharedMedia-3.0\lib.xml"/>
     <Include file="Libs\LibCustomGlow-1.0\LibCustomGlow-1.0.xml"/>
@@ -20,18 +23,30 @@
     <Script file="Locales.lua"/>
 
     <!-- utils -->
-    <Script file="Utils\ObjectPool.lua"/>
-    <Script file="Utils\Queue.lua"/>
-    <Script file="Utils\OnUpdateExecutor.lua"/>
-    <Script file="Utils\EventHandler.lua"/>
-    <Script file="Utils\CallbackHandler.lua"/>
-    <Script file="Utils\Common.lua"/>
-    <Script file="Utils\Communication.lua"/>
+    <Script file="Utils\Math.lua"/>
+    <Script file="Utils\Table.lua"/>
+    <Script file="Utils\String.lua"/>
+    <Script file="Utils\DateTime.lua"/>
+    <Script file="Utils\Delay.lua"/>
+    <Script file="Utils\Serialization.lua"/>
     <Script file="Utils\Color.lua"/>
-    <Script file="Utils\Addon.lua"/>
-    <Script file="Utils\DataBroker.lua"/>
 
-    <!-- player -->
+    <!-- system -->
+    <Script file="System\Addon.lua"/>
+    <Script file="System\CallbackHandler.lua"/>
+    <Script file="System\EventHandler.lua"/>
+    <Script file="System\Communication.lua"/>
+    <Script file="System\Events.lua"/>
+
+    <!-- data -->
+    <Script file="Data\ObjectPool.lua"/>
+    <Script file="Data\Queue.lua"/>
+
+    <!-- Executors -->
+    <Script file="Executors\OnUpdateExecutor.lua"/>
+    <Script file="Executors\ItemLoadExecutor.lua"/>
+
+    <!-- units/player -->
     <Script file="Units\Player.lua"/>
 
     <!-- media -->
@@ -75,6 +90,7 @@
     <Include file="Widgets\AuraCooldown.xml"/>
     <Script file="Widgets\Aura.lua"/>
     <Script file="Widgets\Misc.lua"/>
+    <Script file="Widgets\DataBroker.lua"/>
 
     <!-- units -->
     <Script file="Units\Common.lua"/>

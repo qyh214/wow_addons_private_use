@@ -1,4 +1,4 @@
-## Interface: 11506, 11507, 20504, 30404, 40402, 40401, 110105, 110007, 110100
+## Interface: 11506, 11507, 20504, 30405, 40402, 40401, 50500, 110105, 110107, 110200
 
 ## Title: Lib: Ace3
 ## Notes: AddOn development framework
@@ -6,7 +6,7 @@
 ## X-Website: http://www.wowace.com
 ## X-Category: Library
 ## X-License: Limited BSD
-## Version: 2.5.1
+## Version: 2.6.0
 
 LibStub\LibStub.lua
 CallbackHandler-1.0\CallbackHandler-1.0.xml

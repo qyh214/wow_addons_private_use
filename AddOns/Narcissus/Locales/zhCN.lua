@@ -284,6 +284,7 @@ L["Animation"] = "角色动画";
 L["Animation Tooltip"] = "浏览和搜索动画";
 L["Animation Variation"] = "子类型";
 L["Reset Slider"] = "重置为零";
+L["Available Count"] = "%d个可用";
 
 --Spell Visual Browser--
 L["Visuals"] = "法术效果";
@@ -346,7 +347,7 @@ L["Other Last Name Format"] = "其他"..NARCI_COLOR_GREY_70.." %s(s)|r:\n";
 L["Too Many Matches Format"] = "\n超过%s个结果";
 
 --装备对比--
-NARCI_AZERITE_POWERS = "艾泽里特之力";
+L["Azerite Powers"] = "艾泽里特之力";
 L["Gem Tooltip Format1"] = "%s和%s";
 L["Gem Tooltip Format2"] = "%s、%s和另外%s种...";
 
@@ -434,6 +435,10 @@ L["Click And Hold"] = "按住鼠标左键";
 L["To Do List"] = "待办事项";
 L["Error Alert Bookmarks Too Many"] = "你最多同时选择%s个成就。";
 L["Instruction Add To To Do List"] = string.format("%s 左键 点击一个未完成的成就，可把它加入到你的待办事项里。", NARCI_MODIFIER_ALT);
+L["Instruction Remove From To Do List"] = string.format("%s 左键点击以从待办事项中移除。", NARCI_MODIFIER_ALT);
+L["DIY"] = "DIY";
+L["DIY Tab Tooltip"] = "自定义一个成就供截图使用。"
+L["Binding Name Open Achievement"] = "Narcissus成就面板";
 
 --Barbershop--
 L["Save New Look"] = "保存外观";
@@ -472,7 +477,8 @@ L["Private Profile"] = "个人";   --used by the current character
 L["Public Profile"] = "共用";     --shared among all your characters
 L["No Saves"] = "没有存档";
 L["Profile Type Tooltip"] = "选择当前角色所用档案。\n\n个人:|cffedd100 由此角色创建的档案|r\n\n共用:|cffedd100 可被你所有角色共用的档案|r";
-L["Profile Migration Okay"] = "好的"
+L["Profile Migration Okay"] = "好的";
+L["Profile Migration CopyButton Tooltip"] = "复制此外观到共用档案";
 
 --Tutorial--
 L["Alert"] = "警告";

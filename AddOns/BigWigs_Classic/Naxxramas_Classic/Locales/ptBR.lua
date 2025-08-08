@@ -4,8 +4,6 @@ if L then
 	L.add_death = "Aviso de morte do lacaio"
 	L.add_death_desc = "Avisa quando um lacaio morre."
 
-	L.wave = "%d/22: %s"
-
 	L.trainee = "Aprendiz" -- Unrelenting Trainee NPC 16124
 	L.deathKnight = "Cavaleiro da Morte" -- Unrelenting Death Knight NPC 16125
 	L.rider = "Cavalgante" -- Unrelenting Rider NPC 16126

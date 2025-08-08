@@ -9,6 +9,6 @@
 <Script file="Toravon.lua"/>
 <Script file="Onyxia.lua"/>
 
-<Include file="Options\options.xml"/>
+<Script file="!Options.lua"/>
 
 </Ui>

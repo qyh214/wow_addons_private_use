@@ -19,16 +19,21 @@ if L then
 	L.freeze_warn_frost = "%d attaques de givre - %d de plus"
 end
 
+L = BigWigs:NewBossLocale("Silithid Royalty", "frFR")
+if L then
+	L[15543] = "Yauj"
+	L[15544] = "Vem"
+	L[15511] = "Kri"
+end
+
 L = BigWigs:NewBossLocale("Ouro", "frFR")
 if L then
-	L.engage_message = "Ouro engagé ! Submersion possible dans 90 secondes !"
-	L.possible_submerge_bar = "Submersion possible"
-
 	L.emerge_message = "Ouro a émergé"
 	L.emerge_bar = "Émergence"
 
 	L.submerge_message = "Ouro a submergé"
 	L.submerge_bar = "Submersion"
+	--L.submerge_early_message = "Early Submerge - No one was in range"
 
 	L.scarab = "Disparition des scarabées"
 	L.scarab_desc = "Avertissement pour la disparition des scarabées."

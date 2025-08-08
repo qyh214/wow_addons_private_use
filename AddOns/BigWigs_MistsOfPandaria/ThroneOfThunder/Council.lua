@@ -50,7 +50,7 @@ function mod:GetOptions()
 		{-7062, "FLASH"}, 136878, {136857, "FLASH", "DISPEL"}, 136894, -- Sul the Sandcrawler
 		{137122, "FLASH"}, -- Kazra'jin
 		{-7054, "TANK_HEALER"}, {136992, "ICON", "SAY", "PROXIMITY"}, 136990, 137084, {137085, "FLASH"}, -- Frost King Malakk
-		136442, "custom_on_markpossessed", {137650, "FLASH"}, "proximity", "berserk",
+		136442, "custom_on_markpossessed", 137650, "proximity", "berserk",
 	}, {
 		["priestess_adds"] = -7050,
 		[-7062] = -7049,

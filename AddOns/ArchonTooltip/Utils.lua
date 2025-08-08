@@ -55,7 +55,7 @@ function Private.EncodeWithPercentileColor(percentile, content)
 	local color = Private.Colors.Common
 
 	if percentile ~= nil then
-		if percentile >= 100 then
+		if percentile >= 99.95 then
 			color = Private.Colors.Artifact
 		elseif percentile >= 99 then
 			color = Private.Colors.Astounding
@@ -122,7 +122,11 @@ function Private.GetProfileUrl(name, realmNameOrId, projectId)
 	---@type string|nil
 	local subdomain = nil
 	if projectId == WOW_PROJECT_CLASSIC then
-		subdomain = "sod"
+		if C_Seasons.GetActiveSeason() == Enum.SeasonID.Fresh then
+			subdomain = "fresh"
+		else
+			subdomain = "sod"
+		end
 	elseif projectId == WOW_PROJECT_WRATH_CLASSIC or projectId == WOW_PROJECT_CATACLYSM_CLASSIC then
 		subdomain = "classic"
 	end
@@ -169,26 +173,35 @@ function Private.GetProfileUrl(name, realmNameOrId, projectId)
 	return string.lower(string.format(baseUrl, Private.CurrentRealm.region, realmNameOrId, name))
 end
 
----@param difficulty number
----@param size number
----@param zoneId number|nil
+---@param zoneId number
+---@param difficultyId number
+---@param sizeId number
+---@param progressKilled number
+---@param progressPossible number
+---@param isShort boolean
 ---@return string
-function Private.GetDifficultyString(difficulty, size, zoneId)
-	if Private.HasDifficulties == false then
-		return ""
+function Private.GetProgressString(zoneId, difficultyId, sizeId, progressKilled, progressPossible, isShort)
+	local progress = string.format("%d/%d", progressKilled, progressPossible)
+
+	local zone = Private.GetZoneById(zoneId)
+	local difficultyAndSize = ""
+
+	if not isShort and zone and zone.difficultyIconMap ~= nil then
+		local difficultyIcon = zone.difficultyIconMap[difficultyId]
+		if difficultyIcon then
+			difficultyAndSize = string.format("%s %s", difficultyAndSize, Private.EncodeWithTexture(difficultyIcon))
+		end
 	end
 
-	local translatedDifficulty = Private.L["Difficulty-" .. difficulty] or ""
-	-- weekly data has no encounter ids and thus no zone id
-	local zone = zoneId and Private.GetZoneById(zoneId) or nil
-	local hasMultipleSizes = zone and zone.hasMultipleSizes or (Private.IsWrath or Private.IsCata)
-	local difficultyIcon = zone and zone.difficultyIconMap and zone.difficultyIconMap[difficulty] or nil
-
-	if difficultyIcon then
-		translatedDifficulty = string.format("%s %s", Private.EncodeWithTexture(difficultyIcon), translatedDifficulty)
+	if zone and zone.hasMultipleDifficulties then
+		difficultyAndSize = string.format("%s%s", difficultyAndSize, Private.L["Difficulty-" .. difficultyId] or "")
 	end
 
-	return hasMultipleSizes and string.format("%s%d", translatedDifficulty, size) or translatedDifficulty
+	if not isShort and zone and zone.hasMultipleSizes then
+		difficultyAndSize = string.format(" %s%d", difficultyAndSize, sizeId)
+	end
+
+	return string.format("%s%s", progress, difficultyAndSize)
 end
 
 ---@param realm string|nil
@@ -199,13 +212,19 @@ function Private.GetRealmOrDefault(realm)
 		return Private.CurrentRealm.name
 	end
 
-	return realm
+	if realm then
+		return select(1, string.gsub(realm, "%s+", ""))
+	end
+
+	return nil
 end
 
 local function ShowStaticPopupDialog(...)
 	local id = "WARCRAFTLOGS_COPY_URL"
 
 	if not StaticPopupDialogs[id] then
+		local lastOnShowText = ""
+
 		StaticPopupDialogs[id] = {
 			id = id,
 			text = "%s",
@@ -220,6 +239,7 @@ local function ShowStaticPopupDialog(...)
 			OnShow = function(self)
 				local editBox = _G[self:GetName() .. "WideEditBox"] or _G[self:GetName() .. "EditBox"]
 
+				lastOnShowText = self.text.text_arg2
 				editBox:SetText(self.text.text_arg2)
 				editBox:HighlightText()
 
@@ -242,6 +262,16 @@ local function ShowStaticPopupDialog(...)
 			end,
 			EditBoxOnEscapePressed = function(self)
 				self:GetParent():Hide()
+			end,
+			EditBoxOnTextChanged = function(self)
+				-- ctrl + x sets the text to "" but this triggers hiding and shouldn't trigger resetting the text
+				local currentText = self:GetText()
+
+				if currentText == "" or currentText == lastOnShowText then
+					return
+				end
+
+				self:SetText(lastOnShowText)
 			end,
 		}
 	end
@@ -267,6 +297,37 @@ function Private.SupportsLazyLoading(realm)
 	return Private.IsClassicEra and Private.CurrentRealm ~= realm
 end
 
+Private.AddOnUtils = {
+	RaiderIoLoaded = false,
+	---@param name string
+	---@return boolean
+	IsAddOnLoaded = function(name)
+		if C_AddOns and C_AddOns.IsAddOnLoaded then
+			return select(1, C_AddOns.IsAddOnLoaded(name))
+		end
+
+		return select(1, IsAddOnLoaded(name))
+	end,
+	---@param name string
+	---@return boolean
+	DoesAddOnExist = function(name)
+		if C_AddOns and C_AddOns.DoesAddOnExist then
+			return C_AddOns.DoesAddOnExist(name)
+		end
+
+		return true
+	end,
+	---@param name string
+	---@return boolean?, string?
+	LoadAddOn = function(name)
+		if C_AddOns and C_AddOns.LoadAddOn then
+			return C_AddOns.LoadAddOn(name)
+		end
+
+		return LoadAddOn(name)
+	end,
+}
+
 ---@type table<string, boolean>
 local warnings = {}
 
@@ -276,11 +337,11 @@ local warnings = {}
 function Private.LoadAddOn(databaseKey, realmName)
 	local addonToLoad = string.format("%sDB_%s", AddonName, databaseKey)
 
-	if (C_AddOns.IsAddOnLoaded and C_AddOns.IsAddOnLoaded(addonToLoad)) or (IsAddOnLoaded and IsAddOnLoaded(addonToLoad)) then
+	if Private.AddOnUtils.IsAddOnLoaded(addonToLoad) then
 		return true
 	end
 
-	if C_AddOns.DoesAddOnExist and not C_AddOns.DoesAddOnExist(addonToLoad) then
+	if not Private.AddOnUtils.DoesAddOnExist(addonToLoad) then
 		local warning = string.format(Private.L.SubAddonMissing, Private.GetAddOnNameWithIcon(), databaseKey, realmName)
 
 		if not warnings[warning] then
@@ -293,8 +354,7 @@ function Private.LoadAddOn(databaseKey, realmName)
 
 	local startTs = debugprofilestop()
 
-	local fn = C_AddOns.LoadAddOn or LoadAddOn
-	local loaded, reason = fn(addonToLoad, select(1, UnitName("player")))
+	local loaded, reason = Private.AddOnUtils.LoadAddOn(addonToLoad, select(1, UnitName("player")))
 
 	if not loaded then
 		print(string.format(Private.L.DBLoadError, Private.GetAddOnNameWithIcon(), databaseKey, reason or Private.L.Unknown))
@@ -314,4 +374,31 @@ function Private.GetDatabaseKeyForRealm(realm)
 			return realmInfo.database
 		end
 	end
+end
+
+--- the utf8 global is not available, so we polyfill utf8.offset so we can correctly find prefixes of utf8 strings
+---@param str string
+---@param index number
+---@return number|nil
+function Private.Utf8Offset(str, index)
+	local len = #str
+
+	if index <= 0 or index > len then
+		return nil -- Out of bounds
+	end
+
+	-- Move forward to the nth character
+	local count = 0
+	for i = 1, len do
+		local byte = string.byte(str, i)
+		local isContinuationByte = byte >= 128 and byte < 192
+		if not isContinuationByte then
+			count = count + 1
+			if count == index then
+				return i
+			end
+		end
+	end
+
+	return nil -- If the nth character is not found
 end

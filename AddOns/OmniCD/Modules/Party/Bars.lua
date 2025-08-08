@@ -24,6 +24,7 @@ function BarFrameMixin:OnEvent(event, ...)
 		if unit ~= self.unit and unit ~= UNIT_TO_PET[self.unit] then
 			return
 		end
+
 		if E.spellcast_all[spellID] then
 			info:ProcessSpell(spellID)
 		end
@@ -39,10 +40,14 @@ function BarFrameMixin:OnEvent(event, ...)
 
 
 
+
+
+
 		if not UnitIsDeadOrGhost(unit) then
-			if E.preCata then
+			if E.preMoP then
 				local icon = info.spellIcons[20608]
 				if icon then
+
 					local mult = info.talentData[16184] and 0.3 or (info.talentData[16209] and 0.4) or 0.2
 					if UnitHealth(unit) == floor(UnitHealthMax(unit) * mult) then
 						icon:StartCooldown()

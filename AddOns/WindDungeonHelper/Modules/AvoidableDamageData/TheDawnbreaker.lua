@@ -8,7 +8,13 @@ local mistakes = {
 		aura = 451104,
 	},
 	{
-		-- 黑暗傷痕 (阿努比卡杰, 『死亡尖嘯者』伊坎特克)
+		-- 恐嚇猛擊 (堅不可摧的伊絲奎特, 阿努比卡杰)
+		type = AD.MISTAKE.AURA,
+		spell = 427007,
+		playerIsNotTank = true,
+	},
+	{
+		-- 黑暗傷痕 (『死亡尖嘯者』伊坎特克, 阿努比卡杰)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 427378,
 	},
@@ -88,6 +94,12 @@ local mistakes = {
 		spell = 451098,
 	},
 	{
+		-- 恐嚇猛擊 (堅不可摧的伊絲奎特, 阿努比卡杰)
+		type = AD.MISTAKE.AURA,
+		spell = 451115,
+		playerIsNotTank = true,
+	},
+	{
 		-- 崩解之夜 (代言者影冠)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 453173,
@@ -98,7 +110,7 @@ local mistakes = {
 		spell = 453214,
 	},
 	{
-		-- 黑暗傷痕 (阿努比卡杰, 『死亡尖嘯者』伊坎特克)
+		-- 黑暗傷痕 (『死亡尖嘯者』伊坎特克, 阿努比卡杰)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 460135,
 	},

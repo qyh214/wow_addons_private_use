@@ -4,13 +4,13 @@ local AF = _G.AbstractFramework
 local bleedList
 
 function AF.GetDebuffType(auraData)
-    if auraData.isHelpful then return end
+    if not auraData or auraData.isHelpful then return end
 
     if not auraData.dispelName and bleedList[spellId] then
         return "Bleed"
     end
 
-    return auraData.dispelName or "None"
+    return auraData.dispelName -- or "None"
 end
 
 

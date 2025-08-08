@@ -200,8 +200,12 @@ local function ExtractCharacterInformation(context)
 	end
 end
 
-if Private.IsRetail or Private.IsClassicEra or Private.IsCata then
+if Menu and Menu.ModifyMenu then
 	local function ModifyMenuCallback(owner, rootDescription, contextData)
+		if not Private.db.Settings.MenuDropdownIntegration then
+			return
+		end
+
 		ExtractCharacterInformation(contextData)
 
 		if currentDropDownSelection.name == nil then
@@ -223,6 +227,10 @@ if Private.IsRetail or Private.IsClassicEra or Private.IsCata then
 	end
 
 	Menu.ModifyMenu("MENU_LFG_FRAME_SEARCH_ENTRY", function(owner, rootDescription, contextData)
+		if not Private.db.Settings.MenuDropdownIntegration then
+			return
+		end
+
 		local id = owner.resultID
 
 		local entry = C_LFGList.GetSearchResultInfo(id)
@@ -272,6 +280,10 @@ else
 
 	---@type LibDropDownExtensionCallback
 	local function OnShow(dropdown, event, options, level, data)
+		if not Private.db.Settings.MenuDropdownIntegration then
+			return
+		end
+
 		if not IsValidDropDown(dropdown) then
 			return
 		end
@@ -298,6 +310,10 @@ else
 	end
 
 	local function OnHide(dropdown, event, options, level, data)
+		if not Private.db.Settings.MenuDropdownIntegration then
+			return
+		end
+
 		currentDropDownSelection.name = nil
 		currentDropDownSelection.realm = nil
 		currentDropDownSelection.projectId = WOW_PROJECT_ID

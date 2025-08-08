@@ -26,7 +26,7 @@ local mt_resource = ns.metatables.mt_resource
 local GetActiveLossOfControlData, GetActiveLossOfControlDataCount = C_LossOfControl.GetActiveLossOfControlData, C_LossOfControl.GetActiveLossOfControlDataCount
 local GetItemCooldown = C_Item.GetItemCooldown
 local GetSpellDescription, GetSpellTexture = C_Spell.GetSpellDescription, C_Spell.GetSpellTexture
-local GetSpecialization, GetSpecializationInfo = _G.GetSpecialization, _G.GetSpecializationInfo
+local GetSpecialization, GetSpecializationInfo = C_SpecializationInfo.GetSpecialization, C_SpecializationInfo.GetSpecializationInfo
 local GetItemSpell, GetItemCount, IsUsableItem = C_Item.GetItemSpell, C_Item.GetItemCount, C_Item.IsUsableItem
 local GetSpellInfo = C_Spell.GetSpellInfo
 local GetSpellLink = C_Spell.GetSpellLink
@@ -1132,7 +1132,7 @@ local HekiliSpecMixin = {
 
             -- Register the pet and handle the copy field if it exists.
             if copy then
-                self:RegisterPet( token, id, spell, duration, copy )
+                self:RegisterPet( token, id, spell, duration, type( copy ) == "string" and copy or unpack( copy ) )
             else
                 self:RegisterPet( token, id, spell, duration )
             end
@@ -1174,8 +1174,7 @@ local HekiliSpecMixin = {
                     self.totems[ id ] = copy
                 elseif type( copy ) == "table" then
                     for _, alias in ipairs( copy ) do
-                        self.totems[ alias ] = id
-                        self.totems[ id ] = alias
+                        self.totems[ alias ] = token
                     end
                 end
             end
@@ -1366,6 +1365,8 @@ function Hekili:NewSpecialization( specID, isRanged, icon )
 
     if not specID or specID < 0 then return end
 
+    isRanged = isRanged or ns.Specializations[ specID ].ranged
+
     local id, name, _, texture, role, pClass
 
     if Hekili.IsRetail() and specID > 0 then id, name, _, texture, role, pClass = GetSpecializationInfoByID( specID )
@@ -1462,6 +1463,7 @@ local all = Hekili:NewSpecialization( 0, "All", "Interface\\Addons\\Hekili\\Text
 -- SHARED SPELLS/BUFFS/ETC. --
 ------------------------------
 
+---@diagnostic disable-next-line: need-check-nil
 all:RegisterAuras( {
 
     enlisted_a = {
@@ -1983,7 +1985,7 @@ all:RegisterAuras( {
                 spell, _, _, startCast, endCast, _, notInterruptible, spellID = UnitChannelInfo( unit )
                 startCast = ( startCast or 0 ) / 1000
                 endCast = ( endCast or 0 ) / 1000
-                duration = endCast - startCast
+                local duration = endCast - startCast
 
                 -- Channels greater than 10 seconds are nonsense.  Probably.
                 if spell and duration <= 10 then
@@ -2141,12 +2143,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if event.lockoutSchool == 0 and event.startTime and event.startTime > 0 and event.timeRemaining and event.timeRemaining > 0 and event.timeRemaining > remains then
+                    if event and event.lockoutSchool == 0 and event.startTime and event.startTime > 0 and event.timeRemaining and event.timeRemaining > 0 and event.timeRemaining > remains then
                         spell = event.spellID
                         start = event.startTime
                         duration = event.duration
@@ -2180,12 +2182,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if event.locType == "CONFUSE"
+                    if event and event.locType == "CONFUSE"
                         and event.startTime and event.startTime > 0
                         and event.timeRemaining and event.timeRemaining > 0
                         and event.timeRemaining > remains then
@@ -2223,12 +2225,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if ( event.locType == "FEAR" or event.locType == "FEAR_MECHANIC" or event.locType == "HORROR" )
+                    if event and ( event.locType == "FEAR" or event.locType == "FEAR_MECHANIC" or event.locType == "HORROR" )
                         and event.startTime and event.startTime > 0
                         and event.timeRemaining and event.timeRemaining > 0
                         and event.timeRemaining > remains then
@@ -2266,12 +2268,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if event.locType == "STUN"
+                    if event and event.locType == "STUN"
                         and event.startTime and event.startTime > 0
                         and event.timeRemaining and event.timeRemaining > 0
                         and event.timeRemaining > remains then
@@ -2310,12 +2312,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if event.locType == "ROOT" and event.startTime and event.startTime > 0 and event.timeRemaining and event.timeRemaining > 0 and event.timeRemaining > remains then
+                    if event and event.locType == "ROOT" and event.startTime and event.startTime > 0 and event.timeRemaining and event.timeRemaining > 0 and event.timeRemaining > remains then
                         spell = event.spellID
                         start = event.startTime
                         duration = event.duration
@@ -2349,12 +2351,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if event.locType == "SNARE" and event.startTime and event.startTime > 0 and event.timeRemaining and event.timeRemaining > 0 and event.timeRemaining > remains then
+                    if event and event.locType == "SNARE" and event.startTime and event.startTime > 0 and event.timeRemaining and event.timeRemaining > 0 and event.timeRemaining > remains then
                         spell = event.spellID
                         start = event.startTime
                         duration = event.duration
@@ -2389,12 +2391,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if event.locType == "STUN_MECHANIC"
+                    if event and event.locType == "STUN_MECHANIC"
                         and event.startTime and event.startTime > 0
                         and event.timeRemaining and event.timeRemaining > 0
                         and event.timeRemaining > remains then
@@ -2708,6 +2710,7 @@ do
         }
     }
 
+---@diagnostic disable-next-line: need-check-nil
     all:RegisterAura( "fake_potion", {
         duration = 30,
         max_stack = 1,

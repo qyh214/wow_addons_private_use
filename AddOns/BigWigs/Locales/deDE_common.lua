@@ -1,4 +1,5 @@
-local L = BigWigsAPI:NewLocale("BigWigs: Common", "deDE")
+local _, addonTbl = ...
+local L = addonTbl.API:NewLocale("BigWigs: Common", "deDE")
 if not L then return end
 
 -- Prototype.lua common words
@@ -13,8 +14,10 @@ L.buff_other = "Buff auf %s: %s"
 L.magic_buff_boss = "Magie Buff auf BOSS: %s" -- Magic buff on BOSS: SPELL_NAME
 L.magic_buff_other = "Magie Buff auf: %s: %s" -- Magic buff on NPC_NAME: SPELL_NAME
 L.on = "%s auf %s"
-L.stack = "%dx %s auf %s"
-L.stackyou = "%dx %s auf DIR"
+L.stack = "%dx %s auf %s" -- "5x SPELL_NAME on PLAYER_OR_NPC" showing how many stacks of a buff/debuff are on a player or NPC
+L.stackyou = "%dx %s auf DIR" -- "5x SPELL_NAME on YOU" showing how many stacks of a buff/debuff are on you
+L.stackboss = "%dx %s auf BOSS" -- "5x SPELL_NAME on BOSS" showing how many stacks of a buff/debuff are on the boss
+L.stack_gained = "%dx erhalten" -- "Gained 5x" for situations where we show how many stacks of a buff were gained since last time a message showed
 L.cast = "<Wirkt %s>"
 L.casting = "Wirkt %s"
 L.soon = "%s bald"
@@ -43,10 +46,11 @@ L.dead = "Tot" -- When a player is dead
 L.general = "Allgemein" -- General settings, i.e. things that apply to normal, heroic and mythic mode.
 L.health = "Gesundheit" -- The health of an NPC
 L.health_percent = "%d%% Gesundheit" -- "10% Health" The health percentage of an NPC
+L.energy = "Energie"
+L.energy_percent = "%d%% Energie" -- "80% Energy" The energy percentage of an NPC
 L.door_open = "Tür offen" -- When a door is open, usually after a speech from an NPC
 L.gate_open = "Tor offen" -- When a gate is open, usually after a speech from an NPC
 L.threat = "Bedrohung"
-L.energy = "Energie"
 
 L.remaining = "%d übrig" -- 5 remaining
 L.duration = "%s für %s Sek" -- Spell for 10 seconds
@@ -74,6 +78,8 @@ L.keep_moving = "In Bewegung bleiben" -- An ability that forces you to keep movi
 L.stand_still = "Stehen bleiben" -- An ability that forces you to stand still or you will take damage
 L.safe_to_stop = "Stehen möglich" -- When an ability that forces you to keep moving fades from you, allowing you to stop moving
 L.safe_to_move = "Bewegen möglich" -- When an ability to forces you to stand still fades from you, allowing you to move again
+L.safe = "Sicher" -- You are safe from a bad ability
+L.unsafe = "Unsicher" -- You are unsafe (in danger) of a bad ability
 
 -- Add related
 L.add_spawned = "Add erschienen" -- singular
@@ -131,6 +137,9 @@ L.marker = "%s markieren"
 L.marker_player_desc = "Markiert Spieler, die von %s betroffen sind, mit %s. Benötigt Leiter oder Assistent." -- Mark players affected by 'SPELL_NAME' with SKULL_ICON
 L.marker_npc_desc = "Markiert %s mit %s. Benötigt Leiter oder Assistent." -- Mark NPC_NAME with SKULL_ICON
 L.marker_npc_aura_desc = "Von '%s' betroffene NPCs mit %s markieren. Benötigt Leiter oder Assistent." -- Mark NPCs affected by 'SPELL_NAME' with SKULL_ICON
+L.disabled = "Deaktiviert"
+L.none = "Nichts"
+L.markers = "Markierungen" -- Plural of marker
 
 -- Ability where two players have to move close to each other
 L.link = "Verbindung"
@@ -151,10 +160,14 @@ L.seconds = "%.1fs" -- 1.1 seconds
 
 -- Directions
 L.top = "Oben"
+L.top_right = "Oben Rechts"
+L.top_left = "Oben Links"
 L.up = "Hoch"
 L.middle = "Mitte"
 L.down = "Runter"
 L.bottom = "Unten"
+L.bottom_right = "Unten Rechts"
+L.bottom_left = "Unten Links"
 L.left = "Links"
 L.right = "Rechts"
 L.north = "Norden"
@@ -165,6 +178,11 @@ L.south = "Süden"
 L.south_west = "Südwesten"
 L.west = "Westen"
 L.north_west = "Nordwesten"
+
+-- Sizes
+L.small = "Klein"
+L.medium = "Mittel"
+L.large = "Groß"
 
 -- Schools
 L.fire = "Feuer"
@@ -177,6 +195,7 @@ L.arcane = "Arkan"
 L.autotalk = "Automatische NPC Interaktion"
 L.autotalk_boss_desc = "Automatisch die NPC Dialogoptionen wählen, welche den Bosskampf beginnen lassen."
 L.autotalk_generic_desc = "Automatisch die NPC Dialogoptionen wählen, welche die nächste Phase des Dungeons einleiten."
+L.autotalk_notice = "Automatisch mit NPC %s interagiert."
 
 -- Common ability name replacements
 L.absorb = "Absorbieren" -- Used for shield-like abilities that absorb damage or healing
@@ -230,6 +249,8 @@ L.spell_reflection = "Zauberreflexion" -- Any ability that reflects spells
 L.rooted = "Bewegungsunfähig" -- Any ability that roots you in place, preventing you from moving
 
 -- Common ability name replacements A-Z
+L.ball = "Ball" -- A ball, like a football, basketball, etc
+L.balls = "Bälle" -- Plural of L.ball
 L.blind = "Blenden" -- Any ability that blinds or disorientates you. Usually an ability a boss casts and you need to turn away from the boss or it will blind you.
 L.dodge = "Ausweichen" -- When you need to continually run around to dodge abilities, like missiles landing on the ground under you
 L.enrage = "Wutanfall" -- Any enrage buff that can be removed by players using abilities like Soothe (Druid), Tranquilizing Shot (Hunter) and Shiv (Rogue)
@@ -248,6 +269,7 @@ L.soaks = "Soaks" -- Plural of L.soak
 L.spike = "Stachel" -- Short for any ability with the name "spike" in it e.g. "Glacial Spike" or "Fel Spike" or "Volatile Spike"
 L.spikes = "Stacheln" -- Plural of L.spike
 L.spread = "Verteilen" -- An ability that forces you to spread out away from other players, or you might damage them
+L.tank_bomb = "Tank Bombe" -- Similar to L.bomb but only applies to tanks
 L.tank_combo = "Tank Kombi" -- Used for tank swap mechanics where the boss casts a sequence of tank buster attacks
 L.tank_debuff = "Tank Debuff" -- Used for debuffs that only apply to tanks, usually an indicator that you need to taunt
 L.tank_frontal = "Tank Frontal" -- Similar to L.frontal_cone but only applies to tanks
@@ -255,3 +277,5 @@ L.tank_soak = "Tank Soak" -- Similar to L.soak but only applies to tanks
 L.tentacle = "Tentakel" -- Used for bosses that summon tentacles
 L.tentacles = "Tentakel" -- Plural of L.tentacle
 L.waves = "Wellen" -- Multiple waves of a bad ability coming from a boss, like waves in the ocean
+L.whelp = "Welpe" -- Short for Whelpling, a baby dragonkin (Dragon Whelp)
+L.whelps = "Welpen" -- Plural of L.whelp

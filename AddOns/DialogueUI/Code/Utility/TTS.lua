@@ -3,6 +3,7 @@
 local _, addon = ...
 local CallbackRegistry = addon.CallbackRegistry;
 local GetDBBool = addon.GetDBBool;
+local L = addon.L;
 
 local TTSUtil = CreateFrame("Frame");
 addon.TTSUtil = TTSUtil;
@@ -22,6 +23,16 @@ local TTS_SKIP_RECENT = false;        --skp reading recently read quest dialogs
 local TTS_HISTORY_DEPTH = 20;         --number of quest dialogs that will be skipped
 ------------------
 
+local TTSFlags = {
+    Translation = -1,
+    Gossip = 0,
+    QuestText = 1,
+    QuestTitle = 2,
+    QuestObjective = 3,
+};
+addon.TTSFlags = TTSFlags;
+
+
 local UnitExists = UnitExists;
 local UnitSex = UnitSex;
 local C_VoiceChat = C_VoiceChat;
@@ -31,6 +42,8 @@ local After = C_Timer.After;
 local gsub = string.gsub;
 
 local TTSButtons = {};      --DialogueUI, BookUI
+local TTSButtonMixin = {};
+
 
 local function AdjustTextForTTS(text)
     text = gsub(text, "[<>]", "");      --any "<>" as TTS has problems reading it
@@ -159,7 +172,13 @@ function TTSUtil:SpeakText(segment)
     C_VoiceChat.SpeakText(segment.voiceID, segment.text, self.destination, self.rate, self.volume);
 end
 
-function TTSUtil:ReadCurrentDialogue()
+function TTSUtil:ReadCurrentDialogue(fromAutoPlay)
+    if self:DoesExternalVoiceoverExist() then
+        self:StopLastTTS();
+        self:RequestPlayingVoiceoverExternal(fromAutoPlay);
+        return
+    end
+
     local contentSource = "dialogue";
     self.contentSource = contentSource;
 
@@ -388,9 +407,6 @@ do  --TTS Play Button
     local ICON_SIZE = 16;
     local ALPHA_UNFOCUSED = 0.6;
 
-    local TTSButtonMixin = {};
-
-    local L = addon.L;
 
     function TTSButtonMixin:OnEnter()
         self:SetAlpha(1);
@@ -415,7 +431,20 @@ do  --TTS Play Button
 
         TooltipFrame:AddLeftLine(L["TTS Button Tooltip"], 1, 0.82, 0);
 
+        if self:CheckTranslator(true) then
+            local HOTKEY_ALTERNATE_MODE = "Shift";
+            local description;
+            local readTranslation = GetDBBool("TTSReadTranslation");
+            if readTranslation then
+                description = L["TTS Button Read Original"];
+            else
+                description = L["TTS Button Read Translation"];
+            end
+            local alternateModeCallback = nil;  --Handled by OnModiferStateChanged
+            TooltipFrame:ShowHotkey(HOTKEY_ALTERNATE_MODE, description, alternateModeCallback);
+        end
 
+        self:CheckExternalVoiceover(TooltipFrame);
 
         TooltipFrame:Show();
     end
@@ -423,6 +452,7 @@ do  --TTS Play Button
     function TTSButtonMixin:OnLeave()
         self:SetAlpha(ALPHA_UNFOCUSED);
         addon.SharedTooltip:Hide();
+        self:CheckTranslator(false);
     end
 
     function TTSButtonMixin:SetTheme(themeID)
@@ -507,8 +537,33 @@ do  --TTS Play Button
         return b
     end
     addon.CreateTTSButton = CreateTTSButton;
-end
 
+
+    --Translator: Press Shift to switch between reading original texts or the translation.
+    function TTSButtonMixin:CheckTranslator(state)
+        if state and addon.DialogueUI:IsTranslationAvailable() and addon.IsTranslatorEnabled() then
+            self:RegisterEvent("MODIFIER_STATE_CHANGED");
+            self:SetScript("OnEvent", self.OnModiferStateChanged);
+            return true
+        else
+            self:UnregisterEvent("MODIFIER_STATE_CHANGED");
+            self:SetScript("OnEvent", nil);
+            return false
+        end
+    end
+
+    function TTSButtonMixin:OnModiferStateChanged(event, key, down)
+        if (key == "LSHIFT" or key == "RSHIFT") and down == 1 then
+            if self:IsMouseMotionFocus() then
+                local userInput = true;
+                addon.FlipDBBool("TTSReadTranslation", userInput);
+                self:OnEnter();
+            else
+                self:CheckTranslator(false);
+            end
+        end
+    end
+end
 
 do  --Voice List
     local GetDBValue = addon.GetDBValue;
@@ -650,12 +705,108 @@ do  --Voice List
     end);
 end
 
+do  --External Voiceover Provider
+    local ExternalQueue = CreateFrame("Frame");
+    do
+        ExternalQueue:Hide();
+        ExternalQueue.delay = 0.75;
+
+        function ExternalQueue:Stop()
+            self:Hide();
+            self:SetScript("OnUpdate", nil);
+            self.t = nil;
+        end
+
+        function ExternalQueue:Start()
+            self.t = 0;
+            self:SetScript("OnUpdate", self.OnUpdate);
+            self:Show();
+        end
+
+        function ExternalQueue:OnUpdate(elapsed)
+            self.t = self.t + elapsed;
+            if self.t >= self.delay then
+                self:Stop();
+                TTSUtil:PlayVoiceoverExternal();
+            end
+        end
+    end
+
+
+    function TTSUtil:GetExternalVoiceoverName()
+        --override
+    end
+
+    function TTSUtil:DoesExternalVoiceoverExist()
+        --override
+        return false
+    end
+
+    function TTSUtil:PlayVoiceoverExternal()
+        --override
+    end
+
+    function TTSUtil:StopVoiceoverExternal()
+        --override
+    end
+
+    function TTSUtil:IsPlayingVoiceoverExternal()
+        --override
+        --nil means no external voiceover addon
+    end
+
+    function TTSUtil:UpdateAutoPlayDelay()
+        local delay = self.GetAutoPlayDelayExternal and self:GetAutoPlayDelayExternal();
+        if (not delay) or type(delay) ~= "number" then
+            delay = 0.75;
+        end
+        if delay < 0.5 then
+            delay = 0.5;
+        end
+        ExternalQueue.delay = delay;
+    end
+
+
+    function TTSUtil:RequestPlayingVoiceoverExternal(fromAutoPlay)
+        if fromAutoPlay then
+            self:UpdateAutoPlayDelay();
+            self:StopVoiceoverExternal();
+            ExternalQueue:Start();
+        else
+            if self:IsPlayingVoiceoverExternal() then
+                self:StopVoiceoverExternal();
+            else
+                self:PlayVoiceoverExternal();
+            end
+        end
+    end
+
+    function TTSUtil:RequestStoppingVoiceoverExternal(fromLeavingNPC)
+        ExternalQueue:Stop();
+        if (not fromLeavingNPC) or TTS_STOP_WHEN_LEAVING then
+            self:StopVoiceoverExternal();
+        end
+    end
+
+
+    function TTSButtonMixin:CheckExternalVoiceover(tooltip)
+        local providerName = TTSUtil:GetExternalVoiceoverName();
+        if providerName then
+            tooltip:AddBlankLine();
+            if TTSUtil:DoesExternalVoiceoverExist() then
+                tooltip:AddLeftLine(L["VO Provider Format"]:format(providerName), 1, 0.82, 0);
+            else
+                tooltip:AddLeftLine(L["VO No File Format"]:format(providerName), 1.000, 0.125, 0.125);
+            end
+        end
+    end
+end
 
 do  --CallbackRegistry
     local function OnHandleEvent(event)
         if TTSUtil.isEnabled then
             if TTS_AUTO_PLAY then
-                TTSUtil:ReadCurrentDialogue();
+                TTSUtil:ReadCurrentDialogue(true);
             end
         end
     end
@@ -680,6 +831,7 @@ do  --CallbackRegistry
                 TTSUtil:StopLastTTS();
             end
         end
+        TTSUtil:RequestStoppingVoiceoverExternal(true);
     end
     CallbackRegistry:Register("DialogueUI.Hide", InteractionClosed);
 

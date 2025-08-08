@@ -101,7 +101,6 @@ function mod:OnBossEnable()
 	self:Emote("Surface", L["unburrow_trigger"])
 
 	self:BossYell("Engage", L["engage_trigger"])
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:Death("Win", 34564)
 end
 
@@ -115,6 +114,7 @@ end
 function mod:OnEngage()
 	coldTargets = {}
 	isBurrowed = nil
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:MessageOld("burrow", "yellow", nil, L["engage_message"], 65919)
 	self:Bar("burrow", 80, L["burrow"], 65919)
 	self:DelayedMessage("burrow", 65, "yellow", L["burrow_soon"])

@@ -43,7 +43,7 @@ L = mod:GetLocale()
 -- Initialization
 --
 
-function mod:GetOptions(CL)
+function mod:GetOptions()
 	return {
 		107588, "sapper",
 		{"sunder", "TANK"}, {108046, "SAY", "FLASH"}, {108076, "SAY", "FLASH", "ICON"}, 108044,
@@ -51,7 +51,7 @@ function mod:GetOptions(CL)
 	}, {
 		[107588] = -4027,
 		sunder = -4033,
-		warmup = CL["general"],
+		warmup = CL.general,
 	}
 end
 

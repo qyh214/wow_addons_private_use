@@ -66,7 +66,7 @@ function mod:GetOptions()
 		137458, {-7868, "FLASH"},
 		-7086, -7090, -7092,
 		{-7109, "DISPEL"}, {136723, "FLASH"}, -- Farraki
-		{"venom_bolt_volley", "FLASH"}, {136646, "FLASH"}, -- Gurubashi
+		"venom_bolt_volley", {136646, "FLASH"}, -- Gurubashi
 		{-7119, "DISPEL"}, {-7120, "HEALER"}, {136573, "FLASH"}, -- Drakkari
 		"fireball", "chain_lightning", {-7125, "DISPEL"}, {136490, "FLASH"}, -- Amani
 		136817, 136821, -- War-God Jalak

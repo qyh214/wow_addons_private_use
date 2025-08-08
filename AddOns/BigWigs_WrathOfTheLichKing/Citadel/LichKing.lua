@@ -95,7 +95,6 @@ function mod:OnBossEnable()
 
 	self:Death("Win", 36597)
 
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:BossYell("Warmup", L["warmup_trigger"])
 	self:BossYell("Engage", L["engage_trigger"])
 end
@@ -106,6 +105,7 @@ end
 
 function mod:OnEngage()
 	self:SetStage(1)
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	frenzied = {}
 	plagueTicks = {}
 	valkyrs = {}

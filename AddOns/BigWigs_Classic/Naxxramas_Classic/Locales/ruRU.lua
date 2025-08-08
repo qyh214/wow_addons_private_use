@@ -4,8 +4,6 @@ if L then
 	L.add_death = "Оповещать смерть помощников"
 	L.add_death_desc = "Сообщать о смерти помощников."
 
-	L.wave = "%d/22: %s"
-
 	L.trainee = "Новобранец" -- Unrelenting Trainee NPC 16124
 	L.deathKnight = "Рыцарь Смерти" -- Unrelenting Death Knight NPC 16125
 	L.rider = "Всадник" -- Unrelenting Rider NPC 16126

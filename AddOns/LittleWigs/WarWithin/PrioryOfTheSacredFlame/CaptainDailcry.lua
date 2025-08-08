@@ -4,7 +4,12 @@
 
 local mod, CL = BigWigs:NewBoss("Captain Dailcry", 2649, 2571)
 if not mod then return end
-mod:RegisterEnableMob(207946) -- Captain Dailcry
+mod:RegisterEnableMob(
+	207946, -- Captain Dailcry
+	211291, -- Sergeant Shaynemail
+	211290, -- Elaena Emberlanz
+	211289 -- Taener Duelmal
+)
 mod:SetEncounterID(2847)
 mod:SetRespawnTime(30)
 
@@ -23,8 +28,8 @@ local nextSavageMauling = 0
 function mod:GetOptions()
 	return {
 		424419, -- Battle Cry
-		447270, -- Hurl Spear
-		{424414, "TANK"}, -- Pierce Armor
+		1238780, -- Earthshattering Spear
+		{424414, "TANK_HEALER"}, -- Pierce Armor
 		447439, -- Savage Mauling
 	}
 end
@@ -32,7 +37,9 @@ end
 function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "BattleCry", 424419)
 	self:Log("SPELL_CAST_SUCCESS", "BattleCrySuccess", 424419)
-	self:Log("SPELL_CAST_START", "HurlSpear", 447270)
+	self:Log("SPELL_CAST_START", "EarthshatteringSpear", 1238780)
+	self:Log("SPELL_PERIODIC_DAMAGE", "EarthshatteringSpearDamage", 1238782)
+	self:Log("SPELL_PERIODIC_MISSED", "EarthshatteringSpearDamage", 1238782)
 	self:Log("SPELL_CAST_START", "PierceArmor", 424414)
 	self:Log("SPELL_CAST_SUCCESS", "SavageMauling", 447439)
 	self:Log("SPELL_AURA_REMOVED", "SavageMaulingRemoved", 447443)
@@ -43,7 +50,7 @@ function mod:OnEngage()
 	isSavageMauling = false
 	energyGainedDuringSavageMauling = 0
 	self:CDBar(424414, 5.2) -- Pierce Armor
-	self:CDBar(447270, 8.1) -- Hurl Spear
+	self:CDBar(1238780, 9.3) -- Earthshattering Spear
 	self:CDBar(424419, 12.0) -- Battle Cry
 	nextSavageMauling = t + 13.0
 	self:CDBar(447439, 13.0) -- Savage Mauling
@@ -93,10 +100,21 @@ function mod:BattleCrySuccess()
 	end
 end
 
-function mod:HurlSpear(args)
+function mod:EarthshatteringSpear(args)
 	self:Message(args.spellId, "orange")
-	self:CDBar(args.spellId, 30.3)
+	self:CDBar(args.spellId, 25.5)
 	self:PlaySound(args.spellId, "alarm")
+end
+
+do
+	local prev = 0
+	function mod:EarthshatteringSpearDamage(args)
+		if self:Me(args.destGUID) and args.time - prev > 2.25 then -- ticks every 0.5s
+			prev = args.time
+			self:PersonalMessage(1238780, "underyou")
+			self:PlaySound(1238780, "underyou")
+		end
+	end
 end
 
 function mod:PierceArmor(args)

@@ -1,0 +1,11 @@
+---------------------------------------------------------------
+--                     COMMON FRAMEWORK                      --
+---------------------------------------------------------------
+-- Provides utilities, animation, API, setting templates &
+-- streamline add-on development.
+-- For use in AdaptiveX add-ons.
+-- https://www.curseforge.com/members/adaptivex/projects
+---------------------------------------------------------------
+-- Developer: @AdaptiveX
+-- ♡ Contributor: @lemieszek
+---------------------------------------------------------------

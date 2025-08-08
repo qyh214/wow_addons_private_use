@@ -24,7 +24,8 @@ end
 ---@diagnostic disable: undefined-field
 local function Trace()
     D.DebugLog(AddOnFolderName, "%s", "======== Trace ==")
-    for i, v in ipairs({("\n"):split(debugstack(2))}) do
+    local stack = debugstack(2)
+    for i, v in ipairs(strsplittable("\n", stack)) do
         if v ~= "" then
             D.DebugLog(AddOnFolderName, "%d: %s", i, v)
         end

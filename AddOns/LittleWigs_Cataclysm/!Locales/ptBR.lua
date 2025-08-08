@@ -12,7 +12,7 @@ end
 L = BigWigs:NewBossLocale("Erudax", "ptBR")
 if L then
 	L.summon = "Evoca Corruptor Sem-Rosto"
-	L.summon_desc = "Avisa quando Erudax sumonar um Corruptor Sem-Rosto"
+	L.summon_desc = "Avisa quando Erudax sumonar um Corruptor Sem-Rosto."
 	L.summon_message = "Corruptor Sem-Rosto Sumonado"
 	L.summon_trigger = "evoca um"
 end
@@ -35,7 +35,6 @@ end
 
 L = BigWigs:NewBossLocale("The Hour of Twilight Trash", "ptBR")
 if L then
-	L.custom_on_autotalk = "Conversa automática"
 	--L.custom_on_autotalk_desc = "Instantly select Thrall's gossip options."
 end
 
@@ -91,12 +90,6 @@ if L then
 	--L.high_tide_trigger2 = "Destroy these intruders! Leave them for the great dark beyond!"
 end
 
-L = BigWigs:NewBossLocale("Ozumat", "ptBR")
-if L then
-	L.custom_on_autotalk = "Conversa Automática"
-	L.custom_on_autotalk_desc = "Instantaneamente seleciona a opção de conversa para iniciar a luta."
-end
-
 -- The Vortex Pinnacle
 
 L = BigWigs:NewBossLocale("The Vortex Pinnacle Trash", "ptBR")
@@ -115,17 +108,10 @@ if L then
 	L.minister_of_air = "Ministro do Ar"
 end
 
-L = BigWigs:NewBossLocale("Altairus", "ptBR")
-if L then
-	--L.upwind = "Upwind on you (safe)"
-	--L.downwind = "Downwind on you (unsafe)"
-end
-
 -- Well of Eternity
 
 L = BigWigs:NewBossLocale("Well Of Eternity Trash", "ptBR")
 if L then
-	L.custom_on_autotalk = "Conversa Automática"
 	L.custom_on_autotalk_desc = "Instantaneamente seleciona a opção de conversa de Illidan."
 end
 

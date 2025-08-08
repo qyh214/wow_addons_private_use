@@ -271,6 +271,57 @@ CLASS_ICON_TCOORDS = {}
 ---| "INCLUDE_NAME_PLATE_ONLY"
 ---| "MAW"
 
+---@class pvpscoreinfo : table
+---@field name string 	
+---@field guid string
+---@field killingBlows number 	
+---@field honorableKills number 	
+---@field deaths number 	
+---@field honorGained number 	
+---@field faction number 	
+---@field raceName string 	
+---@field className string 	
+---@field classToken string 	
+---@field damageDone number 	
+---@field healingDone number 	
+---@field rating number 	
+---@field ratingChange number 	
+---@field prematchMMR number 	
+---@field mmrChange number 	
+---@field postmatchMMR number 	10.1.0
+---@field talentSpec string 	
+---@field honorLevel number 	
+---@field roleAssigned number 	
+---@field stats pvpstatinfo[] 	
+
+---@class pvpstatinfo : table
+---@field pvpStatID number
+---@field pvpStatValue number
+---@field orderIndex number
+---@field name string
+---@field tooltip string
+---@field iconName string
+
+---@class pvppostmatchitemreward : table
+---@field type string
+---@field link string
+---@field quantity number
+---@field specID number
+---@field sex number
+---@field isUpgraded boolean
+
+---@class pvppostmatchcurrencyreward
+---@field currencyType number
+---@field quantityChanged number
+
+---@class matchpvpstatcolumn : table
+---@field pvpStatID number
+---@field columnHeaderID number
+---@field orderIndex number
+---@field name string
+---@field tooltipTitle string
+---@field tooltip string
+
 ---@class backdrop : table
 ---@field bgFile string?
 ---@field edgeFile string?
@@ -589,7 +640,7 @@ BackdropTemplateMixin = {}
 ---@field SetClampRectInsets fun(self: frame, left: number, right: number, top: number, bottom: number)
 ---@field SetMovable fun(self: frame, movable: boolean)
 ---@field SetUserPlaced fun(self: frame, userPlaced: boolean)
----@field SetBackdrop fun(self: frame, backdrop: backdrop|table)
+---@field SetBackdrop fun(self: frame, backdrop: backdrop|table|nil)
 ---@field SetBackdropColor fun(self: frame, red: red|number, green: green|number, blue: blue|number, alpha: alpha|number?)
 ---@field SetBackdropBorderColor fun(self: frame, red: red|number, green: green|number, blue: blue|number, alpha: alpha|number?)
 ---@field GetBackdrop fun(self: frame) : backdrop
@@ -874,7 +925,7 @@ BackdropTemplateMixin = {}
 ---@field SetTextColor fun(self: editbox, r: red|number, g: green|number, b: blue|number, a: alpha|number?)
 ---@field SetJustifyH fun(self:editbox, alignment:string)
 ---@field SetTextInsets fun(self:editbox, left:number, right:number, top:number, bottom:number)
----@field SetFocus fun(self:editbox, focus:boolean)
+---@field SetFocus fun(self:editbox)
 ---@field HasFocus fun(self:editbox) : boolean return true if the editbox has focus
 ---@field HighlightText fun(self:editbox, start:number?, finish:number?) select a portion of the text, passing zero will select the entire text
 
@@ -890,6 +941,68 @@ BackdropTemplateMixin = {}
 ---@field SetObeyStepOnDrag fun(self: slider, obeyStep: boolean)
 ---@field SetThumbTexture fun(self: slider, texture: textureid|texturepath)
 ---@field SetStepsPerPage fun(self: slider, steps: number)
+
+---@class encodingutil : table
+---@field EncodeHex fun(self: encodingutil, str: string) : string
+---@field DecodeHex fun(self: encodingutil, str: string) : string
+---@field EncodeBase64 fun(self: encodingutil, str: string, variant: string?) : string
+---@field DecodeBase64 fun(self: encodingutil, str: string, variant: string?) : string
+---@field CompressString fun(self: encodingutil, str: string, method: string?, level: string?) : string
+---@field DecompressString fun(self: encodingutil, str: string, method: string?) : string
+---@field SerializeJSON fun(self: encodingutil, value: any, options: table?) : string
+---@field DeserializeJSON fun(self: encodingutil, str: string) : any
+---@field SerializeCBOR fun(self: encodingutil, value: any, options: table?) : string
+---@field DeserializeCBOR fun(self: encodingutil, str: string) : any
+
+C_EncodingUtil = {}
+
+---@param source string
+---@param method string?
+---@param level string?
+---@return string
+function C_EncodingUtil.CompressString(source, method, level) return "" end
+
+---@param source string
+---@param variant string?
+---@return string
+function C_EncodingUtil.DecodeBase64(source, variant) return "" end
+
+---@param source string
+---@return string
+function C_EncodingUtil.DecodeHex(source) return "" end
+
+---@param source string
+---@param method string?
+---@return string
+function C_EncodingUtil.DecompressString(source, method) return "" end
+
+---@param source string
+---@return any
+function C_EncodingUtil.DeserializeCBOR(source) return nil end
+
+---@param source string
+---@return any
+function C_EncodingUtil.DeserializeJSON(source) return nil end
+
+---@param source string
+---@param variant string?
+---@return string
+function C_EncodingUtil.EncodeBase64(source, variant) return "" end
+
+---@param source string
+---@return string
+function C_EncodingUtil.EncodeHex(source) return "" end
+
+---@param value any
+---@param options table?
+---@return string
+function C_EncodingUtil.SerializeCBOR(value, options) return "" end
+
+---@param value any
+---@param options table?
+---@return string
+function C_EncodingUtil.SerializeJSON(value, options) return "" end
+
 
 ---get all frames under the cursor that has mouse focus
 ---@return uiobject[]
@@ -1534,7 +1647,10 @@ function C_ChallengeMode.GetMapTable() return {} end
 ---@param mapChallengeModeID number The map id for the challenge mode.
 ---@return string name The name of the challenge mode map.
 ---@return number id The id of the challenge mode map.
-function C_ChallengeMode.GetMapUIInfo(mapChallengeModeID) return "", 0 end
+---@return number timeLimit The time limit for the challenge mode map.
+---@return number texture The texture for the challenge mode map.
+---@return number backgroundTexture The background texture for the challenge mode map.
+function C_ChallengeMode.GetMapUIInfo(mapChallengeModeID) return "", 0, 0, 0, 0 end
 
 ---return the affix information for the challenge mode.
 ---@param affixID number The affix id for the challenge mode.
@@ -2257,6 +2373,9 @@ UseSoulstone = function(type) end
 CanSolveArtifact = function() return true end
 
 UIParent = {}
+
+---@return number
+GetNumClasses = function() return 0 end
 
 ---@param raceIndex number
 ---@return number, string, string, number, number, number, number, number
@@ -5095,8 +5214,8 @@ GetPartyAssignment = function(unit) return "", "" end
 
 ---return name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML, combatRole
 ---@param raidID number
----@return string, string, number, number, string, string, string, boolean, boolean, string, boolean, string
-GetRaidRosterInfo = function(raidID) return "", "", 0, 0, "", "", "", true, true, "", true, "" end
+---@return string, number, number, number, string, string, string, boolean, boolean, string, boolean, string
+GetRaidRosterInfo = function(raidID) return "", 0, 0, 0, "", "", "", true, true, "", true, "" end
 
 ---@param unit string
 ---@return number

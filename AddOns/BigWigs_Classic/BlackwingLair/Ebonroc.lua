@@ -77,7 +77,7 @@ function mod:ShadowFlameSoD(args)
 end
 
 function mod:ShadowOfEbonrocApplied(args)
-	self:TargetMessage(args.spellId, "orange", args.destName)
+	self:TargetMessage(args.spellId, "purple", args.destName)
 	self:TargetBar(args.spellId, 8, args.destName)
 	self:PlaySound(args.spellId, "alarm")
 end

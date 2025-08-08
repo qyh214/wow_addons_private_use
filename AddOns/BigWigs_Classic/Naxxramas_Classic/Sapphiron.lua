@@ -17,6 +17,7 @@ local blockCount = 0
 local curseCount = 0
 local curseTime = 0
 local CheckAirPhase
+local isHardMode = false
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -46,16 +47,41 @@ function mod:GetOptions()
 	}
 end
 
+local glacialCrashMarker = mod:AddMarkerOption(true, "player", 1, 1219728, 1, 2) -- Glacial Crash
+if mod:GetSeason() == 2 then
+	function mod:GetOptions()
+		return {
+			28542, -- Life Drain
+			{28522, "SAY"}, -- Ice Bolt
+			{28524, "EMPHASIZE", "CASTBAR", "CASTBAR_COUNTDOWN"}, -- Frost Breath
+			28547, -- Chill
+			{1219728, "SAY", "SAY_COUNTDOWN", "ME_ONLY_EMPHASIZE"}, -- Glacial Crash
+			glacialCrashMarker,
+			"stages",
+			"berserk",
+		},nil,{
+			[28542] = CL.curse, -- Life Drain (Curse)
+			[28547] = self:SpellName(26607), -- Chill (Blizzard)
+			[1219728] = CL.soak, -- Glacial Crash (Soak)
+		}
+	end
+end
+
 function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "LifeDrain", 28542)
 	self:Log("SPELL_AURA_APPLIED", "LifeDrainApplied", 28542)
 	self:Log("SPELL_AURA_REMOVED", "LifeDrainRemoved", 28542)
 	self:Log("SPELL_AURA_APPLIED", "IceboltApplied", 28522)
 	self:Log("SPELL_CAST_START", "FrostBreathStart", 28524)
-	self:Log("SPELL_CAST_SUCCESS", "FrostBreath", 28524)
+	self:Log("SPELL_CAST_SUCCESS", "FrostBreathSuccess", 28524)
 	self:Log("SPELL_AURA_APPLIED", "ChillDamage", 28547)
 	self:Log("SPELL_PERIODIC_DAMAGE", "ChillDamage", 28547)
 	self:Log("SPELL_PERIODIC_MISSED", "ChillDamage", 28547)
+	if self:GetSeason() == 2 then
+		self:Log("SPELL_CAST_SUCCESS", "GlacialCrash", 1219728)
+		self:Log("SPELL_AURA_APPLIED", "GlacialCrashApplied", 1219729, 1219732)
+		self:Log("SPELL_AURA_REMOVED", "GlacialCrashRemoved", 1219729, 1219732)
+	end
 end
 
 function mod:OnEngage()
@@ -63,11 +89,16 @@ function mod:OnEngage()
 	curseCount = 0
 	curseTime = 0
 	targetCheck = nil
+	isHardMode = false
 	self:SetStage(1)
 	self:Berserk(900)
 	self:CDBar(28542, 12.5, CL.curse) -- Life Drain
 	self:CDBar("stages", 32, CL.stage:format(2), L.stages_icon)
 	self:ScheduleTimer(CheckAirPhase, 20)
+	if self:GetPlayerAura(1218283) then -- Authority of the Frozen Wastes
+		isHardMode = true
+		self:CDBar(1219728, 30, CL.soak) -- Glacial Crash
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -120,6 +151,9 @@ function CheckAirPhase()
 			mod:SetStage(2)
 
 			mod:StopBar(CL.curse) -- Life Drain
+			if isHardMode then
+				mod:StopBar(CL.soak) -- Glacial Crash
+			end
 			mod:StopBar(CL.stage:format(2))
 
 			mod:Message("stages", "cyan", CL.stage:format(2), L.stages_icon)
@@ -138,12 +172,15 @@ function mod:FrostBreathStart(args) -- Deep Breath
 	self:PlaySound(args.spellId, "warning")
 end
 
-function mod:FrostBreath(args) -- Deep Breath
+function mod:FrostBreathSuccess(args) -- Deep Breath
 	blockCount = 0
 	self:SetStage(1)
 	self:Message("stages", "cyan", CL.stage:format(1), L.stages_icon)
 
 	self:CDBar(28542, 8, CL.curse) -- Life Drain
+	if isHardMode then
+		self:CDBar(1219728, 8, CL.soak) -- Glacial Crash
+	end
 	self:CDBar("stages", 72, CL.stage:format(2), L.stages_icon)
 	self:ScheduleTimer(CheckAirPhase, 50) -- ~74 until next
 
@@ -158,5 +195,33 @@ do
 			self:PersonalMessage(args.spellId, "aboveyou", self:SpellName(26607)) -- Blizzard
 			self:PlaySound(args.spellId, "underyou")
 		end
+	end
+end
+
+do
+	local playerList = {}
+	function mod:GlacialCrash(args)
+		playerList = {}
+		self:CDBar(args.spellId, 30, CL.soak)
+	end
+
+	function mod:GlacialCrashApplied(args)
+		local count = #playerList+1
+		playerList[count] = args.destName
+		playerList[args.destName] = count -- Set raid marker
+		self:TargetsMessage(1219728, "yellow", playerList, 2, CL.soak)
+		self:CustomIcon(glacialCrashMarker, args.destName, count)
+		if self:Me(args.destGUID) then
+			self:Yell(1219728, CL.rticon:format(CL.soak, count), nil, ("Soak ({rt%d})"):format(count))
+			self:YellCountdown(1219728, 8, count)
+		end
+		self:PlaySound(1219728, "warning", nil, args.destName)
+	end
+end
+
+function mod:GlacialCrashRemoved(args)
+	self:CustomIcon(glacialCrashMarker, args.destName)
+	if self:Me(args.destGUID) then
+		self:CancelYellCountdown(1219728)
 	end
 end

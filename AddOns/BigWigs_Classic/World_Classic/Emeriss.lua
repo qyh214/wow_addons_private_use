@@ -15,6 +15,8 @@ mod.worldBoss = 14889
 --
 
 local warnHP = 80
+local tankDebuffOnMe = false
+local corruptionOfTheEarthPercent = 100
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -31,9 +33,11 @@ end
 -- Initialization
 --
 
+local volatileInfectionMarker = mod:AddMarkerOption(true, "player", 8, 24928, 8) -- Volatile Infection
 function mod:GetOptions()
 	return {
-		{24928, "ICON"}, -- Volatile Infection
+		24928, -- Volatile Infection
+		volatileInfectionMarker,
 		24910, -- Corruption of the Earth
 		24871, -- Spore Cloud
 		-- Shared
@@ -42,6 +46,7 @@ function mod:GetOptions()
 	},{
 		[24818] = CL.general,
 	},{
+		[24928] = CL.disease, -- Volatile Infection (Disease)
 		[24818] = CL.breath, -- Noxious Breath (Breath)
 	}
 end
@@ -56,8 +61,10 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "NoxiousBreath", 24818)
 	self:Log("SPELL_AURA_APPLIED", "NoxiousBreathApplied", 24818)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "NoxiousBreathApplied", 24818)
+	self:Log("SPELL_AURA_REMOVED", "NoxiousBreathRemoved", 24818)
 	self:Log("SPELL_CAST_SUCCESS", "SeepingFog", 24814)
-	self:Log("SPELL_AURA_APPLIED", "VolatileInfection", 24928)
+	self:Log("SPELL_AURA_APPLIED", "VolatileInfectionApplied", 24928)
+	self:Log("SPELL_AURA_REMOVED", "VolatileInfectionRemoved", 24928)
 	self:Log("SPELL_CAST_SUCCESS", "CorruptionOfTheEarth", 24910)
 	self:Log("SPELL_AURA_APPLIED", "SporeCloudDamage", 24871)
 	self:Log("SPELL_PERIODIC_DAMAGE", "SporeCloudDamage", 24871)
@@ -69,6 +76,7 @@ end
 
 function mod:OnEngage()
 	warnHP = 80
+	corruptionOfTheEarthPercent = 100
 	self:RegisterEvent("UNIT_HEALTH")
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 end
@@ -91,11 +99,27 @@ end
 
 function mod:NoxiousBreathApplied(args)
 	local unit, targetUnit = self:GetUnitIdByGUID(args.sourceGUID), self:UnitTokenFromGUID(args.destGUID)
-	if unit and targetUnit and self:Tanking(unit, targetUnit) then
-		self:StackMessage(args.spellId, "purple", args.destName, args.amount, 4, CL.breath)
-		if args.amount >= 4 then
-			self:PlaySound(args.spellId, "warning", nil, args.destName)
+	if unit and targetUnit then
+		local tanking = self:Tanking(unit, targetUnit)
+		if self:Me(args.destGUID) then
+			tankDebuffOnMe = true
+			if not tanking then -- Not tanking, 1+
+				self:StackMessage(args.spellId, "purple", args.destName, args.amount, 1, CL.breath)
+			elseif args.amount then -- Tanking, 2+
+				self:StackMessage(args.spellId, "purple", args.destName, args.amount, 100, CL.breath) -- No emphasize when on you
+			end
+		elseif tanking and args.amount then -- On a tank that isn't me, 2+
+			self:StackMessage(args.spellId, "purple", args.destName, args.amount, (tankDebuffOnMe or args.amount >= 6) and 100 or 3, CL.breath)
+			if not tankDebuffOnMe and args.amount >= 3 and args.amount <= 5 then
+				self:PlaySound(args.spellId, "warning", nil, args.destName)
+			end
 		end
+	end
+end
+
+function mod:NoxiousBreathRemoved(args)
+	if self:Me(args.destGUID) then
+		tankDebuffOnMe = false
 	end
 end
 
@@ -111,14 +135,26 @@ do
 	end
 end
 
-function mod:VolatileInfection(args)
-	self:TargetMessage(args.spellId, "orange", args.destName)
-	self:PrimaryIcon(args.spellId, args.destName)
-	self:PlaySound(args.spellId, "alert", nil, args.destName)
+do
+	local prev
+	function mod:VolatileInfectionApplied(args)
+		prev = args.destGUID
+		self:TargetMessage(args.spellId, "orange", args.destName, CL.disease)
+		self:CustomIcon(volatileInfectionMarker, args.destName, 8)
+		self:PlaySound(args.spellId, "alert", nil, args.destName)
+	end
+
+	function mod:VolatileInfectionRemoved(args)
+		if prev and args.destGUID == prev then
+			prev = nil
+			self:CustomIcon(volatileInfectionMarker, args.destName)
+		end
+	end
 end
 
 function mod:CorruptionOfTheEarth(args)
-	self:Message(args.spellId, "red")
+	corruptionOfTheEarthPercent = corruptionOfTheEarthPercent - 25
+	self:Message(args.spellId, "red", CL.percent:format(corruptionOfTheEarthPercent, args.spellName))
 	self:Bar(args.spellId, 10)
 	self:PlaySound(args.spellId, "long")
 end

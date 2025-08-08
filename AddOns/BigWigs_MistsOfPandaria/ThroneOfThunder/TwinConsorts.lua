@@ -39,7 +39,7 @@ function mod:GetOptions()
 	return {
 		-- Lu'lin
 		-7631, {-7634, "TANK_HEALER"}, -- phase 1
-		-7649, {137440, "FLASH"}, -- phase 2
+		-7649, 137440, -- phase 2
 		137531, --Phase 3
 		-- Suen
 		-7643, -- phase 1

@@ -73,6 +73,7 @@ if L then
 	L.immolationyou_message = "Trappola Incendiaria"
 	L.crystal = "Trappola della Prigione di Cristallo"
 	L.crystal_desc = "Avvisa verso chi Shannox lancia la Trappola della Progione di CristalloWarn whom Shannox casts a Crystal Trap under."
+	--L.facerage_trigger = "Go for the throat!"
 end
 
 L = BigWigs:NewBossLocale("Baleroc", "itIT")

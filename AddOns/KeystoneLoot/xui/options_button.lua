@@ -54,14 +54,14 @@ HighlightTexture:SetAlpha(0.4);
 local GlowArrow = CreateFrame('Frame', 'KeystoneLootGlowArrow', OverviewFrame, 'GlowBoxArrowTemplate');
 Button.GlowArrow = GlowArrow;
 GlowArrow:SetFrameLevel(510);
-GlowArrow:SetPoint('TOP', Button,'BOTTOM', 7, -5);
+GlowArrow:SetPoint('TOP', Button, 'BOTTOM', 7, -5);
 GlowArrow.Arrow:SetSize(40, 16);
 GlowArrow.Arrow:SetRotation(math.rad(180));
 GlowArrow.Glow:Hide();
 GlowArrow:Hide();
 
 local NewText = GlowArrow:CreateFontString('ARTWORK', nil, 'GameFontNormal');
-NewText:SetPoint('TOP', GlowArrow,'BOTTOM', -6, 0);
+NewText:SetPoint('TOP', GlowArrow, 'BOTTOM', -6, 0);
 NewText:SetSize(40, 10);
 NewText:SetJustifyH('CENTER');
 NewText:SetText(NEW:upper());
@@ -81,7 +81,7 @@ function Button:GetList()
 	info.checked = KeystoneLootDB.minimapButtonEnabled;
 	info.keepShownOnClick = true;
 	info.args = not KeystoneLootDB.minimapButtonEnabled;
-	info.func = function (enable)
+	info.func = function(enable)
 		KeystoneLootDB.minimapButtonEnabled = enable;
 
 		if (LibStub) then
@@ -108,7 +108,7 @@ function Button:GetList()
 	info.checked = KeystoneLootDB.favoritesShowAllSpecs;
 	info.keepShownOnClick = true;
 	info.args = not KeystoneLootDB.favoritesShowAllSpecs;
-	info.func = function (enable)
+	info.func = function(enable)
 		KeystoneLootDB.favoritesShowAllSpecs = enable;
 
 		KeystoneLoot:GetCurrentTab():Update();
@@ -120,7 +120,7 @@ function Button:GetList()
 	info.checked = KeystoneLootDB.keystoneItemLevelEnabled;
 	info.keepShownOnClick = true;
 	info.args = not KeystoneLootDB.keystoneItemLevelEnabled;
-	info.func = function (enable)
+	info.func = function(enable)
 		KeystoneLootDB.keystoneItemLevelEnabled = enable;
 	end;
 	table.insert(_list, info);
@@ -137,7 +137,7 @@ function Button:GetList()
 	info.checked = KeystoneLootDB.lootReminderEnabled;
 	info.keepShownOnClick = true;
 	info.args = not KeystoneLootDB.lootReminderEnabled;
-	info.func = function (enable)
+	info.func = function(enable)
 		KeystoneLootDB.lootReminderEnabled = enable;
 	end;
 	table.insert(_list, info);
@@ -154,7 +154,7 @@ function Button:GetList()
 	info.checked = KeystoneLootDB.raidLootReminderEnabled;
 	info.keepShownOnClick = true;
 	info.args = not KeystoneLootDB.raidLootReminderEnabled;
-	info.func = function (enable)
+	info.func = function(enable)
 		KeystoneLootDB.raidLootReminderEnabled = enable;
 	end;
 	table.insert(_list, info);
@@ -171,7 +171,7 @@ function Button:GetList()
 	info.checked = KeystoneLootCharDB.statHighlightingCritEnabled;
 	info.keepShownOnClick = true;
 	info.args = not KeystoneLootCharDB.statHighlightingCritEnabled;
-	info.func = function (enable)
+	info.func = function(enable)
 		KeystoneLootCharDB.statHighlightingCritEnabled = enable;
 
 		KeystoneLoot:GetCurrentTab():Update();
@@ -183,7 +183,7 @@ function Button:GetList()
 	info.checked = KeystoneLootCharDB.statHighlightingHasteEnabled;
 	info.keepShownOnClick = true;
 	info.args = not KeystoneLootCharDB.statHighlightingHasteEnabled;
-	info.func = function (enable)
+	info.func = function(enable)
 		KeystoneLootCharDB.statHighlightingHasteEnabled = enable;
 
 		KeystoneLoot:GetCurrentTab():Update();
@@ -195,7 +195,7 @@ function Button:GetList()
 	info.checked = KeystoneLootCharDB.statHighlightingMasteryEnabled;
 	info.keepShownOnClick = true;
 	info.args = not KeystoneLootCharDB.statHighlightingMasteryEnabled;
-	info.func = function (enable)
+	info.func = function(enable)
 		KeystoneLootCharDB.statHighlightingMasteryEnabled = enable;
 
 		KeystoneLoot:GetCurrentTab():Update();
@@ -207,7 +207,7 @@ function Button:GetList()
 	info.checked = KeystoneLootCharDB.statHighlightingVersatilityEnabled;
 	info.keepShownOnClick = true;
 	info.args = not KeystoneLootCharDB.statHighlightingVersatilityEnabled;
-	info.func = function (enable)
+	info.func = function(enable)
 		KeystoneLootCharDB.statHighlightingVersatilityEnabled = enable;
 
 		KeystoneLoot:GetCurrentTab():Update();
@@ -219,10 +219,33 @@ function Button:GetList()
 	info.checked = KeystoneLootCharDB.statHighlightingNoStatsEnabled;
 	info.keepShownOnClick = true;
 	info.args = not KeystoneLootCharDB.statHighlightingNoStatsEnabled;
-	info.func = function (enable)
+	info.func = function(enable)
 		KeystoneLootCharDB.statHighlightingNoStatsEnabled = enable;
 
 		KeystoneLoot:GetCurrentTab():Update();
+	end;
+	table.insert(_list, info);
+
+	local info = {};
+	info.text = NORMAL_FONT_COLOR:WrapTextInColorCode(FAVORITES);
+	info.checked = false;
+	info.notCheckable = true;
+	info.disabled = true;
+	table.insert(_list, info);
+
+	local info = {};
+	info.text = TALENT_FRAME_DROP_DOWN_IMPORT;
+	info.notCheckable = true;
+	info.func = function()
+		KeystoneLoot:ShowImportDialog();
+	end;
+	table.insert(_list, info);
+
+	local info = {};
+	info.text = TALENT_FRAME_DROP_DOWN_EXPORT;
+	info.notCheckable = true;
+	info.func = function()
+		KeystoneLoot:ShowExportDialog();
 	end;
 	table.insert(_list, info);
 

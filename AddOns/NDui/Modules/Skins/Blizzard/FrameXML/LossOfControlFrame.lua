@@ -5,7 +5,7 @@ tinsert(C.defaultThemes, function()
 	if not C.db["Skins"]["BlizzardSkins"] then return end
 
 	local styled
-	hooksecurefunc("LossOfControlFrame_SetUpDisplay", function(self)
+	hooksecurefunc(LossOfControlFrame, "SetUpDisplay", function(self)
 		if not styled then
 			B.ReskinIcon(self.Icon, true)
 

@@ -77,5 +77,9 @@ function ItemUpgradeTipDisplayDataProviderMixin:GetRowTemplate()
 end
 
 function ItemUpgradeTipDisplayDataProviderMixin:ApplyQualityColor(name, link)
-    return "|c" .. string.match(link, "|c(........)|") .. name .. "|r"
+    return "|c" .. self:GetQualityColorFromLink(link) .. name .. "|r"
+end
+
+function ItemUpgradeTipDisplayDataProviderMixin:GetQualityColorFromLink(itemLink)
+  return string.match(itemLink, "|c(nIQ%d+:)|") or string.match(itemLink, "|c(........)|")
 end

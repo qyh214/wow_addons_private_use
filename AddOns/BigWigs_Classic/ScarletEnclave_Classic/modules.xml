@@ -9,8 +9,9 @@
 <Script file="RebornCouncil.lua"/>
 <Script file="LillianVoss.lua"/>
 <Script file="Caldoran.lua"/>
+<Script file="Trash.lua"/>
 
 <Include file="Locales\locales.xml"/>
-<Include file="Options\options.xml"/>
+<Script file="!Options.lua"/>
 
 </Ui>

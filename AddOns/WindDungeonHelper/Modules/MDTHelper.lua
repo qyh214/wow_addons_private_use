@@ -8,14 +8,14 @@ local pairs = pairs
 local C_AddOns_IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
 local currentPatchMaps = {
-	[115] = true, -- Priory of the Sacred Flame (TWW S2)
-	[116] = true, -- Cinderbrew Meadery (TWW S2)
-	[117] = true, -- Darkflame Cleft (TWW S2)
-	[118] = true, -- TheRookery (TWW S2)
-	[119] = true, -- OperationFloodgate (TWW S2)
-	[120] = true, -- The MOTHERLODE!! (TWW S2)
-	[121] = true, -- Theater of Pain (TWW S2)
-	[122] = true, -- MechagonWorkshop (TWW S2)
+	[30] = true,
+	[37] = true,
+	[38] = true,
+	[111] = true,
+	[113] = true,
+	[115] = true,
+	[119] = true,
+	[123] = true,
 }
 
 -- NPC Blacklist

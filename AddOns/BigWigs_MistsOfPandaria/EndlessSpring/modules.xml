@@ -6,6 +6,6 @@
 <Script file="LeiShi.lua"/>
 <Script file="ShaOfFear.lua"/>
 
-<Include file="Options\options.xml"/>
+<Script file="!Options.lua"/>
 
 </Ui>

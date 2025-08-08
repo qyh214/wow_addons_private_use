@@ -1,12 +1,18 @@
 # SavedInstances
 
-## [11.1.1](https://github.com/SavedInstances/SavedInstances/tree/11.1.1) (2025-03-18)
-[Full Changelog](https://github.com/SavedInstances/SavedInstances/compare/11.1.0...11.1.1) [Previous Releases](https://github.com/SavedInstances/SavedInstances/releases)
+## [11.2.0](https://github.com/SavedInstances/SavedInstances/tree/11.2.0) (2025-08-05)
+[Full Changelog](https://github.com/SavedInstances/SavedInstances/compare/11.1.4...11.2.0) [Previous Releases](https://github.com/SavedInstances/SavedInstances/releases)
 
-- Always display amount if there is a relatedItemCount  
-    Fixes #953 by displaying a 0 and the relatedItemCount if there is a relatedItemCount  
-- Liberation tracked as dungeon, returning maxPlayers = 5  
-    Fixes #950  
-- Update Quest.lua  
-- Update Coffer Key Shard for 11.1  
-    After update with 1 shard in inventory. Was showing 0 before. Looks like the ID for just the shards changed in 11.1.  
+- chore: toc update  
+- feat: update worldsoul & sparks of war quest list, add undermine weekly quest (oops), and first version of K'aresh weekly quest  
+- feat: new world boss in patch 11.2  
+- feat: new paragon faction in patch 11.2  
+- feat: new m+ dungeon & reward item level in season 3  
+- feat: new currencies and related item in patch 11.2  
+- fix: STATICPOPUP\_NUMDIALOGS removed in patch 11.2, but no longer taints  
+- Update SavedInstances.toc  
+- feat: add bfa timewalking  
+- feat: add missing Titanic Resurgence ids  
+    fixes #981  
+- feat: ignore delves in history  
+    fixes #983  

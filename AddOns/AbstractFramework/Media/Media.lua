@@ -1,6 +1,8 @@
 ---@class AbstractFramework
 local AF = _G.AbstractFramework
 
+local format = string.format
+
 ---------------------------------------------------------------------
 -- get icon
 ---------------------------------------------------------------------
@@ -8,7 +10,8 @@ local AF = _G.AbstractFramework
 ---@param addon? string addonFolderName
 ---@return string iconPath
 function AF.GetIcon(icon, addon)
-    if not icon then return "" end
+    if AF.IsBlank(icon) then return "" end
+
     if addon then
         return "Interface\\AddOns\\" .. addon .. "\\Media\\Icons\\" .. icon
     else
@@ -17,19 +20,52 @@ function AF.GetIcon(icon, addon)
 end
 
 ---@param icon string fileName
----@param size? number
+---@param height? number
+---@param width? number
 ---@param addon? string addonFolderName
----@return string iconString "|T..:0|t" escape sequence
-function AF.GetIconString(icon, size, addon)
-    if not icon then return "" end
-    return "|T" .. AF.GetIcon(icon, addon) .. ":" .. (size or 0) .. "|t"
+---@return string iconString "|T..|t" escape sequence
+function AF.GetIconString(icon, height, width, addon)
+    return AF.EscapeIcon(AF.GetIcon(icon, addon), height, width)
 end
 
+-- refer to TextureUtil.lua, this should not work anymore
+-- local function EscapeIconWithColor(iconPath, height, width, color)
+--     local r, g, b
+--     if type(color) == "string" then
+--         r, g, b = AF.GetColorRGB(color)
+--     elseif type(color) == "table" then
+--         r, g, b = AF.UnpackColor(color)
+--     end
+
+--     assert(r and g and b, "Invalid color format. Use string or table with RGB values.")
+
+--     r, g, b = AF.ConvertToRGB256(r, g, b)
+
+--     if not height then
+--         return format("|T%s:0:0:::::::::%d:%d:%d|t", iconPath, r, g, b)
+--     elseif not width then
+--         -- NOTE: "aspectRatio" only works when height is set to 0
+--         return format("|T%s:%s::::::::::%d:%d:%d|t", iconPath, height, r, g, b)
+--     else
+--         return format("|T%s:%s:%s:::::::::%d:%d:%d|t", iconPath, height, width, r, g, b)
+--     end
+-- end
+
 ---@param iconPath string
----@param size? number
----@return string iconString "|T..:0|t" escape sequence
-function AF.EscapeIcon(iconPath, size)
-    return format("|T%s:%d|t", iconPath, size or 0)
+---@param height? number
+---@param width? number
+---@return string iconString "|T..|t" escape sequence
+function AF.EscapeIcon(iconPath, height, width)
+    if AF.IsBlank(iconPath) then return "" end
+
+    if not height then
+        return format("|T%s:0:aspectRatio|t", iconPath)
+    elseif not width then
+        -- NOTE: "aspectRatio" only works when height is set to 0
+        return format("|T%s:%s|t", iconPath, height)
+    else
+        return format("|T%s:%s:%s|t", iconPath, height, width)
+    end
 end
 
 function AF.EscapeAtlas(atlas, width, height)

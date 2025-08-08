@@ -2126,7 +2126,7 @@ local iconFrame_OnEnter = function(self)
 
 			instance:BuildInstanceBarTooltip(self)
 
-			local bIsClassic = (DetailsFramework.IsClassicWow() or DetailsFramework.IsTBCWow() or DetailsFramework.IsWotLKWow() or DetailsFramework.IsCataWow())
+			local bIsClassic = (DetailsFramework.IsClassicWow() or DetailsFramework.IsTBCWow() or DetailsFramework.IsWotLKWow() or DetailsFramework.IsCataWow() or DetailsFramework.IsPandaWow())
 
 			local classIcon, classL, classR, classT, classB = Details:GetClassIcon(class)
 
@@ -3421,7 +3421,8 @@ do
 		self:SetPoint("center", UIParent, "center", x, y)
 	end
 
-	tooltipAnchor.alert = CreateFrame("frame", "DetailsTooltipAnchorAlert", UIParent, "ActionBarButtonSpellActivationAlert")
+	--tooltipAnchor.alert = CreateFrame("frame", "DetailsTooltipAnchorAlert", UIParent, "ActionBarButtonSpellActivationAlert")
+	tooltipAnchor.alert = CreateFrame("frame", "DetailsTooltipAnchorAlert", UIParent)
 	tooltipAnchor.alert:SetFrameStrata("FULLSCREEN")
 	tooltipAnchor.alert:Hide()
 	tooltipAnchor.alert:SetPoint("topleft", tooltipAnchor, "topleft", -60, 6)

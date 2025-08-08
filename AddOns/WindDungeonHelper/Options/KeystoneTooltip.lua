@@ -17,7 +17,10 @@ O.keystoneTooltip = {
 			type = "description",
 			width = "full",
 			name = C.StringByTemplate(
-				format(L["The keystone information only available for players who installed Details! or %s."], L["Wind Dungeon Helper"]),
+				format(
+					L["The keystone information only available for players who installed Details! or %s."],
+					L["Wind Dungeon Helper"]
+				),
 				"warning"
 			),
 		},

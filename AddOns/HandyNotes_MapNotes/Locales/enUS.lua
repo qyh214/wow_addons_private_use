@@ -1,9 +1,70 @@
 local ADDON_NAME = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "enUS", true)
 
-
+-- Npc
+L["NPC targeting"] = true
+L["Clicking on a MapNotes symbol with an NPC name opens a confirmation window, which automatically targets this NPC after confirmation and marks it with an X"] = true
+L["If you are not within range, you will receive the message in the chat"] = true
+-- Changelog
+L["Changelog"] = true
+L["Last Changelog"] = true
+L["Show MapNotes Changelog again"] = true
+L["Do not show again until next version"] = true
+-- SwapButtons
+L["In addition to the Right mouse button, the shift key must now also be pressed to set a waypoint"] = true
+L["In addition to the Left mouse button, the shift key must now also be pressed to set a waypoint"] = true
+L["< Shift + Left Click sets a waypoint on a MapNotes icon >"] = true
+L["< Shift + Right Click sets a waypoint on a MapNotes icon >"] = true
+L["When enabled, the function of the left and right mouse buttons is swapped"] = true
+L["Sets a waypoint on a MapNotes icon"] = true
+L["Opens the adventure guide of the corresponding instance"] = true
+L["Opens the map where the destination is"] = true
+L["< Right Click sets a waypoint on a MapNotes icon >"] = true
+L["< Right Click to open Adventure Guide >"] = true
+L["< Right Click to show map >"] = true
+L["< Left Click sets a waypoint on a MapNotes icon >"] = true
+L["Right-clicking on a symbol on this map type opens the corresponding map in which the symbol is located"] = true
+L["Right-clicking on a MapNotes raid (green), dungeon (blue) or multiple icon (green&blue) on the map opens the corresponding dungeon or raid map in the Adventure Guide"] = true
+L["Right-clicking on a multiple icon will open the map where the dungeons are located"] = true
+-- Races
+L["These icons disappear from the map after discovery"] = true
+L["However, they can be displayed again in the General tab under Advanced Options using the 'Races +' option"] = true
+L["Icons that have already been discovered will be marked with the suffix 'already learned'"] = true
+L["Icons that have not yet been discovered will be marked with the suffix 'not yet unlocked'"] = true
+L["Normally, special race icons are automatically hidden after being discovered. They are only visible once in the game and disappear after you interact with them"] = true
+L["This will redisplay the previously discovered icons of the race category on all maps"] = true
+L["Travel to this point and click on the mole machine on site to unlock it"] = true
+L["The icons are only visible if you belong to the corresponding race"] = true
+L["Otherwise, the icons in this category are not visible to you"] = true
+-- Minimap Arrow
+L["The MapNotes player arrow disappears from the minimap for the set number of seconds when you hover over it"] = true
+L["This makes it easier for the player to see which other icon is currently under the player"] = true
+L["Unfortunately does not work in instances"] = true
+L["Minimap player arrow"] = true
+L["Displays the player arrow on the minimap layered above addon-created icons"] = true
+L["Coordinates"] = true
+L["Creates a window for displaying the coordinates"] = true
+L["Only visible when the world map is open"] = true
+L["Function"] = true
+L["Area Map"] = true
+L["Way to"] = true
+L["Waypoints"] = true
+-- Boss names
+L["Boss names"] = true
+L["Killed bosses"] = true
+L["Multiple instances"] = true
+L["Bosses in this dungeon"] = true
+L["Bosses in this raid"] = true
+L["Bosses in this instance"] = true
+L["Show boss names on the dungeon or raid icon"] = true
+L["Shows already defeated bosses on dungeon or raid icons"] = true
+L["Resets the displayed map to the map of the player's position"] = true
+L["Shift + Right Click on a MapNotes icon adds a waypoint to it"] = true
+L["Too many boss names – click on this icon and then choose one of the dungeons or raids"] = true
+L["If TomTom is installed, a TomTom waypoint is created. If TomTom is not installed, a waypoint is created using the Blizzard waypoint system"] = true
 -- create and copy links
 L["Use CTRL + C to copy the link"] = true
+L["Activate the 'Link' function in the MapNotes menu to generate a clickable web link"] = true
 L["If the link or email address is colored blue in the chat, the link is ready to be copied"] = true
 L["Links are only generated after the feature is activated. Links or email addresses created before activation will not be recognized retroactively"] = true
 L["Enables you to copy links and email addresses from the chat"] = true
@@ -24,7 +85,6 @@ L["Thrown"] = true
 L["Two-Handed Axes"] = true
 L["Two-Handed Maces"] = true
 L["Two-Handed Swords"] = true
-L["Wands"] = true
 --professions
 L["Profession detection"] = true
 L["Automatically detects your professions and activates the corresponding professions icons on this map"] = true
@@ -43,8 +103,6 @@ L["Warrior"] = true
 L["Weapon Master"] = true
 --0.08
 L["Has not been unlocked yet"] = true
-L["Displays location symbols on the Azeroth / Continent map for Horde and Alliance capitals with additional information about what is within that capital at MapNotes associated symbols"] = true
-L["For the zones and capitals themselves, there is an option in the respective tab to display nearby symbols in groups instead of individually"] = true
 L["Displays Horde and Alliance capitals icons with additional information"] = true
 L["Synchronize"] = true
 L["Synchronizes size and visibility of all individual symbols"] = true
@@ -57,9 +115,7 @@ L["Tooltip"] = true
 L["to show delve map"] = true
 L["< Left Click to show map >"] = true
 L["< Left Click to show delve map >"] = true
-L["< Shift Left Click to show map >"] = true
 L["< Left Click to open Adventure Guide >"] = true
-L["< Shift + Right Click add TomTom waypoint >"] = true
 L["< Alt + Right click to delete this icon >"] = true
 L["This applies to the following tabs"] = true
 L["Middle mouse button to post the link in the chat"] = true
@@ -88,11 +144,9 @@ L["Show joined zone names in chat"] = true
 L["Capital cities are excluded from this because there would be too much chat spam"] = true
 L["Show Zone Names"] = true
 L["In addition to the zone names, it also displays the names of specific locations within a zone. Disabling the Show Zone Names feature will also disable this feature"] = true
-L["You are now in"] = true
 L["When entering a new zone, the name of the new zone will be displayed in the chat"] = true
 --0.3 Classic function Change
 L["Number"] = true
-L["Orientation"] = true
 L["Old icon style"] = true
 L["Changes the appearance of the icons. When activated, the listed icons will be changed with the previous style of these icons"] = true
 --0.4 Restore
@@ -112,13 +166,11 @@ L["Synchronizes the Capitals tab with the Capitals - Minimap tab"] = true
 L["Which deactivates the functions from the Capitals - Minimap tab and is now controlled together by the Capitals tab"] = true
 L["This will delete all Capitals - Minimap settings and replace them with those from Capitals tab"] = true
 --0.6 MapNotes icons and hide blizzard POIs
-L["Displays special MapNotes summary icons containing several different pieces of information (dungeons/raids/portals, etc.)"] = true
 L["Points of interests"] = true
 L["Disables the display of all Blizzard Dungeon and Raid icons on the zone map"] = true
 --1 Capitals
 L["Leather Armor"] = true
 L["Heavy Armor"] = true
-L["Plate Armor"] = true
 L["Cloth Armor"] = true
 L["Quartermaster"] = true
 L["The Scryers"] = true
@@ -143,7 +195,6 @@ L["Shrine7Stars"] = true
 L["Starting on the first Sunday of each month for one week"] = true
 L["Enables the display of icons for a specific capital city"] = true
 L["This MapNotes icons shows various icons that are too close to each other together"] = true
-L["Only affects instance passage icons, not path icons such as exit icons or icons on an instance map or the Capitals category / Minimap Capitals"] = true
 L["Zones"] = true
 L["Continents"] = true
 --2 Unexplored Areas function
@@ -153,28 +204,6 @@ L["Mist of the Unexplored"] = true
 L["Leaves the unexplored areas revealed but adds a slight fog so you can still see which ones you haven't explored yet"] = true
 L["Reveals unexplored areas and shows the individual areas of each zone that are actually still unexplored"] = true
 --3 Info tab
-L["Info"] = true
-L["A description of what this addon does and what functions it offers"] = true
-L["A collection of various icons on various maps from previous expansions up to Dragonflight"] = true
-L["Displays instance entrances, portals, ships, zeppelins, exits, passage, enemy faction and other transport icons"] = true
-L["All icons can be activated or deactivated separately!"] = true
-L["Shift function option: You can use the MapNotes symbols with or without shift-clicking"] = true
-L["Hide MapNotes! option: All icons can also be hidden or shown with a single click"] = true
-L["Normally on a maximized map you cannot use instance icons from Blizzard or other addons that would open the adventure guide. But not for MapNotes! You can use all functions on minimized or maximized maps!"] = true
-L["Worldmap function"] = true
-L["Right-click on any icon adds a TomTom waypoint (except on the Azeroth and Minimap)"] = true
-L["Left-click on a Instance icon opens the corresponding dungeon in the adventure guide"] = true
-L["Azeroth/Continent Map: Left-click on a transport symbol opens the map where the symbol is"] = true
-L["Zone map: Left-click on a transport symbol opens the map of the symbol's destination"] = true
-L["Example zone map: => Orgrimmar. Left-click on this icon opens the map of Orgrimmar"] = true
-L["Example Azeroth/continent map: 'Jade Forest Portal => Orgrimmar' Left-click on this symbol opens the map of the Jade Forest. So you can see where you need to go to get to the portal"] = true
-L["Maximized Map function"] = true
-L["After the adventure guide is opened using a MapNote instance icon and you then switch to the dungeon map using the 'Show map' option in the adventure guide, the map is shown reduced in size so that you can move with the character within the instance and see where you have to go. This minimized map feature ends when you close the map or once! Press the “World map on/off” button (which you have set under 'ESC - Keyboard assignment - Interface function'), whereupon the map will be maximized"] = true
-L["Minimap button function"] = true
-L["Left-click opens or close the MapNote setting menu"] = true
-L["Right-click opens or close the HandyNote setting menu"] = true
-L["Shift+Right-click hide the minimap button"] = true
-L["Chat commands"] = true
 --4 General tab
 L["Description"] = true
 L["Position of the real Instance Entrance"] = true
@@ -182,22 +211,14 @@ L["Way to the Instance Entrance"] = true
 L["Also disables all Blizzard Instance icons on the zone map. However, these can be reactivated on the map at the top right under the 'Map filter' dungeon entrance magnifying glass. Disable and enable MapNotes VS again. blizzard, deactivates the instance icons on the zone map again"] = true
 L["Hides certain Blizzard icons (e.g. Horde/Alliance/Neutral capitals icon or general travel icons on the map) and replaces them with almost identical MapNotes icons, providing additional information and functionality"] = true
 L["Removes the Blizzard symbols only where MapNotes symbols and Blizzard symbols overlap, thereby making the tooltip and the function of the MapNote symbols usable again on the overlapping points"] = true
-L["If the map is open, after enabling or disabling this option, the map must be reopened once for the changes to display correctly"] = true
 L["Left-clicking on a icon on this map opens the corresponding instance in the adventure guide or the map in which the portal, ship, zeppelin or special transport icon is located"] = true
 L["Left-click on one of these symbols on a map, the corresponding adventure guide or map of the destination will open"] = true
 L["Left-clicking on a multiple icon will open the map where the dungeons are located"] = true
 L["At the same time, all icons representing additional instance inputs are removed"] = true
 L["Changes all passage symbols on all maps to dungeon, raid or multiple symbols. In addition, the passage option will be disabled everywhere and the symbols will be added to the respective raids, dungeons or multiple options (The dungeon map remains unchanged from all this)"] = true
-L["Show different icons on different maps. All icons are clickable (except on the minimap) and have a function Map icons work with or without the shift key. Simply change the Shift function!"] = true
-L["Generally"] = true
 L["General"] = true
 L["General settings that apply to Azeroth / Continent / Dungeon map at the same time"] = true
 L["General settings / Additional functions"] = true
-L["Shift function!"] = true
-L["When enabled, you must press Shift before left- or right-clicking to interact with MapNotes icons. But this has an advantage because there are so many icons in the game, including from other addons, so you don't accidentally click on a symbol and change the map, or mistakenly create a TomTom point."] = true
-L["You must now always press Shift + Click at the same time to interact with the MapNotes icons"] = true
-L["You can now interact with MapNotes icons without having to press Shift + Click at the same time"] = true
-L["Settings apply to the zone map and the mini map at the same time"] = true
 L["symbol size"] = true
 L["Changes the size of the icons"] = true
 L["symbol visibility"] = true
@@ -207,14 +228,11 @@ L["Hide the MapNotes button on the minimap"] = true
 L["hide worldmap button"] = true
 L["Hide the MapNotes button on the worldmap"] = true
 L["hide MapNotes!"] = true
-L["-> Hide all MapNotes icons <-"] = true
 L["Disable MapNotes, all icons will be hidden on each map and all categories will be disabled"] = true
 L["Adventure guide"] = true
-L["Left-clicking on a MapNotes raid (green), dungeon (blue) or multiple icon (green&blue) on the map opens the corresponding dungeon or raid map in the Adventure Guide (the map must not be open in full screen)"] = true
+L["Left-clicking on a MapNotes raid (green), dungeon (blue) or multiple icon (green&blue) on the map opens the corresponding dungeon or raid map in the Adventure Guide"] = true
 L["TomTom waypoints"] = true
-L["Shift+right click on a raid, dungeon, multiple symbol, portal, ship, zeppelin, passage or exit from MapNotes on the continent or dungeon map creates a TomTom waypoint to this point (but the TomTom add-on must be installed for this)"] = true
 L["extra information"] = true
-L["Displays additional information for dungeons or raid icons. E.g. the number of bosses already killed"] = true
 L["gray single"] = true
 L["Colors only individual points of assigned dungeons and raids in gray (if you have an ID)"] = true
 L["gray all"] = true
@@ -225,11 +243,8 @@ L["However, this only applies to the Azeroth & continent map. Not for Zones + & 
 L["chat message"] = true
 L["Disables MapNotes status chat messages excluding core information"] = true
 L["Shows special transport icons like"] = true
-L["Combines several different grouped symbols that lie on one point, thus showing all possible transport/instance symbols that are located here instead of just one of several possible ones"] = true
-L["Left-clicking on one of these symbols on the map opens the corresponding map, which contains all of the points listed by the symbol on the map"] = true
 L["Informations"] = true
 L["Chat commands:"] = true
-L["to show MapNotes info in chat: /mn, /MN"] = true
 L["to open MapNotes menu: /mno, /MNO"] = true
 L["to close MapNotes menu: /mnc, /MNC"] = true
 L["to show minimap button: /mnb or /MNB"] = true
@@ -257,7 +272,6 @@ L["Portals"] = true
 L["Zeppelins"] = true
 L["Ships"] = true
 L["Transport"] = true
-L["Special"] = true
 L["Ogre Waygate"] = true
 L["Old Instances"] = true
 L["Show icons of passage on this map"] = true
@@ -271,7 +285,6 @@ L["Show all MapNotes for a specific map"] = true
 L["Show icons of MapNotes dungeon exit on this map"] = true
 L["Enables the display of all possible icons on this map"] = true
 L["Show icons of passage to raids and dungeons on this map"] = true
-L["Show Ogre Waygate icons from Garrison on this map"] = true
 L["Activates the display of all possible icons on this map"] = true
 L["Show icons of multiple (dungeons,raids) on this map"] = true
 L["Show all Outland MapNotes dungeon, raid, portal, zeppelin and ship icons on this map"] = true
@@ -302,7 +315,6 @@ L["Kul Tiras"] = true
 L["Shadowlands"] = true
 L["Dragon Isles"] = true
 --8 Core specific
-L["Shift function"] = true
 L["-> MiniMapButton <-"] = true
 L["-> WorldMapButton <-"] = true
 L["MapNotes menu window"] = true
@@ -313,7 +325,6 @@ L["is deactivated"] = true
 L["are shown"] = true
 L["are hidden"] = true
 L["Left-click => Open/Close"] = true
-L["Right-click => Open/Close"] = true
 L["Shift + Right-click => hide"] = true
 L["Middle-Mouse-Button => Open/Close"] = true
 --9 transport
@@ -335,14 +346,12 @@ L["Honor Hold Mage"] = true
 L["Use the Old Keyring"] = true
 L["Travel"] = true
 L["Teleporter"] = true
-L["Old Keyring"] = true
 L["Old Version"] = true
 L["Secret Portal"] = true
 L["Secret Entrance"] = true
 L["Ogre Waygate to Garrison"] = true
 L["in the basement"] = true
 L["(on the tower)"] = true
-L["(inside portal chamber)"] = true
 L["(inside building)"] = true
 L["talk to"] = true
 --10 places
@@ -408,7 +417,6 @@ L["Frostfire Ridge"] = true
 L["Tanaan Jungle"] = true
 L["Shadowmoon Valley"] = true
 L["Spires of Arak"] = true
-L["Netherstorm"] = true
 L["Blade's Edge Mountains"] = true
 L["Zangarmarsh"] = true
 L["Terokkar Forest"] = true
@@ -458,9 +466,7 @@ L["Seer Kazal"] = true
 L["Auridormi"] = true
 L["Registrant"] = true
 L["Scarlet Instances"] = true
-L["hide Cosmos map symbols"] = true
 L["Shows the locations of Raidbrowser applicants for old Raids"] = true
-L["Deactivates the display of all possible icons on this map"] = true
 --11 Specific
 L["This instance entrance is in a different timeline. Other timeline can be activated at Zidormi"] = true
 L["Shows locations of raids, dungeons, portals ,ship and zeppelins icons on different maps"] = true
@@ -517,3 +523,9 @@ L["Travel through time to another point in the history of"] = true
 L["If you don't see this icon, it's probably in a different phase. \nChange the phase on Zidormi"] = true
 L["The associated settings are regulated here. \nRegardless of whether it is the display of an icon, an entire icon group or the display of the complete icons for the corresponding Continent"] = true
 L["The associated settings are regulated here. \nRegardless of whether it is the display of an icon, an entire icon group or the display of the complete icons for the corresponding Capital"] = true
+-- Support
+L["About MapNotes"] = true
+L["If you like this addon, feel free to support me via Paypal, Patreon or Ko-fi"] = true
+L["You can find the relevant links on:"] = true
+L["Any support is greatly appreciated"] = true
+L["Best regards"] = true

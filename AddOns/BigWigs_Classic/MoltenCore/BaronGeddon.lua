@@ -53,6 +53,7 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED", "LivingBombApplied", 20475)
 	self:Log("SPELL_AURA_REMOVED", "LivingBombRemoved", 20475)
 	self:Log("SPELL_CAST_SUCCESS", "Inferno", 19695)
+	self:Log("SPELL_AURA_REMOVED", "InfernoRemoved", 19695)
 	self:Log("SPELL_CAST_SUCCESS", "Armageddon", 20478)
 	self:Log("SPELL_CAST_SUCCESS", "IgniteMana", 19659)
 	self:Log("SPELL_AURA_APPLIED", "IgniteManaApplied", 19659)
@@ -62,6 +63,7 @@ function mod:OnBossEnable()
 		self:Log("SPELL_AURA_APPLIED", "LivingBombAppliedSoD", 465725, 461090, 461105) -- Level 1, Level 2, Level 3
 		self:Log("SPELL_AURA_REMOVED", "LivingBombRemoved", 465725, 461090, 461105) -- Level 1, Level 2, Level 3
 		self:Log("SPELL_CAST_SUCCESS", "Inferno", 461087, 461110) -- Level 1, Level 2 & 3
+		self:Log("SPELL_AURA_REMOVED", "InfernoRemoved", 461087, 461110) -- Level 1, Level 2 & 3
 		self:Log("SPELL_CAST_SUCCESS", "ArmageddonSoD", 461121)
 		self:Log("SPELL_AURA_APPLIED", "LivingFalloutDamage", 461103, 461111) -- Living Fallout, Inferno (Leaves a fire patch at level 2 & 3, just re-using the same living fallout option)
 		self:Log("SPELL_PERIODIC_DAMAGE", "LivingFalloutDamage", 461103, 461111)
@@ -120,11 +122,20 @@ function mod:LivingBombRemoved(args)
 	self:CustomIcon(livingBombMarker, args.destName)
 end
 
-function mod:Inferno()
-	self:Message(19695, "red")
-	self:CastBar(19695, 8)
-	self:CDBar(19695, 21) -- 21-29
-	self:PlaySound(19695, "alarm")
+do
+	local prev = 0
+	function mod:Inferno(args)
+		prev = args.time
+		self:Message(19695, "red")
+		self:CastBar(19695, 8)
+		self:PlaySound(19695, "alarm")
+	end
+
+	function mod:InfernoRemoved(args)
+		self:StopCastBar(args.spellName)
+		local duration = 21-(args.time-prev) -- 21-29
+		self:CDBar(19695, duration > 0 and duration or 13) -- Fallback for safety (21-8)
+	end
 end
 
 function mod:Armageddon(args)

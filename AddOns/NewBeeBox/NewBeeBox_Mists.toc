@@ -1,0 +1,15 @@
+## Interface: 50500
+## Title:  新手盒子游戏助手
+## Author: wclbox.com
+## Notes: 用于新手盒子内角色数据识别同步的插件
+## X-Website: https://www.wclbox.com
+## Version: 1.0.24
+## DefaultState: Enabled
+## SavedVariables: WclBoxGlobal
+## SavedVariablesPerCharacter: WclBoxCharacter
+## LoadOnDemand: 0
+## OptionalDependencies: WeakAuras
+
+libs/crypto.lua
+data/wa.lua
+WclBox.lua

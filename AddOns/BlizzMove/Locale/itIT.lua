@@ -47,6 +47,8 @@ L["Do not remember"] = "Do not remember"
 --[[Translation missing --]]
 L["Enable the Blizzmove_Debug plugin, to find more debugging information."] = "Enable the Blizzmove_Debug plugin, to find more debugging information."
 --[[Translation missing --]]
+L["Failed to make frame movable:"] = "Failed to make frame movable:"
+--[[Translation missing --]]
 L["Filter"] = "Filter"
 --[[Translation missing --]]
 L["Found bad anchor connections, copy the popup window contents to analyze them."] = "Found bad anchor connections, copy the popup window contents to analyze them."

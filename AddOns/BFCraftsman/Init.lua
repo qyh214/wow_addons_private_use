@@ -1,7 +1,7 @@
 ---@class BFC
 local BFC = select(2, ...)
 BFC.name = "BFCraftsman"
-BFC.channelName = "BFCraftsman"
+BFC.channelName = "BFChannel"
 BFC.channelID = 0
 BFC.minVersion = 7
 
@@ -19,7 +19,7 @@ AF.RegisterAddon(BFC.name, L["BFCraftsman"])
 -- functions
 ---------------------------------------------------------------------
 function BFC.IsStale(lastUpdate)
-    return time() - lastUpdate > 600 -- 10 minutes
+    return time() - lastUpdate > 310 -- 5 minutes
 end
 
 local ChatEdit_ActivateChat = ChatEdit_ActivateChat
@@ -111,7 +111,8 @@ BFC:RegisterEvent("ADDON_LOADED", function(_, _, addon)
             if type(id) ~= "string" or #id ~= 32 or type(t.professions) ~= "table" or type(t.recipes) ~= "table" then
                 BFC_DB.list[id] = nil
             else
-                t.inInstance = nil -- reset in instance status
+                -- t.inInstance = nil -- reset in instance status
+                t._lastServicesUpdate = nil
             end
         end
         -- validate publish
@@ -204,15 +205,7 @@ BFC:RegisterEvent("ADDON_LOADED", function(_, _, addon)
 end)
 
 local BNGetInfo = BNGetInfo
-local ChatFrame_RemoveChannel = ChatFrame_RemoveChannel
 BFC:RegisterEvent("PLAYER_LOGIN", function()
-    -- disable channel message
-    for i = 1, 10 do
-        if _G["ChatFrame" .. i] then
-            ChatFrame_RemoveChannel(_G["ChatFrame" .. i], BFC.channelName)
-        end
-    end
-
     -- prepare
     local bTag = select(2, BNGetInfo())
     if bTag then
@@ -238,39 +231,17 @@ BFC:RegisterEvent("PLAYER_LOGIN", function()
     end
 end)
 
-local GetChannelName = GetChannelName
-local JoinTemporaryChannel = JoinTemporaryChannel
-local versionBroadcasted
-local function PLAYER_ENTERING_WORLD()
-    BFC.channelID = GetChannelName(BFC.channelName)
-    -- print("BFC channelID: " .. tostring(BFC.channelID))
-    if BFC.channelID == 0 then
-        JoinTemporaryChannel(BFC.channelName)
-        C_Timer.After(5, PLAYER_ENTERING_WORLD)
-    else
-        if not versionBroadcasted then
-            BFC.BroadcastVersion()
-            versionBroadcasted = true
-        end
+---------------------------------------------------------------------
+-- channel
+---------------------------------------------------------------------
+AF.UnregisterChannel("BFCraftsman") -- leave old channel
+AF.RegisterTemporaryChannel(BFC.channelName)
+AF.BlockChatConfigFrameInteractionForChannel(BFC.channelName)
+AF.RegisterCallback("AF_JOIN_TEMP_CHANNEL", function(_, channelName, channelID)
+    if channelName == BFC.channelName then
+        BFC.channelID = channelID
+        BFC.BroadcastVersion()
         BFC.UpdateInstanceStatus()
-    end
-end
-BFC:RegisterEvent("PLAYER_ENTERING_WORLD", AF.GetDelayedInvoker(10, PLAYER_ENTERING_WORLD))
-
----------------------------------------------------------------------
--- disable ChatConfigFrame interaction
----------------------------------------------------------------------
-hooksecurefunc("ChatConfig_CreateCheckboxes", function(frame, checkBoxTable, checkBoxTemplate, title)
-    local name = frame:GetName()
-    if name == "ChatConfigChannelSettingsLeft" then
-        for i = 1, #checkBoxTable do
-            local checkBox = _G[name .. "Checkbox" .. i]
-            if checkBoxTable[i].channelName == BFC.channelName then
-                AF.ShowMask(checkBox, L["Disabled by BFCraftsman"])
-            else
-                AF.HideMask(checkBox)
-            end
-        end
     end
 end)
 

@@ -10,7 +10,7 @@ if L then
 	L.eruption_stomp = "踐踏" -- Short for Eruption Stomp
 	L.thunderdrum_salvo = "電圈" -- Short for Thunderdrum Salvo
 
-	--L.static_charge_high = "%d - You're moving too much"
+	L.static_charge_high = "%d - 移動過於頻繁"
 end
 
 L = BigWigs:NewBossLocale("Rik Reverb", "zhTW")
@@ -23,8 +23,6 @@ end
 
 L = BigWigs:NewBossLocale("Stix Bunkjunker", "zhTW")
 if L then
-	L.ball_size_medium = "中球！"
-	L.ball_size_large = "大球！"
 	L.rolled_on_you = "%s 碾了你" -- PlayerX rolled over you
 	L.rolled_from_you = "你碾了 %s" -- (you) Rolled over PlayerX
 	L.garbage_dump_message = "你對首領造成了 %s 點傷害" -- 視百分比或數值再調整
@@ -33,7 +31,6 @@ if L then
 	L.muffled_doomsplosion = "悶響爆炸" -- 悶響末日爆炸 暫定
 	L.short_fuse = "螃蟹爆炸" -- 表意
 	L.incinerator = "火圈" -- 火圈/焚化/燒垃圾
-	L.landing = "降落" -- Landing down from the sky
 end
 
 L = BigWigs:NewBossLocale("Sprocketmonger Lockenstock", "zhTW")
@@ -53,10 +50,10 @@ if L then
 	L.rocket_barrage = "火箭" --火箭彈幕
 	L.mega_magnetize = "磁鐵" --超能磁化
 	L.jumbo_void_beam = "虛無光束" --就不改了
-	--L.void_barrage = "Balls" --虛無彈幕
-	--L.everything = "Everything"
+	L.void_barrage = "黑球" --虛無彈幕
+	L.everything = "組合技" -- 所有發明物/合擊
 
-	--L.under_you_comment = "Under You" -- Implies this setting is for the damage from the ground effect under you
+	L.under_you_comment = "在你腳下" -- Implies this setting is for the damage from the ground effect under you
 end
 
 L = BigWigs:NewBossLocale("The One-Armed Bandit", "zhTW")
@@ -70,7 +67,7 @@ if L then
 	L.flame = "烈焰"
 	L.coin = "硬幣" -- 應該是獎勵的硬幣
 
-	--L.withering_flames = "Flames" -- Short for Withering Flames
+	L.withering_flames = "烈焰" -- Short for Withering Flames
 
 	L.cheat = "啟動：%s" -- Cheat: Coils, Cheat: Debuffs, Cheat: Raid Damage, Cheat: Final Cast
 	L.linked_machines = "線圈"

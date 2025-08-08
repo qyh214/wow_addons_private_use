@@ -1,9 +1,9 @@
-## Interface: 110100
+## Interface: 110105
 ## Title: |cff0080ffNDui|r Extras
 ## Author: 七曜
 ## Notes: 有用没用的小玩意！
 ## RequiredDeps: NDui
-## Version: 3.3
+## Version: 3.5
 ## IconTexture: Interface\AddOns\NDui_Extras\Texture\logo
 ## X-Credits: Siweia, Witness, Elv, fgprodigal, Cybeloras, hokohuang, Dencer, fang2hou, HopeAsd, p3lim, gegenschall.
 

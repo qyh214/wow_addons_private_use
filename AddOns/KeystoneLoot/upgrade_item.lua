@@ -22,10 +22,10 @@ local _specialBonusId = {
 };
 
 local _blacklistedItems = {
-	[228807] = true, [228815] = true, [228799] = true, [228803] = true, [228811] = true,
-	[228808] = true, [228816] = true, [228800] = true, [228804] = true, [228812] = true,
-	[228809] = true, [228817] = true, [228801] = true, [228805] = true, [228813] = true,
-	[228810] = true, [228818] = true, [228802] = true, [228806] = true, [228814] = true
+    [237588] = true, [237596] = true, [237592] = true, [237600] = true, [237584] = true,
+	[237587] = true, [237595] = true, [237591] = true, [237599] = true, [237583] = true,
+	[237586] = true, [237594] = true, [237590] = true, [237598] = true, [237582] = true,
+	[237585] = true, [237593] = true, [237589] = true, [237597] = true, [237581] = true
 }
 
 function KeystoneLoot:UpdateUpgradeTooltip()

@@ -1,7 +1,14 @@
 -- Auchindoun
 
-local L = BigWigs:NewBossLocale("Auchindoun Trash", "esMX")
+local L = BigWigs:NewBossLocale("Teron'gor", "esMX")
 if not L then return end
+if L then
+	L.affliction = "Aflicción"
+	L.demonology = "Demonología"
+	L.destruction = "Destrucción"
+end
+
+L = BigWigs:NewBossLocale("Auchindoun Trash", "esMX")
 if L then
 	L.abyssal = "Abisal vilificado"
 end
@@ -77,12 +84,6 @@ end
 
 -- Shadowmoon Burial Grounds
 
-L = BigWigs:NewBossLocale("Sadana Bloodfury", "esMX")
-if L then
-	--L.custom_on_markadd = "Mark the Dark Communion Add"
-	--L.custom_on_markadd_desc = "Mark the add spawned by Dark Communion with {rt8}, requires promoted or leader."
-end
-
 L = BigWigs:NewBossLocale("Bonemaw", "esMX")
 if L then
 	--L.summon_worms = "Summon Carrion Worms"
@@ -112,10 +113,8 @@ end
 
 L = BigWigs:NewBossLocale("High Sage Viryx", "esMX")
 if L then
-	--L.custom_on_markadd = "Mark the Solar Zealot"
-	--L.custom_on_markadd_desc = "Mark the Solar Zealot with {rt8}, requires promoted or leader."
-
-	L.construct = "Ensamblaje de protección del Trecho Celestial" -- NPC ID 76292
+	L.solar_zealot = "Fanático solar"
+	L.construct = "Ensamblaje de protección del Trecho Celestial"
 end
 
 -- The Everbloom

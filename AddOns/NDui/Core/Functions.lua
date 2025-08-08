@@ -709,10 +709,12 @@ do
 		["orange"] = Enum.ItemQuality.Legendary,
 		["artifact"] = Enum.ItemQuality.Artifact,
 		["account"] = Enum.ItemQuality.Heirloom,
+		["epic"] = Enum.ItemQuality.Epic,
+		["legendary"] = Enum.ItemQuality.Legendary,
 	}
 	local function updateIconBorderColorByAtlas(border, atlas)
 		local atlasAbbr = atlas and strmatch(atlas, "%-(%w+)$")
-		local quality = atlasAbbr and AtlasToQuality[atlasAbbr]
+		local quality = atlasAbbr and AtlasToQuality[strlower(atlasAbbr)]
 		local color = DB.QualityColors[quality or 1]
 		border.__owner.bg:SetBackdropBorderColor(color.r, color.g, color.b)
 	end
@@ -1887,11 +1889,17 @@ do
 		if frame.SetBackdrop then frame:SetBackdrop(nil) end
 	end
 
+	local function KillEditMode(object)
+		object.HighlightSystem = B.Dummy
+		object.ClearHighlight = B.Dummy
+	end
+
 	local function addapi(object)
 		local mt = getmetatable(object).__index
 		if not object.SetInside then mt.SetInside = SetInside end
 		if not object.SetOutside then mt.SetOutside = SetOutside end
 		if not object.HideBackdrop then mt.HideBackdrop = HideBackdrop end
+		if not object.KillEditMode then mt.KillEditMode = KillEditMode end
 		if not object.DisabledPixelSnap then
 			if mt.SetTexture then hooksecurefunc(mt, "SetTexture", DisablePixelSnap) end
 			if mt.SetTexCoord then hooksecurefunc(mt, "SetTexCoord", DisablePixelSnap) end

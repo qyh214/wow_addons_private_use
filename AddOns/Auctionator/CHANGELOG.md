@@ -1,6 +1,6 @@
 # Auctionator
 
-## [272](https://github.com/Auctionator/Auctionator/tree/272) (2025-04-09)
-[Full Changelog](https://github.com/Auctionator/Auctionator/compare/271...272) 
+## [288](https://github.com/Auctionator/Auctionator/tree/288) (2025-08-04)
+[Full Changelog](https://github.com/Auctionator/Auctionator/compare/287...288) 
 
-- Update toc for Classic Era/SoD 1.15.7  
+- Fix error when posting too low price with "Post next item" enabled  

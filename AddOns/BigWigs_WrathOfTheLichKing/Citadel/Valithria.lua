@@ -59,7 +59,6 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "Win", 71189)
 
 	self:BossYell("Portal", L["portal_trigger"])
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:BossYell("Engage", L["engage_trigger"])
 end
 
@@ -87,6 +86,7 @@ do
 	end
 	function mod:OnEngage()
 		portalCount = 1
+		self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 		if self:Heroic() then
 			self:CDBar("suppresser", 14, L["suppresser_message"], 70588)
 			self:Bar("portal", 46, L["portalcd_bar"]:format(portalCount), 72482)

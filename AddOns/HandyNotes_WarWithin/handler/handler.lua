@@ -113,6 +113,15 @@ do
         if item.covenant then
             table.insert(available, ns.conditions.Covenant(item.covenant))
         end
+        if item.requires then
+            if ns.IsObject(item.requires) then
+                table.insert(available, item.requires)
+            else
+                for i,v in ipairs(item.requires) do
+                    table.insert(available, v)
+                end
+            end
+        end
         if #available > 0 then
             upgrade.requires = available
             available = {}
@@ -433,7 +442,7 @@ local function render_string(s, context)
     return s:gsub("{([^:}]+):([^:}]+):?([^}]*)}", function(variant, id, fallback)
         local mainid, subid = id:match("(%d+)%.(%d+)")
         mainid, subid = mainid and tonumber(mainid), subid and tonumber(subid)
-        id = tonumber(id)
+        id = mainid or tonumber(id)
         -- TODO: multiple variants?
         local mainvariant, subvariant = variant:match("(%l+)%.(%l+)")
         if subvariant then
@@ -531,6 +540,9 @@ local function render_string(s, context)
                 name = GetFactionInfoByID(id)
             end
             if name then
+                if subid then
+                    return TEXT_MODE_A_STRING_VALUE_TYPE:format(name, GetText("FACTION_STANDING_LABEL"..subid, UnitSex("player")) or string(subid))
+                end
                 return name
             end
         elseif variant == "garrisontalent" then
@@ -950,8 +962,8 @@ local function tooltip_achievement(tooltip, achievement, criteria)
         tooltip_criteria(tooltip, achievement, 1)
     end
 end
-local function tooltip_loot(tooltip, item)
-    if ns.db.tooltip_charloot and not IsShiftKeyDown() and not item:MightDrop() then
+local function tooltip_loot(tooltip, item, force)
+    if (ns.db.tooltip_charloot and not IsShiftKeyDown() and not item:MightDrop()) and not force then
         return true
     end
     item:AddToTooltip(tooltip)
@@ -1012,7 +1024,7 @@ local function handle_tooltip(tooltip, point, skip_label)
     if point.loot then
         local hidden
         for _, item in ipairs(point.loot) do
-            hidden = tooltip_loot(tooltip, item) or hidden
+            hidden = tooltip_loot(tooltip, item, point.showallloot) or hidden
         end
         if hidden then
             tooltip:AddLine("Items for other characters hidden", 0, 1, 1)

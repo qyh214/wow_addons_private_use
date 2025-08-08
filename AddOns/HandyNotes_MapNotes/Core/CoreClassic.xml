@@ -9,4 +9,5 @@
     <Script file="ProfessionDetection.lua"/>
     <Include file="wmb-template.xml"/>
     <Include file="Classic\ClassicCore.xml"/>
+    <Script file="Core/CoordsDisplay.lua"/>
 </Ui>

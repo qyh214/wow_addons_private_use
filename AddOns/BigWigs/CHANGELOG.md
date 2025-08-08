@@ -1,14 +1,12 @@
 # BigWigs
 
-## [v382.1](https://github.com/BigWigsMods/BigWigs/tree/v382.1) (2025-04-15)
-[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v382...v382.1) [Previous Releases](https://github.com/BigWigsMods/BigWigs/releases)
+## [v392.7](https://github.com/BigWigsMods/BigWigs/tree/v392.7) (2025-08-07)
+[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v392.6...v392.7) [Previous Releases](https://github.com/BigWigsMods/BigWigs/releases)
 
-- Bump version  
-- Parser: Generate combined option files (#2004)  
-- LiberationOfUndermine/Bandit: Tweaks  
-- LiberationOfUndermine/Bandit: Extend Stage 2 timer tables slightly  
-- LiberationOfUndermine/Bandit: Also notify players when the High Roller buff is refreshed  
-- Update luacheck  
-- Update koKR (#2003)  
-- Update zhCN (#2002)  
-- Locales: Fix duplicate common locale entry  
+- Loader: Fix comment  
+- Plugins/BossBlock: Hard mute the emote sounds since Blizz thinks audio should play to users that block the emotes (also deafening people is "fantastic" design)  
+- Tools/Keystones: Cleanup  
+- Tools/Keystones: Add all the dungeon teleports  
+- Tools/Keystones: Cleanups  
+- Update frFR (#2140)  
+- Update koKR (#2139)  

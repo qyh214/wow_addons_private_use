@@ -1132,6 +1132,10 @@ function module.options:Load()
 
 		--271-280
 		{L.S_ZoneT33..": "..L.bossName[3016],{2409,0.52,0.77,3}},
+		{L.EJInstanceName[317]..": "..L.bossName[1500],{473,0.20,0.51,2.5}},
+		{L.EJInstanceName[317]..": "..L.bossName[1407],{473,0.68,0.82,2.5}},
+		{L.EJInstanceName[330]..": "..L.bossName[1501],{475,0.30,0.74,2}},
+		{L.EJInstanceName[320],{456}},
 	}
 	local mapsSorted = {
 		1,
@@ -1153,97 +1157,59 @@ function module.options:Load()
 		{L.S_ZoneT22Uldir,9,8,11,7,6,5,4,2,3},
 		{DUNGEONS..": "..EXPANSION_NAME7,41,42,43,44,12,13,14,15,16,17,18,19},
 	}
-	if ExRT.isCata then
+	if ExRT.isClassic then
 		mapsSorted = {
 			1,
 			{L.NoteColor,10,94,95,96,97,98,99},
-			{L.S_ZoneT13,253,254,255},
-			{L.S_ZoneT12,246,247,248,249,250,251,252},
-			{L.S_ZoneT11_ToB,232,233,234,235,236},
-			{L.S_ZoneT11_BD,237,238,239,240,241,242},
-			{L.S_ZoneT11_TotFW,243,244},
-			{L.S_ZoneT11_BH,245},
-			{"The Ruby Sanctum",168},
-			{"Icecrown Citadel [rooms]",210,211,212,213,214,215,216,217,218,219,220,223,221,222},
-			{"Icecrown Citadel",160,161,162,163,164,165,166,167},
-			{"Onyxia's Lair",169},
-			{"Trial of the Crusader",158,159},
-			{"Ulduar [visual]",186,187,188,189,190,191,192,193,194,195,196,197,198,199,200},
-			{"Ulduar",152,153,154,155,156,157},
-			{"The Eye of Eternity",170},
-			{"The Obsidian Sanctum",171},
-			{"Naxxramas",172,173,174,175,176,177},
-			{"Sunwell Plateau",139,140},
-			{"Battle for Mount Hyjal",135},
-			{"Black Temple",126,127,128,129,130,131,132,133},
-			{"Tempest Keep",138},
-			{"Serpentshrine Cavern",137},
-			{"Gruul's Lair",134},
-			{"Magtheridon's Lair",136},
+		}
+		if ExRT.isMoP then
+			ExRT.F.table_add(mapsSorted,{
+				{(EXPANSION_NAME4 or "MoP").. " T14",272,273,274,275},
+			})
+		end
+		if ExRT.isCata then
+			ExRT.F.table_add(mapsSorted,{
+				{L.S_ZoneT13,253,254,255},
+				{L.S_ZoneT12,246,247,248,249,250,251,252},
+				{L.S_ZoneT11_ToB,232,233,234,235,236},
+				{L.S_ZoneT11_BD,237,238,239,240,241,242},
+				{L.S_ZoneT11_TotFW,243,244},
+				{L.S_ZoneT11_BH,245},
+			})
+		end
+		if ExRT.isLK then
+			ExRT.F.table_add(mapsSorted,{
+				{"The Ruby Sanctum",168},
+				{"Icecrown Citadel [rooms]",210,211,212,213,214,215,216,217,218,219,220,223,221,222},
+				{"Icecrown Citadel",160,161,162,163,164,165,166,167},
+				{"Onyxia's Lair",169},
+				{"Trial of the Crusader",158,159},
+				{"Ulduar [visual]",186,187,188,189,190,191,192,193,194,195,196,197,198,199,200},
+				{"Ulduar",152,153,154,155,156,157},
+				{"The Eye of Eternity",170},
+				{"The Obsidian Sanctum",171},
+				{"Naxxramas",172,173,174,175,176,177},
+			})
+		end
+		if ExRT.isBC then
+			ExRT.F.table_add(mapsSorted,{
+				{"Sunwell Plateau",139,140},
+				{"Battle for Mount Hyjal",135},
+				{"Black Temple",126,127,128,129,130,131,132,133},
+				{"Tempest Keep",138},
+				{"Serpentshrine Cavern",137},
+				{"Gruul's Lair",134},
+				{"Magtheridon's Lair",136},
+			})
+		end
+		ExRT.F.table_add(mapsSorted,{
 			{"Blackwing Lair","by Wollie",57,58,59,60,61,62,63,64},
 			{"Molten Core",65},
-			{"Naxxramas [classic]","by Wollie",71,72,73,74,75,76},
+			{"Naxxramas"..(ExRT.isLK and " [classic]" or ""),"by Wollie",71,72,73,74,75,76},
 			{"Ruins of Ahn'Qiraj",67},
 			{"Temple of Ahn'Qiraj",68,69,70},
 			{"Zul'gurub",66},
-		}
-	elseif ExRT.isLK then
-		mapsSorted = {
-			1,
-			{L.NoteColor,10,94,95,96,97,98,99},
-			{"The Ruby Sanctum",168},
-			{"Icecrown Citadel [rooms]",210,211,212,213,214,215,216,217,218,219,220,223,221,222},
-			{"Icecrown Citadel",160,161,162,163,164,165,166,167},
-			{"Onyxia's Lair",169},
-			{"Trial of the Crusader",158,159},
-			{"Ulduar [visual]",186,187,188,189,190,191,192,193,194,195,196,197,198,199,200},
-			{"Ulduar",152,153,154,155,156,157},
-			{"The Eye of Eternity",170},
-			{"The Obsidian Sanctum",171},
-			{"Naxxramas",172,173,174,175,176,177},
-			{"Sunwell Plateau",139,140},
-			{"Battle for Mount Hyjal",135},
-			{"Black Temple",126,127,128,129,130,131,132,133},
-			{"Tempest Keep",138},
-			{"Serpentshrine Cavern",137},
-			{"Gruul's Lair",134},
-			{"Magtheridon's Lair",136},
-			{"Blackwing Lair","by Wollie",57,58,59,60,61,62,63,64},
-			{"Molten Core",65},
-			{"Naxxramas [classic]","by Wollie",71,72,73,74,75,76},
-			{"Ruins of Ahn'Qiraj",67},
-			{"Temple of Ahn'Qiraj",68,69,70},
-			{"Zul'gurub",66},
-		}
-	elseif ExRT.isBC then
-		mapsSorted = {
-			1,
-			{L.NoteColor,10,94,95,96,97,98,99},
-			{"Sunwell Plateau",139,140},
-			{"Battle for Mount Hyjal",135},
-			{"Black Temple",126,127,128,129,130,131,132,133},
-			{"Tempest Keep",138},
-			{"Serpentshrine Cavern",137},
-			{"Gruul's Lair",134},
-			{"Magtheridon's Lair",136},
-			{"Blackwing Lair","by Wollie",57,58,59,60,61,62,63,64},
-			{"Molten Core",65},
-			{"Naxxramas","by Wollie",71,72,73,74,75,76},
-			{"Ruins of Ahn'Qiraj",67},
-			{"Temple of Ahn'Qiraj",68,69,70},
-			{"Zul'gurub",66},
-		}
-	elseif ExRT.isClassic then
-		mapsSorted = {
-			1,
-			{L.NoteColor,10,94,95,96,97,98,99},
-			{"Blackwing Lair","by Wollie",57,58,59,60,61,62,63,64},
-			{"Molten Core",65},
-			{"Naxxramas","by Wollie",71,72,73,74,75,76},
-			{"Ruins of Ahn'Qiraj",67},
-			{"Temple of Ahn'Qiraj",68,69,70},
-			{"Zul'gurub",66},
-		}
+		})
 	end
 	for i=1,#mapsSorted do
 		local p = mapsSorted[i]

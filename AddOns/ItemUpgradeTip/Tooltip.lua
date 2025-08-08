@@ -73,7 +73,7 @@ function private.HandleKeystone(tooltip, itemLink)
             GameTooltip_AddBlankLineToTooltip(tooltip);
             tooltip:AddDoubleLine(L["LOOT_DROPS"], mPlusKey.lootDrops)
             tooltip:AddDoubleLine(L["VAULT_REWARD"], mPlusKey.vaultReward)
-            tooltip:AddDoubleLine(L["CREST_TYPE"], icon .. " " .. mPlusKey.currency.color:WrapTextInColorCode(mPlusKey.currency.name))
+            tooltip:AddDoubleLine(L["CREST_TYPE"], icon .. " " .. mPlusKey.currency.colorData.color:WrapTextInColorCode(mPlusKey.currency.name))
         end
     end
 end

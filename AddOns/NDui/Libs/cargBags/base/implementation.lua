@@ -259,7 +259,6 @@ function Implementation:Init()
 	self:RegisterEvent("BAG_UPDATE_COOLDOWN", self, self.BAG_UPDATE_COOLDOWN)
 	self:RegisterEvent("ITEM_LOCK_CHANGED", self, self.ITEM_LOCK_CHANGED)
 	self:RegisterEvent("PLAYERBANKSLOTS_CHANGED", self, self.PLAYERBANKSLOTS_CHANGED)
-	self:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED", self, self.PLAYERREAGENTBANKSLOTS_CHANGED)
 	self:RegisterEvent("UNIT_QUEST_LOG_CHANGED", self, self.UNIT_QUEST_LOG_CHANGED)
 	self:RegisterEvent("BAG_CLOSED", self, self.BAG_CLOSED)
 end
@@ -418,7 +417,11 @@ end
 	@param slotID <number> [optional]
 	@callback Container:OnBagUpdate(bagID, slotID)
 ]]
+local isUpdating = false
 function Implementation:BAG_UPDATE(_, bagID, slotID)
+	if isUpdating then return end
+	isUpdating = true
+
 	if self.isSorting then return end
 
 	if(bagID and slotID) then
@@ -426,10 +429,12 @@ function Implementation:BAG_UPDATE(_, bagID, slotID)
 	elseif(bagID) then
 		self:UpdateBag(bagID)
 	else
-		for bagID = -3, 17 do
+		for bagID = 0, 16 do
 			self:UpdateBag(bagID)
 		end
 	end
+
+	isUpdating = false
 end
 
 --[[!
@@ -486,24 +491,6 @@ end
 	@param slotID <number> [optional]
 ]]
 function Implementation:PLAYERBANKSLOTS_CHANGED(event, bagID, slotID)
-	if(bagID <= NUM_BANKGENERIC_SLOTS) then
-		slotID = bagID
-		bagID = -1
-	else
-		bagID = bagID - NUM_BANKGENERIC_SLOTS
-	end
-
-	self:BAG_UPDATE(event, bagID, slotID)
-end
-
---[[!
-	Fired when reagent bank slots need to be updated
-	@param bagID <number>
-	@param slotID <number> [optional]
-]]
-function Implementation:PLAYERREAGENTBANKSLOTS_CHANGED(event, slotID)
-	local bagID = -3
-
 	self:BAG_UPDATE(event, bagID, slotID)
 end
 

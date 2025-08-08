@@ -1,23 +1,24 @@
-local MAJOR, MINOR = "LibDispel-1.0", 14
+local MAJOR, MINOR = "LibDispel-1.0", 15
 assert(LibStub, MAJOR.." requires LibStub")
 
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
-local Retail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
-local Classic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
-local Cata = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
-
 local next = next
 local wipe = wipe
-local CopyTable = CopyTable
-local CreateFrame = CreateFrame
-local GetTalentInfo = GetTalentInfo
-local IsPlayerSpell = IsPlayerSpell
-local IsSpellKnownOrOverridesKnown = IsSpellKnownOrOverridesKnown
+local type = type
 
 local GetCVar = C_CVar.GetCVar
 local SetCVar = C_CVar.SetCVar
+
+local CopyTable = CopyTable
+local CreateFrame = CreateFrame
+local IsPlayerSpell = IsPlayerSpell
+local IsSpellKnownOrOverridesKnown = IsSpellKnownOrOverridesKnown
+
+local Retail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+local Classic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local Mists = WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC
 
 local function GetList(name, data)
 	local list = lib[name]
@@ -1276,11 +1277,6 @@ do
 		end
 	end
 
-	local function CheckTalentClassic(tabIndex, talentIndex)
-		local _, _, _, _, rank = GetTalentInfo(tabIndex, talentIndex)
-		return (rank and rank > 0) or nil
-	end
-
 	local function UpdateDispels(_, event, arg1)
 		if event == 'CHARACTER_POINTS_CHANGED' and (not arg1 or arg1 > 0) then
 			return -- Not interested in gained points from leveling
@@ -1292,9 +1288,9 @@ do
 		if event == 'UNIT_PET' then
 			DispelList.Magic = CheckPetSpells()
 		elseif myClass == 'DRUID' then
-			local cure = Retail and CheckSpell(88423) -- Nature's Cure Spell
+			local cure = CheckSpell(88423) -- Nature's Cure Spell
 			local corruption = CheckSpell(2782) -- Remove Corruption (retail), Remove Curse (classic)
-			DispelList.Magic = cure or (Cata and corruption and CheckTalentClassic(3, 15)) -- Nature's Cure Talent
+			DispelList.Magic = cure
 			DispelList.Poison = cure or (not Classic and corruption) or CheckSpell(2893) or CheckSpell(8946) -- Abolish Poison / Cure Poison
 			DispelList.Curse = cure or corruption
 		elseif myClass == 'MAGE' then
@@ -1303,15 +1299,15 @@ do
 			DispelList.Magic = greater
 		elseif myClass == 'MONK' then
 			local mwDetox = CheckSpell(115450) -- Detox (Mistweaver)
-			local detox = mwDetox or CheckSpell(218164) -- Detox (Brewmaster or Windwalker)
-			DispelList.Magic = mwDetox
+			local detox = (not Retail and mwDetox) or (Retail and CheckSpell(218164)) -- Detox (Brewmaster or Windwalker)
+			DispelList.Magic = mwDetox and (not Mists or CheckSpell(115451))
 			DispelList.Disease = detox
 			DispelList.Poison = detox
 		elseif myClass == 'PALADIN' then
 			local cleanse = CheckSpell(4987) -- Cleanse
 			local purify = CheckSpell(1152) -- Purify
 			local toxins = cleanse or purify or CheckSpell(213644) -- Cleanse Toxins
-			DispelList.Magic = cleanse and (not Cata or CheckTalentClassic(1, 7)) -- Sacred Cleansing
+			DispelList.Magic = cleanse and (not Mists or CheckSpell(53551)) -- Sacred Cleansing
 			DispelList.Poison = toxins
 			DispelList.Disease = toxins
 		elseif myClass == 'PRIEST' then
@@ -1319,14 +1315,13 @@ do
 			DispelList.Magic = dispel or CheckSpell(32375)
 			DispelList.Disease = Retail and (IsPlayerSpell(390632) or CheckSpell(213634)) or not Retail and (CheckSpell(552) or CheckSpell(528)) -- Purify Disease / Abolish Disease / Cure Disease
 		elseif myClass == 'SHAMAN' then
-			local purify = Retail and CheckSpell(77130) -- Purify Spirit
-			local cleanse = purify or CheckSpell(51886) -- Cleanse Spirit (Retail/Cata)
-			local improvedCleanse = Cata and cleanse and CheckTalentClassic(3, 14) -- Improved Cleanse Spirit
-			local toxins = Retail and CheckSpell(383013) or CheckSpell(526) -- Poison Cleansing Totem (Retail), Cure Toxins (Classic)
+			local purify = CheckSpell(77130) -- Purify Spirit
+			local cleanse = purify or CheckSpell(51886) -- Cleanse Spirit (Retail/Mists)
+			local toxins = (Retail and CheckSpell(383013)) or (Classic and CheckSpell(526)) -- Poison Cleansing Totem (Retail), Cure Poison (Classic)
 			local cureDisease = Classic and CheckSpell(2870) -- Cure Disease
 			local diseaseTotem = Classic and CheckSpell(8170) -- Disease Cleansing Totem
 
-			DispelList.Magic = purify or improvedCleanse
+			DispelList.Magic = purify
 			DispelList.Curse = cleanse
 			DispelList.Poison = toxins
 			DispelList.Disease = cureDisease or diseaseTotem
@@ -1361,7 +1356,7 @@ do
 	frame:RegisterEvent('LEARNED_SPELL_IN_TAB')
 	frame:RegisterEvent('SPELLS_CHANGED')
 
-	if Retail or Cata then
+	if Retail or Mists then
 		frame:RegisterEvent('PLAYER_TALENT_UPDATE')
 	end
 

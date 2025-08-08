@@ -48,7 +48,7 @@ local flightstoneUpgradeData = {
     ["flightstones"] = {
         name = L["FLIGHTSTONES"],
         shortName = L["FLIGHTSTONES"],
-        color = WHITE_FONT_COLOR,
+        colorData = ColorManager.GetColorDataForItemQuality(Enum.ItemQuality.Common),
         icon = 5172976,
         itemId = nil,
         currencyId = private.currencyIds.Flightstones
@@ -57,7 +57,7 @@ local flightstoneUpgradeData = {
     ["whelpCrests"] = {
         name = L["WHELP_CRESTS"],
         shortName = L["WHELP_CRESTS_SHORT"],
-        color = UNCOMMON_GREEN_COLOR,
+        colorData = ColorManager.GetColorDataForItemQuality(Enum.ItemQuality.Uncommon),
         icon = 5646099,
         itemId = nil,
         currencyId = private.currencyIds.whelpCrest
@@ -66,7 +66,7 @@ local flightstoneUpgradeData = {
     ["drakeCrests"] = {
         name = L["DRAKE_CRESTS"],
         shortName = L["DRAKE_CRESTS_SHORT"],
-        color = RARE_BLUE_COLOR,
+        colorData = ColorManager.GetColorDataForItemQuality(Enum.ItemQuality.Rare),
         icon = 5646097,
         itemId = nil,
         currencyId = private.currencyIds.drakeCrest
@@ -75,7 +75,7 @@ local flightstoneUpgradeData = {
     ["wyrmCrests"] = {
         name = L["WYRM_CRESTS"],
         shortName = L["WYRM_CRESTS_SHORT"],
-        color = EPIC_PURPLE_COLOR,
+        colorData = ColorManager.GetColorDataForItemQuality(Enum.ItemQuality.Epic),
         icon = 5646101,
         itemId = nil,
         currencyId = private.currencyIds.wyrmCrest
@@ -84,7 +84,7 @@ local flightstoneUpgradeData = {
     ["aspectCrests"] = {
         name = L["ASPECT_CRESTS"],
         shortName = L["ASPECT_CRESTS_SHORT"],
-        color = LEGENDARY_ORANGE_COLOR,
+        colorData = ColorManager.GetColorDataForItemQuality(Enum.ItemQuality.Legendary),
         icon = 5646095,
         itemId = nil,
         currencyId = private.currencyIds.aspectCrest
@@ -3499,9 +3499,9 @@ local function ParseUpgradeCost(upgradeCostData)
 
             if not private.DB.profile.CompactTooltips then
                 table.insert(lines, {
-                    left = icon .. " " .. upgradeItem.color:WrapTextInColorCode(upgradeItem.name),
+                    left = icon .. " " .. upgradeItem.colorData.color:WrapTextInColorCode(upgradeItem.name),
                     right = costLine,
-                    color = upgradeItem.color
+                    color = upgradeItem.colorData.color
                 })
             end
         end
@@ -3657,12 +3657,12 @@ local function HandleFlightstones(tooltip, inventoryTypeSlotMask, bonusId, bonus
 
         if #nextLevelLines > 0 or #totalLines > 0 then
             tooltip:AddLine("\n")
-            tooltip:AddLine(ARTIFACT_GOLD_COLOR:WrapTextInColorCode(L["FLIGHTSTONE_CREST_UPGRADES"]))
+            tooltip:AddLine(ColorManager.GetFormattedStringForItemQuality(L["FLIGHTSTONE_CREST_UPGRADES"], Enum.ItemQuality.Artifact))
 
             if nextLevelLines then
                 if not private.DB.profile.CompactTooltips then
                     -- Standard tooltip
-                    tooltip:AddLine(HEIRLOOM_BLUE_COLOR:WrapTextInColorCode(L["COST_FOR_NEXT_LEVEL"] .. " (" .. nextUpgrade.itemLevel .. ")"))
+                    tooltip:AddLine(ColorManager.GetFormattedStringForItemQuality(L["COST_FOR_NEXT_LEVEL"] .. " (" .. nextUpgrade.itemLevel .. ")", Enum.ItemQuality.Heirloom))
 
                     for _, newLine in pairs(nextLevelLines) do
                         tooltip:AddDoubleLine(newLine.left, newLine.right)
@@ -3683,7 +3683,7 @@ local function HandleFlightstones(tooltip, inventoryTypeSlotMask, bonusId, bonus
                         tooltip:AddLine("\n")
                     end
 
-                    tooltip:AddLine(HEIRLOOM_BLUE_COLOR:WrapTextInColorCode(L["COST_TO_UPGRADE_TO_MAX"] .. " (" .. maxUpgrade.itemLevel .. ")"))
+                    tooltip:AddLine(ColorManager.GetFormattedStringForItemQuality(L["COST_TO_UPGRADE_TO_MAX"] .. " (" .. maxUpgrade.itemLevel .. ")", Enum.ItemQuality.Heirloom))
 
                     for _, newLine in pairs(totalLines) do
                         tooltip:AddDoubleLine(newLine.left, newLine.right)

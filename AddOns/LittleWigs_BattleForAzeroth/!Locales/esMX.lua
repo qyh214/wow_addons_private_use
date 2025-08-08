@@ -1,7 +1,6 @@
 -- Atal'Dazar
 
 local L = BigWigs:NewBossLocale("Atal'Dazar Trash", "esMX")
-if not L then return end
 if L then
 	L.skyscreamer = "Vociferador de cielos hambriento"
 	L.tlonja = "T'lonja"
@@ -66,15 +65,21 @@ if L then
 	L.lightning_caught = "¡Relámpago atrapado después de %.1f segundos!"
 	L.ludwig = "Ludwig Von Tortollan"
 	L.trothak = "Trothak"
-
-	L.left = "%s (Izquierda)"
-	L.right = "%s (Derecha)"
 end
 
 -- Horrific Vision of Orgrimmar
 
 L = BigWigs:NewBossLocale("Horrific Vision of Orgrimmar Trash", "esMX")
 if L then
+	--L.sanity_change = "%d Sanity"
+	--L.madnesses = "Madnesses"
+	--L.potions = "Potions"
+	--L.buffs = "Buffs"
+	--L.slowed = "Slowed"
+	--L.sluggish_potion_effect = "Heal 2% every 5 sec"
+	--L.sickening_potion_effect = "5% damage reduction"
+	--L.spicy_potion_effect = "Breathe fire"
+
 	L.voidbound_shaman = "Chamán unido al Vacío"
 	L.endless_hunger_totem = "Tótem de Hambre sin fin"
 	L.crawling_corruption = "Corrupción reptante"
@@ -100,6 +105,7 @@ if L then
 	L.aqir_bonecrusher = "Aplastahuesos aqir"
 	L.aqir_mindhunter = "Cazamentes aqir"
 	L.aqir_venomweaver = "Portavenenos aqir"
+	L.gamon = "Gamon"
 end
 
 L = BigWigs:NewBossLocale("Thrall", "esMX")
@@ -134,6 +140,17 @@ end
 
 L = BigWigs:NewBossLocale("Horrific Vision of Stormwind Trash", "esMX")
 if L then
+	--L.sanity_change = "%d Sanity"
+	--L.portal_closed = "Portal Closed"
+	--L.portal_closed_desc = "Show a message when a portal is closed in the Mage Quarter."
+	--L.madnesses = "Madnesses"
+	--L.potions = "Potions"
+	--L.buffs = "Buffs"
+	--L.slowed = "Slowed"
+	--L.sluggish_potion_effect = "Heal 2% every 5 sec"
+	--L.sickening_potion_effect = "5% damage reduction"
+	--L.spicy_potion_effect = "Breathe fire"
+
 	L.crawling_corruption = "Corrupción reptante"
 	L.enthralled_footman = "Lacayo fascinado"
 	L.fallen_voidspeaker = "OPortavoz del Vacío caído"
@@ -158,6 +175,7 @@ if L then
 	L.zardeth_of_the_black_claw = "Zardeth de los Zarpanegra"
 	L.unstable_servant = "Sirviente inestable"
 	L.hogger = "Hogger"
+	L.void_scarred_gryphon = "Grifo marcado por el Vacío"
 
 	--L.therum_deepforge_warmup_trigger = "So ye like tae play with explosives, do ye? Then let's play."
 	--L.alleria_windrunner_warmup_trigger = "Mother... do not listen to the whispers!"
@@ -220,9 +238,6 @@ if L then
 	L.beastmaster = "Maestra de bestias espectral"
 	L.brute = "Bruto espectral"
 	L.zul = "Sombra de Zul"
-
-	L.casting_on_you = "Lanzando %s en TI"
-	L.casting_on_other = "Lanzando %s: %s"
 end
 
 -- Operation: Mechagon
@@ -263,11 +278,6 @@ end
 L = BigWigs:NewBossLocale("Tussle Tonks", "esMX")
 if L then
 	--L.warmup_trigger = "Now this is a statistical anomaly! Our visitors are still alive!"
-end
-
-L = BigWigs:NewBossLocale("K.U.-J.0.", "esMX")
-if L then
-	--L.safe = "Safe"
 end
 
 L = BigWigs:NewBossLocale("King Mechagon", "esMX")
@@ -351,11 +361,6 @@ if L then
 	L.incubator = "Incubador enloquecido"
 	L.nimbus = "Nimbo inquieto"
 	L.doctor = "Doctora de peste"
-end
-
-L = BigWigs:NewBossLocale("Galvazzt", "esMX")
-if L then
-	--L.percent = "%s (%d%%)"
 end
 
 -- The MOTHERLODE!!

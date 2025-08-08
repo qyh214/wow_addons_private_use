@@ -8,6 +8,6 @@
 <Script file="Unsok.lua"/>
 <Script file="Shekzeer.lua"/>
 
-<Include file="Options\options.xml"/>
+<Script file="!Options.lua"/>
 
 </Ui>

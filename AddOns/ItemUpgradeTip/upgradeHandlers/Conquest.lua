@@ -139,7 +139,7 @@ local function ParseUpgradeCost(upgradeCost)
         local costLine = requiredColor:WrapTextInColorCode(BreakUpLargeNumbers(upgradeCost)) .. " / " .. heldColor:WrapTextInColorCode(BreakUpLargeNumbers(currencyInfo.quantity))
 
         table.insert(lines, {
-            left = icon .. " " .. EPIC_PURPLE_COLOR:WrapTextInColorCode(currencyInfo.name),
+            left = icon .. " " .. ColorManager.GetFormattedStringForItemQuality(currencyInfo.name, Enum.ItemQuality.Epic),
             right = costLine,
         })
     else
@@ -199,12 +199,12 @@ local function HandleConquest(tooltip, upgradeCost, bonusId, bonusInfo)
 
         if #nextLevelLines > 0 or #totalLines > 0 then
             tooltip:AddLine("\n")
-            tooltip:AddLine(ARTIFACT_GOLD_COLOR:WrapTextInColorCode(L["X_UPGRADES"]:format(currencyInfo.name)))
+            tooltip:AddLine(ColorManager.GetFormattedStringForItemQuality(L["X_UPGRADES"]:format(currencyInfo.name), Enum.ItemQuality.Artifact))
 
             if nextLevelLines then
                 if not private.DB.profile.CompactTooltips then
                     -- Standard tooltip
-                    tooltip:AddLine(HEIRLOOM_BLUE_COLOR:WrapTextInColorCode(L["COST_FOR_NEXT_LEVEL"] .. " (" .. nextUpgrade.itemLevel .. ")"))
+                    tooltip:AddLine(ColorManager.GetFormattedStringForItemQuality(L["COST_FOR_NEXT_LEVEL"] .. " (" .. nextUpgrade.itemLevel .. ")", Enum.ItemQuality.Heirloom))
 
                     for _, newLine in pairs(nextLevelLines) do
                         tooltip:AddDoubleLine(newLine.left, newLine.right)
@@ -225,7 +225,7 @@ local function HandleConquest(tooltip, upgradeCost, bonusId, bonusInfo)
                         tooltip:AddLine("\n")
                     end
 
-                    tooltip:AddLine(HEIRLOOM_BLUE_COLOR:WrapTextInColorCode(L["COST_TO_UPGRADE_TO_MAX"] .. " (" .. maxUpgrade.itemLevel .. ")"))
+                    tooltip:AddLine(ColorManager.GetFormattedStringForItemQuality(L["COST_TO_UPGRADE_TO_MAX"] .. " (" .. maxUpgrade.itemLevel .. ")", Enum.ItemQuality.Heirloom))
 
                     for _, newLine in pairs(totalLines) do
                         tooltip:AddDoubleLine(newLine.left, newLine.right)

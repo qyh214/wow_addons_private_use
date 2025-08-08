@@ -1,7 +1,6 @@
 -- Atal'Dazar
 
 local L = BigWigs:NewBossLocale("Atal'Dazar Trash", "deDE")
-if not L then return end
 if L then
 	L.skyscreamer = "Fressender Himmelskreischer"
 	L.tlonja = "T'lonja"
@@ -66,15 +65,21 @@ if L then
 	L.lightning_caught = "Blitz nach %.1f Sekunden gefangen!"
 	L.ludwig = "Ludwig Von Tortollen"
 	L.trothak = "Trothak"
-
-	L.left = "%s (Links)"
-	L.right = "%s (Rechts)"
 end
 
 -- Horrific Vision of Orgrimmar
 
 L = BigWigs:NewBossLocale("Horrific Vision of Orgrimmar Trash", "deDE")
 if L then
+	L.sanity_change = "%d Geistige Gesundheit"
+	L.madnesses = "Wahnsinn"
+	L.potions = "Tränke"
+	L.buffs = "Buffs"
+	L.slowed = "Verlangsamt"
+	L.sluggish_potion_effect = "Heilt alle 5 Sek. 2%"
+	L.sickening_potion_effect = "5% weniger erlittener Schaden"
+	L.spicy_potion_effect = "Speit Feuer"
+
 	L.voidbound_shaman = "Leerengebundener Schamane"
 	L.endless_hunger_totem = "Totem des endlosen Hungers"
 	L.crawling_corruption = "Krabbelnde Verderbnis"
@@ -100,6 +105,7 @@ if L then
 	L.aqir_bonecrusher = "Knochenzermalmer der Aqir"
 	L.aqir_mindhunter = "Geistjäger der Aqir"
 	L.aqir_venomweaver = "Giftweber der Aqir"
+	L.gamon = "Gamon"
 end
 
 L = BigWigs:NewBossLocale("Thrall", "deDE")
@@ -125,15 +131,26 @@ end
 L = BigWigs:NewBossLocale("Rexxar", "deDE")
 if L then
 	L.rexxar = "Rexxar"
-	--L.pet_trigger_1 = "Come, my pets! Serve your master!"
-	--L.pet_trigger_2 = "My beasts will devour you!"
-	--L.pet_trigger_3 = "Hunt them down!"
+	L.pet_trigger_1 = "Kommt, meine Tiere! Dient Eurem Meister!"
+	L.pet_trigger_2 = "Meine Tiere werden Euch verschlingen!"
+	L.pet_trigger_3 = "Schnappt sie euch!"
 end
 
 -- Horrific Vision of Stormwind
 
 L = BigWigs:NewBossLocale("Horrific Vision of Stormwind Trash", "deDE")
 if L then
+	L.sanity_change = "%d Geistige Gesundheit"
+	L.portal_closed = "Portal geschlossen"
+	L.portal_closed_desc = "Zeigt eine Nachricht wenn ein Portal im Magierviertel geschlossen wird."
+	L.madnesses = "Wahnsinn"
+	L.potions = "Tränke"
+	L.buffs = "Buffs"
+	L.slowed = "Verlangsamt"
+	L.sluggish_potion_effect = "Heilt alle 5 Sek. 2%"
+	L.sickening_potion_effect = "5% weniger erlittener Schaden"
+	L.spicy_potion_effect = "Speit Feuer"
+
 	L.crawling_corruption = "Krabbelnde Verderbnis"
 	L.enthralled_footman = "Bezauberter Fußsoldat"
 	L.fallen_voidspeaker = "Gefallener Leerensprecher"
@@ -158,9 +175,10 @@ if L then
 	L.zardeth_of_the_black_claw = "Zardeth der Schwarzen Klaue"
 	L.unstable_servant = "Instabiler Diener"
 	L.hogger = "Hogger"
+	L.void_scarred_gryphon = "Leerenvernarbter Greif"
 
-	--L.therum_deepforge_warmup_trigger = "So ye like tae play with explosives, do ye? Then let's play."
-	--L.alleria_windrunner_warmup_trigger = "Mother... do not listen to the whispers!"
+	L.therum_deepforge_warmup_trigger = "Ihr spielt wohl gern mit Sprengstoff, was? Dann lasst uns spielen!"
+	L.alleria_windrunner_warmup_trigger = "Mutter... hör nicht auf das Geflüster!"
 end
 
 L = BigWigs:NewBossLocale("Alleria Windrunner", "deDE")
@@ -220,9 +238,6 @@ if L then
 	L.beastmaster = "Spektrale Bestienmeisterin"
 	L.brute = "Spektraler Schläger"
 	L.zul = "Zuls Schatten"
-
-	L.casting_on_you = "Wirkt %s auf DICH"
-	L.casting_on_other = "Wirkt %s: %s"
 end
 
 -- Operation: Mechagon
@@ -263,11 +278,6 @@ end
 L = BigWigs:NewBossLocale("Tussle Tonks", "deDE")
 if L then
 	L.warmup_trigger = "Also, das ist mal eine statistische Anomalie. Unsere Besucher leben noch!"
-end
-
-L = BigWigs:NewBossLocale("K.U.-J.0.", "deDE")
-if L then
-	L.safe = "Schrott"
 end
 
 L = BigWigs:NewBossLocale("King Mechagon", "deDE")
@@ -351,11 +361,6 @@ if L then
 	L.incubator = "Wahnsinniger Inkubator"
 	L.nimbus = "Aufgebrachter Nimbus"
 	L.doctor = "Seuchenärztin"
-end
-
-L = BigWigs:NewBossLocale("Galvazzt", "deDE")
-if L then
-	--L.percent = "%s (%d%%)"
 end
 
 -- The MOTHERLODE!!

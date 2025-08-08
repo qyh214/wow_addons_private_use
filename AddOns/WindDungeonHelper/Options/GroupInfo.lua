@@ -25,14 +25,20 @@ O.groupInfo = {
 			desc = L["Add LFG group info to tooltip."],
 			width = "full",
 		},
-		title = {
+		excludeDungeon = {
 			order = 2,
+			type = "toggle",
+			name = L["Exclude Dungeons"],
+			desc = L["It will not show the group info for dungeons."],
+		},
+		title = {
+			order = 3,
 			type = "toggle",
 			name = L["Add Title"],
 			desc = L["Display an additional title."],
 		},
 		mode = {
-			order = 3,
+			order = 4,
 			name = L["Mode"],
 			type = "select",
 			values = {
@@ -41,7 +47,7 @@ O.groupInfo = {
 			},
 		},
 		classIconStyle = {
-			order = 4,
+			order = 5,
 			name = L["Class Icon Style"],
 			type = "select",
 			values = function()
@@ -59,13 +65,13 @@ O.groupInfo = {
 			end,
 		},
 		betterAlign1 = {
-			order = 5,
+			order = 6,
 			type = "description",
 			name = "",
 			width = "full",
 		},
 		template = {
-			order = 6,
+			order = 7,
 			type = "input",
 			name = L["Template"],
 			desc = L["Please click the button below to read reference."],
@@ -78,7 +84,7 @@ O.groupInfo = {
 			end,
 		},
 		resourcePage = {
-			order = 7,
+			order = 8,
 			type = "execute",
 			name = L["Reference"],
 			desc = format(
@@ -108,7 +114,7 @@ O.groupInfo = {
 			end,
 		},
 		useDefaultTemplate = {
-			order = 8,
+			order = 9,
 			type = "execute",
 			name = L["Default"],
 			func = function(info)
@@ -117,7 +123,7 @@ O.groupInfo = {
 			end,
 		},
 		applyButton = {
-			order = 9,
+			order = 10,
 			type = "execute",
 			name = L["Apply"],
 			disabled = function()
@@ -128,13 +134,13 @@ O.groupInfo = {
 			end,
 		},
 		betterAlign2 = {
-			order = 10,
+			order = 11,
 			type = "description",
 			name = "",
 			width = "full",
 		},
 		previewText = {
-			order = 11,
+			order = 12,
 			type = "description",
 			name = function(info)
 				LFGPI:SetClassIconStyle(W.db[info[#info - 1]].classIconStyle)

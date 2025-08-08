@@ -2,14 +2,13 @@
 -- Module Declaration
 --
 
-local plugin = BigWigs:NewPlugin("Bars")
+local plugin, L = BigWigs:NewPlugin("Bars")
 if not plugin then return end
 
 --------------------------------------------------------------------------------
 -- Locals
 --
 
-local L = BigWigsAPI:GetLocale("BigWigs")
 plugin.displayName = L.bars
 
 local currentBarStyler = nil
@@ -299,7 +298,9 @@ do
 				desc = L.testBarsBtn_desc,
 				func = function()
 					testCount = testCount + 1
-					plugin:SendMessage("BigWigs_StartBar", plugin, nil, BigWigsAPI:GetLocale("BigWigs: Common").count:format(L.test, testCount), random(11, 30), testIcons[(testCount%3)+1])
+					local time = math.random(11, 30)
+					plugin:SendMessage("BigWigs_StartBar", plugin, nil, BigWigsAPI:GetLocale("BigWigs: Common").count:format(L.test, testCount), time, testIcons[(testCount%3)+1])
+					plugin:SendMessage("BigWigs_Timer", plugin, nil, time, time, BigWigsAPI:GetLocale("BigWigs: Common").count:format(L.test, testCount), 0, testIcons[(testCount%3)+1], false, true)
 				end,
 				width = 1.5,
 				order = 0.4,
@@ -1419,7 +1420,9 @@ do
 			plugin:SendMessage("BigWigs_StopBar", plugin, nick..": "..barText)
 		else
 			timers[id] = plugin:ScheduleTimer(function() plugin:SendMessage("BigWigs_Message", plugin, false, L.timerFinished:format(nick, barText), "yellow", 134376) end, seconds)
-			plugin:SendMessage("BigWigs_StartBar", plugin, id, nick..": "..barText, seconds, 134376) -- 134376 = "Interface\\Icons\\INV_Misc_PocketWatch_01"
+			local text = nick..": "..barText
+			plugin:SendMessage("BigWigs_StartBar", plugin, id, text, seconds, 134376) -- 134376 = "Interface\\Icons\\INV_Misc_PocketWatch_01"
+			plugin:SendMessage("BigWigs_Timer", plugin, id, 9, 9, text, 0, 134376, false, true)
 		end
 	end
 end
@@ -1442,11 +1445,11 @@ end
 -- Slashcommand
 --
 
-local SendAddonMessage = BigWigsLoader.SendAddonMessage
-local dbmPrefix = BigWigsLoader.dbmPrefix
 do
+	local SendAddonMessage = BigWigsLoader.SendAddonMessage
+	local dbmPrefix = BigWigsLoader.dbmPrefix
 	local times
-	SlashCmdList.BIGWIGSRAIDBAR = function(input)
+	BigWigsAPI.RegisterSlashCommand("/raidbar", function(input)
 		if not plugin:IsEnabled() then BigWigs:Enable() end
 
 		if not IsInGroup() or (not UnitIsGroupLeader("player") and not UnitIsGroupAssistant("player")) then BigWigs:Print(L.requiresLeadOrAssist) return end
@@ -1471,11 +1474,10 @@ do
 				BigWigs:Error("BigWigs: Failed to send raid bar. Error code: ".. result)
 			end
 		end
-	end
-	SLASH_BIGWIGSRAIDBAR1 = "/raidbar"
+	end)
 end
 
-SlashCmdList.BIGWIGSLOCALBAR = function(input)
+BigWigsAPI.RegisterSlashCommand("/localbar", function(input)
 	if not plugin:IsEnabled() then BigWigs:Enable() end
 
 	local seconds, barText = input:match("(%S+) (.*)")
@@ -1485,5 +1487,4 @@ SlashCmdList.BIGWIGSLOCALBAR = function(input)
 	if not seconds then BigWigs:Print(L.wrongTime) return end
 
 	startCustomBar(seconds, plugin:UnitName("player"), barText)
-end
-SLASH_BIGWIGSLOCALBAR1 = "/localbar"
+end)

@@ -13,6 +13,7 @@ mod:SetEncounterID(713)
 
 local swingCount = -1
 local frostCount = 0
+local frostLimit = 170
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -63,10 +64,11 @@ function mod:OnBossEnable()
 	self:Log("SWING_DAMAGE", "SwingDamage", "*")
 
 	self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE")
-	self:RegisterEvent("UNIT_TARGET")
+	self:RegisterMessage("BigWigs_UNIT_TARGET")
 end
 
 function mod:OnEngage()
+	frostLimit = self:GetSeason() == 2 and 50 or 170
 	self:CDBar(25991, 8.8) -- Poison Bolt Volley
 end
 
@@ -99,8 +101,8 @@ if mod:Vanilla() then
 	function mod:FrostDamage(args)
 		if bit.band(args.spellSchool, 0x10) == 0x10 and self:MobId(args.destGUID) == 15299 then -- 0x10 is Frost
 			frostCount = frostCount + 1
-			if frostCount < 170 and frostCount % 20 == 0 then
-				self:Message("freeze", "green", L.freeze_warn_frost:format(frostCount, 170-frostCount), L.freeze_icon)
+			if frostCount < frostLimit and frostCount % 20 == 0 then
+				self:Message("freeze", "green", L.freeze_warn_frost:format(frostCount, frostLimit-frostCount), L.freeze_icon)
 			end
 		end
 	end
@@ -143,7 +145,7 @@ function mod:CHAT_MSG_MONSTER_EMOTE(_, msg)
 		swingCount = 0
 		self:StopBar(25991) -- Poison Bolt Volley
 		self:Message("freeze", "red", CL.count:format(L.freeze_warn3, frostCount), L.freeze_icon)
-		self:Bar("freeze", 30, L.freeze_warn3, L.freeze_icon)
+		self:Bar("freeze", 15, L.freeze_warn3, L.freeze_icon)
 		frostCount = 999
 	elseif msg:find(L.freeze_trigger4, nil, true) and not self:Vanilla() then
 		self:Message("freeze", "orange", CL.count:format(L.freeze_warn4, swingCount), L.freeze_icon)
@@ -152,9 +154,10 @@ function mod:CHAT_MSG_MONSTER_EMOTE(_, msg)
 	end
 end
 
-function mod:UNIT_TARGET(_, unit)
-	if self:MobId(self:UnitGUID(unit.."target")) == 15667 and swingCount ~= -1 then -- Glob of Viscidus
+function mod:BigWigs_UNIT_TARGET(_, mobId)
+	if mobId == 15667 and swingCount ~= -1 then -- Glob of Viscidus
 		frostCount = 0
+		frostLimit = 170
 		self:StopBar(L.freeze_warn3)
 		self:StopBar(25991) -- Poison Bolt Volley
 		self:Message("freeze", "green", tostring(swingCount), false)

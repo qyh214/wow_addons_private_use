@@ -6,11 +6,6 @@ if L then
 	--L.ability_desc = "Cooldown timer for the next ability."
 end
 
-L = BigWigs:NewBossLocale("Salyis's Warband", "ptBR")
-if L then
-	--L.engage_yell = "Bring me their corpses!"
-end
-
 L = BigWigs:NewBossLocale("Ordos", "ptBR")
 if L then
 	--L.engage_yell = "You will take my place on the eternal brazier."
@@ -18,4 +13,3 @@ if L then
 	--L.burning_soul_bar = "Explosions"
 	--L.burning_soul_self_bar = "You explode!"
 end
-

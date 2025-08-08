@@ -4,6 +4,9 @@ ns.defaults = {
 
   profile = {
 
+    -- Advanced Options
+      MinimapArrowScale = 0.8,
+      
     -- Instance single Zone icon scale and alpha
       ZoneInstanceScale = 2,
       ZoneInstanceAlpha = 1,
@@ -19,6 +22,7 @@ ns.defaults = {
       ZoneAlphaOldVanilla = 1,
       ZoneScaleLFR = 2,
       ZoneAlphaLFR = 1,
+      
       -- Instance single MiniMap icon scale and alpha
       MiniMapInstanceScale = 2,
       MiniMapInstanceAlpha = 1,
@@ -56,6 +60,9 @@ ns.defaults = {
       ZoneAlphaTravel = 1,
       ZoneScaleDarkmoon = 1.5,
       ZoneAlphaDarkmoon = 1,
+      ZoneScaleRaces = 1.5,
+      ZoneAlphaRaces = 1,
+
       -- Transport single MiniMap icon scale and alpha 
       MiniMapTransportScale = 1.5,
       MiniMapTransportAlpha = 1,
@@ -77,6 +84,8 @@ ns.defaults = {
       MiniMapAlphaTravel = 1,
       MiniMapScaleDarkmoon = 1.5,
       MiniMapAlphaDarkmoon = 1,
+      MiniMapScaleRaces = 1.5,
+      MiniMapAlphaRaces = 1,
 
     -- General single Zone icon scale and alpha
       ZoneGeneralScale = 1.5,
@@ -160,18 +169,22 @@ ns.defaults = {
 
     --0 General tab
       journal = true,
-      tomtom = true,
-      extraInformation = true,
+      WayPoints = true,
+      WayPointsShift = true,
+      KilledBosses = true,
+      NpcNameTargeting = true,
+      BossNames = true,
       graySingleID = true,
       grayMultipleID = true,
       CoreChatMassage = true,
       MmbWmbChatMessage = true,
       ChatMassage = false,
-      ZoneChanged = true,
-      ZoneChangedDetail = false,
-      TooltipInformations = true,
+      ZoneChanged = false,
+      ZoneChangedDetail = true,
+      NpcNameTargetingChatText = true,
+      TooltipInformations = false,
       DeleteIcons = false,
-      CreateAndCopyLinks = true,
+      CreateAndCopyLinks = false,
       RestoreAllIcons = false,
       RestoreZoneDeletedIcons = false,
       RestoreContinentDeletedIcons = false,
@@ -218,6 +231,7 @@ ns.defaults = {
       showMiniMapMirror = true,
       showMiniMapTravel = true,
       showMiniMapDarkmoon = true,
+      showMiniMapRaces = true,
     -- MiniMap Professions
       MiniMapProfessionsScale = 1.5,
       MiniMapProfessionsAlpha = 1,
@@ -281,7 +295,6 @@ ns.defaults = {
       showZoneOldVanilla = true,
       showZoneLFR = true,
     -- Zone Transport
-
       showZonePortals = true,
       showZoneZeppelins = true,
       showZoneShips = true,
@@ -291,6 +304,7 @@ ns.defaults = {
       showZoneMirror = true,
       showZoneTravel = true,
       showZoneDarkmoon = true,
+      showZoneRaces = true,
       -- Zone Professions
       ZoneProfessionsScale = 1.5,
       ZoneProfessionsAlpha = 1,
@@ -347,6 +361,7 @@ ns.defaults = {
       showContinentProfessions = true,
       showContinentDelves = true,
       showContinentPaths = true,
+      showContinentRaces = true,
       showContinentFP = true, -- only Classic and Cataclym
       showContinentPvPandPvEVendor = true,
       showContinentKalimdor = true,
@@ -377,6 +392,7 @@ ns.defaults = {
       showAzerothOldVanilla = true,
       showAzerothLFR = true,
       showAzerothDelves = true,
+      showAzerothRaces = true,
       showAzerothFP = true, -- only classic +
       showAzerothKalimdor = true,
       showAzerothEasternKingdom = true,
@@ -434,6 +450,7 @@ ns.defaults = {
       showCapitalsValdrakken = true,
       showCapitalsDornogal = true,
       showCapitalsDarkmoon = true,
+      showCapitalsRaces = true,
 
     --Capital Instances
       CapitalsInstanceScale = 2,
@@ -495,6 +512,7 @@ ns.defaults = {
       showCapitalsGhost = true,
       showCapitalsStablemaster = true,
       showCapitalsTradingPost = true,
+      showCapitalsMountMerchent = true,
 
     --7 Capitals Minimap
       showMinimapCapitals = true,
@@ -519,6 +537,7 @@ ns.defaults = {
       showMinimapCapitalsValdrakken = true,
       showMinimapCapitalsDornogal = true,
       showMinimapCapitalsDarkmoon = true,
+      showMinimapCapitalsRaces = true,
 
     --Capital Minimap Instances
       MinimapCapitalsInstanceScale = 1.5,
@@ -580,13 +599,18 @@ ns.defaults = {
       showMinimapCapitalsGhost = true,
       showMinimapCapitalsStablemaster = true,
       showMinimapCapitalsTradingPost = true,
-
+      showMinimapCapitalsMountMerchent = true,
+      
     --10 ns.Addon.db.profile.activate.
       activate = {
         HideMapNote = false,
         HideMMB = false,
         EnemyFaction = true,
-        ShiftWorld = false,
+        SwapButtons = false,
+        showRacesIconsDiscovered = false,
+        MinimapArrow = true,
+        MinimapArrowOnEnter = true,
+        MinimapArrowOnEnterTime = 3,
         ClassicIcons = false,
         ClassicPortals = true,
         ClassicShips = true,
@@ -610,6 +634,10 @@ ns.defaults = {
         MiniMapInstanceSyncScaleAlpha = true,        
         MiniMapTransportSyncScaleAlpha = true,
         MiniMapGeneralSyncScaleAlpha = true,
+      --Azeroth
+        AzerothEnemyFaction = true,
+      --Continent
+        ContinentEnemyFaction = true,
       --MiniMap
         MiniMapEnemyFaction = true,
         MiniMapInstances = true,
@@ -644,6 +672,8 @@ ns.defaults = {
         MinimapCapitalsTransporting = true,
         MinimapCapitalsProfessions = true,
         MinimapCapitalsGeneral = true,
+
+        DeveloperMode = false,
       },
 
     --11 deleted icons function
@@ -687,6 +717,30 @@ ns.defaults = {
           colorG_Reduce = 0.65,
           colorB_Reduce = 0.65,
           colorA_Reduce = 0.65,
-      }
+      },
+
+    --13 CoordsDisplay
+      displayCoords = {
+        showPlayerCoords = false,
+        showMouseCoords = false,
+        PlayerCoordsSize = 0.7,
+        PlayerCoordsAlpha = 1,
+        MouseCoordsSize = 0.7,
+        MouseCoordsAlpha = 1,
+      },
+
+      --14 AreaMap
+      areaMap = {
+        showAreaMapDropDownMenu = false,
+        showAreaMapDropDownMenuCapitalsIcons = false,
+        showAreaMapDropDownMenuZonesIcons = false,
+        showAreaMapUnexploredAreas = false,
+        areaMapScale = 1,
+        areaMapFogOfWarColorR = 1,
+        areaMapFogOfWarColorG = 0,
+        areaMapFogOfWarColorB = 0,
+        areaMapFogOfWarColorA = 1,
+      },
+
   },
 }

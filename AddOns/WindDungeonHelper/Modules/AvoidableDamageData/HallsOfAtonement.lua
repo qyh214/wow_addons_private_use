@@ -2,11 +2,56 @@ local W, F, L, P = unpack(select(2, ...))
 local AD = W:GetModule("AvoidableDamage")
 
 local mistakes = {
-	-- 小怪
 	{
-		-- 致命推進 (墮落的暗刃兵)
+		-- 罪光幻象
+		type = AD.MISTAKE.AURA,
+		aura = 339237,
+	},
+	{
+		-- 血腥洪流 (艾可隆)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 319702,
+	},
+	{
+		-- 血腥洪流 (艾可隆)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 319703,
+	},
+	{
+		-- 粉碎猛擊 (哈奇厄斯)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 322936,
+		playerIsNotTank = true,
+	},
+	{
+		-- 拋擲殘骸 (哈奇厄斯)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 322945,
+	},
+	{
+		-- 念力碰撞
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 323126,
+	},
+	{
+		-- 釋放磨難 (宮務大臣)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 323236,
+	},
+	{
+		-- 折射罪光 (哈奇厄斯)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 324044,
+	},
+	{
+		-- 致命推進
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 325523,
+	},
+	{
+		-- 急速射擊
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 325799,
 	},
 	{
 		-- 罪孽震盪 (哈奇厄斯裂片)
@@ -14,15 +59,9 @@ local mistakes = {
 		spell = 326440,
 	},
 	{
-		-- 急速射擊 (墮落的馴犬者)
+		-- 苦痛 (嫉妒化身)
 		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 325799,
-	},
-	{
-		-- 岩石之息
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 346866,
-		playerIsNotTank = true,
+		spell = 326891,
 	},
 	{
 		-- 強力揮擊 (石源魔斬擊者)
@@ -30,55 +69,31 @@ local mistakes = {
 		spell = 326997,
 		playerIsNotTank = true,
 	},
-	-- [1]『罪污巨人』哈奇厄斯
 	{
-		-- 拋擲殘骸
+		-- 爆發折磨 (宮務大臣)
 		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 322945,
+		spell = 327885,
 	},
 	{
-		-- 玻璃裂片
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 323001,
-		playerIsNotTank = true,
-	},
-	{
-		-- 折射罪光
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 324044,
-	},
-	-- [2] 艾可隆
-	{
-		-- 血腥洪流
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 319702,
-	},
-	-- [3] 至高判決者阿利茲
-	{
-		-- 靈魂泉
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 338013,
-	},
-	-- [4] 宮務大臣
-	{
-		-- 念力碰撞
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 323126,
-	},
-	{
-		-- 念力猛襲
+		-- 念力猛襲 (宮務大臣)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 329113,
 	},
 	{
-		-- 釋放磨難
+		-- 靈魄泉 (靈魄泉, 至高判決者阿利茲)
 		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 323236,
+		spell = 329340,
 	},
 	{
-		-- 爆發折磨
+		-- 靈魄泉 (靈魄泉, 至高判決者阿利茲)
 		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 327885,
+		spell = 338013,
+	},
+	{
+		-- 岩石之息
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 346866,
+		playerIsNotTank = true,
 	},
 }
 

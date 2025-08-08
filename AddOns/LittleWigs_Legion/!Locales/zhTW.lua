@@ -1,7 +1,6 @@
 -- Artifact Scenarios
 
 local L = BigWigs:NewBossLocale("Tugar Bloodtotem", "zhTW")
-if not L then return end
 if L then
 	--L.tugar = "Tugar Bloodtotem"
 	--L.jormog = "Jormog the Behemoth"
@@ -26,8 +25,6 @@ if L then
 	--L.handFromBeyond = "Hand from Beyond"
 
 	--L.rune_desc = "Places a Rune of Summoning on the ground. If left unsoaked a Thing of Nightmare will spawn."
-
-	--L.killed = "%s killed"
 
 	--L.warmup_text = "Karam Magespear Active"
 	--L.warmup_trigger = "You were a fool to follow me, brother. The Twisting Nether feeds my strength. I have become more powerful than you could ever imagine!"
@@ -80,8 +77,7 @@ if L then
 	--L.warmup_trigger1 = "You are too late! Levia's power is mine! Using her knowledge, my minions will infiltrate the Kirin Tor and dismantle it from the inside!" -- 35
 	--L.warmup_trigger2 = "Even now, my sayaad tempt your weak-willed mages. Your allies will surrender willingly to the Legion!" -- 16
 	--L.warmup_trigger3 = "But first, you must be punished for taking away my little pet." -- 3
-	--
-	--L.absorb = "Absorb"
+
 	--L.stacks = "Stacks"
 end
 
@@ -92,15 +88,12 @@ if L then
 	--L.faljar = "Runenseher Faljar"
 
 	--L.warmup_trigger = "What's this? The outsider has come to stop me?"
-	--
-	--L.absorb = "Absorb"
 end
 
 -- Assault on Violet Hold
 
 L = BigWigs:NewBossLocale("Assault on Violet Hold Trash", "zhTW")
 if L then
-	--L.custom_on_autotalk = "Autotalk"
 	--L.custom_on_autotalk_desc = "Instantly selects Lieutenant Sinclaris gossip option to start the Assault on Violet Hold."
 	--L.keeper = "Portal Keeper"
 	--L.guardian = "Portal Guardian"
@@ -151,7 +144,6 @@ end
 
 L = BigWigs:NewBossLocale("Domatrax", "zhTW")
 if L then
-	--L.custom_on_autotalk = "Autotalk"
 	--L.custom_on_autotalk_desc = "Instantly selects the Aegis of Aggramar's gossip option to start the Domatrax encounter."
 
 	--L.missing_aegis = "You're not standing in Aegis" -- Aegis is a short name for Aegis of Aggramar
@@ -347,7 +339,6 @@ end
 L = BigWigs:NewBossLocale("Karazhan Trash", "zhTW")
 if L then
 	-- Opera Event
-	L.custom_on_autotalk = "自動對話"
 	--L.custom_on_autotalk_desc = "Instantly selects Barnes' gossip option to start the Opera Hall encounter."
 	L.opera_hall_wikket_story_text = "歌劇大廳：綠野巫蹤"
 	--L.opera_hall_wikket_story_trigger = "Shut your jabber" -- Shut your jabber, drama man! The Monkey King got another plan!
@@ -429,7 +420,6 @@ end
 
 L = BigWigs:NewBossLocale("Viceroy Nezhar", "zhTW")
 if L then
-	--L.tentacles = "Tentacles"
 	--L.guards = "Guards"
 	--L.interrupted = "%s interrupted %s (%.1fs left)!"
 end
@@ -443,7 +433,6 @@ end
 
 L = BigWigs:NewBossLocale("Seat of the Triumvirate Trash", "zhTW")
 if L then
-	--L.custom_on_autotalk = "Autotalk"
 	--L.custom_on_autotalk_desc = "Instantly selects Alleria Winrunners gossip option."
 	--L.gossip_available = "Gossip available"
 	--L.alleria_gossip_trigger = "Follow me!" -- Allerias yell after the first boss is defeated
@@ -475,14 +464,8 @@ if L then
 	L.light_dropped = "%s丟掉了光。"
 	L.light_picked = "%s撿起了光。"
 
-	L.warmup_text = "寇達娜．魔歌啟動"
 	L.warmup_trigger = "我已經拿到我要找的東西了。但為了你們，我最好還是留下來…斬草除根！"
 	--L.warmup_trigger_2 = "And now you fools have fallen into my trap. Let's see how you fare in the dark."
-end
-
-L = BigWigs:NewBossLocale("Glazer", "zhTW")
-if L then
-	--L.radiation_level = "%s: %d%%"
 end
 
 L = BigWigs:NewBossLocale("Tirathon Saltheril", "zhTW")

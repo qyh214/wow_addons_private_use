@@ -19,16 +19,21 @@ if L then
 	L.freeze_warn_frost = "%d морозных атак - осталось еще %d"
 end
 
+L = BigWigs:NewBossLocale("Silithid Royalty", "ruRU")
+if L then
+	L[15543] = "Яудж"
+	L[15544] = "Вем"
+	L[15511] = "Кри"
+end
+
 L = BigWigs:NewBossLocale("Ouro", "ruRU")
 if L then
-	L.engage_message = "Оуро занят! Возможное погружение через 90 секунд!"
-	L.possible_submerge_bar = "Возможное погружение"
-
 	L.emerge_message = "Оуро появился"
 	L.emerge_bar = "Появление"
 
 	L.submerge_message = "Оуро погрузился"
 	L.submerge_bar = "Погружение"
+	--L.submerge_early_message = "Early Submerge - No one was in range"
 
 	L.scarab = "Скарабей исчез"
 	L.scarab_desc = "Предупреждать об исчезновении скарабея."

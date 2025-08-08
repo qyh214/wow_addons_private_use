@@ -129,14 +129,30 @@ function ns.conditions.Covenant:Matched()
     return true
 end
 
-ns.conditions.Faction = RankedCondition:extends{classname = "Faction", type = 'faction'}
+ns.conditions.Faction = RankedCondition:extends{classname = "Faction", type = 'faction',
+    RANKS = {
+        ["Unknown"] = 0,
+        ["Hated"] = 1,
+        ["Hostile"] = 2,
+        ["Unfriendly"] = 3,
+        ["Neutral"] = 4,
+        ["Friendly"] = 5,
+        ["Honored"] = 6,
+        ["Revered"] = 7,
+        ["Exalted"] = 8,
+    },
+}
+function ns.conditions.Faction:init(id, rank)
+    return self:super("init", id, self.RANKS[rank] or rank)
+end
 function ns.conditions.Faction:Matched()
     local name, standingid, _
     if C_Reputation and C_Reputation.GetFactionDataByID then
         local info = C_Reputation.GetFactionDataByID(self.id)
         if info and info.name then
             name = info.name
-            standingid = info.currentstanding
+            -- info.currentStanding exists but is your total rep with the faction
+            standingid = info.reaction
         end
     elseif GetFactionInfoByID then
         name, _, standingid = GetFactionInfoByID(self.id)
@@ -144,6 +160,12 @@ function ns.conditions.Faction:Matched()
     if name and standingid then
         return self.rank <= standingid
     end
+end
+function ns.conditions.Faction:Label()
+    if self.rank then
+        return ('{%s:%d.%d}'):format(self.type, self.id, self.rank)
+    end
+    return self:super("Label")
 end
 
 ns.conditions.MajorFaction = RankedCondition:extends{classname = "MajorFaction", type = 'majorfaction'}

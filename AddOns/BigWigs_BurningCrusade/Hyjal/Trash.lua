@@ -134,9 +134,12 @@ function mod:GOSSIP_SHOW()
 end
 
 local function Restart(self, saveNextBoss)
-	self:Reboot()
-	self:Bar("warmup", 300, CL.active, "achievement_bg_returnxflags_def_wsg") -- XXX icon doesn't exist on classic
-	nextBoss = saveNextBoss
+	-- Delay to prevent re-registering UPDATE_UI_WIDGET during the same event
+	self:SimpleTimer(function()
+		self:Reboot()
+		self:Bar("warmup", 300, CL.active, "achievement_bg_returnxflags_def_wsg") -- XXX icon doesn't exist on classic
+		nextBoss = saveNextBoss
+	end, 0)
 end
 
 function mod:UpdateEnemies(_, text)

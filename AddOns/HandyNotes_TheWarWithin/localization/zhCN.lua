@@ -249,6 +249,11 @@ L['nightfarm_growthling_note'] = '在 {location:旋辉田野} 的 {object:小型
 
 L['thunder_lynx_note'] = '1. 在 {location:炬光矿脉} 的 {object:小型钥焰} 使用3个 {item:206350} 召唤 {npc:212419}。\n\n2. 与 {npc:212419} 交谈并按照所有额外的对话框提示找到 {quest:82007}。\n\n3. 找到每只小山猫：{npc:222373}（{dot:Blue}）、{npc:222372}（{dot:Green}）、{npc:222375}（{dot:Orange}）和 {npc:222374}（{dot:Red}）。\n\n{note:请确保同时开始 {quest:76169} 以接收 {item:219198} 或使用类似物品，例如 {item:219148}。需要一盏灯来照亮 {location:霜影洞穴} 内的 {npc:222373}。}\n\n4. 拯救每一只山猫幼崽并返回 {npc:212419}。'
 
+L['options_icons_fighter'] = '{achievement:41999}'
+L['options_icons_fighter_desc'] = '显示 {achievement:41999} 成就中 {object:夜幕激斗} 精英的位置。'
+L['suspicious_document_label'] = '可疑的文件'
+L['suspicious_document_note'] = '打开 {object:可疑的文件} 召唤 {object:夜幕激斗} 精英。'
+
 -------------------------------------------------------------------------------
 ---------------------------------- AZJ-KAHET ----------------------------------
 -------------------------------------------------------------------------------
@@ -298,6 +303,8 @@ L['no_harm_from_reading_note'] = [[
 追踪每个 {npc:227421} 并与他们互动，将他们送回 {object:血肉魔典}。
 
 找到所有4个 {npc:227421} 后，返回 {object:血肉魔典} 并与 {npc:227421} 交谈。
+
+需要先路过飞行点才会生成{npc:227421}。
 ]]
 L['another_you_4_note'] = '沿着标记的路径巡逻。'
 
@@ -446,7 +453,7 @@ L['options_icons_ratts_revenge'] = '{achievement:40967}'
 L['options_icons_ratts_revenge_desc'] = '显示 {achievement:40967} 成就中秘密的位置。'
 
 -- INERT PECULIAR KEY
-L['inert_peculiar_key_note'] = '藏在巨大的中空树干里板条箱后面。\n\n{note:下一个位置：}\n如果 {bug:*没有*} {item:228938}，请前往 {location:卡兹阿加} 的 {location:多恩诺加尔}。\n\n如果 |cFF00FF00*有*|r {item:228938}，请前往 {location:东部王国} 的 {location:逆风小径}。'
+L['inert_peculiar_key_note'] = '藏在巨大的中空树干里板条箱后面。\n\n{note:下一个位置：}\n如果 {bug:*没有*} {item:228938}，请前往 {location:卡兹阿加} 的 {location:多恩诺嘉尔}。\n\n如果 |cFF00FF00*有*|r {item:228938}，请前往 {location:东部王国} 的 {location:逆风小径}。'
 
 -- PECULIAR GEM
 L['carefully_penned_note'] = '佩戴 {title:侦探} 头衔与 {npc:230042} 交谈以接受 {quest:84684}。\n\n{note:下一个位置：}{location:艾基-卡赫特}'
@@ -457,7 +464,7 @@ L['peculiar_gem_note'] = '到达 {location:沃什柱巢}，穿过山洞内隐藏
 
 -- KARAZHAN CATACOMBS
 L['karazhan_catacombs_label'] = '卡拉赞墓穴'
-L['karazhan_catacombs_entrance_note'] = '从 {location:卡利姆多} 的 {location:安格洛环形山} 开始收集 {item:44124}\n\n从 {location:卡兹阿加} 的 {location:多恩诺加尔} 开始收集 {item:228938}\n\n将宝石和钥匙组合成 {item:44124}。\n\n将 {item:44124} 放入包中并激活 {item:208092}，接近大门即可看到一个红色的副本入口。'
+L['karazhan_catacombs_entrance_note'] = '从 {location:卡利姆多} 的 {location:安格洛环形山} 开始收集 {item:228941}\n\n从 {location:卡兹阿加} 的 {location:多恩诺嘉尔} 开始收集 {item:228938}\n\n将宝石和钥匙组合成 {item:44124}。\n\n将 {item:44124} 放入包中并激活 {item:208092}，接近大门即可看到一个红色的副本入口。'
 
 -- ORB 1
 L['orb_1_label'] = '1号球'
@@ -493,7 +500,7 @@ L['code_machine_note_8'] = '输入代码并打开 {object:加密的宝箱} 获�
 L['slot_machine_label'] = '“试试手气！”游戏机'
 L['slot_machine_note_a'] = '收集五个幸运物品然后输入代码：\n\n'
 L['slot_machine_note_b'] = '{location:暴风城} 的 {npc:2795}：\n'
-L['slot_machine_note_c'] = '{location:多恩诺加尔} 的 {npc:219197}：\n'
+L['slot_machine_note_c'] = '{location:多恩诺嘉尔} 的 {npc:219197}：\n'
 L['slot_machine_note_d'] = '{location:欧恩哈拉平原} 的 {npc:186650}\n'
 L['slot_machine_note_e'] = '{object:代码}：777、77777 或 7777777'
 L['slot_machine_vendor_note'] = '为 {object:“试试手气！”游戏机} 购买这些物品。'
@@ -636,9 +643,32 @@ L['undermine_clam_chowder_label'] = '安德麦正宗烹饪法指南'
 L['undermine_clam_chowder_location'] = '在 {location:罐缸工坊} 的小巷中，{npc:226728} 后面的架子上。'
 L['undermine_clam_chowder_note'] = '1. 要收集此食谱，必须首先学会 {item:16767}，该食谱可以从两个 {object:旧世经典} 供应商处以 %s 的价格购买。\n\n{npc:54232} 位于 {location:荆棘谷海角} 的 {location:藏宝海湾}\n\n{npc:48060} 位于 {location:荒芜之地} 的 {location:熔光镇}\n\n2. 一旦学会了旧食谱，打开 {object:安德麦正宗烹饪法指南} 并阅读到最后一页。记下食谱以获得 {item:235800}。'
 
+L['breakneck_race_note'] = '以下推荐的 {object:G-99疾飙飞车} 升级可以让赚取 |cFFFFD700金币|r 变得更容易一些：\n\n%s\n\n%s\n\n%s'
+L['upgrade_the_pozzik_standard'] = '{item:232982}（引擎）：在所有普通和反向 {object:疾飙竞速} 比赛中获得 |cFFCD7F32铜牌|r。'
+L['upgrade_22h_slicks'] = '{item:232985}（轮胎）：由工程师制作并在拍卖行出售。'
+L['upgrade_turbo_handcrank'] = '{item:232984}（涡轮）：从稀有怪物或拍卖行收集并组合所有5个部件。'
+
 L['blazefeather_peacock_note'] = '完成 {quest:83421} 任务线后，与 {npc:226555} 对话并支付 %s 以召唤一只可驯服的 {npc:226561}。'
 L['radioactive_subject_note'] = '使用附近的管道和 {item:237276}、{item:109076}、{item:231099} 或其他跳跃谜题技巧，到达 {location:罐缸工坊} 的 {location:热砂试验室} 建筑屋顶。'
 L['george_the_big_pinch_note'] = '快速点击所有5个 {npc:238189} 以获得 {spell:1219679}，并允许驯服 {npc:233938}。'
 
-L['crumpled_schematic_note'] = nil
-L['crumpled_schematic_location'] = nil
+-------------------------------------------------------------------------------
+----------------------------------- K'ARESH -----------------------------------
+-------------------------------------------------------------------------------
+
+L['options_icons_karesh_lore_hunter'] = '{achievement:60890}'
+L['options_icons_karesh_lore_hunter_desc'] = '显示 {achievement:60890} 成就中剧情物品的位置。'
+
+L['options_icons_purrkins'] = '{achievement:42729}'
+L['options_icons_purrkins_desc'] = nil
+L['purrkins_note'] = nil
+L['kareshire_sublabel'] = nil
+L['in_a_tree'] = '在树上。'
+L['little_ms_phaser_sublabel'] = nil
+
+L['mailroom_distribution_note'] = nil
+L['gift_of_the_brothers_note'] = nil
+L['ancient_coffer_note'] = nil
+
+L['sthaarbs_note'] = nil
+L['heka_tamos_note'] = nil

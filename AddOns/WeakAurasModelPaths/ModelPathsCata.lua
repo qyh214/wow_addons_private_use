@@ -7035,17 +7035,6 @@ WeakAuras.ModelPaths = {
    {
     children = {
      {
-      fileId = "4323001",
-      text = "mace_1h_incubus_whip_a_01.m2",
-      value = "mace_1h_incubus_whip_a_01.m2",
-     },
-    },
-    text = "mace_1h_incubus_whip_a_01",
-    value = "mace_1h_incubus_whip_a_01",
-   },
-   {
-    children = {
-     {
       fileId = "124827",
       text = "madscientist.m2",
       value = "madscientist.m2",
@@ -73759,6 +73748,11 @@ WeakAuras.ModelPaths = {
         text = "wand_1h_zulgurub_d_03.m2",
         value = "wand_1h_zulgurub_d_03.m2",
        },
+       {
+        fileId = "4323001",
+        text = "whip_1h_incubus_a_01.m2",
+        value = "whip_1h_incubus_a_01.m2",
+       },
       },
       text = "weapon",
       value = "weapon",
@@ -73770,29 +73764,6 @@ WeakAuras.ModelPaths = {
   },
   text = "item",
   value = "item",
- },
- {
-  children = {
-   {
-    children = {
-     {
-      children = {
-       {
-        fileId = "6246204",
-        text = "6246204.m2",
-        value = "6246204.m2",
-       },
-      },
-      text = "unk_exp10_6246204",
-      value = "unk_exp10_6246204",
-     },
-    },
-    text = "world",
-    value = "world",
-   },
-  },
-  text = "models",
-  value = "models",
  },
  {
   children = {
@@ -91047,6 +91018,40 @@ WeakAuras.ModelPaths = {
     },
     text = "detail",
     value = "detail",
+   },
+   {
+    children = {
+     {
+      children = {
+       {
+        children = {
+         {
+          children = {
+           {
+            fileId = "4618885",
+            text = "icecrown_citadel_exterior_launch_version_door01.m2",
+            value = "icecrown_citadel_exterior_launch_version_door01.m2",
+           },
+           {
+            fileId = "4618900",
+            text = "icecrown_citadel_exterior_launch_version_door02.m2",
+            value = "icecrown_citadel_exterior_launch_version_door02.m2",
+           },
+          },
+          text = "scourgewalls",
+          value = "scourgewalls",
+         },
+        },
+        text = "icecrown",
+        value = "icecrown",
+       },
+      },
+      text = "northrend",
+      value = "northrend",
+     },
+    },
+    text = "doodads",
+    value = "doodads",
    },
    {
     children = {
@@ -137072,6 +137077,23 @@ WeakAuras.ModelPaths = {
      {
       children = {
        {
+        fileId = "6246204",
+        text = "11xp_generic_shateaset01.m2",
+        value = "11xp_generic_shateaset01.m2",
+       },
+      },
+      text = "doodads",
+      value = "doodads",
+     },
+    },
+    text = "expansion10",
+    value = "expansion10",
+   },
+   {
+    children = {
+     {
+      children = {
+       {
         fileId = "196911",
         text = "ed_dragonshrine_a.m2",
         value = "ed_dragonshrine_a.m2",
@@ -165284,28 +165306,6 @@ WeakAuras.ModelPaths = {
     },
     text = "skillactivated",
     value = "skillactivated",
-   },
-   {
-    children = {
-     {
-      fileId = "4618885",
-      text = "4618885.m2",
-      value = "4618885.m2",
-     },
-    },
-    text = "unk_exp09_4618885",
-    value = "unk_exp09_4618885",
-   },
-   {
-    children = {
-     {
-      fileId = "4618900",
-      text = "4618900.m2",
-      value = "4618900.m2",
-     },
-    },
-    text = "unk_exp09_4618900",
-    value = "unk_exp09_4618900",
    },
    {
     children = {

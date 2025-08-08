@@ -3,8 +3,8 @@
 local L = BigWigs:NewBossLocale("Echo of Baine", "frFR")
 if not L then return end
 if L then
-	--L.totemDrop = "Totem dropped"
-	--L.totemThrow = "Totem thrown by %s"
+	L.totemDrop = "Totem lâché"
+	L.totemThrow = "Totem lancé par %s"
 end
 
 -- Grim Batol
@@ -12,7 +12,7 @@ end
 L = BigWigs:NewBossLocale("Erudax", "frFR")
 if L then
 	L.summon = "Invocation d'un corrupteur sans-visage"
-	L.summon_desc = "Préviens lorsqu'Erudax invoque un Corrupteur sans-visage"
+	L.summon_desc = "Préviens lorsqu'Erudax invoque un Corrupteur sans-visage."
 	L.summon_message = "Corrupteur sans-visage invoqué"
 	L.summon_trigger = "invoque un"
 end
@@ -35,8 +35,7 @@ end
 
 L = BigWigs:NewBossLocale("The Hour of Twilight Trash", "frFR")
 if L then
-	L.custom_on_autotalk = "Parler automatiquement"
-	--L.custom_on_autotalk_desc = "Instantly select Thrall's gossip options."
+	L.custom_on_autotalk_desc = "Séléctionne automatiquement les options de dialogue de Thrall."
 end
 
 -- Lost City of the Tol'vir
@@ -52,9 +51,9 @@ end
 L = BigWigs:NewBossLocale("Lord Walden", "frFR")
 if L then
 	-- %s will be either "Toxic Coagulant" or "Toxic Catalyst"
-	--L.coagulant = "%s: Move to dispel"
-	--L.catalyst = "%s: Crit Buff"
-	--L.toxin_healer_message = "%s: DoT on everyone"
+	L.coagulant = "%s : se déplacer pour dispell"
+	L.catalyst = "%s : Amélioration critique"
+	L.toxin_healer_message = "%s : Dégâts sur la durée sur tout le monde"
 end
 
 -- The Stonecore
@@ -91,12 +90,6 @@ if L then
 	--L.high_tide_trigger2 = "Destroy these intruders! Leave them for the great dark beyond!"
 end
 
-L = BigWigs:NewBossLocale("Ozumat", "frFR")
-if L then
-	--L.custom_on_autotalk = "Autotalk"
-	--L.custom_on_autotalk_desc = "Instantly selects the gossip option to start the fight."
-end
-
 -- The Vortex Pinnacle
 
 L = BigWigs:NewBossLocale("The Vortex Pinnacle Trash", "frFR")
@@ -115,39 +108,32 @@ if L then
 	L.minister_of_air = "Ministre de l'air"
 end
 
-L = BigWigs:NewBossLocale("Altairus", "frFR")
-if L then
-	--L.upwind = "Upwind on you (safe)"
-	--L.downwind = "Downwind on you (unsafe)"
-end
-
 -- Well of Eternity
 
 L = BigWigs:NewBossLocale("Well Of Eternity Trash", "frFR")
 if L then
-	--L.custom_on_autotalk = "Autotalk"
-	--L.custom_on_autotalk_desc = "Instantly select Illidan's gossip option."
+	L.custom_on_autotalk_desc = "Séléctionne automatiquement les options de dialogue d'Illidan."
 end
 
 -- Zul'Aman
 
 L = BigWigs:NewBossLocale("Daakara", "frFR")
 if L then
-	--L[42594] = "Bear Form" -- short form for "Essence of the Bear"
-	--L[42607] = "Lynx Form"
-	--L[42606] = "Eagle Form"
-	--L[42608] = "Dragonhawk Form"
+	L[42594] = "Forme d'ours Form" -- short form for "Essence of the Bear"
+	L[42607] = "Forme de lynx Form"
+	L[42606] = "Forme d'aigle Form"
+	L[42608] = "Forme de faucon-dragon"
 end
 
 L = BigWigs:NewBossLocale("Halazzi", "frFR")
 if L then
-	--L.spirit_message = "Spirit Phase"
-	--L.normal_message = "Normal Phase"
+	L.spirit_message = "Phase d'esprit"
+	L.normal_message = "Phase normale"
 end
 
 L = BigWigs:NewBossLocale("Nalorakk", "frFR")
 if L then
-	--L.troll_message = "Troll Form"
+	L.troll_message = "Forme de troll"
 	--L.troll_trigger = "Make way for da Nalorakk!"
 end
 
@@ -155,5 +141,5 @@ end
 
 L = BigWigs:NewBossLocale("Jin'do the Godbreaker", "frFR")
 if L then
-	--L.barrier_down_message = "Barrier down, %d remaining" -- short name for "Brittle Barrier" (97417)
+	L.barrier_down_message = "Barrière tombée, %d restant(s)" -- short name for "Brittle Barrier" (97417)
 end

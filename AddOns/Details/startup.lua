@@ -4,6 +4,9 @@ local _
 local tocName, Details222 = ...
 local detailsFramework = DetailsFramework
 
+local GetSpecialization = C_SpecializationInfo and C_SpecializationInfo.GetSpecialization or GetSpecialization
+local GetSpecializationInfo = C_SpecializationInfo and C_SpecializationInfo.GetSpecializationInfo or GetSpecializationInfo
+
 --start funtion
 function Details222.StartUp.StartMeUp()
 	if (Details.AndIWillNeverStop) then
@@ -28,7 +31,7 @@ function Details222.StartUp.StartMeUp()
 		Details:FillUserCustomSpells()
 	end)
 
-	Details.challengeModeMapId = C_ChallengeMode and C_ChallengeMode.GetActiveChallengeMapID()
+	Details.challengeModeMapId = C_ChallengeMode and C_ChallengeMode.GetActiveChallengeMapID and C_ChallengeMode.GetActiveChallengeMapID()
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --row single click, this determines what happen when the user click on a bar
@@ -71,6 +74,19 @@ function Details222.StartUp.StartMeUp()
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --initialize
 
+	do
+		--advertising patreon cuz I'm in need, need to make absolute sure this is removed before 11.1.7 goes live
+		local version = GetBuildInfo()
+		if (version == "11.1.7") then
+			--limit this to 10 days to be safe, don't want problems
+			local time = time()
+			local limitTime = 1747072462 --10 days ahead of May 02
+			if (time < limitTime) then
+				Details:Msg("Help support Details! author on Patreon: https://www.patreon.com/terciob")
+			end
+		end
+	end
+
 	--make an encounter journal cache. the cache will load before this if any function tries to get information from the cache
 	C_Timer.After(3, Details222.EJCache.CreateEncounterJournalDump)
 
@@ -89,6 +105,10 @@ function Details222.StartUp.StartMeUp()
 	Details:InitializeRunCodeWindow()
 	Details:InitializePlaterIntegrationWindow()
 	Details:InitializeMacrosWindow()
+
+	if (Details.InitializeEncounterSwapper) then
+		Details:InitializeEncounterSwapper()
+	end
 
 	Details222.CreateAllDisplaysFrame()
 
@@ -298,7 +318,7 @@ function Details222.StartUp.StartMeUp()
 
 		Details.listener:RegisterEvent("PLAYER_TARGET_CHANGED")
 
-		if (not DetailsFramework.IsTimewalkWoW()) then
+		if (not DetailsFramework.IsTimewalkWoW()) then --C_EventUtils.IsEventValid
 			Details.listener:RegisterEvent("PET_BATTLE_OPENING_START")
 			Details.listener:RegisterEvent("PET_BATTLE_CLOSE")
 			Details.listener:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
@@ -393,10 +413,8 @@ function Details222.StartUp.StartMeUp()
 			lowerInstanceId = Details:GetInstance(lowerInstanceId)
 			if (lowerInstanceId) then
 				--check if there's changes in the size of the news string
-				if (Details.last_changelog_size ~= #Loc["STRING_VERSION_LOG"]) then
+				if (false and Details.last_changelog_size ~= #Loc["STRING_VERSION_LOG"]) then
 					Details.last_changelog_size = #Loc["STRING_VERSION_LOG"]
-
-					if (true) then return end --stop opening the new window automatically
 
 					if (Details.auto_open_news_window) then
 						C_Timer.After(5, function()
@@ -497,6 +515,10 @@ function Details222.StartUp.StartMeUp()
 	---@type table<string, boolean>
 	Details.CrowdControlSpellNamesCache = {}
 
+	--cache of all spells ids that are used by crowd control effects
+	---@type table<spellid, spellname>
+	Details.CrowdControlSpellIdsCache = {}
+
 	---not in use atm, waiting the unzip of talents string.
 	---@type table<unitname, table<spellname, boolean>>
 	Details.CrowdControlSpellsByUnitCache = {}
@@ -505,6 +527,7 @@ function Details222.StartUp.StartMeUp()
 		if (spellData.type == 8) then
 			local spellInfo = C_Spell.GetSpellInfo(spellId)
 			if (spellInfo) then
+				Details.CrowdControlSpellIdsCache[spellId] = spellInfo.name
 				Details.CrowdControlSpellNamesCache[spellInfo.name] = true
 			end
 		end
@@ -512,6 +535,7 @@ function Details222.StartUp.StartMeUp()
 	for spellId, spellData in pairs(LIB_OPEN_RAID_CROWDCONTROL) do
 		local spellInfo = C_Spell.GetSpellInfo(spellId)
 		if (spellInfo and not Details.CrowdControlSpellNamesCache[spellInfo.name]) then
+			Details.CrowdControlSpellIdsCache[spellId] = spellInfo.name
 			Details.CrowdControlSpellNamesCache[spellInfo.name] = true
 		end
 	end

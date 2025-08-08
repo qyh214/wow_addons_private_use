@@ -66,9 +66,10 @@ function E:SetFontProperties(fontString, db)
 	if db.font == "Homespun" then
 		ofsX, flag = 0, "MONOCHROMEOUTLINE"
 	end
+
+	fontString:SetFont(LSM:Fetch("font", db.font), db.size, flag == "NONE" and "" or flag)
 	fontString:SetShadowOffset(ofsX, -ofsX)
 	fontString:SetShadowColor(db.r, db.g, db.b, ofsX == 0 and 0 or 1)
-	fontString:SetFont(LSM:Fetch("font", db.font), db.size, flag == "NONE" and "" or flag)
 end
 
 function E.Party:ConfigTextures()

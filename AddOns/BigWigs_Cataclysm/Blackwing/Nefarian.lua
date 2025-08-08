@@ -151,7 +151,7 @@ function mod:NefarianLanding()
 	self:PlaySound("stages", "long")
 end
 
-function mod:CHAT_MSG_RAID_BOSS_EMOTE(_, msg, _, _, _, target)
+function mod:CHAT_MSG_RAID_BOSS_EMOTE(_, _, _, _, _, target)
 	if target == self:SpellName(-3279) and self:IsEngaged() then -- Not during the RP of activating the boss
 		currentPercent = currentPercent - 10
 		electrocuteCount = electrocuteCount + 1

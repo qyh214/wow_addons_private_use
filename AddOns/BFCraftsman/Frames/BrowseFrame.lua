@@ -112,8 +112,10 @@ local function Pane_Load(pane, id, t)
     -- professions
     if BFC_DB.blacklist[pane.id] then
         pane.professionText:SetText(AF.WrapTextInColor(L["Blacklisted"], "red"))
+        t.inInstance = nil
     elseif BFC.IsStale(t.lastUpdate) then
         pane.professionText:SetText(AF.WrapTextInColor(L["Stale"], "darkgray"))
+        t.inInstance = nil
     -- elseif t.inInstance then
     --     pane.professionText:SetText(AF.WrapTextInColor(L["In Instance"], "firebrick"))
     else
@@ -121,7 +123,7 @@ local function Pane_Load(pane, id, t)
     end
 
     -- favorite
-    pane.favoriteButton:SetTexture(BFC_DB.favorite[pane.id] and AF.GetIcon("Star2") or AF.GetIcon("Star1"))
+    pane.favoriteButton:SetTexture(BFC_DB.favorite[pane.id] and AF.GetIcon("Star_Filled") or AF.GetIcon("Star"))
     pane.favoriteButton:SetTextureColor(BFC_DB.favorite[pane.id] and "gold" or "darkgray")
 
     -- block
@@ -139,7 +141,7 @@ local function Pane_Load(pane, id, t)
 end
 
 local function Pane_OnEnter(pane)
-    pane:SetBackdropColor(AF.GetColorRGB("sheet_row_highlight"))
+    pane:SetBackdropColor(AF.GetColorRGB("sheet_highlight"))
     if not BFC_DB.blacklist[pane.id] then
         AF.ShowTooltips(pane, "BOTTOMLEFT", 0, -1, {
             AF.WrapTextInColor(pane.t.name, pane.t.class),
@@ -152,12 +154,12 @@ local function Pane_OnEnter(pane)
 end
 
 local function Pane_OnLeave(pane)
-    pane:SetBackdropColor(AF.GetColorRGB("sheet_bg2"))
+    pane:SetBackdropColor(AF.GetColorRGB("sheet_normal2"))
     AF.HideTooltips()
 end
 
 local function CreatePane()
-    local pane = AF.CreateBorderedFrame(list.slotFrame, nil, nil, nil, "sheet_bg2")
+    local pane = AF.CreateBorderedFrame(list.slotFrame, nil, nil, nil, "sheet_normal2")
     pane:SetOnEnter(Pane_OnEnter)
     pane:SetOnLeave(Pane_OnLeave)
 
@@ -225,7 +227,7 @@ local function CreatePane()
     local favoriteButton = AF.CreateButton(pane, nil, "gray_hover", 20, 20, nil, nil, "")
     pane.favoriteButton = favoriteButton
     AF.SetPoint(favoriteButton, "TOPRIGHT", blockButton, "TOPLEFT", 1, 0)
-    favoriteButton:SetTexture(AF.GetIcon("Star1"), {15, 15})
+    favoriteButton:SetTexture(AF.GetIcon("Star"), {15, 15})
     favoriteButton:SetTextureColor("darkgray")
     favoriteButton:SetOnClick(function()
         if BFC_DB.favorite[pane.id] then
@@ -270,8 +272,8 @@ function BFC.UpdateCraftingServicesOnMyServer(t)
 
     for id, pt in pairs(t.professions) do
         for _, crafter in pairs(pt) do
-            if AF.IsConnectedRealm(crafter[1]) and (crafter[3] == AF.player.faction or not crafter[3]) then
-                -- NOTE: same realm, same faction, or no faction (old data)
+            if AF.IsConnectedRealm(crafter[1]) then -- and (crafter[3] == AF.player.faction or not crafter[3]) then
+                -- NOTE: same realm
                 if not t._services[id] then t._services[id] = {} end
                 t._services[id][crafter[1]] = true
             end
@@ -335,7 +337,7 @@ end
 ---------------------------------------------------------------------
 -- show
 ---------------------------------------------------------------------
-AF.RegisterCallback("BFC_ShowFrame", function(which)
+AF.RegisterCallback("BFC_ShowFrame", function(_, which)
     if which == "Browse" then
         if not browseFrame then
             CreateBrowseFrame()

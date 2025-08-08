@@ -35,7 +35,6 @@ end
 
 L = BigWigs:NewBossLocale("The Hour of Twilight Trash", "zhCN")
 if L then
-	L.custom_on_autotalk = "自动对话"
 	L.custom_on_autotalk_desc = "立即和萨尔对话继续剧情。"
 end
 
@@ -91,12 +90,6 @@ if L then
 	L.high_tide_trigger2 = "毁灭这些入侵者！将他们丢进无尽的黑暗之中！"
 end
 
-L = BigWigs:NewBossLocale("Ozumat", "zhCN")
-if L then
-	L.custom_on_autotalk = "自动对话"
-	L.custom_on_autotalk_desc = "立即选择对话选项开始战斗。"
-end
-
 -- The Vortex Pinnacle
 
 L = BigWigs:NewBossLocale("The Vortex Pinnacle Trash", "zhCN")
@@ -115,17 +108,10 @@ if L then
 	L.minister_of_air = "空气司祭"
 end
 
-L = BigWigs:NewBossLocale("Altairus", "zhCN")
-if L then
-	L.upwind = "你在顺风（安全）"
-	L.downwind = "你在逆风（不安全）"
-end
-
 -- Well of Eternity
 
 L = BigWigs:NewBossLocale("Well Of Eternity Trash", "zhCN")
 if L then
-	L.custom_on_autotalk = "自动对话"
 	L.custom_on_autotalk_desc = "立即选择伊利丹对话选项。"
 end
 

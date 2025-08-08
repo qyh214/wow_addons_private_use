@@ -13,7 +13,7 @@ local AF_EditBoxMixin = {}
 ---@param width number? default is 30, but use editbox width if position is "BOTTOM".
 ---@param height number? default is 20.
 function AF_EditBoxMixin:SetConfirmButton(func, text, position, width, height)
-    self.confirmBtn = self.confirmBtn or AF.CreateButton(self, text, "accent", width or 30, height or 20)
+    self.confirmBtn = self.confirmBtn or AF.CreateButton(self, text, self.accentColor, width or 30, height or 20)
     self.confirmBtn:Hide()
     AF.SetFrameLevel(self.confirmBtn, 5)
 
@@ -138,14 +138,16 @@ function AF_EditBoxMixin:SetNotUserChangable(notUserChangable)
 end
 
 ---@param parent Frame
----@param label string
----@param width number
----@param height number
----@param mode string? "multiline"|"number"|"trim"|nil
+---@param label? string
+---@param width? number
+---@param height? number
+---@param mode? string "multiline"|"number"|"trim"|nil
 ---@param font? string|Font
 ---@return AF_EditBox
 function AF.CreateEditBox(parent, label, width, height, mode, font)
     local eb = CreateFrame("EditBox", nil, parent, "BackdropTemplate")
+
+    eb.accentColor = AF.GetAddonAccentColorName()
 
     AF.ApplyDefaultBackdropWithColors(eb, "widget")
     AF.SetWidth(eb, width or 40)
@@ -199,7 +201,7 @@ function AF.CreateEditBox(parent, label, width, height, mode, font)
         eb:SetBackdropBorderColor(0, 0, 0, 1)
     end)
 
-    eb.highlight = AF.CreateTexture(eb, nil, AF.GetColorTable("accent", 0.07))
+    eb.highlight = AF.CreateTexture(eb, nil, AF.GetColorTable(eb.accentColor, 0.07))
     AF.SetPoint(eb.highlight, "TOPLEFT", 1, -1)
     AF.SetPoint(eb.highlight, "BOTTOMRIGHT", -1, 1)
     eb.highlight:Hide()
@@ -282,7 +284,7 @@ function AF_ScrollEditBoxMixin:SetEnabled(enabled)
     self:EnableMouseWheel(enabled)
     self.scrollThumb:EnableMouse(enabled)
     if enabled then
-        self.scrollThumb:SetBackdropColor(AF.GetColorRGB("accent"))
+        self.scrollThumb:SetBackdropColor(AF.GetColorRGB(self.accentColor))
         self.scrollThumb:SetBackdropBorderColor(AF.GetColorRGB("black"))
         self.scrollBar:SetBackdropBorderColor(AF.GetColorRGB("black"))
         self.scrollFrame:SetBackdropBorderColor(AF.GetColorRGB("black"))
@@ -354,8 +356,10 @@ function AF.CreateScrollEditBox(parent, name, label, width, height, scrollStep)
     AF.ApplyDefaultBackdropWithColors(frame.scrollFrame, "widget")
     AF.ApplyDefaultBackdropWithColors(frame.scrollBar)
 
+    frame.accentColor = AF.GetAddonAccentColorName()
+
     -- highlight
-    local highlight = AF.CreateTexture(frame.scrollFrame, nil, AF.GetColorTable("accent", 0.07))
+    local highlight = AF.CreateTexture(frame.scrollFrame, nil, AF.GetColorTable(frame.accentColor, 0.07))
     AF.SetPoint(highlight, "TOPLEFT", 1, -1)
     AF.SetPoint(highlight, "BOTTOMRIGHT", -1, 1)
     highlight:Hide()

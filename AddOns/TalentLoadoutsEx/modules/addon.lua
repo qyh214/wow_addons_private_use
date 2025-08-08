@@ -1,4 +1,4 @@
-﻿local addonName, Addon = ...;
+﻿local _, Addon = ...;
 
 function Addon:IsAddOnLoaded(name)
 	local loadedOrLoading, loaded = C_AddOns.IsAddOnLoaded(name);

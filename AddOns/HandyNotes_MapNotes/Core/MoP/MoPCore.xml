@@ -1,0 +1,10 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Script file="MoPCreateLinks.lua"/>
+    <Script file="MoPDefaults.lua"/>
+    <Script file="MoPOptions.lua"/>
+    <Script file="MoPMmb.lua"/>
+    <Script file="MoPWmb.lua"/>
+    <Script file="MoPFogOfWar.lua"/>
+    <Script file="MoPMain.lua"/>    
+    <Script file="MoPAreaMap.lua"/>      
+</Ui>

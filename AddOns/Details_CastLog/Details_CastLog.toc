@@ -1,0 +1,10 @@
+## Interface: 110200
+## Title: Details! Cast Log (plugin)
+## Notes: Records log of spell casting for each player in the group.
+## RequiredDeps: Details
+## SavedVariablesPerCharacter: CastLogDB
+
+## X-Curse-Project-ID: 693528
+## X-Wago-ID: q96dkONO
+
+Details_CastLog.lua

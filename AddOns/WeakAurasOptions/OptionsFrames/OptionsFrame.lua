@@ -121,7 +121,15 @@ function OptionsPrivate.CreateFrame()
   frame:SetResizeBounds(minWidth, minHeight)
   frame:SetFrameStrata("DIALOG")
   -- Workaround classic issue
-  WeakAurasOptionsPortrait:SetTexture([[Interface\AddOns\WeakAuras\Media\Textures\logo_256_round.tga]])
+
+  local serverTime = C_DateAndTime.GetServerTimeLocal()
+  if serverTime >= 1748736000 -- June 1.
+     and serverTime <= 1751328000 -- July 1.
+  then
+    WeakAurasOptionsPortrait:SetTexture([[Interface\AddOns\WeakAuras\Media\Textures\logo_256_round_pride.tga]])
+  else
+    WeakAurasOptionsPortrait:SetTexture([[Interface\AddOns\WeakAuras\Media\Textures\logo_256_round.tga]])
+  end
 
   frame.window = "default"
 
@@ -326,7 +334,7 @@ function OptionsPrivate.CreateFrame()
 
   local minimizebutton = CreateFrame("Button", nil, frame, "MaximizeMinimizeButtonFrameTemplate")
   minimizebutton:SetFrameLevel(frame.TitleContainer:GetFrameLevel() + 1)
-  minimizebutton:SetPoint("RIGHT", frame.CloseButton, "LEFT", WeakAuras.IsClassicOrCata() and 10 or 0, 0)
+  minimizebutton:SetPoint("RIGHT", frame.CloseButton, "LEFT", WeakAuras.IsClassicOrCataOrMists() and 10 or 0, 0)
   minimizebutton:SetOnMaximizedCallback(function()
     frame.minimized = false
     local right, top = frame:GetRight(), frame:GetTop()
@@ -503,7 +511,7 @@ function OptionsPrivate.CreateFrame()
   local thanksListCJ = lineWrapDiscordList(OptionsPrivate.Private.DiscordListCJ)
   local thanksListK = lineWrapDiscordList(OptionsPrivate.Private.DiscordListK)
 
-  local discordButton = addFooter(L["Discord"], [[Interface\AddOns\WeakAuras\Media\Textures\discord.tga]], "https://discord.gg/xhUHVCgAGy",
+  local discordButton = addFooter(L["Discord"], [[Interface\AddOns\WeakAuras\Media\Textures\discord.tga]], "https://discord.gg/weakauras",
             L["Chat with WeakAuras experts on our Discord server."])
   discordButton:SetParent(tipFrame)
   discordButton:SetPoint("LEFT", tipFrame, "LEFT")
@@ -544,7 +552,7 @@ function OptionsPrivate.CreateFrame()
 
   local companionButton
   if not OptionsPrivate.Private.CompanionData.slugs then
-    companionButton = addFooter(L["Update Auras"], [[Interface\AddOns\WeakAuras\Media\Textures\wagoupdate_refresh.tga]], "https://discord.gg/xhUHVCgAGy",
+    companionButton = addFooter(L["Update Auras"], [[Interface\AddOns\WeakAuras\Media\Textures\wagoupdate_refresh.tga]], "https://weakauras.wtf",
             L["Keep your Wago imports up to date with the Companion App."])
     companionButton:SetParent(tipFrame)
     companionButton:SetPoint("RIGHT", wagoButton, "LEFT", -footerSpacing, 0)
@@ -604,7 +612,74 @@ function OptionsPrivate.CreateFrame()
   -- Toolbar
   local toolbarContainer = CreateFrame("Frame", nil, buttonsContainer.frame)
   toolbarContainer:SetParent(buttonsContainer.frame)
-  toolbarContainer:Hide()
+  -- toolbarContainer:Hide()
+  toolbarContainer:SetPoint("TOPLEFT", buttonsContainer.frame, "TOPLEFT", 30, 30)
+  toolbarContainer:SetPoint("BOTTOMRIGHT", buttonsContainer.frame, "TOPRIGHT", 0, 0)
+
+  local undo = AceGUI:Create("WeakAurasToolbarButton")
+  undo:SetText(L["Undo"])
+  undo:SetTexture("Interface\\AddOns\\WeakAuras\\Media\\Textures\\upleft")
+  undo:SetCallback("OnClick", function()
+    OptionsPrivate.Private.TimeMachine:StepBackward()
+    frame:FillOptions()
+  end)
+  undo.frame:SetParent(toolbarContainer)
+  undo.frame:SetShown(OptionsPrivate.Private.Features:Enabled("undo"))
+  undo:SetPoint("LEFT")
+  undo.frame:SetCollapsesLayout(true)
+
+  local redo = AceGUI:Create("WeakAurasToolbarButton")
+  redo:SetText(L["Redo"])
+  redo:SetTexture("Interface\\AddOns\\WeakAuras\\Media\\Textures\\upright")
+  redo:SetCallback("OnClick", function()
+    OptionsPrivate.Private.TimeMachine:StepForward()
+    frame:FillOptions()
+  end)
+  redo.frame:SetParent(toolbarContainer)
+  redo.frame:SetShown(OptionsPrivate.Private.Features:Enabled("undo"))
+  redo:SetPoint("LEFT", undo.frame, "RIGHT", 10, 0)
+  redo.frame:SetEnabled(OptionsPrivate.Private.TimeMachine:DescribeNext() ~= nil)
+  redo.frame:SetCollapsesLayout(true)
+  OptionsPrivate.Private.Features:Subscribe("undo",
+    function()
+      undo.frame:Show()
+      redo.frame:Show()
+    end,
+    function()
+      undo.frame:Hide()
+      redo.frame:Hide()
+    end
+  )
+
+  local tmControls = {
+    undo = undo,
+    redo = redo,
+  }
+
+  function tmControls:Step()
+    -- slightly annoying workaround
+    -- Buttons behave in a strange way if they are disabled inside of the OnClick handler
+    -- where the pushed texture refuses to vanish until the button is enabled & user clicks it again
+    -- so, just disable the button after next frame draw, so it's imperceptible to the user but we're not in the OnClick handler
+    C_Timer.After(0, function()
+      self.undo:SetDisabled(OptionsPrivate.Private.TimeMachine:DescribePrevious() == nil)
+      self.redo:SetDisabled(OptionsPrivate.Private.TimeMachine:DescribeNext() == nil)
+    end)
+  end
+  tmControls:Step()
+  OptionsPrivate.Private.TimeMachine.sub:AddSubscriber("Step", tmControls)
+
+  local newButton = AceGUI:Create("WeakAurasToolbarButton")
+  newButton:SetText(L["New Aura"])
+  newButton:SetTexture("Interface\\AddOns\\WeakAuras\\Media\\Textures\\newaura")
+  newButton.frame:SetParent(toolbarContainer)
+  newButton.frame:Show()
+  newButton:SetPoint("LEFT", redo.frame, "RIGHT", 10, 0)
+  frame.toolbarContainer = toolbarContainer
+
+  newButton:SetCallback("OnClick", function()
+    frame:NewAura()
+  end)
 
   local importButton = AceGUI:Create("WeakAurasToolbarButton")
   importButton:SetText(L["Import"])
@@ -612,20 +687,28 @@ function OptionsPrivate.CreateFrame()
   importButton:SetCallback("OnClick", OptionsPrivate.ImportFromString)
   importButton.frame:SetParent(toolbarContainer)
   importButton.frame:Show()
-  importButton:SetPoint("RIGHT", filterInput, "RIGHT")
-  importButton:SetPoint("BOTTOM", frame, "TOP", 0, -55)
+  importButton:SetPoint("LEFT", newButton.frame, "RIGHT", 10, 0)
 
-  local newButton = AceGUI:Create("WeakAurasToolbarButton")
-  newButton:SetText(L["New Aura"])
-  newButton:SetTexture("Interface\\AddOns\\WeakAuras\\Media\\Textures\\newaura")
-  newButton.frame:SetParent(toolbarContainer)
-  newButton.frame:Show()
-  newButton:SetPoint("RIGHT", importButton.frame, "LEFT", -10, 0)
-  frame.toolbarContainer = toolbarContainer
-
-  newButton:SetCallback("OnClick", function()
-    frame:NewAura()
+  local lockButton = AceGUI:Create("WeakAurasToolbarButton")
+  lockButton:SetText(L["Lock Positions"])
+  lockButton:SetTexture("Interface\\AddOns\\WeakAuras\\Media\\Textures\\lockPosition")
+  lockButton:SetCallback("OnClick", function(self)
+    if WeakAurasOptionsSaved.lockPositions then
+      lockButton:SetStrongHighlight(false)
+      lockButton:UnlockHighlight()
+      WeakAurasOptionsSaved.lockPositions = false
+    else
+      lockButton:SetStrongHighlight(true)
+      lockButton:LockHighlight()
+      WeakAurasOptionsSaved.lockPositions = true
+    end
   end)
+  if WeakAurasOptionsSaved.lockPositions then
+    lockButton:LockHighlight()
+  end
+  lockButton.frame:SetParent(toolbarContainer)
+  lockButton.frame:Show()
+  lockButton:SetPoint("LEFT", importButton.frame, "RIGHT", 10, 0)
 
   local magnetButton = AceGUI:Create("WeakAurasToolbarButton")
   magnetButton:SetText(L["Magnetically Align"])
@@ -647,28 +730,8 @@ function OptionsPrivate.CreateFrame()
   end
   magnetButton.frame:SetParent(toolbarContainer)
   magnetButton.frame:Show()
-  magnetButton:SetPoint("BOTTOMRIGHT", frame, "TOPRIGHT", -17, -55)
+  magnetButton:SetPoint("LEFT", lockButton.frame, "RIGHT", 10, 0)
 
-  local lockButton = AceGUI:Create("WeakAurasToolbarButton")
-  lockButton:SetText(L["Lock Positions"])
-  lockButton:SetTexture("Interface\\AddOns\\WeakAuras\\Media\\Textures\\lockPosition")
-  lockButton:SetCallback("OnClick", function(self)
-    if WeakAurasOptionsSaved.lockPositions then
-      lockButton:SetStrongHighlight(false)
-      lockButton:UnlockHighlight()
-      WeakAurasOptionsSaved.lockPositions = false
-    else
-      lockButton:SetStrongHighlight(true)
-      lockButton:LockHighlight()
-      WeakAurasOptionsSaved.lockPositions = true
-    end
-  end)
-  if WeakAurasOptionsSaved.lockPositions then
-    lockButton:LockHighlight()
-  end
-  lockButton.frame:SetParent(toolbarContainer)
-  lockButton.frame:Show()
-  lockButton:SetPoint("RIGHT", magnetButton.frame, "LEFT", -10, 0)
 
   local loadProgress = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
   loadProgress:SetPoint("TOP", buttonsContainer.frame, "TOP", 0, -4)
@@ -679,7 +742,6 @@ function OptionsPrivate.CreateFrame()
     self.loadProgessVisible = visible
     self:UpdateFrameVisible()
   end
-
 
   local buttonsScroll = AceGUI:Create("ScrollFrame")
   buttonsScroll:SetLayout("ButtonsScrollLayout")

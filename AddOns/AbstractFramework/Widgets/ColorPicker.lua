@@ -55,9 +55,11 @@ function AF.CreateColorPicker(parent, label, alphaEnabled, onChange, onConfirm)
     AF.SetPoint(cp.label, "LEFT", cp, "RIGHT", 5, 0)
     cp:SetHitRectInsets(0, -cp.label:GetStringWidth()-5, 0, 0)
 
+    cp.accentColor = AF.GetAddonAccentColorName()
+
     cp:SetScript("OnEnter", function()
-        cp:SetBackdropBorderColor(AF.GetColorRGB("accent", 0.5))
-        cp.label:SetColor("accent")
+        cp:SetBackdropBorderColor(AF.GetColorRGB(cp.accentColor, nil, 0.5))
+        cp.label:SetColor(cp.accentColor)
     end)
 
     cp:SetScript("OnLeave", function()
@@ -338,7 +340,7 @@ end
 -- color grids
 -------------------------------------------------
 local function CreateColorGrid(color)
-    local grid = AF.CreateButton(colorPickerFrame, nil, "none", 14, 14)
+    local grid = AF.CreateButton(colorPickerFrame, nil, nil, 14, 14)
 
     if type(color) == "table" then
         AF.SetTooltips(grid, "ANCHOR_TOPLEFT", 0, 2, "|c"..AF.GetColorHex(color[1])..color[2])
@@ -390,8 +392,8 @@ local preset2 = {
 
 local preset3 = {
     "red", "yellow", "green", "cyan", "blue", "purple",
-    "hotpink", "chartreuse",
-    "accent", "widget"
+    "pink", "chartreuse",
+    "blazing_tangerine", "vivid_raspberry"
 }
 
 -------------------------------------------------
@@ -720,6 +722,10 @@ function AF.ShowColorPicker(owner, callback, onConfirm, hasAlpha, r, g, b, a)
     colorPickerFrame:SetParent(owner)
     colorPickerFrame:SetFrameStrata("DIALOG")
     colorPickerFrame:SetToplevel(true)
+
+    -- accent color system
+    -- colorPickerFrame:SetTitleBackgroundColor(AF.GetColorTable(owner.accentColor, 0.025))
+    -- colorPickerFrame:SetTitleColor(owner.accentColor)
 
     -- clear previous
     hueSlider.prev = nil

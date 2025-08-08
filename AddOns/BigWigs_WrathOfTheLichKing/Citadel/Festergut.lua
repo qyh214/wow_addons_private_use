@@ -46,7 +46,6 @@ function mod:OnBossEnable()
 	self:Death("Win", 36626)
 
 	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:BossYell("Engage", L["engage_trigger"])
 
 	self:Log("SPELL_AURA_APPLIED", "Spores", 69279)
@@ -54,6 +53,7 @@ end
 
 function mod:OnEngage()
 	count = 1
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:Berserk(300, true)
 	self:CDBar(69279, 20) -- Gas Spore
 	self:Bar(69165, 33.5, L["inhale_bar"]:format(count))

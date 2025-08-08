@@ -156,7 +156,7 @@ local function RefreshSet(set)
         for _,nodeID in ipairs(nodeIDs) do
             local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID);
             if nodeInfo.subTreeID == tree.ID then
-                if #nodeInfo.entryIDs > 1 then
+                if nodeInfo.type == Enum.TraitNodeType.Selection and #nodeInfo.entryIDs > 1 then
                     if nodeInfo.activeEntry then
                         for index,entryID in ipairs(nodeInfo.entryIDs) do
                             if entryID == nodeInfo.activeEntry.entryID then
@@ -284,7 +284,7 @@ local function IsSetActive(set)
             return false;
         end
 
-        if #nodeInfo.entryIDs > 1 then
+        if nodeInfo.type == Enum.TraitNodeType.Selection and #nodeInfo.entryIDs > 1 then
             if not nodeInfo.activeEntry then
                 return false;
             end
@@ -337,7 +337,7 @@ local function SetRequirements(set)
         local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID);
         if nodeInfo.isVisible and nodeInfo.subTreeID == set.subTreeID then
             local value = set.nodes[nodeID];
-            if #nodeInfo.entryIDs > 1 then
+            if nodeInfo.type == Enum.TraitNodeType.Selection and #nodeInfo.entryIDs > 1 then
                 if nodeInfo.activeEntry and nodeInfo.activeEntry.entryID and (not value or nodeInfo.entryIDs[value] ~= nodeInfo.activeEntry.entryID) then
                     isActive = false;
                     waitForCooldown = waitForCooldown or IsNodeEntryOnCooldown(nodeInfo.activeEntry.entryID);
@@ -1133,7 +1133,7 @@ function BtWLoadoutsHeroTalentsMixin:UpdateTreeCurrencyInfo(skipButtonUpdates)
         local value = self.set.nodes[nodeID];
         if value then
             local nodeInfo = Internal.GetNodeInfoBySpecID(self.specID, nodeID);
-            if #nodeInfo.entryIDs > 1 then
+            if nodeInfo.type == Enum.TraitNodeType.Selection and #nodeInfo.entryIDs > 1 then
                 value = 1;
             end
             if nodeInfo.costs then
@@ -1174,14 +1174,7 @@ function BtWLoadoutsHeroTalentsMixin:GetAndCacheNodeInfo(nodeID)
         result.isAvailable = true; -- Not Gated
         result.meetsEdgeRequirements = true; -- Not Locked
 
-        if #result.entryIDs == 1 then
-            result.canPurchaseRank = false;
-            result.canRefundRank = false;
-            result.activeRank = 1;
-            result.currentRank = 1;
-            result.ranksPurchased = 1;
-            result.activeEntry.rank = 1;
-        else
+        if result.type == Enum.TraitNodeType.Selection and #result.entryIDs > 1 then
             result.canPurchaseRank = true;
             result.canRefundRank = true;
 
@@ -1199,6 +1192,16 @@ function BtWLoadoutsHeroTalentsMixin:GetAndCacheNodeInfo(nodeID)
                 result.ranksPurchased = 0;
                 result.activeEntry = nil
             end
+        else
+            result.canPurchaseRank = false;
+            result.canRefundRank = false;
+            result.activeRank = 1;
+            result.currentRank = 1;
+            result.ranksPurchased = 1;
+            result.activeEntry = {
+                entryID = result.entryIDs[1],
+                rank = 1,
+            }
         end
 
         if result.subTreeID == self.subTreeID then

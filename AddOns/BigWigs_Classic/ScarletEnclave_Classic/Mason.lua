@@ -16,6 +16,7 @@ mod:SetAllowWin(true)
 local nextTidal = 75
 local curseCount = 0
 local curseTime = 0
+local prevTidalForceStacks = 0
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -51,8 +52,11 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "DrowningShallows", 1231592)
 	self:Log("SPELL_AURA_APPLIED", "DrowningShallowsApplied", 1231592)
 	self:Log("SPELL_AURA_REMOVED", "DrowningShallowsRemoved", 1231592)
+	self:Log("SPELL_CAST_START", "TidalForce", 1231585)
 	self:Log("SPELL_AURA_APPLIED", "TidalForceApplied", 1231585)
 	self:Log("SPELL_AURA_REMOVED", "TidalForceRemoved", 1231585)
+	self:Log("SPELL_AURA_APPLIED", "TidalForceBuffApplied", 1231587)
+	self:Log("SPELL_AURA_APPLIED_DOSE", "TidalForceBuffApplied", 1231587)
 	self:Log("SPELL_CAST_START", "IgniteFlesh", 1234347)
 	self:Log("SPELL_INTERRUPT", "IgniteFleshInterrupted", "*")
 	self:Log("SPELL_AURA_APPLIED", "MortalWoundApplied", 1229005)
@@ -63,7 +67,8 @@ function mod:OnEngage()
 	nextTidal = 75
 	curseCount = 0
 	curseTime = 0
-	self:Berserk(360)
+	prevTidalForceStacks = 0
+	self:Berserk(600)
 end
 
 --------------------------------------------------------------------------------
@@ -72,6 +77,7 @@ end
 
 function mod:DrowningShallows(args)
 	curseTime = args.time
+	curseCount = 0
 	self:Message(args.spellId, "orange", CL.curse)
 	self:PlaySound(args.spellId, "alert")
 end
@@ -91,39 +97,46 @@ function mod:DrowningShallowsRemoved(args)
 	end
 end
 
-do
-	local appliedTime = 0
-	function mod:TidalForceApplied(args)
-		appliedTime = args.time
-		self:Message(args.spellId, "red", CL.percent:format(nextTidal, CL.shield))
-		nextTidal = nextTidal - 25
-		self:Bar(args.spellId, 60, CL.shield)
-		self:PlaySound(args.spellId, "long")
-	end
-
-	function mod:TidalForceRemoved(args)
-		self:StopBar(CL.shield)
-		self:Message(args.spellId, "cyan", CL.removed_after:format(CL.shield, args.time-appliedTime))
-	end
+function mod:TidalForce(args)
+	self:Message(args.spellId, "red", CL.percent:format(nextTidal, CL.shield))
+	self:PlaySound(args.spellId, "long")
 end
 
 do
-	local inRange = false
-	function mod:IgniteFlesh(args)
-		local unit = self:GetUnitIdByGUID(args.sourceGUID)
-		if not unit or self:UnitWithinRange(unit, 10) or args.sourceGUID == self:UnitGUID("target") then
-			inRange = true
-			self:Message(args.spellId, "yellow", CL.casting:format(args.spellName))
-			self:PlaySound(args.spellId, "info")
-		else
-			inRange = false
-		end
+	local appliedTime, currentStacks = 0, 0
+	function mod:TidalForceApplied(args)
+		appliedTime = args.time
+		nextTidal = nextTidal - 25
+		self:Bar(args.spellId, 60, CL.shield)
 	end
 
-	function mod:IgniteFleshInterrupted(args)
-		if inRange and args.extraSpellName == self:SpellName(1234347) then
-			self:Message(1234347, "green", CL.interrupted_by:format(args.extraSpellName, self:ColorName(args.sourceName)))
+	function mod:TidalForceBuffApplied(args)
+		currentStacks = args.amount or 1
+	end
+
+	function mod:TidalForceRemoved(args)
+		local diff = currentStacks-prevTidalForceStacks
+		prevTidalForceStacks = currentStacks
+		self:StopBar(CL.shield)
+		self:Message(args.spellId, "cyan", CL.removed_after:format(CL.shield, args.time-appliedTime), nil, nil, 4) -- Stay onscreen for 4s
+		if nextTidal == 50 then -- The first one at 75% doesn't need extra text
+			self:Message(args.spellId, "cyan", CL.stackboss:format(currentStacks, args.spellName), nil, nil, 4) -- Stay onscreen for 4s
+		else
+			self:Message(args.spellId, "cyan", CL.extra:format(CL.stackboss:format(currentStacks, args.spellName), CL.stack_gained:format(diff)), nil, nil, 4) -- Stay onscreen for 4s
 		end
+	end
+end
+
+function mod:IgniteFlesh(args)
+	if args.sourceGUID == self:UnitGUID("target") then
+		self:Message(args.spellId, "yellow", CL.extra:format(CL.casting:format(args.spellName), CL.interruptible))
+		self:PlaySound(args.spellId, "info")
+	end
+end
+
+function mod:IgniteFleshInterrupted(args)
+	if args.destGUID == self:UnitGUID("target") and args.extraSpellName == self:SpellName(1234347) then
+		self:Message(1234347, "green", CL.interrupted_by:format(args.extraSpellName, self:ColorName(args.sourceName)))
 	end
 end
 

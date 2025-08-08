@@ -1626,6 +1626,18 @@ local enchantBySpellID = {
     [1216517] = 7652, -- Apply Charged Armor Kit
     [1216518] = 7653, -- Apply Charged Armor Kit
     [1216519] = 7654, -- Apply Charged Armor Kit
+    [1225074] = 7912, -- Lesser Rune of Twilight Devastation
+    [1233223] = 7914, -- Greater Rune of Twilight Devastation
+    [1233355] = 7915, -- Lesser Rune of the Echoing Void
+    [1225873] = 7917, -- Greater Rune of the Echoing Void
+    [1233375] = 7922, -- Lesser Rune of Infinite Stars
+    [1227206] = 7924, -- Greater Rune of Infinite Stars
+    [1233385] = 7925, -- Lesser Rune of Gushing Wound
+    [1227288] = 7927, -- Greater Rune of Gushing Wound
+    [1233392] = 7928, -- Lesser Rune of the Twisted Appendage
+    [1227294] = 7930, -- Greater Rune of the Twisted Appendage
+    [1233394] = 7931, -- Lesser Rune of the Void Ritual
+    [1227311] = 7933, -- Greater Rune of the Void Ritual
 }
 
 local itemChangedData = {}

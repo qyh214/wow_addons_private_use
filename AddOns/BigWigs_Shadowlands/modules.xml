@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+<Include file="CastleNathria\modules.xml"/>
+<Include file="SanctumOfDomination\modules.xml"/>
+<Include file="SepulcherOfTheFirstOnes\modules.xml"/>
+<Include file="Shadowlands\modules.xml"/>
+
+</Ui>

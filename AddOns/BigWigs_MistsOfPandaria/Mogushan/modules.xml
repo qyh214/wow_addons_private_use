@@ -8,6 +8,6 @@
 <Script file="Elegon.lua"/>
 <Script file="WillOfTheEmperor.lua"/>
 
-<Include file="Options\options.xml"/>
+<Script file="!Options.lua"/>
 
 </Ui>

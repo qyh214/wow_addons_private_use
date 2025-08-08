@@ -655,7 +655,7 @@ function AD:CHALLENGE_MODE_COMPLETED()
 
 		SortTable(damageTable)
 
-		for index, data in pairs(damageTable) do
+		for index, data in ipairs(damageTable) do
 			self:SendChatMessage(format("%d. %s %s", index, data.key, self:FormatNumber(data["value"])))
 		end
 

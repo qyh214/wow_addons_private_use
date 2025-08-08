@@ -111,3 +111,7 @@ function TT:Enable()
 end
 
 E["TooltipID"] = TT
+
+--[==[@debug@
+TT:Enable()
+--@end-debug@]==]

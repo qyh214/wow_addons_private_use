@@ -52,6 +52,12 @@ function ItemUpgradeTip:GetMythicPlusInfo()
     return private.mythicPlusInfo
 end
 
+-- Return the Bountiful Delve info
+---@return Array<BountifulDelveInfo>
+function ItemUpgradeTip:GetBountifulDelvesInfo()
+    return private.bountifulDelveInfo
+end
+
 -- Return the Raid info
 ---@return Array<RaidInfo>
 function ItemUpgradeTip:GetRaidInfo()

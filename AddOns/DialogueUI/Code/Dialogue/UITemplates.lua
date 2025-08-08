@@ -476,6 +476,7 @@ function DUIDialogOptionButtonMixin:SetQuestTypeText(questInfo)
             local frameWidth = questTypeFrame:GetContentWidth();
             self.hasQuestType = true;
             self.rightFrameWidth = Round(frameWidth);
+            self:SetButtonText(questInfo.title, true);
         end
 
         local rightIcon = self:GetExtraObject("Warband");
@@ -487,7 +488,11 @@ function DUIDialogOptionButtonMixin:SetQuestTypeText(questInfo)
     end
 end
 
-function DUIDialogOptionButtonMixin:SetQuestVisual(questInfo)
+function DUIDialogOptionButtonMixin:SetQuestVisual(questInfo, rebuildQuestInfo)
+    if rebuildQuestInfo then
+        API.BuildQuestInfo(questInfo);
+    end
+
     self.Icon:SetTexture(GetQuestIcon(questInfo));  --We fill in the QuestInfo through this API
 
     if questInfo.isComplete or (not questInfo.isOnQuest) then
@@ -646,6 +651,8 @@ function DUIDialogOptionButtonMixin:SetButtonAlreadyOnQuest()
     self.showIcon = true;
     self.Icon:SetTexture(nil);
     self:SetButtonText(L["Quest Accepted"], true);
+
+    addon.DialogueUI:ClearButtonHighlight(self);
 end
 
 function DUIDialogOptionButtonMixin:SetButtonCloseAutoAcceptQuest()

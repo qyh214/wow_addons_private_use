@@ -17,12 +17,12 @@
 		end
 		local addonName, Details222 = ...
 		local version, build, date, tvs = GetBuildInfo()
-		Details.build_counter = 13519
-		Details.alpha_build_counter = 13519 --if this is higher than the regular counter, use it instead
+		Details.build_counter = 13652
+		Details.alpha_build_counter = 13652 --if this is higher than the regular counter, use it instead
 		Details.dont_open_news = true
 		Details.game_version = version
 		Details.userversion = version .. " " .. Details.build_counter
-		Details.realversion = 164 --core version, this is used to check API version for scripts and plugins (see alias below)
+		Details.realversion = 165 --core version, this is used to check API version for scripts and plugins (see alias below)
 		Details.gametoc = tvs
 		Details.APIVersion = Details.realversion --core version
 		Details.version = Details.userversion .. " (core " .. Details.realversion .. ")" --simple stirng to show to players
@@ -392,11 +392,13 @@
 						--will ba called when the context finishes, in this case when the SCENARIO_COMPLETED event is triggered
 						local fOnContextFinished = function()
 							--check if this is not a mythic+ run
-							if (C_ChallengeMode.GetActiveChallengeMapID() or C_ChallengeMode.GetActiveKeystoneInfo() or C_ChallengeMode.IsChallengeModeActive()) then
-								print("did not start as this is a m+ run")
-								return
-							else
-								print("this is not a m+ run")
+							if (C_ChallengeMode) then
+								if (C_ChallengeMode.GetActiveChallengeMapID() or C_ChallengeMode.GetActiveKeystoneInfo() or C_ChallengeMode.IsChallengeModeActive()) then
+									print("did not start as this is a m+ run")
+									return
+								else
+									print("this is not a m+ run")
+								end
 							end
 
 							---@type combat[]

@@ -320,7 +320,7 @@ function mod:ElectrostaticCharge(args)
 end
 
 function mod:ElectrostaticChargeApplied(args)
-	if UnitIsPlayer(args.destName) then -- Shows up for pets, etc.
+	if self:Player(args.destFlags) then -- Shows up for pets, etc.
 		self:StackMessageOld(args.spellId, args.destName, args.amount, "yellow", "info")
 	end
 end

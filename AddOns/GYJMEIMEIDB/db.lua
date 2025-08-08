@@ -5,7 +5,6 @@ GYJMEIMEIDB = {
         [426619] = {"冲锋", "注意冲锋.ogg"}, --One-Hand Headlock
         [474031] = {"分散", "注意分散.ogg"}, --Void Crush
         [430179] = {"脚下", "注意脚下.ogg"}, --Seeping Corruption
-        [424423] = {"分散", "注意分散.ogg"}, --Lunging Strike
         [448787] = {"点名", "注意点名.ogg"}, --Purification
         [1217279] = {"击退", "小心击退.ogg"}, --Uppercut
         [257582] = {"锁定", "目标锁定.ogg"}, --Raging Gaze
@@ -16,6 +15,8 @@ GYJMEIMEIDB = {
         [333861] = {"流血", "注意流血.ogg"}, --Ricocheting Blade
         [448619] = {"冲锋", "注意冲锋.ogg"}, --Reckless Delivery
         [427616] = {"点名", "注意点名.ogg"}, -- Energized Barrage
+        [430805] = {"分散", "注意分散.ogg"}, --Arcing Void
+        [430805] = {"分散", "注意分散.ogg"}, --Arcing Void
     },
     trash_cc = {
         --[spellID] = {"name",category,"soundFile","role", "show target" (true/false), "important" (true/false)},
@@ -30,7 +31,6 @@ GYJMEIMEIDB = {
         [471733] = {"回春水藻",0,"","ALL",false,true}, --Restorative Algae
         [424322] = {"爆炸烈焰",0,"","ALL",false,true}, --Explosive Flame
         [1214780] = {"终极失真",0,"嘟嘟.ogg","ALL",false,true}, --Maximum Distortion
-        [444743] = {"连珠火球",0,".嘟嘟.ogg","ALL",false,true}, --Fireball Volley
         [440687] = {"蜂蜜齐射",0,"嘟嘟.ogg","ALL",false,true}, --Honey Volley
         [330868] = {"通灵箭雨",0,"嘟嘟.ogg","ALL",false,true}, --Necrotic Bolt Volley
         [301088] = {"引爆",0,"","ALL",false,true}, --Detonate
@@ -99,7 +99,6 @@ GYJMEIMEIDB = {
         ["167533"] = {[333827] = {"SPELL_CAST_START", 0, "ALL", "AOE预警", 2.1, 9.7}}, --Seismic Stomp
         ["169893"] = {[333299] = {"SPELL_CAST_SUCCESS", 2, "ALL", "准备诅咒", 6.9, 12.1}}, --Curse of Desolation
         ["221760"] = {[444743] = {"SPELL_CAST_START", 6, "ALL", "准备躲避", 9.5, 24.3}}, -- Fireball Volley
-        ["206710"] = {[427601] = {"SPELL_CAST_START", 2, "ALL", "准备治疗", 36, 0.1}}, -- Burst of Light
     },
     private_auras = {
 

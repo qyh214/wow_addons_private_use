@@ -2,59 +2,26 @@ local W, F, L, P = unpack(select(2, ...))
 local AD = W:GetModule("AvoidableDamage")
 
 local mistakes = {
-	-- 小怪
 	{
-		-- 裂隙衝擊 (傳送門法師佐洪)
+		-- 審問 (佐菲克斯)
 		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 355306,
+		spell = 346028,
 	},
 	{
-		-- 震擊地雷 (指揮官佐發)
+		-- 灑出的液體 (郵務主管)
 		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 355476,
+		spell = 346329,
 	},
 	{
-		-- 致命武力 (指揮官佐發)
+		-- 殊離之環 (索阿茲米)
 		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 355487,
+		spell = 347481,
 	},
 	{
-		-- 震光屏障 (環境)
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 355502,
-	},
-	{
-		-- 鎮壓猛襲 (市場保安官)
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 355638,
-	},
-	{
-		-- 干擾手榴彈 (海關警衛)
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 355903,
-	},
-	{
-		-- 光束接合者 (武裝監督者, 『追蹤者』佐寇司)
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 356011,
-	},
-	{
-		-- 腐爛的食物 (脫序的顧客)
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 356482,
-	},
-	{
-		-- 聖光裂片撤退 (集團幫派)
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 357019,
-	},
-	-- [1] 佐菲克斯
-	{
-		-- 武裝保全
+		-- 武裝保全 (佐菲克斯)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 348366,
 	},
-	-- [2] 大展示廳
 	{
 		-- 飢餓之握 (阿克魯斯)
 		type = AD.MISTAKE.SPELL_DAMAGE,
@@ -71,43 +38,111 @@ local mistakes = {
 		spell = 349999,
 	},
 	{
-		-- 散熱震盪 (亞奇力特)
-		-- 測試 (可能無法避免)
+		-- 貪食饗宴 (阿克魯斯)
 		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 351070,
+		spell = 350013,
+	},
+	{
+		-- 腐蝕靈魄 (亞奇力特)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 350045,
 	},
 	{
 		-- 旋風之滅 (溫札‧金熔)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 350090,
 	},
-	-- [3] 佐戈隆
 	{
-		-- 控場
+		-- 控場 (佐戈隆)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 350921,
 	},
 	{
-		-- 壓制火光
+		-- 散熱震盪 (亞奇力特)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 351070,
+	},
+	{
+		-- 靜電錘擊 (市集打手)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 351961,
+		playerIsNotTank = true,
+	},
+	{
+		-- 裂隙衝擊 (傳送門法師佐洪)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 355306,
+	},
+	{
+		-- 壓制火光 (佐戈隆)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 355439,
+	},
+	{
+		-- 震擊地雷 (指揮官佐發)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 355476,
+	},
+	{
+		-- 致命武力 (指揮官佐發)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 355487,
+	},
+	{
+		-- 震光屏障
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 355502,
+	},
+	{
+		-- 鎮壓猛襲 (市場保安官)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 355638,
+	},
+	{
+		-- 迅捷之刃 (集團潛藏者)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 355832,
+		playerIsNotTank = true,
+	},
+	{
+		-- 干擾手榴彈 (海關警衛)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 355903,
+	},
+	{
+		-- 光束接合者 (武裝監督者, 『追蹤者』佐寇司)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 356011,
+	},
+	{
+		-- 熔岩之息 (上古熔核犬)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 356404,
+	},
+	{
+		-- 腐爛的食物 (脫序的顧客)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 356482,
+	},
+	{
+		-- 聖光裂片撤退 (集團幫派)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 357019,
+	},
+	{
+		-- 狂野痛擊 (暴怒的恐角龍)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 357509,
 	},
 	{
 		-- 不許進入！
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 357799,
 	},
-	-- [4] 郵務主管
 	{
-		-- 灑出的液體
+		-- 充能斬擊 (佐菲克斯)
 		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 346329,
-	},
-	-- [5] 索阿茲米
-	{
-		-- 殊離之環
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 347481,
+		spell = 1236348,
 	},
 }
 

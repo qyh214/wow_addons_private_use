@@ -2209,7 +2209,9 @@ function module.main.COMBAT_LOG_EVENT_UNFILTERED(_,event,_,sourceGUID,sourceName
 			return
 		end
 
-		local data, spellData = GetSpellData(spellID,npcID,FlagMarkToIndex[sourceFlags2])
+		local markFlag = bit.band(sourceFlags2, COMBATLOG_OBJECT_RAIDTARGET_MASK)
+		local markIndex = FlagMarkToIndex[markFlag]
+		local data, spellData = GetSpellData(spellID,npcID,markIndex)
 
 		if not data then
 			return
@@ -2217,19 +2219,19 @@ function module.main.COMBAT_LOG_EVENT_UNFILTERED(_,event,_,sourceGUID,sourceName
 
 		if not spellData.noscs then
 			counter[sourceGUID] = (counter[sourceGUID] or 1) + 1
-			if counter[sourceGUID] > ((type(spellData.reset)=="string" and spellData.reset == "A" and GetResetAuto(spellData,FlagMarkToIndex[sourceFlags2])) or (type(spellData.reset)=="number" and spellData.reset) or math.huge) then
+			if counter[sourceGUID] > ((type(spellData.reset)=="string" and spellData.reset == "A" and GetResetAuto(spellData,markIndex)) or (type(spellData.reset)=="number" and spellData.reset) or math.huge) then
 				counter[sourceGUID] = 1
 			end
 		end
 		isCasting[sourceGUID] = nil
 
-		local isMine = GetOwnAssignment(spellData,counter[sourceGUID],FlagMarkToIndex[sourceFlags2])
+		local isMine = GetOwnAssignment(spellData,counter[sourceGUID],markIndex)
 
 		if isMine and not spellData.nonext and not spellData.noscs then
 			module:PlaySound(2)
 		end
 
-		local assignedNames = GetAllAssignments(npcID,counter[sourceGUID],FlagMarkToIndex[sourceFlags2])
+		local assignedNames = GetAllAssignments(npcID,counter[sourceGUID],markIndex)
 
 		module:UpdateFrame(module.db.guidToFrame[sourceGUID],sourceGUID,isMine,assignedNames)
 	elseif event == "SPELL_CAST_START" then
@@ -2239,7 +2241,9 @@ function module.main.COMBAT_LOG_EVENT_UNFILTERED(_,event,_,sourceGUID,sourceName
 			return
 		end
 
-		local data, spellData = GetSpellData(spellID,npcID,FlagMarkToIndex[sourceFlags2])
+		local markFlag = bit.band(sourceFlags2, COMBATLOG_OBJECT_RAIDTARGET_MASK)
+		local markIndex = FlagMarkToIndex[markFlag]
+		local data, spellData = GetSpellData(spellID,npcID,markIndex)
 
 		if not data then
 			return
@@ -2248,13 +2252,13 @@ function module.main.COMBAT_LOG_EVENT_UNFILTERED(_,event,_,sourceGUID,sourceName
 		counter[sourceGUID] = (counter[sourceGUID] or 1)
 		isCasting[sourceGUID] = spellID
 
-		local isMine = GetOwnAssignment(spellData,counter[sourceGUID],FlagMarkToIndex[sourceFlags2])
+		local isMine = GetOwnAssignment(spellData,counter[sourceGUID],markIndex)
 
 		if isMine then
 			module:PlaySound(1)
 		end
 
-		local assignedNames = GetAllAssignments(npcID,counter[sourceGUID],FlagMarkToIndex[sourceFlags2])
+		local assignedNames = GetAllAssignments(npcID,counter[sourceGUID],markIndex)
 
 		module:UpdateFrame(module.db.guidToFrame[sourceGUID],sourceGUID,isMine,assignedNames)
 	elseif event == "SPELL_INTERRUPT" then
@@ -2264,25 +2268,27 @@ function module.main.COMBAT_LOG_EVENT_UNFILTERED(_,event,_,sourceGUID,sourceName
 			return
 		end
 
-		local data, spellData = GetSpellData(extraspellID,npcID,FlagMarkToIndex[destFlags2])
+		local markFlag = bit.band(destFlags2, COMBATLOG_OBJECT_RAIDTARGET_MASK)
+		local markIndex = FlagMarkToIndex[markFlag]
+		local data, spellData = GetSpellData(extraspellID,npcID,markIndex)
 
 		if not data then
 			return
 		end
 
 		counter[destGUID] = (counter[destGUID] or 1) + 1
-		if counter[destGUID] > ((type(spellData.reset)=="string" and spellData.reset == "A" and GetResetAuto(spellData,FlagMarkToIndex[destFlags2])) or (type(spellData.reset)=="number" and spellData.reset) or math.huge) then
+		if counter[destGUID] > ((type(spellData.reset)=="string" and spellData.reset == "A" and GetResetAuto(spellData,markIndex)) or (type(spellData.reset)=="number" and spellData.reset) or math.huge) then
 			counter[destGUID] = 1
 		end
 		isCasting[destGUID] = nil
 
-		local isMine = GetOwnAssignment(spellData,counter[destGUID],FlagMarkToIndex[destFlags2])
+		local isMine = GetOwnAssignment(spellData,counter[destGUID],markIndex)
 
 		if isMine and not spellData.nonext then
 			module:PlaySound(2)
 		end
 
-		local assignedNames = GetAllAssignments(npcID,counter[destGUID],FlagMarkToIndex[destFlags2])
+		local assignedNames = GetAllAssignments(npcID,counter[destGUID],markIndex)
 
 		module:UpdateFrame(module.db.guidToFrame[destGUID],destGUID,isMine,assignedNames)
 	end

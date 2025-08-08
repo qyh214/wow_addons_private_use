@@ -1,0 +1,191 @@
+local V2_TAG_NUMBER = 4
+
+---@param v2Rankings ProviderProfileV2Rankings
+---@return ProviderProfileSpec
+local function convertRankingsToV1Format(v2Rankings, difficultyId, sizeId)
+	---@type ProviderProfileSpec
+	local v1Rankings = {}
+	v1Rankings.progress = v2Rankings.progressKilled
+	v1Rankings.total = v2Rankings.progressPossible
+	v1Rankings.average = v2Rankings.bestAverage
+	v1Rankings.spec = v2Rankings.spec
+	v1Rankings.asp = v2Rankings.allStarPoints
+	v1Rankings.rank = v2Rankings.allStarRank
+	v1Rankings.difficulty = difficultyId
+	v1Rankings.size = sizeId
+
+	v1Rankings.encounters = {}
+	for id, encounter in pairs(v2Rankings.encountersById) do
+		v1Rankings.encounters[id] = {
+			kills = encounter.kills,
+			best = encounter.best,
+		}
+	end
+
+	return v1Rankings
+end
+
+---Convert a v2 profile to a v1 profile
+---@param v2 ProviderProfileV2
+---@return ProviderProfile
+local function convertToV1Format(v2)
+	---@type ProviderProfile
+	local v1 = {}
+	v1.subscriber = v2.isSubscriber
+	v1.perSpec = {}
+
+	if v2.summary ~= nil then
+		v1.progress = v2.summary.progressKilled
+		v1.total = v2.summary.progressPossible
+		v1.totalKillCount = v2.summary.totalKills
+		v1.difficulty = v2.summary.difficultyId
+		v1.size = v2.summary.sizeId
+	else
+		local bestSection = v2.sections[1]
+		v1.progress = bestSection.anySpecRankings.progressKilled
+		v1.total = bestSection.anySpecRankings.progressPossible
+		v1.average = bestSection.anySpecRankings.bestAverage
+		v1.totalKillCount = bestSection.totalKills
+		v1.difficulty = bestSection.difficultyId
+		v1.size = bestSection.sizeId
+		v1.anySpec = convertRankingsToV1Format(bestSection.anySpecRankings, bestSection.difficultyId, bestSection.sizeId)
+		for i, rankings in pairs(bestSection.perSpecRankings) do
+			v1.perSpec[i] = convertRankingsToV1Format(rankings, bestSection.difficultyId, bestSection.sizeId)
+		end
+		v1.encounters = v1.anySpec.encounters
+	end
+
+	if v2.mainCharacter ~= nil then
+		v1.mainCharacter = {}
+		v1.mainCharacter.spec = v2.mainCharacter.spec
+		v1.mainCharacter.average = v2.mainCharacter.bestAverage
+		v1.mainCharacter.difficulty = v2.mainCharacter.difficultyId
+		v1.mainCharacter.size = v2.mainCharacter.sizeId
+		v1.mainCharacter.progress = v2.mainCharacter.progressKilled
+		v1.mainCharacter.total = v2.mainCharacter.progressPossible
+		v1.mainCharacter.totalKillCount = v2.mainCharacter.totalKills
+	end
+
+	return v1
+end
+
+---Parse a single set of rankings from `state`
+---@param decoder BitDecoder
+---@param state ParseState
+---@param lookup table<number, string>
+---@return ProviderProfileV2Rankings
+local function parseRankings(decoder, state, lookup)
+	---@type ProviderProfileV2Rankings
+	local result = {}
+	result.spec = decoder.decodeString(state, lookup)
+	result.progressKilled = decoder.decodeInteger(state, 1)
+	result.progressPossible = decoder.decodeInteger(state, 1)
+	result.bestAverage = decoder.decodePercentileFixed(state)
+	result.allStarRank = decoder.decodeInteger(state, 3)
+	result.allStarPoints = decoder.decodeInteger(state, 2)
+
+	local encounterCount = decoder.decodeInteger(state, 1)
+	result.encountersById = {}
+	for i = 1, encounterCount do
+		local id = decoder.decodeInteger(state, 4)
+		local kills = decoder.decodeInteger(state, 2)
+		local best = decoder.decodeInteger(state, 1)
+		local isHidden = decoder.decodeBoolean(state)
+
+		result.encountersById[id] = { kills = kills, best = best, isHidden = isHidden }
+	end
+
+	return result
+end
+
+---Parse a binary-encoded data string into a provider profile
+---@param decoder BitDecoder
+---@param content string
+---@param lookup table<number, string>
+---@param formatVersion number
+---@return ProviderProfile|ProviderProfileV2|nil
+local function parse(decoder, content, lookup, formatVersion) -- luacheck: ignore 211
+	-- For backwards compatibility. The existing addon will leave this as nil
+	-- so we know to use the old format. The new addon will specify this as 2.
+	formatVersion = formatVersion or 1
+	if formatVersion > 2 then
+		return nil
+	end
+
+	---@type ParseState
+	local state = { content = content, position = 1 }
+
+	local tag = decoder.decodeInteger(state, 1)
+	if tag ~= V2_TAG_NUMBER then
+		return nil
+	end
+
+	---@type ProviderProfileV2
+	local result = {}
+	result.isSubscriber = decoder.decodeBoolean(state)
+	result.summary = nil
+	result.sections = {}
+	result.progressOnly = false
+	result.mainCharacter = nil
+
+	local sectionsCount = decoder.decodeInteger(state, 1)
+	if sectionsCount == 0 then
+		---@type ProviderProfileV2Summary
+		local summary = {}
+		summary.zoneId = decoder.decodeInteger(state, 2)
+		summary.difficultyId = decoder.decodeInteger(state, 1)
+		summary.sizeId = decoder.decodeInteger(state, 1)
+		summary.progressKilled = decoder.decodeInteger(state, 1)
+		summary.progressPossible = decoder.decodeInteger(state, 1)
+		summary.totalKills = decoder.decodeInteger(state, 2)
+
+		result.summary = summary
+	else
+		for i = 1, sectionsCount do
+			---@type ProviderProfileV2Section
+			local section = {}
+			section.zoneId = decoder.decodeInteger(state, 2)
+			section.difficultyId = decoder.decodeInteger(state, 1)
+			section.sizeId = decoder.decodeInteger(state, 1)
+			section.partitionId = decoder.decodeInteger(state, 1) - 128
+			section.totalKills = decoder.decodeInteger(state, 2)
+
+			local specCount = decoder.decodeInteger(state, 1)
+			section.anySpecRankings = parseRankings(decoder, state, lookup)
+
+			section.perSpecRankings = {}
+			for j = 1, specCount - 1 do
+				local specRankings = parseRankings(decoder, state, lookup)
+				table.insert(section.perSpecRankings, specRankings)
+			end
+
+			table.insert(result.sections, section)
+		end
+	end
+
+	local hasMainCharacter = decoder.decodeBoolean(state)
+	if hasMainCharacter then
+		---@type ProviderProfileV2MainCharacter
+		local mainCharacter = {}
+		mainCharacter.zoneId = decoder.decodeInteger(state, 2)
+		mainCharacter.difficultyId = decoder.decodeInteger(state, 1)
+		mainCharacter.sizeId = decoder.decodeInteger(state, 1)
+		mainCharacter.progressKilled = decoder.decodeInteger(state, 1)
+		mainCharacter.progressPossible = decoder.decodeInteger(state, 1)
+		mainCharacter.totalKills = decoder.decodeInteger(state, 2)
+		mainCharacter.spec = decoder.decodeString(state, lookup)
+		mainCharacter.bestAverage = decoder.decodePercentileFixed(state)
+
+		result.mainCharacter = mainCharacter
+	end
+
+	local progressOnly = decoder.decodeBoolean(state)
+	result.progressOnly = progressOnly
+
+	if formatVersion == 1 then
+		return convertToV1Format(result)
+	end
+
+	return result
+end
+ local lookup = {'DemonHunter-Vengeance','DemonHunter-Havoc','Evoker-Devastation','Evoker-Preservation','Mage-Fire','Mage-Arcane','Priest-Holy','Priest-Shadow','Paladin-Retribution','Hunter-Marksmanship','Hunter-BeastMastery','Warlock-Affliction','Warlock-Destruction','Rogue-Outlaw','Rogue-Subtlety','Paladin-Holy','Priest-Discipline','Mage-Frost','Rogue-Assassination','Druid-Balance','DeathKnight-Unholy','DeathKnight-Blood','Druid-Feral','Shaman-Restoration','Warrior-Arms','Paladin-Protection','Druid-Restoration','Shaman-Elemental','Warlock-Demonology','Monk-Mistweaver','Monk-Windwalker','Monk-Brewmaster','Unknown-Unknown','Hunter-Survival','DeathKnight-Frost','Warrior-Fury','Warrior-Protection',}; local provider = {region='CN',realm='苏塔恩',name='CN',type='weekly',zone=42,date='2025-08-08',data={Ad='Adah:BAABKgAFFH8NAAMBAAYIDRwSBQBVAQABAAYIkhkSBQBVAQACAAQI6hgODQAPAQAAAA==.Adamove:BAACKgAFFH8mAAMDAAgIoRNzEABaAQADAAgIoRNzEABaAQAEAAIIxQmfCwA4AAAqAAQKfzIAAwMACAiOIZEKAIsCAAMACAiOIZEKAIsCAAQAAQgAAIMvAAAAAAAA.',Ag='Agonie:BAAAKgADCgQIBAAAAA==.Aguai:BAAAKgADCgQIBAAAAA==.',Ar='Archon:BAABKgAFFH8RAAMFAAYIwB6RDQBgAQAFAAYI8RmRDQBgAQAGAAQIzRzzIQDeAAAAAA==.',Bl='Blotus:BAABKgAFFH8HAAMHAAcIqRcqCwBwAQAHAAYIpxgqCwBwAQAIAAEIeA3yKwBEAAAAAA==.Bluecrystal:BAAAKgAFFAIIAgAAAA==.',Ch='Chainsomker:BAAAKgADCgYIBgAAAA==.Chetholmgren:BAABKgAFFH8IAAIJAAgIEA/1CgD0AQAJAAgIEA/1CgD0AQAAAA==.',Cm='Cman:BAAAKgAECgIIAgAAAA==.',Cr='Crouchfs:BAABKgAFFH8IAAIGAAgIcQe0CgC0AQAGAAgIcQe0CgC0AQAAAA==.Crouchk:BAAAKgAFFAYIBAAAAA==.Crouchs:BAAAKgAFFAMIAwAAAA==.Croucht:BAAAKgAECggICAAAAA==.',Df='Dfertasa:BAABKgAFFH8GAAIJAAMIlR3TSwDXAAAJAAMIlR3TSwDXAAAAAA==.',Do='Donk:BAABKgAFFH8IAAMKAAQIIyGDBgATAQAKAAQIVCCDBgATAQALAAQICRZ1HADkAAABKgAFFAgICAALAHMNAA==.',El='Elpsycongroo:BAACKgAFFH8wAAMMAAUISiMyAgB9AQAMAAUISiMyAgB9AQANAAIIEho0HgCdAAAqAAQKfyAAAwwACAjVI2EBAHcCAAwABwjyI2EBAHcCAA0ABgisI3wJAAcCAAAA.',En='Enjoylife:BAACKgAFFH8FAAIOAAMIdxBjAgDnAAAOAAMIdxBjAgDnAAAqAAQKfxYAAw4ACAi8IZoDAGcCAA4ACAi8IZoDAGcCAA8ABginCYEiAPgAAAAA.',Ep='Epiphany:BAAAKgAECgIIAgAAAA==.',Ex='Exelero:BAACKgAFFH8kAAMJAAYIdx69EQAOAQAJAAYIdx69EQAOAQAQAAIIAA/8DQB0AAAqAAQKfywAAgkACAiuJJ4PANkCAAkACAiuJJ4PANkCAAAA.',Ge='Gentouka:BAABKgAFFH8MAAMRAAQIeR+JBgAtAQARAAQIeR+JBgAtAQAIAAEIrxdOIgBTAAAAAA==.',Go='Goldenwind:BAAAKgADCgEIAQAAAA==.',Gu='Gulrdan:BAAAKgAECgYIBwAAAA==.',Ha='Haman:BAAAKgAECgEIAQAAAA==.',He='Hesitation:BAAAKgAECgQIBAAAAA==.Hestia:BAACKgAFFH8NAAISAAQIAiH7DQD0AAASAAQIAiH7DQD0AAAqAAQKfxQAAhIACAibINEdABkCABIACAibINEdABkCAAAA.',Je='Jealousy:BAAAKgAECggIEQAAAA==.',Kn='Knice:BAACKgAFFH8FAAMTAAMIHBH3GQDaAAATAAMIHBH3GQDaAAAOAAIIsgxRBgB6AAAqAAQKfxYABA4ACAiQH0cLAHABAA4ABwiIFEcLAHABAA8ABAgZIC8HAGwBABMABQhsHPMkAEQBAAAA.',Kr='Krakend:BAAAKgAFFAgIAwABKgAFFAgIUAAUABcmAA==.Krakenm:BAABKgAFFH8IAAIHAAgI0RvlBQCxAQAHAAgI0RvlBQCxAQAAAA==.Krakens:BAAAKgADCgIIAgAAAA==.Krakenw:BAAAKgAFFAgIBAAAAA==.Krakenx:BAABKgAFFH8KAAMVAAgIWBfwCgBqAQAVAAQIcBzwCgBqAQAWAAYIoxPAEQC0AAAAAA==.',Ma='Mattina:BAAAKgAFFAIIAgAAAA==.Mazikeen:BAABKgAFFH8GAAIRAAYIVhggCQCKAQARAAYIVhggCQCKAQAAAA==.',Mc='Mclaren:BAAAKgAFFAMIAwAAAA==.',Mo='Moonquake:BAABKgAFFH8IAAIRAAgIsiLzAACuAgARAAgIsiLzAACuAgAAAA==.',Mu='Mummy:BAAAKgAECgcIDwAAAA==.',Na='Natureorwild:BAAAKgAECgUIBQAAAA==.',Ne='Nero:BAAAKgAECgcIDQAAAA==.',No='Nothing:BAAAKgADCgQIBAAAAA==.',Pe='Perfectionii:BAAAKgAECgMIAwAAAA==.',Re='Revuelto:BAABKgAFFH8FAAMXAAMIxxGnCACjAAAXAAIIyBenCACjAAAUAAEIxQUiYQA1AAAAAA==.',Sa='Samomi:BAABKgAFFH8IAAIYAAgImwrDBwDMAQAYAAgImwrDBwDMAQAAAA==.',Se='Seaside:BAAAKgAFFAgIBAAAAA==.',Sg='Sgalexander:BAAAKgAECgYIBgAAAA==.',Sl='Sladegelmir:BAABKgAFFH8OAAICAAYIWxrIEQBwAQACAAYIWxrIEQBwAQAAAA==.',Sm='Smallhunter:BAAAKgAECgQIBAAAAA==.',Su='Sunabcd:BAABKgAFFH8GAAIZAAYIBRf1CQBsAQAZAAYIBRf1CQBsAQAAAA==.',Ta='Tahngarth:BAABKgAECn8wAAIXAAgIBhyyCAARAgAXAAgIBhyyCAARAgAAAA==.',Te='Temujin:BAAAKgAECgQIBAAAAA==.',Up='Uppercut:BAAAKgAFFAYIBAAAAA==.',Ve='Venturi:BAAAKgAECgYIAQAAAA==.',Vk='Vk:BAAAKgAECgIIAgAAAA==.',['一只']='一只小小虫:BAAAKgAFFAIIAgAAAA==.',['一品']='一品香雪:BAAAKgAECggICAAAAA==.',['一步']='一步莲華:BAAAKgAECgUIBgAAAA==.',['一毫']='一毫升眼泪:BAAAKgAECgUIBwAAAA==.',['一笑']='一笑倾城丶:BAAAKgAECgYIBgAAAA==.',['一览']='一览众山小:BAABKgAFFH8HAAIaAAQI8wlIDwCMAAAaAAQI8wlIDwCMAAAAAA==.',['七对']='七对子:BAAAKgAFFAMIAwAAAA==.',['七月']='七月子音:BAAAKgAFFAIIAgAAAA==.',['不取']='不取名字了:BAAAKgAFFAYIAgAAAA==.',['专注']='专注指挥:BAAAKgAECgYIBgAAAA==.',['东宝']='东宝宝:BAAAKgAFFAIIAgAAAA==.',['两颗']='两颗大荔枝:BAAAKgAECgEIAQAAAA==.',['严泪']='严泪:BAAAKgADCggIDwAAAA==.',['丨兄']='丨兄弟难当:BAAAKgAECgIIAgAAAA==.',['丨牛']='丨牛盾丨:BAAAKgADCggICAAAAA==.',['丨翼']='丨翼之彦丨:BAAAKgAECgUICAAAAA==.',['丶周']='丶周浦灬奇爷:BAAAKgAECgQIBgAAAA==.',['丶夜']='丶夜风:BAAAKgAECggICAAAAA==.',['丶涩']='丶涩龍:BAAAKgAECggICwAAAA==.',['丶阿']='丶阿疯:BAABKgAFFH8FAAMHAAQIKQ5wDgDJAAAHAAQIKQ5wDgDJAAARAAEIAABWLgAAAAAAAA==.',['丶青']='丶青橙:BAACKgAFFH8fAAMRAAYIHhvhCACPAQARAAYIHhvhCACPAQAIAAQIBhtcDAD4AAAqAAQKfyIAAwgACAhFH4IPAGsCAAgACAhFH4IPAGsCABEABwidEkZAABUBAAAA.',['丷嬰']='丷嬰儿肥丷:BAAAKgAECgEIAQAAAA==.',['为啥']='为啥要改名字:BAAAKgADCgEIAQAAAA==.',['为老']='为老婆变坏:BAAAKgADCgIIAwAAAA==.',['丿娜']='丿娜娜丶:BAAAKgAECgEIAQAAAA==.',['乌拉']='乌拉诺凡:BAAAKgADCggICAAAAA==.',['乖乖']='乖乖老板娘:BAABKgAECn8VAAISAAgIzBIvLwC5AQASAAgIzBIvLwC5AQAAAA==.',['九千']='九千七:BAABKgAFFH8gAAMLAAgIMCScAQDbAgALAAgIMCScAQDbAgAKAAUIgiM/CwCiAQAAAA==.',['九尾']='九尾:BAAAKgAECgIIAgAAAA==.',['乾坤']='乾坤缘:BAACKgAFFH8NAAMLAAcICx5QBgAoAgALAAcICx5QBgAoAgAKAAYIrxk1DACUAQAqAAQKfyAAAwsACAgBGW89AK8BAAsACAizGG89AK8BAAoABQh6D5p2AJQAAAAA.',['任其']='任其逍遥:BAACKgAFFH8PAAMbAAQISBTeCgDaAAAbAAMISBTeCgDaAAAUAAQI5g7yIgCpAAAqAAQKfxcAAxsACAjnGScbAOsBABsACAjnGScbAOsBABQABAjBHRZXAFcBAAAA.',['企鹅']='企鹅嘎嘎:BAAAKgAECgQIBAAAAA==.',['伊尔']='伊尔姗诗舞:BAAAKgAECgEIAQAAAA==.',['伊莎']='伊莎贝儿:BAAAKgAECgcICQAAAA==.',['优菈']='优菈:BAABKgAFFH8JAAIJAAYIpRyYGACYAQAJAAYIpRyYGACYAQAAAA==.',['似曾']='似曾相识:BAAAKgAECggIEgAAAA==.',['但盼']='但盼风雨来:BAAAKgAECgEIAQAAAA==.',['佛罗']='佛罗翼德:BAABKgAFFH8RAAMTAAQIARigCAAAAQATAAQIWBagCAAAAQAPAAEIZxRqDwBWAAAAAA==.',['你在']='你在那爪子:BAAAKgADCggICAAAAA==.',['你若']='你若安好:BAABKgAECn8XAAQJAAcIRBgLeQClAQAJAAcIRBgLeQClAQAQAAII3RwpTgA+AAAaAAEI6QA6cAAEAAAAAA==.',['信仰']='信仰之光:BAAAKgAECggICQAAAA==.',['俺寻']='俺寻思基里馒:BAABKgAECn8WAAIJAAYIbhxCkgBzAQAJAAYIbhxCkgBzAQAAAA==.',['倓莣']='倓莣濄去:BAABKgAFFH8QAAMGAAQIQhpGIgDcAAAGAAQIiBdGIgDcAAASAAIIyBMIFACOAAAAAA==.',['假死']='假死的杨二叔:BAAAKgAFFAEIAQAAAA==.',['偷惢']='偷惢小猎:BAABKgAFFH8GAAIKAAYIRwl4GwATAQAKAAYIRwl4GwATAQAAAA==.',['傻灬']='傻灬蠻:BAAAKgADCgQIBAAAAA==.',['儱棩']='儱棩:BAAAKgAFFAIIAgAAAA==.',['元素']='元素能进本么:BAABKgAFFH8SAAMYAAQIORt1JgDdAAAYAAQIORt1JgDdAAAcAAQI1xV0CwDTAAAAAA==.',['兑水']='兑水的伏特加:BAAAKgADCgMIAwAAAA==.',['兜里']='兜里有叮当:BAAAKgAECgcIDAAAAA==.兜里有妖怪:BAABKgAFFH8HAAIHAAMIiAYoMQCBAAAHAAMIiAYoMQCBAAAAAA==.',['六戒']='六戒浪理椛:BAAAKgADCgYIBgAAAA==.',['六月']='六月飞天雪:BAAAKgAECgIIAwAAAA==.',['六朋']='六朋骑士:BAAAKgAECgIIAgAAAA==.',['六饼']='六饼:BAAAKgADCgEIAQAAAA==.',['冢一']='冢一弗洛伊德:BAABKgAFFH8JAAICAAUImB5eDwADAQACAAUImB5eDwADAQABKgAFFAgIDAACADUhAA==.',['冰与']='冰与火的邂逅:BAAAKgAECggICAAAAA==.',['冰丶']='冰丶羽:BAACKgAFFH8pAAMNAAgI+R0nBQBKAgANAAgI1x0nBQBKAgAdAAEI5xwkJABSAAAqAAQKfyYABB0ACAiMHxQPAAoCAB0ABgi4HxQPAAoCAA0ABggpHZQ6AIIBAAwAAghnEsAvAHQAAAAA.',['冰之']='冰之固结:BAAAKgADCgQIBAAAAA==.',['冰灬']='冰灬羽:BAABKgAFFH8FAAMHAAII5A7ENQBpAAAHAAII5A7ENQBpAAAIAAEIgwgkMQAzAAAAAA==.',['冷月']='冷月记忆:BAABKgAFFH8OAAMbAAYIZQ/TAgBfAQAbAAYIZQ/TAgBfAQAUAAQI2Rh+FQDmAAAAAA==.',['凛冬']='凛冬:BAACKgAFFH9LAAQFAAgIDyQxAgCzAgAFAAgINCMxAgCzAgAGAAYIgyHbBABdAgASAAQIEyO9CQApAQAqAAQKfx0ABAUABgiJJuQMAAoCAAUABQjMJOQMAAoCAAYABQh8JVEqALEBABIAAgjfJgVFANkAAAAA.',['凯飒']='凯飒丶大帝:BAABKgAFFH8GAAIVAAYIBSDvAAD7AQAVAAYIBSDvAAD7AQAAAA==.',['凹凸']='凹凸牛:BAAAKgAECgcICQAAAA==.',['创口']='创口贴:BAABKgAECn8sAAMLAAgI7xOjUADAAQALAAgI7xOjUADAAQAKAAQIeA0eaQCHAAAAAA==.',['制裁']='制裁之力:BAABKgAFFH8IAAIJAAgI4w3ECwDnAQAJAAgI4w3ECwDnAQAAAA==.',['刺头']='刺头:BAAAKgAECgYIBAAAAA==.',['剑诚']='剑诚于心:BAAAKgADCggICAAAAA==.',['加藤']='加藤:BAAAKgAECgEIAQAAAA==.',['勇猛']='勇猛的小灰灰:BAAAKgAECgEIAQAAAA==.',['包里']='包里有枪:BAAAKgAFFAEIAQAAAA==.',['北原']='北原仓介:BAABKgAFFH8SAAIVAAgINhtRAwBsAgAVAAgINhtRAwBsAgAAAA==.',['北风']='北风微凉丶:BAABKgAFFH8MAAQeAAYI2wuHEAAoAQAeAAYI2wuHEAAoAQAfAAIIqRNvDgDGAAAgAAQIBBD2BACjAAAAAA==.',['十步']='十步:BAAAKgADCggIDgAAAA==.',['千幻']='千幻之面:BAAAKgAECgYICQAAAA==.',['午後']='午後小妖:BAAAKgAECggIDAAAAA==.',['半边']='半边天堂:BAAAKgADCggICAAAAA==.',['卡普']='卡普亚之光:BAAAKgADCgIIAgAAAA==.',['卡門']='卡門灬芝士:BAABKgAFFH8IAAITAAgI9xjNAgCHAgATAAgI9xjNAgCHAgAAAA==.',['卩灬']='卩灬靈魂绑顁:BAAAKgAECgIIAgAAAA==.',['发粪']='发粪涂墙:BAAAKgAECgcIDgAAAA==.',['发酵']='发酵酸酸乳:BAAAKgAFFAIIAgAAAA==.',['口香']='口香糖:BAAAKgADCggICAAAAA==.',['古美']='古美萌:BAABKgAFFH8IAAMGAAQIahxHHgD0AAAGAAQIaRxHHgD0AAAFAAQInRYLGwDlAAAAAA==.',['只会']='只会做面包:BAAAKgAFFAYIAgAAAA==.',['召妹']='召妹:BAAAKgADCgcIBwAAAA==.',['可岚']='可岚:BAABKgAFFH8XAAIJAAYIsBgZJABbAQAJAAYIsBgZJABbAQAAAA==.',['吃瓜']='吃瓜群众:BAABKgAFFH8FAAIVAAQIoh0pKgDkAAAVAAQIoh0pKgDkAAAAAA==.',['呆猎']='呆猎:BAABKgAFFH8QAAMLAAUINhhtHwAQAQALAAUINhhtHwAQAQAKAAQIcQqEFAC8AAAAAA==.',['命之']='命之主宰:BAAAKgAECgQIBAAAAA==.',['咖啡']='咖啡里的冰块:BAAAKgAFFAQIBAABKgAFFAgIDgABALELAA==.',['咘噜']='咘噜咘噜:BAAAKgAECgEIAQAAAA==.',['哀傷']='哀傷灬蛋:BAAAKgAECgIIAgAAAA==.',['哈什']='哈什玛皮皮:BAABKgAFFH8GAAITAAYIlxvgCwCOAQATAAYIlxvgCwCOAQAAAA==.',['哈士']='哈士德:BAAAKgAECgIIAgAAAA==.',['哎哟']='哎哟摔跤了:BAAAKgAECgcIBwABKgAFFAQIBAAhAAAAAA==.',['唐加']='唐加三勺:BAABKgAFFH8LAAILAAMIBBAfIADXAAALAAMIBBAfIADXAAAAAA==.',['唐細']='唐細細:BAAAKgAFFAUIBAAAAA==.',['喳喳']='喳喳:BAABKgAFFH8GAAIQAAYIkA6qBgBSAQAQAAYIkA6qBgBSAQAAAA==.',['喵喵']='喵喵的胖老爸:BAAAKgAECggIBwAAAA==.',['嗨丶']='嗨丶土豆:BAAAKgAFFAIIAgABKgAFFAUIDQASAHIJAA==.',['嗨晓']='嗨晓羽:BAABKgAFFH8NAAITAAYILhq4CwCQAQATAAYILhq4CwCQAQAAAA==.',['嘉丶']='嘉丶风暴烈酒:BAAAKgADCgcIBwAAAA==.',['嘎嘎']='嘎嘎抗:BAABKgAFFH8QAAMJAAYIhhZJFgA9AQAJAAQIPCRJFgA9AQAaAAYIbATkGQCpAAAAAA==.',['噜噜']='噜噜君:BAABKgAFFH8KAAITAAYIuQ04AwCDAQATAAYIuQ04AwCDAQABKgAFFAgIBQATAEkOAA==.噜噜呼:BAAAKgAECggICAAAAA==.噜噜唔:BAABKgAFFH8IAAIVAAgIkgtIBwDcAQAVAAgIkgtIBwDcAQAAAA==.',['四爪']='四爪鱼:BAAAKgAFFAUIBAAAAA==.',['圣光']='圣光先锋:BAAAKgAECgQIBAAAAA==.圣光牛肉干:BAACKgAFFH8aAAIJAAYIqxsoFQCyAQAJAAYIqxsoFQCyAQAqAAQKfxoAAgkACAhWJLEfAJoCAAkACAhWJLEfAJoCAAAA.',['圣晓']='圣晓雨:BAAAKgAECgUIBQAAAA==.',['圣牧']='圣牧士:BAAAKgAECgQIDAAAAA==.',['地心']='地心引力:BAABKgAFFH8HAAIYAAQIwx20EQDdAAAYAAQIwx20EQDdAAABKgAFFAUICQAYAAoSAA==.',['地精']='地精老人:BAAAKgADCggICAAAAA==.',['坏脾']='坏脾滊:BAAAKgAECgYIBgAAAA==.',['基辛']='基辛格:BAAAKgAECgMIAwAAAA==.',['塔达']='塔达林坚果:BAABKgAECn8gAAMQAAgIYxJBGgCRAQAQAAgIYxJBGgCRAQAJAAcIZRVAgABPAQAAAA==.',['塞克']='塞克拉迦:BAAAKgAECgQIBAAAAA==.',['墮天']='墮天使丨殤:BAAAKgADCgIIAgAAAA==.',['墮楓']='墮楓:BAABKgAFFH8KAAMaAAYIKRHIDgATAQAaAAYIKRHIDgATAQAJAAQIdQgwKQDNAAAAAA==.',['壞脾']='壞脾气:BAAAKgAECgUIBQAAAA==.',['壹贰']='壹贰叁肆伍:BAABKgAFFH8aAAQKAAYIrhpgCQCTAQAKAAYIrhpgCQCTAQAiAAIIHws7AwCNAAALAAEImRUARQBOAAAAAA==.',['夆影']='夆影:BAACKgAFFH8xAAQMAAYIdxbfAwAgAQAMAAUIERTfAwAgAQANAAIIeRWNIQCKAAAdAAMI2RVSDQCKAAAqAAQKfzIABB0ACAipInAHAGkCAB0ACAg2InAHAGkCAA0ABwjqGA0rAMoBAAwAAgidIdU5AF8AAAAA.',['夏末']='夏末风华:BAAAKgAECgUIBgAAAA==.',['多奶']='多奶的公牛:BAAAKgAECgcICQAAAA==.',['多若']='多若泰:BAAAKgADCgMIAwAAAA==.',['多财']='多财多亿:BAAAKgADCgMIAwAAAA==.',['夜丶']='夜丶狂舞:BAAAKgAECgQIBAAAAA==.夜丶飞舞:BAAAKgAFFAIIAgAAAA==.',['夜听']='夜听风雨:BAABKgAFFH8FAAIeAAQImAWZGQCwAAAeAAQImAWZGQCwAAAAAA==.夜听风雨声:BAAAKgADCgIIAgAAAA==.',['夜场']='夜场三爷:BAABKgAFFH8GAAIWAAYIrg0sCAAaAQAWAAYIrg0sCAAaAQABKgAFFAgIBgAWABkJAA==.',['夜月']='夜月公子:BAAAKgAECgEIAQAAAA==.',['夜里']='夜里有风:BAAAKgAFFAIIAgAAAA==.',['夜雨']='夜雨魂殇:BAAAKgADCgYIBgAAAA==.',['夜飸']='夜飸:BAABKgAFFH8JAAIJAAgIshleCAA+AgAJAAgIshleCAA+AgAAAA==.',['大圣']='大圣:BAAAKgAFFAcIBAAAAA==.',['大披']='大披风:BAABKgAECn8aAAILAAgIhSNAIAB1AgALAAgIhSNAIAB1AgAAAA==.',['大木']='大木师:BAABKgAFFH8LAAMHAAQIEBwXGwDjAAAHAAQIhxkXGwDjAAARAAEIfxNDMgA/AAAAAA==.',['大耳']='大耳朵阿花:BAAAKgAECgUIBQAAAA==.大耳萌:BAAAKgADCgYIBgAAAA==.',['大飘']='大飘神:BAAAKgAFFAQIBAAAAA==.',['大默']='大默然:BAAAKgAFFAcIBAAAAA==.',['天堂']='天堂娇花:BAAAKgAECggIDAAAAA==.',['天空']='天空叶:BAAAKgAECggIEQAAAA==.',['天赐']='天赐发疯:BAACKgAFFH8OAAMcAAQIJh2hBgD9AAAcAAQIJh2hBgD9AAAYAAEIqgyTNgA5AAAqAAQKfyUAAxwACAhrIz0OAH0CABwACAhrIz0OAH0CABgABggMF/ZqAAABAAAA.天赐唤魔:BAABKgAFFH8LAAIDAAgI4w6wCADdAQADAAgI4w6wCADdAQAAAA==.',['天雨']='天雨:BAAAKgAFFAIIAwAAAA==.',['头号']='头号种子:BAAAKgAECgYIBgAAAA==.',['夸父']='夸父丶:BAAAKgAECggIDgABKgAFFAgIBgAKAIoVAA==.',['奈落']='奈落落:BAAAKgAECgEIAQAAAA==.',['奥克']='奥克塔蛮角:BAAAKgAECggICwAAAA==.',['女为']='女为悦己者容:BAAAKgAECgEIAQAAAA==.',['女施']='女施主留步:BAAAKgAECggIEAAAAA==.',['奶味']='奶味十足:BAAAKgAECgYIEwAAAA==.',['奶嘴']='奶嘴糖:BAAAKgAECggICAAAAA==.',['奶糖']='奶糖喵喵:BAAAKgAFFAEIAQAAAA==.',['她的']='她的奶甜吗:BAAAKgAFFAMIAwAAAA==.',['如鱼']='如鱼得水:BAAAKgAECgYICQABKgAFFAMICAAeAJcXAA==.',['妹子']='妹子加我战网:BAAAKgAECgIIAgAAAA==.',['姜硬']='姜硬:BAACKgAFFH8FAAICAAIISg3uPwB+AAACAAIISg3uPwB+AAAqAAQKfy4AAgIACAizIO8PAIUCAAIACAizIO8PAIUCAAAA.',['娜么']='娜么丷:BAAAKgAECgMIBgAAAA==.',['婉瑜']='婉瑜:BAAAKgAECgUIBQAAAA==.',['嫣然']='嫣然妹妹:BAAAKgAECgcICwAAAA==.',['孤单']='孤单丶魂殇:BAAAKgADCgIIAgAAAA==.',['安吉']='安吉拉北鼻:BAAAKgAFFAYIAQABKgAFFAgILQAHADsVAA==.',['安度']='安度銦:BAABKgAFFH8SAAIJAAMI/htBQADwAAAJAAMI/htBQADwAAAAAA==.',['安茜']='安茜:BAAAKgAECggICAAAAA==.',['宝宝']='宝宝芭比:BAAAKgAECgYIEAAAAA==.',['宮永']='宮永咲:BAAAKgAECgIIAgAAAA==.',['宿醉']='宿醉在花间:BAABKgAECn8UAAILAAgIXQfKgQAxAQALAAgIXQfKgQAxAQAAAA==.',['小九']='小九流香:BAAAKgAFFAEIAQAAAA==.',['小啵']='小啵姐:BAAAKgADCgEIAQAAAA==.',['小婲']='小婲笙:BAABKgAFFH8SAAQVAAYIwRvZFgBmAQAVAAYILBjZFgBmAQAjAAQI8Bk+CADmAAAWAAQIHhMFEAC/AAAAAA==.',['小屋']='小屋:BAAAKgAECggICQAAAA==.',['小强']='小强强来玩玩:BAAAKgAECgEIAQAAAA==.',['小淮']='小淮风丶:BAAAKgAFFAEIAQAAAA==.',['小狐']='小狐:BAAAKgAECggIEwAAAA==.',['小石']='小石头:BAAAKgAECgQICAAAAA==.',['小色']='小色奻:BAABKgAECn8YAAIJAAgI7hbxbQC9AQAJAAgI7hbxbQC9AQAAAA==.小色姦:BAAAKgAECggICQAAAA==.',['小艾']='小艾萱萱:BAAAKgAECggIEgAAAA==.',['小苏']='小苏:BAAAKgAECgcIBwAAAA==.',['小虎']='小虎牙丢丢:BAAAKgAFFAEIAQAAAA==.',['小车']='小车嘟嘟:BAAAKgAFFAMIBAAAAA==.',['小野']='小野喵喵:BAABKgAECn8WAAMXAAYI1xwUDwCyAQAXAAYI1xwUDwCyAQAUAAQINAewrgBmAAAAAA==.',['小黑']='小黑熊人:BAAAKgAECgMIAwAAAA==.',['尛筱']='尛筱冰:BAABKgAFFH8GAAMUAAQIPgdLIwCeAAAUAAQIPgdLIwCeAAAbAAIIqgvmLgBdAAAAAA==.',['尤牧']='尤牧:BAABKgAECn8UAAIHAAgI3QvaQAA2AQAHAAgI3QvaQAA2AQAAAA==.',['就是']='就是小蚂蚁呀:BAAAKgAFFAMIAwAAAA==.',['尼罗']='尼罗河花园:BAAAKgAECgcICAAAAA==.',['尽系']='尽系枉然:BAAAKgAECgUIBQAAAA==.',['山月']='山月不知心:BAAAKgAECgYIBwAAAA==.',['岢薆']='岢薆啲菇凉:BAABKgAFFH8HAAIJAAcIGBzCCwANAgAJAAcIGBzCCwANAgAAAA==.',['巫马']='巫马良其:BAAAKgAECgcIBwAAAA==.',['帅气']='帅气的罗少:BAAAKgAFFAMIAwAAAA==.',['希露']='希露迪:BAAAKgAFFAYIAQAAAA==.',['帝天']='帝天:BAAAKgAECgEIAQAAAA==.',['幕山']='幕山蕴:BAAAKgAFFAYIBAAAAA==.',['幺鸡']='幺鸡:BAAAKgAFFAgIBAAAAA==.',['幻一']='幻一夜:BAAAKgADCgEIAQAAAA==.',['幻夜']='幻夜骑士:BAAAKgAFFAYIBAAAAA==.',['幽夜']='幽夜瑞雪:BAABKgAFFH8HAAIYAAYISARoHwD9AAAYAAYISARoHwD9AAAAAA==.',['幾張']='幾張:BAAAKgAFFAMIAwABKgAFFAgIBgAeABUEAA==.',['康康']='康康宝贝:BAAAKgAECgYIDgAAAA==.',['张韶']='张韶涵丶:BAAAKgADCgEIAQAAAA==.',['彦泪']='彦泪:BAABKgAECn8XAAITAAcItxM0HwBmAQATAAcItxM0HwBmAQAAAA==.',['微明']='微明:BAABKgAFFH8SAAIeAAMIlgLCKQB2AAAeAAMIlgLCKQB2AAAAAA==.',['德彪']='德彪:BAAAKgAECggICAAAAA==.',['心灵']='心灵丶震撼:BAABKgAFFH8MAAMFAAYIIRo0BQCyAQAFAAYIIRo0BQCyAQASAAQIEhmAFQDAAAAAAA==.',['忆启']='忆启迪:BAAAKgADCggICAAAAA==.',['忙碌']='忙碌的小明:BAABKgAFFH8NAAIJAAgIEwkYDgDBAQAJAAgIEwkYDgDBAQAAAA==.',['念伊']='念伊人:BAAAKgAECgYICgAAAA==.',['怒丶']='怒丶风:BAAAKgAECgcIBwAAAA==.',['怒风']='怒风怒雷:BAABKgAFFH8IAAIBAAQIPhm/DgDQAAABAAQIPhm/DgDQAAAAAA==.',['怜莜']='怜莜:BAAAKgADCggICAAAAA==.',['怪物']='怪物莱了:BAABKgAFFH8GAAIYAAYIEhUuDAA3AQAYAAYIEhUuDAA3AQABKgAFFAgICwAYAP4jAA==.',['恐怖']='恐怖馒头:BAAAKgAECgIIAgAAAA==.',['恶魔']='恶魔腾飞:BAACKgAFFH8IAAIBAAMIAQtDFwCQAAABAAMIAQtDFwCQAAAqAAQKfyYAAwEACAgzFDgmAE8BAAEACAgzFDgmAE8BAAIAAQg8BcnFACkAAAAA.',['懒猫']='懒猫杀手:BAAAKgADCgMIAwAAAA==.',['戏舞']='戏舞龖齑矲:BAAAKgAFFAYIAgAAAA==.',['我半']='我半藏贼溜:BAABKgAFFH8IAAICAAQIfwwYMwBMAAACAAQIfwwYMwBMAAAAAA==.',['我愿']='我愿像风:BAAAKgADCgEIAQAAAA==.',['我是']='我是爵爷:BAAAKgAECgUICQAAAA==.',['我的']='我的胸呢:BAAAKgAFFAMIAwAAAA==.',['战豆']='战豆豆:BAAAKgAECggIDgAAAA==.',['戦天']='戦天使:BAAAKgAFFAgIAQAAAA==.',['扁担']='扁担哥们:BAAAKgAFFAQIBAAAAA==.',['打不']='打不死的强强:BAAAKgAECgEIAQAAAA==.',['批批']='批批:BAACKgAFFH8TAAILAAMItRF5MgDFAAALAAMItRF5MgDFAAAqAAQKfyEAAwsACAgJG5YrAAACAAsACAj9GpYrAAACAAoAAggIFKiEAHIAAAAA.',['拳打']='拳打老师傅:BAABKgAECn8UAAMeAAUIiApQaQCeAAAeAAUIiApQaQCeAAAgAAUI6AHpIQBYAAAAAA==.',['拼点']='拼点没输过:BAACKgAFFH8iAAMEAAQI1SZbAgBSAQAEAAQI1SZbAgBSAQADAAIIaAUKHABtAAAqAAQKfyIAAwQACAhnJf8GABkCAAQACAhnJf8GABkCAAMABQiRDTFPAHcAAAAA.',['挚爱']='挚爱唯焱:BAABKgAFFH8IAAIWAAgILgRQEAAiAQAWAAgILgRQEAAiAQAAAA==.挚爱维艳:BAAAKgAFFAQIBAAAAA==.',['捕风']='捕风的大叔:BAAAKgADCgIIAgAAAA==.',['接近']='接近神的猪:BAAAKgAFFAYIBAAAAA==.',['摩洛']='摩洛哥炒饼:BAAAKgADCgEIAQAAAA==.',['斩丶']='斩丶白:BAABKgAFFH8TAAIJAAYIThu1JQBSAQAJAAYIThu1JQBSAQAAAA==.',['斬丶']='斬丶獅子挽歌:BAAAKgAECgEIAQAAAA==.',['断魂']='断魂小丑:BAAAKgAECgYICAAAAA==.',['方便']='方便面超人:BAAAKgAECgEIAgAAAA==.',['无心']='无心睡眠:BAAAKgAECggIEQAAAA==.',['无情']='无情懒猫:BAAAKgADCgYIBgAAAA==.',['无敌']='无敌比巴卜:BAABKgAFFH8GAAIKAAYIihWQDQCCAQAKAAYIihWQDQCCAQAAAA==.',['春去']='春去东来:BAABKgAECn8XAAMKAAgIQBO2IwC7AQAKAAgIQBO2IwC7AQALAAMIWA/h2AB8AAAAAA==.',['昨夜']='昨夜上青楼:BAAAKgAECgIIAgAAAA==.',['晴天']='晴天笑语:BAAAKgADCgUIBQAAAA==.',['智者']='智者天:BAABKgAFFH8IAAMJAAMIXBR7SgDZAAAJAAMIXBR7SgDZAAAQAAMIdRMpDgDSAAAAAA==.',['暖棍']='暖棍常相伴:BAAAKgADCgEIAQAAAA==.',['暗之']='暗之审判:BAAAKgAECgUIBQAAAA==.',['暗影']='暗影灬魔漪:BAAAKgAECggICAAAAA==.',['暗月']='暗月劫:BAAAKgAECgYIBgAAAA==.暗月贾君鹏:BAAAKgAECgYIBgAAAA==.',['暗牧']='暗牧能进本么:BAABKgAFFH8KAAIHAAYIqBvZBgC/AQAHAAYIqBvZBgC/AQAAAA==.',['暮色']='暮色四合:BAAAKgADCgQIBAAAAA==.',['曾經']='曾經只是浮雲:BAABKgAFFH8GAAIJAAYIDRtRDwCtAQAJAAYIDRtRDwCtAQAAAA==.',['有事']='有事没事烧纸:BAAAKgAFFAQIBAAAAA==.有事烧纸:BAABKgAFFH8GAAITAAYIwRoECgCxAQATAAYIwRoECgCxAQAAAA==.',['有冇']='有冇病:BAAAKgAECgQIBAAAAA==.',['有夫']='有夫之妇:BAAAKgAECgUIBQAAAA==.',['木公']='木公哥:BAAAKgAECgIIAgAAAA==.',['木寒']='木寒烟:BAAAKgAECgUIBQAAAA==.',['杀幻']='杀幻月白:BAAAKgADCgEIAQAAAA==.',['李奶']='李奶奶:BAAAKgAFFAQIBAAAAA==.',['杏花']='杏花疏影:BAAAKgAECgYIEAAAAA==.',['杨仔']='杨仔:BAAAKgAECgIIAgAAAA==.',['杨晨']='杨晨晨:BAABKgAFFH8SAAIKAAQI+BUAKgDCAAAKAAQI+BUAKgDCAAAAAA==.',['杨柳']='杨柳新晴:BAAAKgAECgEIAQAAAA==.',['杰伦']='杰伦威廉姆斯:BAABKgAFFH8IAAIKAAgIYg+3CQC8AQAKAAgIYg+3CQC8AQAAAA==.',['杰瑞']='杰瑞卢指导:BAAAKgAECggICAAAAA==.',['极品']='极品霸道总裁:BAAAKgAECgQIBAAAAA==.',['柚子']='柚子乄:BAAAKgAECggIBwAAAA==.',['柠檬']='柠檬汤脆脆球:BAABKgAFFH8IAAIVAAgIhw9tCgDmAQAVAAgIhw9tCgDmAQAAAA==.',['核心']='核心骑士:BAAAKgAECgMIBQAAAA==.',['梦醒']='梦醒淑芬:BAAAKgADCgYIBgAAAA==.',['棱子']='棱子凯:BAABKgAFFH8GAAIeAAYI4Q4MEAAtAQAeAAYI4Q4MEAAtAQAAAA==.',['楓訫']='楓訫璇:BAAAKgAFFAQIBAAAAA==.',['極樂']='極樂凈土:BAACKgAFFH8rAAMSAAQI0iVICAA+AQASAAQI0iVICAA+AQAGAAMIxxj4NQCKAAAqAAQKfxcAAxIACAhdJKIHAM4CABIACAhdJKIHAM4CAAYAAQhbCfqiACEAAAAA.',['槑高']='槑高玩:BAAAKgADCgEIAQAAAA==.',['樱花']='樱花飘雪:BAAAKgADCgQIBAAAAA==.',['樱若']='樱若:BAAAKgAECgQIBAAAAA==.',['橒栈']='橒栈:BAABKgAFFH8HAAIWAAQIVAFQEgBVAAAWAAQIVAFQEgBVAAAAAA==.',['橙多']='橙多多:BAABKgAFFH8cAAMHAAYIXRGWDQDwAAAHAAYIXRGWDQDwAAAIAAMIewvKFQByAAAAAA==.',['正二']='正二八百:BAAAKgADCggICAAAAA==.',['步顶']='步顶龙:BAAAKgADCggICQABKgAFFAQIBgAUAEIWAA==.',['武阴']='武阴功:BAABKgAECn8YAAIeAAgIbRKTLwCSAQAeAAgIbRKTLwCSAQAAAA==.',['死逼']='死逼胖子:BAAAKgAECgUIBQAAAA==.',['殇之']='殇之梦天使:BAAAKgAFFAIIAgAAAA==.',['毛绒']='毛绒绒的猫:BAACKgAFFH8JAAMfAAMIRwb9GQCaAAAfAAMIRwb9GQCaAAAeAAMIogQ2KACAAAAqAAQKfxsAAx4ACAjmGEknAFYBAB4ACAjmGEknAFYBAB8ABggXDP5JANoAAAAA.',['水法']='水法帅:BAAAKgAECgQIBAAAAA==.',['水無']='水無燈里:BAAAKgAECggIDwAAAA==.',['汐夏']='汐夏:BAAAKgAFFAIIAgAAAA==.',['江北']='江北饮马:BAABKgAFFH8KAAIYAAYIoBx2BQAvAQAYAAYIoBx2BQAvAQAAAA==.',['没冇']='没冇病:BAACKgAFFH8eAAICAAQIziMjCwAcAQACAAQIziMjCwAcAQAqAAQKfxUAAgIACAinJKYTAJECAAIACAinJKYTAJECAAAA.没冇逝:BAAAKgAECggICAAAAA==.没冇魔:BAAAKgAECgQIBAAAAA==.',['泰玛']='泰玛:BAACKgAFFH8hAAIYAAUIzRyHDAD3AAAYAAUIzRyHDAD3AAAqAAQKfyAAAhgACAhYH90fABcCABgACAhYH90fABcCAAAA.',['洋村']='洋村村长大人:BAAAKgAECgIIAgAAAA==.',['洒家']='洒家来也:BAAAKgAECgYICAAAAA==.',['流光']='流光飞舞丶:BAACKgAFFH8UAAIHAAMIHiYlAgBDAQAHAAMIHiYlAgBDAQAqAAQKf0MAAgcACAi4JTMCAOgCAAcACAi4JTMCAOgCAAAA.',['海底']='海底捞月:BAAAKgADCggICAAAAA==.',['海洋']='海洋是粉色的:BAAAKgAECgcIBQAAAA==.',['海盎']='海盎然:BAABKgAFFH8GAAIJAAYILxAjJABaAQAJAAYILxAjJABaAQAAAA==.',['海绵']='海绵:BAAAKgAECgIIAgAAAA==.',['淡淡']='淡淡的:BAABKgAFFH8IAAILAAgICQyeCQDZAQALAAgICQyeCQDZAQAAAA==.淡淡的忧:BAABKgAFFH8TAAMSAAMIZgwkFQCIAAAGAAMIJQrDLQCtAAASAAMImAskFQCIAAAAAA==.',['淼燚']='淼燚焱炎:BAAAKgADCggICAAAAA==.',['清川']='清川月白:BAABKgAFFH8PAAQGAAYI7B7uCwCpAQAGAAYI7B7uCwCpAQAFAAQIbRpWFgD1AAASAAIIHAt3IQB+AAAAAA==.',['渐渐']='渐渐伤感:BAABKgAECn8sAAIJAAgI8R/ZFgARAgAJAAgI8R/ZFgARAgABKgAFFAYIBgAaAEIWAA==.',['渡你']='渡你到黄泉:BAAAKgAFFAYIAgAAAA==.',['渡鴉']='渡鴉:BAAAKgAECgQIAwAAAA==.',['渣渣']='渣渣之殇:BAABKgAFFH8GAAIVAAYI1QciHQA1AQAVAAYI1QciHQA1AQAAAA==.',['游荡']='游荡怪物:BAABKgAFFH8VAAILAAUIUhdKCwCTAQALAAUIUhdKCwCTAQAAAA==.',['湮灭']='湮灭风暴:BAAAKgAECgYICwAAAA==.',['满月']='满月鬼门开:BAAAKgAECgMIAwAAAA==.',['潜龍']='潜龍五用:BAAAKgAFFAEIAQAAAA==.潜龍吾用:BAAAKgAECgMIAwAAAA==.',['澹灬']='澹灬台:BAABKgAFFH8eAAQIAAYIghoxAgC+AQAIAAYIghoxAgC+AQAHAAYIxRsYCgCAAQARAAQIDw7MHwCkAAAAAA==.',['火车']='火车司机:BAAAKgAECgMIBAAAAA==.',['灬蓝']='灬蓝精灵灬:BAAAKgADCgUIBQAAAA==.',['灬虾']='灬虾米龍灬:BAABKgAFFH8GAAILAAQIkRzdFwDxAAALAAQIkRzdFwDxAAAAAA==.',['灰牛']='灰牛撒嘛:BAAAKgAECgUIBQAAAA==.',['灰豆']='灰豆是只喵:BAAAKgAFFAIIAgAAAA==.',['灵岩']='灵岩:BAAAKgADCgQIBAAAAA==.',['炎焱']='炎焱燚淼:BAABKgAECn8oAAMNAAgIORUOEACgAQANAAgIfRIOEACgAQAdAAgIUxMsJQBuAQAAAA==.',['炒饭']='炒饭:BAAAKgAECgEIAQAAAA==.',['炭烧']='炭烧脆皮肠:BAABKgAFFH8JAAIYAAUIfRK0KwDHAAAYAAUIfRK0KwDHAAAAAA==.',['烏薩']='烏薩:BAAAKgADCggIEAAAAA==.',['热血']='热血天使:BAAAKgAFFAMIAwAAAA==.',['熊熊']='熊熊桑:BAAAKgAFFAMIBAAAAA==.',['熙熙']='熙熙笑嘻嘻:BAAAKgADCgYIBgAAAA==.',['燕麦']='燕麦拿铁:BAABKgAFFH8IAAMSAAQIeiJrCQDiAAASAAQI0xhrCQDiAAAGAAQIySF5BwBPAAAAAA==.',['爆杀']='爆杀還岢以:BAABKgAFFH8GAAIeAAYIDSHUBgDRAQAeAAYIDSHUBgDRAQAAAA==.',['爬爬']='爬爬熊与猪头:BAAAKgAECgIIAwAAAA==.',['爷爷']='爷爷的斧子:BAABKgAFFH8KAAIkAAgIcwycBgADAgAkAAgIcwycBgADAgAAAA==.',['爹爹']='爹爹:BAABKgAFFH8hAAIDAAgI6hnUBgAjAgADAAgI6hnUBgAjAgAAAA==.',['牙儿']='牙儿张背投:BAAAKgADCggICwAAAA==.',['牛咸']='牛咸咸:BAABKgAFFH8GAAICAAYIuA03GQAzAQACAAYIuA03GQAzAQAAAA==.',['牛小']='牛小妹:BAAAKgADCgYIBgAAAA==.',['牛德']='牛德译笔:BAABKgAFFH8GAAITAAYIoAlzCABkAQATAAYIoAlzCABkAQAAAA==.',['牛牛']='牛牛丶大领主:BAAAKgAFFAYIAgAAAA==.牛牛叫我来:BAAAKgAECgIIAgAAAA==.牛牛就是牛:BAABKgAECn8nAAIkAAgI3B9tDwCKAgAkAAgI3B9tDwCKAgAAAA==.',['牛狩']='牛狩猎:BAAAKgADCgQIBAAAAA==.',['牛转']='牛转乾坤:BAABKgAECn8UAAIUAAgIMhy5KAAeAgAUAAgIMhy5KAAeAgAAAA==.',['牛酸']='牛酸酸:BAAAKgAECggICAABKgAFFAYIBgACALgNAA==.',['狂风']='狂风小萨:BAAAKgADCgEIAQAAAA==.',['狂龙']='狂龙贝勒:BAABKgAECn8wAAIEAAgITCM9AgCIAgAEAAgITCM9AgCIAgAAAA==.',['狗富']='狗富贵互相汪:BAABKgAFFH8IAAICAAgIqg/SCAD6AQACAAgIqg/SCAD6AQAAAA==.',['独家']='独家记忆丶:BAAAKgAECgMIAwAAAA==.',['独狼']='独狼咆哮:BAABKgAECn8VAAIkAAgIzQ/FMQBmAQAkAAgIzQ/FMQBmAQAAAA==.',['狼丶']='狼丶齿:BAABKgAECn8aAAMlAAgIgxbCEQDIAQAlAAgIgxbCEQDIAQAkAAcIGgl+SQBBAQAAAA==.',['狼魂']='狼魂战神:BAAAKgADCgYIBgAAAA==.',['猎户']='猎户者:BAABKgAECn8jAAMKAAgIyRE8PABkAQAKAAgIgRA8PABkAQALAAYI9xPvgwAsAQAAAA==.',['猎手']='猎手的笑贱贱:BAAAKgAECgUIBQAAAA==.',['猎魂']='猎魂归来:BAABKgAFFH8nAAILAAgIKyXWAQDFAgALAAgIKyXWAQDFAgAAAA==.猎魂收割者:BAAAKgAECggICAAAAA==.',['王六']='王六六丷:BAAAKgADCgIIAgAAAA==.',['玛格']='玛格汉步兵:BAAAKgAFFAMIAwAAAA==.',['珍妮']='珍妮丶狄克逊:BAACKgAFFH8GAAINAAIIOAeTQgBhAAANAAIIOAeTQgBhAAAqAAQKfycAAg0ACAjQE6c1AJgBAA0ACAjQE6c1AJgBAAAA.',['班集']='班集体的小丑:BAAAKgAFFAYIBAAAAA==.',['現代']='現代也有神:BAAAKgAECggICAAAAA==.',['琴冉']='琴冉:BAAAKgADCgUIBQAAAA==.',['瑞伯']='瑞伯:BAABKgAFFH8JAAIYAAMIPCNPGgAWAQAYAAMIPCNPGgAWAQAAAA==.',['瑟玛']='瑟玛普拉格丶:BAAAKgAECgMIAwAAAA==.',['瓦尔']='瓦尔基莉亚:BAABKgAECn8hAAIkAAgI/RzZGwAyAgAkAAgI/RzZGwAyAgAAAA==.',['甜甜']='甜甜丶私房貓:BAABKgAFFH8MAAIUAAUImBxmKQDtAAAUAAUImBxmKQDtAAAAAA==.',['甩甩']='甩甩马尾辫:BAAAKgADCgQIBAAAAA==.',['疏雨']='疏雨滴梧桐:BAABKgAFFH8MAAIHAAYIiQivEwAVAQAHAAYIiQivEwAVAQAAAA==.',['疯狂']='疯狂的闪电:BAAAKgAECgEIAgAAAA==.',['痞子']='痞子周:BAAAKgAFFAQIBAAAAA==.',['發财']='發财:BAABKgAFFH8HAAIeAAcI2wsQEgAZAQAeAAcI2wsQEgAZAQAAAA==.',['白一']='白一:BAAAKgAFFAIIAgAAAA==.',['白发']='白发有面纹:BAABKgAECn8gAAQVAAgIDBnXJwDkAQAVAAgIhhjXJwDkAQAjAAUIPRR5IAC/AAAWAAEIywJ5bQAaAAAAAA==.',['白楼']='白楼阁:BAABKgAFFH8OAAMjAAYIPhdYAwB/AQAjAAYIPhZYAwB/AQAWAAQI1hLOEAC6AAAAAA==.',['白色']='白色赞美诗:BAAAKgAFFAYIAgAAAA==.',['白雾']='白雾红尘:BAABKgAFFH8HAAIVAAMIUhZLEQD0AAAVAAMIUhZLEQD0AAAAAA==.',['皓月']='皓月之殇:BAAAKgAECgIIAgAAAA==.',['皮卡']='皮卡丘爷爷:BAAAKgAFFAQIBAAAAA==.',['真抓']='真抓实肝:BAAAKgAECgYIBgAAAA==.',['真水']='真水静天:BAACKgAFFH8OAAIJAAYIqxa2AgC1AQAJAAYIqxa2AgC1AQAqAAQKfzMAAgkACAhLI98VAMACAAkACAhLI98VAMACAAAA.',['真的']='真的很难:BAAAKgAECgYIBgAAAA==.',['短尾']='短尾蝮:BAABKgAFFH8GAAIWAAYIJx8tCACZAQAWAAYIJx8tCACZAQAAAA==.',['硬绑']='硬绑绑哦:BAAAKgAECgMIBQAAAA==.',['祁彡']='祁彡少:BAAAKgAECgEIAQAAAA==.',['神圣']='神圣厂长之锤:BAABKgAFFH8KAAIJAAYITB1ZDwAXAQAJAAYITB1ZDwAXAQABKgAFFAYIFwAJALAYAA==.',['神奈']='神奈備命:BAABKgAECn8VAAISAAgImxM5OQCIAQASAAgImxM5OQCIAQAAAA==.',['神尾']='神尾觀鈴:BAAAKgAECgMIBgAAAA==.',['神秘']='神秘奶德:BAAAKgAECgYIBwAAAA==.',['秋叶']='秋叶为何而落:BAAAKgAECgQIBAAAAA==.',['秋名']='秋名山山神:BAABKgAFFH8gAAMfAAgIZRaHAwA5AgAfAAgIZRaHAwA5AgAeAAgI6hitAwA4AgAAAA==.',['程洁']='程洁琪:BAABKgAFFH8PAAIaAAgIqR0LAwBTAgAaAAgIqR0LAwBTAgAAAA==.',['竹下']='竹下月影:BAAAKgADCgQIBAAAAA==.',['笗菇']='笗菇頭:BAAAKgADCgQIBAAAAA==.',['筱鑫']='筱鑫鑫:BAABKgAFFH8KAAIbAAYIuh3ZBgCnAQAbAAYIuh3ZBgCnAQAAAA==.',['箭诚']='箭诚于心:BAAAKgADCggIFwAAAA==.',['米小']='米小苏:BAABKgAFFH8FAAIRAAUIViPVCQB7AQARAAUIViPVCQB7AQAAAA==.',['精灵']='精灵枪火:BAABKgAECn8UAAMKAAgI1A7GSwDtAAAKAAgI1A7GSwDtAAALAAEI9wS/DgEkAAAAAA==.',['糕手']='糕手是我装的:BAAAKgAFFAMIAwAAAA==.',['素颜']='素颜灬尛宅宅:BAAAKgAECgQIBAAAAA==.',['紫啧']='紫啧:BAAAKgADCgQIBAAAAA==.',['紫枫']='紫枫残泪:BAABKgAFFH8JAAIJAAYI/QwPHwDrAAAJAAYI/QwPHwDrAAAAAA==.紫枫鹤舞:BAABKgAFFH8IAAIeAAgIRxQyGABCAAAeAAgIRxQyGABCAAAAAA==.',['紫楓']='紫楓:BAAAKgAECgEIAQAAAA==.',['紫烽']='紫烽:BAAAKgAFFAIIAgAAAA==.',['紫铯']='紫铯懲裓:BAABKgAFFH8GAAIJAAYINx/lFwCeAQAJAAYINx/lFwCeAQAAAA==.',['紫颖']='紫颖小满妞:BAABKgAECn8XAAMYAAcIBB0kQgB+AQAYAAcIBB0kQgB+AQAcAAQIvQiCbgBtAAAAAA==.',['红手']='红手圆子:BAAAKgAECgcIDAAAAA==.',['红牛']='红牛特邀嘉宾:BAAAKgAECgMIAwAAAA==.',['纤哆']='纤哆哆:BAAAKgAECggICAAAAA==.',['细雨']='细雨:BAAAKgAECgEIAQAAAA==.',['终极']='终极信任:BAAAKgADCgEIAQAAAA==.',['给姐']='给姐笑一个:BAAAKgAECgIIAgAAAA==.',['绝城']='绝城:BAABKgAFFH8PAAMeAAMIUAt3JACRAAAeAAMIUAt3JACRAAAfAAIIlgFzIwBIAAAAAA==.',['缓慢']='缓慢且强大:BAAAKgADCggICAAAAA==.',['罗兰']='罗兰之心:BAAAKgADCgEIAQAAAA==.',['美萱']='美萱萱:BAAAKgAECgYIDgAAAA==.',['老夫']='老夫撤了:BAAAKgADCgIIAgAAAA==.',['聂情']='聂情封灬:BAAAKgADCgEIAQAAAA==.',['聋儿']='聋儿:BAAAKgADCgQIBAAAAA==.',['肆亡']='肆亡蛋蛋:BAAAKgAECgcIDQAAAA==.',['背叛']='背叛者的杀戮:BAAAKgAFFAgIBAAAAA==.背叛自我:BAAAKgAFFAIIAwAAAA==.',['胖胖']='胖胖鼬:BAABKgAFFH8HAAINAAcIGABtLQATAAANAAcIGABtLQATAAAAAA==.',['胜者']='胜者舞帝:BAABKgAFFH8FAAMQAAQIExCwEQByAAAQAAMI+ASwEQByAAAJAAEITQBQYQAlAAAAAA==.',['胸中']='胸中有爱:BAAAKgAFFAEIAQAAAA==.',['胸毛']='胸毛竖爆鸟:BAAAKgAECgMIBQABKgAFFAgICAAKALMfAA==.',['脚踝']='脚踝杀手:BAAAKgAECgMIAwAAAA==.',['舅婆']='舅婆的小青菜:BAABKgAFFH8GAAIYAAYIVR2lAADpAQAYAAYIVR2lAADpAQAAAA==.',['艾薇']='艾薇娜:BAAAKgAECgYICQAAAA==.',['芙列']='芙列雅:BAABKgAFFH8IAAIHAAgInRcVAwAxAgAHAAgInRcVAwAxAgAAAA==.',['花叶']='花叶媚清莲:BAAAKgAECgQICAAAAA==.',['花名']='花名:BAAAKgADCggICAAAAA==.',['苏酥']='苏酥姝:BAAAKgAECgQIBAAAAA==.',['若兮']='若兮丶:BAABKgAFFH8GAAIJAAII4xXCbgCNAAAJAAII4xXCbgCNAAAAAA==.',['草莓']='草莓喵喵:BAAAKgAECgEIAQAAAA==.',['荒野']='荒野夜羽:BAAAKgAFFAQIBAAAAA==.荒野夜雨:BAAAKgAECgYIBgAAAA==.',['莉德']='莉德奈:BAAAKgADCggICAAAAA==.',['莫妮']='莫妮卡丷:BAAAKgAECgUIBQAAAA==.',['菜鸟']='菜鸟阿仁:BAAAKgAECgQIBAAAAA==.',['萌小']='萌小新:BAABKgAFFH8GAAQNAAYIphrvGwAnAQANAAQIYxvvGwAnAQAdAAEIsRdlJgBMAAAMAAEIAABMKQAAAAAAAA==.',['萌萌']='萌萌的丶菓菓:BAAAKgADCgcIBwAAAA==.萌萌的奶油:BAABKgAFFH8GAAIHAAYIkRfDCgB2AQAHAAYIkRfDCgB2AQAAAA==.',['萩风']='萩风烈烈:BAACKgAFFH8fAAIYAAQI6haJEwDWAAAYAAQI6haJEwDWAAAqAAQKfyQAAhgACAgvHfYhAAwCABgACAgvHfYhAAwCAAAA.',['葬送']='葬送的芙莉莲:BAAAKgAFFAgIBAAAAA==.',['蓝博']='蓝博灬精灵:BAAAKgADCgYIBgAAAA==.',['蓝小']='蓝小夕:BAABKgAFFH8IAAIRAAgIDw8rBAC7AQARAAgIDw8rBAC7AQAAAA==.',['蓝拂']='蓝拂衣:BAAAKgAFFAYIBAAAAA==.',['蓝莓']='蓝莓丶踏风:BAAAKgAECgUIBQAAAA==.蓝莓悠悠:BAABKgAFFH8IAAMLAAQIpA4OHwDbAAALAAQIYg4OHwDbAAAKAAQIuAzBEQDQAAAAAA==.蓝莓绛紫:BAABKgAFFH8GAAIJAAYIShkBMACvAAAJAAYIShkBMACvAAABKgAFFAYIFwAJALAYAA==.蓝莓花开:BAAAKgAFFAQIBAAAAA==.',['薄荷']='薄荷喵喵:BAAAKgAECgUIBwAAAA==.',['藍天']='藍天使:BAABKgAFFH8IAAMSAAQIqByWBAAOAQASAAQIqByWBAAOAQAFAAQIkAlTIgCmAAABKgAFFAgIEAALAKobAA==.',['血占']='血占戈:BAAAKgAECgEIAQAAAA==.',['血迪']='血迪克嗨皮:BAABKgAFFH8XAAMWAAYIrx1hBgAsAQAVAAYI9hs/EACbAQAWAAYItxthBgAsAQABKgAFFAgIDgAJACocAA==.',['西北']='西北锤王:BAABKgAFFH8QAAMVAAgIEwjjCACqAQAVAAgIrgbjCACqAQAWAAgIZgadBgBPAQAAAA==.',['角斗']='角斗兰:BAAAKgAECgYIAQAAAA==.',['记忆']='记忆里的岁月:BAABKgAFFH8KAAMSAAQI4w1BDQDBAAASAAQI4w1BDQDBAAAFAAIIYQVMNwBeAAAAAA==.',['诚默']='诚默者:BAAAKgAECgYIBgAAAA==.',['谢伦']='谢伦伊尔的雾:BAAAKgAECgMIBAAAAA==.',['豊川']='豊川祥子:BAABKgAECn8cAAMFAAgIKhTBNwC2AQAFAAgIKhTBNwC2AQASAAQIqw7whwB/AAAAAA==.',['豹纹']='豹纹鳄鱼:BAABKgAFFH8IAAIeAAMIlxeTEACiAAAeAAMIlxeTEACiAAAAAA==.',['贝戋']='贝戋:BAAAKgAFFAQIBAAAAA==.贝戋贝戋:BAABKgAFFH8JAAMSAAUIrA72DADFAAAGAAUIXw3AHwDqAAASAAQIQQ/2DADFAAAAAA==.',['贫苦']='贫苦劳动人民:BAAAKgADCgYIBgAAAA==.',['贰拾']='贰拾叁:BAAAKgAECgUIBQAAAA==.',['赞骑']='赞骑士:BAAAKgAECggICAAAAA==.',['赶紧']='赶紧灭别加血:BAABKgAFFH8MAAIQAAQIOB9fCQATAQAQAAQIOB9fCQATAQAAAA==.',['起儛']='起儛挵淸景彡:BAAAKgAECgYIBgAAAA==.',['蹦傣']='蹦傣迪:BAABKgAFFH8IAAIJAAQIFAUIagCYAAAJAAQIFAUIagCYAAAAAA==.',['蹦蹦']='蹦蹦跳:BAAAKgAFFAIIAgAAAA==.',['輪回']='輪回依然:BAAAKgAECgcICAAAAA==.',['轩辕']='轩辕牛仔:BAAAKgAFFAIIAgAAAA==.',['这就']='这就是我:BAAAKgAFFAEIAQAAAA==.',['远野']='远野秋叶:BAAAKgADCggICAAAAA==.',['迪莎']='迪莎:BAAAKgADCggICAAAAA==.',['追不']='追不着:BAAAKgAECgcICAAAAA==.',['追忆']='追忆猎神:BAAAKgADCggICAAAAA==.追忆猎魂:BAAAKgADCggICAAAAA==.',['逍遙']='逍遙明王:BAAAKgAECgIIAgAAAA==.',['道生']='道生一:BAAAKgAECgcIAwAAAA==.',['還苛']='還苛以:BAABKgAFFH8GAAMTAAUIYxopCwCZAQATAAUIYxopCwCZAQAPAAEITwXQEgA8AAAAAA==.',['邕府']='邕府吴彦祖:BAAAKgAECgEIAQAAAA==.',['邪风']='邪风烈刃:BAABKgAECn8YAAIVAAcIQx0uLQDFAQAVAAcIQx0uLQDFAQAAAA==.',['邹尒']='邹尒妹:BAABKgAFFH8FAAIKAAUI3hgzHQAIAQAKAAUI3hgzHQAIAQABKgAFFAgIEAALACYbAA==.',['酱蒲']='酱蒲酱蒲:BAAAKgADCgQIBAAAAA==.',['酷炫']='酷炫少女:BAAAKgAECgYIDQAAAA==.',['酷酷']='酷酷的土灵:BAAAKgAECggICAAAAA==.酷酷的萨满:BAAAKgAFFAQIBAABKgAFFAgIHgAYABseAA==.',['野生']='野生小恐龙:BAABKgAFFH8IAAMTAAYI7BM0DgBtAQATAAYIbg40DgBtAQAOAAII3RHcBwCOAAAAAA==.',['鑫鑫']='鑫鑫尛法:BAABKgAFFH8GAAISAAYIQyMEAwDZAQASAAYIQyMEAwDZAQAAAA==.',['铁臂']='铁臂憨憨:BAAAKgAECgMIAwAAAA==.',['银之']='银之木裔:BAABKgAFFH8IAAIWAAgI2wXMBgBGAQAWAAgI2wXMBgBGAQAAAA==.',['银鸦']='银鸦:BAACKgAFFH8cAAMLAAYIqBW/IgD+AAALAAYIqBW/IgD+AAAKAAEI/Av0UwAxAAAqAAQKfyQAAwsACAi0Ge09AAACAAsACAi0Ge09AAACAAoABAiaEJ1QANoAAAAA.',['锦鲤']='锦鲤来了:BAAAKgADCggICAAAAA==.',['闪电']='闪电小呆:BAAAKgAECgEIAQAAAA==.',['问天']='问天德:BAAAKgAECgIIAwAAAA==.',['阿不']='阿不归来:BAABKgAFFH8WAAQSAAgI1hsbBQCOAQASAAYIix4bBQCOAQAFAAgIDxuHBwCMAQAGAAQIHCAuHwDuAAAAAA==.',['阿喀']='阿喀琉斯之踵:BAAAKgAECgYICQAAAA==.',['阿奶']='阿奶奶:BAABKgAFFH8GAAIIAAYISw2fDQAnAQAIAAYISw2fDQAnAQAAAA==.',['阿澪']='阿澪:BAAAKgADCgYIBgAAAA==.',['阿罗']='阿罗:BAAAKgAFFAQIBAAAAA==.',['阿茶']='阿茶发大财:BAAAKgADCgEIAQAAAA==.',['隆科']='隆科多丶:BAACKgAFFH8IAAMVAAUIQxJODwACAQAVAAUIQxJODwACAQAjAAEIBQ62EQA/AAAqAAQKfxUAAhUACAiIGec2ANUBABUACAiIGec2ANUBAAAA.',['随颩']='随颩而逝:BAAAKgADCgUIBwAAAA==.',['集翔']='集翔村花李姨:BAAAKgAECgMIAwAAAA==.',['雪乃']='雪乃:BAAAKgAECgYIBQAAAA==.',['雪夜']='雪夜星瞳:BAAAKgAECgMIAwAAAA==.',['雪落']='雪落无痕:BAAAKgAECggIDwAAAA==.',['雾岛']='雾岛董香:BAABKgAFFH8KAAMLAAQIaBg4HwDbAAALAAQIrRA4HwDbAAAKAAQIaBi1KwC8AAABKgAFFAgICwALALQjAA==.',['风之']='风之岚:BAABKgAFFH8IAAIHAAgIyhv1AgAnAgAHAAgIyhv1AgAnAgAAAA==.风之涌动:BAAAKgADCggICQAAAA==.',['风口']='风口浪尖:BAAAKgADCggICAAAAA==.',['风语']='风语岚:BAABKgAFFH8GAAIbAAYIyRG2DAA+AQAbAAYIyRG2DAA+AQAAAA==.',['风间']='风间小唯:BAAAKgADCgEIAQAAAA==.风间小枫:BAAAKgAECgIIAgAAAA==.风间月儿:BAAAKgADCggICAAAAA==.',['飞雪']='飞雪和美羊羊:BAABKgAFFH8MAAMLAAQIRRSLHgDdAAALAAMIIg2LHgDdAAAKAAQIRRTQGgCTAAAAAA==.',['香煎']='香煎三纹鱼:BAAAKgAECgYICwAAAA==.',['马勺']='马勺:BAAAKgADCggIDgAAAA==.',['鬼剑']='鬼剑:BAAAKgAECgMIAwAAAA==.',['鬼悠']='鬼悠悠:BAABKgAFFH8IAAIWAAgIVQ+wCACOAQAWAAgIVQ+wCACOAQAAAA==.',['魁米']='魁米:BAABKgAFFH8GAAIJAAYISSMhGACcAQAJAAYISSMhGACcAQAAAA==.',['魂之']='魂之影舞:BAAAKgAECgcICQAAAA==.',['魔幻']='魔幻儛歩:BAAAKgAECggICwAAAA==.',['魔法']='魔法抗体:BAAAKgADCgIIAgAAAA==.',['魔血']='魔血染青天:BAAAKgADCggICAAAAA==.',['鱼丸']='鱼丸喵:BAAAKgADCgIIAgAAAA==.',['鲜血']='鲜血凋零:BAAAKgAECgMIAwAAAA==.',['鹏哥']='鹏哥:BAAAKgAFFAIIAwAAAA==.',['鹤形']='鹤形:BAAAKgAECgEIAQAAAA==.',['鹿目']='鹿目圆:BAAAKgAECggICAAAAA==.',['鹿鹿']='鹿鹿麓:BAAAKgAECgYIBgAAAA==.',['麦旋']='麦旋风丶:BAAAKgAFFAEIAQABKgAFFAgIIQAIAF8YAA==.',['黄泉']='黄泉丶彼岸:BAAAKgAECgUIBwAAAA==.',['黑太']='黑太黑了:BAAAKgAECgQIBAAAAA==.',['黑暗']='黑暗胖胖:BAAAKgAFFAMIAwAAAA==.',['黑河']='黑河坏:BAAAKgAECgIIAgAAAA==.',['黑焱']='黑焱的守护:BAABKgAFFH8IAAINAAgI0wefCwCRAQANAAgI0wefCwCRAQAAAA==.',['黯铁']='黯铁:BAAAKgAECgIIAgAAAA==.',['龙希']='龙希尔小野:BAAAKgAECgYICAAAAA==.',['龙武']='龙武:BAABKgAECn8kAAIJAAgItBlAUwD7AQAJAAgItBlAUwD7AQAAAA==.',['龙眼']='龙眼狼:BAAAKgAECgYIBgAAAA==.',['龙葵']='龙葵诗诗:BAABKgAECn8XAAIJAAgIKhc8iQCFAQAJAAgIKhc8iQCFAQAAAA==.',},}; provider.parse = parse;if ArchonTooltip.AddProviderV2 then ArchonTooltip.AddProviderV2(lookup, provider) end

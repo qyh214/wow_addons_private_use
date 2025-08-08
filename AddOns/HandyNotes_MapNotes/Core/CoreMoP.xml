@@ -1,0 +1,12 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Script file="IconClass.lua"/>
+    <Script file="icons.lua"/>
+    <Script file="ccmmb.lua"/>
+    <Script file="StaticPopUps.lua"/>
+    <Script file="syncWithMinimap.lua"/>
+    <Script file="ClassicImages.lua"/>
+    <Script file="ProfessionDetection.lua"/>
+    <Include file="wmb-template.xml"/>
+    <Include file="MoP\MoPCore.xml"/>
+    <Script file="Core/CoordsDisplay.lua"/>
+</Ui>

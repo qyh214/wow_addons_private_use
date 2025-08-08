@@ -11,6 +11,7 @@ local function CreateDialog()
     dialog = AF.CreateBorderedFrame(AF.UIParent, "AF_Dialog", 200, 100, nil, "accent")
     dialog:Hide() -- for first OnShow
 
+    AF.ShowNormalGlow(dialog, "shadow", 2)
     dialog:EnableMouse(true)
     dialog:SetClampedToScreen(true)
 
@@ -90,6 +91,9 @@ local function CreateDialog()
             dialog.shownMask:Hide()
             dialog.shownMask = nil
         end
+
+        -- reset shadow
+        AF.ShowNormalGlow(dialog, "shadow", 2)
     end)
 
     -- OnShow
@@ -105,8 +109,22 @@ local function CreateDialog()
             end
             dialog:SetHeight(Round(textHolder:GetHeight() + contentHolder:GetHeight()) + 40)
             dialog:SetScript("OnUpdate", nil)
+
+            -- accent color system
+            local r, g, b = AF.GetColorRGB(dialog.accentColor)
+            dialog:SetBackdropBorderColor(r, g, b)
+            dialog.yes:SetBackdropBorderColor(r, g, b)
+            dialog.no:SetBackdropBorderColor(r, g, b)
         end)
     end)
+
+    function dialog:EnableYes(enabled)
+        dialog.yes:SetEnabled(enabled)
+    end
+
+    function dialog:EnableNo(enabled)
+        dialog.no:SetEnabled(enabled)
+    end
 
     -- update pixels
     function dialog:UpdatePixels()
@@ -137,6 +155,8 @@ end
 function AF.ShowDialog(parent, text, width, yesText, noText, showMask, content, yesDisabled)
     if not dialog then CreateDialog() end
 
+    dialog.accentColor = AF.GetAddonAccentColorName()
+
     dialog:SetParent(parent)
     AF.SetFrameLevel(dialog, 50, parent)
     AF.SetWidth(dialog, width or 200)
@@ -163,8 +183,9 @@ function AF.ShowDialog(parent, text, width, yesText, noText, showMask, content, 
     return dialog
 end
 
--- point
+-- use this after AF.ShowDialog to set the dialog position
 function AF.SetDialogPoint(...)
+    if not dialog then return end
     AF.ClearPoints(dialog)
     AF.SetPoint(dialog, ...)
 end
@@ -215,6 +236,7 @@ local function CreateNotificationDialog()
     notificationDialog = AF.CreateBorderedFrame(AF.UIParent, "AF_NotificationDialog", 200, 100, nil, "accent")
     notificationDialog:Hide() -- for first OnShow
 
+    AF.ShowNormalGlow(notificationDialog, "shadow", 2)
     notificationDialog:EnableMouse(true)
     notificationDialog:SetClampedToScreen(true)
 
@@ -259,6 +281,9 @@ local function CreateNotificationDialog()
             notificationDialog.shownMask:Hide()
             notificationDialog.shownMask = nil
         end
+
+        -- reset shadow
+        AF.ShowNormalGlow(notificationDialog, "shadow", 2)
     end)
 
     -- OnShow
@@ -271,6 +296,10 @@ local function CreateNotificationDialog()
             end
             notificationDialog:SetHeight(Round(textHolder:GetHeight()) + 40)
             notificationDialog:SetScript("OnUpdate", nil)
+
+            -- accent color system
+            notificationDialog:SetBackdropBorderColor(AF.GetColorRGB(notificationDialog.accentColor, 1))
+            notificationDialog.close:SetColor(notificationDialog.accentColor)
         end)
     end)
 
@@ -295,6 +324,8 @@ end
 ---@return AF_NotificationDialog
 function AF.ShowNotificationDialog(parent, text, width, showMask, countdown)
     if not notificationDialog then CreateNotificationDialog() end
+
+    notificationDialog.accentColor = AF.GetAddonAccentColorName()
 
     notificationDialog:SetParent(parent)
     AF.SetFrameLevel(notificationDialog, 50, parent)
@@ -328,8 +359,9 @@ function AF.ShowNotificationDialog(parent, text, width, showMask, countdown)
     return notificationDialog
 end
 
--- point
+-- use this after AF.ShowNotificationDialog to set the dialog position
 function AF.SetNotificationDialogPoint(...)
+    if not notificationDialog then return end
     AF.ClearPoints(notificationDialog)
     AF.SetPoint(notificationDialog, ...)
 end

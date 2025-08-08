@@ -52,35 +52,41 @@ local function EncodeTooManyContinuations(s1, s2)
 	return s1 .. (s2:gsub(".", EncodeCharToQuotedPrintable))
 end
 
--- Realm part matching is greedy, as realm names will rarely have dashes, but
--- player names will never.
-local FULL_PLAYER_SPLIT = FULL_PLAYER_NAME:gsub("-", "%%%%-"):format("^(.-)", "(.+)$")
-local FULL_PLAYER_FIND = FULL_PLAYER_NAME:gsub("-", "%%%%-"):format("^.-", ".+$")
-
 function Chomp.NameMergedRealm(name, realm)
 	if type(name) ~= "string" then
 		error("Chomp.NameMergedRealm: name: expected string, got " .. type(name), 2)
 	elseif name == "" then
 		error("Chomp.NameMergedRealm: name: expected non-empty string", 2)
-	elseif not realm or realm == "" then
-		-- Normally you'd just return the full input name without reformatting,
-		-- but Blizzard has started returning an occasional "Name-Realm Name"
-		-- combination with spaces and hyphens in the realm name.
-		local splitName, splitRealm = name:match(FULL_PLAYER_SPLIT)
+	end
+
+	-- Normally you'd just return the full input name without reformatting,
+	-- but Blizzard has started returning an occasional "Name-Realm Name"
+	-- combination with spaces and hyphens in the realm name.
+	local splitName, splitRealm = Chomp.NameSplitRealm(name)
+	if not realm or realm == "" then
 		if splitName and splitRealm then
 			name = splitName
 			realm = splitRealm
 		else
 			realm = GetRealmName()
 		end
-	elseif name:find(FULL_PLAYER_FIND) then
+	elseif splitRealm then
 		error("Chomp.NameMergedRealm: name already has a realm name, but realm name also provided")
 	end
-	return FULL_PLAYER_NAME:format(name, (realm:gsub("[%s%-]", "")))
+
+	return string.join("-", name, (Chomp.NormalizeRealmName(realm)))
 end
 
 function Chomp.NameSplitRealm(nameRealm)
-	return string.match(nameRealm, FULL_PLAYER_SPLIT)
+	local name, realm = string.split("-", nameRealm, 2)
+
+	if name and realm and realm ~= "" then
+		return name, realm
+	end
+end
+
+function Chomp.NormalizeRealmName(realmName)
+	return (string.gsub(realmName, "[%s%-%.]", ""))
 end
 
 local Serialize = setmetatable({}, {

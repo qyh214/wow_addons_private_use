@@ -1,0 +1,25 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<!-- Load -->
+	<Script file="Load.lua"/>
+
+	<!-- Core -->
+	<Script file="Core/FrameTemplates_Frame.lua"/>
+	<Script file="Core/FrameTemplates_Button.lua"/>
+	<Script file="Core/FrameTemplates_Checkbox.lua"/>
+	<Script file="Core/FrameTemplates_LayoutGroup.lua"/>
+	<Script file="Core/FrameTemplates_ModelFrame.lua"/>
+	<Script file="Core/FrameTemplates_MouseResponder.lua"/>
+	<Script file="Core/FrameTemplates_ProgressBar.lua"/>
+	<Script file="Core/FrameTemplates_Range.lua"/>
+	<Script file="Core/FrameTemplates_ScrollBar.lua"/>
+	<Script file="Core/FrameTemplates_ScrollFrame.lua"/>
+	<Script file="Core/FrameTemplates_Text.lua"/>
+	<Script file="Core/FrameTemplates_TextBox.lua"/>
+	<Script file="Core/FrameTemplates_Texture.lua"/>
+
+	<!-- Prefabs -->
+	<Include file="Prefabs/Prefabs_FrameTemplates.lua"/>
+	<Include file="Prefabs/Prefabs_FrameTemplates_Templates_Mixin.lua"/>
+	<Include file="Prefabs/Prefabs_FrameTemplates_Templates.xml"/>
+</Ui>

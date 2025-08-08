@@ -59,8 +59,6 @@ function AF.SetWidth(region, width, minPixels)
     region._size_grid = nil
     region._size_list_h = nil
     -- add new
-    minPixels = minPixels or 0.001
-    -- region._size_normal = true
     region._width = width
     region._minwidth = minPixels
     region:SetWidth(AF.GetNearestPixelSize(width, region:GetEffectiveScale(), minPixels))
@@ -71,8 +69,6 @@ function AF.SetHeight(region, height, minPixels)
     region._size_grid = nil
     region._size_list_v = nil
     -- add new
-    minPixels = minPixels or 0.001
-    -- region._size_normal = true
     region._height = height
     region._minheight = minPixels
     region:SetHeight(AF.GetNearestPixelSize(height, region:GetEffectiveScale(), minPixels))
@@ -159,7 +155,6 @@ function AF.SetGridSize(region, gridWidth, gridHeight, gridSpacingX, gridSpacing
     -- clear conflicts
     region._size_list_h = nil
     region._size_list_v = nil
-    -- region._size_normal = nil
 
     -- add new
     region._size_grid = true
@@ -290,6 +285,25 @@ function AF.SetOutside(region, relativeTo, offsetX, offsetY)
     AF.SetPoint(region, "BOTTOMRIGHT", relativeTo, "BOTTOMRIGHT", offsetX, -offsetY)
 end
 
+---@param region Frame
+---@param relativeTo Frame|nil default is region:GetParent()
+---@param left? number
+---@param right? number
+---@param top? number
+---@param bottom? number
+-- if left/right/top/bottom is not provided, it will be set to 0
+-- positive values expand outward, negative values contract inward
+function AF.SetOutsets(region, relativeTo, left, right, top, bottom)
+    left = left or 0
+    right = right or 0
+    top = top or 0
+    bottom = bottom or 0
+    relativeTo = relativeTo or region:GetParent()
+    AF.ClearPoints(region)
+    AF.SetPoint(region, "TOPLEFT", relativeTo, "TOPLEFT", -left, top)
+    AF.SetPoint(region, "BOTTOMRIGHT", relativeTo, "BOTTOMRIGHT", right, -bottom)
+end
+
 function AF.ClearPoints(region)
     region:ClearAllPoints()
     if region._points then wipe(region._points) end
@@ -305,13 +319,35 @@ function AF.SetBackdrop(region, backdropInfo)
     end
 
     if backdropInfo.insets then
-        region._inset_size = backdropInfo.insets.left
-        for k in pairs(backdropInfo.insets) do
-            backdropInfo.insets[k] = AF.ConvertPixelsForRegion(region._inset_size, region)
+        region._insets = AF.Copy(backdropInfo.insets)
+        for k, v in pairs(backdropInfo.insets) do
+            backdropInfo.insets[k] = AF.ConvertPixelsForRegion(v, region)
         end
     end
 
     region:SetBackdrop(backdropInfo)
+end
+
+function AF.SetBackdropBorderSize(region, borderSize)
+    if not region.GetBackdrop then return end
+    local backdropInfo = region:GetBackdrop()
+    if not backdropInfo then return end
+
+    -- preserve color
+    local r, g, b, a = region:GetBackdropColor()
+    local br, bg, bb, ba = region:GetBackdropBorderColor()
+
+    if borderSize then
+        region._edge_size = borderSize
+        backdropInfo.edgeSize = AF.ConvertPixelsForRegion(borderSize, region)
+    else
+        region._edge_size = nil
+        backdropInfo.edgeSize = nil
+    end
+
+    region:SetBackdrop(backdropInfo)
+    region:SetBackdropColor(r, g, b, a)
+    region:SetBackdropBorderColor(br, bg, bb, ba)
 end
 
 ---------------------------------------------------------------------
@@ -358,28 +394,21 @@ function AF.ReBorder(region)
     local backdropInfo = region:GetBackdrop()
     if not backdropInfo then return end
 
-    if not (region._edge_size or region._inset_size) then return end
+    if not (region._edge_size or region._insets) then return end
 
     local r, g, b, a = region:GetBackdropColor()
     local br, bg, bb, ba = region:GetBackdropBorderColor()
 
-    -- local n = AF.GetOnePixelForRegion(region)
-    -- if backdropInfo.edgeSize then
-        if region._edge_size then
-            backdropInfo.edgeSize = AF.ConvertPixelsForRegion(region._edge_size, region)
-        -- else
-        --     backdropInfo.edgeSize = n
+    if region._edge_size then
+        backdropInfo.edgeSize = AF.ConvertPixelsForRegion(region._edge_size, region)
+    end
+
+    if region._insets then
+        backdropInfo.insets = {}
+        for k, v in pairs(region._insets) do
+            backdropInfo.insets[k] = AF.ConvertPixelsForRegion(v, region)
         end
-    -- end
-    -- if backdropInfo.insets then
-        if region._inset_size then
-            local n = AF.ConvertPixelsForRegion(region._inset_size, region)
-            backdropInfo.insets.left = n
-            backdropInfo.insets.right = n
-            backdropInfo.insets.top = n
-            backdropInfo.insets.bottom = n
-        end
-    -- end
+    end
 
     region:SetBackdrop(backdropInfo)
     region:SetBackdropColor(r, g, b, a)
@@ -423,16 +452,38 @@ function AF.RemoveFromPixelUpdater(r)
 end
 
 function AF.UpdatePixels()
+    local start = GetTimePreciseSec()
+    AF.Fire("AF_PIXEL_UPDATE_START")
     for r in next, components do
         r:UpdatePixels()
     end
+    AF.Fire("AF_PIXEL_UPDATE_END")
+    AF.Debug(AF.WrapTextInColor("Pixel update took %.3f seconds", "yellow"):format(GetTimePreciseSec() - start))
 end
 
+-- not ideal
 function AF.UpdatePixelsForAddon(addon)
     addon = addon or AF.GetAddon()
     if addon and addonComponents[addon] then
         for r in next, addonComponents[addon] do
             r:UpdatePixels()
+        end
+    end
+end
+
+-- some object types are not included in GetChildren(), such as Texture, FontString ...
+---@param region Frame
+function AF.UpdatePixelsForRegionAndChildren(region)
+    if region and not region:IsForbidden() and region.GetChildren then
+        -- print(region:GetObjectType())
+        if region.UpdatePixels then
+            region:UpdatePixels()
+        else
+            DefaultUpdatePixels(region)
+        end
+
+        for _, child in pairs({region:GetChildren()}) do
+            AF.UpdatePixelsForRegionAndChildren(child)
         end
     end
 end

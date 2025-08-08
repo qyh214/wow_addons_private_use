@@ -150,6 +150,8 @@ end
 
 ---@param color string|table if table, color[1] is normal color, color[2] is hover color
 function AF_ButtonMixin:SetColor(color)
+    if not color then return end
+
     -- keep color & hoverColor ------------------
     if type(color) == "table" then
         assert(#color == 2, "color table must have 2 elements")
@@ -378,6 +380,7 @@ function AF.CreateButton(parent, text, color, width, height, template, borderCol
     end
 
     -- color ------------------------------------
+    b.accentColor = AF.GetAddonAccentColorName() -- just for Tooltips ...
     b:SetColor(color)
 
     -- click sound ------------------------------
@@ -492,7 +495,7 @@ function AF.CreateCloseButton(parent, frameToHide, width, height, padding)
     padding = padding or 6
 
     local b = AF.CreateButton(parent, nil, "red", width, height)
-    b:SetTexture(AF.GetIcon("Close1"), {width - padding, height - padding}, {"CENTER", 0, 0})
+    b:SetTexture(AF.GetIcon("Close"), {width - padding, height - padding}, {"CENTER", 0, 0})
     b:SetScript("OnClick", function()
         if frameToHide then
             frameToHide:Hide()
@@ -535,12 +538,32 @@ function AF_IconButtonMixin:SetTexCoord(...)
     self.icon:SetTexCoord(...)
 end
 
+---@param icon string
+---@param filterMode string|nil "LINEAR"|"TRILINEAR"|"NEAREST". default is "LINEAR".
 function AF_IconButtonMixin:SetIcon(icon, filterMode)
     if filterMode then
         self._filterMode = filterMode
     end
     self._iconPath = icon
     self.icon:SetTexture(icon, nil, nil, self._filterMode)
+end
+
+---@param color string|table
+function AF_IconButtonMixin:SetColor(color)
+    assert(type(color) == "string" or (type(color) == "table" and (#color == 3 or #color == 4)), "color must be a string or a table with 3 or 4 elements")
+    self._color = type(color) == "string" and AF.GetColorTable(color) or color
+    if not self:IsMouseOver() then
+        self.icon:SetVertexColor(AF.UnpackColor(self._color))
+    end
+end
+
+---@param color string|table
+function AF_IconButtonMixin:SetHoverColor(color)
+    assert(type(color) == "string" or (type(color) == "table" and (#color == 3 or #color == 4)), "color must be a string or a table with 3 or 4 elements")
+    self._hoverColor = type(color) == "string" and AF.GetColorTable(color) or color
+    if self:IsMouseOver() then
+        self.icon:SetVertexColor(AF.UnpackColor(self._hoverColor))
+    end
 end
 
 function AF_IconButtonMixin:SetFilterMode(filterMode)
@@ -551,7 +574,7 @@ end
 function AF_IconButtonMixin:UpdatePixels()
     AF.ReSize(self)
     AF.RePoint(self)
-    AF.SetSize(self.icon, self._width - self.padding, self._height - self.padding)
+    AF.SetSize(self.icon, self._width - self._padding, self._height - self._padding)
 end
 
 ---@param parent Frame
@@ -569,25 +592,25 @@ function AF.CreateIconButton(parent, icon, width, height, padding, color, hoverC
     local b = CreateFrame("Button", nil, parent)
     AF.SetSize(b, width, height)
 
-    b.padding = (padding or 0) * 2
+    b._padding = (padding or 0) * 2
 
     b.icon = b:CreateTexture(nil, "ARTWORK")
     b.icon:SetPoint("CENTER")
-    AF.SetSize(b.icon, width - b.padding, height - b.padding)
+    AF.SetSize(b.icon, width - b._padding, height - b._padding)
 
     b.icon:SetTexture(icon, nil, nil, filterMode)
     b._icon = icon
     b._filterMode = filterMode
 
-    b.color = type(color) == "string" and AF.GetColorTable(color) or (color or AF.GetColorTable("white"))
-    b.hoverColor = type(hoverColor) == "string" and AF.GetColorTable(hoverColor) or (hoverColor or AF.GetColorTable("white"))
-    b.icon:SetVertexColor(AF.UnpackColor(b.color))
+    b._color = type(color) == "string" and AF.GetColorTable(color) or (color or AF.GetColorTable("white"))
+    b._hoverColor = type(hoverColor) == "string" and AF.GetColorTable(hoverColor) or (hoverColor or AF.GetColorTable("white"))
+    b.icon:SetVertexColor(AF.UnpackColor(b._color))
 
     b:SetScript("OnEnter", function()
-        b.icon:SetVertexColor(AF.UnpackColor(b.hoverColor))
+        b.icon:SetVertexColor(AF.UnpackColor(b._hoverColor))
     end)
     b:SetScript("OnLeave", function()
-        b.icon:SetVertexColor(AF.UnpackColor(b.color))
+        b.icon:SetVertexColor(AF.UnpackColor(b._color))
     end)
 
     Mixin(b, AF_IconButtonMixin)
@@ -601,6 +624,43 @@ function AF.CreateIconButton(parent, icon, width, height, padding, color, hoverC
     AF.AddToPixelUpdater(b)
 
     return b
+end
+
+---------------------------------------------------------------------
+-- tips button
+---------------------------------------------------------------------
+---@class AF_TipsButton:AF_IconButton
+local AF_TipsButtonMixin = {}
+
+local function TipsButton_OnEnter(self)
+    if not AF.IsEmpty(self.tips) then
+        AF.ShowTooltips(self, self.position, self.x, self.y, self.tips)
+    end
+end
+
+local function TipsButton_OnLeave(self)
+    AF.HideTooltips()
+end
+
+---@param ... string
+function AF_TipsButtonMixin:SetTips(...)
+    self.tips = {...}
+end
+
+function AF_TipsButtonMixin:SetTipsPosition(position, x, y)
+    self.position = position or "TOPRIGHT"
+    self.x = x or 0
+    self.y = y or 0
+end
+
+---@return AF_TipsButton
+function AF.CreateTipsButton(parent)
+    local tipsButton = AF.CreateIconButton(parent, AF.GetIcon("Info_Square"), 16, 16, 0, "gray", "white", "NEAREST", true)
+    Mixin(tipsButton, AF_TipsButtonMixin)
+    tipsButton:SetTipsPosition("TOPRIGHT", 0, 0)
+    tipsButton:HookOnEnter(TipsButton_OnEnter)
+    tipsButton:HookOnLeave(TipsButton_OnLeave)
+    return tipsButton
 end
 
 ---------------------------------------------------------------------
@@ -634,6 +694,8 @@ function AF.CreateCheckButton(parent, label, onClick)
     local cb = CreateFrame("CheckButton", nil, parent, "BackdropTemplate")
     AF.SetSize(cb, 14, 14)
 
+    cb.accentColor = AF.GetAddonAccentColorName()
+
     cb.onClick = onClick
     cb:SetScript("OnClick", function(self)
         PlaySound(self:GetChecked() and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
@@ -654,13 +716,13 @@ function AF.CreateCheckButton(parent, label, onClick)
 
     local checkedTexture = cb:CreateTexture(nil, "ARTWORK")
     cb.checkedTexture = checkedTexture
-    checkedTexture:SetColorTexture(AF.GetColorRGB("accent", 0.7))
+    checkedTexture:SetColorTexture(AF.GetColorRGB(cb.accentColor, 0.7))
     AF.SetPoint(checkedTexture, "TOPLEFT", 1, -1)
     AF.SetPoint(checkedTexture, "BOTTOMRIGHT", -1, 1)
 
     local highlightTexture = cb:CreateTexture(nil, "ARTWORK")
     cb.highlightTexture = highlightTexture
-    highlightTexture:SetColorTexture(AF.GetColorRGB("accent", 0.1))
+    highlightTexture:SetColorTexture(AF.GetColorRGB(cb.accentColor, 0.1))
     AF.SetPoint(highlightTexture, "TOPLEFT", 1, -1)
     AF.SetPoint(highlightTexture, "BOTTOMRIGHT", -1, 1)
 
@@ -670,7 +732,7 @@ function AF.CreateCheckButton(parent, label, onClick)
 
     cb:SetScript("OnEnable", function()
         cb.label:SetTextColor(1, 1, 1)
-        checkedTexture:SetColorTexture(AF.GetColorRGB("accent", 0.7))
+        checkedTexture:SetColorTexture(AF.GetColorRGB(cb.accentColor, 0.7))
         cb:SetBackdropBorderColor(0, 0, 0, 1)
     end)
 
@@ -744,7 +806,7 @@ function AF_SwitchMixin:SetLabels(labels)
         buttons[i].value = labels[i].value or labels[i].text
         buttons[i].isSelected = false
 
-        buttons[i].highlight = AF.CreateTexture(buttons[i], nil, AF.GetColorTable("accent", 0.7))
+        buttons[i].highlight = AF.CreateTexture(buttons[i], nil, AF.GetColorTable(switch.accentColor, 0.7))
         AF.SetPoint(buttons[i].highlight, "BOTTOMLEFT", 1, 1)
         AF.SetPoint(buttons[i].highlight, "BOTTOMRIGHT", -1, 1)
         AF.SetHeight(buttons[i].highlight, 1)
@@ -850,7 +912,9 @@ end
 function AF.CreateSwitch(parent, width, height, labels)
     local switch = AF.CreateBorderedFrame(parent, nil, width, height, "widget")
 
-    switch.highlight = AF.CreateTexture(switch, nil, AF.GetColorTable("accent", 0.07))
+    switch.accentColor = AF.GetAddonAccentColorName()
+
+    switch.highlight = AF.CreateTexture(switch, nil, AF.GetColorTable(switch.accentColor, 0.07))
     AF.SetPoint(switch.highlight, "TOPLEFT", 1, -1)
     AF.SetPoint(switch.highlight, "BOTTOMRIGHT", -1, 1)
     switch.highlight:Hide()

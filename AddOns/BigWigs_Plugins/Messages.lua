@@ -2,7 +2,7 @@
 -- Module Declaration
 --
 
-local plugin = BigWigs:NewPlugin("Messages")
+local plugin, L = BigWigs:NewPlugin("Messages")
 if not plugin then return end
 
 -------------------------------------------------------------------------------
@@ -25,7 +25,6 @@ local labelsPrimaryPoint, labelsSecondaryPoint = nil, nil
 
 local db = nil
 
-local L = BigWigsAPI:GetLocale("BigWigs")
 plugin.displayName = L.messages
 
 local validFramePoints = {
@@ -849,13 +848,19 @@ do
 
 		if not db.useicons then icon = nil end
 
-		if emphasized and not db.emphDisabled then
+		if emphasized then
+			if db.emphDisabled and module and module.IsEnableMob then
+				return
+			end
 			if db.emphUppercase then
 				text = upper(text)
 				text = gsub(text, "(:%d+|)T", "%1t") -- Fix texture paths that need to end in lowercase |t
 			end
 			self:EmphasizedPrint(nil, text, r, g, b, nil, nil, nil, nil, nil, nil, customDisplayTime)
-		elseif not db.disabled then
+		else
+			if db.disabled and module and module.IsEnableMob then
+				return
+			end
 			self:Print(nil, text, r, g, b, nil, nil, nil, nil, nil, icon, customDisplayTime)
 		end
 		if db.chat then

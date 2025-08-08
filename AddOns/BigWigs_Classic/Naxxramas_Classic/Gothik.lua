@@ -13,11 +13,9 @@ mod:SetStage(1)
 -- Locals
 --
 
-local waveCount = 0
 local traineeCount = 1
 local deathKnightCount = 1
 local riderCount = 1
-local timerList = {}
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -27,8 +25,6 @@ local L = mod:GetLocale()
 if L then
 	L.add_death = "Add Death Alert"
 	L.add_death_desc = "Alerts when an add dies."
-
-	L.wave = "%d/22: %s"
 
 	L.trainee = "Trainee" -- Unrelenting Trainee NPC 16124
 	-- Technically "Deathknight" in classic era but we are using the modern 2 word term
@@ -57,11 +53,9 @@ function mod:OnBossEnable()
 end
 
 function mod:OnEngage()
-	waveCount = 0
 	traineeCount = 1
 	deathKnightCount = 1
 	riderCount = 1
-	timerList = {}
 	self:SetStage(1)
 
 	self:Message("stages", "cyan", CL.stage:format(1), false)
@@ -72,8 +66,8 @@ function mod:OnEngage()
 	self:DelayedMessage("stages", 260, "cyan", CL.custom_sec:format(stage2Msg, 10))
 
 	self:NewTrainee(27)
-	self:NewDeathKnight(77)
-	self:NewRider(137)
+	self:NewDeathKnight(self:GetSeason() == 2 and 82 or 77)
+	self:NewRider(self:GetSeason() == 2 and 145 or 137)
 end
 
 --------------------------------------------------------------------------------
@@ -121,48 +115,43 @@ function mod:UnrelentingRiderDies()
 end
 
 do
+	local maxWaves = mod:GetSeason() == 2 and 19 or 22
 	local function waveWarn(color, message, icon)
-		waveCount = waveCount + 1
-		if waveCount < 24 then
-			mod:Message("adds", color, L.wave:format(waveCount, message), icon) -- SetOption::yellow,orange,red::
-		end
-		if waveCount == 23 then
-			mod:StopBar(CL.count:format(L.trainee, traineeCount - 1))
-			mod:StopBar(CL.count:format(L.deathKnight, deathKnightCount - 1))
-			mod:StopBar(CL.count:format(L.rider, riderCount - 1))
-			for i = 1, 6 do
-				if timerList[i] then
-					mod:CancelTimer(timerList[i])
-				end
-			end
-			timerList = {}
-		end
+		mod:Message("adds", color, message, icon) -- SetOption::yellow,orange,red::
 	end
 
 	function mod:NewTrainee(timeTrainee)
-		if traineeCount < 12 then
-			self:Bar("adds", timeTrainee, CL.count:format(L.trainee, traineeCount), "Achievement_character_human_male")
-			timerList[1] = self:ScheduleTimer(waveWarn, timeTrainee - 3, "yellow", CL.custom_sec:format(L.trainee, 3), "Achievement_character_human_male")
-			timerList[2] = self:ScheduleTimer("NewTrainee", timeTrainee, 20)
-			traineeCount = traineeCount + 1
+		self:Bar("adds", timeTrainee, CL.count:format(L.trainee, traineeCount), "Achievement_character_human_male")
+		self:ScheduleTimer(waveWarn, timeTrainee - 3, "yellow", CL.custom_sec:format(CL.count_amount:format(L.trainee, traineeCount, 11), 3), "Achievement_character_human_male")
+		traineeCount = traineeCount + 1
+		if traineeCount <= 11 then
+			self:ScheduleTimer("NewTrainee", timeTrainee, 20)
 		end
 	end
 
-	function mod:NewDeathKnight(timeDK)
-		if deathKnightCount < 8 then
+	do
+		local dkMax = mod:GetSeason() == 2 and 6 or 7
+		local dkNext = mod:GetSeason() == 2 and 30 or 25
+		function mod:NewDeathKnight(timeDK)
 			self:Bar("adds", timeDK, CL.count:format(L.deathKnight, deathKnightCount), "Spell_deathknight_frostpresence")
-			timerList[3] = self:ScheduleTimer(waveWarn, timeDK - 3, "orange", CL.custom_sec:format(L.deathKnight, 3), "Spell_deathknight_frostpresence")
-			timerList[4] = self:ScheduleTimer("NewDeathKnight", timeDK, 25)
+			self:ScheduleTimer(waveWarn, timeDK - 3, "orange", CL.custom_sec:format(CL.count_amount:format(L.deathKnight, deathKnightCount, dkMax), 3), "Spell_deathknight_frostpresence")
 			deathKnightCount = deathKnightCount + 1
+			if deathKnightCount <= dkMax then
+				self:ScheduleTimer("NewDeathKnight", timeDK, dkNext)
+			end
 		end
 	end
 
-	function mod:NewRider(timeRider)
-		if riderCount < 5 then
+	do
+		local riderMax = mod:GetSeason() == 2 and 2 or 4
+		local riderNext = mod:GetSeason() == 2 and 45 or 30
+		function mod:NewRider(timeRider)
 			self:Bar("adds", timeRider, CL.count:format(L.rider, riderCount), "ability_mount_undeadhorse")
-			timerList[5] = self:ScheduleTimer(waveWarn, timeRider - 3, "red", CL.custom_sec:format(L.rider, 3), "ability_mount_undeadhorse")
-			timerList[6] = self:ScheduleTimer("NewRider", timeRider, 30)
+			self:ScheduleTimer(waveWarn, timeRider - 3, "red", CL.custom_sec:format(CL.count_amount:format(L.rider, riderCount, riderMax), 3), "ability_mount_undeadhorse")
 			riderCount = riderCount + 1
+			if riderCount <= riderMax then
+				self:ScheduleTimer("NewRider", timeRider, riderNext)
+			end
 		end
 	end
 end

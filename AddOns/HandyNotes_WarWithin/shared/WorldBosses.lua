@@ -83,7 +83,7 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
 ns.RegisterPoints(ns.UNDERMINE, {
     [49601720] = { -- The Gobfather
         quest=85088, -- 89401 is the account-loot weekly, I think?
-        worldquest=85089, -- The Main Event, also
+        worldquest=85088, -- The Main Event, also
         npc=231821,
         loot={
             232725, -- Pilot's Oiled Trousers
@@ -95,6 +95,25 @@ ns.RegisterPoints(ns.UNDERMINE, {
             232731, -- Steadfast Contender's Breastplate
             232732, -- Champion's Gilded Stompers
             232733, -- Gobfather's Gold Medal
+        },
+    },
+})
+
+ns.RegisterPoints(ns.KARESH, {
+    [71854851] = { -- Reshanor
+        quest=90783, -- 87352 tripped as well, account-wide
+        worldquest=87354,
+        npc=238319,
+        loot={
+            243038, -- Gaze of the Untethered Doom
+            243039, -- Devoured Magi's Cinch
+            243040, -- Crystalblight Legguards
+            243041, -- Umbral Stalker's Footpads
+            243042, -- Void-Bound Hauberk
+            243043, -- Shadowguard's Rift Wrap
+            243044, -- Feasting Fiend's Barbute
+            243045, -- Bygone Wastelander's Girdle
+            243046, -- Band of Boundless Hunger
         },
     },
 })

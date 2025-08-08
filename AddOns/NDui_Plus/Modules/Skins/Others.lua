@@ -112,7 +112,7 @@ end
 
 function S:Krowi_WorldMapButtons()
 	local Krowi_WMB = _G.LibStub and _G.LibStub("Krowi_WorldMapButtons-1.4", true)
-	if not Krowi_WMB then return end
+	if not Krowi_WMB or not Krowi_WMB.Buttons then return end
 
 	for _, button in ipairs(Krowi_WMB.Buttons) do
 		if button.AlphaOption and button.ScaleOption then
@@ -153,6 +153,33 @@ function S:OmniCD()
 	end
 end
 
+function S:WarpDeplete_HandleBar(object)
+	local bar = object.bar
+	local frame = object.frame
+
+	B.StripTextures(frame)
+	B.SetBD(frame, nil, 0, 0, 0, 0)
+	frame.SetBackdrop = B.Dummy
+	bar:SetStatusBarTexture(DB.normTex)
+	bar.SetStatusBarTexture = B.Dummy
+	bar:SetInside()
+	bar.SetPoint = B.Dummy
+end
+
+function S:WarpDeplete()
+	local WarpDeplete = _G.WarpDeplete
+	if not WarpDeplete then return end
+
+	P.WaitFor(function()
+		return not not (WarpDeplete.bars and WarpDeplete.forces)
+	end, function()
+		for _, barFrame in pairs(WarpDeplete.bars) do
+			S:WarpDeplete_HandleBar(barFrame)
+		end
+		S:WarpDeplete_HandleBar(WarpDeplete.forces)
+	end)
+end
+
 S:RegisterSkin("WorldQuestsList", S.WorldQuestsList)
 S:RegisterSkin("PremadeGroupsFilter", S.PremadeGroupsFilter)
 S:RegisterSkin("MogPartialSets", S.MogPartialSets)
@@ -162,6 +189,7 @@ S:RegisterSkin("SavedInstances", S.SavedInstances)
 S:RegisterSkin("Krowi_WorldMapButtons")
 S:RegisterSkin("BuyEmAll", S.BuyEmAll)
 S:RegisterSkin("OmniCD", S.OmniCD)
+S:RegisterSkin("WarpDeplete", S.WarpDeplete)
 
 -- Hide Toggle Button
 S.ToggleFrames = {}

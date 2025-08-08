@@ -102,7 +102,7 @@ function ItemUpgradeTipUpgradeDataProviderMixin:Refresh()
 
         local upgradeInfo = {
             ilvl = upgradeTrack.itemLevel,
-            crestType = icon .. " " .. upgradeTrack.currency.color:WrapTextInColorCode(upgradeTrack.currency.name),
+            crestType = icon .. " " .. upgradeTrack.currency.colorData.color:WrapTextInColorCode(upgradeTrack.currency.name),
             adventurerTier = (rank1 == 2 and upgradeTierString1) or (rank2 == 2 and upgradeTierString2) or (rank3 == 2 and upgradeTierString3) or (rank4 == 2 and upgradeTierString4) or "",
             veteranTier = (rank1 == 3 and upgradeTierString1) or (rank2 == 3 and upgradeTierString2) or (rank3 == 3 and upgradeTierString3) or (rank4 == 3 and upgradeTierString4) or "",
             championTier = (rank1 == 4 and upgradeTierString1) or (rank2 == 4 and upgradeTierString2) or (rank3 == 4 and upgradeTierString3) or (rank4 == 4 and upgradeTierString4) or "",

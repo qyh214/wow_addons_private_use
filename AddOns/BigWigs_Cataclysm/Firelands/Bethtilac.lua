@@ -107,7 +107,7 @@ function mod:BroodlingWatcher()
 end
 
 function mod:Fixate(args)
-	if not UnitIsPlayer(args.destName) then return end --Affects the NPC and a player
+	if not self:Player(args.destFlags) then return end --Affects the NPC and a player
 	self:TargetMessageOld(99559, args.destName, "yellow", "alarm", args.spellId)
 	if self:Me(args.destGUID) then
 		self:Flash(99559)

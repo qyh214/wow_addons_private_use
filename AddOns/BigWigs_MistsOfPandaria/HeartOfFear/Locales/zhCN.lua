@@ -11,8 +11,8 @@ if L then
 	L.attenuation_message = "%s 音波衰减 %s"
 	L.echo = "|c001cc986回响傀儡|r"
 	L.zorlok = "|c00ed1ffa佐尔洛克|r"
-	L.left = "|c00008000<- 左 <-|r"
-	L.right = "|c00FF0000-> 右 ->|r"
+	L.left = "|c00008000 左 |r"
+	L.right = "|c00FF0000 右 |r"
 
 	L.platform_emote = "皇家宰相佐尔洛克朝他其中一个平台飞去了！" -- Imperial Vizier Zor'lok flies to one of his platforms!
 	L.platform_emote_final = "皇家宰相佐尔洛克吸入狂热信息素！"-- Imperial Vizier Zor'lok inhales the Pheromones of Zeal!
@@ -35,7 +35,7 @@ L = BigWigs:NewBossLocale("Garalon", "zhCN")
 if L then
 	L.phase2_trigger = "巨型盔甲开始碎裂了"
 
-	L.removed = ">%s< 已移除！"
+	L.removed = "%s 已移除！"
 end
 
 L = BigWigs:NewBossLocale("Wind Lord Mel'jarak", "zhCN")
@@ -63,14 +63,14 @@ if L then
 	L.explosion_casting_by_you_desc = "你正在施放琥珀爆炸时显示警报。强烈建议使用醒目！"
 
 	L.willpower = "意志力"
-	L.willpower_message = "意志力：>%d<！"
+	L.willpower_message = "意志力：%d！"
 
-	L.break_free_message = "血量：>%d%%<！"
+	L.break_free_message = "血量：%d%%！"
 	L.fling_message = "快吸水！"
 	L.parasite = "寄生生长"
 
 	L.monstrosity_is_casting = "琥珀畸怪：爆炸"
-	L.you_are_casting = ">你< 正在施法！"
+	L.you_are_casting = "你 正在施法！"
 
 	L.unsok_short = "首领"
 	L.monstrosity_short = "琥珀畸怪"

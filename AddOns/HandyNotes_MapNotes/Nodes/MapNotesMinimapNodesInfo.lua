@@ -3,9 +3,16 @@ local ADDON_NAME, ns = ...
 function ns.LoadMapNotesMinimapInfo()
 local minimap = ns.minimap
 
---############################
+--##################################
+--####### Classic MoP minimap ######
+--##################################
+
+minimap[1467] = { } -- Outland
+minimap[998] = { } -- Undercity
+
+--##############################
 --####### Classic minimap ######
---############################
+--##############################
 
 --############################
 --######### Kalimdor #########
@@ -68,11 +75,11 @@ minimap[1436] = { } -- Westfall
 minimap[1437] = { } -- Wettlands
 minimap[1453] = { } -- Stormwind City   
 minimap[1458] = { } -- Undercity Old Version
-minimap[1941] = { } -- Immersang Forrest
+minimap[1941] = { } -- Eversong Woods
 minimap[1942] = { } -- Ghostlands
 minimap[1943] = { } -- Azurmythosinsel
 minimap[1947] = { } -- Exodar
-minimap[1954] = { } -- Sivermoon City
+minimap[1954] = { } -- Silvermoon City
 minimap[1957] = { } -- Isle of Quel'Danas
 
 
@@ -135,7 +142,7 @@ minimap[85] = { } -- Orgrimmar
 minimap[86] = { } -- Ragefire -- of Shadow
 minimap[87] = { } -- Ironforge
 minimap[88] = { } -- Thunder Bluff
-minimap[89] = { } -- Teldrassil
+minimap[89] = { } -- Teldrassil / Darnassus
 minimap[97] = { } -- Azurmythosinsel
 minimap[103] = { } -- Exodar
 minimap[106] = { } -- Blutmythosinsel
@@ -260,6 +267,7 @@ minimap[231] = { } -- Uldaman - Inside Dungeon Map
 minimap[232] = { } -- Molten Core
 minimap[242] = { } -- Blackwing Depths - Inside Dungeon Map
 minimap[243] = { } -- Blackrock Depths - Inside Dungeon Map
+minimap[1186] = { } -- Blackrock Depths - Inside Dungeon Map
 minimap[250] = { } -- Lower Blackrock Spire - Inside Dungeon Map
 minimap[251] = { } -- Lower Blackrock Spire - Inside Dungeon Map
 minimap[252] = { } -- Lower Blackrock Spire - Inside Dungeon Map
@@ -472,7 +480,8 @@ minimap[1527] = { } -- Uldum
 
 -- Azeroth/Continent map minimap
 minimap[371] = { } -- TheJadeForest
-minimap[376] = { } -- ValleyoftheFourWinds    
+minimap[376] = { } -- ValleyoftheFourWinds
+minimap[378] = { } -- The Wandering Isle 
 minimap[379] = { } -- KunLaiSummit  
 minimap[388] = { } -- TownlongWastes    
 minimap[390] = { } -- ValeofEternalBlossoms  
@@ -617,6 +626,8 @@ minimap[680] = { } -- Suramar
 minimap[750] = { } -- Highmountain Thundertotem
 minimap[790] = { } -- Eye of Aszhara
 minimap[830] = { } -- Krokuun
+minimap[831] = { } -- Vindikaar upper deck
+minimap[832] = { } -- Vindikaar lower deck
 minimap[882] = { } -- Eredath
 minimap[885] = { } -- Antoran Wastes
 minimap[905] = { } -- Argus
@@ -633,6 +644,7 @@ minimap[749] = { } -- The Arcway
 minimap[751] = { } -- Black Rook Hold
 minimap[761] = { } -- Court of Stars
 minimap[764] = { } -- The Nighthold
+minimap[765] = { } -- The Nighthold
 minimap[777] = { } -- The Emerald Nightmare
 minimap[807] = { } -- Trial of Valor
 minimap[845] = { } -- Cathedral of Eternal Night
@@ -760,6 +772,8 @@ minimap[2367] = { } -- Chamber of Memory
 minimap[2369] = { } -- Siren Isle
 minimap[2322] = { } -- Hall of Awakening
 minimap[2346] = { } -- Undermine
+minimap[2371] = { } -- K'aresh
+minimap[2472] = { } -- Tazavesh
 -- Dungeon map nodes
 minimap[2315] = { } -- The Rookery - Inside Dungeon Map
 minimap[2335] = { } -- The Cinderbrew Meadery - Inside Dungeon Map
@@ -771,6 +785,8 @@ minimap[2357] = { } -- Ara-Kara, City of Echoes - Inside Dungeon Map
 minimap[2343] = { } -- City of Threads - Inside Dungeon Map
 minimap[2387] = { } -- Operation: Floodgate - Inside Dungeon Map
 minimap[2292] = { } -- Nerub-ar Palace - Inside Dungeon Map
+minimap[2449] = { } -- Eco-Dome Al'dani - Inside Dungeon Map
+minimap[2460] = { } -- Manaforge Omega - Inside Dungeon Map
 -- Delves map nodes
 minimap[2259] = { } -- Tak-Rethan-Abyss - Inside Dungeon Map
 minimap[2299] = { } -- The Underkeep - Inside Dungeon Map
@@ -788,4 +804,6 @@ minimap[2250] = { } -- Kriegval's Rest - Inside Dungeon Map
 minimap[2396] = { } -- Rowdy Rifts - Inside Dungeon Map
 minimap[2423] = { } -- Sidestreet Sluice - Inside Dungeon Map
 minimap[2420] = { } -- Sidestreet Sluice - The Pits - Inside Dungeon Map
+minimap[2452] = { } -- Archival Assault - Inside Dungeon Map
+minimap[2484] = { } -- Voidscar Cavern - Inside Dungeon Map
 end

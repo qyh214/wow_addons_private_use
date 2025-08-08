@@ -1,5 +1,5 @@
 --
--- RaiderIO Client Data. Generated on Tue Apr 15 2025 10:02:41 GMT+0000 (Coordinated Universal Time)
+-- RaiderIO Client Data. Generated on Fri Aug 08 2025 09:58:40 GMT+0000 (Coordinated Universal Time)
 --
 local _, ns = ...
 ns.CLIENT_CHARACTERS = {
@@ -16,6 +16,7 @@ ns.CLIENT_CHARACTERS = {
         ["score"] = 0,
         ["color"] = "#ffffff",
         ["best"] = nil,
+        ["bestRun"] = nil,
         ["bestFortified"] = nil,
         ["bestTyrannical"] = nil,
         ["runs"] = {
@@ -37,6 +38,7 @@ ns.CLIENT_CHARACTERS = {
         ["score"] = 0,
         ["color"] = "#ffffff",
         ["best"] = nil,
+        ["bestRun"] = nil,
         ["bestFortified"] = nil,
         ["bestTyrannical"] = nil,
         ["runs"] = {
@@ -58,6 +60,7 @@ ns.CLIENT_CHARACTERS = {
         ["score"] = 0,
         ["color"] = "#ffffff",
         ["best"] = nil,
+        ["bestRun"] = nil,
         ["bestFortified"] = nil,
         ["bestTyrannical"] = nil,
         ["runs"] = {
@@ -79,6 +82,7 @@ ns.CLIENT_CHARACTERS = {
         ["score"] = 0,
         ["color"] = "#ffffff",
         ["best"] = nil,
+        ["bestRun"] = nil,
         ["bestFortified"] = nil,
         ["bestTyrannical"] = nil,
         ["runs"] = {
@@ -100,6 +104,7 @@ ns.CLIENT_CHARACTERS = {
         ["score"] = 0,
         ["color"] = "#ffffff",
         ["best"] = nil,
+        ["bestRun"] = nil,
         ["bestFortified"] = nil,
         ["bestTyrannical"] = nil,
         ["runs"] = {
@@ -121,6 +126,7 @@ ns.CLIENT_CHARACTERS = {
         ["score"] = 0,
         ["color"] = "#ffffff",
         ["best"] = nil,
+        ["bestRun"] = nil,
         ["bestFortified"] = nil,
         ["bestTyrannical"] = nil,
         ["runs"] = {

@@ -7,6 +7,7 @@ local AF = _G.AbstractFramework
 ---@class AF_Texture:Texture
 local AF_TextureMixin = {}
 
+---@param color table|string
 function AF_TextureMixin:SetColor(color)
     if type(color) == "string" then color = AF.GetColorTable(color) end
     color = color or {1, 1, 1, 1}
@@ -17,7 +18,14 @@ function AF_TextureMixin:SetColor(color)
     end
 end
 
----@param color table|string
+---@param parent Frame
+---@param texture? string
+---@param color? table|string
+---@param drawLayer? string default "ARTWORK"
+---@param subLevel? number
+---@param wrapModeHorizontal? string
+---@param wrapModeVertical? string
+---@param filterMode? string
 ---@return AF_TextureMixin tex
 function AF.CreateTexture(parent, texture, color, drawLayer, subLevel, wrapModeHorizontal, wrapModeVertical, filterMode)
     local tex = parent:CreateTexture(nil, drawLayer or "ARTWORK", nil, subLevel)
@@ -36,9 +44,30 @@ function AF.CreateTexture(parent, texture, color, drawLayer, subLevel, wrapModeH
 end
 
 ---------------------------------------------------------------------
+-- default texcoord for blizzard icons
+---------------------------------------------------------------------
+---@return number left 0.08
+---@return number right 0.92
+---@return number top 0.08
+---@return number bottom 0.92
+function AF.GetDefaultTexCoord()
+    return 0.08, 0.92, 0.08, 0.92
+end
+
+--- 0.08, 0.92, 0.08, 0.92
+---@param tex Texture
+function AF.ApplyDefaultTexCoord(tex)
+    tex:SetTexCoord(AF.GetDefaultTexCoord())
+end
+
+---@param tex Texture
+function AF.ClearTexCoord(tex)
+    tex:SetTexCoord(0, 1, 0, 1)
+end
+
+---------------------------------------------------------------------
 -- calc texcoord
 ---------------------------------------------------------------------
-
 ---calculates texture coordinates with adjustments for aspect ratio and cropping
 ---@param crop? number cropping percentage
 ---@param targetAspectRatio? number target aspect ratio (targetWidth / targetHeight), defaults to 1

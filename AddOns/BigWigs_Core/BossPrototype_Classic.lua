@@ -30,16 +30,16 @@ local BigWigsAPI = BigWigsAPI
 local L = BigWigsAPI:GetLocale("BigWigs: Common")
 local LibSpec = LibStub("LibSpecialization", true)
 local loader = BigWigsLoader
-local isClassic, isRetail, isClassicEra, isCata, season = loader.isClassic, loader.isRetail, loader.isVanilla, loader.isCata, loader.season
-local C_EncounterJournal_GetSectionInfo = isCata and function(key)
+local isClassic, isRetail, isClassicEra, isCata, isMists, season = loader.isClassic, loader.isRetail, loader.isVanilla, loader.isCata, loader.isMists, loader.season
+local C_EncounterJournal_GetSectionInfo = (isCata or isMists) and function(key)
 	return C_EncounterJournal.GetSectionInfo(key) or BigWigsAPI:GetLocale("BigWigs: Encounter Info")[key]
 end or isRetail and C_EncounterJournal.GetSectionInfo or function(key)
 	return BigWigsAPI:GetLocale("BigWigs: Encounter Info")[key]
 end
-local UnitIsPlayer, UnitPosition, UnitIsConnected, UnitClass, UnitTokenFromGUID = UnitIsPlayer, UnitPosition, UnitIsConnected, UnitClass, loader.UnitTokenFromGUID
-local GetSpellName, GetSpellTexture, GetTime, IsSpellKnown, IsPlayerSpell = loader.GetSpellName, loader.GetSpellTexture, GetTime, IsSpellKnown, IsPlayerSpell
+local UnitPosition, UnitIsConnected, UnitClass, UnitTokenFromGUID = UnitPosition, UnitIsConnected, UnitClass, loader.UnitTokenFromGUID
+local GetSpellName, GetSpellTexture, GetTime = loader.GetSpellName, loader.GetSpellTexture, GetTime
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned
-local EJ_GetEncounterInfo = isCata and function(key)
+local EJ_GetEncounterInfo = (isCata or isMists) and function(key)
 	return EJ_GetEncounterInfo(key) or BigWigsAPI:GetLocale("BigWigs: Encounters")[key]
 end or isRetail and EJ_GetEncounterInfo or function(key)
 	return BigWigsAPI:GetLocale("BigWigs: Encounters")[key]
@@ -59,7 +59,7 @@ local bossUtilityFrame = CreateFrame("Frame")
 local petUtilityFrame = CreateFrame("Frame")
 local activeNameplateUtilityFrame, inactiveNameplateUtilityFrame = CreateFrame("Frame"), CreateFrame("Frame")
 local engagedGUIDs, activeNameplates, nameplateWatcher = {}, {}, nil
-local enabledModules, unitTargetScans, scheduledEvents = {}, {}, {}
+local enabledModules, unitTargetScans, scheduledEvents, ieeuEvents = {}, {}, {}, {}
 local allowedEvents = {}
 local difficulty, maxPlayers
 local UpdateDispelStatus, UpdateInterruptStatus = nil, nil
@@ -84,8 +84,8 @@ do -- Update some data that may be called at the top of modules (prior to initia
 		end
 	end
 	if LibSpec then
-		LibSpec:Register(loader, update)
-		LibSpec:RequestSpecialization()
+		LibSpec.RegisterGroup({}, update)
+		LibSpec.RequestGroupSpecialization()
 	end
 end
 local talentRoles = {
@@ -111,17 +111,14 @@ local updateData = function(module)
 		classColorMessages = true
 	end
 
-	if core.db.profile.englishSayMessages then
+	if loader.db.profile.englishSayMessages then
 		englishSayMessages = true
 	else
 		englishSayMessages = false
 	end
 
-	myRole = nil
-	myRolePosition = nil
-
 	if isCata then
-		local _, role, position = LibSpec:MySpecialization()
+		local _, role, position = LibSpec.MySpecialization()
 		myRole, myRolePosition = role, position
 	else
 		local _, class = UnitClass("player")
@@ -429,7 +426,7 @@ function boss:GetAllowWin()
 	return self.allowWin and true or false
 end
 
---- Register private auras.
+--- Set private aura spell IDs.
 -- @param spellIDTable the options table
 function boss:SetPrivateAuraSounds(spellIDTable)
 	for i = 1, #spellIDTable do
@@ -442,6 +439,31 @@ function boss:SetPrivateAuraSounds(spellIDTable)
 		end
 	end
 	self.privateAuraSoundOptions = spellIDTable
+end
+
+function boss:RegisterPrivateAuraSounds()
+	if not self.privateAuraSoundOptions or self.privateAuraSounds then return end
+	local soundModule = plugins.Sounds
+	if not soundModule then return end
+
+	self.privateAuraSounds = {}
+	for _, opt in next, self.privateAuraSoundOptions do
+		local key = opt[1]
+		local sound = soundModule:GetSoundFile(self, key, "privateaura")
+		if sound then
+			for i = 1, #opt do
+				local privateAuraSoundID = C_UnitAuras.AddPrivateAuraAppliedSound({
+					spellID = opt[i],
+					unitToken = "player",
+					soundFileName = sound,
+					outputChannel = "master",
+				})
+				if privateAuraSoundID then
+					self.privateAuraSounds[#self.privateAuraSounds + 1] = privateAuraSoundID
+				end
+			end
+		end
+	end
 end
 
 --- Check if a module option is enabled.
@@ -552,34 +574,14 @@ function boss:Enable(isWipe)
 		end
 		enabledModules[#enabledModules+1] = self
 
+		if self.SetupOptions then self:SetupOptions() end
+
 		if self:GetEncounterID() then
 			self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckForEncounterEngage")
 			self:RegisterEvent("ENCOUNTER_END", "EncounterEnd")
 		else
-			if self.privateAuraSoundOptions and not self.privateAuraSounds then -- Some modules don't engage (trash modules) so we register them here
-				self.privateAuraSounds = {}
-				local soundModule = plugins.Sounds
-				if soundModule then
-					local default = soundModule:GetDefaultSound("privateaura")
-					for _, opt in next, self.privateAuraSoundOptions do
-						local key = ("pa_%d"):format(opt[1])
-						local sound = soundModule:GetSoundFile(nil, nil, self.db.profile[key] or default)
-						if sound then
-							for i = 1, #opt do
-								local privateAuraSoundId = C_UnitAuras.AddPrivateAuraAppliedSound({
-									spellID = opt[i],
-									unitToken = "player",
-									soundFileName = sound,
-									outputChannel = "master",
-								})
-								if privateAuraSoundId then
-									self.privateAuraSounds[#self.privateAuraSounds + 1] = privateAuraSoundId
-								end
-							end
-						end
-					end
-				end
-			end
+			-- Some modules don't engage (trash modules) so we register them here
+			self:RegisterPrivateAuraSounds()
 		end
 
 		local _, class = UnitClass("player")
@@ -587,7 +589,6 @@ function boss:Enable(isWipe)
 			petUtilityFrame:RegisterUnitEvent("UNIT_PET", "player")
 		end
 
-		if self.SetupOptions then self:SetupOptions() end
 		if type(self.OnBossEnable) == "function" then self:OnBossEnable() end
 
 		if IsEncounterInProgress() and not isWiping then -- Safety. ENCOUNTER_END might fire whilst IsEncounterInProgress is still true and engage a module.
@@ -626,12 +627,14 @@ function boss:Disable(isWipe)
 			activeNameplates = {}
 			unitTargetScans = {}
 			scheduledEvents = {}
+			ieeuEvents = {}
 		else
 			for i = #unitTargetScans, 1, -1 do
 				if self == unitTargetScans[i][1] then
 					tremove(unitTargetScans, i)
 				end
 			end
+			ieeuEvents[self] = nil
 		end
 
 		-- Unregister the Unit Events for this module
@@ -673,6 +676,7 @@ function boss:Disable(isWipe)
 		self.missing = nil
 		self.isWiping = nil
 		self.isEngaged = nil
+		self.isWinning = nil
 		self.bossTargetChecks = nil
 
 		if not isWiping then
@@ -680,10 +684,11 @@ function boss:Disable(isWipe)
 		end
 
 		if self.missing then
-			local newBar = "New timer for %q at stage %d with placement %d and value %.2f on %d running ".. loader:GetVersionString() ..", tell the authors."
+			local version, hash, currentDifficulty = BigWigsAPI.GetVersion(), BigWigsAPI.GetVersionHash(), self:Difficulty()
+			local newBar = "New timer for %q at stage %d with placement %d and value %.2f on %d running %d#%s, tell the authors."
 			local newBarError = "New timer for %q at stage %d with placement %d and value %.2f."
 			local difficultyToText = {[14] = "N", [15] = "H", [16] = "M", [17] = "LFR"}
-			local errorHeader = format("BigWigs is missing timers on %q running %s, tell the devs!", difficultyToText[self:Difficulty()] or self:Difficulty(), loader:GetVersionString())
+			local errorHeader = format("BigWigs is missing timers on %q running %d#%s, tell the devs!", difficultyToText[currentDifficulty] or currentDifficulty, version, hash)
 			local errorStrings = {errorHeader}
 			for key, stageTbl in next, self.missing do
 				for stage = 0, 5, 0.5 do
@@ -691,7 +696,7 @@ function boss:Disable(isWipe)
 						local count = #stageTbl[stage]
 						for timeEntry = 2, count do
 							local t = stageTbl[stage][timeEntry] - stageTbl[stage][timeEntry-1]
-							local text = format(newBar, key, stage, timeEntry-1, t, self:Difficulty())
+							local text = format(newBar, key, stage, timeEntry-1, t, currentDifficulty, version, hash)
 							core:Print(text)
 							errorStrings[#errorStrings+1] = format(newBarError, key, stage, timeEntry-1, t)
 						end
@@ -1213,35 +1218,6 @@ do
 		end
 	end
 
-	local bosses = {"boss1", "boss2", "boss3", "boss4", "boss5"}
-	-- Update module engage status from querying boss units.
-	-- Engages modules if boss1-boss5 matches an registered enabled mob,
-	-- disables the module if set as engaged but has no boss match.
-	-- noEngage if set to "NoEngage", the module is prevented from engaging if enabling during a boss fight (after a DC)
-	function boss:CheckForEncounterEngage(noEngage)
-		if not self:IsEngaged() then
-			for i = 1, 5 do
-				local bossUnit = bosses[i]
-				local guid = UnitGUID(bossUnit)
-				if guid and UnitHealth(bossUnit) > 0 then
-					local mobId = self:MobId(guid)
-					if self:IsEnableMob(mobId) then
-						self:Engage(noEngage == "NoEngage" and noEngage)
-						return
-					elseif not self.disableTimer then
-						self.disableTimer = true
-						self:SimpleTimer(function()
-							self.disableTimer = nil
-							if not self:IsEngaged() then
-								self:Disable()
-							end
-						end, 3) -- 3 seconds should be enough time for the IEEU event to enable all the boss frames (fires once per boss frame)
-					end
-				end
-			end
-		end
-	end
-
 	-- Query boss units to update engage status.
 	function boss:CheckBossStatus()
 		local hasBoss = UnitHealth("boss1") > 0 or UnitHealth("boss2") > 0 or UnitHealth("boss3") > 0 or UnitHealth("boss4") > 0 or UnitHealth("boss5") > 0
@@ -1254,6 +1230,84 @@ do
 		else
 			self:Debug(":CheckBossStatus called with no result", "IsEngaged():", self:IsEngaged(), "hasBoss:", hasBoss, self:GetEncounterID(), self.moduleName)
 		end
+	end
+
+	do
+		local bosses = {"boss1", "boss2", "boss3", "boss4", "boss5", "boss6", "boss7", "boss8", "boss9", "boss10"}
+		-- Update module engage status from querying boss units.
+		-- Engages modules if boss1-boss5 matches an registered enabled mob,
+		-- disables the module if set as engaged but has no boss match.
+		-- noEngage if set to "NoEngage", the module is prevented from engaging if enabling during a boss fight (after a DC)
+		function boss:CheckForEncounterEngage(noEngage)
+			if not self:IsEngaged() then
+				for i = 1, 10 do
+					local bossUnit = bosses[i]
+					local guid = self:UnitGUID(bossUnit)
+					if guid and self:GetHealth(bossUnit) > 0 then
+						local mobId = self:MobId(guid)
+						if self:IsEnableMob(mobId) then
+							self:Engage(noEngage == "NoEngage" and noEngage)
+							return
+						elseif not self.disableTimer then
+							self.disableTimer = true
+							self:SimpleTimer(function()
+								self.disableTimer = nil
+								if not self:IsEngaged() then
+									self:Disable()
+								end
+							end, 3) -- 3 seconds should be enough time for the IEEU event to enable all the boss frames (fires once per boss frame)
+						end
+					end
+				end
+			end
+		end
+
+		function boss:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
+			if self:GetEncounterID() then
+				self:CheckForEncounterEngage()
+			end
+			ieeuEvents[self].dispatching = true
+			for i = 1, 10 do
+				local bossUnit = bosses[i]
+				local bossGUID = self:UnitGUID(bossUnit)
+				if bossGUID then
+					local bossID = self:MobId(bossGUID)
+					if ieeuEvents[self][bossID] then
+						self[ieeuEvents[self][bossID]](self, bossGUID, bossUnit, bossID)
+					end
+				else
+					break
+				end
+			end
+			ieeuEvents[self].dispatching = nil
+		end
+
+		local noBossID = "Module %q tried to register the boss unit event without specifying a boss ID."
+		local noBossFunc = "Module %q tried to register a boss unit event with the function %q which doesn't exist in the module."
+		local curBossEvent = "Module %q tried to register a boss event using ID %q to the function %q but the event is in the middle of dispatching."
+		--- Register a callback for the INSTANCE_ENCOUNTER_ENGAGE_UNIT event for the specified boss ID. If the bossID is found to be a boss unit, the callback will be dispatched.
+		-- @number bossID the ID of a boss to scan the boss units for
+		-- @param func callback function, passed (bossGUID, bossUnit, bossID)
+		function boss:RegisterBossEvent(bossID, func)
+			if type(bossID) ~= "number" then core:Print(format(noBossID, self.moduleName)) return end
+			if type(func) ~= "string" or not self[func] then core:Print(format(noBossFunc, self.moduleName, tostring(func))) return end
+			if not ieeuEvents[self] then ieeuEvents[self] = {} end
+			if ieeuEvents[self][bossID] then
+				ieeuEvents[self][bossID] = func
+			else
+				if ieeuEvents[self].dispatching then
+					core:Error(curBossEvent:format(self.moduleName, bossID, func))
+				end
+				ieeuEvents[self][bossID] = func
+				self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT")
+			end
+		end
+	end
+
+	--- Unregister a callback for the INSTANCE_ENCOUNTER_ENGAGE_UNIT event.
+	-- @number bossID the ID of a boss unit to stop listening to
+	function boss:UnregisterBossEvent(bossID)
+		ieeuEvents[self][bossID] = nil
 	end
 end
 
@@ -1312,7 +1366,7 @@ do
 		"raid36target", "raid37target", "raid38target", "raid39target", "raid40target",
 	}
 	local unitTableCount = #unitTable
-	local function findTargetByGUID(id)
+	local function findTargetByGUID(self, id)
 		local isNumber = type(id) == "number"
 		if not isNumber and UnitTokenFromGUID then
 			local unit = UnitTokenFromGUID(id)
@@ -1333,7 +1387,7 @@ do
 		for i = 1, unitTableCount do
 			local unit = unitTable[i]
 			local guid = UnitGUID(unit)
-			if guid and not UnitIsPlayer(unit) then
+			if guid and not self:UnitIsPlayer(unit) then
 				if isNumber then
 					local _, _, _, _, _, mobId = strsplit("-", guid)
 					guid = tonumber(mobId)
@@ -1347,7 +1401,7 @@ do
 	-- in an attempt to find a valid unit id to return.
 	-- @param id GUID or mob/npc id
 	-- @return unit id if found, nil otherwise
-	function boss:GetUnitIdByGUID(id) return findTargetByGUID(id) end
+	function boss:GetUnitIdByGUID(id) return findTargetByGUID(self, id) end
 
 	--- Fetches a unit id by scanning boss units 1 to 5 only.
 	-- @param id Either the GUID or the mob/npc id of the boss unit to find
@@ -1375,7 +1429,7 @@ do
 			local elapsed = unitTargetScans[i][5] + 0.05
 			unitTargetScans[i][5] = elapsed
 
-			local unit = findTargetByGUID(guid)
+			local unit = findTargetByGUID(self, guid)
 			if unit then
 				local unitTarget = unit.."target"
 				local playerGUID = UnitGUID(unitTarget)
@@ -1415,7 +1469,7 @@ do
 	function boss:CheckForEngage()
 		if self:IsEnabled() and not self:IsEngaged() then
 			for mobId in next, self.enableMobs do
-				local unit = findTargetByGUID(mobId)
+				local unit = findTargetByGUID(self, mobId)
 				if unit and UnitAffectingCombat(unit) then
 					self:Debug(":CheckForEngage() scan passed, calling :Engage()", self:GetEncounterID(), self.moduleName, unit, mobId)
 					self:Engage()
@@ -1430,9 +1484,9 @@ do
 
 	--- Start a repeating timer checking if your group has left combat with a boss.
 	function boss:CheckForWipe()
-		if self:IsEnabled() and self:IsEngaged() then
+		if self:IsEnabled() and self:IsEngaged() and not self.isWinning then
 			for mobId in next, self.enableMobs do
-				local unit = findTargetByGUID(mobId)
+				local unit = findTargetByGUID(self, mobId)
 				if unit and UnitAffectingCombat(unit) then
 					self:Debug(":CheckForWipe() found active bosses, waiting for next scan in 2s", self:GetEncounterID(), self.moduleName, unit, mobId)
 					self:SimpleTimer(function() self:CheckForWipe() end, 2)
@@ -1452,29 +1506,8 @@ do
 
 			self:Debug(":Engage", "noEngage:", noEngage, encounterID, self.moduleName)
 
-			if encounterID and self.privateAuraSoundOptions and not self.privateAuraSounds then
-				self.privateAuraSounds = {}
-				local soundModule = plugins.Sounds
-				if soundModule then
-					local default = soundModule:GetDefaultSound("privateaura")
-					for _, opt in next, self.privateAuraSoundOptions do
-						local key = ("pa_%d"):format(opt[1])
-						local sound = soundModule:GetSoundFile(nil, nil, self.db.profile[key] or default)
-						if sound then
-							for i = 1, #opt do
-								local privateAuraSoundId = C_UnitAuras.AddPrivateAuraAppliedSound({
-									spellID = opt[i],
-									unitToken = "player",
-									soundFileName = sound,
-									outputChannel = "master",
-								})
-								if privateAuraSoundId then
-									self.privateAuraSounds[#self.privateAuraSounds + 1] = privateAuraSoundId
-								end
-							end
-						end
-					end
-				end
+			if encounterID then
+				self:RegisterPrivateAuraSounds()
 			end
 
 			if not noEngage or noEngage ~= "NoEngage" then
@@ -1498,6 +1531,7 @@ do
 			twipe(spells)
 			if self.OnWin then self:OnWin() end
 			SimpleTimer(1, function() self:Disable() end) -- Delay a little to prevent re-enabling
+			self.isWinning = true -- Prevent a :CheckForWipe returning true during this 1 second delay
 			self:SendMessage("BigWigs_OnBossWin", self)
 			self:SendMessage("BigWigs_VictorySound", self)
 		end
@@ -1849,6 +1883,17 @@ do
 end
 
 do
+	local UnitIsPlayer = loader.UnitIsPlayer
+	--- Returns true if the unit is a player.
+	-- @string unit unit token or name
+	-- @return boolean
+	function boss:UnitIsPlayer(unit)
+		local isPlayer = UnitIsPlayer(unit)
+		return isPlayer
+	end
+end
+
+do
 	local UnitName = loader.UnitName
 	--- Get the full name of a unit.
 	-- @string unit unit token or name
@@ -2122,22 +2167,21 @@ do
 		end
 	end
 
+	local function GossipOptionSort(leftInfo, rightInfo)
+		return leftInfo.orderIndex < rightInfo.orderIndex
+	end
+
 	--- Select a specific NPC gossip option
 	-- @number optionNumber The number of the specific option to be selected
 	-- @bool[opt] skipConfirmDialogBox If the pop up confirmation dialog box should be skipped
-	local GossipOptionSort = _G.GossipOptionSort -- XXX temp, only available on 10.0
 	function boss:SelectGossipOption(optionNumber, skipConfirmDialogBox)
-		if GossipOptionSort then -- XXX 10.0 compat
-			local gossipOptions = GetOptions()
-			if gossipOptions and gossipOptions[1] then
-				table.sort(gossipOptions, GossipOptionSort)
-				local gossipOptionID = gossipOptions[optionNumber] and gossipOptions[optionNumber].gossipOptionID
-				if gossipOptionID then
-					SelectOption(gossipOptionID, "", skipConfirmDialogBox) -- Don't think the text arg is something we will ever need
-				end
+		local gossipOptions = GetOptions()
+		if gossipOptions and gossipOptions[1] then
+			table.sort(gossipOptions, GossipOptionSort)
+			local gossipOptionID = gossipOptions[optionNumber] and gossipOptions[optionNumber].gossipOptionID
+			if gossipOptionID then
+				self:SelectGossipID(gossipOptionID, skipConfirmDialogBox)
 			end
-		else
-			SelectOption(optionNumber, "", skipConfirmDialogBox) -- Don't think the text arg is something we will ever need
 		end
 	end
 
@@ -2156,7 +2200,13 @@ do
 	--- Select a specific NPC gossip entry by ID
 	-- @number id The ID of the specific gossip option to be selected
 	-- @bool[opt] skipConfirmDialogBox If the pop up confirmation dialog box should be skipped
+	local autotalk_notice = L.autotalk_notice
+	local UnitName = loader.UnitName
 	function boss:SelectGossipID(id, skipConfirmDialogBox)
+		local npc = UnitName("npc")
+		if npc then
+			core:Print(format(autotalk_notice, npc))
+		end
 		SelectOption(id, "", skipConfirmDialogBox) -- Don't think the text arg is something we will ever need
 	end
 end
@@ -2207,7 +2257,7 @@ end
 --- Ask LibSpecialization to update the role positions of everyone in your group.
 function boss:UpdateRolePositions()
 	if LibSpec then
-		LibSpec:RequestSpecialization()
+		LibSpec.RequestGroupSpecialization()
 	end
 end
 
@@ -2324,120 +2374,126 @@ petUtilityFrame:SetScript("OnEvent", function()
 end)
 
 do
-	local offDispel, defDispel = {}, {}
-	function UpdateDispelStatus()
-		offDispel, defDispel = {}, {}
-		-- local shieldslam = isClassic and (IsSpellKnown(47488) or IsSpellKnown(47487) or IsSpellKnown(30356) or IsSpellKnown(25258) or IsSpellKnown(23925) or IsSpellKnown(23924) or IsSpellKnown(23923) or IsSpellKnown(23922))
-		local devourMagic = IsSpellKnown(19505, true) or IsSpellKnown(19731, true) or IsSpellKnown(19734, true) or IsSpellKnown(19736, true) or IsSpellKnown(27276, true) or IsSpellKnown(27277, true) or IsSpellKnown(48011, true)
-		if IsSpellKnown(19801) or IsSpellKnown(527) or IsSpellKnown(988) or IsSpellKnown(32375) or IsSpellKnown(370) or IsSpellKnown(8012) or devourMagic then
-			-- Tranquilizing Shot (Hunter), Dispel Magic r1/r2 (Priest), Mass Dispel (Priest)[W], Purge r1/r2 (Shaman), Devour Magic (Warlock Felhunter)
-			offDispel.magic = true
+	local IsSpellKnownOrInSpellBook = loader.IsSpellKnownOrInSpellBook
+	local IsSpellKnown = loader.IsSpellKnown
+	local IsPlayerSpell = loader.IsPlayerSpell
+	do
+		local offDispel, defDispel = {}, {}
+		function UpdateDispelStatus()
+			offDispel, defDispel = {}, {}
+			-- local shieldslam = isClassic and (IsSpellKnown(47488) or IsSpellKnown(47487) or IsSpellKnown(30356) or IsSpellKnown(25258) or IsSpellKnown(23925) or IsSpellKnown(23924) or IsSpellKnown(23923) or IsSpellKnown(23922))
+			local devourMagic = IsSpellKnown(19505, true) or IsSpellKnown(19731, true) or IsSpellKnown(19734, true) or IsSpellKnown(19736, true) or IsSpellKnown(27276, true) or IsSpellKnown(27277, true) or IsSpellKnown(48011, true)
+			if IsSpellKnown(19801) or IsSpellKnown(527) or IsSpellKnown(988) or IsSpellKnown(32375) or IsSpellKnown(370) or IsSpellKnown(8012) or devourMagic then
+				-- Tranquilizing Shot (Hunter), Dispel Magic r1/r2 (Priest), Mass Dispel (Priest)[W], Purge r1/r2 (Shaman), Devour Magic (Warlock Felhunter)
+				offDispel.magic = true
+			end
+			if IsSpellKnown(19801) then
+				-- Tranquilizing Shot (Hunter)
+				offDispel.enrage = true
+			end
+			if IsSpellKnown(4987) or IsSpellKnown(527) or IsSpellKnown(988) or IsSpellKnown(32375) then
+				-- Cleanse (Paladin), Dispel Magic r1/r2 (Priest), Mass Dispel (Priest)[W]
+				defDispel.magic = true
+			end
+			if IsSpellKnown(1152) or IsSpellKnown(4987) or IsSpellKnown(528) or IsSpellKnown(552) or (isClassicEra and IsSpellKnown(2870)) or (isClassic and IsSpellKnown(526)) or IsSpellKnown(8170) then
+				-- Purify (Paladin), Cleanse (Paladin), Cure Disease (Priest), Abolish Disease (Priest), Cure Disease (Shaman)[C,BC], Cure Toxins (Shaman)[W], Disease Cleansing Totem (Shaman)
+				defDispel.disease = true
+			end
+			if IsSpellKnown(2893) or IsSpellKnown(8946) or IsSpellKnown(1152) or IsSpellKnown(4987) or IsSpellKnown(526) or IsSpellKnown(8166) then
+				-- Abolish Poison (Druid), Cure Poison (Druid), Purify (Paladin), Cleanse (Paladin), Cure Poison/Toxins (Shaman), Poison Cleansing Totem (Shaman)
+				defDispel.poison = true
+			end
+			if IsSpellKnown(2782) or IsSpellKnown(475) or IsSpellKnown(51886) then
+				-- Remove Curse (Druid), Remove Lesser Curse (Mage), Cleanse Spirit (Shaman)[W]
+				defDispel.curse = true
+			end
+			if IsSpellKnown(1044) then
+				-- Blessing of Freedom (Paladin)
+				defDispel.movement = true
+			end
 		end
-		if IsSpellKnown(19801) then
-			-- Tranquilizing Shot (Hunter)
-			offDispel.enrage = true
-		end
-		if IsSpellKnown(4987) or IsSpellKnown(527) or IsSpellKnown(988) or IsSpellKnown(32375) then
-			-- Cleanse (Paladin), Dispel Magic r1/r2 (Priest), Mass Dispel (Priest)[W]
-			defDispel.magic = true
-		end
-		if IsSpellKnown(1152) or IsSpellKnown(4987) or IsSpellKnown(528) or IsSpellKnown(552) or (isClassicEra and IsSpellKnown(2870)) or (isClassic and IsSpellKnown(526)) or IsSpellKnown(8170) then
-			-- Purify (Paladin), Cleanse (Paladin), Cure Disease (Priest), Abolish Disease (Priest), Cure Disease (Shaman)[C,BC], Cure Toxins (Shaman)[W], Disease Cleansing Totem (Shaman)
-			defDispel.disease = true
-		end
-		if IsSpellKnown(2893) or IsSpellKnown(8946) or IsSpellKnown(1152) or IsSpellKnown(4987) or IsSpellKnown(526) or IsSpellKnown(8166) then
-			-- Abolish Poison (Druid), Cure Poison (Druid), Purify (Paladin), Cleanse (Paladin), Cure Poison/Toxins (Shaman), Poison Cleansing Totem (Shaman)
-			defDispel.poison = true
-		end
-		if IsSpellKnown(2782) or IsSpellKnown(475) or IsSpellKnown(51886) then
-			-- Remove Curse (Druid), Remove Lesser Curse (Mage), Cleanse Spirit (Shaman)[W]
-			defDispel.curse = true
-		end
-		if IsSpellKnown(1044) then
-			-- Blessing of Freedom (Paladin)
-			defDispel.movement = true
+		--- Check if you can dispel.
+		-- @string dispelType dispel type (magic, enrage, disease, poison, curse, movement)
+		-- @bool[opt] isOffensive true if dispelling a buff from an enemy (magic), nil if dispelling a friendly
+		-- @param[opt] key module option key to check
+		-- @return boolean
+		function boss:Dispeller(dispelType, isOffensive, key)
+			if key then
+				local o = self.db.profile[key]
+				if not o then core:Print(format("Module %s uses %q as a dispel lookup, but it doesn't exist in the module options.", self.name, key)) return end
+				if band(o, C.DISPEL) ~= C.DISPEL then return true end
+			end
+			local dispelTable = isOffensive and offDispel or defDispel
+			return dispelTable[dispelType]
 		end
 	end
-	--- Check if you can dispel.
-	-- @string dispelType dispel type (magic, enrage, disease, poison, curse, movement)
-	-- @bool[opt] isOffensive true if dispelling a buff from an enemy (magic), nil if dispelling a friendly
-	-- @param[opt] key module option key to check
-	-- @return boolean
-	function boss:Dispeller(dispelType, isOffensive, key)
-		if key then
-			local o = self.db.profile[key]
-			if not o then core:Print(format("Module %s uses %q as a dispel lookup, but it doesn't exist in the module options.", self.name, key)) return end
-			if band(o, C.DISPEL) ~= C.DISPEL then return true end
-		end
-		local dispelTable = isOffensive and offDispel or defDispel
-		return dispelTable[dispelType]
-	end
-end
 
-do
-	local GetSpellCooldown = loader.GetSpellCooldown
-	local canInterrupt = false
-	local spellListClassic = {
-		-- 16979, -- Feral Charge (Druid)
-		2139, -- Counterspell (Mage)
-		15487, -- Silence (Priest)
-		38768, 1769, 1768, 1767, 1766, -- Kick (Rogue)
-		25454, 10414, 10413, 10412, 8046, 8045, 8044, 8042, -- Earth Shock (Shaman)
-		6554, 6552, -- Pummel (Warrior)
-		-- 29704, 1672, 1671, 72, -- Shield Bash (Warrior)
-	}
-	local spellListWrath = {
-		-- 16979, -- Feral Charge (Druid)
-		2139, -- Counterspell (Mage)
-		15487, -- Silence (Priest)
-		1766, -- Kick (Rogue)
-		6555, -- Pummel (Warrior)
-		-- 72, -- Shield Bash (Warrior)
-		47528, -- Mind Freeze (Death Knight)
-		57994, -- Wind Shear (Shaman)
-	}
-	local spellList = isClassicEra and spellListClassic or spellListWrath
-	function UpdateInterruptStatus()
-		if IsSpellKnown(19244, true) or IsSpellKnown(19647, true) then -- Spell Lock (Warlock Felhunter)
-			canInterrupt = GetSpellName(19647)
-			return
-		end
-		canInterrupt = false
-		for i = 1, #spellList do
-			local spell = spellList[i]
-			if IsSpellKnown(spell) then
-				canInterrupt = spell
-				break
-			end
-		end
-	end
-	--- Check if you can interrupt.
-	-- @string[opt] guid if not nil, will only return true if the GUID matches your target or focus.
-	-- @return boolean, if the unit can interrupt
-	-- @return boolean, if the interrupt is off cooldown and ready to use
-	function boss:Interrupter(guid)
-		if canInterrupt then
-			local ready = true
-			local start, duration = GetSpellCooldown(canInterrupt)
-			if type(start) == "table" then
-				start, duration = start.startTime, start.duration
-			end
-			if start > 0 then -- On cooldown currently
-				local endTime = start + duration
-				local t = GetTime()
-				if endTime - t > 1 then -- Greater than 1 second remaining on cooldown, not ready
-					ready = false
-				end
-			end
-
-			if guid then
-				if UnitGUID("target") == guid or UnitGUID("focus") == guid then
-					return canInterrupt, ready
-				end
+	do
+		local canInterrupt = false
+		local spellListClassic = {
+			-- 16979, -- Feral Charge (Druid)
+			2139, -- Counterspell (Mage)
+			15487, -- Silence (Priest)
+			38768, 1769, 1768, 1767, 1766, -- Kick (Rogue)
+			25454, 10414, 10413, 10412, 8046, 8045, 8044, 8042, -- Earth Shock (Shaman)
+			6554, 6552, -- Pummel (Warrior)
+			-- 29704, 1672, 1671, 72, -- Shield Bash (Warrior)
+		}
+		local spellListWrath = {
+			-- 16979, -- Feral Charge (Druid)
+			2139, -- Counterspell (Mage)
+			15487, -- Silence (Priest)
+			1766, -- Kick (Rogue)
+			6555, -- Pummel (Warrior)
+			-- 72, -- Shield Bash (Warrior)
+			47528, -- Mind Freeze (Death Knight)
+			57994, -- Wind Shear (Shaman)
+		}
+		local spellList = isClassicEra and spellListClassic or spellListWrath
+		function UpdateInterruptStatus()
+			if IsSpellKnown(19244, true) or IsSpellKnown(19647, true) then -- Spell Lock (Warlock Felhunter)
+				canInterrupt = GetSpellName(19647)
 				return
 			end
+			canInterrupt = false
+			for i = 1, #spellList do
+				local spell = spellList[i]
+				if IsSpellKnown(spell) then
+					canInterrupt = spell
+					break
+				end
+			end
+		end
 
-			return canInterrupt, ready
+		local GetSpellCooldown = loader.GetSpellCooldown
+		--- Check if you can interrupt.
+		-- @string[opt] guid if not nil, will only return true if the GUID matches your target or focus.
+		-- @return boolean, if the unit can interrupt
+		-- @return boolean, if the interrupt is off cooldown and ready to use
+		function boss:Interrupter(guid)
+			if canInterrupt then
+				local ready = true
+				local start, duration = GetSpellCooldown(canInterrupt)
+				if type(start) == "table" then
+					start, duration = start.startTime, start.duration
+				end
+				if start > 0 then -- On cooldown currently
+					local endTime = start + duration
+					local t = GetTime()
+					if endTime - t > 1 then -- Greater than 1 second remaining on cooldown, not ready
+						ready = false
+					end
+				end
+
+				if guid then
+					if UnitGUID("target") == guid or UnitGUID("focus") == guid then
+						return canInterrupt, ready
+					end
+					return
+				end
+
+				return canInterrupt, ready
+			end
 		end
 	end
 end

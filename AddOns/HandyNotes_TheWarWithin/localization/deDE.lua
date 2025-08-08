@@ -251,6 +251,11 @@ L['nightfarm_growthling_note'] = 'Entfache mit 3x {item:206350} die {object:Klei
 
 L['thunder_lynx_note'] = '1. Entfache mit 3x {item:206350} die {object:Kleine Schlüsselflamme} in {location:Fackelscheinmine}, damit {npc:212419} erscheint.\n\n2. Spreche mit {npc:212419}, damit du die Quest {quest:82007} erhalten kannst.\n\n3. Finde die Luchswelpen: {npc:222373} ({dot:Blue}), {npc:222372} ({dot:Green}), {npc:222375} ({dot:Orange}) und {npc:222374} ({dot:Red}).\n\n{note:Starte gleichzeitig die Quest {quest:76169}, um eine {item:219198} zu erhalten oder benutze einen vergleichbaren Gegenstand, wie die {item:219148}. Du brauchst eine Fackel, um {npc:222373} in der {location:Kaltschattenhöhle} zu finden.}\n\n4. Rette alle Luchswelpen und kehre dann zu {npc:212419} zurück.'
 
+L['options_icons_fighter'] = '{achievement:41999}'
+L['options_icons_fighter_desc'] = 'Zeigt die Positionen der {npc:Nachtsturzelitegegner} für den Erfolg {achievement:41999} an'
+L['suspicious_document_label'] = 'Verdächtiges Dokument'
+L['suspicious_document_note'] = 'Untersuche das {object:Verdächtiges Dokument}, damit der {npc:Nachtsturzelitegegner} erscheint.'
+
 -------------------------------------------------------------------------------
 ---------------------------------- AZJ-KAHET ----------------------------------
 -------------------------------------------------------------------------------
@@ -460,7 +465,7 @@ L['peculiar_gem_note'] = 'Springe ein Loch in der Höhle des {location:Stütznes
 
 -- KARAZHAN CATACOMBS
 L['karazhan_catacombs_label'] = 'Die Katakomben von Karazhan'
-L['karazhan_catacombs_entrance_note'] = 'Sammle den {item:44124} im {location:Krater von Un\'Goro} ({location:Kalimdor})\n\nSammle den {item:228938} beginnend in {location:Dornogal} ({location:Khaz Algar}, {location:Insel von Dorn})\n\nKombiniere den Schlüssel und Edelstein, um den {item:44124} zu erhalten.\n\nMit dem {item:44124} in deinen Taschen und der {item:208092} aktiv nähere dich dem Gitter, um einen roten Instanzeingang zu offenbaren.'
+L['karazhan_catacombs_entrance_note'] = 'Sammle den {item:228941} im {location:Krater von Un\'Goro} ({location:Kalimdor})\n\nSammle den {item:228938} beginnend in {location:Dornogal} ({location:Khaz Algar}, {location:Insel von Dorn})\n\nKombiniere den Schlüssel und Edelstein, um den {item:44124} zu erhalten.\n\nMit dem {item:44124} in deinen Taschen und der {item:208092} aktiv nähere dich dem Gitter, um einen roten Instanzeingang zu offenbaren.'
 
 -- ORB 1
 L['orb_1_label'] = 'Kugel 1'
@@ -639,9 +644,32 @@ L['undermine_clam_chowder_label'] = 'Lorenhalls Ratgeber zu authentischer Küche
 L['undermine_clam_chowder_location'] = 'In der Gasse auf einem Regal hinter {npc:226728}.'
 L['undermine_clam_chowder_note'] = '1. Um dieses Rezept zu erhalten, musst du zunächst das Rezept {item:16767} erlernen, welches bei zwei {object:Classic}-Händlern für %s gekaut werden kann.\n\n{npc:54232} in {location:Beutebucht} ({location:Die Östlichen Königreiche}, {location:Schlingendorntal})\n\n{npc:48060} in {location:Luntenbrand} ({location:Die Östlichen Königreiche}, {location:Ödland})\n\n2. Wenn du das "alte" Rezept erlernt hast, interagiere mit dem Buch {object:Lorenhalls Ratgeber zu authentischer Küche} und lese dir alle Seiten durch, um das Rezept {item:235800} zu erhalten.'
 
+L['breakneck_race_note'] = 'Die folgenden {object:99-G-Genickbrecher} Anpassungen werden empfohlen, um das Erreichen von |cFFFFD700Gold|r ein wenig zu erleichtern: \n\n%s\n\n%s\n\n%s'
+L['upgrade_the_pozzik_standard'] = '{item:232982} (Motor): Erreiche den Rang |cFFCD7F32Bronze|r bei allen normalen and umgekehrten Halsbrecherrennen.'
+L['upgrade_22h_slicks'] = '{item:232985} (Räder): Kann von Ingenieuren hergestellt oder auch im Auktionshaus gekauft werden.'
+L['upgrade_turbo_handcrank'] = '{item:232984} (Turbo): Kombiniere alle 5 Teile, die du von seltenen Gegnern plündern oder im Auktionshaus kaufen kannst.'
+
 L['blazefeather_peacock_note'] = 'Spreche nach Abschluss des {quest:83421} Geschichtsstrangs mit {npc:226555}, um für %s ein einen zähmbaren {npc:226561} zu beschwören.'
 L['radioactive_subject_note'] = 'Benutze nahegelegene Rohre und eine Kombination aus {item:237276}, {item:109076} und {item:231099} oder anderen Sprung-Puzzle-Tricks, um das Dach des {location:Dampfdrucklabore} Gebäudes zu erreichen.'
 L['george_the_big_pinch_note'] = 'Klicke schnell alle 5 {npc:238189} an, um den Stärkungszauber {spell:1219679} zu erhalten, der dir erlaubt {npc:233938} zu zähmen.'
 
-L['crumpled_schematic_note'] = 'Plündere den {object:Zusammengeknüllter Bauplan}, um {item:235037} zu erhalten.\n\n{note:Sobald du es geplündert hast, kann es auch bei Händlern für Ingenieurskunstbedarf wie {npc:219098} in {location:Dornogal} gekauft werden.}'
-L['crumpled_schematic_location'] = 'In der ersten Etage des Gebäudes.'
+-------------------------------------------------------------------------------
+----------------------------------- K'ARESH -----------------------------------
+-------------------------------------------------------------------------------
+
+L['options_icons_karesh_lore_hunter'] = '{achievement:60890}'
+L['options_icons_karesh_lore_hunter_desc'] = 'Zeigt die Positionen der Geschichtsobjekte für den Erfolg {achievement:60890} an.'
+
+L['options_icons_purrkins'] = '{achievement:42729}'
+L['options_icons_purrkins_desc'] = 'Zeigt die Positionen der Schnurrer für den Erfolg {achievement:42729} an.'
+L['purrkins_note'] = 'Streichel ({emote:/streicheln}) den Schnurrer.'
+L['kareshire_sublabel'] = 'Erscheint und verschwindet hin und wieder.'
+L['in_a_tree'] = 'Oben im Baum.'
+L['little_ms_phaser_sublabel'] = 'Erscheint und verschwindet hin und wieder.'
+
+L['mailroom_distribution_note'] = 'Sammle vor dem Eingang die {object:Überschüssige Post} ein, öffne dann die Tür und stelle dich auf die Kreise, um mit dem Extraaktionsbutton die Post auszutragen. Der Schatz erscheint neben dem Eingang.'
+L['gift_of_the_brothers_note'] = 'Interagiere mit der {object:Flackernde Laterne} und spreche mit {npc:233881}. Suche nach den Brüdern {npc:234112} ({dot:Red}), {npc:234113} ({dot:Yellow}) und {npc:234075} ({dot:Green}) und spreche mit ihnen, kehre dann zu {npc:233881} zurück, um ihm die Laterne zurück zu geben.'
+L['ancient_coffer_note'] = 'Sammle das {item:233794} ({dot:Red}) und die {item:233799} ({dot:Yellow}), um den Kasten öffnen zu können.'
+
+L['sthaarbs_note'] = 'Verwende den Teleporter in der Nähe des {object:Phase Conduit}, um {npc:234845} zu erreichen.' -- review
+L['heka_tamos_note'] = nil

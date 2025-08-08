@@ -72,6 +72,16 @@
                     <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-20" y="50" />
                 </Anchors>
             </Frame>
+                    
+            <Frame parentKey="BountifulDelvesFrame" inherits="ItemUpgradeTipBountifulDelvesDisplayTemplate" parentArray="Views">
+                <KeyValues>
+                    <KeyValue key="displayMode" value="BountifulDelves" type="string" />
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="20" y="-50" />
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-20" y="50" />
+                </Anchors>
+            </Frame>
 
             <Frame parentKey="UpgradeFrame" inherits="ItemUpgradeTipUpgradeDisplayTemplate" parentArray="Views">
                 <KeyValues>
@@ -113,6 +123,12 @@
                 <KeyValues>
                     <KeyValue key="displayMode" value="Raid" type="string" />
                     <KeyValue key="title" value="ITEMUPGRADETIP_L_RAID" type="global" />
+                </KeyValues>
+            </Button>
+            <Button name="$parentBountifulDelvesTab" parentKey="BountifulDelvesTab" inherits="ItemUpgradeTipTabButtonTemplate" text="ITEMUPGRADETIP_L_BOUNTIFUL_DELVES">
+                <KeyValues>
+                    <KeyValue key="displayMode" value="BountifulDelves" type="string" />
+                    <KeyValue key="title" value="ITEMUPGRADETIP_L_BOUNTIFUL_DELVES" type="global" />
                 </KeyValues>
             </Button>
             <Button name="$parentUpgradeTab" parentKey="UpgradeTab" inherits="ItemUpgradeTipTabButtonTemplate" text="ITEMUPGRADETIP_L_UPGRADE_TRACKS">

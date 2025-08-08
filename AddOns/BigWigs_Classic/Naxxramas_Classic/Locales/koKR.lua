@@ -4,8 +4,6 @@ if L then
 	L.add_death = "추가 몹 죽음 알림"
 	L.add_death_desc = "추가된 몹 죽음을 알립니다."
 
-	L.wave = "%d/22: %s"
-
 	L.trainee = "수련생" -- Unrelenting Trainee NPC 16124
 	L.deathKnight = "죽음의 기사" -- Unrelenting Death Knight NPC 16125
 	L.rider = "기병" -- Unrelenting Rider NPC 16126

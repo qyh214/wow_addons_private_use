@@ -120,7 +120,7 @@ function mod:GetOptions()
 		"custom_off_edge_marks",
 		{143701, "FLASH", "SAY"}, {143759, "FLASH"}, {143735, "FLASH"}, {148650, "FLASH"}, --Ka'roz the Locust
 		143280, --Skeer the Bloodseeker
-		143339, {"injection_tank", "TANK"}, {-8065, "FLASH"}, {148589, "FLASH"}, 143337, --Rik'kal the Dissector
+		143339, {"injection_tank", "TANK"}, {-8065, "FLASH"}, 148589, 143337, --Rik'kal the Dissector
 		"custom_off_parasite_marks",
 		{-8073, "ICON", "FLASH"}, {143243, "FLASH"}, --Hisek the Swarmkeeper
 
@@ -166,9 +166,9 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "ShieldBash", 143974)
 	--Iyyokuk the Lucid
 	local emoteTriggers = {}
-	for _, t in next, calculations do
-		for partial in next, t do
-			emoteTriggers[#emoteTriggers+1] = partial
+	for _, table in next, calculations do
+		for partialMatch in next, table do
+			emoteTriggers[#emoteTriggers+1] = partialMatch
 		end
 	end
 	self:Emote("CalculateEmotes", unpack(emoteTriggers))
@@ -477,8 +477,8 @@ do
 			results.shape, results.color, results.number = nil, nil, nil -- reset
 		end
 
-		for type, t in pairs(calculations) do
-			for partial, v in pairs(t) do
+		for type, table in pairs(calculations) do
+			for partial, v in pairs(table) do
 				if msg:find(partial) then
 					results[type] = v
 					return

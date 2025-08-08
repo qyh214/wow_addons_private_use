@@ -9,15 +9,14 @@ local RUMOR = {
     loot={},
     hide_before=ns.WORLDQUESTS,
     group="rumor",
+    levels=true,
 }
 
 --[[
 [] = {quest=82642, vignette=6295,},
 [] = {quest=82644, vignette=6296,},
-[] = {quest=82642, vignette=6299,},
 [] = {quest=82642, vignette=6301,},
 [] = {quest=82644, vignette=6303,},
-[] = {quest=82644, vignette=6304,},
 [] = {quest=82646, vignette=6306,},
 [] = {quest=82648, vignette=6307,},
 [] = {quest=82581, vignette=6542,},
@@ -28,8 +27,6 @@ local RUMOR = {
 [] = {quest=82640, vignette=6548,},
 [] = {quest=82581, vignette=6549,},
 [] = {quest=82581, vignette=6550,},
-[] = {quest=82581, vignette=6551,},
-[] = {quest=82640, vignette=6552,},
 [] = {quest=82640, vignette=6554,},
 [] = {quest=82581, vignette=6555,},
 [] = {quest=82640, vignette=6556,},
@@ -62,8 +59,12 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
         vignette=6546,
         -- gave
     },
+    [43004715] = {quest=82642, vignette=6299,}, -- Eirzay 224161, gave 81475
+    [68655107] = {quest=82581, vignette=6551,}, -- Ru'murh 224191, gave 81484
+    [41482241] = {quest=82640, vignette=6552,}, -- Ru'murh 224190, gave 81555
     [52021664] = {quest=82640, vignette=6564,}, -- Ghos'opp 224177, gave 81479
     [64162119] = {quest=82640, vignette=6563,}, -- Ghos'opp 224178, gave 81495
+    [61253619] = {quest=82644, vignette=6304,}, -- Eirzay 224171, gave 81491
 }, RUMOR)
 ns.RegisterPoints(ns.CITYOFTHREADSLOWER, {
     [49664432] = { -- Eirzay 224168
@@ -84,6 +85,7 @@ local CACHE = {
     -- 80544 for chosing the Weaver?
     hide_before={ns.conditions.QuestComplete(80544)},
     group="rumor",
+    levels=true,
 }
 
 --[[
@@ -91,10 +93,7 @@ local CACHE = {
 [] = {quest=80580, vignette=6340,},
 [] = {quest=82855, vignette=6342,},
 [] = {quest=82856, vignette=6343,},
-[] = {quest=82858, vignette=6345,},
-[] = {quest=82859, vignette=6346,},
 [] = {quest=82860, vignette=6347,},
-[] = {quest=82862, vignette=6349,},
 [] = {quest=80559, vignette=6388,},
 [] = {quest=80579, vignette=6389,},
 [] = {quest=80580, vignette=6390,},
@@ -128,6 +127,9 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
         quest=80579,
         vignette=6339,
     },
+    [69898274] = {quest=82858, vignette=6345,}, -- Thumble 224891
+    [75194831] = {quest=82862, vignette=6349,}, -- Thimble 224895
+    [26255113] = {quest=82859, vignette=6346,}, -- Thimble 224892
 }, CACHE)
 
 -- Forgotten Memorial

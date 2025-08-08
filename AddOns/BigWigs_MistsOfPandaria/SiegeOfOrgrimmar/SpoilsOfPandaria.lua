@@ -50,7 +50,7 @@ function mod:GetOptions()
 	return {
 		{146815, "FLASH"},
 		145288, {145461, "TANK"}, {142947, "TANK"}, 142694, -- Mogu crate
-		{145987, "PROXIMITY", "FLASH"}, {145747, "FLASH"}, {145692, "TANK"}, {145715, "FLASH"}, {145786, "DISPEL"},-- Mantid crate
+		{145987, "PROXIMITY", "FLASH"}, 145747, {145692, "TANK"}, 145715, {145786, "DISPEL"},-- Mantid crate
 		{146217, "FLASH"}, 146222, 146257, -- Crate of Panderan Relics
 		"proximity", {"crates", "TANK"}, {"warmup", "COUNTDOWN"}, "berserk",
 	}, {
@@ -148,9 +148,9 @@ function mod:UNIT_POWER_FREQUENT(_, unit, powerType)
 		else
 			local remaining = 50 - power
 			local small = remaining
-			small = max(0, small - (massiveCrates * 14))
-			local medium = min(floor(small / 3), stoutCrates)
-			small = max(0, small - (medium * 3))
+			small = math.max(0, small - (massiveCrates * 14))
+			local medium = math.min(floor(small / 3), stoutCrates)
+			small = math.max(0, small - (medium * 3))
 			self:MessageOld("crates", "yellow", nil, L.power_left:format(remaining, massiveCrates, medium, small), L.crates_icon)
 		end
 	elseif self:Mythic() then

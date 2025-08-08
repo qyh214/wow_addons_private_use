@@ -1,0 +1,18 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<!-- Load -->
+	<Script file="Load.lua"/>
+
+	<!-- Core -->
+	<Script file="Core/enUS.lua"/>
+	<Script file="Core/deDE.lua"/>
+	<Script file="Core/esES.lua"/>
+	<Script file="Core/esMX.lua"/>
+	<Script file="Core/frFR.lua"/>
+	<Script file="Core/itIT.lua"/>
+	<Script file="Core/koKR.lua"/>
+	<Script file="Core/ptBR.lua"/>
+	<Script file="Core/ruRU.lua"/>
+	<Script file="Core/zhCN.lua"/>
+	<Script file="Core/zhTW.lua"/>
+</Ui>

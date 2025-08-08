@@ -1,7 +1,24 @@
+-- Archival Assault
+
+local L = BigWigs:NewBossLocale("Captain Nil'hitan", "koKR")
+if L then
+	--L.captain_nilhitan = "Captain Nil'hitan"
+end
+
+L = BigWigs:NewBossLocale("Portalmaster Halsan", "koKR")
+if L then
+	--L.portalmaster_halsan = "Portalmaster Halsan"
+end
+
+L = BigWigs:NewBossLocale("Voidrider Challnax", "koKR")
+if L then
+	--L.voidripper = "Voidripper"
+	--L.voidrider_challnax= "Voidrider Challnax"
+end
+
 -- Demolition Dome
 
-local L = BigWigs:NewBossLocale("The Underpin", "koKR")
-if not L then return end
+L = BigWigs:NewBossLocale("The Underpin", "koKR")
 if L then
 	L.the_underpin = "대지주 (8단계)"
 	L.crony = "친구"
@@ -211,6 +228,18 @@ if L then
 	L.waxface = "밀랍얼굴"
 end
 
+-- Voidrazor Sanctuary
+
+L = BigWigs:NewBossLocale("Nexus-Princess Ky'veza (Tier 8)", "koKR")
+if L then
+	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza (Tier 8)"
+end
+
+L = BigWigs:NewBossLocale("Nexus-Princess Ky'veza (Tier 11)", "koKR")
+if L then
+	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza (Tier 11)"
+end
+
 -- Zekvir's Lair
 
 L = BigWigs:NewBossLocale("Zekvir", "koKR")
@@ -226,6 +255,18 @@ if L then
 end
 
 -- Trash
+
+L = BigWigs:NewBossLocale("Ethereal Trash", "koKR")
+if L then
+	--L.ethereal_trash = "Ethereal Trash"
+
+	--L.shadeye_observer = "Shadeye Observer"
+	--L.shadowguard_phasecutter = "Shadowguard Phasecutter"
+	--L.shadowguard_arcanotech = "Shadowguard Arcanotech"
+	--L.shadowguard_soulbreaker = "Shadowguard Soulbreaker"
+	--L.shadowguard_steelsoul = "Shadowguard Steelsoul"
+	--L.siphoned_drake = "Siphoned Drake"
+end
 
 L = BigWigs:NewBossLocale("Fungarian Delve Trash", "koKR")
 if L then
@@ -275,6 +316,21 @@ if L then
 	L.crazed_predator = "광기 어린 포식자"
 	L.deepwater_makura = "깊은물 마쿠라"
 	L.kobyss_trickster = "코비스 요술쟁이"
+end
+
+L = BigWigs:NewBossLocale("Ky'veza Rares", "koKR")
+if L then
+	--L.rares = "Ky'veza Rares"
+
+	--L.pactsworn_fraycaller = "Pactsworn Fraycaller"
+	--L.pactsworn_dustblade = "Pactsworn Dustblade"
+	--L.pactsworn_sandreaver = "Pactsworn Sandreaver"
+	--L.pactsworn_arcanist = "Pactsworn Arcanist"
+	--L.pactsworn_wildcaller = "Pactsworn Wildcaller"
+	--L.invasive_phasecrawler = "Invasive Phasecrawler"
+	--L.drude = "D'rude"
+	--L.great_devourer = "Great Devourer"
+	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza (Random Spawn)"
 end
 
 L = BigWigs:NewBossLocale("Nerubian Delve Trash", "koKR")
@@ -335,5 +391,5 @@ if L then
 	L.aggressively_lost_hobgoblin = "난폭한 길 잃은 밥통고블린"
 	L.the_underpin = "대지주 (무작위 생성)"
 
-	--L.underpin_retreat_trigger = "People always messin' around on my perfectly legal, deeded land!"
+	L.underpin_retreat_trigger = "왜 인간들은 늘 완벽하게 합법적으로 내 소유인 땅에서 노는 거냐고!"
 end

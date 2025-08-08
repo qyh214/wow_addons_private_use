@@ -9,7 +9,7 @@ DB.Version = C_AddOns.GetAddOnMetadata("NDui", "Version")
 DB.Support = C_AddOns.GetAddOnMetadata("NDui", "X-Support")
 DB.Client = GetLocale()
 DB.ScreenWidth, DB.ScreenHeight = GetPhysicalScreenSize()
-DB.isNewPatch = select(4, GetBuildInfo()) >= 110105 -- 11.1.5
+DB.isNewPatch = select(4, GetBuildInfo()) >= 110200 -- 11.2.0
 
 -- Deprecated
 do
@@ -92,7 +92,6 @@ DB.closeTex = Media.."Hutu\\close"
 DB.ArrowUp = Media.."Hutu\\arrow"
 DB.afdianTex = Media.."Hutu\\Afdian"
 DB.patreonTex = Media.."Hutu\\Patreon"
-DB.sponsorTex = Media.."Hutu\\Sponsor"
 DB.curseforgeTex = Media.."Hutu\\CURSEFORGE"
 DB.boxTex = Media.."Hutu\\Box"
 DB.mailTex = "Interface\\Minimap\\Tracking\\Mailbox"

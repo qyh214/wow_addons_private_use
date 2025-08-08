@@ -1,4 +1,4 @@
-﻿local addonName, Addon = ...;
+﻿local _, Addon = ...;
 
 function Addon:ShowTextFrame(title)
 	Addon.isLocked = true;

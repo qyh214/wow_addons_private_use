@@ -1,4 +1,5 @@
-local L = BigWigsAPI:NewLocale("BigWigs: Common", "ruRU")
+local _, addonTbl = ...
+local L = addonTbl.API:NewLocale("BigWigs: Common", "ruRU")
 if not L then return end
 
 -- Prototype.lua common words
@@ -13,8 +14,10 @@ L.buff_other = "Бафф на %s: %s"
 L.magic_buff_boss = "Магический бафф на боссе: %s" -- Magic buff on BOSS: SPELL_NAME
 L.magic_buff_other = "Магический бафф на %s: %s" -- Magic buff on NPC_NAME: SPELL_NAME
 L.on = "%s на %s"
-L.stack = "%dx %s на %s"
-L.stackyou = "%dx %s на ТЕБЕ"
+L.stack = "%dx %s на %s" -- "5x SPELL_NAME on PLAYER_OR_NPC" showing how many stacks of a buff/debuff are on a player or NPC
+L.stackyou = "%dx %s на ТЕБЕ" -- "5x SPELL_NAME on YOU" showing how many stacks of a buff/debuff are on you
+--L.stackboss = "%dx %s on BOSS" -- "5x SPELL_NAME on BOSS" showing how many stacks of a buff/debuff are on the boss
+--L.stack_gained = "Gained %dx" -- "Gained 5x" for situations where we show how many stacks of a buff were gained since last time a message showed
 L.cast = "<Чтение %s>"
 L.casting = "Чтение %s"
 L.soon = "%s скоро"
@@ -43,10 +46,11 @@ L.dead = "Смерть" -- When a player is dead
 L.general = "Общее" -- General settings, i.e. things that apply to normal, heroic and mythic mode.
 L.health = "Здоровья" -- The health of an NPC
 L.health_percent = "%d%% Здоровья" -- "10% Health" The health percentage of an NPC
+L.energy = "Энергия"
+--L.energy_percent = "%d%% Energy" -- "80% Energy" The energy percentage of an NPC
 L.door_open = "Дверь открыта" -- When a door is open, usually after a speech from an NPC
 L.gate_open = "Врата открыты" -- When a gate is open, usually after a speech from an NPC
 L.threat = "Угрозе"
-L.energy = "Энергия"
 
 L.remaining = "%d |4осталось:остались:осталось;" -- 5 remaining
 L.duration = "%s для %s сек" -- Spell for 10 seconds
@@ -67,13 +71,15 @@ L.you_die = "Умираешь" -- You will die
 L.you_die_sec = "Умрёшь через %d сек" -- "You die in 15 sec" (sec = seconds)
 L.next_ability = "Следующая способность" -- We don't know what ability will be next, we only know when it will happen (showing a bar)
 L.boss_landing = "%s приземляется" -- "NPC_NAME is landing" Used when a flying NPC/dragon/boss is landing
---L.landing = "Landing" -- Used when a flying NPC/dragon/boss is landing
+L.landing = "Приземление" -- Used when a flying NPC/dragon/boss is landing
 L.flying_available = "Можешь лететь"
 L.bosses_too_close = "Разведи боссов" -- When 2 or more bosses are too close to each other, buffing each other with a shield, extra damage, etc. -- changed translation meaning, but intent is the same
---L.keep_moving = "Keep moving" -- An ability that forces you to keep moving or you will take damage
---L.stand_still = "Stand still" -- An ability that forces you to stand still or you will take damage
---L.safe_to_stop = "Safe to stop" -- When an ability that forces you to keep moving fades from you, allowing you to stop moving
---L.safe_to_move = "Safe to move" -- When an ability to forces you to stand still fades from you, allowing you to move again
+L.keep_moving = "Двигайся" -- An ability that forces you to keep moving or you will take damage
+L.stand_still = "Стой смирно" -- An ability that forces you to stand still or you will take damage
+L.safe_to_stop = "Можно остановиться" -- When an ability that forces you to keep moving fades from you, allowing you to stop moving
+L.safe_to_move = "Можно двигаться" -- When an ability to forces you to stand still fades from you, allowing you to move again
+L.safe = "Безопасность" -- You are safe from a bad ability
+L.unsafe = "Опасность" -- You are unsafe (in danger) of a bad ability
 
 -- Add related
 L.add_spawned = "Помощник появился" -- singular
@@ -131,6 +137,9 @@ L.marker = "Метка %s"
 L.marker_player_desc = "Отмечать игроков, затронутых %s меткой %s, требуется быть помощником или лидером рейда." -- Mark players affected by 'SPELL_NAME' with SKULL_ICON
 L.marker_npc_desc = "Отмечать %s меткой %s, требуется быть помощником или лидером рейда." -- Mark NPC_NAME with SKULL_ICON
 L.marker_npc_aura_desc = "Отмечает НПЦ под воздействием '%s' меткой %s, требуется быть помощником или лидером рейда." -- Mark NPCs affected by 'SPELL_NAME' with SKULL_ICON
+L.disabled = "Отключено"
+L.none = "Нет"
+--L.markers = "Markers" -- Plural of marker
 
 -- Ability where two players have to move close to each other
 L.link = "Связь"
@@ -151,10 +160,14 @@ L.seconds = "%.1fс" -- 1.1 seconds
 
 -- Directions
 L.top = "Верх" -- need to make sure usage is good (1)
+L.top_right = "Сверху справа"
+L.top_left = "Сверху слева"
 L.up = "Вверх" -- need to make sure usage is good (1)
 L.middle = "Центр"
 L.down = "Вниз" -- need to make sure usage is good (2)
 L.bottom = "Низ" -- need to make sure usage is good (2)
+L.bottom_right = "Снизу справа"
+L.bottom_left = "Снизу слева"
 L.left = "Лево"
 L.right = "Право"
 L.north = "Север"
@@ -165,6 +178,11 @@ L.south = "Юг"
 L.south_west = "Юго-Запад"
 L.west = "Запад"
 L.north_west = "Северо-Запад"
+
+-- Sizes
+L.small = "Маленький" -- Male gender used. Maybe neutral ?
+L.medium = "Средний"
+L.large = "Большой"
 
 -- Schools
 L.fire = "Огонь"
@@ -177,6 +195,7 @@ L.arcane = "Тайная магия"
 L.autotalk = "Автоматическое взаимодействие с НПЦ"
 L.autotalk_boss_desc = "Автоматический выбирать вариант диалога с НПЦ для начала боя."
 L.autotalk_generic_desc = "Автоматический выбирать вариант диалога с НПЦ для продвижения по подземелью."
+--L.autotalk_notice = "Automatically interacting with NPC %s."
 
 -- Common ability name replacements
 L.absorb = "Поглoщ." -- Used for shield-like abilities that absorb damage or healing
@@ -230,6 +249,8 @@ L.spell_reflection = "Отражение заклинаний" -- Any ability th
 L.rooted = "Обездвиживание" -- Any ability that roots you in place, preventing you from moving
 
 -- Common ability name replacements A-Z
+L.ball = "Шар" -- A ball, like a football, basketball, etc
+L.balls = "Шары" -- Plural of L.ball
 L.blind = "Ослепление" -- Any ability that blinds or disorientates you. Usually an ability a boss casts and you need to turn away from the boss or it will blind you.
 L.dodge = "Избегай" -- When you need to continually run around to dodge abilities, like missiles landing on the ground under you
 L.enrage = "Исступление" -- Any enrage buff that can be removed by players using abilities like Soothe (Druid), Tranquilizing Shot (Hunter) and Shiv (Rogue)
@@ -239,7 +260,7 @@ L.fixates = "Фиксации" -- Plural of L.fixate
 L.group_damage = "Пати Урон" -- Any ability that causes damage to every player in the 5 player group
 L.health_drain = "Потеря здоровья" -- Any ability that drains health from the player
 L.parasite = "Паразит" -- Any ability where a parasite is involved e.g. "Parasitic Infection", "Parasitic Growth", etc
---L.parasites = "Parasites" -- Plural of L.parasite
+L.parasites = "Паразиты" -- Plural of L.parasite
 L.pull_in = "Притяжка" -- An ability that pulls you in towards the boss against your will
 L.raid_damage = "Рейд Урон" -- Any ability that causes damage to every player in the raid
 L.smash = "Удар" -- Short for any ability with the name "smash" in it e.g. "Darkrift Smash" or "Seismic Smash" or "Arcing Smash"
@@ -248,10 +269,13 @@ L.soaks = "Соки" -- Plural of L.soak
 L.spike = "Шип" -- Short for any ability with the name "spike" in it e.g. "Glacial Spike" or "Fel Spike" or "Volatile Spike"
 L.spikes = "Шипы" -- Plural of L.spike
 L.spread = "Спредай" -- An ability that forces you to spread out away from other players, or you might damage them
+--L.tank_bomb = "Tank Bomb" -- Similar to L.bomb but only applies to tanks
 L.tank_combo = "Танковское комбо" -- Used for tank swap mechanics where the boss casts a sequence of tank buster attacks
---L.tank_debuff = "Tank Debuff" -- Used for debuffs that only apply to tanks, usually an indicator that you need to taunt
---L.tank_frontal = "Tank Frontal" -- Similar to L.frontal_cone but only applies to tanks
---L.tank_soak = "Tank Soak" -- Similar to L.soak but only applies to tanks
+L.tank_debuff = "Танк Дебафф" -- Used for debuffs that only apply to tanks, usually an indicator that you need to taunt
+L.tank_frontal = "Танк Фронтал" -- Similar to L.frontal_cone but only applies to tanks
+L.tank_soak = "Танк Соак" -- Similar to L.soak but only applies to tanks
 L.tentacle = "Щупальце" -- Used for bosses that summon tentacles
 L.tentacles = "Щупальца" -- Plural of L.tentacle
 L.waves = "Пельмени" -- Multiple waves of a bad ability coming from a boss, like waves in the ocean -- technically speaking "waves" is "Волны" but current tl is a very common name
+L.whelp = "Дракончик" -- Short for Whelpling, a baby dragonkin (Dragon Whelp)
+L.whelps = "Дракончики" -- Plural of L.whelp

@@ -57,12 +57,12 @@ end
 local collectibleAsCostForItem = function(t)
 	local id = t.itemID;
 	local results = SearchForField("itemIDAsCost", id);
-	if #results > 0 then
+	if results and #results > 0 then
 		local costTotal = 0;
 		if not t.parent or not t.parent.saved then
 			for _,ref in pairs(results) do
 				if ref.itemID ~= id and app.RecursiveGroupRequirementsFilter(ref) then
-					if ref.key == "instanceID" or ((ref.key == "difficultyID" or ref.key == "mapID" or ref.key == "headerID") and (ref.parent and GetRelativeValue(ref.parent, "instanceID"))) then
+					if ref.key == "instanceID" or ((ref.key == "difficultyID" or ref.key == "mapID" or (ref.key == "headerID" and not ref.type)) and (ref.parent and GetRelativeValue(ref.parent, "instanceID"))) then
 						if costTotal < 1 then	-- This is for Keys
 							costTotal = costTotal + 1;
 						end
@@ -136,7 +136,7 @@ local collectedAsTransmog = function(t)
 			else
 				-- Check to see if this item was a quest reward.
 				local searchResults = SearchForField("itemID", id);
-				if #searchResults > 0 then
+				if searchResults and #searchResults > 0 then
 					for i,o in ipairs(searchResults) do
 						if o.itemID == id then
 							if ((o.key == "questID" and o.saved) or (o.parent and o.parent.key == "questID" and o.parent.saved)) and app.RecursiveDefaultCharacterRequirementsFilter(o) then
@@ -158,7 +158,8 @@ local itemFields = {
 		return t.link;
 	end,
 	["icon"] = function(t)
-		return GetItemIcon(t.itemID) or 134400;
+		local itemID = t.itemID
+		return itemID and GetItemIcon(itemID) or 134400;
 	end,
 	["link"] = function(t)
 		return BestItemLinkPerItemID[t.itemID];
@@ -173,9 +174,15 @@ local itemFields = {
 	end,
 	["f"] = function(t)
 		if t.questID then return app.FilterConstants.QUEST_ITEMS; end
-		if #SearchForField("itemIDAsCost", t.itemID) > 0 then
+		local results = SearchForField("itemIDAsCost", t.itemID);
+		if results and #results > 0 then
 			return app.FilterConstants.QUEST_ITEMS;
 		end
+	end,
+	["specs"] = function(t)
+		local specs = app.GetFixedItemSpecInfo(t.itemID) or {};
+		t.specs = specs;
+		return specs;
 	end,
 	["tsm"] = function(t)
 		return ("i:%d"):format(t.itemID);
@@ -476,6 +483,7 @@ if C_Heirloom and app.GameBuildVersion >= 30000 then
 		-- Prior to Cataclysm, we need to collect transmog the same way as we do for items.
 		tinsert(heirloomDefinition, "AsTransmog");
 		tinsert(heirloomDefinition, {
+			CACHE = function() return "Sources"; end,
 			collectible = function(t)
 				return t.collectibleAsCost or app.Settings.Collectibles.Transmog;
 			end,
@@ -495,6 +503,7 @@ if C_Heirloom and app.GameBuildVersion >= 30000 then
 		local AccountSources;
 		tinsert(heirloomDefinition, "AsTransmog");
 		tinsert(heirloomDefinition, {
+			CACHE = function() return "Sources"; end,
 			collectible = function(t)
 				return t.collectibleAsCost or app.Settings.Collectibles.Transmog;
 			end,
@@ -525,18 +534,6 @@ if C_Heirloom and app.GameBuildVersion >= 30000 then
 			if t.collectedAsCost == false then
 				return 0;
 			end
-			if t.repeatable then
-				return (app.CurrentCharacter.Factions[t.factionID] and 1)
-					or (ATTAccountWideData.Factions[t.factionID] and 2);
-			else
-				-- This is used for the Grand Commendations unlocking Bonus Reputation
-				if ATTAccountWideData.FactionBonus[t.factionID] then return 1; end
-				if GetFactionBonusReputation(t.factionID) then
-					ATTAccountWideData.FactionBonus[t.factionID] = 1;
-					return 1;
-				end
-			end
-			-- This is used by reputation tokens. (turn in items)
 			if app.CurrentCharacter.Factions[t.factionID] then return 1; end
 			if app.Settings.AccountWide.Reputations and ATTAccountWideData.Factions[t.factionID] then return 2; end
 		end,

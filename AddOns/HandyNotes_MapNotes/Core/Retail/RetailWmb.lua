@@ -12,6 +12,7 @@ end
 
 function WorldMapOptionsButtonMixin:OnClick(button)
 local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
+local GetCurrentMapID = WorldMapFrame:GetMapID()
 
     if button == "LeftButton" then
 
@@ -76,7 +77,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
         -- Continent Maps
         if info.mapType == 2 then 
 
-            if WorldMapFrame:GetMapID() == 12 or WorldMapFrame:GetMapID() == 948 then
+            if GetCurrentMapID == 12 or GetCurrentMapID == 948 then
                 if ns.Addon.db.profile.showContinentKalimdor then
                     ns.Addon.db.profile.showContinentKalimdor = false
                     if ns.Addon.db.profile.MmbWmbChatMessage then
@@ -88,7 +89,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Kalimdor"], L["icons"], "|cff00ff00" .. L["are shown"])
                     end
                 end
-            elseif WorldMapFrame:GetMapID() == 13 then
+            elseif GetCurrentMapID == 13 then
                 if ns.Addon.db.profile.showContinentEasternKingdom then
                     ns.Addon.db.profile.showContinentEasternKingdom = false
                     if ns.Addon.db.profile.MmbWmbChatMessage then
@@ -100,7 +101,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Eastern Kingdom"], L["icons"], "|cff00ff00" .. L["are shown"])
                     end
                 end
-            elseif WorldMapFrame:GetMapID() == 101 then
+            elseif GetCurrentMapID == 101 then
                 if ns.Addon.db.profile.showContinentOutland then
                     ns.Addon.db.profile.showContinentOutland = false
                     if ns.Addon.db.profile.MmbWmbChatMessage then
@@ -112,7 +113,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Outland"], L["icons"], "|cff00ff00" .. L["are shown"])
                     end
                 end
-            elseif WorldMapFrame:GetMapID() == 113 then
+            elseif GetCurrentMapID == 113 then
                 if ns.Addon.db.profile.showContinentNorthrend then
                     ns.Addon.db.profile.showContinentNorthrend = false
                     if ns.Addon.db.profile.MmbWmbChatMessage then
@@ -124,7 +125,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Northrend"], L["icons"], "|cff00ff00" .. L["are shown"])
                     end
                 end
-            elseif WorldMapFrame:GetMapID() == 424 then
+            elseif GetCurrentMapID == 424 then
                 if ns.Addon.db.profile.showContinentPandaria then
                     ns.Addon.db.profile.showContinentPandaria = false
                     if ns.Addon.db.profile.MmbWmbChatMessage then
@@ -136,7 +137,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Pandaria"], L["icons"], "|cff00ff00" .. L["are shown"])
                     end
                 end
-            elseif WorldMapFrame:GetMapID() == 572 then
+            elseif GetCurrentMapID == 572 then
                 if ns.Addon.db.profile.showContinentDraenor then
                     ns.Addon.db.profile.showContinentDraenor = false
                     if ns.Addon.db.profile.MmbWmbChatMessage then
@@ -146,7 +147,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     ns.Addon.db.profile.showContinentDraenor = true
                     print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Draenor"], L["icons"], "|cff00ff00" .. L["are shown"])
                 end
-            elseif WorldMapFrame:GetMapID() == 619 then
+            elseif GetCurrentMapID == 619 or GetCurrentMapID == 905 then
                 if ns.Addon.db.profile.showContinentBrokenIsles then
                     ns.Addon.db.profile.showContinentBrokenIsles = false
                     if ns.Addon.db.profile.MmbWmbChatMessage then
@@ -158,7 +159,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Broken Isles"], L["icons"], "|cff00ff00" .. L["are shown"])
                     end
                 end
-            elseif WorldMapFrame:GetMapID() == 875 then
+            elseif GetCurrentMapID == 875 then
                 if ns.Addon.db.profile.showContinentZandalar then
                     ns.Addon.db.profile.showContinentZandalar = false
                     if ns.Addon.db.profile.MmbWmbChatMessage then
@@ -170,7 +171,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Zandalar"], L["icons"], "|cff00ff00" .. L["are shown"])
                     end
                 end
-            elseif WorldMapFrame:GetMapID() == 876 then
+            elseif GetCurrentMapID == 876 then
                 if ns.Addon.db.profile.showContinentKulTiras then
                     ns.Addon.db.profile.showContinentKulTiras = false
                     if ns.Addon.db.profile.MmbWmbChatMessage then
@@ -182,7 +183,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Kul Tiras"], L["icons"], "|cff00ff00" .. L["are shown"])
                     end
                 end
-            elseif WorldMapFrame:GetMapID() == 1550 then
+            elseif GetCurrentMapID == 1550 then
                 if ns.Addon.db.profile.showContinentShadowlands then
                     ns.Addon.db.profile.showContinentShadowlands = false
                     if ns.Addon.db.profile.MmbWmbChatMessage then
@@ -194,7 +195,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Shadowlands"], L["icons"], "|cff00ff00" .. L["are shown"])
                     end
                 end
-            elseif WorldMapFrame:GetMapID() == 1978 then
+            elseif GetCurrentMapID == 1978 then
                 if ns.Addon.db.profile.showContinentDragonIsles then
                     ns.Addon.db.profile.showContinentDragonIsles = false
                     if ns.Addon.db.profile.MmbWmbChatMessage then
@@ -206,7 +207,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Dragon Isles"], L["icons"], "|cff00ff00" .. L["are shown"])
                     end
                 end
-            elseif WorldMapFrame:GetMapID() == 2274 then
+            elseif GetCurrentMapID == 2274 then
                 if ns.Addon.db.profile.showContinentKhazAlgar then
                     ns.Addon.db.profile.showContinentKhazAlgar = false
                         WorldMapFrame:Hide()
@@ -230,16 +231,17 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
 
         -- Dungeon Maps
         if info.mapType == 4 and not 
-            (WorldMapFrame:GetMapID() == 1454 or WorldMapFrame:GetMapID() == 1456 --Cata nodes
-            or WorldMapFrame:GetMapID() == 2266 -- Milleania's Threshold
-            or WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() == 87 or WorldMapFrame:GetMapID() == 89 or WorldMapFrame:GetMapID() == 103 or WorldMapFrame:GetMapID() == 85
-            or WorldMapFrame:GetMapID() == 90 or WorldMapFrame:GetMapID() == 86 or WorldMapFrame:GetMapID() == 88 or WorldMapFrame:GetMapID() == 110 or WorldMapFrame:GetMapID() == 111
-            or WorldMapFrame:GetMapID() == 125 or WorldMapFrame:GetMapID() == 126 or WorldMapFrame:GetMapID() == 391 or WorldMapFrame:GetMapID() == 392 or WorldMapFrame:GetMapID() == 393 
-            or WorldMapFrame:GetMapID() == 394 or WorldMapFrame:GetMapID() == 582 or WorldMapFrame:GetMapID() == 590 or WorldMapFrame:GetMapID() == 622 or WorldMapFrame:GetMapID() == 624 
-            or WorldMapFrame:GetMapID() == 626 or WorldMapFrame:GetMapID() == 627 or WorldMapFrame:GetMapID() == 628 or WorldMapFrame:GetMapID() == 629 or WorldMapFrame:GetMapID() == 1161
-            or WorldMapFrame:GetMapID() == 1163 or WorldMapFrame:GetMapID() == 1164 or WorldMapFrame:GetMapID() == 1165 or WorldMapFrame:GetMapID() == 1670 or WorldMapFrame:GetMapID() == 1671 
-            or WorldMapFrame:GetMapID() == 1672 or WorldMapFrame:GetMapID() == 1673 or WorldMapFrame:GetMapID() == 2112 or WorldMapFrame:GetMapID() == 407 or WorldMapFrame:GetMapID() == 2339 
-            or WorldMapFrame:GetMapID() == 503 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500 or WorldMapFrame:GetMapID() == 2322 or WorldMapFrame:GetMapID() == 2346)
+            (GetCurrentMapID == 1454 or GetCurrentMapID == 1456 --Cata nodes
+            or GetCurrentMapID == 2266 -- Milleania's Threshold
+            or GetCurrentMapID == 84 or GetCurrentMapID == 87 or GetCurrentMapID == 89 or GetCurrentMapID == 103 or GetCurrentMapID == 85
+            or GetCurrentMapID == 90 or GetCurrentMapID == 86 or GetCurrentMapID == 88 or GetCurrentMapID == 110 or GetCurrentMapID == 111
+            or GetCurrentMapID == 125 or GetCurrentMapID == 126 or GetCurrentMapID == 391 or GetCurrentMapID == 392 or GetCurrentMapID == 393 
+            or GetCurrentMapID == 394 or GetCurrentMapID == 582 or GetCurrentMapID == 590 or GetCurrentMapID == 622 or GetCurrentMapID == 624 
+            or GetCurrentMapID == 626 or GetCurrentMapID == 627 or GetCurrentMapID == 628 or GetCurrentMapID == 629 or GetCurrentMapID == 831 or GetCurrentMapID == 832 
+            or GetCurrentMapID == 1161 or GetCurrentMapID == 1163 or GetCurrentMapID == 1164 or GetCurrentMapID == 1165 or GetCurrentMapID == 1670 
+            or GetCurrentMapID == 1671 or GetCurrentMapID == 1672 or GetCurrentMapID == 1673 or GetCurrentMapID == 2112 or GetCurrentMapID == 407 
+            or GetCurrentMapID == 2339 or GetCurrentMapID == 503 or GetCurrentMapID == 499 or GetCurrentMapID == 500 or GetCurrentMapID == 2322 
+            or GetCurrentMapID == 2346)
         then
         
             if not ns.Addon.db.profile.activate.DungeonMap then
@@ -259,12 +261,12 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
         -- Zones without Sync function
         if not ns.Addon.db.profile.activate.SyncZoneAndMinimap and (info.mapType == 3 or info.mapType == 4 or info.mapType == 5 or info.mapType == 6) then
             --Kalimdor
-            if (WorldMapFrame:GetMapID() == 1 or WorldMapFrame:GetMapID() == 7 or WorldMapFrame:GetMapID() == 10 or WorldMapFrame:GetMapID() == 11 or WorldMapFrame:GetMapID() == 57 or WorldMapFrame:GetMapID() == 62 
-                or WorldMapFrame:GetMapID() == 63 or WorldMapFrame:GetMapID() == 64 or WorldMapFrame:GetMapID() == 65 or WorldMapFrame:GetMapID() == 66 or WorldMapFrame:GetMapID() == 67 or WorldMapFrame:GetMapID() == 68 
-                or WorldMapFrame:GetMapID() == 69 or WorldMapFrame:GetMapID() == 70 or WorldMapFrame:GetMapID() == 71 or WorldMapFrame:GetMapID() == 74 or WorldMapFrame:GetMapID() == 75 or WorldMapFrame:GetMapID() == 76 
-                or WorldMapFrame:GetMapID() == 77 or WorldMapFrame:GetMapID() == 78 or WorldMapFrame:GetMapID() == 80 or WorldMapFrame:GetMapID() == 81 or WorldMapFrame:GetMapID() == 83 or WorldMapFrame:GetMapID() == 97 
-                or WorldMapFrame:GetMapID() == 106 or WorldMapFrame:GetMapID() == 199 or WorldMapFrame:GetMapID() == 327 or WorldMapFrame:GetMapID() == 460 or WorldMapFrame:GetMapID() == 461 or WorldMapFrame:GetMapID() == 462 
-                or WorldMapFrame:GetMapID() == 468 or WorldMapFrame:GetMapID() == 1527 or WorldMapFrame:GetMapID() == 198 or WorldMapFrame:GetMapID() == 249)
+            if (GetCurrentMapID == 1 or GetCurrentMapID == 7 or GetCurrentMapID == 10 or GetCurrentMapID == 11 or GetCurrentMapID == 57 or GetCurrentMapID == 62 
+                or GetCurrentMapID == 63 or GetCurrentMapID == 64 or GetCurrentMapID == 65 or GetCurrentMapID == 66 or GetCurrentMapID == 67 or GetCurrentMapID == 68 
+                or GetCurrentMapID == 69 or GetCurrentMapID == 70 or GetCurrentMapID == 71 or GetCurrentMapID == 74 or GetCurrentMapID == 75 or GetCurrentMapID == 76 
+                or GetCurrentMapID == 77 or GetCurrentMapID == 78 or GetCurrentMapID == 80 or GetCurrentMapID == 81 or GetCurrentMapID == 83 or GetCurrentMapID == 97 
+                or GetCurrentMapID == 106 or GetCurrentMapID == 199 or GetCurrentMapID == 327 or GetCurrentMapID == 460 or GetCurrentMapID == 461 or GetCurrentMapID == 462 
+                or GetCurrentMapID == 468 or GetCurrentMapID == 1527 or GetCurrentMapID == 198 or GetCurrentMapID == 249)
             then
                 if not ns.Addon.db.profile.showZoneKalimdor then
                     ns.Addon.db.profile.showZoneKalimdor = true
@@ -278,15 +280,15 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             --Eastern Kingdom
-            elseif (WorldMapFrame:GetMapID() == 13 or WorldMapFrame:GetMapID() == 14 or WorldMapFrame:GetMapID() == 15 or WorldMapFrame:GetMapID() == 16 or WorldMapFrame:GetMapID() == 17 or WorldMapFrame:GetMapID() == 18 
-                or WorldMapFrame:GetMapID() == 19 or WorldMapFrame:GetMapID() == 21 or WorldMapFrame:GetMapID() == 22 or WorldMapFrame:GetMapID() == 23 or WorldMapFrame:GetMapID() == 25 or WorldMapFrame:GetMapID() == 26 
-                or WorldMapFrame:GetMapID() == 27 or WorldMapFrame:GetMapID() == 28 or WorldMapFrame:GetMapID() == 30 or WorldMapFrame:GetMapID() == 32 or WorldMapFrame:GetMapID() == 33 or WorldMapFrame:GetMapID() == 34 
-                or WorldMapFrame:GetMapID() == 35 or WorldMapFrame:GetMapID() == 36 or WorldMapFrame:GetMapID() == 37 or WorldMapFrame:GetMapID() == 42 or WorldMapFrame:GetMapID() == 47 or WorldMapFrame:GetMapID() == 48 
-                or WorldMapFrame:GetMapID() == 49 or WorldMapFrame:GetMapID() == 50 or WorldMapFrame:GetMapID() == 51 or WorldMapFrame:GetMapID() == 52 or WorldMapFrame:GetMapID() == 55 or WorldMapFrame:GetMapID() == 56 
-                or WorldMapFrame:GetMapID() == 94 or WorldMapFrame:GetMapID() == 210 or WorldMapFrame:GetMapID() == 224 or WorldMapFrame:GetMapID() == 245 or WorldMapFrame:GetMapID() == 425 or WorldMapFrame:GetMapID() == 427 
-                or WorldMapFrame:GetMapID() == 465 or WorldMapFrame:GetMapID() == 467 or WorldMapFrame:GetMapID() == 469 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500 or WorldMapFrame:GetMapID() == 2070 
-                or WorldMapFrame:GetMapID() == 241 or WorldMapFrame:GetMapID() == 203 or WorldMapFrame:GetMapID() == 204 or WorldMapFrame:GetMapID() == 205 or WorldMapFrame:GetMapID() == 241 or WorldMapFrame:GetMapID() == 244 
-                or WorldMapFrame:GetMapID() == 245 or WorldMapFrame:GetMapID() == 201 or WorldMapFrame:GetMapID() == 95 or WorldMapFrame:GetMapID() == 122 or WorldMapFrame:GetMapID() == 217  or WorldMapFrame:GetMapID() == 226)
+            elseif (GetCurrentMapID == 13 or GetCurrentMapID == 14 or GetCurrentMapID == 15 or GetCurrentMapID == 16 or GetCurrentMapID == 17 or GetCurrentMapID == 18 
+                or GetCurrentMapID == 19 or GetCurrentMapID == 21 or GetCurrentMapID == 22 or GetCurrentMapID == 23 or GetCurrentMapID == 25 or GetCurrentMapID == 26 
+                or GetCurrentMapID == 27 or GetCurrentMapID == 28 or GetCurrentMapID == 30 or GetCurrentMapID == 32 or GetCurrentMapID == 33 or GetCurrentMapID == 34 
+                or GetCurrentMapID == 35 or GetCurrentMapID == 36 or GetCurrentMapID == 37 or GetCurrentMapID == 42 or GetCurrentMapID == 47 or GetCurrentMapID == 48 
+                or GetCurrentMapID == 49 or GetCurrentMapID == 50 or GetCurrentMapID == 51 or GetCurrentMapID == 52 or GetCurrentMapID == 55 or GetCurrentMapID == 56 
+                or GetCurrentMapID == 94 or GetCurrentMapID == 210 or GetCurrentMapID == 224 or GetCurrentMapID == 245 or GetCurrentMapID == 425 or GetCurrentMapID == 427 
+                or GetCurrentMapID == 465 or GetCurrentMapID == 467 or GetCurrentMapID == 469 or GetCurrentMapID == 2070 
+                or GetCurrentMapID == 241 or GetCurrentMapID == 203 or GetCurrentMapID == 204 or GetCurrentMapID == 205 or GetCurrentMapID == 241 or GetCurrentMapID == 244 
+                or GetCurrentMapID == 245 or GetCurrentMapID == 201 or GetCurrentMapID == 95 or GetCurrentMapID == 122 or GetCurrentMapID == 217  or GetCurrentMapID == 226)
             then
                 if not ns.Addon.db.profile.showZoneEasternKingdom then
                     ns.Addon.db.profile.showZoneEasternKingdom = true
@@ -300,8 +302,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             --Outland
-            elseif (WorldMapFrame:GetMapID() == 100 or WorldMapFrame:GetMapID() == 102 or WorldMapFrame:GetMapID() == 104 or WorldMapFrame:GetMapID() == 105 or WorldMapFrame:GetMapID() == 107 or WorldMapFrame:GetMapID() == 108
-                or WorldMapFrame:GetMapID() == 109)
+            elseif (GetCurrentMapID == 100 or GetCurrentMapID == 102 or GetCurrentMapID == 104 or GetCurrentMapID == 105 or GetCurrentMapID == 107 or GetCurrentMapID == 108
+                or GetCurrentMapID == 109)
             then
                 if not ns.Addon.db.profile.showZoneOutland then
                     ns.Addon.db.profile.showZoneOutland = true
@@ -315,8 +317,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             --Northrend
-            elseif (WorldMapFrame:GetMapID() == 114 or WorldMapFrame:GetMapID() == 115 or WorldMapFrame:GetMapID() == 116 or WorldMapFrame:GetMapID() == 117 or WorldMapFrame:GetMapID() == 118 or WorldMapFrame:GetMapID() == 119
-                or WorldMapFrame:GetMapID() == 120 or WorldMapFrame:GetMapID() == 121 or WorldMapFrame:GetMapID() == 123 or WorldMapFrame:GetMapID() == 127 or WorldMapFrame:GetMapID() == 170)
+            elseif (GetCurrentMapID == 114 or GetCurrentMapID == 115 or GetCurrentMapID == 116 or GetCurrentMapID == 117 or GetCurrentMapID == 118 or GetCurrentMapID == 119
+                or GetCurrentMapID == 120 or GetCurrentMapID == 121 or GetCurrentMapID == 123 or GetCurrentMapID == 127 or GetCurrentMapID == 170)
             then
                 if not ns.Addon.db.profile.showZoneNorthrend then
                     ns.Addon.db.profile.showZoneNorthrend = true
@@ -330,9 +332,9 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             --Pandaria
-            elseif (WorldMapFrame:GetMapID() == 371 or WorldMapFrame:GetMapID() == 376 or WorldMapFrame:GetMapID() == 379 or WorldMapFrame:GetMapID() == 388 or WorldMapFrame:GetMapID() == 390 or WorldMapFrame:GetMapID() == 418
-                or WorldMapFrame:GetMapID() == 422 or WorldMapFrame:GetMapID() == 433 or WorldMapFrame:GetMapID() == 434 or WorldMapFrame:GetMapID() == 504 or WorldMapFrame:GetMapID() == 554  or WorldMapFrame:GetMapID() == 1530
-                or WorldMapFrame:GetMapID() == 507)
+            elseif (GetCurrentMapID == 371 or GetCurrentMapID == 376 or GetCurrentMapID == 379 or GetCurrentMapID == 388 or GetCurrentMapID == 390 or GetCurrentMapID == 418
+                or GetCurrentMapID == 422 or GetCurrentMapID == 433 or GetCurrentMapID == 434 or GetCurrentMapID == 504 or GetCurrentMapID == 554  or GetCurrentMapID == 1530
+                or GetCurrentMapID == 507)
             then
                 if not ns.Addon.db.profile.showZonePandaria then
                     ns.Addon.db.profile.showZonePandaria = true
@@ -346,8 +348,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             --Draenor
-            elseif (WorldMapFrame:GetMapID() == 525 or WorldMapFrame:GetMapID() == 534 or WorldMapFrame:GetMapID() == 535 or WorldMapFrame:GetMapID() == 539 or WorldMapFrame:GetMapID() == 542 or WorldMapFrame:GetMapID() == 543
-                or WorldMapFrame:GetMapID() == 550 or WorldMapFrame:GetMapID() == 588)
+            elseif (GetCurrentMapID == 525 or GetCurrentMapID == 534 or GetCurrentMapID == 535 or GetCurrentMapID == 539 or GetCurrentMapID == 542 or GetCurrentMapID == 543
+                or GetCurrentMapID == 550 or GetCurrentMapID == 588)
             then
                 if not ns.Addon.db.profile.showZoneDraenor then
                     ns.Addon.db.profile.showZoneDraenor = true
@@ -361,9 +363,9 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             --Broken Isles
-            elseif (WorldMapFrame:GetMapID() == 630 or WorldMapFrame:GetMapID() == 634 or WorldMapFrame:GetMapID() == 641 or WorldMapFrame:GetMapID() == 646 or WorldMapFrame:GetMapID() == 650 or WorldMapFrame:GetMapID() == 652
-                or WorldMapFrame:GetMapID() == 750 or WorldMapFrame:GetMapID() == 680 or WorldMapFrame:GetMapID() == 830 or WorldMapFrame:GetMapID() == 882 or WorldMapFrame:GetMapID() == 885 or WorldMapFrame:GetMapID() == 905
-                or WorldMapFrame:GetMapID() == 941 or WorldMapFrame:GetMapID() == 790 or WorldMapFrame:GetMapID() == 971)
+            elseif (GetCurrentMapID == 630 or GetCurrentMapID == 634 or GetCurrentMapID == 641 or GetCurrentMapID == 646 or GetCurrentMapID == 650 or GetCurrentMapID == 652
+                or GetCurrentMapID == 750 or GetCurrentMapID == 680 or GetCurrentMapID == 830 or GetCurrentMapID == 882 or GetCurrentMapID == 885 or GetCurrentMapID == 941 
+                or GetCurrentMapID == 790 or GetCurrentMapID == 971)
             then
                 if not ns.Addon.db.profile.showZoneBrokenIsles then
                     ns.Addon.db.profile.showZoneBrokenIsles = true
@@ -377,7 +379,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             --Zandalar
-            elseif (WorldMapFrame:GetMapID() == 862 or WorldMapFrame:GetMapID() == 863 or WorldMapFrame:GetMapID() == 864 or WorldMapFrame:GetMapID() == 1355 or WorldMapFrame:GetMapID() == 1528)
+            elseif (GetCurrentMapID == 862 or GetCurrentMapID == 863 or GetCurrentMapID == 864 or GetCurrentMapID == 1355 or GetCurrentMapID == 1528)
             then
                 if not ns.Addon.db.profile.showZoneZandalar then
                     ns.Addon.db.profile.showZoneZandalar = true
@@ -391,7 +393,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             --KulTiras
-            elseif (WorldMapFrame:GetMapID() == 895 or WorldMapFrame:GetMapID() == 896 or WorldMapFrame:GetMapID() == 942 or WorldMapFrame:GetMapID() == 1462 or WorldMapFrame:GetMapID() == 1169)
+            elseif (GetCurrentMapID == 895 or GetCurrentMapID == 896 or GetCurrentMapID == 942 or GetCurrentMapID == 1462 or GetCurrentMapID == 1169)
             then
                 if not ns.Addon.db.profile.showZoneKulTiras then
                     ns.Addon.db.profile.showZoneKulTiras = true
@@ -405,8 +407,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             --Shadowlands
-            elseif (WorldMapFrame:GetMapID() == 1525 or WorldMapFrame:GetMapID() == 1533 or WorldMapFrame:GetMapID() == 1536 or WorldMapFrame:GetMapID() == 1543 or WorldMapFrame:GetMapID() == 1565 or WorldMapFrame:GetMapID() == 1961
-                or WorldMapFrame:GetMapID() == 1970 or WorldMapFrame:GetMapID() == 2016)
+            elseif (GetCurrentMapID == 1525 or GetCurrentMapID == 1533 or GetCurrentMapID == 1536 or GetCurrentMapID == 1543 or GetCurrentMapID == 1565 or GetCurrentMapID == 1961
+                or GetCurrentMapID == 1970 or GetCurrentMapID == 2016)
             then
                 if not ns.Addon.db.profile.showZoneShadowlands then
                     ns.Addon.db.profile.showZoneShadowlands = true
@@ -420,8 +422,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             --Dragon Isle
-            elseif (WorldMapFrame:GetMapID() == 2022 or WorldMapFrame:GetMapID() == 2023 or WorldMapFrame:GetMapID() == 2024 or WorldMapFrame:GetMapID() == 2025 or WorldMapFrame:GetMapID() == 2026 or WorldMapFrame:GetMapID() == 2133
-                or WorldMapFrame:GetMapID() == 2151 or WorldMapFrame:GetMapID() == 2200 or WorldMapFrame:GetMapID() == 2239)
+            elseif (GetCurrentMapID == 2022 or GetCurrentMapID == 2023 or GetCurrentMapID == 2024 or GetCurrentMapID == 2025 or GetCurrentMapID == 2026 or GetCurrentMapID == 2133
+                or GetCurrentMapID == 2151 or GetCurrentMapID == 2200 or GetCurrentMapID == 2239)
             then
                 if not ns.Addon.db.profile.showZoneDragonIsles then
                     ns.Addon.db.profile.showZoneDragonIsles = true
@@ -435,8 +437,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             --Khaz Algar
-            elseif (WorldMapFrame:GetMapID() == 2248 or WorldMapFrame:GetMapID() == 2214 or WorldMapFrame:GetMapID() == 2215 or WorldMapFrame:GetMapID() == 2255 or WorldMapFrame:GetMapID() == 2256 or WorldMapFrame:GetMapID() == 2213 
-                or WorldMapFrame:GetMapID() == 2216 or WorldMapFrame:GetMapID() == 2369 or WorldMapFrame:GetMapID() == 2322 or WorldMapFrame:GetMapID() == 2346)
+            elseif (GetCurrentMapID == 2248 or GetCurrentMapID == 2214 or GetCurrentMapID == 2215 or GetCurrentMapID == 2255 or GetCurrentMapID == 2256 or GetCurrentMapID == 2213 
+                or GetCurrentMapID == 2216 or GetCurrentMapID == 2369 or GetCurrentMapID == 2322 or GetCurrentMapID == 2346 or GetCurrentMapID == 2371 or GetCurrentMapID == 2472)
             then
                 if not ns.Addon.db.profile.showZoneKhazAlgar then
                     ns.Addon.db.profile.showZoneKhazAlgar = true
@@ -455,12 +457,12 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
         -- Zones Sync function
         if ns.Addon.db.profile.activate.SyncZoneAndMinimap and (info.mapType == 3  or info.mapType == 4 or info.mapType == 5 or info.mapType == 6) then
             --Kalimdor
-            if (WorldMapFrame:GetMapID() == 1 or WorldMapFrame:GetMapID() == 7 or WorldMapFrame:GetMapID() == 10 or WorldMapFrame:GetMapID() == 11 or WorldMapFrame:GetMapID() == 57 or WorldMapFrame:GetMapID() == 62 
-                or WorldMapFrame:GetMapID() == 63 or WorldMapFrame:GetMapID() == 64 or WorldMapFrame:GetMapID() == 65 or WorldMapFrame:GetMapID() == 66 or WorldMapFrame:GetMapID() == 67 or WorldMapFrame:GetMapID() == 68 
-                or WorldMapFrame:GetMapID() == 69 or WorldMapFrame:GetMapID() == 70 or WorldMapFrame:GetMapID() == 71 or WorldMapFrame:GetMapID() == 74 or WorldMapFrame:GetMapID() == 75 or WorldMapFrame:GetMapID() == 76 
-                or WorldMapFrame:GetMapID() == 77 or WorldMapFrame:GetMapID() == 78 or WorldMapFrame:GetMapID() == 80 or WorldMapFrame:GetMapID() == 81 or WorldMapFrame:GetMapID() == 83 or WorldMapFrame:GetMapID() == 97 
-                or WorldMapFrame:GetMapID() == 106 or WorldMapFrame:GetMapID() == 199 or WorldMapFrame:GetMapID() == 327 or WorldMapFrame:GetMapID() == 460 or WorldMapFrame:GetMapID() == 461 or WorldMapFrame:GetMapID() == 462 
-                or WorldMapFrame:GetMapID() == 468 or WorldMapFrame:GetMapID() == 1527 or WorldMapFrame:GetMapID() == 198 or WorldMapFrame:GetMapID() == 249)
+            if (GetCurrentMapID == 1 or GetCurrentMapID == 7 or GetCurrentMapID == 10 or GetCurrentMapID == 11 or GetCurrentMapID == 57 or GetCurrentMapID == 62 
+                or GetCurrentMapID == 63 or GetCurrentMapID == 64 or GetCurrentMapID == 65 or GetCurrentMapID == 66 or GetCurrentMapID == 67 or GetCurrentMapID == 68 
+                or GetCurrentMapID == 69 or GetCurrentMapID == 70 or GetCurrentMapID == 71 or GetCurrentMapID == 74 or GetCurrentMapID == 75 or GetCurrentMapID == 76 
+                or GetCurrentMapID == 77 or GetCurrentMapID == 78 or GetCurrentMapID == 80 or GetCurrentMapID == 81 or GetCurrentMapID == 83 or GetCurrentMapID == 97 
+                or GetCurrentMapID == 106 or GetCurrentMapID == 199 or GetCurrentMapID == 327 or GetCurrentMapID == 460 or GetCurrentMapID == 461 or GetCurrentMapID == 462 
+                or GetCurrentMapID == 468 or GetCurrentMapID == 1527 or GetCurrentMapID == 198 or GetCurrentMapID == 249)
             then
                 if not ns.Addon.db.profile.showZoneKalimdor then
                     ns.Addon.db.profile.showZoneKalimdor = true
@@ -474,15 +476,15 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             -- Eastern Kingdom
-            elseif (WorldMapFrame:GetMapID() == 13 or WorldMapFrame:GetMapID() == 14 or WorldMapFrame:GetMapID() == 15 or WorldMapFrame:GetMapID() == 16 or WorldMapFrame:GetMapID() == 17 or WorldMapFrame:GetMapID() == 18 
-                or WorldMapFrame:GetMapID() == 19 or WorldMapFrame:GetMapID() == 21 or WorldMapFrame:GetMapID() == 22 or WorldMapFrame:GetMapID() == 23 or WorldMapFrame:GetMapID() == 25 or WorldMapFrame:GetMapID() == 26 
-                or WorldMapFrame:GetMapID() == 27 or WorldMapFrame:GetMapID() == 28 or WorldMapFrame:GetMapID() == 30 or WorldMapFrame:GetMapID() == 32 or WorldMapFrame:GetMapID() == 33 or WorldMapFrame:GetMapID() == 34 
-                or WorldMapFrame:GetMapID() == 35 or WorldMapFrame:GetMapID() == 36 or WorldMapFrame:GetMapID() == 37 or WorldMapFrame:GetMapID() == 42 or WorldMapFrame:GetMapID() == 47 or WorldMapFrame:GetMapID() == 48 
-                or WorldMapFrame:GetMapID() == 49 or WorldMapFrame:GetMapID() == 50 or WorldMapFrame:GetMapID() == 51 or WorldMapFrame:GetMapID() == 52 or WorldMapFrame:GetMapID() == 55 or WorldMapFrame:GetMapID() == 56 
-                or WorldMapFrame:GetMapID() == 94 or WorldMapFrame:GetMapID() == 210 or WorldMapFrame:GetMapID() == 224 or WorldMapFrame:GetMapID() == 245 or WorldMapFrame:GetMapID() == 425 or WorldMapFrame:GetMapID() == 427 
-                or WorldMapFrame:GetMapID() == 465 or WorldMapFrame:GetMapID() == 467 or WorldMapFrame:GetMapID() == 469 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500 or WorldMapFrame:GetMapID() == 2070 
-                or WorldMapFrame:GetMapID() == 241 or WorldMapFrame:GetMapID() == 203 or WorldMapFrame:GetMapID() == 204 or WorldMapFrame:GetMapID() == 205 or WorldMapFrame:GetMapID() == 241 or WorldMapFrame:GetMapID() == 244 
-                or WorldMapFrame:GetMapID() == 245 or WorldMapFrame:GetMapID() == 201 or WorldMapFrame:GetMapID() == 95 or WorldMapFrame:GetMapID() == 122 or WorldMapFrame:GetMapID() == 217  or WorldMapFrame:GetMapID() == 226) 
+            elseif (GetCurrentMapID == 13 or GetCurrentMapID == 14 or GetCurrentMapID == 15 or GetCurrentMapID == 16 or GetCurrentMapID == 17 or GetCurrentMapID == 18 
+                or GetCurrentMapID == 19 or GetCurrentMapID == 21 or GetCurrentMapID == 22 or GetCurrentMapID == 23 or GetCurrentMapID == 25 or GetCurrentMapID == 26 
+                or GetCurrentMapID == 27 or GetCurrentMapID == 28 or GetCurrentMapID == 30 or GetCurrentMapID == 32 or GetCurrentMapID == 33 or GetCurrentMapID == 34 
+                or GetCurrentMapID == 35 or GetCurrentMapID == 36 or GetCurrentMapID == 37 or GetCurrentMapID == 42 or GetCurrentMapID == 47 or GetCurrentMapID == 48 
+                or GetCurrentMapID == 49 or GetCurrentMapID == 50 or GetCurrentMapID == 51 or GetCurrentMapID == 52 or GetCurrentMapID == 55 or GetCurrentMapID == 56 
+                or GetCurrentMapID == 94 or GetCurrentMapID == 210 or GetCurrentMapID == 224 or GetCurrentMapID == 245 or GetCurrentMapID == 425 or GetCurrentMapID == 427 
+                or GetCurrentMapID == 465 or GetCurrentMapID == 467 or GetCurrentMapID == 469 or GetCurrentMapID == 2070 
+                or GetCurrentMapID == 241 or GetCurrentMapID == 203 or GetCurrentMapID == 204 or GetCurrentMapID == 205 or GetCurrentMapID == 241 or GetCurrentMapID == 244 
+                or GetCurrentMapID == 245 or GetCurrentMapID == 201 or GetCurrentMapID == 95 or GetCurrentMapID == 122 or GetCurrentMapID == 217  or GetCurrentMapID == 226) 
             then
                 if not ns.Addon.db.profile.showZoneEasternKingdom then
                     ns.Addon.db.profile.showZoneEasternKingdom = true
@@ -496,8 +498,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             -- Outland    
-            elseif (WorldMapFrame:GetMapID() == 100 or WorldMapFrame:GetMapID() == 102 or WorldMapFrame:GetMapID() == 104 or WorldMapFrame:GetMapID() == 105 or WorldMapFrame:GetMapID() == 107 or WorldMapFrame:GetMapID() == 108
-                or WorldMapFrame:GetMapID() == 109) 
+            elseif (GetCurrentMapID == 100 or GetCurrentMapID == 102 or GetCurrentMapID == 104 or GetCurrentMapID == 105 or GetCurrentMapID == 107 or GetCurrentMapID == 108
+                or GetCurrentMapID == 109) 
             then
                 if not ns.Addon.db.profile.showZoneOutland then
                     ns.Addon.db.profile.showZoneOutland = true
@@ -511,8 +513,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             -- Northrend    
-            elseif (WorldMapFrame:GetMapID() == 114 or WorldMapFrame:GetMapID() == 115 or WorldMapFrame:GetMapID() == 116 or WorldMapFrame:GetMapID() == 117 or WorldMapFrame:GetMapID() == 118 or WorldMapFrame:GetMapID() == 119
-                or WorldMapFrame:GetMapID() == 120 or WorldMapFrame:GetMapID() == 121 or WorldMapFrame:GetMapID() == 123 or WorldMapFrame:GetMapID() == 127 or WorldMapFrame:GetMapID() == 170) 
+            elseif (GetCurrentMapID == 114 or GetCurrentMapID == 115 or GetCurrentMapID == 116 or GetCurrentMapID == 117 or GetCurrentMapID == 118 or GetCurrentMapID == 119
+                or GetCurrentMapID == 120 or GetCurrentMapID == 121 or GetCurrentMapID == 123 or GetCurrentMapID == 127 or GetCurrentMapID == 170) 
             then
                 if not ns.Addon.db.profile.showZoneNorthrend then
                     ns.Addon.db.profile.showZoneNorthrend = true
@@ -526,9 +528,9 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             -- Pandaria    
-            elseif (WorldMapFrame:GetMapID() == 371 or WorldMapFrame:GetMapID() == 376 or WorldMapFrame:GetMapID() == 379 or WorldMapFrame:GetMapID() == 388 or WorldMapFrame:GetMapID() == 390 or WorldMapFrame:GetMapID() == 418
-                or WorldMapFrame:GetMapID() == 422 or WorldMapFrame:GetMapID() == 433 or WorldMapFrame:GetMapID() == 434 or WorldMapFrame:GetMapID() == 504 or WorldMapFrame:GetMapID() == 554  or WorldMapFrame:GetMapID() == 1530
-                or WorldMapFrame:GetMapID() == 507) 
+            elseif (GetCurrentMapID == 371 or GetCurrentMapID == 376 or GetCurrentMapID == 379 or GetCurrentMapID == 388 or GetCurrentMapID == 390 or GetCurrentMapID == 418
+                or GetCurrentMapID == 422 or GetCurrentMapID == 433 or GetCurrentMapID == 434 or GetCurrentMapID == 504 or GetCurrentMapID == 554  or GetCurrentMapID == 1530
+                or GetCurrentMapID == 507) 
             then
                 if not ns.Addon.db.profile.showZonePandaria then
                     ns.Addon.db.profile.showZonePandaria = true
@@ -542,8 +544,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             -- Draenor    
-            elseif (WorldMapFrame:GetMapID() == 525 or WorldMapFrame:GetMapID() == 534 or WorldMapFrame:GetMapID() == 535 or WorldMapFrame:GetMapID() == 539 or WorldMapFrame:GetMapID() == 542 or WorldMapFrame:GetMapID() == 543
-                or WorldMapFrame:GetMapID() == 550 or WorldMapFrame:GetMapID() == 588) 
+            elseif (GetCurrentMapID == 525 or GetCurrentMapID == 534 or GetCurrentMapID == 535 or GetCurrentMapID == 539 or GetCurrentMapID == 542 or GetCurrentMapID == 543
+                or GetCurrentMapID == 550 or GetCurrentMapID == 588) 
             then
                 if not ns.Addon.db.profile.showZoneDraenor then
                     ns.Addon.db.profile.showZoneDraenor = true
@@ -557,9 +559,9 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             -- Broken Isles    
-            elseif (WorldMapFrame:GetMapID() == 630 or WorldMapFrame:GetMapID() == 634 or WorldMapFrame:GetMapID() == 641 or WorldMapFrame:GetMapID() == 646 or WorldMapFrame:GetMapID() == 650 or WorldMapFrame:GetMapID() == 652
-                or WorldMapFrame:GetMapID() == 750 or WorldMapFrame:GetMapID() == 680 or WorldMapFrame:GetMapID() == 830 or WorldMapFrame:GetMapID() == 882 or WorldMapFrame:GetMapID() == 885 or WorldMapFrame:GetMapID() == 905
-                or WorldMapFrame:GetMapID() == 941 or WorldMapFrame:GetMapID() == 790 or WorldMapFrame:GetMapID() == 971) 
+            elseif (GetCurrentMapID == 630 or GetCurrentMapID == 634 or GetCurrentMapID == 641 or GetCurrentMapID == 646 or GetCurrentMapID == 650 or GetCurrentMapID == 652
+                or GetCurrentMapID == 750 or GetCurrentMapID == 680 or GetCurrentMapID == 830 or GetCurrentMapID == 882 or GetCurrentMapID == 885 or GetCurrentMapID == 941 
+                or GetCurrentMapID == 790 or GetCurrentMapID == 971) 
             then
                 if not ns.Addon.db.profile.showZoneBrokenIsles then
                     ns.Addon.db.profile.showZoneBrokenIsles = true
@@ -573,7 +575,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             -- Zandalar    
-            elseif (WorldMapFrame:GetMapID() == 862 or WorldMapFrame:GetMapID() == 863 or WorldMapFrame:GetMapID() == 864 or WorldMapFrame:GetMapID() == 1355 or WorldMapFrame:GetMapID() == 1528) 
+            elseif (GetCurrentMapID == 862 or GetCurrentMapID == 863 or GetCurrentMapID == 864 or GetCurrentMapID == 1355 or GetCurrentMapID == 1528) 
             then
                 if not ns.Addon.db.profile.showZoneZandalar then
                     ns.Addon.db.profile.showZoneZandalar = true
@@ -587,7 +589,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             -- Kul Tiras    
-            elseif (WorldMapFrame:GetMapID() == 895 or WorldMapFrame:GetMapID() == 896 or WorldMapFrame:GetMapID() == 942 or WorldMapFrame:GetMapID() == 1462 or WorldMapFrame:GetMapID() == 1169) 
+            elseif (GetCurrentMapID == 895 or GetCurrentMapID == 896 or GetCurrentMapID == 942 or GetCurrentMapID == 1462 or GetCurrentMapID == 1169) 
             then
                 if not ns.Addon.db.profile.showZoneKulTiras then
                     ns.Addon.db.profile.showZoneKulTiras = true
@@ -601,8 +603,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             -- Shadowlands    
-            elseif (WorldMapFrame:GetMapID() == 1525 or WorldMapFrame:GetMapID() == 1533 or WorldMapFrame:GetMapID() == 1536 or WorldMapFrame:GetMapID() == 1543 or WorldMapFrame:GetMapID() == 1565 or WorldMapFrame:GetMapID() == 1961
-                or WorldMapFrame:GetMapID() == 1970 or WorldMapFrame:GetMapID() == 2016) 
+            elseif (GetCurrentMapID == 1525 or GetCurrentMapID == 1533 or GetCurrentMapID == 1536 or GetCurrentMapID == 1543 or GetCurrentMapID == 1565 or GetCurrentMapID == 1961
+                or GetCurrentMapID == 1970 or GetCurrentMapID == 2016) 
             then
                 if not ns.Addon.db.profile.showZoneShadowlands then
                     ns.Addon.db.profile.showZoneShadowlands = true
@@ -616,8 +618,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             -- Dragon Isles    
-            elseif (WorldMapFrame:GetMapID() == 2022 or WorldMapFrame:GetMapID() == 2023 or WorldMapFrame:GetMapID() == 2024 or WorldMapFrame:GetMapID() == 2025 or WorldMapFrame:GetMapID() == 2026 or WorldMapFrame:GetMapID() == 2133
-                or WorldMapFrame:GetMapID() == 2151 or WorldMapFrame:GetMapID() == 2200 or WorldMapFrame:GetMapID() == 2239) 
+            elseif (GetCurrentMapID == 2022 or GetCurrentMapID == 2023 or GetCurrentMapID == 2024 or GetCurrentMapID == 2025 or GetCurrentMapID == 2026 or GetCurrentMapID == 2133
+                or GetCurrentMapID == 2151 or GetCurrentMapID == 2200 or GetCurrentMapID == 2239) 
             then
                 if not ns.Addon.db.profile.showZoneDragonIsles then
                     ns.Addon.db.profile.showZoneDragonIsles = true
@@ -631,8 +633,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             -- Khaz Algar    
-            elseif (WorldMapFrame:GetMapID() == 2248 or WorldMapFrame:GetMapID() == 2214 or WorldMapFrame:GetMapID() == 2215 or WorldMapFrame:GetMapID() == 2255 or WorldMapFrame:GetMapID() == 2256 or WorldMapFrame:GetMapID() == 2213
-                or WorldMapFrame:GetMapID() == 2216 or WorldMapFrame:GetMapID() == 2369 or WorldMapFrame:GetMapID() == 2322 or WorldMapFrame:GetMapID() == 2346) 
+            elseif (GetCurrentMapID == 2248 or GetCurrentMapID == 2214 or GetCurrentMapID == 2215 or GetCurrentMapID == 2255 or GetCurrentMapID == 2256 or GetCurrentMapID == 2213
+                or GetCurrentMapID == 2216 or GetCurrentMapID == 2369 or GetCurrentMapID == 2322 or GetCurrentMapID == 2346 or GetCurrentMapID == 2371 or GetCurrentMapID == 2472) 
             then
                 if not ns.Addon.db.profile.showZoneKhazAlgar then
                     ns.Addon.db.profile.showZoneKhazAlgar = true
@@ -649,16 +651,17 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
         end
 
         -- Capitals without Sync function
-        if not ns.Addon.db.profile.activate.SyncCapitalsAndMinimap and (WorldMapFrame:GetMapID() == 1454 or WorldMapFrame:GetMapID() == 1456 -- Cata nodes
-            or WorldMapFrame:GetMapID() == 2266 -- Millenia's Threshold
-            or WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() == 87 or WorldMapFrame:GetMapID() == 89 or WorldMapFrame:GetMapID() == 103 or WorldMapFrame:GetMapID() == 85
-            or WorldMapFrame:GetMapID() == 90 or WorldMapFrame:GetMapID() == 86 or WorldMapFrame:GetMapID() == 88 or WorldMapFrame:GetMapID() == 110 or WorldMapFrame:GetMapID() == 111
-            or WorldMapFrame:GetMapID() == 125 or WorldMapFrame:GetMapID() == 126 or WorldMapFrame:GetMapID() == 391 or WorldMapFrame:GetMapID() == 392 or WorldMapFrame:GetMapID() == 393 
-            or WorldMapFrame:GetMapID() == 394 or WorldMapFrame:GetMapID() == 582 or WorldMapFrame:GetMapID() == 590 or WorldMapFrame:GetMapID() == 622 or WorldMapFrame:GetMapID() == 624 
-            or WorldMapFrame:GetMapID() == 626 or WorldMapFrame:GetMapID() == 627 or WorldMapFrame:GetMapID() == 628 or WorldMapFrame:GetMapID() == 629 or WorldMapFrame:GetMapID() == 1161
-            or WorldMapFrame:GetMapID() == 1163 or WorldMapFrame:GetMapID() == 1164 or WorldMapFrame:GetMapID() == 1165 or WorldMapFrame:GetMapID() == 1670 or WorldMapFrame:GetMapID() == 1671 
-            or WorldMapFrame:GetMapID() == 1672 or WorldMapFrame:GetMapID() == 1673 or WorldMapFrame:GetMapID() == 2112 or WorldMapFrame:GetMapID() == 407 or WorldMapFrame:GetMapID() == 2339 
-            or WorldMapFrame:GetMapID() == 503 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500) 
+        if not ns.Addon.db.profile.activate.SyncCapitalsAndMinimap and (GetCurrentMapID == 1454 or GetCurrentMapID == 1456 -- Cata nodes
+            or GetCurrentMapID == 2266 -- Millenia's Threshold
+            or GetCurrentMapID == 84 or GetCurrentMapID == 87 or GetCurrentMapID == 89 or GetCurrentMapID == 103 or GetCurrentMapID == 85
+            or GetCurrentMapID == 90 or GetCurrentMapID == 86 or GetCurrentMapID == 88 or GetCurrentMapID == 110 or GetCurrentMapID == 111
+            or GetCurrentMapID == 125 or GetCurrentMapID == 126 or GetCurrentMapID == 391 or GetCurrentMapID == 392 or GetCurrentMapID == 393 
+            or GetCurrentMapID == 394 or GetCurrentMapID == 582 or GetCurrentMapID == 590 or GetCurrentMapID == 622 or GetCurrentMapID == 624 
+            or GetCurrentMapID == 626 or GetCurrentMapID == 627 or GetCurrentMapID == 628 or GetCurrentMapID == 629 or GetCurrentMapID == 831 or GetCurrentMapID == 832 
+            or GetCurrentMapID == 1161 or GetCurrentMapID == 1163 or GetCurrentMapID == 1164 or GetCurrentMapID == 1165 or GetCurrentMapID == 1670 
+            or GetCurrentMapID == 1671 or GetCurrentMapID == 1672 or GetCurrentMapID == 1673 or GetCurrentMapID == 2112 or GetCurrentMapID == 407 
+            or GetCurrentMapID == 2339 or GetCurrentMapID == 503 or GetCurrentMapID == 499 or GetCurrentMapID == 500 or GetCurrentMapID == 2322 
+            or GetCurrentMapID == 2346)
         then
         
             if not ns.Addon.db.profile.activate.Capitals then
@@ -675,16 +678,18 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
         end
 
         -- Capitals Sync function
-        if ns.Addon.db.profile.activate.SyncCapitalsAndMinimap and (WorldMapFrame:GetMapID() == 1454 or WorldMapFrame:GetMapID() == 1456 -- Cata nodes
-            or WorldMapFrame:GetMapID() == 2266 -- Millenia's Threshold
-            or WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() == 87 or WorldMapFrame:GetMapID() == 89 or WorldMapFrame:GetMapID() == 103 or WorldMapFrame:GetMapID() == 85
-            or WorldMapFrame:GetMapID() == 90 or WorldMapFrame:GetMapID() == 86 or WorldMapFrame:GetMapID() == 88 or WorldMapFrame:GetMapID() == 110 or WorldMapFrame:GetMapID() == 111
-            or WorldMapFrame:GetMapID() == 125 or WorldMapFrame:GetMapID() == 126 or WorldMapFrame:GetMapID() == 391 or WorldMapFrame:GetMapID() == 392 or WorldMapFrame:GetMapID() == 393 
-            or WorldMapFrame:GetMapID() == 394 or WorldMapFrame:GetMapID() == 582 or WorldMapFrame:GetMapID() == 590 or WorldMapFrame:GetMapID() == 622 or WorldMapFrame:GetMapID() == 624 
-            or WorldMapFrame:GetMapID() == 626 or WorldMapFrame:GetMapID() == 627 or WorldMapFrame:GetMapID() == 628 or WorldMapFrame:GetMapID() == 629 or WorldMapFrame:GetMapID() == 1161
-            or WorldMapFrame:GetMapID() == 1163 or WorldMapFrame:GetMapID() == 1164 or WorldMapFrame:GetMapID() == 1165 or WorldMapFrame:GetMapID() == 1670 or WorldMapFrame:GetMapID() == 1671 
-            or WorldMapFrame:GetMapID() == 1672 or WorldMapFrame:GetMapID() == 1673 or WorldMapFrame:GetMapID() == 2112 or WorldMapFrame:GetMapID() == 407 or WorldMapFrame:GetMapID() == 2339 
-            or WorldMapFrame:GetMapID() == 503 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500) then
+        if ns.Addon.db.profile.activate.SyncCapitalsAndMinimap and (GetCurrentMapID == 1454 or GetCurrentMapID == 1456 -- Cata nodes
+            or GetCurrentMapID == 2266 -- Millenia's Threshold
+            or GetCurrentMapID == 84 or GetCurrentMapID == 87 or GetCurrentMapID == 89 or GetCurrentMapID == 103 or GetCurrentMapID == 85
+            or GetCurrentMapID == 90 or GetCurrentMapID == 86 or GetCurrentMapID == 88 or GetCurrentMapID == 110 or GetCurrentMapID == 111
+            or GetCurrentMapID == 125 or GetCurrentMapID == 126 or GetCurrentMapID == 391 or GetCurrentMapID == 392 or GetCurrentMapID == 393 
+            or GetCurrentMapID == 394 or GetCurrentMapID == 582 or GetCurrentMapID == 590 or GetCurrentMapID == 622 or GetCurrentMapID == 624 
+            or GetCurrentMapID == 626 or GetCurrentMapID == 627 or GetCurrentMapID == 628 or GetCurrentMapID == 629 or GetCurrentMapID == 831 or GetCurrentMapID == 832 
+            or GetCurrentMapID == 1161 or GetCurrentMapID == 1163 or GetCurrentMapID == 1164 or GetCurrentMapID == 1165 or GetCurrentMapID == 1670 
+            or GetCurrentMapID == 1671 or GetCurrentMapID == 1672 or GetCurrentMapID == 1673 or GetCurrentMapID == 2112 or GetCurrentMapID == 407 
+            or GetCurrentMapID == 2339 or GetCurrentMapID == 503 or GetCurrentMapID == 499 or GetCurrentMapID == 500 or GetCurrentMapID == 2322 
+            or GetCurrentMapID == 2346) 
+        then
         
             if not ns.Addon.db.profile.activate.Capitals then
                 ns.Addon.db.profile.activate.Capitals = true
@@ -707,12 +712,13 @@ end
 
 function WorldMapOptionsButtonMixin:OnEnter()
 local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
+local GetCurrentMapID = WorldMapFrame:GetMapID()
 
     GameTooltip:SetOwner(self, 'ANCHOR_RIGHT')
     GameTooltip_SetTitle(GameTooltip, ns.COLORED_ADDON_NAME)
     GameTooltip:AddLine(L["Left-click => Open/Close"] .. "|cffffcc00" .. " " .. ns.COLORED_ADDON_NAME,1,1,1)
     GameTooltip:AddLine(" ",1,1,1)
-    GameTooltip:AddLine(L["Middle-Mouse-Button => Open/Close"] .. " => " .. "|cffffcc00" .. L["Disable MapNotes, all icons will be hidden on each map and all categories will be disabled"] .. " " .. SHOW .. " / " .. HIDE,1,1,1,1)
+    GameTooltip:AddLine(KEY_BUTTON3 .. " => " .. "|cffffcc00" .. L["Disable MapNotes, all icons will be hidden on each map and all categories will be disabled"] .. " " .. SHOW .. " / " .. HIDE,1,1,1,1)
     GameTooltip:AddLine(" ",1,1,1)
     
     -- Cosmos Map
@@ -730,40 +736,40 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
     -- Continent Maps
     if info.mapType == 2 then 
 
-        if WorldMapFrame:GetMapID() == 12 or WorldMapFrame:GetMapID() == 948 then
+        if GetCurrentMapID == 12 or GetCurrentMapID == 948 then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Kalimdor"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
-        elseif WorldMapFrame:GetMapID() == 13 then
+        elseif GetCurrentMapID == 13 then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Eastern Kingdom"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
-        elseif WorldMapFrame:GetMapID() == 101 then
+        elseif GetCurrentMapID == 101 then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Outland"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
-        elseif WorldMapFrame:GetMapID() == 113 then
+        elseif GetCurrentMapID == 113 then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Northrend"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
-        elseif WorldMapFrame:GetMapID() == 424 then
+        elseif GetCurrentMapID == 424 then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Pandaria"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
-        elseif WorldMapFrame:GetMapID() == 572 then
+        elseif GetCurrentMapID == 572 then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Draenor"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
-        elseif WorldMapFrame:GetMapID() == 619 then
+        elseif GetCurrentMapID == 619 or GetCurrentMapID == 905 then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Broken Isles"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
-        elseif WorldMapFrame:GetMapID() == 875 then
+        elseif GetCurrentMapID == 875 then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Zandalar"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
-        elseif WorldMapFrame:GetMapID() == 876 then
+        elseif GetCurrentMapID == 876 then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Kul Tiras"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
-        elseif WorldMapFrame:GetMapID() == 1550 then
+        elseif GetCurrentMapID == 1550 then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Shadowlands"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
-        elseif WorldMapFrame:GetMapID() == 1978 then
+        elseif GetCurrentMapID == 1978 then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Dragon Isles"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
-        elseif WorldMapFrame:GetMapID() == 2274 then
+        elseif GetCurrentMapID == 2274 then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Khaz Algar"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         end
@@ -773,85 +779,85 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
     -- Zones without Sync function
     if not ns.Addon.db.profile.activate.SyncZoneAndMinimap and (info.mapType == 3 or info.mapType == 4 or info.mapType == 5 or info.mapType == 6) then
         --Kalimdor
-        if (WorldMapFrame:GetMapID() == 1 or WorldMapFrame:GetMapID() == 7 or WorldMapFrame:GetMapID() == 10 or WorldMapFrame:GetMapID() == 11 or WorldMapFrame:GetMapID() == 57 or WorldMapFrame:GetMapID() == 62 
-            or WorldMapFrame:GetMapID() == 63 or WorldMapFrame:GetMapID() == 64 or WorldMapFrame:GetMapID() == 65 or WorldMapFrame:GetMapID() == 66 or WorldMapFrame:GetMapID() == 67 or WorldMapFrame:GetMapID() == 68 
-            or WorldMapFrame:GetMapID() == 69 or WorldMapFrame:GetMapID() == 70 or WorldMapFrame:GetMapID() == 71 or WorldMapFrame:GetMapID() == 74 or WorldMapFrame:GetMapID() == 75 or WorldMapFrame:GetMapID() == 76 
-            or WorldMapFrame:GetMapID() == 77 or WorldMapFrame:GetMapID() == 78 or WorldMapFrame:GetMapID() == 80 or WorldMapFrame:GetMapID() == 81 or WorldMapFrame:GetMapID() == 83 or WorldMapFrame:GetMapID() == 97 
-            or WorldMapFrame:GetMapID() == 106 or WorldMapFrame:GetMapID() == 199 or WorldMapFrame:GetMapID() == 327 or WorldMapFrame:GetMapID() == 460 or WorldMapFrame:GetMapID() == 461 or WorldMapFrame:GetMapID() == 462 
-            or WorldMapFrame:GetMapID() == 468 or WorldMapFrame:GetMapID() == 1527 or WorldMapFrame:GetMapID() == 198 or WorldMapFrame:GetMapID() == 249)
+        if (GetCurrentMapID == 1 or GetCurrentMapID == 7 or GetCurrentMapID == 10 or GetCurrentMapID == 11 or GetCurrentMapID == 57 or GetCurrentMapID == 62 
+            or GetCurrentMapID == 63 or GetCurrentMapID == 64 or GetCurrentMapID == 65 or GetCurrentMapID == 66 or GetCurrentMapID == 67 or GetCurrentMapID == 68 
+            or GetCurrentMapID == 69 or GetCurrentMapID == 70 or GetCurrentMapID == 71 or GetCurrentMapID == 74 or GetCurrentMapID == 75 or GetCurrentMapID == 76 
+            or GetCurrentMapID == 77 or GetCurrentMapID == 78 or GetCurrentMapID == 80 or GetCurrentMapID == 81 or GetCurrentMapID == 83 or GetCurrentMapID == 97 
+            or GetCurrentMapID == 106 or GetCurrentMapID == 199 or GetCurrentMapID == 327 or GetCurrentMapID == 460 or GetCurrentMapID == 461 or GetCurrentMapID == 462 
+            or GetCurrentMapID == 468 or GetCurrentMapID == 1527 or GetCurrentMapID == 198 or GetCurrentMapID == 249)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Kalimdor"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Eastern Kingdom
-        elseif (WorldMapFrame:GetMapID() == 13 or WorldMapFrame:GetMapID() == 14 or WorldMapFrame:GetMapID() == 15 or WorldMapFrame:GetMapID() == 16 or WorldMapFrame:GetMapID() == 17 or WorldMapFrame:GetMapID() == 18 
-            or WorldMapFrame:GetMapID() == 19 or WorldMapFrame:GetMapID() == 21 or WorldMapFrame:GetMapID() == 22 or WorldMapFrame:GetMapID() == 23 or WorldMapFrame:GetMapID() == 25 or WorldMapFrame:GetMapID() == 26 
-            or WorldMapFrame:GetMapID() == 27 or WorldMapFrame:GetMapID() == 28 or WorldMapFrame:GetMapID() == 30 or WorldMapFrame:GetMapID() == 32 or WorldMapFrame:GetMapID() == 33 or WorldMapFrame:GetMapID() == 34 
-            or WorldMapFrame:GetMapID() == 35 or WorldMapFrame:GetMapID() == 36 or WorldMapFrame:GetMapID() == 37 or WorldMapFrame:GetMapID() == 42 or WorldMapFrame:GetMapID() == 47 or WorldMapFrame:GetMapID() == 48 
-            or WorldMapFrame:GetMapID() == 49 or WorldMapFrame:GetMapID() == 50 or WorldMapFrame:GetMapID() == 51 or WorldMapFrame:GetMapID() == 52 or WorldMapFrame:GetMapID() == 55 or WorldMapFrame:GetMapID() == 56 
-            or WorldMapFrame:GetMapID() == 94 or WorldMapFrame:GetMapID() == 210 or WorldMapFrame:GetMapID() == 224 or WorldMapFrame:GetMapID() == 245 or WorldMapFrame:GetMapID() == 425 or WorldMapFrame:GetMapID() == 427 
-            or WorldMapFrame:GetMapID() == 465 or WorldMapFrame:GetMapID() == 467 or WorldMapFrame:GetMapID() == 469 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500 or WorldMapFrame:GetMapID() == 2070 
-            or WorldMapFrame:GetMapID() == 241 or WorldMapFrame:GetMapID() == 203 or WorldMapFrame:GetMapID() == 204 or WorldMapFrame:GetMapID() == 205 or WorldMapFrame:GetMapID() == 241 or WorldMapFrame:GetMapID() == 244 
-            or WorldMapFrame:GetMapID() == 245 or WorldMapFrame:GetMapID() == 201 or WorldMapFrame:GetMapID() == 95 or WorldMapFrame:GetMapID() == 122 or WorldMapFrame:GetMapID() == 217  or WorldMapFrame:GetMapID() == 226)
+        elseif (GetCurrentMapID == 13 or GetCurrentMapID == 14 or GetCurrentMapID == 15 or GetCurrentMapID == 16 or GetCurrentMapID == 17 or GetCurrentMapID == 18 
+            or GetCurrentMapID == 19 or GetCurrentMapID == 21 or GetCurrentMapID == 22 or GetCurrentMapID == 23 or GetCurrentMapID == 25 or GetCurrentMapID == 26 
+            or GetCurrentMapID == 27 or GetCurrentMapID == 28 or GetCurrentMapID == 30 or GetCurrentMapID == 32 or GetCurrentMapID == 33 or GetCurrentMapID == 34 
+            or GetCurrentMapID == 35 or GetCurrentMapID == 36 or GetCurrentMapID == 37 or GetCurrentMapID == 42 or GetCurrentMapID == 47 or GetCurrentMapID == 48 
+            or GetCurrentMapID == 49 or GetCurrentMapID == 50 or GetCurrentMapID == 51 or GetCurrentMapID == 52 or GetCurrentMapID == 55 or GetCurrentMapID == 56 
+            or GetCurrentMapID == 94 or GetCurrentMapID == 210 or GetCurrentMapID == 224 or GetCurrentMapID == 245 or GetCurrentMapID == 425 or GetCurrentMapID == 427 
+            or GetCurrentMapID == 465 or GetCurrentMapID == 467 or GetCurrentMapID == 469 or GetCurrentMapID == 2070 
+            or GetCurrentMapID == 241 or GetCurrentMapID == 203 or GetCurrentMapID == 204 or GetCurrentMapID == 205 or GetCurrentMapID == 241 or GetCurrentMapID == 244 
+            or GetCurrentMapID == 245 or GetCurrentMapID == 201 or GetCurrentMapID == 95 or GetCurrentMapID == 122 or GetCurrentMapID == 217  or GetCurrentMapID == 226)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Eastern Kingdom"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()            
         --Outland
-        elseif (WorldMapFrame:GetMapID() == 100 or WorldMapFrame:GetMapID() == 102 or WorldMapFrame:GetMapID() == 104 or WorldMapFrame:GetMapID() == 105 or WorldMapFrame:GetMapID() == 107 or WorldMapFrame:GetMapID() == 108
-            or WorldMapFrame:GetMapID() == 109)
+        elseif (GetCurrentMapID == 100 or GetCurrentMapID == 102 or GetCurrentMapID == 104 or GetCurrentMapID == 105 or GetCurrentMapID == 107 or GetCurrentMapID == 108
+            or GetCurrentMapID == 109)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Outland"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()  
         --Northrend
-        elseif (WorldMapFrame:GetMapID() == 114 or WorldMapFrame:GetMapID() == 115 or WorldMapFrame:GetMapID() == 116 or WorldMapFrame:GetMapID() == 117 or WorldMapFrame:GetMapID() == 118 or WorldMapFrame:GetMapID() == 119
-            or WorldMapFrame:GetMapID() == 120 or WorldMapFrame:GetMapID() == 121 or WorldMapFrame:GetMapID() == 123 or WorldMapFrame:GetMapID() == 127 or WorldMapFrame:GetMapID() == 170)
+        elseif (GetCurrentMapID == 114 or GetCurrentMapID == 115 or GetCurrentMapID == 116 or GetCurrentMapID == 117 or GetCurrentMapID == 118 or GetCurrentMapID == 119
+            or GetCurrentMapID == 120 or GetCurrentMapID == 121 or GetCurrentMapID == 123 or GetCurrentMapID == 127 or GetCurrentMapID == 170)
         then 
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Northrend"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Pandaria
-        elseif (WorldMapFrame:GetMapID() == 371 or WorldMapFrame:GetMapID() == 376 or WorldMapFrame:GetMapID() == 379 or WorldMapFrame:GetMapID() == 388 or WorldMapFrame:GetMapID() == 390 or WorldMapFrame:GetMapID() == 418
-            or WorldMapFrame:GetMapID() == 422 or WorldMapFrame:GetMapID() == 433 or WorldMapFrame:GetMapID() == 434 or WorldMapFrame:GetMapID() == 504 or WorldMapFrame:GetMapID() == 554  or WorldMapFrame:GetMapID() == 1530
-            or WorldMapFrame:GetMapID() == 507)
+        elseif (GetCurrentMapID == 371 or GetCurrentMapID == 376 or GetCurrentMapID == 379 or GetCurrentMapID == 388 or GetCurrentMapID == 390 or GetCurrentMapID == 418
+            or GetCurrentMapID == 422 or GetCurrentMapID == 433 or GetCurrentMapID == 434 or GetCurrentMapID == 504 or GetCurrentMapID == 554  or GetCurrentMapID == 1530
+            or GetCurrentMapID == 507)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Pandaria"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Draenor
-        elseif (WorldMapFrame:GetMapID() == 525 or WorldMapFrame:GetMapID() == 534 or WorldMapFrame:GetMapID() == 535 or WorldMapFrame:GetMapID() == 539 or WorldMapFrame:GetMapID() == 542 or WorldMapFrame:GetMapID() == 543
-            or WorldMapFrame:GetMapID() == 550 or WorldMapFrame:GetMapID() == 588)
+        elseif (GetCurrentMapID == 525 or GetCurrentMapID == 534 or GetCurrentMapID == 535 or GetCurrentMapID == 539 or GetCurrentMapID == 542 or GetCurrentMapID == 543
+            or GetCurrentMapID == 550 or GetCurrentMapID == 588)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Draenor"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Broken Isles
-        elseif (WorldMapFrame:GetMapID() == 630 or WorldMapFrame:GetMapID() == 634 or WorldMapFrame:GetMapID() == 641 or WorldMapFrame:GetMapID() == 646 or WorldMapFrame:GetMapID() == 650 or WorldMapFrame:GetMapID() == 652
-            or WorldMapFrame:GetMapID() == 750 or WorldMapFrame:GetMapID() == 680 or WorldMapFrame:GetMapID() == 830 or WorldMapFrame:GetMapID() == 882 or WorldMapFrame:GetMapID() == 885 or WorldMapFrame:GetMapID() == 905
-            or WorldMapFrame:GetMapID() == 941 or WorldMapFrame:GetMapID() == 790 or WorldMapFrame:GetMapID() == 971)
+        elseif (GetCurrentMapID == 630 or GetCurrentMapID == 634 or GetCurrentMapID == 641 or GetCurrentMapID == 646 or GetCurrentMapID == 650 or GetCurrentMapID == 652
+            or GetCurrentMapID == 750 or GetCurrentMapID == 680 or GetCurrentMapID == 830 or GetCurrentMapID == 882 or GetCurrentMapID == 885 or GetCurrentMapID == 941 
+            or GetCurrentMapID == 790 or GetCurrentMapID == 971)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Broken Isles"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Zandalar
-        elseif (WorldMapFrame:GetMapID() == 862 or WorldMapFrame:GetMapID() == 863 or WorldMapFrame:GetMapID() == 864 or WorldMapFrame:GetMapID() == 1355 or WorldMapFrame:GetMapID() == 1528)
+        elseif (GetCurrentMapID == 862 or GetCurrentMapID == 863 or GetCurrentMapID == 864 or GetCurrentMapID == 1355 or GetCurrentMapID == 1528)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Zandalar"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --KulTiras
-        elseif (WorldMapFrame:GetMapID() == 895 or WorldMapFrame:GetMapID() == 896 or WorldMapFrame:GetMapID() == 942 or WorldMapFrame:GetMapID() == 1462 or WorldMapFrame:GetMapID() == 1169)
+        elseif (GetCurrentMapID == 895 or GetCurrentMapID == 896 or GetCurrentMapID == 942 or GetCurrentMapID == 1462 or GetCurrentMapID == 1169)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Kul Tiras"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Shadowlands
-        elseif(WorldMapFrame:GetMapID() == 1525 or WorldMapFrame:GetMapID() == 1533 or WorldMapFrame:GetMapID() == 1536 or WorldMapFrame:GetMapID() == 1543 or WorldMapFrame:GetMapID() == 1565 or WorldMapFrame:GetMapID() == 1961
-            or WorldMapFrame:GetMapID() == 1970 or WorldMapFrame:GetMapID() == 2016)
+        elseif(GetCurrentMapID == 1525 or GetCurrentMapID == 1533 or GetCurrentMapID == 1536 or GetCurrentMapID == 1543 or GetCurrentMapID == 1565 or GetCurrentMapID == 1961
+            or GetCurrentMapID == 1970 or GetCurrentMapID == 2016)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Shadowlands"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Dragon Isle
-        elseif (WorldMapFrame:GetMapID() == 2022 or WorldMapFrame:GetMapID() == 2023 or WorldMapFrame:GetMapID() == 2024 or WorldMapFrame:GetMapID() == 2025 or WorldMapFrame:GetMapID() == 2026 or WorldMapFrame:GetMapID() == 2133
-            or WorldMapFrame:GetMapID() == 2151 or WorldMapFrame:GetMapID() == 2200 or WorldMapFrame:GetMapID() == 2239)
+        elseif (GetCurrentMapID == 2022 or GetCurrentMapID == 2023 or GetCurrentMapID == 2024 or GetCurrentMapID == 2025 or GetCurrentMapID == 2026 or GetCurrentMapID == 2133
+            or GetCurrentMapID == 2151 or GetCurrentMapID == 2200 or GetCurrentMapID == 2239)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Dragon Isles"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Khaz Algar
-        elseif (WorldMapFrame:GetMapID() == 2248 or WorldMapFrame:GetMapID() == 2214 or WorldMapFrame:GetMapID() == 2215 or WorldMapFrame:GetMapID() == 2255 or WorldMapFrame:GetMapID() == 2256 or WorldMapFrame:GetMapID() == 2213 
-            or WorldMapFrame:GetMapID() == 2216 or WorldMapFrame:GetMapID() == 2369 or WorldMapFrame:GetMapID() == 2322 or WorldMapFrame:GetMapID() == 2346)
+        elseif (GetCurrentMapID == 2248 or GetCurrentMapID == 2214 or GetCurrentMapID == 2215 or GetCurrentMapID == 2255 or GetCurrentMapID == 2256 or GetCurrentMapID == 2213 
+            or GetCurrentMapID == 2216 or GetCurrentMapID == 2369 or GetCurrentMapID == 2322 or GetCurrentMapID == 2346 or GetCurrentMapID == 2371 or GetCurrentMapID == 2472)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Khaz Algar"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
@@ -861,85 +867,85 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
     -- Zones Sync function
     if ns.Addon.db.profile.activate.SyncZoneAndMinimap and (info.mapType == 3 or info.mapType == 4 or info.mapType == 5 or info.mapType == 6) then
         --Kalimdor
-        if (WorldMapFrame:GetMapID() == 1 or WorldMapFrame:GetMapID() == 7 or WorldMapFrame:GetMapID() == 10 or WorldMapFrame:GetMapID() == 11 or WorldMapFrame:GetMapID() == 57 or WorldMapFrame:GetMapID() == 62 
-            or WorldMapFrame:GetMapID() == 63 or WorldMapFrame:GetMapID() == 64 or WorldMapFrame:GetMapID() == 65 or WorldMapFrame:GetMapID() == 66 or WorldMapFrame:GetMapID() == 67 or WorldMapFrame:GetMapID() == 68 
-            or WorldMapFrame:GetMapID() == 69 or WorldMapFrame:GetMapID() == 70 or WorldMapFrame:GetMapID() == 71 or WorldMapFrame:GetMapID() == 74 or WorldMapFrame:GetMapID() == 75 or WorldMapFrame:GetMapID() == 76 
-            or WorldMapFrame:GetMapID() == 77 or WorldMapFrame:GetMapID() == 78 or WorldMapFrame:GetMapID() == 80 or WorldMapFrame:GetMapID() == 81 or WorldMapFrame:GetMapID() == 83 or WorldMapFrame:GetMapID() == 97 
-            or WorldMapFrame:GetMapID() == 106 or WorldMapFrame:GetMapID() == 199 or WorldMapFrame:GetMapID() == 327 or WorldMapFrame:GetMapID() == 460 or WorldMapFrame:GetMapID() == 461 or WorldMapFrame:GetMapID() == 462 
-            or WorldMapFrame:GetMapID() == 468 or WorldMapFrame:GetMapID() == 1527 or WorldMapFrame:GetMapID() == 198 or WorldMapFrame:GetMapID() == 249)
+        if (GetCurrentMapID == 1 or GetCurrentMapID == 7 or GetCurrentMapID == 10 or GetCurrentMapID == 11 or GetCurrentMapID == 57 or GetCurrentMapID == 62 
+            or GetCurrentMapID == 63 or GetCurrentMapID == 64 or GetCurrentMapID == 65 or GetCurrentMapID == 66 or GetCurrentMapID == 67 or GetCurrentMapID == 68 
+            or GetCurrentMapID == 69 or GetCurrentMapID == 70 or GetCurrentMapID == 71 or GetCurrentMapID == 74 or GetCurrentMapID == 75 or GetCurrentMapID == 76 
+            or GetCurrentMapID == 77 or GetCurrentMapID == 78 or GetCurrentMapID == 80 or GetCurrentMapID == 81 or GetCurrentMapID == 83 or GetCurrentMapID == 97 
+            or GetCurrentMapID == 106 or GetCurrentMapID == 199 or GetCurrentMapID == 327 or GetCurrentMapID == 460 or GetCurrentMapID == 461 or GetCurrentMapID == 462 
+            or GetCurrentMapID == 468 or GetCurrentMapID == 1527 or GetCurrentMapID == 198 or GetCurrentMapID == 249)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Kalimdor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Eastern Kingdom
-        elseif (WorldMapFrame:GetMapID() == 13 or WorldMapFrame:GetMapID() == 14 or WorldMapFrame:GetMapID() == 15 or WorldMapFrame:GetMapID() == 16 or WorldMapFrame:GetMapID() == 17 or WorldMapFrame:GetMapID() == 18 
-            or WorldMapFrame:GetMapID() == 19 or WorldMapFrame:GetMapID() == 21 or WorldMapFrame:GetMapID() == 22 or WorldMapFrame:GetMapID() == 23 or WorldMapFrame:GetMapID() == 25 or WorldMapFrame:GetMapID() == 26 
-            or WorldMapFrame:GetMapID() == 27 or WorldMapFrame:GetMapID() == 28 or WorldMapFrame:GetMapID() == 30 or WorldMapFrame:GetMapID() == 32 or WorldMapFrame:GetMapID() == 33 or WorldMapFrame:GetMapID() == 34 
-            or WorldMapFrame:GetMapID() == 35 or WorldMapFrame:GetMapID() == 36 or WorldMapFrame:GetMapID() == 37 or WorldMapFrame:GetMapID() == 42 or WorldMapFrame:GetMapID() == 47 or WorldMapFrame:GetMapID() == 48 
-            or WorldMapFrame:GetMapID() == 49 or WorldMapFrame:GetMapID() == 50 or WorldMapFrame:GetMapID() == 51 or WorldMapFrame:GetMapID() == 52 or WorldMapFrame:GetMapID() == 55 or WorldMapFrame:GetMapID() == 56 
-            or WorldMapFrame:GetMapID() == 94 or WorldMapFrame:GetMapID() == 210 or WorldMapFrame:GetMapID() == 224 or WorldMapFrame:GetMapID() == 245 or WorldMapFrame:GetMapID() == 425 or WorldMapFrame:GetMapID() == 427 
-            or WorldMapFrame:GetMapID() == 465 or WorldMapFrame:GetMapID() == 467 or WorldMapFrame:GetMapID() == 469 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500 or WorldMapFrame:GetMapID() == 2070 
-            or WorldMapFrame:GetMapID() == 241 or WorldMapFrame:GetMapID() == 203 or WorldMapFrame:GetMapID() == 204 or WorldMapFrame:GetMapID() == 205 or WorldMapFrame:GetMapID() == 241 or WorldMapFrame:GetMapID() == 244 
-            or WorldMapFrame:GetMapID() == 245 or WorldMapFrame:GetMapID() == 201 or WorldMapFrame:GetMapID() == 95 or WorldMapFrame:GetMapID() == 122 or WorldMapFrame:GetMapID() == 217  or WorldMapFrame:GetMapID() == 226)
+        elseif (GetCurrentMapID == 13 or GetCurrentMapID == 14 or GetCurrentMapID == 15 or GetCurrentMapID == 16 or GetCurrentMapID == 17 or GetCurrentMapID == 18 
+            or GetCurrentMapID == 19 or GetCurrentMapID == 21 or GetCurrentMapID == 22 or GetCurrentMapID == 23 or GetCurrentMapID == 25 or GetCurrentMapID == 26 
+            or GetCurrentMapID == 27 or GetCurrentMapID == 28 or GetCurrentMapID == 30 or GetCurrentMapID == 32 or GetCurrentMapID == 33 or GetCurrentMapID == 34 
+            or GetCurrentMapID == 35 or GetCurrentMapID == 36 or GetCurrentMapID == 37 or GetCurrentMapID == 42 or GetCurrentMapID == 47 or GetCurrentMapID == 48 
+            or GetCurrentMapID == 49 or GetCurrentMapID == 50 or GetCurrentMapID == 51 or GetCurrentMapID == 52 or GetCurrentMapID == 55 or GetCurrentMapID == 56 
+            or GetCurrentMapID == 94 or GetCurrentMapID == 210 or GetCurrentMapID == 224 or GetCurrentMapID == 245 or GetCurrentMapID == 425 or GetCurrentMapID == 427 
+            or GetCurrentMapID == 465 or GetCurrentMapID == 467 or GetCurrentMapID == 469 or GetCurrentMapID == 2070 
+            or GetCurrentMapID == 241 or GetCurrentMapID == 203 or GetCurrentMapID == 204 or GetCurrentMapID == 205 or GetCurrentMapID == 241 or GetCurrentMapID == 244 
+            or GetCurrentMapID == 245 or GetCurrentMapID == 201 or GetCurrentMapID == 95 or GetCurrentMapID == 122 or GetCurrentMapID == 217  or GetCurrentMapID == 226)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Eastern Kingdom"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()        
         --Outland
-        elseif (WorldMapFrame:GetMapID() == 100 or WorldMapFrame:GetMapID() == 102 or WorldMapFrame:GetMapID() == 104 or WorldMapFrame:GetMapID() == 105 or WorldMapFrame:GetMapID() == 107 or WorldMapFrame:GetMapID() == 108
-            or WorldMapFrame:GetMapID() == 109)
+        elseif (GetCurrentMapID == 100 or GetCurrentMapID == 102 or GetCurrentMapID == 104 or GetCurrentMapID == 105 or GetCurrentMapID == 107 or GetCurrentMapID == 108
+            or GetCurrentMapID == 109)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Outland"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Northrend
-        elseif (WorldMapFrame:GetMapID() == 114 or WorldMapFrame:GetMapID() == 115 or WorldMapFrame:GetMapID() == 116 or WorldMapFrame:GetMapID() == 117 or WorldMapFrame:GetMapID() == 118 or WorldMapFrame:GetMapID() == 119
-            or WorldMapFrame:GetMapID() == 120 or WorldMapFrame:GetMapID() == 121 or WorldMapFrame:GetMapID() == 123 or WorldMapFrame:GetMapID() == 127 or WorldMapFrame:GetMapID() == 170)
+        elseif (GetCurrentMapID == 114 or GetCurrentMapID == 115 or GetCurrentMapID == 116 or GetCurrentMapID == 117 or GetCurrentMapID == 118 or GetCurrentMapID == 119
+            or GetCurrentMapID == 120 or GetCurrentMapID == 121 or GetCurrentMapID == 123 or GetCurrentMapID == 127 or GetCurrentMapID == 170)
         then 
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Northrend"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Pandaria
-        elseif (WorldMapFrame:GetMapID() == 371 or WorldMapFrame:GetMapID() == 376 or WorldMapFrame:GetMapID() == 379 or WorldMapFrame:GetMapID() == 388 or WorldMapFrame:GetMapID() == 390 or WorldMapFrame:GetMapID() == 418
-            or WorldMapFrame:GetMapID() == 422 or WorldMapFrame:GetMapID() == 433 or WorldMapFrame:GetMapID() == 434 or WorldMapFrame:GetMapID() == 504 or WorldMapFrame:GetMapID() == 554  or WorldMapFrame:GetMapID() == 1530
-            or WorldMapFrame:GetMapID() == 507)
+        elseif (GetCurrentMapID == 371 or GetCurrentMapID == 376 or GetCurrentMapID == 379 or GetCurrentMapID == 388 or GetCurrentMapID == 390 or GetCurrentMapID == 418
+            or GetCurrentMapID == 422 or GetCurrentMapID == 433 or GetCurrentMapID == 434 or GetCurrentMapID == 504 or GetCurrentMapID == 554  or GetCurrentMapID == 1530
+            or GetCurrentMapID == 507)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Pandaria"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Draenor
-        elseif (WorldMapFrame:GetMapID() == 525 or WorldMapFrame:GetMapID() == 534 or WorldMapFrame:GetMapID() == 535 or WorldMapFrame:GetMapID() == 539 or WorldMapFrame:GetMapID() == 542 or WorldMapFrame:GetMapID() == 543
-            or WorldMapFrame:GetMapID() == 550 or WorldMapFrame:GetMapID() == 588)
+        elseif (GetCurrentMapID == 525 or GetCurrentMapID == 534 or GetCurrentMapID == 535 or GetCurrentMapID == 539 or GetCurrentMapID == 542 or GetCurrentMapID == 543
+            or GetCurrentMapID == 550 or GetCurrentMapID == 588)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Draenor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Broken Isles
-        elseif (WorldMapFrame:GetMapID() == 630 or WorldMapFrame:GetMapID() == 634 or WorldMapFrame:GetMapID() == 641 or WorldMapFrame:GetMapID() == 646 or WorldMapFrame:GetMapID() == 650 or WorldMapFrame:GetMapID() == 652
-            or WorldMapFrame:GetMapID() == 750 or WorldMapFrame:GetMapID() == 680 or WorldMapFrame:GetMapID() == 830 or WorldMapFrame:GetMapID() == 882 or WorldMapFrame:GetMapID() == 885 or WorldMapFrame:GetMapID() == 905
-            or WorldMapFrame:GetMapID() == 941 or WorldMapFrame:GetMapID() == 790 or WorldMapFrame:GetMapID() == 971)
+        elseif (GetCurrentMapID == 630 or GetCurrentMapID == 634 or GetCurrentMapID == 641 or GetCurrentMapID == 646 or GetCurrentMapID == 650 or GetCurrentMapID == 652
+            or GetCurrentMapID == 750 or GetCurrentMapID == 680 or GetCurrentMapID == 830 or GetCurrentMapID == 882 or GetCurrentMapID == 885 or GetCurrentMapID == 941 
+            or GetCurrentMapID == 790 or GetCurrentMapID == 971)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Broken Isles"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Zandalar
-        elseif (WorldMapFrame:GetMapID() == 862 or WorldMapFrame:GetMapID() == 863 or WorldMapFrame:GetMapID() == 864 or WorldMapFrame:GetMapID() == 1355 or WorldMapFrame:GetMapID() == 1528)
+        elseif (GetCurrentMapID == 862 or GetCurrentMapID == 863 or GetCurrentMapID == 864 or GetCurrentMapID == 1355 or GetCurrentMapID == 1528)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Zandalar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --KulTiras
-        elseif (WorldMapFrame:GetMapID() == 895 or WorldMapFrame:GetMapID() == 896 or WorldMapFrame:GetMapID() == 942 or WorldMapFrame:GetMapID() == 1462 or WorldMapFrame:GetMapID() == 1169)
+        elseif (GetCurrentMapID == 895 or GetCurrentMapID == 896 or GetCurrentMapID == 942 or GetCurrentMapID == 1462 or GetCurrentMapID == 1169)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Kul Tiras"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Shadowlands
-        elseif(WorldMapFrame:GetMapID() == 1525 or WorldMapFrame:GetMapID() == 1533 or WorldMapFrame:GetMapID() == 1536 or WorldMapFrame:GetMapID() == 1543 or WorldMapFrame:GetMapID() == 1565 or WorldMapFrame:GetMapID() == 1961
-            or WorldMapFrame:GetMapID() == 1970 or WorldMapFrame:GetMapID() == 2016)
+        elseif(GetCurrentMapID == 1525 or GetCurrentMapID == 1533 or GetCurrentMapID == 1536 or GetCurrentMapID == 1543 or GetCurrentMapID == 1565 or GetCurrentMapID == 1961
+            or GetCurrentMapID == 1970 or GetCurrentMapID == 2016)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Shadowlands"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Dragon Isle
-        elseif (WorldMapFrame:GetMapID() == 2022 or WorldMapFrame:GetMapID() == 2023 or WorldMapFrame:GetMapID() == 2024 or WorldMapFrame:GetMapID() == 2025 or WorldMapFrame:GetMapID() == 2026 or WorldMapFrame:GetMapID() == 2133
-            or WorldMapFrame:GetMapID() == 2151 or WorldMapFrame:GetMapID() == 2200 or WorldMapFrame:GetMapID() == 2239)
+        elseif (GetCurrentMapID == 2022 or GetCurrentMapID == 2023 or GetCurrentMapID == 2024 or GetCurrentMapID == 2025 or GetCurrentMapID == 2026 or GetCurrentMapID == 2133
+            or GetCurrentMapID == 2151 or GetCurrentMapID == 2200 or GetCurrentMapID == 2239)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Dragon Isles"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Khaz Algar
-        elseif (WorldMapFrame:GetMapID() == 2248 or WorldMapFrame:GetMapID() == 2214 or WorldMapFrame:GetMapID() == 2215 or WorldMapFrame:GetMapID() == 2255 or WorldMapFrame:GetMapID() == 2256 or WorldMapFrame:GetMapID() == 2213 
-            or WorldMapFrame:GetMapID() == 2216 or WorldMapFrame:GetMapID() == 2369 or WorldMapFrame:GetMapID() == 2322 or WorldMapFrame:GetMapID() == 2346)
+        elseif (GetCurrentMapID == 2248 or GetCurrentMapID == 2214 or GetCurrentMapID == 2215 or GetCurrentMapID == 2255 or GetCurrentMapID == 2256 or GetCurrentMapID == 2213 
+            or GetCurrentMapID == 2216 or GetCurrentMapID == 2369 or GetCurrentMapID == 2322 or GetCurrentMapID == 2346 or GetCurrentMapID == 2371 or GetCurrentMapID == 2472)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Khaz Algar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
@@ -948,48 +954,53 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
 
     -- Dungeon Maps
     if info.mapType == 4 and not 
-        (WorldMapFrame:GetMapID() == 1454 or WorldMapFrame:GetMapID() == 1456 -- Cata nodes
-        or WorldMapFrame:GetMapID() == 2266 -- Millenias's Threshold
-        or WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() == 87 or WorldMapFrame:GetMapID() == 89 or WorldMapFrame:GetMapID() == 103 or WorldMapFrame:GetMapID() == 85
-        or WorldMapFrame:GetMapID() == 90 or WorldMapFrame:GetMapID() == 86 or WorldMapFrame:GetMapID() == 88 or WorldMapFrame:GetMapID() == 110 or WorldMapFrame:GetMapID() == 111
-        or WorldMapFrame:GetMapID() == 125 or WorldMapFrame:GetMapID() == 126 or WorldMapFrame:GetMapID() == 391 or WorldMapFrame:GetMapID() == 392 or WorldMapFrame:GetMapID() == 393 
-        or WorldMapFrame:GetMapID() == 394 or WorldMapFrame:GetMapID() == 582 or WorldMapFrame:GetMapID() == 590 or WorldMapFrame:GetMapID() == 622 or WorldMapFrame:GetMapID() == 624 
-        or WorldMapFrame:GetMapID() == 626 or WorldMapFrame:GetMapID() == 627 or WorldMapFrame:GetMapID() == 628 or WorldMapFrame:GetMapID() == 629 or WorldMapFrame:GetMapID() == 1161
-        or WorldMapFrame:GetMapID() == 1163 or WorldMapFrame:GetMapID() == 1164 or WorldMapFrame:GetMapID() == 1165 or WorldMapFrame:GetMapID() == 1670 or WorldMapFrame:GetMapID() == 1671 
-        or WorldMapFrame:GetMapID() == 1672 or WorldMapFrame:GetMapID() == 1673 or WorldMapFrame:GetMapID() == 2112 or WorldMapFrame:GetMapID() == 407 or WorldMapFrame:GetMapID() == 2339 
-        or WorldMapFrame:GetMapID() == 503 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500 or WorldMapFrame:GetMapID() == 2322 or WorldMapFrame:GetMapID() == 2346) 
+            (GetCurrentMapID == 1454 or GetCurrentMapID == 1456 -- Cata nodes
+            or GetCurrentMapID == 2266 -- Millenias's Threshold
+            or GetCurrentMapID == 84 or GetCurrentMapID == 87 or GetCurrentMapID == 89 or GetCurrentMapID == 103 or GetCurrentMapID == 85
+            or GetCurrentMapID == 90 or GetCurrentMapID == 86 or GetCurrentMapID == 88 or GetCurrentMapID == 110 or GetCurrentMapID == 111
+            or GetCurrentMapID == 125 or GetCurrentMapID == 126 or GetCurrentMapID == 391 or GetCurrentMapID == 392 or GetCurrentMapID == 393 
+            or GetCurrentMapID == 394 or GetCurrentMapID == 582 or GetCurrentMapID == 590 or GetCurrentMapID == 622 or GetCurrentMapID == 624 
+            or GetCurrentMapID == 626 or GetCurrentMapID == 627 or GetCurrentMapID == 628 or GetCurrentMapID == 629 or GetCurrentMapID == 831 or GetCurrentMapID == 832 
+            or GetCurrentMapID == 1161 or GetCurrentMapID == 1163 or GetCurrentMapID == 1164 or GetCurrentMapID == 1165 or GetCurrentMapID == 1670 
+            or GetCurrentMapID == 1671 or GetCurrentMapID == 1672 or GetCurrentMapID == 1673 or GetCurrentMapID == 2112 or GetCurrentMapID == 407 
+            or GetCurrentMapID == 2339 or GetCurrentMapID == 503 or GetCurrentMapID == 499 or GetCurrentMapID == 500 or GetCurrentMapID == 2322 
+            or GetCurrentMapID == 2346)
     then
         GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. DUNGEONS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
         GameTooltip:Show()
     end
 
     -- Capitals without Sync function
-    if not ns.Addon.db.profile.activate.SyncCapitalsAndMinimap and (WorldMapFrame:GetMapID() == 1454 or WorldMapFrame:GetMapID() == 1456 -- Cata nodes
-        or WorldMapFrame:GetMapID() == 2266 -- Millenia's Threshold
-        or WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() == 87 or WorldMapFrame:GetMapID() == 89 or WorldMapFrame:GetMapID() == 103 or WorldMapFrame:GetMapID() == 85
-        or WorldMapFrame:GetMapID() == 90 or WorldMapFrame:GetMapID() == 86 or WorldMapFrame:GetMapID() == 88 or WorldMapFrame:GetMapID() == 110 or WorldMapFrame:GetMapID() == 111
-        or WorldMapFrame:GetMapID() == 125 or WorldMapFrame:GetMapID() == 126 or WorldMapFrame:GetMapID() == 391 or WorldMapFrame:GetMapID() == 392 or WorldMapFrame:GetMapID() == 393 
-        or WorldMapFrame:GetMapID() == 394 or WorldMapFrame:GetMapID() == 582 or WorldMapFrame:GetMapID() == 590 or WorldMapFrame:GetMapID() == 622 or WorldMapFrame:GetMapID() == 624 
-        or WorldMapFrame:GetMapID() == 626 or WorldMapFrame:GetMapID() == 627 or WorldMapFrame:GetMapID() == 628 or WorldMapFrame:GetMapID() == 629 or WorldMapFrame:GetMapID() == 1161
-        or WorldMapFrame:GetMapID() == 1163 or WorldMapFrame:GetMapID() == 1164 or WorldMapFrame:GetMapID() == 1165 or WorldMapFrame:GetMapID() == 1670 or WorldMapFrame:GetMapID() == 1671 
-        or WorldMapFrame:GetMapID() == 1672 or WorldMapFrame:GetMapID() == 1673 or WorldMapFrame:GetMapID() == 2112 or WorldMapFrame:GetMapID() == 407 or WorldMapFrame:GetMapID() == 2339 
-        or WorldMapFrame:GetMapID() == 503 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500) 
+    if not ns.Addon.db.profile.activate.SyncCapitalsAndMinimap and 
+            (GetCurrentMapID == 1454 or GetCurrentMapID == 1456 -- Cata nodes
+            or GetCurrentMapID == 2266 -- Millenia's Threshold
+            or GetCurrentMapID == 84 or GetCurrentMapID == 87 or GetCurrentMapID == 89 or GetCurrentMapID == 103 or GetCurrentMapID == 85
+            or GetCurrentMapID == 90 or GetCurrentMapID == 86 or GetCurrentMapID == 88 or GetCurrentMapID == 110 or GetCurrentMapID == 111
+            or GetCurrentMapID == 125 or GetCurrentMapID == 126 or GetCurrentMapID == 391 or GetCurrentMapID == 392 or GetCurrentMapID == 393 
+            or GetCurrentMapID == 394 or GetCurrentMapID == 582 or GetCurrentMapID == 590 or GetCurrentMapID == 622 or GetCurrentMapID == 624 
+            or GetCurrentMapID == 626 or GetCurrentMapID == 627 or GetCurrentMapID == 628 or GetCurrentMapID == 629 or GetCurrentMapID == 831 or GetCurrentMapID == 832 
+            or GetCurrentMapID == 1161 or GetCurrentMapID == 1163 or GetCurrentMapID == 1164 or GetCurrentMapID == 1165 or GetCurrentMapID == 1670 
+            or GetCurrentMapID == 1671 or GetCurrentMapID == 1672 or GetCurrentMapID == 1673 or GetCurrentMapID == 2112 or GetCurrentMapID == 407 
+            or GetCurrentMapID == 2339 or GetCurrentMapID == 503 or GetCurrentMapID == 499 or GetCurrentMapID == 500 or GetCurrentMapID == 2322 
+            or GetCurrentMapID == 2346)
     then
         GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Capitals"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
         GameTooltip:Show()
     end
 
     -- Capitals Sync function
-    if ns.Addon.db.profile.activate.SyncCapitalsAndMinimap and (WorldMapFrame:GetMapID() == 1454 or WorldMapFrame:GetMapID() == 1456 -- Cata nodes
-        or WorldMapFrame:GetMapID() == 2266 -- Millenia's Threshold
-        or WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() == 87 or WorldMapFrame:GetMapID() == 89 or WorldMapFrame:GetMapID() == 103 or WorldMapFrame:GetMapID() == 85
-        or WorldMapFrame:GetMapID() == 90 or WorldMapFrame:GetMapID() == 86 or WorldMapFrame:GetMapID() == 88 or WorldMapFrame:GetMapID() == 110 or WorldMapFrame:GetMapID() == 111
-        or WorldMapFrame:GetMapID() == 125 or WorldMapFrame:GetMapID() == 126 or WorldMapFrame:GetMapID() == 391 or WorldMapFrame:GetMapID() == 392 or WorldMapFrame:GetMapID() == 393 
-        or WorldMapFrame:GetMapID() == 394 or WorldMapFrame:GetMapID() == 582 or WorldMapFrame:GetMapID() == 590 or WorldMapFrame:GetMapID() == 622 or WorldMapFrame:GetMapID() == 624 
-        or WorldMapFrame:GetMapID() == 626 or WorldMapFrame:GetMapID() == 627 or WorldMapFrame:GetMapID() == 628 or WorldMapFrame:GetMapID() == 629 or WorldMapFrame:GetMapID() == 1161
-        or WorldMapFrame:GetMapID() == 1163 or WorldMapFrame:GetMapID() == 1164 or WorldMapFrame:GetMapID() == 1165 or WorldMapFrame:GetMapID() == 1670 or WorldMapFrame:GetMapID() == 1671 
-        or WorldMapFrame:GetMapID() == 1672 or WorldMapFrame:GetMapID() == 1673 or WorldMapFrame:GetMapID() == 2112 or WorldMapFrame:GetMapID() == 407 or WorldMapFrame:GetMapID() == 2339 
-        or WorldMapFrame:GetMapID() == 503 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500) 
+    if ns.Addon.db.profile.activate.SyncCapitalsAndMinimap and 
+            (GetCurrentMapID == 1454 or GetCurrentMapID == 1456 -- Cata nodes
+            or GetCurrentMapID == 2266 -- Millenia's Threshold
+            or GetCurrentMapID == 84 or GetCurrentMapID == 87 or GetCurrentMapID == 89 or GetCurrentMapID == 103 or GetCurrentMapID == 85
+            or GetCurrentMapID == 90 or GetCurrentMapID == 86 or GetCurrentMapID == 88 or GetCurrentMapID == 110 or GetCurrentMapID == 111
+            or GetCurrentMapID == 125 or GetCurrentMapID == 126 or GetCurrentMapID == 391 or GetCurrentMapID == 392 or GetCurrentMapID == 393 
+            or GetCurrentMapID == 394 or GetCurrentMapID == 582 or GetCurrentMapID == 590 or GetCurrentMapID == 622 or GetCurrentMapID == 624 
+            or GetCurrentMapID == 626 or GetCurrentMapID == 627 or GetCurrentMapID == 628 or GetCurrentMapID == 629 or GetCurrentMapID == 831 or GetCurrentMapID == 832 
+            or GetCurrentMapID == 1161 or GetCurrentMapID == 1163 or GetCurrentMapID == 1164 or GetCurrentMapID == 1165 or GetCurrentMapID == 1670 
+            or GetCurrentMapID == 1671 or GetCurrentMapID == 1672 or GetCurrentMapID == 1673 or GetCurrentMapID == 2112 or GetCurrentMapID == 407 
+            or GetCurrentMapID == 2339 or GetCurrentMapID == 503 or GetCurrentMapID == 499 or GetCurrentMapID == 500 or GetCurrentMapID == 2322 
+            or GetCurrentMapID == 2346)
     then
         GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Capitals"] .. " & " ..  L["Capitals"] .. " - " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
         GameTooltip:Show()
@@ -998,7 +1009,6 @@ end
 
 function WorldMapOptionsButtonMixin:OnMouseDown(button)
     self.Icon:SetPoint('TOPLEFT', 8, -8)
-
 end
 
 

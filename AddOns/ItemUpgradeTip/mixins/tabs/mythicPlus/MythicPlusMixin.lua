@@ -50,7 +50,7 @@ function ItemUpgradeTipMythicPlusDataProviderMixin:Refresh()
             keyLevel = mPlusKey.keyLevel,
             lootDrops = mPlusKey.lootDrops,
             vaultReward = mPlusKey.vaultReward,
-            crestReward = icon .. " " .. mPlusKey.currency.color:WrapTextInColorCode(currencyInfo.name),
+            crestReward = icon .. " " .. mPlusKey.currency.colorData.color:WrapTextInColorCode(currencyInfo.name),
             index = index,
             selected = self:IsSelected(index),
             crestRewardCurrencyId = mPlusKey.currency.currencyId

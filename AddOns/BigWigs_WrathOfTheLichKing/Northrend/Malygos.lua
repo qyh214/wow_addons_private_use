@@ -75,12 +75,12 @@ function mod:OnBossEnable()
 	self:RegisterEvent("RAID_BOSS_WHISPER")
 	self:RegisterEvent("RAID_BOSS_EMOTE")
 
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
 end
 
 function mod:OnEngage()
 	phase = 1
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:Bar("vortex", 29, L["vortex_next"], 56105)
 	self:DelayedMessage("vortex", 24, "yellow", L["vortex_warning"])
 	self:Bar("sparks", 25, L["sparks"], 56152)

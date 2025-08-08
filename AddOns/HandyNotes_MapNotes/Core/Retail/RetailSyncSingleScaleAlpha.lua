@@ -36,6 +36,7 @@ function ns.SyncSingleScaleAlpha()
     db.MiniMapScaleMirror = db.ZoneScaleMirror
     db.MiniMapScaleTravel = db.ZoneScaleTravel
     db.MiniMapScaleDarkmoon = db.ZoneScaleDarkmoon
+    db.MiniMapScaleRaces = db.ZoneScaleRaces
     -- Transport Minimap to Zone single Alpha
     db.MiniMapAlphaPortals = db.ZoneAlphaPortals
     db.MiniMapAlphaZeppelins = db.ZoneAlphaZeppelins
@@ -46,6 +47,7 @@ function ns.SyncSingleScaleAlpha()
     db.MiniMapAlphaMirror = db.ZoneAlphaMirror
     db.MiniMapAlphaTravel = db.ZoneAlphaTravel
     db.MiniMapAlphaDarkmoon = db.ZoneAlphaDarkmoon
+    db.MiniMapAlphaRaces = db.ZoneAlphaRaces
 
     -- General Minimap to Zone single Scale
     db.MiniMapScaleInnkeeper = db.ZoneScaleInnkeeper
@@ -111,6 +113,7 @@ function ns.SyncSingleScaleAlpha()
     db.ZoneScaleMirror = db.ZoneTransportScale
     db.ZoneScaleTravel = db.ZoneTransportScale
     db.ZoneScaleDarkmoon = db.ZoneTransportScale
+    db.ZoneScaleRaces = db.ZoneTransportScale
     -- Alpha
     db.ZoneAlphaPortals = db.ZoneTransportAlpha
     db.ZoneAlphaZeppelins = db.ZoneTransportAlpha
@@ -121,6 +124,7 @@ function ns.SyncSingleScaleAlpha()
     db.ZoneAlphaMirror = db.ZoneTransportAlpha
     db.ZoneAlphaTravel = db.ZoneTransportAlpha
     db.ZoneAlphaDarkmoon = db.ZoneTransportAlpha
+    db.ZoneAlphaRaces = db.ZoneTransportAlpha
 
   end
 
@@ -213,6 +217,7 @@ function ns.SyncSingleScaleAlpha()
     db.MiniMapScaleMirror = db.MiniMapTransportScale
     db.MiniMapScaleTravel = db.MiniMapTransportScale
     db.MiniMapScaleDarkmoon = db.MiniMapTransportScale
+    db.MiniMapScaleRaces = db.MiniMapTransportScale
     -- Alpha
     db.MiniMapAlphaPortals = db.MiniMapTransportAlpha
     db.MiniMapAlphaZeppelins = db.MiniMapTransportAlpha
@@ -223,6 +228,7 @@ function ns.SyncSingleScaleAlpha()
     db.MiniMapAlphaMirror = db.MiniMapTransportAlpha
     db.MiniMapAlphaTravel = db.MiniMapTransportAlpha
     db.MiniMapAlphaDarkmoon = db.MiniMapTransportAlpha
+    db.MiniMapAlphaRaces = db.MiniMapTransportAlpha
 
   end
 

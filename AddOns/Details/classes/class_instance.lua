@@ -752,6 +752,22 @@ function Details:GetDisplay()
 	return self.atributo, self.sub_atributo
 end
 
+function Details:IsShowing(segmentId, displayId, subDisplayId)
+	if (segmentId and segmentId ~= self.segmento) then
+		return false
+	end
+
+	if (displayId and displayId ~= self.atributo) then
+		return false
+	end
+
+	if (subDisplayId and subDisplayId ~= self.sub_atributo) then
+		return false
+	end
+
+	return true
+end
+
 function Details:GetMaxInstancesAmount()
 	return Details.instances_amount
 end
@@ -1461,6 +1477,9 @@ function Details:BaseFrameSnap()
 	end
 
 	local my_baseframe = self.baseframe
+
+    self:RestoreMainWindowPositionNoResize()
+
 	for lado, snap_to in pairs(self.snap) do
 		local instancia_alvo = Details.tabela_instancias [snap_to]
 
@@ -1477,7 +1496,7 @@ function Details:BaseFrameSnap()
 					instancia_alvo.baseframe:SetPoint("TOPLEFT", my_baseframe, "BOTTOMLEFT", 0, -34 + statusbar_y_mod)
 
 				elseif (lado == 3) then --a direita
-					instancia_alvo.baseframe:SetPoint("BOTTOMLEFT", my_baseframe, "BOTTOMRIGHT", Details.grouping_horizontal_gap, 0)
+					instancia_alvo.baseframe:SetPoint("TOPLEFT", my_baseframe, "TOPRIGHT", Details.grouping_horizontal_gap, 0)
 
 				elseif (lado == 4) then --em cima
 					local statusbar_y_mod = 0

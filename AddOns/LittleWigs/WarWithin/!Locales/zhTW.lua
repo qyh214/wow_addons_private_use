@@ -1,7 +1,6 @@
 -- Ara-Kara, City of Echoes
 
 local L = BigWigs:NewBossLocale("Ara-Kara, City of Echoes Trash", "zhTW")
-if not L then return end
 if L then
 	L.discordant_attendant = "失諧的侍從"
 	L.engorged_crawler = "腫脹的爬行者"
@@ -32,6 +31,7 @@ end
 L = BigWigs:NewBossLocale("Cinderbrew Meadery Trash", "zhTW")
 if L then
 	L.venture_co_pyromaniac = "風險投資公司縱火魔"
+	L.venture_co_patron = "風險投資公司贊助人"
 	L.hired_muscle = "受雇打手"
 	L.tasting_room_attendant = "品酒室侍從"
 	L.chef_chewie = "嚼嚼大廚"
@@ -117,6 +117,27 @@ if L then
 	L.wriggling_darkspawn = "蠕動的暗裔"
 end
 
+-- Eco-Dome Al'dani
+
+L = BigWigs:NewBossLocale("Eco-Dome Al'dani Trash", "zhTW")
+if L then
+	L.terrified_broker = "驚恐的仲介者"
+	L.arcane_siphon = "秘法虹吸"
+	L.overgorged_mite = "膨脹的蜱蟲"
+	L.voracious_gorger = "饑渴吞食者"
+	L.ravenous_destroyer = "飢餓的毀滅者"
+	L.overcharged_sentinel = "過載啃兵"
+	L.wastelander_farstalker = "荒地居民遠獵者"
+	L.tamed_ruinstalker = "馴服的廢墟潛獵者"
+	L.wastelander_ritualist = "荒地居民祭儀師"
+	L.wastelander_pactspeaker = "荒地居民獸群語者"
+	L.karesh_elemental = "凯瑞西元素"
+	L.burrowing_creeper = "鑽地潛伏者"
+	L.wastes_creeper = "荒地潛伏者"
+
+	L.taahbat_and_awazj_warmup_trigger = "別耽誤我的時間。塔巴特！讓他們別再跟過來。"
+end
+
 -- Operation: Floodgate
 
 L = BigWigs:NewBossLocale("Operation: Floodgate Trash", "zhTW")
@@ -197,6 +218,7 @@ end
 L = BigWigs:NewBossLocale("The Dawnbreaker Trash", "zhTW")
 if L then
 	L.arathi_lamplighter = "阿拉希燈火者"
+	L.nightfall_curseblade = "夜暮詛咒之刃"
 	L.nightfall_shadowmage = "夜暮暗影法師"
 	L.nightfall_ritualist = "夜暮祭儀師"
 	L.nightfall_commander = "夜暮指揮官"

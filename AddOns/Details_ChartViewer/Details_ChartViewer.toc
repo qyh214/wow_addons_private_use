@@ -1,0 +1,31 @@
+## Interface: 110200
+## Title: Details_ChartViewer (plugin)
+## Notes: Plugin for Details
+## RequiredDeps: Details
+## SavedVariablesPerCharacter: ChartViewerDB
+
+## X-Curse-Project-ID: 79620
+## X-Wago-ID: RaN0oaGj
+
+#@no-lib-strip@
+embeds.xml
+#@end-no-lib-strip@
+
+locales\enUS.lua
+locales\deDE.lua
+locales\esES.lua
+locales\esMX.lua
+locales\frFR.lua
+locales\itIT.lua
+locales\koKR.lua
+locales\ptBR.lua
+locales\ruRU.lua
+locales\zhCN.lua
+locales\zhTW.lua
+
+Details_ChartViewer.xml
+Details_ChartViewer.lua
+frames.lua
+frames_tabs.lua
+frames_charts.lua
+frames_options.lua

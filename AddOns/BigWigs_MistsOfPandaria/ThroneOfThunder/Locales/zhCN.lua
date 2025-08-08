@@ -13,15 +13,15 @@ if L then
 	L.orb_trigger = "冲向" -- PLAYERNAME forces Horridon to charge the Farraki door!
 
 	L.chain_lightning_desc = "|cffff0000只警报焦点目标。|r {-7124}"
-	L.chain_lightning_message = "焦点：>闪电链<！"
+	L.chain_lightning_message = "焦点：闪电链！"
 	L.chain_lightning_bar = "焦点：闪电链"
 
 	L.fireball_desc = "|cffff0000只警报焦点目标。|r {-7122}"
-	L.fireball_message = "焦点：>火球术<！"
+	L.fireball_message = "焦点：火球术！"
 	L.fireball_bar = "焦点：火球术"
 
 	L.venom_bolt_volley_desc = "|cffff0000只警报焦点目标。|r {-7112}"
-	L.venom_bolt_volley_message = "焦点：>毒箭之雨<！"
+	L.venom_bolt_volley_message = "焦点：毒箭之雨！"
 	L.venom_bolt_volley_bar = "焦点：毒箭之雨"
 
 	L.adds = "增援出现"
@@ -42,7 +42,7 @@ if L then
 	L.custom_on_markpossessed = "标记控制首领"
 	L.custom_on_markpossessed_desc = "用骷髅团队标记被控制的首领，需要权限。"
 
-	L.priestess_heal = ">%s< 被治疗！"
+	L.priestess_heal = "%s 被治疗！"
 	L.assault_stun = "坦克眩晕"
 	L.assault_message = "冰寒突击！"
 	L.full_power = "全能量"
@@ -56,8 +56,8 @@ if L then
 
 	L.kick = "脚踢"
 	L.kick_desc = "持续追踪可被脚踢旋龟的数量。"
-	L.kick_message = "可脚踢旋龟：>%d<！"
-	L.kicked_message = "%s已被踢！（%d剩余）"
+	L.kick_message = "可脚踢旋龟：%d！"
+	L.kicked_message = "%s已被踢！（剩余：%d）"
 
 	L.custom_off_turtlemarker = "旋龟标记"
 	L.custom_off_turtlemarker_desc = "使用团队标记标记全部旋龟。\n|cFFFF0000团队中只有1名应该启用此选项以防止标记冲突，需要权限。|r\n|cFFADFF2F提示：如果团队选择你用来标记旋龟，鼠标悬停快速划过全部旋龟是最快的标记方式。|r"
@@ -88,7 +88,7 @@ if L then
 	L.up = "|cff008000上层|r"
 	L.down = "|cffff0000下层|r"
 	L.add = "增援"
-	L.big_add_message = "大量增援 >%s<！"
+	L.big_add_message = "大量增援 %s！"
 end
 
 L = BigWigs:NewBossLocale("Durumu the Forgotten", "zhCN")
@@ -109,7 +109,7 @@ if L then
 	L.initial_life_drain = "初始生命吸取施放"
 	L.initial_life_drain_desc = "初始生命吸取施放消息以帮助保持减少受到治疗的减益。"
 
-	L.life_drain_say = ">%d<层吸取"
+	L.life_drain_say = "%d 层吸取"
 
 	L.rays_spawn = "光线出现"
 	L.red_add = "|cffff0000红色|r增援"
@@ -123,7 +123,7 @@ end
 
 L = BigWigs:NewBossLocale("Primordius", "zhCN")
 if L then
-	L.mutations = "变异 |cff008000>%d<|r |cffff0000>%d<|r"
+	L.mutations = "变异 |cff008000%d |r |cffff0000%d|r"
 	L.acidic_spines = "酸性脊刺（溅射伤害）"
 end
 
@@ -132,10 +132,10 @@ if L then
 	L.engage_trigger = "宝珠爆炸了！"
 
 	L.matterswap_desc = "中了物质交换的玩家离你过远，如果他们被驱散时你会与他们交换的位置。"
-	L.matterswap_message = ">你< 最远距离物质交换！"
+	L.matterswap_message = "你 最远距离物质交换！"
 
 	L.siphon_power = "心能虹吸（%d%%）"
-	L.siphon_power_soon = "心能虹吸（%d%%）即将%s！"
+	L.siphon_power_soon = "心能虹吸（%d%%）即将：%s！"
 	L.slam_message = "爆炸猛击！"
 end
 
@@ -168,8 +168,8 @@ if L then
 	L.safe_from_stun = "超载昏迷你也许是安全的"
 	L.diffusion_add = "散射闪电增援"
 	L.shock = "电能震击"
-	L.static_shock_bar = "<静电冲击分摊>"
-	L.overcharge_bar = "<超载脉冲>"
+	L.static_shock_bar = "静电冲击分摊"
+	L.overcharge_bar = "超载脉冲"
 end
 
 L = BigWigs:NewBossLocale("Ra-den", "zhCN")
@@ -184,7 +184,7 @@ if L then
 	L.corruptedballs_desc = "腐化生命和腐化心能，（腐化生命）增加伤害或（腐化心能）增加生命值。"
 	L.unstablevitajumptarget = "不稳定的生命弹跳目标"
 	L.unstablevitajumptarget_desc = "当你距离最远受到不稳定的生命玩家时发出提示。如果醒目此选项，将会在不稳定的生命弹跳到你时候看到冷却计时条。"
-	L.unstablevitajumptarget_message = ">你< 距离不稳定的生命最远！"
+	L.unstablevitajumptarget_message = "你 距离不稳定的生命最远！"
 	L.sensitivityfurthestbad = "生命过敏+最远距离 = |cffff0000坏|r！"
 	L.kill_trigger = "等等"
 

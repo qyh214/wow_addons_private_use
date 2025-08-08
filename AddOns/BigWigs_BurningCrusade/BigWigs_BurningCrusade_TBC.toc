@@ -25,7 +25,7 @@
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
-## Version: v11.1.1
+## Version: v11.1.4
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
 
 ## X-Category: Raid

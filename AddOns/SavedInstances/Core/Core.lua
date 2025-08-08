@@ -212,19 +212,15 @@ SI.defaultDB = {
   -- item: linkstring or nil
 
   -- MythicKey
-  -- name: string
   -- ResetTime: expiry
   -- mapID: int
   -- level: int
-  -- color: string
   -- link: string
 
   -- TimewornMythicKey
-  -- name: string
   -- ResetTime: expiry
   -- mapID: int
   -- level: int
-  -- color: string
   -- link: string
 
   -- MythicKeyBest
@@ -388,17 +384,15 @@ SI.defaultDB = {
     Currency3028 = true, -- Restored Coffer Key
     Currency3056 = true, -- Kej
     Currency3008 = true, -- Valorstones
-    Currency3090 = true, -- Flame-Blessed Iron
-    Currency3218 = true, -- Empty Kaja'Cola Can
-    Currency3220 = true, -- Vintage Kaja'Cola Can
-    Currency3226 = true, -- Market Research
-    Currency3116 = true, -- Essence of Kaja'mite
-    Currency3107 = true, -- Weathered Undermine Crest
-    Currency3108 = true, -- Carved Undermine Crest
-    Currency3109 = true, -- Runed Undermine Crest
-    Currency3110 = true, -- Gilded Undermine Crest
-    Currency3132 = true, -- 11.1 Professions - Personal Tracker - S2 Spark Drops (Hidden)
-    Currency3216 = true, -- Bounty's Remnants
+    Currency3149 = true, -- Displaced Corrupted Mementos
+    Currency3303 = true, -- Untethered Coin
+    Currency3356 = true, -- Untainted Mana-Crystals
+    Currency3269 = true, -- Ethereal Voidsplinter
+    Currency3284 = true, -- Weathered Ethereal Crest
+    Currency3286 = true, -- Carved Ethereal Crest
+    Currency3288 = true, -- Runed Ethereal Crest
+    Currency3290 = true, -- Gilded Ethereal Crest
+    Currency3141 = true, -- Starlight Spark Dust
     CurrencyMax = false,
     CurrencyEarned = true,
     CurrencySortName = false,
@@ -1315,6 +1309,7 @@ function SI:UpdateToonData()
           or id == 1971 -- Random Timewalking Dungeon (Warlords of Draenor)
           or id == 2274 -- Random Timewalking Dungeon (Legion)
           or id == 2634 -- Random Timewalking Dungeon (Classic)
+          or id == 2874 -- Random Timewalking Dungeon (Battle for Azeroth)
           or id == 2714 -- The Codex of Chromie
         )
       then -- donetoday flag is falsely set for some level/dungeon combos where no daily incentive is available
@@ -2517,7 +2512,7 @@ end
 function SI:OnInitialize()
   local versionString = C_AddOns.GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "11.1.1" then
+  if versionString == "11.2.0" then
     versionString = "Dev"
   end
   --@end-debug@]==]
@@ -2915,6 +2910,9 @@ SI.histLimit = 10 -- instances per hour
 function SI:histZoneKey()
   local instname, insttype, diff, diffname, maxPlayers, playerDifficulty, isDynamicInstance = GetInstanceInfo()
   if insttype == nil or insttype == "none" or insttype == "arena" or insttype == "pvp" then -- pvp doesnt count
+    return nil
+  end
+  if diff == 208 then -- delves dont count
     return nil
   end
   if (IsInLFGDungeon() or IsInScenarioGroup()) and diff ~= 19 and diff ~= 17 then -- LFG instances don't count, but Holiday Events and LFR both count
@@ -3820,14 +3818,18 @@ function SI:ShowTooltip(anchorframe)
     for toon, t in cpairs(SI.db.Toons, true) do
       if t.MythicKey and t.MythicKey.link then
         local col = columns[toon .. 1]
-        local name
-        if SI.db.Tooltip.AbbreviateKeystone then
-          name = SI.KeystoneAbbrev[t.MythicKey.mapID] or t.MythicKey.name
+        local mapName = C_ChallengeMode.GetMapUIInfo(t.MythicKey.mapID)
+        if mapName then
+          local name = SI.db.Tooltip.AbbreviateKeystone and SI.KeystoneAbbrev[t.MythicKey.mapID] or mapName
+          local color = C_ChallengeMode.GetKeystoneLevelRarityColor(t.MythicKey.level) or WHITE_FONT_COLOR
+          local text = color:WrapTextInColorCode(name .. " (" .. t.MythicKey.level .. ")")
+          tooltip:SetCell(show, col, text, "CENTER", maxcol)
+          tooltip:SetCellScript(show, col, "OnMouseDown", ChatLink, t.MythicKey.link)
         else
-          name = t.MythicKey.name
+          -- might be caused by corrupted keystone parsing
+          tooltip:SetCell(show, col, t.MythicKey.link, "CENTER", maxcol)
+          tooltip:SetCellScript(show, col, "OnMouseDown", ChatLink, t.MythicKey.link)
         end
-        tooltip:SetCell(show, col, "|c" .. t.MythicKey.color .. name .. " (" .. t.MythicKey.level .. ")" .. FONTEND, "CENTER", maxcol)
-        tooltip:SetCellScript(show, col, "OnMouseDown", ChatLink, t.MythicKey.link)
       end
     end
   end
@@ -3852,14 +3854,18 @@ function SI:ShowTooltip(anchorframe)
     for toon, t in cpairs(SI.db.Toons, true) do
       if t.TimewornMythicKey and t.TimewornMythicKey.link then
         local col = columns[toon .. 1]
-        local name
-        if SI.db.Tooltip.AbbreviateKeystone then
-          name = SI.KeystoneAbbrev[t.TimewornMythicKey.mapID] or t.TimewornMythicKey.name
+        local mapName = C_ChallengeMode.GetMapUIInfo(t.TimewornMythicKey.mapID)
+        if mapName then
+          local name = SI.db.Tooltip.AbbreviateKeystone and SI.KeystoneAbbrev[t.TimewornMythicKey.mapID] or mapName
+          local color = C_ChallengeMode.GetKeystoneLevelRarityColor(t.TimewornMythicKey.level) or WHITE_FONT_COLOR
+          local text = color:WrapTextInColorCode(name .. " (" .. t.TimewornMythicKey.level .. ")")
+          tooltip:SetCell(show, col, text, "CENTER", maxcol)
+          tooltip:SetCellScript(show, col, "OnMouseDown", ChatLink, t.TimewornMythicKey.link)
         else
-          name = t.TimewornMythicKey.name
+          -- might be caused by corrupted keystone parsing
+          tooltip:SetCell(show, col, t.TimewornMythicKey.link, "CENTER", maxcol)
+          tooltip:SetCellScript(show, col, "OnMouseDown", ChatLink, t.TimewornMythicKey.link)
         end
-        tooltip:SetCell(show, col, "|c" .. t.TimewornMythicKey.color .. name .. " (" .. t.TimewornMythicKey.level .. ")" .. FONTEND, "CENTER", maxcol)
-        tooltip:SetCellScript(show, col, "OnMouseDown", ChatLink, t.TimewornMythicKey.link)
       end
     end
   end

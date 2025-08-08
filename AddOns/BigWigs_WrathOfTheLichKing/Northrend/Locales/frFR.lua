@@ -8,7 +8,7 @@ if L then
 	L.deep_breath = "Souffle profond"
 end
 
-local L = BigWigs:NewBossLocale("Archavon the Stone Watcher", "frFR")
+L = BigWigs:NewBossLocale("Archavon the Stone Watcher", "frFR")
 if L then
 	L.stomp_message = "Piétinement - Empaler imminent !"
 	L.stomp_warning = "Piétinement probable dans ~5 sec. !"

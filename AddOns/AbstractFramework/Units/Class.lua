@@ -1,13 +1,15 @@
 ---@class AbstractFramework
 local AF = _G.AbstractFramework
 
-local localizedClass
+local classFileToLocalized
 if LocalizedClassList then
-    localizedClass = LocalizedClassList()
+    classFileToLocalized = LocalizedClassList()
 else
-    localizedClass = {}
-    FillLocalizedClassList(localizedClass)
+    classFileToLocalized = {}
+    FillLocalizedClassList(classFileToLocalized)
 end
+
+local classLocalizedToFile = AF.SwapKeyValue(classFileToLocalized)
 
 local sortedClasses = {}
 local classFileToID = {}
@@ -43,19 +45,26 @@ end
 
 local GetNumClasses = GetNumClasses
 
-function AF.GetClassID(classFile)
-    return classFileToID[classFile]
+function AF.GetClassID(classFileOrLocalized)
+    if classLocalizedToFile[classFileOrLocalized] then
+        classFileOrLocalized = classLocalizedToFile[classFileOrLocalized]
+    end
+    return classFileToID[classFileOrLocalized]
 end
 
-function AF.GetClassFile(classID)
-    return classIDToFile[classID]
+function AF.GetClassFile(classIDOrLocalized)
+    if type(classIDOrLocalized) == "string" then
+        return classLocalizedToFile[classIDOrLocalized]
+    elseif type(classIDOrLocalized) == "number" then
+        return classIDToFile[classIDOrLocalized]
+    end
 end
 
 function AF.GetLocalizedClassName(classFileOrID)
     if type(classFileOrID) == "string" then
-        return localizedClass[classFileOrID] or classFileOrID
+        return classFileToLocalized[classFileOrID] or classFileOrID
     elseif type(classFileOrID) == "number" and classIDToFile[classFileOrID] then
-        return localizedClass[classIDToFile[classFileOrID]] or classFileOrID
+        return classFileToLocalized[classIDToFile[classFileOrID]] or classFileOrID
     end
     return ""
 end

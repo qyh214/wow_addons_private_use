@@ -1,8 +1,8 @@
---	26.03.2025
+--	29.07.2025
 
 local GlobalAddonName, MRT = ...
 
-MRT.V = 5150
+MRT.V = 5195
 MRT.T = "R"
 
 MRT.Slash = {}			--> функции вызова из коммандной строки
@@ -64,6 +64,14 @@ elseif MRT.clientVersion < 60000 then
 	MRT.isCata = true
 	MRT.isMoP = true
 	MRT.T = "Pandaria"
+elseif MRT.clientVersion < 70000 then
+	MRT.isClassic = true
+	MRT.isBC = true
+	MRT.isLK = true
+	MRT.isCata = true
+	MRT.isMoP = true
+	MRT.isWoD = true
+	MRT.T = "Draenor"
 elseif MRT.clientVersion >= 110000 then
 	MRT.is11 = true
 end
@@ -746,22 +754,35 @@ end
 
 -------------> Callbacks <-------------
 
+local CallbackRecent
+local function CallbackErrorHandler(err)
+	print ("Callback Error", err)
+	print("Source:",CallbackRecent.root)
+end
+
 local callbacks = {}
-function MRT.F:RegisterCallback(eventName, func)
+function MRT.F:RegisterCallback(eventName, func, key)
 	if not callbacks[eventName] then
 		callbacks[eventName] = {}
 	end
-	tinsert(callbacks[eventName], func)
+	local callbackData = {
+		f = func,
+		root = debugstack(2),
+		k = key,
+	}
+	tinsert(callbacks[eventName], callbackData)
 
 	MRT.F:FireCallback("CallbackRegistered", eventName, func)
 end
-function MRT.F:UnregisterCallback(eventName, func)
+function MRT.F:UnregisterCallback(eventName, func, key)
 	if not callbacks[eventName] then
 		return
 	end
 	local count = 0
 	for i=#callbacks[eventName],1,-1 do
-		if callbacks[eventName][i] == func then
+		if key and callbacks[eventName][i].k == key then
+			tremove(callbacks[eventName], i)
+		elseif not key and callbacks[eventName][i].f == func then
 			tremove(callbacks[eventName], i)
 		else
 			count = count + 1
@@ -771,16 +792,13 @@ function MRT.F:UnregisterCallback(eventName, func)
 	MRT.F:FireCallback("CallbackUnregistered", eventName, func, count)
 end
 
-local function CallbackErrorHandler(err)
-	print ("Callback Error", err)
-end
-
 function MRT.F:FireCallback(eventName, ...)
 	if not callbacks[eventName] then
 		return
 	end
-	for _,func in pairs(callbacks[eventName]) do
-		xpcall(func, CallbackErrorHandler, eventName, ...)
+	for _,callbackData in pairs(callbacks[eventName]) do
+		CallbackRecent = callbackData
+		xpcall(callbackData.f, CallbackErrorHandler, eventName, ...)
 	end
 end
 

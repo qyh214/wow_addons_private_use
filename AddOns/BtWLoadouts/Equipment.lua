@@ -29,6 +29,12 @@ local GetCharacterInfo = Internal.GetCharacterInfo
 
 local AddSetToMapData, RemoveSetFromMapData, UpdateSetItemInMapData
 
+local BANK_CONTAINER = Enum.BagIndex.Bank or BANK_CONTAINER;
+local BACKPACK_CONTAINER = Enum.BagIndex.Backpack or BACKPACK_CONTAINER;
+local NUM_BAG_SLOTS = Enum.BagIndex.ReagentBag or NUM_BAG_SLOTS;
+local FIRST_BANK_BAG_SLOT = Enum.BagIndex.CharacterBankTab_1 or Enum.BagIndex.BankBag_1 or NUM_BAG_SLOTS + 1;
+local LAST_BANK_BAG_SLOT = Enum.BagIndex.CharacterBankTab_6 or Enum.BagIndex.BankBag_7 or FIRST_BANK_BAG_SLOT + 6;
+
 local function PackLocation(bag, slot)
 	if bag == nil then -- Inventory slot
 		if slot >= 52 and slot <= 79 then -- Bank Slot
@@ -41,7 +47,7 @@ local function PackLocation(bag, slot)
             return bit.bor(ITEM_INVENTORY_LOCATION_BANK, slot + 51); -- Bank slots are stored as inventory slots, and start at 52
         elseif bag >= 0 and bag <= NUM_BAG_SLOTS then
             return bit.bor(ITEM_INVENTORY_LOCATION_PLAYER, ITEM_INVENTORY_LOCATION_BAGS, bit.lshift(bag, ITEM_INVENTORY_BAG_BIT_OFFSET), slot);
-        elseif bag >= NUM_BAG_SLOTS+1 and bag <= NUM_BAG_SLOTS+NUM_BANKBAGSLOTS then
+        elseif bag >= FIRST_BANK_BAG_SLOT and bag <= LAST_BANK_BAG_SLOT then
             return bit.bor(ITEM_INVENTORY_LOCATION_BANK, ITEM_INVENTORY_LOCATION_BAGS, bit.lshift(bag - ITEM_INVENTORY_BANK_BAG_OFFSET, ITEM_INVENTORY_BAG_BIT_OFFSET), slot);
         end
 	end
@@ -2436,7 +2442,7 @@ do
 					UpdateLocation(newLocation)
 				end
 				
-				for bagId=NUM_BAG_SLOTS+1,NUM_BAG_SLOTS+NUM_BANKBAGSLOTS do
+				for bagId=FIRST_BANK_BAG_SLOT,LAST_BANK_BAG_SLOT do
 					if next(missingItemDatas) == nil then
 						break
 					end

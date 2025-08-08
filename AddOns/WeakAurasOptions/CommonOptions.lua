@@ -1561,7 +1561,13 @@ local function PositionOptionsForSubElement(data, options, startOrder, areaAncho
   options.xOffset = {
     type = "range",
     control = "WeakAurasSpinBox",
-    name = L["X Offset"],
+    name = function()
+      if data.anchor_mode == "area" then
+        return L["Extra Width"]
+      else
+        return L["X Offset"]
+      end
+    end,
     order = startOrder + 0.7,
     width = WeakAuras.normalWidth,
     softMin = -200,
@@ -1572,7 +1578,13 @@ local function PositionOptionsForSubElement(data, options, startOrder, areaAncho
   options.yOffset = {
     type = "range",
     control = "WeakAurasSpinBox",
-    name = L["Y Offset"],
+    name = function()
+      if data.anchor_mode == "area" then
+        return L["Extra Height"]
+      else
+        return L["Y Offset"]
+      end
+    end,
     order = startOrder + 0.8,
     width = WeakAuras.normalWidth,
     softMin = -200,
@@ -1949,7 +1961,7 @@ local function AddCodeOption(args, data, name, prefix, url, order, hiddenFunc, p
 
       code = "return " .. code;
 
-      local loadedFunction, errorString = OptionsPrivate.Private.LoadFunction(code, true);
+      local loadedFunction, errorString = OptionsPrivate.Private.LoadFunction(code, data.id, true);
 
       if not errorString then
         if options.validator then

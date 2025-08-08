@@ -1,5 +1,6 @@
-## Interface: 110100
-## Title: Causese_SharedMedia
+## Interface: 110107, 110200
+## Title: SharedMedia_Causese
+## Category: Causese
 
 libs\LibStub\LibStub.lua
 libs\CallbackHandler-1.0\CallbackHandler-1.0.lua

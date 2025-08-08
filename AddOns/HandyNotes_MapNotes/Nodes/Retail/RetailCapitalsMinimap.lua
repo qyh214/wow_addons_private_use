@@ -4,11 +4,12 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 function ns.LoadMinimapCapitalsLocationinfo(self)
 local db = ns.Addon.db.profile
 local minimap = ns.minimap
+ns._currentSourceFile = "RetailCapitalsMinimap.lua"
 
 --#####################################################################################################
 --##########################        function to hide all minimap below         ########################
 --#####################################################################################################
-if not db.activate.HideMapNote then
+    if not db.activate.HideMapNote then
 
     --########################################################################################
     --################################         Capitals       ################################
@@ -34,74 +35,76 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
                     if self.db.profile.showMinimapCapitalsAlchemy then
-                        minimap[85][55684575] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][55684575] = { npcID = 3347, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 
                     if self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[85][60595535] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][60595535] = { npcID = 3365, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[85][57105622] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][37058474] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][57105622] = { npcID = 11017, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][37058474] = { npcID = 45545, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[85][61385421] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][39614985] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][61385421] = { npcID = 3365, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][39614985] = { npcID = 44782, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTailoring then
-                        minimap[85][60755912] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][38865090] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][38228718] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][60755912] = { npcID = 3363, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true  }
+                        minimap[85][38865090] = { npcID = 44783, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][38228718] = { npcIDs1 = 133239, npcIDs2 = 133109, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[85][72673406] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][72673406] = { npcID = 46675, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsBlacksmith then
-                        minimap[85][76533451] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][75353400] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][76373707] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][40735007] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][44237719] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][76523449] = { npcID = 3355, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][75893361] = { npcID = 11178, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][76413710] = { npcID = 7231, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][75813716] = { npcID = 7230, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][75313403] = { npcID = 11177, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][40735007] = { npcID = 44781, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][44237719] = { npcID = 37072, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMining then
-                        minimap[85][39058556] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][44547839] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][72343537] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][39058556] = { npcID = 133236, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][44547839] = { npcID = 46357, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][72343537] = { npcID = 3357, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsFishing then
-                        minimap[85][66434193] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][35196733] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][66434193] = { npcID = 3332, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][35196733] = { npcID = 44975, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[85][56376139] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][41147895] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][32256966] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][56376139] = { npcID = 46709, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][41147895] = { npcID = 133261, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][32256966] = { npcID = 3399, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsArchaeology then
-                        minimap[85][49277069] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][49277069] = { npcID = 47571, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[85][54895027] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][34836286] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[85][40178060] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][54895027] = { npcID = 46741, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][34836286] = { npcID = 29143, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][40178060] = { npcID = 133104, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEnchanting then
-                        minimap[85][53404929] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][53404929] = { npcID = 3345, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsInscription then
-                        minimap[85][55115586] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[85][55115586] = { npcID = 46716, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -119,7 +122,7 @@ if not db.activate.HideMapNote then
                         minimap[85][57479225] = { mnID = 371, name = "", type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. L["Jade Forest"] } -- The Jade Forest 
                         minimap[85][56219180] = { mnID = 125, name = "", type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. DUNGEON_FLOOR_DALARANCITY1 .. " - " .. POSTMASTER_PIPE_NORTHREND} -- Crystalsong Forest (Old Dalaran) Portalroom 
                         minimap[85][57409153] = { mnID = 111, name = L["Shattrath City"], TransportName = L["in the basement"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Shattrath 
-                        minimap[85][57179070] = { mnID = 17, name = "", TransportName = L["The Dark Portal"] .. "\n" .. "( " .. L["talk to"] .. ": " .. L["Thrallmar Mage"] .. " )" .. "\n" ..L["in the basement"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blasted Lands
+                        minimap[85][57179070] = { npcID = 150131, mnID = 17, name = "", TransportName = L["The Dark Portal"] .. " " ..L["in the basement"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blasted Lands
                         minimap[85][56399252] = { mnID = 74, name = DUNGEON_FLOOR_TANARIS18, TransportName = L["in the basement"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Caverns of Time 
                         minimap[85][55209201] = { mnID = 624, name = L["Warspear"], TransportName = L["in the basement"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Warspear - Ashran 
                         minimap[85][57878985] = { mnID = 2339, name = L["Dornogal"], TransportName = L["in the basement"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dornogal
@@ -142,7 +145,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
-                        minimap[85][49705919] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][49705919] = { npcID = 3310, name = "", type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
     
                 end
@@ -168,7 +171,11 @@ if not db.activate.HideMapNote then
 
             --General Orgrimmar
                 if self.db.profile.activate.MinimapCapitalsGeneral then
-    
+
+                    if self.db.profile.showMinimapCapitalsInnkeeper or self.db.profile.showMinimapCapitalsAuctioneer or self.db.profile.showMinimapCapitalsMailbox or self.db.profile.showMinimapCapitalsStablemaster or self.db.profile.showMinimapCapitalsBank then
+                        minimap[85][32916483] = { npcIDs1 = 45086, npcIDs2 = 9988, npcIDs3 = 45081, npcIDs10 = 45082, dnID = BUTTON_LAG_AUCTIONHOUSE .. "\n" .. "\n" .. MINIMAP_TRACKING_MAILBOX, name = "",  type = "MNL", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    end
+
                     if self.db.profile.showMinimapCapitalsPaths then
                         minimap[85][70583097] = { dnID = L["Entrance"], mnID = 503, name = "", type = "PathRO", showInZone = false, showOnContinent = false, showOnMinimap = true} -- Portal to Shlae'gararena
                         minimap[503][57431229] = { dnID = L["Exit"], mnID = 85, name = "", type = "PathRO", showInZone = false, showOnContinent = false, showOnMinimap = true} -- Portal to Shlae'gararena
@@ -181,17 +188,17 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[85][53637877] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[85][41068007] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[85][38854865] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[85][71304995] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][53637877] = { npcID = 6929, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][41068007.01] = { npcID = 45563, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][38854865] = { npcID = 44785, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][71304995] = { npcID = 46642, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
-                        minimap[85][53957324] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[85][35847732] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[85][41674889] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[85][66623629] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][53957324] = { npcIDs1 = 44865, npcIDs2 = 44867, npcIDs3 = 44866, npcIDs4 = 44868, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][35847732] = { npcID = 45659, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][41674889] = { npcID = 44787, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][66623629] = { npcIDs1 = 46639, npcIDs2 = 46637, npcIDs3 = 46640, npcIDs4 = 46638, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsBank then
@@ -200,12 +207,8 @@ if not db.activate.HideMapNote then
                         minimap[85][40104599] = { dnID = BANK .. "\n" .. GUILD_BANK, name = "", type = "Bank", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
-                    if self.db.profile.showMinimapCapitalsMapNotes then
-                        minimap[85][32916483] = { dnID = MINIMAP_TRACKING_INNKEEPER .. "\n" .. BANK .. "\n" .. BUTTON_LAG_AUCTIONHOUSE .. "\n" .. MINIMAP_TRACKING_MAILBOX .. "\n" .. MINIMAP_TRACKING_STABLEMASTER, name = "", type = "MNL", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    end
-
                     if self.db.profile.showMinimapCapitalsBarber then
-                        minimap[85][40336058] = { dnID = MINIMAP_TRACKING_BARBER, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][40336058] = { npcID = 29143, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMailbox then
@@ -231,26 +234,33 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsPvPVendor then
-                        minimap[85][38347131] = { dnID = TRANSMOG_SET_PVP .. " " .. MERCHANT, name = "", type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][38347131] = { npcIDs1 = 12794, npcIDs2 = 12795, npcIDs3 = 12793, npcIDs4 = 52036, npcIDs5 = 52033, npcIDs6 = 54657, npcIDs7 = 69977, npcIDs8 = 69978, npcIDs9 = 175050, npcIDs10 = 146626, name = TRANSMOG_SET_PVP .. " " .. MERCHANT, type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTransmogger then
-                        minimap[85][58116545] = { dnID = MINIMAP_TRACKING_TRANSMOGRIFIER, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][58116545] = { npcID = 54473, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][47797449] = { npcID = 201314, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsPvEVendor then
-                        minimap[85][48037056] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT, name = "", TransportName = L["(on the tower)"],  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][48037056] = { npcIDs1 = 58155, npcIDs2 = 46555, npcIDs3 = 46556, name = TRANSMOG_SET_PVE .. " " .. MERCHANT .. " " .. L["(on the tower)"], type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[503][50632907] = { npcID = 145695, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsStablemaster then
-                        --minimap[85][40808060] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true } stablemaster replaced to Herbalism??
-                        --minimap[85][32606480] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[85][39604840] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[85][62403560] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][39604840.01] = { npcID = 44788, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][62403560] = { npcID = 47764, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTradingPost then
-                        minimap[85][48717601] = { dnID = BATTLE_PET_SOURCE_12, name = "",  type = "TradingPost", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][48717601] = { npcIDs1 = 185472, npcIDs2 = 185473, name = "",  type = "TradingPost", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsMountMerchent then
+                        minimap[85][69824115] = { npcID = 66022, name = PERKS_VENDOR_CATEGORY_MOUNT .. " " .. MERCHANT, type = "MountMerchant", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][48005870] = { npcID = 44918, name = PERKS_VENDOR_CATEGORY_MOUNT .. " " .. MERCHANT, type = "MountMerchant", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][38057803] = { npcID = 48510, name = PERKS_VENDOR_CATEGORY_MOUNT .. " " .. MERCHANT, type = "MountMerchant", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[85][41807298] = { npcIDs1 = 12796, npcIDs2 = 73151, name = TRANSMOG_SET_PVP .. " " .. PERKS_VENDOR_CATEGORY_MOUNT .. " " .. MERCHANT, type = "MountMerchant", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -271,60 +281,60 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
                     if self.db.profile.showMinimapCapitalsAlchemy then
-                        minimap[88][46643317] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[88][46643317] = { npcID = 3009, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 
                     if self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[88][41514257] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[88][41514257] = { npcID = 3007, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[88][36065961] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[88][36065961] = { npcID = 52651, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[88][44424321] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[88][44424321] = { npcID = 7089, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTailoring then
-                        minimap[88][44544531] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[88][44544531] = { npcID = 3004, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[88][34825399] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[88][34825399] = { npcID = 52657, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true}
                     end
 
-                    if self.db.profileshowMinimapCapitalsBlacksmith then
-                        minimap[88][39365510] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    if self.db.profile.showMinimapCapitalsBlacksmith then
+                        minimap[88][39365510] = { npcID = 2998, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMining then
-                        minimap[88][34385790] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[88][34385790] = { npcID = 3001, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsFishing then
-                        minimap[88][56144642] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[88][56144642] = { npcID = 3028, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[88][50745310] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[88][50745310] = { npcID = 3026, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsArchaeology then
-                        minimap[88][75032812] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[88][75032812] = { npcID = 47572, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[88][49954040] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[88][49954040] = { npcID = 3013, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEnchanting then
-                        minimap[88][45293847] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[88][45293847] = { npcID = 3011, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsInscription then
-                        minimap[88][28812071] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[88][30323012] = { name = L["Passage"] .. " " .. MINIMAP_TRACKING_TRAINER_PROFESSION, type = "PassageLeftL", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName =  INSCRIPTION }
+                        minimap[88][28812071] = { npcID = 30709, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[88][30323012] = { npcID = 30709, name = L["Passage"],  type = "PassageLeftL", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -337,7 +347,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
-                        minimap[88][46654989] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[88][46654989] = { npcID = 2995, name = "", type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -353,12 +363,12 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[88][45856477] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper",  showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[88][45856477] = { npcID = 6746, name = "", type = "Innkeeper",  showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
-                        minimap[88][38875023] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer",  showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[88][40435169] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer",  showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[88][38875023] = { npcID = 8722, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer",  showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[88][40435169] = { npcID = 8674, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer",  showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsBank then
@@ -370,7 +380,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsStablemaster then
-                        minimap[88][45006000] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[88][45006000] = { npcID = 10054, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -393,61 +403,59 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
                     if self.db.profile.showMinimapCapitalsAlchemy then
-                        minimap[110][66701673] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[110][66701673] = { npcID = 16642, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 
                     if self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[110][85008054] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[110][85008054] = { npcID = 16688, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[110][76634110] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[110][76634110] = { npcID = 16667, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[110][84997931] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[110][84997931] = { npcID = 16692, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTailoring then
-                        minimap[110][57365009] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[110][57365009] = { npcID = 16640, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[110][91377443] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[110][90327383] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[110][90767437] = { npcIDs1 = 19775, npcIDs2 = 16703, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
-                    if self.db.profileshowMinimapCapitalsBlacksmith then
-                        minimap[110][79423869] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    if self.db.profile.showMinimapCapitalsBlacksmith then
+                        minimap[110][79423869] = { npcID = 16669, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMining then
-                        minimap[110][78914322] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[110][78914322] = { npcID = 16663, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsFishing then
-                        minimap[110][76246779] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[110][76246779] = { npcID = 16780, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[110][69647153] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[110][69647153] = { npcID = 16676, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsArchaeology then
-                        minimap[110][75032812] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[110][81436390] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[110][81436390] = { npcID = 47346, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[110][67401842] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[110][67401842] = { npcID = 16644, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsInscription then
-                        minimap[110][69322382] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[110][69322382] = { npcID = 30710, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEnchanting then
-                        minimap[110][70012365] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[110][70012365] = { npcID = 16633, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -461,7 +469,8 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
-                        minimap[110][63159649] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[110][63159649] = { npcID = 16192, name = "", type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[110][30237978] = { npcID = 44244, name = "", type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -474,13 +483,13 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[110][79465822] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[110][67867288] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[110][79465822] = { npcID = 16618, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[110][67867288] = { npcID = 17630, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
-                        minimap[110][92735828] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[110][60726258] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[110][92735828] = { npcIDs1 = 16627, npcIDs2 = 16629, npcIDs3 = 16628, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[110][60726258] = { npcIDs1 = 17629, npcIDs2 = 17628, npcIDs3 = 17627, npcIDs4 = 18761, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsBank then
@@ -502,7 +511,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsStablemaster then
-                        minimap[110][83403040] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[110][83403040] = { npcID = 16656, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -525,61 +534,61 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
                     if self.db.profile.showMinimapCapitalsAlchemy then
-                        minimap[90][47757332] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[90][52947737] = { name = L["Passage"] .. " " .. MINIMAP_TRACKING_TRAINER_PROFESSION, type = "PassageLeftL", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName =  L["Alchemy"] }
-                        minimap[90][44626639] = { name = L["Passage"] .. " " .. MINIMAP_TRACKING_TRAINER_PROFESSION, type = "PassageLeftL", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName =  L["Alchemy"] }
+                        minimap[90][47757332] = { npcID = 4611, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][52947737] = { npcID = 4611, name = L["Passage"], type = "PassageLeftL", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][44626639] = { npcID = 4611, name = L["Passage"], type = "PassageLeftL", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 
                     if self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[90][70155740] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[90][70155740] = { npcID = 4588, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[90][76107409] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[90][76107409] = { npcID = 11031, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[90][70165922] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[90][70165922] = { npcID = 7087, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTailoring then
-                        minimap[90][70763072] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[90][70763072] = { npcID = 4576, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[90][56503630] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[90][56503630] = { npcID = 52587, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
-                    if self.db.profileshowMinimapCapitalsBlacksmith then
-                        minimap[90][61313061] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    if self.db.profile.showMinimapCapitalsBlacksmith then
+                        minimap[90][61313061] = { npcID = 4596, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMining then
-                        minimap[90][56043744] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[90][56043744] = { npcID = 4598, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsFishing then
-                        minimap[90][80693124] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[90][80693124] = { npcID = 4573, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[90][62194489] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[90][62194489] = { npcID = 4552, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsArchaeology then
-                        minimap[90][75403772] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[90][75403772] = { npcID = 47382, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[90][54014961] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[90][54014961] = { npcID = 4614, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsInscription then
-                        minimap[90][61065801] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[90][61065801] = { npcID = 30711, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEnchanting then
-                        minimap[90][61866139] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[90][61866139] = { npcID = 4616, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 end
 
@@ -591,7 +600,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
-                        minimap[90][63084832] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][63084832] = { npcID = 4551, name = "", type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -610,18 +619,18 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[90][67743784] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][67743784] = { npcID = 6741, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
-                        minimap[90][60534156] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[90][64363583] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[90][67663591] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[90][71494189] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[90][71394672] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[90][67545239] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[90][64415242] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[90][60494647] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][60534156] = { npcID = 15684, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][64363583] = { npcID = 15683, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][67663591] = { npcID = 15682, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][71494189] = { npcID = 15676, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][71394672] = { npcID = 15675, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][67545239] = { npcID = 8672, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][64415242] = { npcID = 8721, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][60494647] = { npcID = 15686, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsBank then
@@ -629,11 +638,11 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsBarber then
-                        minimap[90][70004653] = { dnID = MINIMAP_TRACKING_BARBER, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][70004653] = { npcID = 29139, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsPvEVendor then
-                        minimap[90][78207564] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT, name = "", TransportName = HEIRLOOMS,  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][78207564] = { npcID = 6566, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end   
 
                     if self.db.profile.showMinimapCapitalsMailbox then
@@ -647,7 +656,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsStablemaster then
-                        minimap[90][67603800] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[90][67603800] = { npcID = 10053, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -656,9 +665,9 @@ if not db.activate.HideMapNote then
 
         end
 
-    --################
-    --### Warspear ###
-    --################
+    --###########################
+    --### Warspear / Garrison ###
+    --###########################
         if self.db.profile.showMinimapCapitalsWarspear then
 
         --#############################
@@ -667,10 +676,10 @@ if not db.activate.HideMapNote then
             if self.faction == "Horde" or db.activate.MinimapCapitalsEnemyFaction then
 
             --Instance Warspear / Garrison
-                if self.db.profileshowMinimapCapitalsInstances then
+                if self.db.profile.activate.MinimapCapitalsInstances then
     
-                    if self.db.profileshowMinimapCapitalsLFR then
-                        minimap[590][41364698] = { mnID = 590, name = L["Seer Kazal"] .. " - " .. REQUIRES_LABEL .. " " .. GARRISON_LOCATION_TOOLTIP .. " " .. LEVEL .. " " .. ACTION_SPELL_CAST_START_MASTER .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 477, 457, 669 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    if self.db.profile.showMinimapCapitalsLFR then
+                        minimap[590][41364698] = { npcID = 94870, mnID = 590, name = L["Seer Kazal"] .. " - " .. REQUIRES_LABEL .. " " .. GARRISON_LOCATION_TOOLTIP .. " " .. LEVEL .. " " .. ACTION_SPELL_CAST_START_MASTER .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 477, 457, 669 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
     
                 end
@@ -679,59 +688,60 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
                     if self.db.profile.showMinimapCapitalsAlchemy then
-                        minimap[624][60832652] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[624][60832652] = { npcID = 86009, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 
                     if self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[624][49532786] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[624][49532786] = { npcID = 86032, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[624][716840299] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[624][71684029] = { npcID = 86012, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
-                    if self.db.profileshowMinimapCapitalsSkinning then
-                        minimap[624][48643138] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    if self.db.profile.showMinimapCapitalsSkinning then
+                        minimap[624][48643138] = { npcID = 86028, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTailoring then
-                        minimap[624][59394278] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[624][59394278] = { npcID = 86004, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[624][60203986] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[624][60203986] = { npcID = 86010, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
-                    if self.db.profileshowMinimapCapitalsMiniapBlacksmith then
-                        minimap[624][74093712] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    if self.db.profile.showMinimapCapitalsBlacksmith then
+                        minimap[624][74093712] = { npcID = 86048, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMining then
-                        minimap[624][78603676] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[624][78603676] = { npcID = 86014, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsFishing then
-                        minimap[624][69161653] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[624][69161653] = { npcID = 86628, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[590][38317223] = { npcID = 79892, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[624][45784497] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[624][45784497] = { npcID = 86029, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsArchaeology then
-                        minimap[624][73603119] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[624][73603119] = { npcID = 86033, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[624][62563059] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[624][62563059] = { npcID = 86006, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsInscription then
-                        minimap[624][77104741] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[624][77104741] = { npcID = 86015, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEnchanting then
-                        minimap[624][78755287] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[624][78755287] = { npcID = 86027, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 end
 
@@ -745,8 +755,8 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
-                        minimap[590][45665027] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[624][44133387] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[590][45665027] = { npcID = 79407, name = "", type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[624][44133387] = { npcID = 86049, name = "", type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -759,11 +769,11 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[624][44954321] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[624][44954321] = { npcID = 86307, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
-                        minimap[624][54692551] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[624][54692551] = { npcIDs1 = 88128, npcIDs2 = 86635, npcIDs3 = 88130, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsBank then
@@ -771,11 +781,11 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsPvPVendor then
-                        minimap[624][49045437] = { dnID = TRANSMOG_SET_PVP .. "" .. SLASH_EQUIP_SET1, name = "", type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[624][48565658] = { npcIDs1 = 128759, npcIDs2 = 93908, npcIDs3 = 93909, npcIDs4 = 93916, npcIDs5 = 93917, npcIDs6 = 88569, npcIDs7 = 87774, name = TRANSMOG_SET_PVP .. " " .. MERCHANT, type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTransmogger then
-                        minimap[624][58335187] = { dnID = MINIMAP_TRACKING_TRANSMOGRIFIER, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[624][58335187] = { npcID = 86395, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMailbox then
@@ -785,11 +795,19 @@ if not db.activate.HideMapNote then
                         minimap[624][65105270] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true}
                         minimap[624][68203930] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true}
                         minimap[624][77805210] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true}
+                        minimap[590][44854959] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true}
                     end
 
                     if self.db.profile.showMinimapCapitalsStablemaster then
-                        minimap[624][77605900] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[624][77605900] = { npcID = 86052, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
+
+                    if self.db.profile.showMinimapCapitalsPvEVendor then
+                        minimap[624][65896343] = { npcIDs1 = 86382, npcIDs2 = 91322, npcIDs3 = 86379, npcIDs4 = 86376, npcIDs5 = 86378, npcIDs6 = 92503, npcIDs7 = 88161, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[590][38524907] = { npcID = 79619, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[590][32883954] = { npcID = 94516, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[590][43804757] = { npcID = 79774, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    end  
 
                 end
 
@@ -811,63 +829,63 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
                     if self.db.profile.showMinimapCapitalsAlchemy then
-                        minimap[1165][42223796] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1165][42223796] = { npcID = 122703, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 
                     if self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[1165][44103463] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1165][44103463] = { npcID = 122698, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[1165][45144059] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1165][45144059] = { npcID = 131840, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[1165][43783469] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1165][43783469] = { npcID = 122699, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTailoring then
-                        minimap[1165][44493387] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1165][44493387] = { npcID = 122700, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[1165][47053791] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION .. "\n" .. L["in the basement"] }
+                        minimap[1165][47053791] = { npcID = 122695, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = "(" .. L["in the basement"] .. ")" }
                     end
 
                     if self.db.profile.showMinimapCapitalsBlacksmith then
-                        minimap[1165][43643827] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1165][43643827] = { npcID = 127112, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMining then
-                        minimap[1165][44123896] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1165][44123896] = { npcID = 122694, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsFishing then
-                        minimap[1165][50522337] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1165][50522337] = { npcID = 122705, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[1165][52479045] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[1164][28565017] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1165][52479045] = { npcID = 141906, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1164][28565017] = { npcID = 141549, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
                     end
 
                     if self.db.profile.showMinimapCapitalsArchaeology then
-                        minimap[1163][32223550] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION .. "\n" .. ERR_USE_OBJECT_MOVING }
-                        minimap[1165][48804311] = { mnID = 1165, name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1163][32223550] = { npcID = 122701, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1165][48804311] = { npcID = 122701, name = "", mnID = 1165, dnID = L["(inside building)"], type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[1165][42093560] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1165][42093560] = { npcID = 122704, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsInscription then
-                        minimap[1165][42313974] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[1164][70563292] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1165][42313974] = { npcID = 130901, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1164][70563292] = { npcID = 132264, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEnchanting then
-                        minimap[1165][47103569] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION .. "\n" .. L["in the basement"] }
+                        minimap[1165][47103569] = { npcID = 122702, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = "(" .. L["in the basement"] .. ")" }
                     end
                 end
 
@@ -875,7 +893,7 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsTransporting then
 
                     if self.db.profile.showMinimapCapitalsPortals then
-                        minimap[1165][51424583] = { mnID = 1163, name = L["Portal"], type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Dazar'alor"] .. " " .. L["Portalroom"] .. L["(inside building)"] .. "\n" .. " ==> " .. L["Silvermoon City"] .. "\n" .. " ==> " .. ORGRIMMAR .. "\n" .. " ==> " .. L["Thunder Bluff"] .. "\n" .. " ==> " .. L["Silithus"] .. "\n" .. " ==> " .. L["Nazjatar"] } -- Portalroom from Dazar'alor
+                        minimap[1165][51424583] = { mnID = 1163, name = "", type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Dazar'alor"] .. " " .. L["Portalroom"] .. "\n" .. L["(inside building)"] .. "\n" .. "\n" .. " ==> " .. L["Silvermoon City"] .. "\n" .. " ==> " .. ORGRIMMAR .. "\n" .. " ==> " .. L["Thunder Bluff"] .. "\n" .. " ==> " .. L["Silithus"] .. "\n" .. " ==> " .. L["Nazjatar"] } -- Portalroom from Dazar'alor
                         minimap[1163][73726194] = { mnID = 110, name = L["Portal"], type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Dazar'alor
                         minimap[1163][74006974] = { mnID = 85, name = L["Portal"], type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Dazar'alor
                         minimap[1163][74027739] = { mnID = 88, name = L["Portal"], type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Dazar'alor
@@ -886,13 +904,13 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsTransport then
-                        minimap[1165][41838761] = { mnID = 1462, name = L["Captain Krooz"] .. " " .. L["Travel"], type = "GoblinF", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Transport from Dazar'alor to Mechagon
+                        minimap[1165][41838761] = { npcID = 152506, name = "", mnID = 1462, type = "GoblinF", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Transport from Dazar'alor to Mechagon
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
-                        minimap[1165][52098994] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[1165][51654120] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[1165][53121928] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1165][52098994] = { npcID = 121252, name = "", type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1165][51654120] = { npcID = 122689, name = "", type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1165][53121928] = { npcID = 133242, name = "", type = "TravelH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -909,9 +927,9 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsLFR then
-                        minimap[1163][76554199] = { mnID = 1164, name = DUNGEON_FLOOR_GILNEAS3  .. "\n" .. " " .. "\n" .. L["Eppu"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 1176, 1031, 1179, 1036 }, type = "PassageRaid", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1163][76554199] = { mnID = 1164, name = DUNGEON_FLOOR_GILNEAS3  .. "\n" .. " " .. "\n" .. L["Eppu"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 1176, 1031, 1179, 1036 }, type = "PassageLFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[1164][68583002] = { mnID = 1164, name = L["Eppu"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 1176, 1031, 1179, 1036 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[1165][49914447] = { mnID = 1164, name = L["Eppu"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 1176, 1031, 1179, 1036 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1165][49914447] = { mnID = 1164, name = L["Eppu"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. L["(inside building)"] .. "\n" .. " ", id = { 1176, 1031, 1179, 1036 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 end
 
@@ -945,13 +963,13 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[1165][52418494] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[1165][49844867] = { mnID = 1163, dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[1163][48837200] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1165][52418494] = { npcID = 120840, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1165][49844867] = { npcID = 122690, name = "", mnID = 1163, dnID = L["(inside building)"], type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1163][48837200] = { npcID = 122690, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
-                        minimap[1165][44964015] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = REQUIRES_LABEL .. " " .. L["Engineer"] }
+                        minimap[1165][44964015] = { npcID = 35607, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = REQUIRES_LABEL .. " " .. L["Engineer"] }
                     end
 
                     if self.db.profile.showMinimapCapitalsBank then
@@ -960,15 +978,19 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsBarber then
-                        minimap[1165][47358104] = { dnID = MINIMAP_TRACKING_BARBER, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1165][47358104] = { npcID = 132364, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTransmogger then
-                        minimap[1165][54508960] = { dnID = MINIMAP_TRACKING_TRANSMOGRIFIER, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1165][54508960] = { npcID = 131470, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsPvEVendor then
+                        minimap[1164][67337133] = { npcIDs1 = 131287, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsPvPVendor then
-                        minimap[1165][51239509] = { dnID = TRANSMOG_SET_PVP .. "" .. SLASH_EQUIP_SET1, name = "", type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1165][51239509] = { npcID = 148924, name = TRANSMOG_SET_PVP .. " " .. MERCHANT, type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true}
                     end
 
                     if self.db.profile.showMinimapCapitalsMailbox then
@@ -984,7 +1006,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsStablemaster then
-                        minimap[1165][45803620] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1165][45803620] = { npcID = 122696, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -1007,13 +1029,13 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
                     if self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[391][62374397] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[1530][62361153] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[391][62374397] = { npcID = 64924, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Engineer"] .. " " .. MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1530][62361153] = { npcID = 64924, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Engineer"] .. " " .. MINIMAP_TRACKING_TRAINER_PROFESSION }
                     end
 
                     if self.db.profile.showMinimapCapitalsBlacksmith then
-                        minimap[391][25844377] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[1530][59181165] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[391][25844377] = { npcID = 64058, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Blacksmithing"] .. " " .. MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1530][59181165] = { npcID = 64058, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Blacksmithing"] .. " " .. MINIMAP_TRACKING_TRAINER_PROFESSION }
                     end
 
                 end
@@ -1046,31 +1068,35 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[391][68544760] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[392][60357734] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[1530][62921195] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[391][68544760] = { npcID = 62996, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[392][60357734] = { npcID = 63008, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1530][62921195] = { npcID = 62996, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
-                        minimap[391][59044226] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = REQUIRES_LABEL .. " " .. L["Engineer"] }
-                        minimap[1530][62071153] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = REQUIRES_LABEL .. " " .. L["Engineer"] }
+                        minimap[391][59044226] = { npcID = 67130, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = REQUIRES_LABEL .. " " .. L["Engineer"] }
+                        minimap[1530][62071153] = { npcID = 67130, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = REQUIRES_LABEL .. " " .. L["Engineer"] }
 
                     end
 
                     if self.db.profile.showMinimapCapitalsBank then
                         minimap[392][27686535] = { dnID = GUILD_BANK, name = "", type = "Bank", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[392][20935102] = { dnID = GUILD_BANK, name = "", type = "Bank", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[392][19584309] = { dnID = GUILD_BANK, name = "", type = "Bank", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[392][22975452] = { dnID = BANK, name = "", type = "Bank", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[1530][58511114] = { dnID = BANK .. " / " .. GUILD_BANK, TransportName = DUNGEON_FLOOR_GILNEAS3, name = "", type = "Bank", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMapNotes then
-                        minimap[1530][61691650] = { dnID = TRANSMOG_SET_PVE .. "" .. SLASH_EQUIP_SET1 .. "\n" .. BANK .. "\n" .. GUILD_BANK .. "\n" .. L["Portal"] .. " ==> " .. ORGRIMMAR .. "\n" .. BUTTON_LAG_AUCTIONHOUSE .. " " .. REQUIRES_LABEL .. " " .. L["Engineer"] .. "\n" .. MINIMAP_TRACKING_INNKEEPER .. "\n" .. L["Engineer"] .. "\n" .. L["Blacksmithing"], name = "", type = "MNL", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1530][61691650] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT .. "\n" .. BANK .. "\n" .. GUILD_BANK .. "\n" .. L["Portal"] .. " ==> " .. ORGRIMMAR .. "\n" .. BUTTON_LAG_AUCTIONHOUSE .. " " .. REQUIRES_LABEL .. " " .. L["Engineer"] .. "\n" .. MINIMAP_TRACKING_INNKEEPER .. "\n" .. L["Engineer"] .. "\n" .. L["Blacksmithing"], name = "", type = "MNL", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
-                    if self.db.profileshowMinimapCapitalsPvEVendor then
-                        minimap[1530][60601347] = { dnID = TRANSMOG_SET_PVE .. "" .. SLASH_EQUIP_SET1, name = "", TransportName = DUNGEON_FLOOR_GILNEAS3,  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[392][43717734] = { dnID = TRANSMOG_SET_PVE .. "" .. SLASH_EQUIP_SET1, name = "", TransportName = DUNGEON_FLOOR_GILNEAS3,  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    if self.db.profile.showMinimapCapitalsPvEVendor then
+                        minimap[1530][60601347] = { npcIDs1 = 73674, npcIDs2 = 74010, npcIDs3 = 74012, npcIDs4 = 74019, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, TransportName = DUNGEON_FLOOR_GILNEAS3,  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[392][43717734] = { npcIDs1 = 73674, npcIDs2 = 74010, npcIDs3 = 74012, npcIDs4 = 74019, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsTransmogger then
+                        minimap[392][59171972] = { npcID = 67014, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMailbox then
@@ -1141,7 +1167,7 @@ if not db.activate.HideMapNote then
                         minimap[84][23865611] = { mnID = 89, name = "", type = "APortal", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. L["Darnassus"] } -- Portal to Darnassus 
                         minimap[84][63197339] = { mnID = 407, name = L["Transport"] .. " ==> " .. CALENDAR_FILTER_DARKMOON, TransportName = "\n" .. REQUIRES_LABEL .. " " .. CALENDAR_FILTER_DARKMOON .. "\n" .. L["Starting on the first Sunday of each month for one week"], type = "DarkMoon", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[84][62043235] = { mnID = 407, name = L["Transport"] .. " ==> " .. CALENDAR_FILTER_DARKMOON, TransportName = "\n" .. REQUIRES_LABEL .. " " .. CALENDAR_FILTER_DARKMOON .. "\n" .. L["Starting on the first Sunday of each month for one week"], type = "DarkMoon", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[84][40819280] = { mnID = 2339, name = L["Dornogal"], type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dornogal
+                        minimap[84][40819280] = { mnID = 2339, name = L["Portal"], type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dornogal
                         minimap[84][51551012] = { mnID = 2322, name = L["Portal"], dnID = "", type = "APortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Hall of Awakening
 
                     end
@@ -1157,7 +1183,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
-                        minimap[84][71977195] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][71977195] = { npcID = 352, name = "", type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -1166,65 +1192,65 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
                     if self.db.profile.showMinimapCapitalsAlchemy then
-                        minimap[84][55668610] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[84][55668610] = { npcID = 5499, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 
                     if self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[84][42596045] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[84][71676301] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[84][42596045] = { npcID = 151287, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][71676301] = { npcID = 5564, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[84][62863192] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[84][62863192] = { npcID = 5518, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[84][72136222] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[84][72136222] = { npcID = 1292, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTailoring then
-                        minimap[84][53098136] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[84][52011954] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[84][53098136] = { npcID = 1346, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][52011954] = { npcIDs1 = 133363, npcIDs2 = 133396, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[84][63486183] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[84][63486183] = { npcID = 44582, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
-                    if self.db.profileshowMinimapCapitalsBlacksmith then
-                        minimap[84][63663702] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    if self.db.profile.showMinimapCapitalsBlacksmith then
+                        minimap[84][63663702] = { npcID = 5511, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMining then
-                        minimap[84][59523778] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[84][49371220] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[84][59523778] = { npcID = 5513, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][49371220] = { npcID = 133369, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsFishing then
-                        minimap[84][54806960] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[84][54806960] = { npcID = 5493, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[84][77285321] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[84][50657384] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[84][77285321] = { npcID = 5482, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][50657384] = { npcID = 42288, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsArchaeology then
-                        minimap[84][85812593] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[84][85812593] = { npcID = 44238, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[84][54298408] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[84][40846587] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[84][54298408] = { npcID = 5566, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][40846587] = { npcID = 5502, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsInscription then
-                        minimap[84][49827479] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[84][49827479] = { npcID = 30713, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEnchanting then
-                        minimap[84][52907447] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[84][51211270] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[84][52907447] = { npcID = 1317, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][51211270] = { npcID = 133394, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 end
 
@@ -1241,10 +1267,10 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[84][60407527] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[84][75685411] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[84][49881574] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[84][64943193] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][60407527] = { npcID = 6740, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][75685411] = { npcID = 44237, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][49881574] = { npcID = 129679, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][64943193] = { npcID = 44235, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
@@ -1258,19 +1284,26 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsBarber then
-                        minimap[84][61316464] = { dnID = MINIMAP_TRACKING_BARBER, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][61316464] = { npcID = 29142, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsPvPVendor then
-                        minimap[84][74486812] = { dnID = TRANSMOG_SET_PVP .. "" .. SLASH_EQUIP_SET1, name = "", type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][74486812] = { npcIDs1 = 69975, npcIDs2 = 146633, npcIDs3 = 52029, npcIDs4 = 52030, npcIDs5 = 69974, npcIDs6 = 175051, npcIDs7 = 54660, npcIDs8 = 12784, npcIDs9 = 12785, name = TRANSMOG_SET_PVP .. " " .. MERCHANT, type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTransmogger then
-                        minimap[84][50396054] = { dnID = MINIMAP_TRACKING_TRANSMOGRIFIER, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][50396054] = { npcID = 54442, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][50117252] = { npcID = 201312, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsPvEVendor then
-                        minimap[84][75666652] = { dnID = TRANSMOG_SET_PVE .. "" .. SLASH_EQUIP_SET1, name = "", TransportName = DUNGEON_FLOOR_GILNEAS3,  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][75666652] = { npcIDs1 = 44245, npcIDs2 = 58154, npcIDs3 = 44246, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, TransportName = DUNGEON_FLOOR_GILNEAS3, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[500][54222496] = { npcID = 68363, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsMountMerchent then
+                        --minimap[84][76126538] = { npcID = 12783, name = PERKS_VENDOR_CATEGORY_MOUNT .. " " .. MERCHANT, type = "MountMerchant", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][76736533] = { npcIDs1 = 12783, npcIDs2 = 73190, name = TRANSMOG_SET_PVP .. " " .. PERKS_VENDOR_CATEGORY_MOUNT .. " " .. MERCHANT, type = "MountMerchant", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMailbox then
@@ -1292,12 +1325,13 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsStablemaster then
-                        minimap[84][77806720] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[84][67003760] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][77806720] = { npcID = 44252, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][67003760] = { npcID = 11069, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][42366059] = { npcID = 9977, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTradingPost then
-                        minimap[84][51487192] = { dnID = BATTLE_PET_SOURCE_12, name = "",  type = "TradingPost", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[84][51487192] = { npcIDs1 = 185467, npcIDs2 = 185468, name = "", type = "TradingPost", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -1320,11 +1354,11 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsTransporting then
 
                     if self.db.profile.showMinimapCapitalsTransport then
-                        minimap[87][72545022] = { mnID = 84, name = "", type = "Carriage", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = DUNGEON_FLOOR_DEEPRUNTRAM1 .. " ==> " .. STORMWIND } -- Transport to Stormwind Carriage
+                        minimap[87][75865097] = { mnID = 84, name = "", type = "Carriage", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = DUNGEON_FLOOR_DEEPRUNTRAM1 .. " ==> " .. STORMWIND } -- Transport to Stormwind Carriage
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
-                        minimap[87][55884786] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[87][55884786] = { npcID = 1573, name = "", type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -1333,60 +1367,60 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
                     if self.db.profile.showMinimapCapitalsAlchemy then
-                        minimap[87][66615566] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[87][66615566] = { npcID = 5177, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 
                     if self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[87][40223365] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[87][40223365] = { npcID = 5127, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[87][68444359] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[87][68444359] = { npcID = 5174, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[87][39843248] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[87][39843248] = { npcID = 6291, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTailoring then
-                        minimap[87][43132939] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[87][43132939] = { npcID = 5153, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[87][50192602] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[87][50192602] = { npcID = 52586, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
-                    if self.db.profileshowMinimapCapitalsBlacksmith then
-                        minimap[87][50324338] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[87][52554139] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    if self.db.profile.showMinimapCapitalsBlacksmith then
+                        minimap[87][50324338] = { npcID = 10276, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[87][52554139] = { npcID = 4258, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMining then
-                        minimap[87][50142649] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[87][50142649] = { npcID = 4254, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsFishing then
-                        minimap[87][48090763] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[87][48090763] = { npcID = 5161, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[87][60073646] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[87][60073646] = { npcID = 5159, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsArchaeology then
-                        minimap[87][75611110] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[87][75611110] = { npcID = 39718, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[87][55865907] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[87][55865907] = { npcID = 5137, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsInscription then
-                        minimap[87][61004516] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[87][61004516] = { npcID = 30717, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEnchanting then
-                        minimap[87][60114533] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[87][60114533] = { npcID = 5157, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 end
 
@@ -1398,7 +1432,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[87][18165147] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[87][18165147] = { npcID = 5111, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
@@ -1412,11 +1446,11 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsBarber then
-                        minimap[87][25215134] = { dnID = MINIMAP_TRACKING_BARBER, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[87][25215134] = { npcID = 29141, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsPvEVendor then
-                        minimap[87][74400917] = { dnID = TRANSMOG_SET_PVE .. "" .. SLASH_EQUIP_SET1, name = "", TransportName = HEIRLOOMS,  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[87][74400917] = { npcID = 6294, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMailbox then
@@ -1429,7 +1463,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsStablemaster then
-                        minimap[87][69008460] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[87][69008460] = { npcID = 9984, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -1468,11 +1502,11 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[89][62533278] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[89][62533278] = { npcID = 6735, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
-                        minimap[89][54915837] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[89][54915837] = { npcIDs1 = 8723, npcIDs2 = 8669, npcIDs3 = 15678, npcIDs4 = 15679, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsBank then
@@ -1489,7 +1523,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsStablemaster then
-                        minimap[89][43602940] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[89][43602940] = { npcID = 10056, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -1502,7 +1536,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
-                        minimap[89][36724827] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[89][36724827] = { npcID = 40552, name = "", type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -1511,59 +1545,59 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
                     if self.db.profile.showMinimapCapitalsAlchemy then
-                        minimap[89][53913853] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[89][53913853] = { npcID = 4160, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 
                     if self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[89][60463683] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[89][60463683] = { npcID = 4212, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[89][49613236] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[89][49613236] = { npcID = 52636, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[89][60273733] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[89][60273733] = { npcID = 6292, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTailoring then
-                        minimap[89][59783740] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[89][59783740] = { npcID = 4159, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[89][53993111] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[89][53993111] = { npcID = 52645, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
-                    if self.db.profileshowMinimapCapitalsBlacksmith then
-                        minimap[89][56985271] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    if self.db.profile.showMinimapCapitalsBlacksmith then
+                        minimap[89][56985271] = { npcID = 52640, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMining then
-                        minimap[89][50083357] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[89][50083357] = { npcID = 52642, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsFishing then
-                        minimap[89][49096098] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[89][49096098] = { npcID = 4156, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[89][49893663] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[89][49893663] = { npcID = 4210, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsArchaeology then
-                        minimap[89][42658334] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[89][42658334] = { npcID = 47569, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[89][49146878] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[89][49146878] = { npcID = 4204, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsInscription then
-                        minimap[89][56793163] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[89][56793163] = { npcID = 30715, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEnchanting then
-                        minimap[89][56413101] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[89][56413101] = { npcID = 4213, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 end
 
@@ -1590,7 +1624,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[103][59511876] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[103][59511876] = { npcID = 16739, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
@@ -1609,7 +1643,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsStablemaster then
-                        minimap[103][59402440] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[103][59402440] = { npcID = 16764, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -1622,7 +1656,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
-                        minimap[103][54383659] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[103][54383659] = { npcID = 17555, name = "", type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -1631,59 +1665,60 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
                     if self.db.profile.showMinimapCapitalsAlchemy then
-                        minimap[103][27766078] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[103][27766078] = { npcID = 16723, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 
                     if self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[103][67467457] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[103][67467457] = { npcID = 16728, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[103][54139288] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[103][54139288] = { npcID = 16726, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[103][65657456] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[103][65657456] = { npcID = 16763, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTailoring then
-                        minimap[103][64386894] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[103][64386894] = { npcID = 16729, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[103][39322223] = { npcID = 16731, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[103][44882424] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[103][44882424] = { npcID = 19778, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
-                    if self.db.profileshowMinimapCapitalsBlacksmith then
-                        minimap[103][60609000] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    if self.db.profile.showMinimapCapitalsBlacksmith then
+                        minimap[103][60609000] = { npcID = 16724, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMining then
-                        minimap[103][59698781] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[103][59698781] = { npcID = 16752, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsFishing then
-                        minimap[103][31931462] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[103][31931462] = { npcID = 16774, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[103][55772672] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[103][55772672] = { npcID = 16719, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsArchaeology then
-                        minimap[103][33316569] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[103][33316569] = { npcID = 47570, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[103][27456281] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[103][27456281] = { npcID = 16736, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsInscription then
-                        minimap[103][39833860] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[103][39833860] = { npcID = 30716, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEnchanting then
-                        minimap[103][40693881] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[103][40693881] = { npcID = 16725, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 end
 
@@ -1705,7 +1740,7 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsInstances then
     
                     if self.db.profile.showMinimapCapitalsLFR then
-                        minimap[582][33173703] = { mnID = 582, name = L["Seer Kazal"] .. " - " .. REQUIRES_LABEL .. " " .. GARRISON_LOCATION_TOOLTIP .. " " .. LEVEL .. " " .. ACTION_SPELL_CAST_START_MASTER .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 477, 457, 669 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[582][33173703] = { npcID = 94870, mnID = 582, name = L["Seer Kazal"] .. " - " .. REQUIRES_LABEL .. " " .. GARRISON_LOCATION_TOOLTIP .. " " .. LEVEL .. " " .. ACTION_SPELL_CAST_START_MASTER .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 477, 457, 669 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
     
                 end
@@ -1718,7 +1753,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[622][35727790] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[622][35727790] = { npcID = 85956, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
@@ -1731,15 +1766,19 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsPvPVendor then
-                        minimap[622][54781873] = { dnID = TRANSMOG_SET_PVP .. " " .. MERCHANT, name = "", type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    end
-
-                    if self.db.profile.showMinimapCapitalsTransmogger then
-                        minimap[622][63133544] = { dnID = MINIMAP_TRACKING_TRANSMOGRIFIER, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[622][54781873] = { npcIDs1 = 86175, npcIDs2 = 86176, npcIDs3 = 93915, npcIDs4 = 93914, npcIDs5 = 93906, npcIDs6 = 93907, name = TRANSMOG_SET_PVP .. " " .. MERCHANT, type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsPvEVendor then
-                        minimap[622][49776140] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[582][29173863] = { npcID = 94512, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[582][38473153] = { npcID = 78564, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[582][29613260] = { npcID = 85839, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[622][29665290] = { npcID = 85849, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[622][49776140] = { npcIDs1 = 86390, npcIDs2 = 91321, npcIDs3 = 86389, npcIDs4 = 86387, npcIDs5 = 86391, npcIDs6 = 92501, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsTransmogger then
+                        minimap[622][63133544] = { npcID = 85961, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMailbox then
@@ -1751,7 +1790,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsStablemaster then
-                        minimap[622][34006420] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[622][34006420] = { npcID = 85963, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -1766,8 +1805,8 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
-                        minimap[622][30554842] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[582][47764933] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[622][30554842] = { npcID = 85959, name = "", type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[582][47764933] = { npcID = 81103, name = "", type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -1776,59 +1815,60 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
                     if self.db.profile.showMinimapCapitalsAlchemy then
-                        minimap[622][37056882] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[622][37056882] = { npcID = 85905, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 
                     if self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[622][52494201] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[622][52494201] = { npcID = 85920, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[622][48004052] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[622][48004052] = { npcID = 85918, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[622][52124369] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[622][52124369] = { npcID = 85923, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTailoring then
-                        minimap[622][51533716] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[622][51533716] = { npcID = 85910, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[622][43513391] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[622][43513391] = { npcID = 85916, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsBlacksmith then
-                        minimap[622][49344639] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[622][49344639] = { npcID = 85917, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMining then
-                        minimap[622][47324371] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[622][47324371] = { npcID = 85919, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsFishing then
-                        minimap[622][55497849] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[582][53991494] = { npcID = 77733, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[622][55497849] = { npcID = 85926, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[622][35137611] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION .. "\n" .. L["in the basement"] }
+                        minimap[622][35137611] = { npcID = 85925, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["in the basement"] }
                     end
 
                     if self.db.profile.showMinimapCapitalsArchaeology then
-                        minimap[622][48993319] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[622][48993319] = { npcID = 85927, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[622][37616948] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[622][37616948] = { npcID = 85921, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsInscription then
-                        minimap[622][63163365] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[622][63163365] = { npcID = 85911, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEnchanting then
-                        minimap[622][56706551] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[622][56706551] = { npcID = 85914, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 end
 
@@ -1858,7 +1898,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsLFR then
-                        minimap[1161][74191352] = { mnID = 1161, name = L["Kiku"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 1176, 1031, 1179, 1036 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1161][74191352] = { npcID = 177193, mnID = 1161, name = L["Kiku"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 1176, 1031, 1179, 1036 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
     
                 end
@@ -1874,7 +1914,8 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[1161][74001234] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1161][56232565] = { npcID = 143560, name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1161][74001234] = { npcID = 135153, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
@@ -1886,15 +1927,15 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsBarber then
-                        minimap[1161][64752889] = { dnID = MINIMAP_TRACKING_BARBER, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1161][64612817] = { npcID = 142089, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsPvPVendor then
-                        minimap[1161][55952505] = { dnID = TRANSMOG_SET_PVP .. "" .. SLASH_EQUIP_SET1, name = "", type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1161][56382709] = { npcID = 145838, name = TRANSMOG_SET_PVP .. " " .. MERCHANT, type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTransmogger then
-                        minimap[1161][71621371] = { dnID = MINIMAP_TRACKING_TRANSMOGRIFIER, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1161][71851338] = { npcID = 136052, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMailbox then
@@ -1905,7 +1946,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsStablemaster then
-                        minimap[1161][69001300] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1161][69621314] = { npcID = 142073, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -1924,11 +1965,14 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsTransport then
-                        minimap[1161][67952670] = { mnID = 862, mnID2 = 864, mnID3 = 863, name = L["(Grand Admiral Jes-Tereth) will take you to Vol'Dun, Nazmir or Zuldazar"], dnID = " " .. ITEM_REQ_ALLIANCE, type = "GilneanF", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dazar'alor to Mechagon
+                        minimap[1161][67952670] = { npcID = 143535, mnID = 862, mnID2 = 864, mnID3 = 863, name = L["(Grand Admiral Jes-Tereth) will take you to Vol'Dun, Nazmir or Zuldazar"], dnID = " " .. ITEM_REQ_ALLIANCE, type = "GilneanF", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dazar'alor to Mechagon
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
-                        minimap[1161][47916532] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1161][47916532] = { npcID = 143535, name = "", type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1161][76707255] = { npcID = 143547, name = "", type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1161][39541386] = { npcID = 133210, name = "", type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[1161][67101507] = { npcID = 124725, name = "", type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -1936,60 +1980,60 @@ if not db.activate.HideMapNote then
             --Professions Boralus
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
-                    if self.db.profileshowMinimapCapitalsAlchemy then
-                        minimap[1161][74090670] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    if self.db.profile.showMinimapCapitalsAlchemy then
+                        minimap[1161][74090670] = { npcID = 132228, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 
                     if self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[1161][75451258] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1161][75451258] = { npcID = 136063, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[1161][77611434] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1161][77611434] = { npcID = 136059, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[1161][75661340] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1161][75661340] = { npcID = 136061, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsTailoring then
-                        minimap[1161][76951116] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1161][76951116] = { npcID = 136071, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[1161][75210986] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1161][75210986] = { npcID = 130368, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsBlacksmith then
-                        minimap[1161][73470849] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1161][73470849] = { npcID = 133536, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMining then
-                        minimap[1161][75200760] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1161][75200760] = { npcID = 136091, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsFishing then
-                        minimap[1161][74160560] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1161][74160560] = { npcID = 136102, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[1161][71201068] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1161][71201068] = { npcID = 136052, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsArchaeology then
-                        minimap[1161][68340848] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1161][68340848] = { npcID = 136106, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[1161][70550566] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1161][70550566] = { npcID = 136096, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsInscription then
-                        minimap[1161][73380637] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1161][73380637] = { npcID = 130399, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsEnchanting then
-                        minimap[1161][74031153] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[1161][74031153] = { npcID = 136041, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                 end
 
@@ -2025,11 +2069,11 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsInnkeeper then
-                        minimap[393][36506610] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[393][36506610] = { npcID = 64149, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsAuctioneer then
-                        minimap[393][57045237] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = REQUIRES_LABEL .. " " .. L["Engineer"] }
+                        minimap[393][57045237] = { npcID = 65599, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = REQUIRES_LABEL .. " " .. L["Engineer"] }
                     end
 
                     if self.db.profile.showMinimapCapitalsBank then
@@ -2041,17 +2085,16 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsTransmogger then
-                        minimap[394][55598526] = { dnID = MINIMAP_TRACKING_TRANSMOGRIFIER, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[394][55598526] = { npcID = 64573, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsPvEVendor then
-                        minimap[394][42834374] = { dnID = TRANSMOG_SET_PVE .. "" .. SLASH_EQUIP_SET1, name = "",  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[394][42834374] = { npcIDs1 = 74020, npcIDs2 = 74022, npcIDs3 = 74021, npcIDs4 = 74027, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsMailbox then
                         minimap[393][61883771] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[393][30356275] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[393][31006220] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[394][74255074] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[394][64703436] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[394][44228360] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -2073,7 +2116,11 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsProfessions then
 
                     if self.db.profile.showMinimapCapitalsBlacksmith then
-                        minimap[393][72655225] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[393][72655225] = { npcID = 64085, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsTailoring then
+                        minimap[393][45826273] = { npcID = 64482, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -2097,13 +2144,8 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsGeneral then
     
                 if self.db.profile.showMinimapCapitalsInnkeeper then
-                    minimap[111][56278147] = { dnID = MINIMAP_TRACKING_INNKEEPER .. " - " .. L["The Scryers"], name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[111][28284938] = { dnID = MINIMAP_TRACKING_INNKEEPER .. " - " .. L["The Aldor"], name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-
-                    if self.db.profile.showMinimapCapitalsMapNotes then
-                        minimap[111][43849031] = { dnID = TUTORIAL_TITLE38 .. " - " .. L["The Scryers"] .. "\n" .. "\n" .. L["Alchemy"] .. "\n" .. L["Engineer"] .. "\n" .. L["Jewelcrafting"] .. "\n" .. L["Leatherworking"] .. "\n" .. L["Blacksmithing"] .. "\n" .. L["Tailoring"] .. "\n" .. L["Skinning"] .. "\n" .. L["Mining"] .. "\n" .. L["Herbalism"] .. "\n" .. L["Enchanting"] .. "\n" .. INSCRIPTION .. "\n" .. PROFESSIONS_FISHING .. "\n" .. PROFESSIONS_COOKING, name = "", type = "MNL", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    end
-
+                    minimap[111][56278147] = { npcID = 19232, name =  L["The Scryers"], type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][28284938] = { npcID = 19046, name =  L["The Aldor"], type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsPaths then
@@ -2117,8 +2159,8 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsAuctioneer then
-                    minimap[111][57066278] = { name = BUTTON_LAG_AUCTIONHOUSE .. " - " .. L["The Scryers"], type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[111][51242693] = { name = BUTTON_LAG_AUCTIONHOUSE .. " - " .. L["The Aldor"], type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][57066278] = { npcIDs1 = 50139, npcIDs2 = 50140, name = L["The Scryers"], type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][51242693] = { npcIDs1 = 50143, npcIDs2 = 50145, name = L["The Aldor"], type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsBank then
@@ -2129,9 +2171,9 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsPvEVendor then
-                    minimap[111][50864226] = { dnID = TRANSMOG_SET_PVE .. "" .. SLASH_EQUIP_SET1, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[111][47752581] = { dnID = L["Quartermaster"] .. " - " .. L["The Aldor"], name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[111][60486423] = { dnID = L["Quartermaster"] .. " - " .. L["The Scryers"], name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][50864226] = { npcIDs1 = 18525, npcIDs2 = 21432, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][47752581] = { npcID = 19321, name = TRANSMOG_SET_PVE .. " " .. MERCHANT .. " - " .. L["The Aldor"], type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][60486423] = { npcID = 19331, name = TRANSMOG_SET_PVE .. " " .. MERCHANT .. " - " .. L["The Scryers"], type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsMailbox then
@@ -2144,8 +2186,8 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsStablemaster then
-                    minimap[111][28604760] = { dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. L["The Aldor"], name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[111][55808080] = { dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. L["The Scryers"], name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][28604760] = { npcID = 21518, name = L["The Aldor"], type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][55808080] = { npcID = 21517, name = L["The Scryers"], type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2166,7 +2208,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsFP then
-                    minimap[111][63794171] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][63794171] = { npcID = 18940, name = "", type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2174,79 +2216,82 @@ if not db.activate.HideMapNote then
         --Professions Shattrath
             if self.db.profile.activate.MinimapCapitalsProfessions then
 
+                if self.db.profile.showMinimapCapitalsAlchemy or self.db.profile.showMinimapCapitalsLeatherworking  or self.db.profile.showMinimapCapitalsEngineer or self.db.profile.showMinimapCapitalsSkinning or self.db.profile.showMinimapCapitalsTailoring or self.db.profile.showMinimapCapitalsJewelcrafting or self.db.profile.showMinimapCapitalsBlacksmith or self.db.profile.showMinimapCapitalsMining or self.db.profile.showMinimapCapitalsFishing or self.db.profile.showMinimapCapitalsHerbalism or self.db.profile.showMinimapCapitalsInscription or self.db.profile.showMinimapCapitalsEnchanting or self.db.profile.showMinimapCapitalsCooking then
+                    minimap[111][43709093] = { dnID = TUTORIAL_TITLE38 .. " - " .. L["The Scryers"] .. "\n" .. "\n" .. L["Alchemy"] .. "\n" .. L["Engineer"] .. "\n" .. L["Jewelcrafting"] .. "\n" .. L["Leatherworking"] .. "\n" .. L["Blacksmithing"] .. "\n" .. L["Tailoring"] .. "\n" .. L["Skinning"] .. "\n" .. L["Mining"] .. "\n" .. L["Herbalism"] .. "\n" .. L["Enchanting"] .. "\n" .. INSCRIPTION .. "\n" .. PROFESSIONS_FISHING .. "\n" .. PROFESSIONS_COOKING, name = "", type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
                 if self.db.profile.showMinimapCapitalsAlchemy then
-                    minimap[111][37977048] = { name = L["Alchemy"] .. " - " .. L["The Scryers"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][38892992] = { name = L["Alchemy"] .. " - " .. L["The Aldor"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][45612149] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[111][37977048] = { npcID = 33630, name = L["The Scryers"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][38892992] = { npcID = 33674, name = L["The Aldor"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][45612149] = { npcID = 19052, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
             
                 if self.db.profile.showMinimapCapitalsLeatherworking then
-                    minimap[111][41366301] = { name = L["Leatherworking"] .. " - " .. L["The Scryers"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][37652815] = { name = L["Leatherworking"] .. " - " .. L["The Aldor"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][67256738] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[111][41366301] = { npcID = 33635, name = L["The Scryers"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][37652815] = { npcID = 33681, name = L["The Aldor"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][67256738] = { npcID = 19187, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
                 end
 
                 if self.db.profile.showMinimapCapitalsEngineer then
-                    minimap[111][43926531] = { name = L["Engineer"] .. " - " .. L["The Scryers"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][37823205] = { name = L["Engineer"] .. " - " .. L["The Aldor"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[111][43926531] = { npcID = 33634, name = L["The Scryers"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][37823205] = { npcID = 33677, name = L["The Aldor"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsSkinning then
-                    minimap[111][40626347] = { name = L["Skinning"] .. " - " .. L["The Scryers"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][36972686] = { name = L["Skinning"] .. " - " .. L["The Aldor"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][63946588] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[111][40626347] = { npcID = 33641, name = L["The Scryers"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][36972686] = { npcID = 33683, name = L["The Aldor"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][63946588] = { npcID = 19180, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsTailoring then
-                    minimap[111][41176365] = { name = L["Tailoring"] .. " - " .. L["The Scryers"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][37812700] = { name = L["Tailoring"] .. " - " .. L["The Aldor"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[111][41176365] = { npcID = 33636, name = L["The Scryers"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][37812700] = { npcID = 33684, name = L["The Aldor"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsJewelcrafting then
-                    minimap[111][58027508] = { name = L["Jewelcrafting"] .. " - " .. L["The Scryers"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][35671956] = { name = L["Jewelcrafting"] .. " - " .. L["The Aldor"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][36024745] = { name = L["Jewelcrafting"] .. " - " .. L["The Aldor"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[111][58027508] = { npcID = 33637, name =  L["The Scryers"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][35671956] = { npcID = 19065, name = L["The Aldor"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][36024745] = { npcID = 33680, name = L["The Aldor"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsBlacksmith then
-                    minimap[111][43236492] = { name = L["Blacksmithing"] .. " - " .. L["The Scryers"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][37293132] = { name = L["Blacksmithing"] .. " - " .. L["The Aldor"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][69484332] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[111][43236492] = { npcID = 33631, name = L["The Scryers"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][37293132] = { npcID = 33675, name = L["The Aldor"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][69484332] = { npcID = 20124, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsMining then
-                    minimap[111][58917523] = { name = L["Mining"] .. " - " .. L["The Scryers"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][36054859] = { name = L["Mining"] .. " - " .. L["The Aldor"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[111][58917523] = { npcID = 33640, name = L["The Scryers"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][36054859] = { npcID = 33682, name = L["The Aldor"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsFishing then
-                    minimap[111][43439160] = { name = PROFESSIONS_FISHING .. " - " .. L["The Scryers"], type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    --minimap[111][43439160] = { name = PROFESSIONS_FISHING .. " - " .. L["The Scryers"], type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsHerbalism then
-                    minimap[111][38807156] = { name = L["Herbalism"] .. " - " .. L["The Scryers"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][38073007] = { name = L["Herbalism"] .. " - " .. L["The Aldor"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[111][38807156] = { npcID = 33639, name = L["The Scryers"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][38073007] = { npcID = 33678, name = L["The Aldor"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsInscription then
-                    minimap[111][55947403] = { name = INSCRIPTION .. " - " .. L["The Scryers"], type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][36014345] = { name = INSCRIPTION .. " - " .. L["The Aldor"], type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[111][55947403] = { npcID = 33638, name = L["The Scryers"], type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][36014345] = { npcID = 33679, name = L["The Aldor"], type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsEnchanting then
-                    minimap[111][55417484] = { name = L["Enchanting"] .. " - " .. L["The Scryers"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][43299253] = { name = L["Enchanting"] .. " - " .. L["The Scryers"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][36514454] = { name = L["Enchanting"] .. " - " .. L["The Aldor"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[111][55417484] = { npcID = 33633, name = L["The Scryers"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][36514454] = { npcID = 33676, name = L["The Aldor"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsArchaeology then
-                    minimap[111][62667040] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[111][62667040] = { npcID = 47575, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsCooking then
-                    minimap[111][74793084] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[111][63066835] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[111][74793084] = { npcID = 19186, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[111][63066835] = { npcID = 19185, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2266,7 +2311,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsLFR then
-                    minimap[125][63885454] = { name = L["Archmage Timear"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 875, 786, 768, 861, 946 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[125][63885454] = { npcID = 31439, mnID = 125, name = L["Archmage Timear"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 875, 786, 768, 861, 946 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2275,16 +2320,16 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsGeneral then
     
                 if self.db.profile.showMinimapCapitalsInnkeeper then
-                    minimap[125][50273955] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[126][35425767] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[125][50273955] = { npcID = 28687, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[126][35425767] = { npcID = 29532, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
 
                     if self.faction == "Horde" or db.activate.MinimapCapitalsEnemyFaction then
-                        minimap[125][65613218] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, TransportName = ITEM_REQ_HORDE, type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[125][65613218] = { npcID = 31557, name = "", TransportName = ITEM_REQ_HORDE, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.faction == "Alliance" or db.activate.MinimapCapitalsEnemyFaction then
-                        minimap[125][44666336] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, TransportName = ITEM_REQ_ALLIANCE, type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[125][44666336] = { npcID = 32413, name = "", TransportName = ITEM_REQ_ALLIANCE, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -2292,21 +2337,21 @@ if not db.activate.HideMapNote then
                 if self.db.profile.showMinimapCapitalsPaths then
                     minimap[126][11648435] = { name = L["Exit"], mnID = 127, type = "PathLU", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[126][25044295] = { name = "", mnID = 125, TransportName = L["Passage"] .. "\n" .. " ==> " .. DUNGEON_FLOOR_DALARAN1, type = "PathR", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[126][66484766] = { name = "", mnID = 125, TransportName = L["Passage"] .. "\n" .. " ==> " .. DUNGEON_FLOOR_DALARAN1, type = "PathO", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[126][66694845] = { name = "", mnID = 125, TransportName = L["Passage"] .. "\n" .. " ==> " .. DUNGEON_FLOOR_DALARAN1, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[125][35294528] = { name = "", mnID = 126, TransportName = L["Passage"] .. "\n" .. " ==> " .. DUNGEON_FLOOR_DALARAN2, type = "PathL", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[125][60294758] = { name = L["Passage"] .. " ==> " .. DUNGEON_FLOOR_DALARAN2, mnID = 126, TransportName = TRANSMOG_SET_PVP .. "" .. SLASH_EQUIP_SET1, type = "PathRU", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[125][48343243] = { name = L["Passage"] .. " ==> " .. DUNGEON_FLOOR_DALARAN2, mnID = 126, TransportName = TRANSMOG_SET_PVP .. "" .. SLASH_EQUIP_SET1, type = "PathU", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[125][60294758] = { name = L["Passage"] .. " ==> " .. DUNGEON_FLOOR_DALARAN2, mnID = 126, TransportName = TRANSMOG_SET_PVP .. " " .. MERCHANT, type = "PathRU", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[125][48343243] = { name = L["Passage"] .. " ==> " .. DUNGEON_FLOOR_DALARAN2, mnID = 126, TransportName = TRANSMOG_SET_PVP .. " " .. MERCHANT, type = "PathU", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsAuctioneer then
                     minimap[125][38402502] = { name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
                     if self.faction == "Horde" or db.activate.MinimapCapitalsEnemyFaction then
-                        minimap[125][65522343] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = ITEM_REQ_HORDE}
+                        minimap[125][65522343] = { npcID = 35607, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = ITEM_REQ_HORDE}
                     end
 
                     if self.faction == "Alliance" or db.activate.MinimapCapitalsEnemyFaction then
-                        minimap[125][37175488] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = ITEM_REQ_ALLIANCE}
+                        minimap[125][37175488] = { npcID = 35594, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = ITEM_REQ_ALLIANCE}
                     end
 
                 end
@@ -2318,30 +2363,32 @@ if not db.activate.HideMapNote then
                     minimap[125][41747539] = { dnID = GUILD_BANK, name = "", type = "Bank", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[125][50541677] = { dnID = GUILD_BANK, name = "", type = "Bank", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[125][55181939] = { dnID = GUILD_BANK, name = "", type = "Bank", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[126][32705586] = { dnID = BANK .. " / " .. GUILD_BANK, name = "", type = "Bank", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[126][32705586] = { dnID = BANK .. "\n" .. GUILD_BANK, name = "", type = "Bank", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsBarber then
-                    minimap[125][51763170] = { dnID = MINIMAP_TRACKING_BARBER, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[125][51763170] = { npcID = 28708, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsPvEVendor then
-                    minimap[125][43744935] = { dnID = TRANSMOG_SET_PVE .. "" .. SLASH_EQUIP_SET1, name = "", TransportName = L["Cloth Armor"], type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[125][51067322] = { dnID = TRANSMOG_SET_PVE .. "" .. SLASH_EQUIP_SET1, name = "", TransportName = L["Leather Armor"] .. "\n" .. L["Heavy Armor"], type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[125][46362680] = { dnID = TRANSMOG_SET_PVE .. "" .. SLASH_EQUIP_SET1, name = "", TransportName = L["Heavy Armor"] .. "\n" .. L["Heavy Armor"], type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    
+                    minimap[125][43744935] = { npcIDs1 = 28995, npcIDs2 = 35496, npcIDs3 = 29491, npcIDs4= 29495, npcIDs5 = 29703, npcIDs6 = 29702, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[125][51827196] = { npcIDs1 = 35497, npcIDs2 = 28992, npcIDs3 = 35500, npcIDs4 = 29523, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[125][49147380] = { npcIDs1 = 28994, npcIDs2 = 29494, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[125][46362680] = { npcIDs1 = 34252, npcIDs2 = 28997, npcIDs3 = 35498, npcIDs4 = 28990, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[126][60021149] = { npcID = 29538, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+
                     if self.faction == "Horde" or db.activate.MinimapCapitalsEnemyFaction then
-                        minimap[125][66362219] = { dnID = L["Quartermaster"] .. " - " .. ITEM_REQ_HORDE, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[125][66362219] = { npcIDs1 = 35495, npcIDs2 = 31582, npcIDs3 = 37941, npcIDs4 = 31581, npcIDs5 = 33963, name = TRANSMOG_SET_PVE .. " " .. MERCHANT .. " - " .. ITEM_REQ_HORDE, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.faction == "Alliance" or db.activate.MinimapCapitalsEnemyFaction then
-                        minimap[125][38135483] = { dnID = L["Quartermaster"] .. " - " .. ITEM_REQ_ALLIANCE, name = "", TransportName = DUNGEON_FLOOR_GILNEAS3,  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[125][38135483] = { npcIDs1 = 31580, npcIDs2 = 31579, npcIDs3 = 35494, npcIDs4 = 37942, npcIDs5 = 33964, name = TRANSMOG_SET_PVE .. " " .. MERCHANT .. " - " .. ITEM_REQ_ALLIANCE .. " (" .. DUNGEON_FLOOR_GILNEAS3 .. ")", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
 
                 if self.db.profile.showMinimapCapitalsPvPVendor then
-                    minimap[126][59355799] = { dnID = TRANSMOG_SET_PVP .. "" .. SLASH_EQUIP_SET1, name = "", type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[126][59355799] = { npcIDs1 = 40212, npcIDs2 = 30885, npcIDs3 = 69321, npcIDs4 = 69318, npcIDs5 = 69973, npcIDs6 = 69971, name = TRANSMOG_SET_PVP .. " " .. MERCHANT, type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsMailbox then
@@ -2358,10 +2405,15 @@ if not db.activate.HideMapNote then
                     minimap[125][45503950] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[125][52502730] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[125][48902540] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[126][33595607] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsStablemaster then
-                    minimap[125][59003860] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[125][59003860] = { npcID = 28690, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsMountMerchent then
+                    minimap[125][57604205] = { npcID = 32216, name = PERKS_VENDOR_CATEGORY_MOUNT .. " " .. MERCHANT, type = "MountMerchant", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2382,7 +2434,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsFP then
-                    minimap[125][72164583] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[125][72164583] = { npcID = 28674, name = "", type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2391,62 +2443,61 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsProfessions then
 
                 if self.db.profile.showMinimapCapitalsAlchemy then
-                    minimap[125][42633205] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[125][42633205] = { npcID = 28703, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
             
                 if self.db.profile.showMinimapCapitalsLeatherworking then
-                    minimap[125][34652896] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[125][33842922] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[125][34412919] = { npcIDs1 = 28700, npcIDs2 = 29507, npcIDs3 = 29508, npcIDs4 = 29509, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsEngineer then
-                    minimap[125][39652486] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[125][39652486] = { npcID = 29513, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsSkinning then
-                    minimap[125][34832786] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[125][34832786] = { npcID = 28696, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsTailoring then
-                    minimap[125][36133357] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[125][36133357] = { npcID = 28699, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsJewelcrafting then
-                    minimap[125][40693536] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[125][40693536] = { npcID = 28701, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsBlacksmith then
-                    minimap[125][45162895] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[125][45162895] = { npcID = 29505, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsMining then
-                    minimap[125][41462566] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[125][41462566] = { npcID = 28698, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsFishing then
-                    minimap[125][53066493] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[125][53066493] = { npcID = 28742, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsHerbalism then
-                    minimap[125][42933408] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[125][42933408] = { npcID = 28704, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsInscription then
-                    minimap[125][41593717] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[125][41593717] = { npcID = 28702, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsEnchanting then
-                    minimap[125][39043981] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[125][39043981] = { npcID = 28693, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsArchaeology then
-                    minimap[125][48363820] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[125][48363820] = { npcID = 47579, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.faction == "Horde" or db.activate.MinimapCapitalsEnemyFaction then
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[125][69943898] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION .. "\n" .. ITEM_REQ_HORDE }
+                        minimap[125][69943898] = { npcID = 29631, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = "("..ITEM_REQ_HORDE..")" }
                     end
 
                 end
@@ -2454,7 +2505,7 @@ if not db.activate.HideMapNote then
                 if self.faction == "Alliance" or db.activate.MinimapCapitalsEnemyFaction then
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[125][40486581] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION .. "\n" .. ITEM_REQ_ALLIANCE }
+                        minimap[125][40486581] = { npcID = 28705, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = "("..ITEM_REQ_ALLIANCE..")" }
                     end
 
                 end
@@ -2476,7 +2527,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsLFR then
-                    minimap[627][63535488] = { name = L["Archmage Timear"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 875, 786, 768, 861, 946 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[627][63535488] = { npcID = 111246, mnID = 627, name = L["Archmage Timear"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 875, 786, 768, 861, 946 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2485,14 +2536,15 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsGeneral then
     
                 if self.db.profile.showMinimapCapitalsInnkeeper then
-                    minimap[627][49784006] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[627][49784006] = { npcID = 96806, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[831][50027563] = { npcID = 123395, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
                     if self.faction == "Horde" or db.activate.MinimapCapitalsEnemyFaction then
-                        minimap[627][65443217] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, TransportName = ITEM_REQ_HORDE, type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[627][65443217] = { npcID = 96796, name = "", TransportName = "("..ITEM_REQ_HORDE..")", type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.faction == "Alliance" or db.activate.MinimapCapitalsEnemyFaction then
-                        minimap[627][44196398] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, TransportName = ITEM_REQ_ALLIANCE, type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[627][44196398] = { npcID = 96790, name = "", TransportName = ITEM_REQ_ALLIANCE, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                 end
@@ -2506,7 +2558,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsAuctioneer then
-                    minimap[627][39082599] = { name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = REQUIRES_LABEL .. " " .. L["Engineer"] }
+                    minimap[627][39082599] = { npcID = 35607, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = REQUIRES_LABEL .. " " .. L["Engineer"] }
                 end
 
                 if self.db.profile.showMinimapCapitalsBank then
@@ -2519,16 +2571,23 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsBarber then
-                    minimap[627][51763170] = { dnID = MINIMAP_TRACKING_BARBER, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[627][51763170] = { npcID = 96781, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsTransmogger then
-                    minimap[627][39294161] = { dnID = MINIMAP_TRACKING_TRANSMOGRIFIER, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[627][39294161] = { npcID = 99867, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsPvEVendor then
-                    minimap[627][37635617] = { dnID = TRANSMOG_SET_PVE .. "" .. SLASH_EQUIP_SET1, name = "", TransportName = L["Cloth Armor"], type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[627][51067322] = { dnID = TRANSMOG_SET_PVE .. "" .. SLASH_EQUIP_SET1, name = "", TransportName = L["Leather Armor"] .. "\n" .. L["Heavy Armor"], type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[627][37635617] = { npcIDs1 = 97342, npcIDs2 = 96975, npcIDs3 = 96976, npcIDs4 = 96987, npcIDs5 = 97332, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[627][51067322] = { npcIDs1 = 96978, npcIDs2 = 96977, npcIDs3 = 96980, npcIDs4 = 96979, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[831][68275675] = { npcID = 127151, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Vindikaar
+                    minimap[831][43257451] = { npcID = 127120, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Vindikaar
+                    minimap[832][46517167] = { npcID = 121589, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Vindikaar
+                end
+
+                if self.db.profile.showMinimapCapitalsMountMerchent then
+                    minimap[627][57604205] = { npcID = 92489, name = PERKS_VENDOR_CATEGORY_MOUNT .. " " .. MERCHANT, type = "MountMerchant", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsMailbox then
@@ -2548,7 +2607,8 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsStablemaster then
-                    minimap[627][59003860] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[627][59003860] = { npcID = 96507, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[831][46937568] = { npcID = 96507, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2562,6 +2622,7 @@ if not db.activate.HideMapNote then
                     minimap[629][31947153] = { mnID = 42, name = L["Portal"], type = "PortalS", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[629][64752082] = { mnID = 627, name = L["Portal"], type = "PortalS", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[627][49324758] = { mnID = 629, name = L["Portal"], TransportName = DUNGEON_FLOOR_DALARAN7012, type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[832][43432516] = { mnID = 627, name = L["Portal"], type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
                     if self.faction == "Horde" or db.activate.MinimapCapitalsEnemyFaction then
                         minimap[629][33557905] = { mnID = 971, name = L["Portal"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -2574,7 +2635,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsFP then
-                    minimap[627][69825114] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[627][69825114] = { npcID = 96813, name = "", type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2583,61 +2644,61 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsProfessions then
 
                 if self.db.profile.showMinimapCapitalsAlchemy then
-                    minimap[627][42023184] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[627][42023184] = { npcID = 92456, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
             
                 if self.db.profile.showMinimapCapitalsLeatherworking then
-                    minimap[627][35102936] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[627][35102936] = { npcID = 93523, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsEngineer then
-                    minimap[627][38552459] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[627][38552459] = { npcID = 93520, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsSkinning then
-                    minimap[627][36082796] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[627][36082796] = { npcID = 93541, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsTailoring then
-                    minimap[627][34993457] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[627][34993457] = { npcID = 93542, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsJewelcrafting then
-                    minimap[627][40043528] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[627][40043528] = { npcID = 93527, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsBlacksmith then
-                    minimap[627][45122893] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[627][45122893] = { npcID = 92183, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsMining then
-                    minimap[627][46102579] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[627][46102579] = { npcID = 93189, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsFishing then
-                    minimap[627][52776559] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[627][52776559] = { npcID = 95844, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsHerbalism then
-                    minimap[627][42363394] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[627][42363394] = { npcID = 92464, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsInscription then
-                    minimap[627][41253707] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[627][41253707] = { npcID = 92195, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsEnchanting then
-                    minimap[627][38294031] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[627][38294031] = { npcID = 93531, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsArchaeology then
-                    minimap[627][41242630] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[627][41242630] = { npcID = 93538, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.faction == "Horde" or db.activate.MinimapCapitalsEnemyFaction then
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[627][69973897] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION .. "\n" .. ITEM_REQ_HORDE }
+                        minimap[627][69973897] = { npcID = 93536, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = "("..ITEM_REQ_HORDE..")" }
                     end
 
                 end
@@ -2645,7 +2706,7 @@ if not db.activate.HideMapNote then
                 if self.faction == "Alliance" or db.activate.MinimapCapitalsEnemyFaction then
 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[627][40586680] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION .. "\n" .. ITEM_REQ_ALLIANCE }
+                        minimap[627][40586680] = { npcID = 93534, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = "("..ITEM_REQ_ALLIANCE..")"}
                     end
 
                 end
@@ -2663,7 +2724,7 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsInstances then
 
                 if self.db.profile.showMinimapCapitalsLFR then
-                    minimap[1670][41377150] = { mnID = 1670, name = L["Ta'elfar"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 1190, 1193, 1195 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[1670][41377150] = { npcID = 205959, name = L["Ta'elfar"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", mnID = 1670, id = { 1190, 1193, 1195 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2673,11 +2734,11 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsGeneral then
     
                 if self.db.profile.showMinimapCapitalsInnkeeper then
-                    minimap[1670][67505031] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[1670][67505031] = { npcID = 156688, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsAuctioneer then
-                    minimap[1670][38374376] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = REQUIRES_LABEL .. " " .. L["Engineer"] }
+                    minimap[1670][38374376] = { npcID = 173571, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = REQUIRES_LABEL .. " " .. L["Engineer"] }
                 end
 
                 if self.db.profile.showMinimapCapitalsBank then
@@ -2690,19 +2751,19 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsPvPVendor then
-                    minimap[1670][35005833] = { dnID = TRANSMOG_SET_PVP .. "" .. SLASH_EQUIP_SET1, name = "", type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[1670][35005833] = { npcIDs1 = 164095, npcIDs2 = 168011, name = TRANSMOG_SET_PVP .. " " .. MERCHANT,  type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsTransmogger then
-                    minimap[1670][64416963] = { dnID = MINIMAP_TRACKING_TRANSMOGRIFIER, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[1670][64416963] = { npcID = 156663, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsPvEVendor then
-                    minimap[1670][47497544] = { dnID = L["Quartermaster"], name = "", TransportName = GARRISON_TYPE_9_0_LANDING_PAGE_TITLE,  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[1670][47497544] = { npcIDs1 = 176067, npcIDs2 = 176064, npcIDs3 = 176065, npcIDs4 = 176066, npcIDs5 = 176368, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsItemUpgrade then
-                    minimap[1670][34505598] = { dnID = ITEM_UPGRADE, name = "",  type = "ItemUpgrade", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[1670][34505598] = { npcID = 164096, name = "", type = "ItemUpgrade", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsMailbox then
@@ -2713,7 +2774,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsStablemaster then
-                    minimap[1670][59207500] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[1670][59207500] = { npcID = 156791, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2747,7 +2808,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsFP then
-                    minimap[1671][60196756] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[1671][60196756] = { npcID = 162666, name = "", type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2756,55 +2817,55 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsProfessions then
 
                 if self.db.profile.showMinimapCapitalsAlchemy then
-                    minimap[1670][39284044] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[1670][39284044] = { npcID = 156687, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
             
                 if self.db.profile.showMinimapCapitalsLeatherworking then
-                    minimap[1670][42342642] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[1670][42342642] = { npcID = 156669, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsEngineer then
-                    minimap[1670][38114472] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[1670][38114472] = { npcID = 156691, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsSkinning then
-                    minimap[1670][42072813] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[1670][42072813] = { npcID = 156667, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsTailoring then
-                    minimap[1670][45553182] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[1670][45553182] = { npcID = 156681, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsJewelcrafting then
-                    minimap[1670][35164127] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[1670][35164127] = { npcID = 156670, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsBlacksmith then
-                    minimap[1670][40563139] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[1670][40563139] = { npcID = 156666, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsMining then
-                    minimap[1670][39313292] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[1670][39313292] = { npcID = 156668, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsFishing then
-                    minimap[1670][46162635] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[1670][46162635] = { npcID = 156671, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsCooking then
-                    minimap[1670][46812266] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[1670][46812266] = { npcID = 156672, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsHerbalism then
-                    minimap[1670][40303824] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[1670][40303824] = { npcID = 156686, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsInscription then
-                    minimap[1670][36473666] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[1670][36473666] = { npcID = 156685, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsEnchanting then
-                    minimap[1670][48422949] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[1670][48422949] = { npcID = 156683, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2820,12 +2881,12 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsGeneral then
     
                 if self.db.profile.showMinimapCapitalsInnkeeper then
-                    minimap[2112][47714635] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2112][47714635] = { npcID = 210817, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsAuctioneer then
-                    minimap[2112][42705981] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[2112][16705185] = { dnID = BLACK_MARKET_AUCTION_HOUSE, name = "", type = "BlackMarket", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2112][42705981] = { npcIDs1 = 197911, npcIDs2 = 188661, npcIDs3 = 185714, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2112][16705185] = { npcID = 189676, name = "", dnID = BLACK_MARKET_AUCTION_HOUSE, type = "BlackMarket", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsBank then
@@ -2845,16 +2906,18 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsPvPVendor then
-                    minimap[2112][44083636] = { dnID = TRANSMOG_SET_PVP .. "" .. SLASH_EQUIP_SET1, name = "", type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2112][44083636] = { npcIDs1 = 199599, npcIDs2 = 199601, npcIDs3 = 199720, name = "", type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2112][43074246] = { npcID = 197553, name = "", type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2112][44844271] = { npcIDs1 = 209377, npcIDs2 = 214682, name = "", type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsTransmogger then
-                    minimap[2112][74575782] = { dnID = MINIMAP_TRACKING_TRANSMOGRIFIER, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2112][74575782] = { npcID = 185570, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsItemUpgrade then
-                    minimap[2112][45753885] = { dnID = ITEM_UPGRADE, name = "",  type = "ItemUpgrade", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[2112][45545624] = { dnID = ITEM_UPGRADE, name = "",  type = "ItemUpgrade", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2112][45753885] = { npcID = 199603, name = "", type = "ItemUpgrade", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2112][45545624] = { npcID = 216608, name = "", type = "ItemUpgrade", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsDragonFlyTransmog then
@@ -2862,7 +2925,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsStablemaster then
-                    minimap[2112][46807880] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2112][46807880] = { npcID = 185561, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsTradingPost then
@@ -2888,7 +2951,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsFP then
-                    minimap[2112][44476790] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2112][44476790] = { npcID = 193321, name = "", type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2901,55 +2964,55 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsAlchemy then
-                    minimap[2112][36417170] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2112][36417170] = { npcID = 185545, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
             
                 if self.db.profile.showMinimapCapitalsLeatherworking then
-                    minimap[2112][28616157] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2112][28616157] = { npcID = 185551, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsEngineer then
-                    minimap[2112][42254861] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2112][42254861] = { npcID = 185548, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsSkinning then
-                    minimap[2112][28606008] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2112][28606008] = { npcID = 193846, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsTailoring then
-                    minimap[2112][32026629] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2112][32026629] = { npcID = 195850, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsJewelcrafting then
-                    minimap[2112][40486141] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2112][40486141] = { npcID = 190094, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsBlacksmith then
-                    minimap[2112][36864659] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2112][36864659] = { npcID = 185546, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsMining then
-                    minimap[2112][38885143] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2112][38885143] = { npcID = 185553, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsFishing then
-                    minimap[2112][44847471] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2112][44847471] = { npcID = 185359, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsCooking then
-                    minimap[2112][46494625] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2112][46494625] = { npcID = 185556, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsHerbalism then
-                    minimap[2112][337626892] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2112][37626892] = { npcID = 185549, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsInscription then
-                    minimap[2112][38847338] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2112][38847338] = { npcID = 185540, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsEnchanting then
-                    minimap[2112][31076137] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2112][31076137] = { npcID = 193744, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2965,9 +3028,9 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsGeneral then
     
                 if self.db.profile.showMinimapCapitalsPvEVendor then
-                    minimap[407][48246955] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT .. "\n" .. "\n" .. ACCESSIBILITY_MOUNT_LABEL .. "\n" .. PERKS_VENDOR_CATEGORY_PET, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[407][51447510] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT .. "\n" .. "\n" .. PERKS_VENDOR_CATEGORY_TRANSMOG_SET, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[407][48096567] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT .. "\n" .. "\n" .. HEIRLOOMS .. "\n" ..  BAG_FILTER_EQUIPMENT .. "\n" .. TOY, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[407][48246955] = { npcID = 14846, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[407][51447510] = { npcID = 85484, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[407][48096567] = { npcIDs1 = 56335, npcIDs2 = 55072, npcIDs3 = 14828, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -3002,35 +3065,35 @@ if not db.activate.HideMapNote then
                 if self.db.profile.showMinimapCapitalsProfessionsMixed then
                     
                     if self.db.profile.showMinimapCapitalsMining and self.db.profile.showMinimapCapitalsLeatherworking and not self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[407][49256078] = { name = "", dnID = TextIconMining:GetIconString() .. " " .. L["Mining"] .. "\n" .. TextIconLeatherworking:GetIconString() .. " " .. L["Leatherworking"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[407][49256078] = { npcID = 14841, name = "", dnID = TextIconMining:GetIconString() .. " " .. L["Mining"] .. "\n" .. TextIconLeatherworking:GetIconString() .. " " .. L["Leatherworking"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     elseif self.db.profile.showMinimapCapitalsMining and self.db.profile.showMinimapCapitalsEngineer and not self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[407][49256078] = { name = "", dnID = TextIconMining:GetIconString() .. " " .. L["Mining"] .. "\n" .. TextIconEngineer:GetIconString() .. " " .. L["Engineer"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[407][49256078] = { npcID = 14841, name = "", dnID = TextIconMining:GetIconString() .. " " .. L["Mining"] .. "\n" .. TextIconEngineer:GetIconString() .. " " .. L["Engineer"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     elseif self.db.profile.showMinimapCapitalsLeatherworking and self.db.profile.showMinimapCapitalsEngineer and not self.db.profile.showMinimapCapitalsMining then
-                        minimap[407][49256078] = { name = "", dnID = TextIconLeatherworking:GetIconString() .. " " .. L["Leatherworking"] .. "\n" .. TextIconEngineer:GetIconString() .. " " .. L["Engineer"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[407][49256078] = { npcID = 14841, name = "", dnID = TextIconLeatherworking:GetIconString() .. " " .. L["Leatherworking"] .. "\n" .. TextIconEngineer:GetIconString() .. " " .. L["Engineer"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     elseif self.db.profile.showMinimapCapitalsMining and self.db.profile.showMinimapCapitalsLeatherworking and self.db.profile.showMinimapCapitalsEngineer then
-                        minimap[407][49256078] = { name = "", dnID = TextIconMining:GetIconString() .. " " .. L["Mining"] .. "\n" .. TextIconLeatherworking:GetIconString() .. " " .. L["Leatherworking"] .. "\n" .. TextIconEngineer:GetIconString() .. " " .. L["Engineer"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[407][49256078] = { npcID = 14841, name = "", dnID = TextIconMining:GetIconString() .. " " .. L["Mining"] .. "\n" .. TextIconLeatherworking:GetIconString() .. " " .. L["Leatherworking"] .. "\n" .. TextIconEngineer:GetIconString() .. " " .. L["Engineer"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     elseif self.db.profile.showMinimapCapitalsMining and not (self.db.profile.showMinimapCapitalsLeatherworking and self.db.profile.showMinimapCapitalsEngineer) then
-                        minimap[407][49446141] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        minimap[407][49446141] = { npcID = 14841, name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
                     elseif self.db.profile.showMinimapCapitalsLeatherworking and not (self.db.profile.showMinimapCapitalsMining and self.db.profile.showMinimapCapitalsEngineer) then
-                        minimap[407][49406080] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        minimap[407][49406080] = { npcID = 14841, name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
                     elseif self.db.profile.showMinimapCapitalsEngineer and not (self.db.profile.showMinimapCapitalsLeatherworking and self.db.profile.showMinimapCapitalsMining) then
-                        minimap[407][49406081] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        minimap[407][49406081] = { npcID = 14841, name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning and self.db.profile.showMinimapCapitalsHerbalism and not self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[407][55007061] = { name = "", dnID = TextIconSkinning:GetIconString() .. " " .. L["Skinning"] .. "\n" .. TextIconHerbalism:GetIconString() .. " " .. L["Herbalism"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[407][55007061] = { npcID = 14833, name = "", dnID = TextIconSkinning:GetIconString() .. " " .. L["Skinning"] .. "\n" .. TextIconHerbalism:GetIconString() .. " " .. L["Herbalism"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     elseif self.db.profile.showMinimapCapitalsSkinning and self.db.profile.showMinimapCapitalsJewelcrafting and not self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[407][55007061] = { name = "", dnID = TextIconSkinning:GetIconString() .. " " .. L["Skinning"] .. "\n" .. TextIconJewelcrafting:GetIconString() .. " " .. L["Jewelcrafting"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[407][55007061] = { npcID = 14833, name = "", dnID = TextIconSkinning:GetIconString() .. " " .. L["Skinning"] .. "\n" .. TextIconJewelcrafting:GetIconString() .. " " .. L["Jewelcrafting"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     elseif self.db.profile.showMinimapCapitalsJewelcrafting and self.db.profile.showMinimapCapitalsHerbalism and not self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[407][55007061] = { name = "", dnID = TextIconJewelcrafting:GetIconString() .. " " .. L["Jewelcrafting"] .. "\n" .. TextIconHerbalism:GetIconString() .. " " .. L["Herbalism"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[407][55007061] = { npcID = 14833, name = "", dnID = TextIconJewelcrafting:GetIconString() .. " " .. L["Jewelcrafting"] .. "\n" .. TextIconHerbalism:GetIconString() .. " " .. L["Herbalism"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     elseif self.db.profile.showMinimapCapitalsJewelcrafting and self.db.profile.showMinimapCapitalsHerbalism and self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[407][55007061] = { name = "", dnID = TextIconJewelcrafting:GetIconString() .. " " .. L["Jewelcrafting"] .. "\n" .. TextIconHerbalism:GetIconString() .. " " .. L["Herbalism"] .. "\n" .. TextIconSkinning:GetIconString() .. " " .. L["Skinning"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[407][55007061] = { npcID = 14833, name = "", dnID = TextIconJewelcrafting:GetIconString() .. " " .. L["Jewelcrafting"] .. "\n" .. TextIconHerbalism:GetIconString() .. " " .. L["Herbalism"] .. "\n" .. TextIconSkinning:GetIconString() .. " " .. L["Skinning"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     elseif self.db.profile.showMinimapCapitalsSkinning and not (self.db.profile.showMinimapCapitalsHerbalism and self.db.profile.showMinimapCapitalsJewelcrafting) then
-                        minimap[407][55007060] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        minimap[407][55007060] = { npcID = 14833, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Skinning"] .. " " .. TUTORIAL_TITLE1 }
                     elseif self.db.profile.showMinimapCapitalsHerbalism and not (self.db.profile.showMinimapCapitalsSkinning and self.db.profile.showMinimapCapitalsJewelcrafting) then
-                        minimap[407][55007060] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        minimap[407][55007060] = { npcID = 14833, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Herbalism"] .. " " .. TUTORIAL_TITLE1 }
                     elseif self.db.profile.showMinimapCapitalsJewelcrafting and not (self.db.profile.showMinimapCapitalsSkinning and self.db.profile.showMinimapCapitalsHerbalism) then
-                        minimap[407][55007060] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        minimap[407][55007060] = { npcID = 14833, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Jewelcrafting"] .. " " .. TUTORIAL_TITLE1 }
                     end
 
                     if self.db.profile.showMinimapCapitalsCooking and self.db.profile.showMinimapCapitalsFishing then
@@ -3041,67 +3104,75 @@ if not db.activate.HideMapNote then
                         minimap[407][52606801] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
                     end
 
+                    if self.db.profile.showMinimapCapitalsInscription and self.db.profile.showMinimapCapitalsEnchanting then
+                        minimap[407][53007580] = { npcID = 14822, name = "", dnID = TextIconInscription:GetIconString() .. " " .. INSCRIPTION .. "\n" .. TextIconEnchanting:GetIconString() .. " " .. L["Enchanting"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    elseif self.db.profile.showMinimapCapitalsInscription and not self.db.profile.showMinimapCapitalsEnchanting then
+                        minimap[407][53007580] = { npcID = 14822, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = INSCRIPTION .. " " .. TUTORIAL_TITLE1 }
+                    elseif self.db.profile.showMinimapCapitalsEnchanting and not self.db.profile.showMinimapCapitalsInscription then
+                        minimap[407][53007580] = { npcID = 14822, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Enchanting"] .. " " .. TUTORIAL_TITLE1 }
+                    end
+
                 end
 
                 if not self.db.profile.showMinimapCapitalsProfessionsMixed then
 
                     if self.db.profile.showMinimapCapitalsMining then
-                        minimap[407][49446141] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        minimap[407][49446141] = { npcID = 14841, name = "" , type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Mining"] .. " " .. TUTORIAL_TITLE1 }
                     end
 
                     if self.db.profile.showMinimapCapitalsLeatherworking then
-                        minimap[407][49406080] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        minimap[407][49406080] = { npcID = 14841, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Leatherworking"] .. " " .. TUTORIAL_TITLE1 }
                     end
 
                     if self.db.profile.showMinimapCapitalsEngineer  then
-                        minimap[407][49406081] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        minimap[407][49406081] = { npcID = 14841, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Engineer"] .. " " .. TUTORIAL_TITLE1 }
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[407][48197805] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        minimap[407][48197805] = { npcID = 14833, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Skinning"] .. " " .. TUTORIAL_TITLE1 }
                     end                    
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
-                        minimap[407][55007060] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        minimap[407][55007060] = { npcID = 14833, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Jewelcrafting"] .. " " .. TUTORIAL_TITLE1 }
                     end   
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[407][55017052] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        minimap[407][55017052] = { npcID = 14833, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Herbalism"] .. " " .. TUTORIAL_TITLE1 }
                     end    
                 
                     if self.db.profile.showMinimapCapitalsCooking then
-                        minimap[407][52606800] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        minimap[407][52606800] = { npcID = 14845, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = PROFESSIONS_COOKING .. " " .. TUTORIAL_TITLE1 }
                     end
 
                     if self.db.profile.showMinimapCapitalsFishing then
-                        --minimap[407][52608860] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        minimap[407][52606800] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                        --minimap[407][52608860] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[407][52606800] = { npcID = 14845, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = PROFESSIONS_FISHING .. " " .. TUTORIAL_TITLE1 }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsInscription then
+                        minimap[407][53007580] = { npcID = 14822, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = INSCRIPTION .. " " .. TUTORIAL_TITLE1 }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsEnchanting then
+                        minimap[407][53007580] = { npcID = 14822, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Enchanting"] .. " " .. TUTORIAL_TITLE1 }
                     end
 
                 end
 
                 if self.db.profile.showMinimapCapitalsAlchemy then
-                    minimap[407][50206940] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    minimap[407][50206940] = { npcID = 14844, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Alchemy"] .. " " .. TUTORIAL_TITLE1 }
                 end
 
                 if self.db.profile.showMinimapCapitalsTailoring then
-                    minimap[407][55805440] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    minimap[407][55805440] = { npcID = 10445, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Tailoring"] .. " " .. TUTORIAL_TITLE1 }
                 end
 
                 if self.db.profile.showMinimapCapitalsBlacksmith then
-                    minimap[407][51008180] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
-                end
-
-                if self.db.profile.showMinimapCapitalsInscription then
-                    minimap[407][53007580] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
-                end
-
-                if self.db.profile.showMinimapCapitalsEnchanting then
-                    minimap[407][53007580] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    minimap[407][51008180] = { npcID = 14829, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Blacksmithing"] .. " " .. TUTORIAL_TITLE1 }
                 end
 
                 if self.db.profile.showMinimapCapitalsArchaeology then
-                    minimap[407][51836072] = { name = PROFESSIONS_ARCHAEOLOGY, type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    minimap[407][51836072] = { npcID = 14847, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = PROFESSIONS_ARCHAEOLOGY .. " " .. TUTORIAL_TITLE1 }
                 end
 
             end
@@ -3132,12 +3203,12 @@ if not db.activate.HideMapNote then
                 end
     
                 if self.db.profile.showMinimapCapitalsInnkeeper then
-                    minimap[2339][44754642] = { dnID = MINIMAP_TRACKING_INNKEEPER, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][44754642.01] = { npcID = 212370, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsAuctioneer then
-                    minimap[2339][56864704] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[2339][64975294] = { dnID = BLACK_MARKET_AUCTION_HOUSE, name = "", type = "BlackMarket", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][56864704] = { npcIDs1 = 219040, npcIDs2 = 219037, npcIDs3 = 219039, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][64975294] = { npcID = 219055, name = "", dnID = BLACK_MARKET_AUCTION_HOUSE, type = "BlackMarket", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsBank then
@@ -3145,7 +3216,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsBarber then
-                    minimap[2339][58645176] = { dnID = MINIMAP_TRACKING_BARBER, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][58645176] = { npcID = 219052, name = "", type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsMailbox then
@@ -3163,25 +3234,25 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsPvPVendor then
-                    minimap[2339][60377017] = { dnID = TRANSMOG_SET_PVP .. " " .. MERCHANT, name = "", TransportName = PVP_LABEL_WAR_MODE, type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[2339][59696906] = { dnID = TRANSMOG_SET_PVP .. " " .. MERCHANT, name = "", TransportName = ELITE .. " " .. L["Quartermaster"],  type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][60377017] = { npcID = 219212, name = "", dnID = TRANSMOG_SET_PVP .. " " .. MERCHANT, type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][59696906] = { npcID = 219216, name = "", dnID = TRANSMOG_SET_PVP .. " " .. MERCHANT, type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[2339][55677618] = { dnID = TRANSMOG_SET_PVP .. " " .. MERCHANT, name = "", TransportName = PVP_LABEL_WAR_MODE .. " " .. L["Quartermaster"] .. "\n" .. HONOR_POINTS .. " " .. L["Quartermaster"] .. "\n" .. HONOR_POINTS .. " " .. AUCTION_CATEGORY_RECIPES,  type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsPvEVendor then
-                    minimap[2339][39092418] = { dnID = L["Merchant for Renown items"], name = L["Council of Dornogal"], type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][39092418] = { npcID = 223728, name = "", dnID = L["Council of Dornogal"], type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     --minimap[2339][39092418] = { dnID = L["Merchant for Renown items"], name = "", TransportName = L["Council of Dornogal"] .. "\n" .. L["The Assembly of the Deeps"] .. "\n" .. L["Hallowfall Arathi"], type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[2339][47834448] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT, name = "", TransportName = L["Quartermaster"],  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][47834448] = { npcIDs1 = 226250, npcIDs2 = 208070, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsTransmogger then
-                    minimap[2339][45835331] = { dnID = MINIMAP_TRACKING_TRANSMOGRIFIER, name = "", TransportName = MERCHANT, type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[2339][58644933] = { dnID = MINIMAP_TRACKING_TRANSMOGRIFIER, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][45835331] = { npcID = 221848, name = "", TransportName = MERCHANT, type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][58644933] = { npcID = 219053, name = "", TransportName = MERCHANT, type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsItemUpgrade then
-                    minimap[2339][59627029] = { dnID = ITEM_UPGRADE, name = "",  type = "ItemUpgrade", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[2339][51944206] = { dnID = ITEM_UPGRADE, name = "",  type = "ItemUpgrade", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][59627029] = { npcID = 219073, name = "", type = "ItemUpgrade", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][51944206] = { npcID = 219225, name = "", type = "ItemUpgrade", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsDragonFlyTransmog then
@@ -3193,7 +3264,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsStablemaster then
-                    minimap[2339][55356711] = { dnID = MINIMAP_TRACKING_STABLEMASTER, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][55356711] = { npcID = 219376, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -3204,16 +3275,16 @@ if not db.activate.HideMapNote then
                 if self.db.profile.showMinimapCapitalsPortals then
                     minimap[2266][43564994] = { mnID = 2339, name = "", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true, dnID = L["Portal"] } --  Timeways Portal to Dornogal
                     --minimap[2266][64534340] = { mnID = 1565, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, dnID = L["Portal"] } --  Timeways Portal to 
-                    minimap[2266][74524703] = { mnID = 1462, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, dnID = L["Portal"] } --  Timeways Portal to Mechagon
-                    minimap[2266][77536180] = { mnID = 1536, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, dnID = L["Portal"] } --  Timeways Portal to Maldraxxus
-                    minimap[2266][70537306] = { mnID = 862, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, dnID = L["Portal"] } --  Timeways Portal to Zuldazar
+                    minimap[2266][74524703] = { mnID = 2472, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, dnID = L["Portal"] } --  Timeways Portal to Mechagon
+                    --minimap[2266][77536180] = { mnID = 1536, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, dnID = L["Portal"] } --  Timeways Portal to Maldraxxus
+                    minimap[2266][70537306] = { mnID = 1525, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, dnID = L["Portal"] } --  Timeways Portal to Zuldazar
                     --minimap[2266][60506950] = { mnID = 241, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, dnID = L["Portal"] } --  Timeways Portal to 
-                    minimap[2339][53563873] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. SPLASH_BATTLEFORAZEROTH_8_2_0_FEATURE1_TITLE .. "\n" .. " ==> " .. L["Maldraxxus"] .. "\n" .. " ==> " .. L["Zuldazar"]} --  Portal from Dornogal to the Timeways
-                    
+                    minimap[2339][53563873] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. "Tazavesh" .. "\n" .. " ==> " .. "Revendreth" } --  Portal from Dornogal to the Timeways
                     minimap[2339][63615205] = { mnID = 2255, name = L["Portal"], dnID = "", achievementID = 19559, showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://www.wowhead.com/achievement=19559/azj-kahet#news", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dornogal to Azj-Kahet if u finished the achievement=19559
                     minimap[2339][29775967] = { mnID = 2367, name = L["Portal"], dnID = "", achievementID = 40725, showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=40725", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Chamber of Memory
                     minimap[2339][52465047] = { mnID = 2346, name = L["Portal"], dnID = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/quest=86535/test-run", questID = 86535, type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dornogal to Undermine
-
+                    minimap[2339][40312267] = { mnID = 2472, name = L["Portal"], dnID = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/quest=84957/return-to-the-veiled-market", questID = 84957, type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dornogal to Tazavesh
+                    
                     if self.faction == "Horde" or db.activate.MinimapCapitalsEnemyFaction then
                         minimap[2339][38192724] = { mnID = 85, name = L["Portal"], dnID = "", type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dornogal to Orgrimmar
                     end
@@ -3224,7 +3295,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsZeppelins then
-                    minimap[2339][73540516] = { mnID = 2369, name = "", type = "Zeppelin", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Zeppelin"] .. " ==> " .. L["Siren Isle"] } -- Zeppelin from OG to Borean Tundra - Northrend
+                    minimap[2339][73540516] = { npcID = 231541, mnID = 2369, name = "", type = "Zeppelin", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Zeppelin"] .. " ==> " .. L["Siren Isle"] } -- Zeppelin from OG to Borean Tundra - Northrend
                 end
 
                 if self.db.profile.showMinimapCapitalsTransport then
@@ -3232,7 +3303,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsFP then
-                    minimap[2339][44695114] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][44695114] = { npcID = 212369, name = "", type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -3241,59 +3312,59 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsProfessions then
 
                 if self.db.profile.showMinimapCapitalsProfessionOrders then
-                    minimap[2339][58015644] = { name = PLACE_CRAFTING_ORDERS, type = "ProfessionOrders", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][58015644] = { npcID = 215258, name = "", type = "ProfessionOrders", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsAlchemy then
-                    minimap[2339][47367039] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2339][47367039] = { npcID = 219092, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
             
                 if self.db.profile.showMinimapCapitalsLeatherworking then
-                    minimap[2339][54455884] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2339][54455884] = { npcID = 219080, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsEngineer then
-                    minimap[2339][49215630] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2339][49215630] = { npcID = 219099, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsSkinning then
-                    minimap[2339][54435714] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2339][54435714] = { npcID = 219083, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsTailoring then
-                    minimap[2339][54786364] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2339][54786364] = { npcID = 219094, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsJewelcrafting then
-                    minimap[2339][49827116] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2339][49827116] = { npcID = 219087, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsBlacksmith then
-                    minimap[2339][49286338] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2339][49286338] = { npcID = 223644, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsMining then
-                    minimap[2339][52635272] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2339][52635272] = { npcID = 219097, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsFishing then
-                    minimap[2339][50542691] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                end
-
-                if self.db.profile.showMinimapCapitalsCooking then
-                    minimap[2339][44084575] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2339][50542691] = { npcID = 219106, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsHerbalism then
-                    minimap[2339][45696965] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2339][45696965] = { npcID = 219101, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsInscription then
-                    minimap[2339][48757117] = { name = INSCRIPTION, type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2339][48757117] = { npcID = 219090, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsEnchanting then
-                    minimap[2339][52817116] = { name = L["Enchanting"], type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                    minimap[2339][52817116] = { npcID = 219085, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsCooking then
+                    minimap[2339][44084575] = { npcID = 219104, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -3301,5 +3372,6 @@ if not db.activate.HideMapNote then
         end
 
     end
-end
+    end
+ 
 end

@@ -1,7 +1,6 @@
 -- Atal'Dazar
 
 local L = BigWigs:NewBossLocale("Atal'Dazar Trash", "zhCN")
-if not L then return end
 if L then
 	L.skyscreamer = "飨宴的啸天龙"
 	L.tlonja = "特隆加"
@@ -66,15 +65,21 @@ if L then
 	L.lightning_caught = "%.1f秒后抓住闪电！"
 	L.ludwig = "路德维希·冯·托尔托伦"
 	L.trothak = "托萨克"
-
-	L.left = "%s (左)"
-	L.right = "%s (右)"
 end
 
 -- Horrific Vision of Orgrimmar
 
 L = BigWigs:NewBossLocale("Horrific Vision of Orgrimmar Trash", "zhCN")
 if L then
+	L.sanity_change = "理智：%d"
+	L.madnesses = "疯狂"
+	L.potions = "药水"
+	L.buffs = "增益"
+	L.slowed = "减速"
+	L.sluggish_potion_effect = "每5秒恢复2%的最大生命值"
+	L.sickening_potion_effect = "受到的所有伤害降低5%"
+	L.spicy_potion_effect = "喷火"
+
 	L.voidbound_shaman = "虚缚萨满祭司"
 	L.endless_hunger_totem = "无尽饥饿图腾"
 	L.crawling_corruption = "蠕行腐蚀"
@@ -100,6 +105,7 @@ if L then
 	L.aqir_bonecrusher = "亚基碾骨虫"
 	L.aqir_mindhunter = "亚基猎心者"
 	L.aqir_venomweaver = "亚基织毒者"
+	L.gamon = "加摩尔"
 end
 
 L = BigWigs:NewBossLocale("Thrall", "zhCN")
@@ -134,6 +140,17 @@ end
 
 L = BigWigs:NewBossLocale("Horrific Vision of Stormwind Trash", "zhCN")
 if L then
+	L.sanity_change = "理智：%d"
+	L.portal_closed = "传送门关闭"
+	L.portal_closed_desc = "当法师区的传送门关闭时显示一条信息。"
+	L.madnesses = "疯狂"
+	L.potions = "药水"
+	L.buffs = "增益"
+	L.slowed = "减速"
+	L.sluggish_potion_effect = "每5秒恢复2%的最大生命值"
+	L.sickening_potion_effect = "受到的所有伤害降低5%"
+	L.spicy_potion_effect = "喷火"
+
 	L.crawling_corruption = "蠕行腐蚀"
 	L.enthralled_footman = "被奴役的步兵"
 	L.fallen_voidspeaker = "堕落的虚空语者"
@@ -158,6 +175,7 @@ if L then
 	L.zardeth_of_the_black_claw = "黑爪加尔德斯"
 	L.unstable_servant = "不稳定的仆从"
 	L.hogger = "霍格"
+	L.void_scarred_gryphon = "虚痕狮鹫"
 
 	L.therum_deepforge_warmup_trigger = "你们喜欢放烟花是吧？那我们就好好玩玩。"
 	L.alleria_windrunner_warmup_trigger = "母亲……别再听那些低语了！"
@@ -220,9 +238,6 @@ if L then
 	L.beastmaster = "幽魂兽王"
 	L.brute = "幽魂蛮兵"
 	L.zul = "祖尔之影"
-
-	L.casting_on_you = "对你施放%s"
-	L.casting_on_other = "施放%s：%s"
 end
 
 -- Operation: Mechagon
@@ -263,11 +278,6 @@ end
 L = BigWigs:NewBossLocale("Tussle Tonks", "zhCN")
 if L then
 	L.warmup_trigger = "这完全不符合统计学！我们的访客还活着！"
-end
-
-L = BigWigs:NewBossLocale("K.U.-J.0.", "zhCN")
-if L then
-	L.safe = "安全"
 end
 
 L = BigWigs:NewBossLocale("King Mechagon", "zhCN")
@@ -351,11 +361,6 @@ if L then
 	L.incubator = "疯狂的孵化者"
 	L.nimbus = "暴怒云气"
 	L.doctor = "瘟疫博士"
-end
-
-L = BigWigs:NewBossLocale("Galvazzt", "zhCN")
-if L then
-	L.percent = "%s（%d%%）"
 end
 
 -- The MOTHERLODE!!

@@ -64,8 +64,8 @@ L["Collection Collected"] = "已收集";
 
 --String Format
 L["Format Reputation Reward Tooltip"] = "在%2$s中的声望提高%1$d点";
-L["Format You Have X"] = "- 你拥有 |cffffffff%d|r";
-L["Format You Have X And Y In Bank"] = "- 你拥有 |cffffffff%d|r (|cffffffff%d|r 个在银行)";
+L["Format You Have X"] = "- 你拥有 |cffffffff%s|r";
+L["Format You Have X And Y In Bank"] = "- 你拥有 |cffffffff%s|r (|cffffffff%s|r 个在银行)";
 L["Format Suggested Players"] = "建议玩家人数：[%d]";
 L["Format Current Skill Level"] = "当前等级：|cffffffff%d/%d|r";
 L["Format Reward Title"] = "头衔：%s";
@@ -184,6 +184,8 @@ L["Primary Control Key"] = "确认键";
 L["Primary Control Key Desc"] = "按下此按钮将自动选择第一个最佳选项，例如接受任务。"
 L["Press Button To Scroll Down"] = "按确认键来向下滚屏";
 L["Press Button To Scroll Down Desc"] = "如果当前页面盛不下所有任务文本，按下确认键会向下滚屏而不是接受任务。";
+L["Press Escape To Decline Quest"] = "按Esc键拒绝任务";
+L["Press Escape To Decline Quest Desc"] = "在你浏览任务详情时，如果该NPC还有其他对话选项，按Esc键会尝试返回上一级而不是直接关闭对话界面。";
 L["Right Click To Close UI"] = "右键关闭界面";
 L["Right Click To Close UI Desc"] = "在对话界面上按右键即可关闭窗口。";
 L["Press Tab To Select Reward"] = "按Tab键选择任务奖励";
@@ -241,7 +243,7 @@ L["Nameplate Dialog"] = "在姓名版上显示对话";
 L["Nameplate Dialog Desc"] = "将不提供任何选项的对话显示在目标姓名版上。\n\n此选项将修改CVar \"SoftTarget Nameplate Interact\"";
 L["Compatibility"] = "兼容性";
 L["Disable DUI In Instance"] = "在副本内使用游戏原始对话界面";
-L["Disable DUI In Instance Desc"] = "当你进入地下城或团本时使用游戏原始对话界面。\n\n推荐勾选此选项如果你无法与开始或跳过Boss战的NPC交互。";
+L["Disable DUI In Instance Desc"] = "当你进入地下城或团本时使用游戏原始对话界面。";
 
 L["Disable UI Motions"] = "减少界面动画";
 L["Disable UI Motions Desc"] = "减少界面动画例如主界面展开和按钮文字右移。";
@@ -325,6 +327,18 @@ L["Instruction Open Settings Keybind Format"] = "在对话界面可见时按 [%s
 L["Instruction Open Settings No Keybind"] = "你未设定打开设置界面的快捷键";
 L["HelpTip Warband Completed Quest"] = "这个图标表示你战团里的角色完成过此任务。";
 L["Got It"] = "我悟了";     --HELP_TIP_BUTTON_GOT_IT
+L["Open Settings"] = "打开设置界面";
+
+--AddOn Compatibility for Language Translator
+L["Translator"] = "翻译器";
+L["Translator Source"] = "来源：";
+L["Translator No Quest Data Format"] = "未找到条目 [Quest: %s]";
+L["Translator Click To Hide Translation"] = "点击以隐藏翻译";
+L["Translator Click To Show Translation"] = "点击以显示翻译";
+
+--AddOn Compatibility for Voiceover AddOns
+L["VO Provider Format"] = "|cffffffff%s|r 正在管理语音。";
+L["VO No File Format"] = "|cffffffff%s|r 无法找到相关的语音文件。";
 
 --DO NOT TRANSLATE
 L["Abbrev Breakpoint 1000"] = "千";     --1,000 = 1K
@@ -340,6 +354,8 @@ L["Match Stat DPS"] = "每秒伤害([,%d%.]+)";
 L["Show Answer"] = "显示正确答案。";
 L["Quest Failed Pattern"] = "^上交任务";
 L["AutoCompleteQuest HallowsEnd"] = "糖罐";     --Quest:28981
+L["AutoCompleteQuest Midsummer"] = "祭拜这团火焰";   --Quest:29031
+L["AutoCompleteQuest Midsummer2"] = "亵渎这团火焰！";     --Quest:11580
 
 --Asking for Directions-- (match the name to replace gossip icon)
 L["Pin Auction House"] = "拍卖行";

@@ -9,6 +9,16 @@
 
 
 -- ----------------------------------------------------------------------------
+-- Misc
+-- ----------------------------------------------------------------------------
+---@class ColorData
+---@field r number
+---@field b number
+---@field g number
+---@field hex string
+---@field color ColorMixin
+
+-- ----------------------------------------------------------------------------
 -- Keystone Info
 -- ----------------------------------------------------------------------------
 ---@class KeystoneInfo
@@ -84,7 +94,7 @@
 ---@class UpgradeData
 ---@field name string
 ---@field shortName string
----@field color ColorMixin
+---@field colorData ColorData
 ---@field icon fileID|integer
 ---@field itemId integer?
 ---@field currencyId integer?
@@ -105,6 +115,16 @@
 ---@field rank integer
 ---@field upgradeLevel integer
 ---@field maxUpgradeLevel integer
+
+---@class BountifulDelveInfo
+---@field tier integer
+---@field loot BountifulDelveDrops
+---@field vault BountifulDelveDrops
+---@field currency UpgradeData
+
+---@class BountifulDelveDrops
+---@field itemLevel integer
+---@field upgradeTrack string
 
 
 -- ----------------------------------------------------------------------------

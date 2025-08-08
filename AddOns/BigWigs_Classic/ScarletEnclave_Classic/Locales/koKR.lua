@@ -1,4 +1,4 @@
-local L = BigWigs:NewBossLocale("Balnazzar", "koKR")
+local L = BigWigs:NewBossLocale("Balnazzar Scarlet Enclave", "koKR")
 if not L then return end
 if L then
 	--L.bossName = "Balnazzar"
@@ -7,6 +7,11 @@ end
 L = BigWigs:NewBossLocale("High Commander Beatrix", "koKR")
 if L then
 	--L.bossName = "High Commander Beatrix"
+	--L.meteor_yell_trigger = "As you wish" -- As you wish, High Commander!
+	--L.waves_footmen_yell_trigger = "Form up" -- Form up and hold the line!
+	--L.waves_cavalry_yell_trigger = "Ready your lances" -- Understod! Ready your lances!
+	--L.arrows_yell_trigger = "Archers," -- Archers, unleash hell!
+	--L.bombing_yell_trigger = "At once," -- At once, Beatrix!
 end
 
 L = BigWigs:NewBossLocale("Solistrasza", "koKR")

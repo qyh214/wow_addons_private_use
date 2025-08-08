@@ -34,12 +34,12 @@ function mod:OnBossEnable()
 	self:Log("SPELL_HEAL", "OverchargeIcon", 64218)
 	self:Death("Win", 33993)
 
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
 end
 
 function mod:OnEngage()
 	self:OpenProximity("proximity", 5)
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:CDBar(64218, 45) -- Overcharge
 	self:Berserk(360)
 end

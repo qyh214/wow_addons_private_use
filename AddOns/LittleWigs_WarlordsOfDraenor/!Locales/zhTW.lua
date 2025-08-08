@@ -1,9 +1,16 @@
 -- Auchindoun
 
-local L = BigWigs:NewBossLocale("Auchindoun Trash", "zhTW")
+local L = BigWigs:NewBossLocale("Teron'gor", "zhTW")
 if not L then return end
 if L then
-	--L.abyssal = "Felborne Abyssal"
+	L.affliction = "痛苦"
+	L.demonology = "惡魔學識"
+	L.destruction = "毀滅"
+end
+
+L = BigWigs:NewBossLocale("Auchindoun Trash", "zhTW")
+if L then
+	L.abyssal = "魔能冥淵火"
 end
 
 -- Bloodmaul Slag Mines
@@ -77,12 +84,6 @@ end
 
 -- Shadowmoon Burial Grounds
 
-L = BigWigs:NewBossLocale("Sadana Bloodfury", "zhTW")
-if L then
-	L.custom_on_markadd = "標記被玷汙的靈魂"
-	L.custom_on_markadd_desc = "用 {rt8} 標記黑暗共融召喚的靈魂，需要權限。"
-end
-
 L = BigWigs:NewBossLocale("Bonemaw", "zhTW")
 if L then
 	--L.summon_worms = "Summon Carrion Worms"
@@ -112,10 +113,8 @@ end
 
 L = BigWigs:NewBossLocale("High Sage Viryx", "zhTW")
 if L then
-	--L.custom_on_markadd = "Mark the Solar Zealot"
-	--L.custom_on_markadd_desc = "Mark the Solar Zealot with {rt8}, requires promoted or leader."
-
-	--L.construct = "Skyreach Shield Construct" -- NPC ID 76292
+	L.solar_zealot = "太陽狂熱者"
+	L.construct = "擎天護盾傀儡"
 end
 
 -- The Everbloom

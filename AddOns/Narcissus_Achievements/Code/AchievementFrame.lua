@@ -381,42 +381,46 @@ local function DisplayProgress(id, flags)
             numIncomplete = 0;
         else
             local criteriaString, criteriaType, completed, quantity, reqQuantity, charName, flags, assetID, quantityString;
+
             for i = 1, numCriteria do
                 criteriaString, criteriaType, completed, quantity, reqQuantity, charName, flags, assetID, quantityString = GetAchievementCriteriaInfo(id, i);
-                --print("criteriaType: "..criteriaType)
-                if ( bband(flags, 1) == 1 ) then  --EVALUATION_TREE_FLAG_PROGRESS_BAR = 1
-                    if ( completed == false ) then
-                        numIncomplete = numIncomplete + 1;
-                        tinsert(iData.bars, {quantity, reqQuantity, criteriaString});
+                --print("criteriaType: "..criteriaType)     --debug
+
+                if criteriaType == 8 and assetID then     --Meta, CRITERIA_TYPE_ACHIEVEMENT
+                    if completed then
+                        numCompleted = numCompleted + 1;
+                        local icon = DataProvider:GetAchievementInfo(assetID, 10);
+                        tinsert(cData.icons, icon);
+                        tinsert(cData.assetIDs, assetID);
                     else
+                        numIncomplete = numIncomplete + 1;
+                        local icon = DataProvider:GetAchievementInfo(assetID, 10);
+                        tinsert(iData.icons, icon);
+                        tinsert(iData.assetIDs, assetID);
+                    end
+                elseif bband(flags, 1) == 1 then     --EVALUATION_TREE_FLAG_PROGRESS_BAR = 1
+                    if completed then
                         numCompleted = numCompleted + 1;
                         tinsert(cData.bars, {quantity, reqQuantity, criteriaString});
-                    end
-                else
-                    if ( completed == false ) then
-                        numIncomplete = numIncomplete + 1;
-                        criteriaString = "|CFF808080" .. criteriaString .. "|r";
-                        tinsert(iData.names, criteriaString);
-                        if criteriaType == 8 and assetID then  --CRITERIA_TYPE_ACHIEVEMENT
-                            local icon = DataProvider:GetAchievementInfo(assetID, 10);
-                            iData.icons[numIncomplete] = icon;
-                            iData.assetIDs[numIncomplete] = assetID;
-                        end
                     else
+                        numIncomplete = numIncomplete + 1;
+                        tinsert(iData.bars, {quantity, reqQuantity, criteriaString});
+                    end
+                else    --TextStrings
+                    if completed then
                         numCompleted = numCompleted + 1;
                         criteriaString = "|CFF5fbb46" .. criteriaString .. "|r"; --00FF00
                         tinsert(cData.names, criteriaString);
-                        if criteriaType == 8 and assetID then  --CRITERIA_TYPE_ACHIEVEMENT
-                            local icon = DataProvider:GetAchievementInfo(assetID, 10);
-                            cData.icons[numCompleted] = icon;
-                            cData.assetIDs[numCompleted] = assetID;
-                        end
+                    else
+                        numIncomplete = numIncomplete + 1;
+                        criteriaString = "|CFF808080" .. criteriaString .. "|r";
+                        tinsert(iData.names, criteriaString);
                     end
                 end
             end
         end
     --end
-    
+
     cData.count = numCompleted;
     iData.count = numIncomplete;
 
@@ -477,7 +481,7 @@ local function ProcessModifiedClick(button)
             end
             if IsAltKeyDown() then
                 BookmarkUtil:ToggleBookmark(achievementID);
-                button.bookmarkIcon:SetShown(BookmarkUtil:IsBookmarked(achievementID));
+                button.BookmarkIcon:SetShown(BookmarkUtil:IsBookmarked(achievementID));
             end
         end
     end
@@ -493,48 +497,65 @@ end
 local function FormatRewardText(id, rewardText)
     local rawText = rewardText;
     local rewardItemID = GetRewardItemID(id);
+    local categoryText, colon, rewardName;
 
     if rewardItemID then
+        categoryText, colon, rewardName = string.match(rewardText, "(.+)([:：]+)(.+)");
+    end
+
+    if categoryText and colon and rewardName then
         local itemID, itemType, itemSubType, _, icon, itemClassID, itemSubClassID = C_Item.GetItemInfoInstant(rewardItemID);
+        local itemProcessed;
         if itemSubType == "Mount" then
             local mountID = C_MountJournal.GetMountFromItem(itemID);
             if mountID then
                 local mountName = C_MountJournal.GetMountInfoByID(mountID);
                 if mountName then
-                    rewardText = gsub((RENOWN_REWARD_MOUNT_NAME_FORMAT or "Mount: %s"), "%%s", mountName);
+                    categoryText = MOUNT or categoryText;
+                    rewardName = " "..mountName;
+                    itemProcessed = true;
                 end
             end
-            if IS_DARK_THEME then
-                rewardText = gsub(rewardText, "(.+)([:：]+)(.+)", "|cff808080".. "%1%2" .."|r|cff8950c6".."%3".."|r");
-            end
-        elseif itemSubType == "Companion Pets" then
+        elseif C_ToyBox.GetToyInfo(itemID) ~= nil then
+            categoryText = TOY or categoryText;
+            itemProcessed = true;
+        else
             local petName = C_PetJournal.GetPetInfoByItemID(rewardItemID);
             if petName then
-                rewardText = gsub((TOOLTIP_BATTLE_PET_NAME or "Battle Pet: %s"), "%%s", petName);
-            end
-            if IS_DARK_THEME then
-                rewardText = gsub(rewardText, "(.+):(.+)", "|cff808080".. "%1" .."|r|cff8950c6".."%2".."|r");
-            end
-        else
-            if IS_DARK_THEME then
-                rewardText = "|cffa3d39c"..rewardText.."|r";
+                categoryText = PET or categoryText;
+                rewardName = " "..petName;
+                itemProcessed = true;
+            else
+
             end
         end
 
+        if IS_DARK_THEME then
+            rewardText = format("|cff808080%s%s|r|cff8950c6%s|r", categoryText, colon, rewardName);
+        else
+            rewardText = "|cffffd200"..categoryText..colon..rewardName.."|r";
+        end
+
         if find(rawText, TITLE_REWARD_FORMAT) then
-            if IS_DARK_THEME then
-                rawText = "|cffa3d39c"..rawText.."|r";
+            if itemProcessed then
+                if IS_DARK_THEME then
+                    rawText = "|cffa3d39c"..rawText.."|r";
+                end
+                rewardText = rawText.."   "..rewardText;
+            else
+                if IS_DARK_THEME then
+                    rewardText = "|cffa3d39c"..rawText.."|r";
+                else
+                    rewardText = rawText;
+                end
             end
-            rewardText = rawText.."   "..rewardText;
         end
     else
         if IS_DARK_THEME then
             rewardText = "|cffa3d39c"..rawText.."|r";
+        else
+            rewardText = "|cffffd200"..rewardText.."|r";
         end
-    end
-
-    if not IS_DARK_THEME then
-        rewardText = "|cffffd200"..rewardText.."|r";
     end
 
     return rewardText, rewardItemID
@@ -571,7 +592,7 @@ local function FormatAchievementCard(button, id, name, points, completed, month,
 
     button.id = id;
     button.trackIcon:SetShown( DataProvider:IsTrackedAchievement(id) );
-    button.bookmarkIcon:SetShown(BookmarkUtil:IsBookmarked(id));
+    button.BookmarkIcon:SetShown(BookmarkUtil:IsBookmarked(id));
 
     if ( not completed or ( not isGuild and not wasEarnedByMe ) ) and (showNotEarnedMark) then
         button.NotEarned:Show();
@@ -816,7 +837,7 @@ function ScrollUtil:ResetHeights()
     self.position = 1;
     self.lastOffset = 0;
     self.nextOffset = 0;
-    wipe(self.heightData);
+    self.heightData = {};
 end
 
 function ScrollUtil:GetScrollRange()
@@ -903,7 +924,7 @@ function ScrollUtil:UpdateScrollChild(direction)
         local bottomButton = tremove(self.activeCards);
         tinsert(self.activeCards, 1, bottomButton);
     end
-    wipe(self.positionToButton);
+    self.positionToButton = {};
     local p = self.position;
     local id;
     local positionIndex;
@@ -2460,7 +2481,7 @@ end
 function NarciAchievementInspectionFrameMixin:DisplayCriteria(cData, iData)
     local numCompleted = cData.count;
     local numIncomplete = iData.count;
-    
+
     self.numCompleted:SetText(numCompleted);
     self.numIncomplete:SetText(numIncomplete);
 
@@ -2470,6 +2491,7 @@ function NarciAchievementInspectionFrameMixin:DisplayCriteria(cData, iData)
     local icon = cData.icons[1];
     local numBars = #cData.bars;
     local type = 1;
+
     if numBars ~= 0 then
         type = 3
     elseif icon then
@@ -2860,7 +2882,7 @@ end
 function NarciAchievementReturnButtonMixin:OnHide()
     self:Hide();
     self:StopAnimating();
-    wipe(self.structure);
+    self.structure = {};
 end
 
 function NarciAchievementReturnButtonMixin:SetLabelText(text)
@@ -3377,6 +3399,7 @@ local function CreateTabButtons()
         tinsert(buttons, button);
         button:SetLabel(tabNames[i]);
         button.id = i;
+        button:SetID(i);
 
         if i == 1 then
             button:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 23, 0);
@@ -3603,7 +3626,6 @@ local function InitializeFrame(frame)
     CreateCategoryButtons(5);
 
     --Reclaim Temp
-    wipe(CategoryStructure);
     CategoryStructure = nil;
     CreateAchievementButtons = nil;
     CreateTabButtons = nil;
@@ -3791,6 +3813,7 @@ function NarciAchievementFrameMixin:UpdateToDoListCount()
     end
 end
 
+
 --[[
 function NarciAchievement_FormatAlertCard(card)
     local achievementID = card.id;
@@ -3807,6 +3830,23 @@ function NarciAchievement_ReskinButton(card)
 end
 --]]
 
+
+local BookmarkIconMixin = {};
+do
+    function BookmarkIconMixin:OnEnter()
+        local tooltip = GameTooltip;
+        tooltip:SetOwner(self, "ANCHOR_RIGHT");
+        tooltip:SetText(L["To Do List"], 1, 1, 1, true);
+        tooltip:AddLine(L["Instruction Remove From To Do List"], 1, 0.82, 0, true);
+        tooltip:Show();
+    end
+
+    function BookmarkIconMixin:OnLeave()
+        GameTooltip:Hide();
+    end
+end
+
+
 NarciAchievementLargeCardMixin = {};
 
 function NarciAchievementLargeCardMixin:OnDragStart()
@@ -3822,6 +3862,9 @@ function NarciAchievementLargeCardMixin:OnLoad()
     self:RegisterForDrag("LeftButton");
     self:SetScript("OnLoad", nil);
     self.OnLoad = nil;
+
+    self.BookmarkIcon:SetScript("OnEnter", BookmarkIconMixin.OnEnter);
+    self.BookmarkIcon:SetScript("OnLeave", BookmarkIconMixin.OnLeave);
 end
 
 function NarciAchievementLargeCardMixin:OnMouseDown()
@@ -4094,12 +4137,10 @@ end
 local function OnAchivementEarned(achievementID)
     DataProvider:UpdateAchievementCache(achievementID);
     RefreshInspection(achievementID);
-    
+
     local categoryID = DataProvider:GetAchievementCategory(achievementID);
     if categoryID then
-        if DataProvider.achievementOrderCache[categoryID] then
-            wipe(DataProvider.achievementOrderCache[categoryID]);
-        end
+        DataProvider.achievementOrderCache[categoryID] = {};
         UpdateCategoryButtonProgressByCategoryID(categoryID);
         if categoryID == DataProvider.currentCategory then
             if MainFrame:IsShown() then
@@ -4118,10 +4159,11 @@ end
 local EventListener = CreateFrame("Frame");
 EventListener:RegisterEvent("ACHIEVEMENT_EARNED");
 EventListener:RegisterEvent("TRACKED_ACHIEVEMENT_LIST_CHANGED");
+EventListener:RegisterEvent("CONTENT_TRACKING_UPDATE");
 
 EventListener:SetScript("OnEvent", function(self, event, ...)
     if event == "ACHIEVEMENT_EARNED" then
-        local achievementID = ...;
+        local achievementID = ...
         OnAchivementEarned(achievementID);
         if not self.pauseUpdate then
             self.pauseUpdate = true;
@@ -4132,9 +4174,13 @@ EventListener:SetScript("OnEvent", function(self, event, ...)
         end
     elseif event == "TRACKED_ACHIEVEMENT_LIST_CHANGED" then
         UpdateTrackAchievements();
+    elseif event == "CONTENT_TRACKING_UPDATE" then
+        local type, id, isTracked = ...
+        if type == 2 then
+            UpdateTrackAchievements();
+        end
     end
 end)
-
 
 
 addon.ReskinButton = ReskinButton;

@@ -1,7 +1,7 @@
 ## Interface: 40402
-## Title: |cffe8344fPatched|r WeakAuras Templates
-## Author: Patched by |cff48a295fang2hou|r, Original WeakAuras made by The WeakAuras Team
-## Version: 5.19.8
+## Title: WeakAuras Templates
+## Author: The WeakAuras Team
+## Version: 5.20.1
 ## Notes: Templates for WeakAuras
 ## Notes-esES: Plantillas para WeakAuras
 ## Notes-esMX: Plantillas para WeakAuras

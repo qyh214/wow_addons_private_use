@@ -28,15 +28,25 @@ BigWigsAPI.RegisterVoicePack("VV")
 
 -- 倒数语音
 
-BigWigsAPI:RegisterCountdown("中文语音：VV（女）", {
-	"Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\1.ogg",
-	"Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\2.ogg",
-	"Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\3.ogg",
-	"Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\4.ogg",
-	"Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\5.ogg",
-	"Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\6.ogg",
-	"Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\7.ogg",
-	"Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\8.ogg",
-	"Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\9.ogg",
-	"Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\10.ogg",
+local VoiceID = "中文语音：VV(女)"
+
+BigWigsAPI:RegisterCountdown(VoiceID, {
+   "Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\1.ogg",
+   "Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\2.ogg",
+   "Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\3.ogg",
+   "Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\4.ogg",
+   "Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\5.ogg",
+   "Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\6.ogg",
+   "Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\7.ogg",
+   "Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\8.ogg",
+   "Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\9.ogg",
+   "Interface\\AddOns\\BigWigs_Voice_VV\\Media\\Sounds\\10.ogg",
 })
+
+local Pull = BigWigs:GetPlugin("Pull")
+Pull.db.profile.voice = VoiceID
+
+local Countdown = BigWigs:GetPlugin("Countdown")
+Countdown.db.profile.voice = VoiceID
+
+

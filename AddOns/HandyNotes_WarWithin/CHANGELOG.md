@@ -1,5 +1,43 @@
 # Changelog
 
+## Changed in v89
+
+* K'aresh:
+    * Change the icon for phase conduits
+    * Add Dangerous Prowlers of K'aresh
+    * Add the Delves and their loot
+    * Tweak how the nearby points for Heka'tamos are displayed
+* Undermine: the discovery achievement was missing from the delve tooltips
+
+## Changed in v88
+
+* K'aresh: add Reshanor, and update various non-achievement rares
+
+## Changed in v87
+
+* Azj-Kahet: showing the tooltip for some of the profession masters could cause an error
+
+## Changed in v86
+
+* Updated for 11.2.0
+* K'aresh: all the basics, missing some non-achievement rares
+
+## Changed in v85
+
+* Updated for 11.1.7
+* Undermine: fixed the Gobfather's questid so loot will show again
+
+## Changed in v84
+
+* Undermine:
+    * Added the quartermasters to the map
+    * Some rare quest updates (thanks ywi!)
+
+## Changed in v83
+
+* Updated for 11.1.5
+* Undermine: added the Authentic Undermine Clam Chowder recipe
+
 ## Changed in v82
 
 * Undermine: add some missing loot, and a hidden shirt

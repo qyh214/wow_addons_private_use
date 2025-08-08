@@ -19,7 +19,7 @@ local api = {};
 app.Modules.Upgrade = api;
 
 -- Module locals
-local CreateItem, DGU, TransmogLastRefresh, GetGroupItemIDWithModID, GetSourceID, CreateItemSource
+local CreateItem, DGU, TransmogLastRefresh, GetGroupItemIDWithModID, GetSourceID, CreateItemSource, CleanLink
 local Runner = app.CreateRunner("upgrade");
 Runner.SetPerFrameDefault(1)
 
@@ -29,6 +29,10 @@ app.AddEventHandler("OnLoad", function()
 	GetGroupItemIDWithModID = app.GetGroupItemIDWithModID
 	GetSourceID = app.GetSourceID
 	CreateItemSource = app.CreateItemSource
+	CleanLink = app.Modules.Item.CleanLink
+	if not CleanLink then
+		error("Upgrade Module requires Modules.Item.CleanLink definition!")
+	end
 end)
 
 -- Static mapping of BonusID -> Next Unlock BonusID for a corresponding Item. Unlock will most-likely always be an Appearance
@@ -360,14 +364,15 @@ local NestedUpgradesAllowedByBonusID = {
 local function GetFirstValueAndKey(t, keys)
 	if not t or not keys then return end
 
-	local k
+	local k, tk
 	for i=1,#keys do
 		k = keys[i]
-		if t[k] then return t[k], k end
+		tk = t[k]
+		if tk then return tk, k end
 	end
 end
 local function GetNextItemUnlockBonusIDByString(item)
-	local itemVals = {(":"):split(item)}
+	local itemVals = {(":"):split(CleanLink(item))}
 
 	-- BonusID count
 	local bonusCount = tonumber(itemVals[14])
@@ -385,12 +390,23 @@ local function GetNextItemUnlockBonusIDByString(item)
 	end
 end
 local function GetNextItemUnlockBonusIDByTable(item)
-	local upgrades = BonusIDNextUnlock[item.bonusID or 0]
-	if upgrades then return upgrades end
+	if not item.sourceID then return end
 
-	-- we currently don't store all bonusIDs in item groups
-	-- upgrades = GetFirstValueAndKey(BonusIDNextUnlock, item.bonuses)
-	-- if upgrades then return upgrades end
+	local upgrades = BonusIDNextUnlock[item.bonusID or 0]
+	if upgrades then
+		-- app.PrintDebug("upgrade.bonusID",upgrades,app:SearchLink(item))
+		return upgrades
+	end
+
+	local bonuses = item.bonuses
+	if bonuses then
+		upgrades = GetFirstValueAndKey(BonusIDNextUnlock, bonuses)
+		if upgrades then
+			-- app.PrintDebug("upgrade.bonuses",upgrades,app:SearchLink(item))
+			return upgrades
+		end
+		return
+	end
 
 	local link = item.link or item.rawlink or item.silentLink
 	if link then
@@ -410,14 +426,6 @@ end
 api.GetNextItemUnlockBonusID = GetNextItemUnlockBonusID;
 
 local ItemSourceCache = {}
-local function AsItemSource(t)
-	-- already an item source table
-	if t.__type == "ItemWithAppearance" then return t; end
-	local link = t.link or t.rawlink or t.silentLink;
-	if not link then return end
-	local sourceID = GetSourceID(link, true)
-	if sourceID then return CreateItemSource(sourceID, t.itemID, t) end
-end
 local function GetUpgrade(t, up)
 	local itemID = t.itemID
 	local upmodID = floor(up);
@@ -431,21 +439,23 @@ local function GetUpgrade(t, up)
 			modID = upmodID > 0 and upmodID or nil,
 			bonusID = upbonusID > 0 and upbonusID or nil
 		}
-		itemSource = AsItemSource(CreateItem(itemID, tup))
+		local item = CreateItem(itemID, tup)
+		local link = item.link or item.rawlink
+		local sourceID, success = GetSourceID(link, true)
+		if sourceID then itemSource = CreateItemSource(sourceID, t.itemID, tup) end
 		if not itemSource then
-			-- app.PrintDebug("GU:no upgrade created",t.modItemID,"=>",up)
+			-- app.PrintDebug("GU:no upgrade created",link,t.modItemID,"=>",up)
+			-- weird but if the item is cached and returns no sourceID, it's just the same appearance it seems
+			if success then
+				-- app.PrintDebug("appears to be identical appearance",item.hash)
+				return
+			end
 			-- this case always means we expected an upgrade, but got none, which means the upgrade item
-			-- is not yet loaded in the Client and cannot return the proper SourceID because Blizzard.
-			return
+			-- is not yet loaded in the Client an`d cannot return the proper SourceID because Blizzard.
+			return false
 		end
 		ItemSourceCache[modItemID] = itemSource
 		-- app.PrintDebug("UPGRADE=>CACHE",modItemID,"==",itemSource.hash)
-	end
-
-	-- upgrade has to actually be different than the source item
-	if itemSource.sourceID == t.sourceID then
-		-- app.PrintDebug("GU:upgrade is same",t.hash,t.modItemID,"=+>",itemSource.__type,itemSource.modItemID)
-		return;
 	end
 
 	-- cache the upgrade within the item itself
@@ -458,7 +468,7 @@ api.GetUpgrade = GetUpgrade;
 -- Returns the different and upgraded version of 't' (via 'up' field only)
 local function HasUpgrade(t)
 
-	-- app.PrintDebug("HU:",t.modItemID)
+	-- app.PrintDebug("HU:",t.hash,t.modItemID,t.up,t._up)
 	-- '.up' is the modID.bonusID portion of the respective upgrade item defined in ATT
 	local up = t.up;
 	if not up then
@@ -467,7 +477,7 @@ local function HasUpgrade(t)
 	end
 
 	-- find or create the upgrade for cached reference
-	return GetUpgrade(t, up);
+	return t._up or GetUpgrade(t, up)
 end
 
 local UpgradeSources = {}
@@ -570,11 +580,11 @@ local function UpdateUpgrades()
 end
 
 -- Returns the different and upgraded version of 't' (via item link/bonuses or 'up' field)
-api.NextUpgrade = function(t)
+local function NextUpgrade(t)
 
-	-- app.PrintDebug("NU:",t.modItemID)
+	-- app.PrintDebug("NU:",t.hash,t.modItemID)
 	-- try basic upgrade logic first (checking 'up' field)
-	local upgrade = t._up or HasUpgrade(t);
+	local upgrade = HasUpgrade(t)
 	if upgrade then return upgrade end
 
 	-- is this a non-default item table which has no upgrade unlock?
@@ -606,4 +616,44 @@ api.CollectibleAsUpgrade = function(t)
 	return upgrade and not upgrade.collected;
 end
 
+-- Event Handling
 app.AddEventHandler("OnRecalculate_NewSettings", UpdateUpgrades)
+
+app.AddEventHandler("OnLoad", function()
+	local Fill = app.Modules.Fill
+	if not Fill then return end
+
+	local CreateObject = app.__CreateObject
+	Fill.AddFiller("UPGRADE",
+	function(group, FillData)
+		local nextUpgrade = NextUpgrade(group)
+		if not nextUpgrade then
+			-- we expected a valid upgrade but one failed to generate, mark the group as working in case it is being displayed in tooltip
+			if nextUpgrade == false then
+				-- app.PrintDebug("mark working",FillData.Root.hash)
+				FillData.Root.working = true
+			end
+			return
+		end
+
+		-- upgrade has to actually be different than the source item
+		if nextUpgrade.sourceID == group.sourceID then
+			-- app.PrintDebug("GU:upgrade is same",group.hash,group.modItemID,"=+>",nextUpgrade.hash,nextUpgrade.modItemID)
+			return
+		end
+
+		if not nextUpgrade.collected then
+			group.filledUpgrade = true
+		end
+
+		nextUpgrade = CreateObject(nextUpgrade)
+		nextUpgrade.filledType = "UPGRADE"
+		nextUpgrade.up = nil
+		-- app.PrintDebug("filledUpgrade=",nextUpgrade.sourceID,nextUpgrade.modItemID,nextUpgrade.collected,"<",group.sourceID,group.modItemID)
+		return { nextUpgrade }
+	end,
+	{
+		SettingsIcon = app.asset("Interface_Upgrade"),
+		SettingsTooltip = "Fills any Upgrade |T"..app.asset("Interface_Upgrade")..":0|t which is available to the given Item\n\nFor an ATT List this is typically shown if available for the default state of an Item as Sourced, whereas in Tooltips it is based on the raw Item data when shown."
+	})
+end)

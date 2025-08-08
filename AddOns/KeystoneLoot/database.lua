@@ -1,6 +1,8 @@
 local AddonName, KeystoneLoot = ...;
 
-local dbVersion = 5;
+local Translate = KeystoneLoot.Translate;
+
+local dbVersion = 6;
 local dbCharacterVersion = 3;
 
 
@@ -39,6 +41,8 @@ function KeystoneLoot:CheckDB()
 			KeystoneLootDB.showNewText = true;
 			KeystoneLootDB.keystoneItemLevelEnabled = true;
 		elseif (KeystoneLootDB.dbVersion == 4) then
+			KeystoneLootDB.showNewText = true;
+		elseif (KeystoneLootDB.dbVersion == 5) then
 			KeystoneLootDB.showNewText = true;
 		end
 
@@ -96,7 +100,7 @@ function KeystoneLoot:GetFavoriteItemList(challengeModeId)
 
 		for specId, specList in next, favoriteLoot[challengeModeId] do
 			for itemId, itemInfo in next, specList do
-				if (challengeModeId == "catalyst" or KeystoneLoot:GetItemInfo(itemId)) then
+				if (challengeModeId == 'catalyst' or KeystoneLoot:GetItemInfo(itemId)) then
 					_tmp[itemId] = {
 						itemId = itemId,
 						specId = specId,
@@ -111,7 +115,7 @@ function KeystoneLoot:GetFavoriteItemList(challengeModeId)
 		end
 	elseif (favoriteLoot[challengeModeId][specId]) then
 		for itemId, itemInfo in next, favoriteLoot[challengeModeId][specId] do
-			if (challengeModeId == "catalyst" or KeystoneLoot:GetItemInfo(itemId)) then
+			if (challengeModeId == 'catalyst' or KeystoneLoot:GetItemInfo(itemId)) then
 				table.insert(_itemList, {
 					itemId = itemId,
 					icon = itemInfo.icon
@@ -169,4 +173,114 @@ function KeystoneLoot:RemoveFavoriteItem(itemId, specId)
 			end
 		end
 	end
+end
+
+function KeystoneLoot:ExportFavorites()
+	local exportTable = {}
+	local exportStr = 'KeystoneLoot:v1';
+
+	for _, specTable in pairs(KeystoneLootCharDB.favoriteLoot) do
+		for specId, itemTable in pairs(specTable) do
+			if (not exportTable[specId]) then
+				exportTable[specId] = {};
+			end
+
+			for itemId, _ in pairs(itemTable) do
+				table.insert(exportTable[specId], itemId);
+			end
+		end
+	end
+
+	for specId, itemList in pairs(exportTable) do
+		local numItemList = #itemList;
+
+		if (numItemList > 0) then
+			exportStr = exportStr .. ',' .. specId .. ':';
+
+			for i, itemId in ipairs(itemList) do
+				exportStr = exportStr .. itemId;
+				if (i < numItemList) then
+					exportStr = exportStr .. ':';
+				end
+			end
+		end
+	end
+
+	return exportStr;
+end
+
+local function IsItemValid(specId, itemId)
+	local _, _, classId = UnitClass('player');
+
+	local catalystItems = KeystoneLoot:GetCatalystItems();
+	if (catalystItems[itemId] and catalystItems[itemId].classId == classId) then
+		return true;
+	end
+
+	local itemInfo = KeystoneLoot:GetItemInfo(itemId);
+	if (itemInfo and itemInfo.classes[classId]) then
+		for _, itemSpecId in pairs(itemInfo.classes[classId]) do
+			if (specId == itemSpecId) then
+				return true;
+			end
+		end
+	end
+end
+
+function KeystoneLoot:ImportFavorites(importStr, overwrite)
+	if (not importStr:match('^KeystoneLoot:v1')) then
+		print(RED_FONT_COLOR:WrapTextInColorCode(Translate['Invalid import string.']));
+		return;
+	end
+
+	local dataStr = importStr:gsub('%s+', ''):gsub('^KeystoneLoot:v1,', '');
+	local importedItems = {};
+	local hasImport = false;
+	local totalImported = 0;
+
+	for specSection in dataStr:gmatch('([^,]+)') do
+		local specId, itemsStr = specSection:match('^(%d+):(.+)$');
+
+		if (specId and itemsStr) then
+			specId = tonumber(specId);
+			if (not importedItems[specId]) then
+				importedItems[specId] = {};
+			end
+
+			for itemId in itemsStr:gmatch('([^:]+)') do
+				itemId = tonumber(itemId);
+				if (itemId) then
+					table.insert(importedItems[specId], itemId);
+					hasImport = true;
+				end
+			end
+		end
+	end
+
+	if (hasImport) then
+		if (overwrite) then
+			KeystoneLootCharDB.favoriteLoot = {}
+		end
+
+		for specId, itemList in pairs(importedItems) do
+			for _, itemId in ipairs(itemList) do
+				local sourceId = self:GetItemSource(itemId);
+
+				if (sourceId and IsItemValid(specId, itemId)) then
+					totalImported = totalImported + 1;
+
+					local icon = (self:GetCatalystItems()[itemId] or self:GetItemInfo(itemId)).icon;
+					self:AddFavoriteItem(sourceId, specId, itemId, icon);
+				end
+			end
+		end
+
+		if (totalImported > 0) then
+			self:GetCurrentTab():Update();
+			print((YELLOW_FONT_COLOR:WrapTextInColorCode(Translate['Successfully imported %d |4item:items;.'])):format(totalImported));
+			return;
+		end
+	end
+
+	print(RED_FONT_COLOR:WrapTextInColorCode(Translate['Invalid import string.']));
 end

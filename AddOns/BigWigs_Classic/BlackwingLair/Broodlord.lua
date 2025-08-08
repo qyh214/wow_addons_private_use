@@ -56,7 +56,7 @@ end
 --
 
 function mod:MortalStrikeApplied(args)
-	self:TargetMessage(args.spellId, "yellow", args.destName)
+	self:TargetMessage(args.spellId, "purple", args.destName)
 	self:PrimaryIcon(args.spellId, args.destName)
 	self:TargetBar(args.spellId, 5, args.destName)
 	self:PlaySound(args.spellId, "alarm")

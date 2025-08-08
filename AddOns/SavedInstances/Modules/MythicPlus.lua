@@ -50,6 +50,11 @@ local ItemLevelsBySeason = {
     ["HEROIC"] = 632,
     ["MYTHIC"] = 645,
   },
+  -- TWW Season 3
+  [108] = {
+    ["HEROIC"] = 678,
+    ["MYTHIC"] = 691,
+  },
 }
 
 local KeystoneAbbrev = {
@@ -130,6 +135,7 @@ local KeystoneAbbrev = {
   [505] = L["DAWN"], -- The Dawnbreaker
   [506] = L["BREW"], -- Cinderbrew Meadery
   [525] = L["FLOOD"], -- Operation: Floodgate
+  [542] = L["EDA"], -- Eco-Dome Al'dani
 }
 SI.KeystoneAbbrev = KeystoneAbbrev
 
@@ -149,30 +155,15 @@ function Module:OnEnable()
   self:RefreshMythicWeeklyBestInfo()
 end
 
-do
-  local colorCache = {}
-  local function getLevelColor(level)
-    if colorCache[level] then
-      return colorCache[level]
-    end
+function Module:ProcessKey(itemLink, targetTable)
+  local _, _, _, mapID, mapLevel = strsplit(":", itemLink)
+  mapID = tonumber(mapID)
+  mapLevel = tonumber(mapLevel)
 
-    local color = C_ChallengeMode_GetKeystoneLevelRarityColor(level)
-    colorCache[level] = color and color:GenerateHexColor() or "ffffffff"
-    return colorCache[level]
-  end
-
-  function Module:ProcessKey(itemLink, targetTable)
-    local _, _, mapID, mapLevel = strsplit(":", itemLink)
-    mapID = tonumber(mapID)
-    mapLevel = tonumber(mapLevel)
-
-    targetTable.link = itemLink
-    targetTable.mapID = mapID
-    targetTable.level = mapLevel
-    targetTable.name = C_ChallengeMode_GetMapUIInfo(mapID)
-    targetTable.color = getLevelColor(mapLevel)
-    targetTable.ResetTime = SI:GetNextWeeklyResetTime()
-  end
+  targetTable.link = itemLink
+  targetTable.mapID = mapID
+  targetTable.level = mapLevel
+  targetTable.ResetTime = SI:GetNextWeeklyResetTime()
 end
 
 function Module:RefreshMythicKeyInfo()
@@ -346,7 +337,7 @@ function Module:ExportKeys(index)
 end
 
 StaticPopupDialogs["SAVEDINSTANCES_REPORT_KEYS"] = {
-  preferredIndex = STATICPOPUP_NUMDIALOGS, -- reduce the chance of UI taint
+  preferredIndex = 1,
   text = L["Are you sure you want to report all your keys to %s?"],
   button1 = OKAY,
   button2 = CANCEL,

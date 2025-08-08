@@ -1,7 +1,7 @@
-## Interface: 110100,110105
+## Interface: 110105
 ## Title: |cffff6600A|r|cffff5f06b|r|cffff590cs|r|cffff5213t|r|cffff4c19r|r|cffff461fa|r|cffff3f26c|r|cffff392ct|r|cffff3333F|r|cffff2c39r|r|cffff263fa|r|cffff1f46m|r|cffff194ce|r|cffff1352w|r|cffff0c59o|r|cffff065fr|r|cffff0066k|r
 ## Author: enderneko
-## Version: r7
+## Version: r12
 ## DefaultState: enabled
 ## IconTexture: Interface\AddOns\AbstractFramework\Media\Icons\AF
 ## SavedVariables: AFConfig

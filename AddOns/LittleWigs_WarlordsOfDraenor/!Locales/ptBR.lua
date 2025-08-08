@@ -1,7 +1,14 @@
 -- Auchindoun
 
-local L = BigWigs:NewBossLocale("Auchindoun Trash", "ptBR")
+local L = BigWigs:NewBossLocale("Teron'gor", "ptBR")
 if not L then return end
+if L then
+	L.affliction = "Suplício"
+	L.demonology = "Demonologia"
+	L.destruction = "Destruição"
+end
+
+L = BigWigs:NewBossLocale("Auchindoun Trash", "ptBR")
 if L then
 	L.abyssal = "Abissal Vilanesco"
 end
@@ -77,12 +84,6 @@ end
 
 -- Shadowmoon Burial Grounds
 
-L = BigWigs:NewBossLocale("Sadana Bloodfury", "ptBR")
-if L then
-	L.custom_on_markadd = "Adicionada marca da Comunhão Sombria"
-	L.custom_on_markadd_desc = "Marca o add gerado pela Comunhão Sombria com {rt8}, requer promovido ou líder."
-end
-
 L = BigWigs:NewBossLocale("Bonemaw", "ptBR")
 if L then
 	--L.summon_worms = "Summon Carrion Worms"
@@ -112,10 +113,8 @@ end
 
 L = BigWigs:NewBossLocale("High Sage Viryx", "ptBR")
 if L then
-	L.custom_on_markadd = "Marca do Zelote Solar"
-	L.custom_on_markadd_desc = "Marca o Zelote Solar com {rt8}, requer promovido ou líder."
-
-	L.construct = "Constructo-escudo de Beira-céu" -- NPC ID 76292
+	L.solar_zealot = "Zelote Solar"
+	L.construct = "Constructo-escudo de Beira-céu"
 end
 
 -- The Everbloom

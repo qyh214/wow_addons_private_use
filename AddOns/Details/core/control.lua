@@ -306,7 +306,7 @@
 
 		--is in a m+ dungeon?
 		Details222.MythicPlus.debug_auras = {}
-		local mythicLevel = C_ChallengeMode and C_ChallengeMode.GetActiveKeystoneInfo() or 1
+		local mythicLevel = C_ChallengeMode and C_ChallengeMode.GetActiveKeystoneInfo() or 1 --not mop friendly
 		if (mythicLevel) then
 			if (Details222.MythicPlus.debug_auras) then
 				--iterate among all actors on the utility container and store the update of each buff
@@ -523,6 +523,8 @@
 
 		Details222.GuessSpecSchedules.ClearSchedules()
 
+		Details:SetDeathLogTemporaryLimit(nil)
+
 		--Details222.TimeCapture.StopCombat() --it did not start
 
 		--check if this isn't a boss and try to find a boss in the segment
@@ -605,7 +607,7 @@
 		end
 
 		--tag as a mythic dungeon segment, can be any type of segment, this tag also avoid the segment to be tagged as trash
-		local mythicLevel = C_ChallengeMode and C_ChallengeMode.GetActiveKeystoneInfo()
+		local mythicLevel = C_ChallengeMode and C_ChallengeMode.GetActiveKeystoneInfo and C_ChallengeMode.GetActiveKeystoneInfo()
 		if (mythicLevel and mythicLevel >= 2) then
 			currentCombat.is_mythic_dungeon_segment = true
 			currentCombat.is_mythic_dungeon_run_id = Details.mythic_dungeon_id
@@ -915,20 +917,29 @@
 		--issue: invalidCombat will be just floating around in memory if not destroyed
 	end --end of leaving combat function
 
+	--~arena
+	---@class arena_ally : table
+	---@field role string
+	---@field guid string
+
+	---@class details : table
+	---@field arena_table arena_ally
+	---@field arena_enemies table<actorname, unit>
+
 	function Details:GetPlayersInArena() --ARENA_OPPONENT_UPDATE
 		local aliados = GetNumGroupMembers() -- LE_PARTY_CATEGORY_HOME
 		for i = 1, aliados-1 do
 			local role = UnitGroupRolesAssigned and UnitGroupRolesAssigned("party" .. i) or "DAMAGER"
 			if (role ~= "NONE" and UnitExists("party" .. i)) then
 				local unitName = Details:GetFullName("party" .. i)
-				Details.arena_table [unitName] = {role = role}
+				Details.arena_table [unitName] = {role = role, guid = UnitGUID("party" .. i)}
 			end
 		end
 
 		local role = UnitGroupRolesAssigned and UnitGroupRolesAssigned("player") or "DAMAGER"
 		if (role ~= "NONE") then
 			local playerName = Details:GetFullName("player")
-			Details.arena_table [playerName] = {role = role}
+			Details.arena_table [playerName] = {role = role, guid = UnitGUID("player")}
 		end
 
 		--enemies
@@ -939,6 +950,40 @@
 			local enemyName = Details:GetFullName("arena" .. i)
 			if (enemyName) then
 				Details.arena_enemies[enemyName] = "arena" .. i
+			end
+		end
+	end
+
+	---@param self details
+	---@param actorObject actor
+	function Details:ArenaPlayerCreated(actorObject)
+		if (actorObject:IsPlayer()) then
+			if (UnitIsUnit("player", actorObject.nome)) then
+				return
+			end
+
+			for i = 1, GetNumGroupMembers()-1 do
+				local unitId = "party" .. i
+				if (UnitExists(unitId) and actorObject.nome == Details:GetFullName(unitId)) then
+					actorObject.arena_ally = true
+					local role = UnitGroupRolesAssigned and UnitGroupRolesAssigned("player") or "DAMAGER"
+					Details.arena_table[actorObject.nome] = {role = role, guid = UnitGUID(unitId)}
+					Details222.ArenaSummary.NewPlayer(actorObject, true, unitId)
+					return
+				end
+			end
+
+			local enemiesAmount = GetNumArenaOpponentSpecs and GetNumArenaOpponentSpecs() or 5
+			for i = 1, enemiesAmount do
+				local unitId = "arena" .. i
+				if (UnitExists(unitId) and actorObject.nome == Details:GetFullName(unitId)) then
+					actorObject.enemy = true
+					actorObject.arena_enemy = true
+					local role = UnitGroupRolesAssigned and UnitGroupRolesAssigned(unitId) or "DAMAGER"
+					Details.arena_enemies[actorObject.nome] = unitId
+					Details222.ArenaSummary.NewPlayer(actorObject, false, unitId)
+					return
+				end
 			end
 		end
 	end
@@ -1044,7 +1089,53 @@
 			local nTimeIntervalBetweenUpdates = 0.1
 			Details:SetWindowUpdateSpeed(nTimeIntervalBetweenUpdates, bNoSave)
 		end
+
+		Details222.ArenaSummary.OnArenaStart()
 	end
+
+	--PVP_MATCH_STATE_CHANGED
+	--PVP_MATCH_COMPLETE
+
+	local isInArena = false
+	local arenaStarted = false
+	local tdebugframe = CreateFrame("Frame", "DetailsParserDebugFrameASD", UIParent)
+
+	if (detailsFramework.IsDragonflightAndBeyond()) then
+		tdebugframe:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+	end
+
+	tdebugframe:SetScript("OnEvent", function(self, event, ...)
+		local zoneName, instanceType = GetInstanceInfo()
+
+		if (event == "ZONE_CHANGED_NEW_AREA" and instanceType == "arena") then
+			if (not isInArena) then
+				isInArena = true
+				tdebugframe:RegisterEvent("PVP_MATCH_COMPLETE")
+				tdebugframe:RegisterEvent("PVP_MATCH_STATE_CHANGED")
+			elseif (isInArena and instanceType ~= "arena") then
+				isInArena = false
+				tdebugframe:UnregisterEvent("PVP_MATCH_COMPLETE")
+				tdebugframe:UnregisterEvent("PVP_MATCH_STATE_CHANGED")
+			end
+
+			return
+		end
+
+        if (C_PvP and C_PvP.IsMatchActive) then -- retail check
+            --C_PvP.IsMatchActive() is true even before the arena match starts
+            if (C_PvP.IsMatchActive() and not arenaStarted) then
+                arenaStarted = true
+
+            elseif (not C_PvP.IsMatchActive() and arenaStarted) then
+				--print("not C_PvP.IsMatchActive()")
+                arenaStarted = false
+				C_Timer.After(1, function()
+                	Details:LeftArena()
+                	Details.is_in_arena = false
+				end)
+            end
+        end
+	end)
 
 	--return the GetTime() of the current or latest arena match
 	function Details:GetArenaStartTime()
@@ -1088,6 +1179,10 @@
 			Details:Msg("(debug) player LeftArena().")
 		end
 
+		if (not Details.is_in_arena) then
+			return
+		end
+
 		Details.is_in_arena = false
 		Details.arena_begun = false
 
@@ -1101,10 +1196,21 @@
 		Details:TimeDataUnregister("Your Team Healing")
 		Details:TimeDataUnregister("Enemy Team Healing")
 
+		Details:EndCombat()
+
+		--block captures
+		Details:CaptureSet(false, "damage", false, 15)
+		Details:CaptureSet(false, "energy", false, 15)
+		Details:CaptureSet(false, "aura", false, 15)
+		Details:CaptureSet(false, "energy", false, 15)
+		Details:CaptureSet(false, "spellcast", false, 15)
+
 		Details:SendEvent("COMBAT_ARENA_END")
 
 		--reset the update speed, as it could have changed when the arena started.
 		Details:SetWindowUpdateSpeed(Details.update_speed)
+
+		Details222.ArenaSummary.OnArenaEnd()
 	end
 
 	function Details:FlagActorsOnPvPCombat()

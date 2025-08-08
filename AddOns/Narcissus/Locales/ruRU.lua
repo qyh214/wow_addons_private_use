@@ -1,4 +1,4 @@
---Coutesy of ZamestoTV. Thank you!    --Translator: ZamestoTV as of 1.7.5
+--Coutesy of ZamestoTV. Thank you!    --Translator: ZamestoTV as of 1.8.1 e
 
 if not (GetLocale() == "ruRU") then
     return;
@@ -10,15 +10,6 @@ local S = Narci.L.S;
 NARCI_GRADIENT = "|cffA236EFN|r|cff9448F1a|r|cff865BF2r|r|cff786DF4c|r|cff6A80F6i|r|cff5D92F7s|r|cff4FA4F9s|r|cff41B7FAu|r|cff33C9FCs|r";
 
 L["Developer Info"] = "Developed by Peterodox";
-
-NARCI_NEW_ENTRY_PREFIX = "|cff40C7EB";
-NARCI_COLOR_GREY_85 = "|cffd8d8d8";
-NARCI_COLOR_GREY_70 = "|cffb3b3b3";
-NARCI_COLOR_RED_MILD = "|cffff5050";
-NARCI_COLOR_GREEN_MILD = "|cff7cc576";
-NARCI_COLOR_YELLOW = "|cfffced00";
-NARCI_COLOR_CYAN_DARK = "5385a5";
-NARCI_COLOR_PINK_DARK = "da9bc3";
 
 NARCI_MODIFIER_CONTROL = "Ctrl";
 NARCI_MODIFIER_ALT = "Alt";   --Windows
@@ -36,6 +27,7 @@ if IsMacClient() then
 end
 
 NARCI_WORDBREAK_COMMA = ", ";
+
 
 --Date--
 L["Today"] = COMMUNITIES_CHAT_FRAME_TODAY_NOTIFICATION;
@@ -395,7 +387,7 @@ NARCI_CRITICAL_STRIKE = STAT_CRITICAL_STRIKE;
 
 
 --Equipment Comparison--
-NARCI_AZERITE_POWERS = "Сила Азерита";
+L["Azerite Powers"] = "Сила Азерита";
 L["Gem Tooltip Format1"] = "%s и %s";
 L["Gem Tooltip Format2"] = "%s, %s и %s больше...";
 
@@ -485,7 +477,10 @@ L["Date"] = "Дата";
 L["Click And Hold"] = "Нажмите и удерживайте";								   
 L["To Do List"] = "Список дел";
 L["Error Alert Bookmarks Too Many"] = "Вы можете добавить в список только %d достижений одновременно.";
-L["Instruction Add To To Do List"] = string.format("%s Щелкните ЛКМ по незаработанному достижению, чтобы добавить его в список дел.", NARCI_MODIFIER_ALT);													 
+L["Instruction Add To To Do List"] = string.format("%s Щелкните ЛКМ по незаработанному достижению, чтобы добавить его в список дел.", NARCI_MODIFIER_ALT);	
+L["Instruction Remove From To Do List"] = string.format("%s ЛКМ, чтобы удалить из списка дел.", NARCI_MODIFIER_ALT);
+L["DIY"] = "Сделай сам";
+L["DIY Tab Tooltip"] = "Создайте пользовательское достижение для создания скриншотов."												 
 
 --Barbershop--
 L["Save New Look"] = "Сохранить новый вид";
@@ -526,6 +521,7 @@ L["Profile Type Tooltip"] = "Выберите профиль, который б�
 L["No Saves"] = "Нет сохранений";
 L["Profile Migration Tooltip"] = "Вы можете скопировать существующие пресеты в общедоступный профиль.";
 L["Profile Migration Okay"] = "Оки Доки";
+L["Profile Migration CopyButton Tooltip"] = "Скопируйте этот пресет в свой публичный профиль.";
 
 --Tutorial--
 L["Alert"] = "Предупреждение";

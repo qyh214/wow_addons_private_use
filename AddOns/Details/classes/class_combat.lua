@@ -292,24 +292,25 @@ local segmentTypeToString = {
 	---return the amount of casts of crowd control spell by an actor
 	---@param self combat
 	---@param actorName string
-	---@return table<string, number>
+	---@return table<spellid, number>
 	---@return number
 	function classCombat:GetCrowdControlSpells(actorName)
 		local spellsCastedByThisActor = self:GetSpellCastTable(actorName)
 		local amountOfCCCastsByThisActor = self:GetCCCastAmount(actorName)
-		local ccSpellNames = Details.CrowdControlSpellNamesCache
+		local ccSpellIds = Details.CrowdControlSpellIdsCache
 
-		---@type table<string, number>
+		---@type table<spellid, number>
 		local crowdControlSpellsUsed = {}
 
-		for spellName in pairs(ccSpellNames) do
-			if (spellsCastedByThisActor[spellName]) then
-				local amountOfCasts = spellsCastedByThisActor[spellName]
+		for spellId in pairs(ccSpellIds) do
+			local spellInfo = C_Spell.GetSpellInfo(spellId)
+			if (spellInfo and spellsCastedByThisActor[spellInfo.name]) then
+				local amountOfCasts = spellsCastedByThisActor[spellInfo.name]
 				if (amountOfCasts > 0) then
 					if (Details.debug_spell_cast) then
-						print("GetCrowdControlSpells > ", actorName, spellName, amountOfCasts)
+						print("GetCrowdControlSpells > ", actorName, spellId, spellInfo.name, amountOfCasts)
 					end
-					crowdControlSpellsUsed[spellName] = amountOfCasts
+					crowdControlSpellsUsed[spellId] = amountOfCasts
 				end
 			end
 		end
@@ -1336,6 +1337,8 @@ function classCombat:NovaTabela(bTimeStarted, overallCombatObject, combatId, ...
 	combatObject.data_inicio = 0
 	combatObject.tempo_start = _tempo
 
+	combatObject.compressed_charts = {}
+
 	combatObject.boss_hp = 1
 
 	C_Timer.After(0.5, getBossName)
@@ -1468,7 +1471,14 @@ end
 	function classCombat:CreateLastEventsTable(playerName)
 		local lastEventsTable = {}
 
-		for i = 1, Details.deadlog_events do
+		local amountOfIndexes = Details.deadlog_events
+		if (Details.temp_deathlog_limit) then
+			if (Details.temp_deathlog_limit > Details.deadlog_events) then
+				amountOfIndexes = Details.temp_deathlog_limit
+			end
+		end
+
+		for i = 1, amountOfIndexes do
 			lastEventsTable[i] = {}
 		end
 

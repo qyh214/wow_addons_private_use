@@ -9,6 +9,6 @@
 <Script file="Staghelm.lua" />
 <Script file="Ragnaros.lua" />
 
-<Include file="Options\options.xml"/>
+<Script file="!Options.lua"/>
 
 </Ui>

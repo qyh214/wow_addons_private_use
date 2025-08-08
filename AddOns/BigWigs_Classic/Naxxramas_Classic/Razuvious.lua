@@ -33,8 +33,8 @@ end
 
 function mod:GetOptions()
 	return {
-		29107, -- Disrupting Shout
-		29060, -- Taunt
+		{29107, "COUNTDOWN"}, -- Disrupting Shout
+		{29060, "OFF"}, -- Taunt
 		29061, -- Shield Wall
 		{29051, "INFOBOX"}, -- Mind Exhaustion
 	}, {
@@ -43,9 +43,9 @@ function mod:GetOptions()
 end
 
 function mod:VerifyEnable(unit, mobId)
-	if mobId == 16061 then
+	if mobId == 16061 then -- Instructor Razuvious
 		return true
-	elseif mobId == 16803 then
+	elseif mobId == 16803 then -- Deathknight Understudy
 		return self:GetHealth(unit) == 100
 	end
 end
@@ -69,7 +69,6 @@ end
 function mod:OnEngage()
 	-- Mind Control can happen before engage, so we don't reset any locals
 	self:CDBar(29107, 25, self:SpellName(29107), L["29107_icon"]) -- Disrupting Shout
-	self:DelayedMessage(29107, 20, "red", CL.soon:format(self:SpellName(29107)))
 
 	self:OpenInfo(29051, "BigWigs")
 	self:SetInfo(29051, 1, "|T136222:0:0:0:0:64:64:4:60:4:60|t".. self:SpellName(29051))
@@ -83,7 +82,6 @@ end
 function mod:DisruptingShout(args)
 	self:Message(args.spellId, "red", args.spellName, L["29107_icon"])
 	self:CDBar(args.spellId, 25, args.spellName, L["29107_icon"])
-	self:DelayedMessage(args.spellId, 20, "red", CL.soon:format(args.spellName))
 	self:PlaySound(args.spellId, "warning")
 end
 

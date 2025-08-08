@@ -1,5 +1,5 @@
-[Full Changelog](https://github.com/enderneko/AbstractWidgets/compare/r6...cb25d4b0118578ec39f032b4de7248c2e4c0222d)
+[Full Changelog](https://github.com/enderneko/AbstractWidgets/compare/r11...cb04e525b6bf9e958976510bc06526007f6e7e85)
 
-
-- Update HelpTip
-- Add some icons
+- Fix instance state events
+- Fix AceComm
+- Fix aura tooltip anchor

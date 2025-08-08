@@ -1,4 +1,4 @@
-## Interface: 110105, 110007, 110100
+## Interface: 110105, 110107, 110200
 
 ## Title: BigWigs [|cffeda55fNerub'ar Palace|r]
 ## Title-deDE: BigWigs [|cffeda55fPalast der Nerub'ar|r]
@@ -23,7 +23,7 @@
 ## Notes-zhCN: BigWigs 尼鲁巴尔王宫模块
 ## Notes-zhTW: BigWigs 奈幽巴宮殿模組
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
-## Version: v382.1
+## Version: v392.7
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
@@ -31,4 +31,14 @@
 ## X-Category: Raid
 ## X-BigWigs-LoadOn-InstanceId: 2657
 
-modules.xml
+Ulgrax.lua
+TheBloodboundHorror.lua
+Sikran.lua
+Rashanan.lua
+Ovinax.lua
+Kyveza.lua
+TheSilkenCourt.lua
+Ansurek.lua
+
+Locales\[TextLocale].lua [AllowLoadTextLocale deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW]
+!Options.lua

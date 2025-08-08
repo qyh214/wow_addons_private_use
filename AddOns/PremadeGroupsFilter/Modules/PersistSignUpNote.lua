@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2024 Bernhard Saumweber
+-- Copyright (C) 2025 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ local patchedFunc = function(self, resultID)
         --end
 
         self.resultID = resultID;
-        self.activityID = searchResultInfo.activityID;
+        self.activityID = searchResultInfo and searchResultInfo.activityID or 0;
     end
     LFGListApplicationDialog_UpdateRoles(self);
     StaticPopupSpecial_Show(self);

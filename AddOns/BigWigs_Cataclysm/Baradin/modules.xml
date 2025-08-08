@@ -5,6 +5,6 @@
 <Script file="Occuthar.lua"/>
 <Script file="Alizabal.lua"/>
 
-<Include file="Options\options.xml"/>
+<Script file="!Options.lua"/>
 
 </Ui>

@@ -51,11 +51,11 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED", "Touch", 66001, 65950) -- Dark/Light
 
 	self:BossYell("Engage", L["engage_trigger1"])
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:Death("Win", 34496)
 end
 
 function mod:OnEngage()
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:Bar("next", 45, L["vortex_or_shield_cd"], 39089)
 	self:Berserk(self:Heroic() and 360 or 480)
 end

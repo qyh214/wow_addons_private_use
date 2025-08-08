@@ -11,14 +11,36 @@ function ns.FogOfWar:OnInitialize()
 	self:SetEnabledState(HandyNotes:GetModule("FogOfWarButton"))
 end
 
+ns.hookedPins = ns.hookedPins or {}
+ns._hookCheckTicker = ns._hookCheckTicker or nil
+
 function ns.FogOfWar:OnEnable()
 	for pin in WorldMapFrame:EnumeratePinsByTemplate("MapExplorationPinTemplate") do
-		self:SecureHook(pin, "RefreshOverlays", "MapExplorationPin_RefreshOverlays")
+		if not ns.hookedPins[pin] then
+			self:SecureHook(pin, "RefreshOverlays", "MapExplorationPin_RefreshOverlays")
+			ns.hookedPins[pin] = true
+		end
+	end
+
+	if not ns._hookCheckTicker then
+		ns._hookCheckTicker = C_Timer.NewTicker(3, function()
+			if not WorldMapFrame:IsShown() then return end
+			for pin in WorldMapFrame:EnumeratePinsByTemplate("MapExplorationPinTemplate") do
+				if not ns.hookedPins[pin] then
+					ns.FogOfWar:SecureHook(pin, "RefreshOverlays", "MapExplorationPin_RefreshOverlays")
+					ns.hookedPins[pin] = true
+				end
+			end
+		end)
 	end
 end
 
 function ns.FogOfWar:OnDisable()
 	self:UnhookAll()
+	if ns._hookCheckTicker then
+		ns._hookCheckTicker:Cancel()
+		ns._hookCheckTicker = nil
+	end
 end
 
 function ns.FogOfWar:Refresh()
@@ -34,7 +56,6 @@ end
 local mapData = ns.FogOfWarDataRetail or {}
 function ns.FogOfWar:MapExplorationPin_RefreshOverlays(pin, fullUpdate)
 
-	-- remove color tint from active overlays
 	for overlay in pin.overlayTexturePool:EnumerateActive() do
 		overlay:SetVertexColor(1,1,1)
 		overlay:SetAlpha(1)
@@ -153,12 +174,24 @@ function ns.FogOfWar:GetFogOfWarColor()
 	return ns.FogOfWar.FogOfWarColorR, ns.FogOfWar.FogOfWarColorG, ns.FogOfWar.FogOfWarColorB, ns.FogOfWar.FogOfWarColorA
 end
 
+ns.lastFogRefresh = 0
+
 function ns.FogOfWar:SetFogOfWarColor(info, FoWr, FoWg, FoWb, FoWa)
 	ns.FogOfWar.FogOfWarColorR, ns.FogOfWar.FogOfWarColorG, ns.FogOfWar.FogOfWarColorB, ns.FogOfWar.FogOfWarColorA = FoWr, FoWg, FoWb, FoWa
-	if WorldMapFrame:IsShown() then 
-		if self:IsEnabled() then self:Refresh() end
+
+	local now = GetTime()
+	if WorldMapFrame:IsShown() and self:IsEnabled() and (now - (ns.lastFogRefresh or 0) > 0.1) then
+		self:Refresh()
+		ns.lastFogRefresh = now
+	end
+
+	if ns.AreaMapFrame and ns.AreaMapFrame:IsShown() then
+		ns.UpdateAreaMapFogOfWar()
+	end
+
+	if ns.StartFogOfWarColorSyncTicker then
+		ns.StartFogOfWarColorSyncTicker()
 	end
 end
-
 -- remove data from global scope
 ns.FogOfWarDataRetail = nil

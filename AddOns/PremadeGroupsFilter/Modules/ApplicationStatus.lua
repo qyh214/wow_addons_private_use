@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2024 Bernhard Saumweber
+-- Copyright (C) 2025 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -28,6 +28,9 @@ PGF.canceledGroups = {}
 
 function PGF.GetAppStatus(resultID, optionalSearchResultInfo)
     local searchResultInfo = optionalSearchResultInfo or PGF.GetSearchResultInfo(resultID)
+    if not searchResultInfo then
+        return "none", false, false
+    end
     local _, appStatus, pendingStatus, appDuration = C_LFGList.GetApplicationInfo(resultID)
     local isApplication = appStatus ~= "none" or pendingStatus
     local isDeclined = appStatus == "declined" or appStatus == "declined_delisted" or appStatus == "declined_full"
@@ -82,6 +85,7 @@ end
 function PGF.OnLFGListApplicationStatusUpdated(id, newStatus)
     -- possible newStatus: declined, declined_full, declined_delisted, timedout
     local searchResultInfo = PGF.GetSearchResultInfo(id)
+    if not searchResultInfo then return end
     local key = PGF.GetGroupKey(searchResultInfo)
     if not key then return end
     if newStatus == "declined" then

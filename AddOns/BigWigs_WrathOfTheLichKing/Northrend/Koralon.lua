@@ -36,12 +36,12 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "Breath", 66665)
 	self:Death("Win", 35013)
 
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
 end
 
 function mod:OnEngage()
 	count = 1
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:Bar(66725, 47) -- Meteor Fists
 	self:Bar(66665, 10, L["breath_bar"]:format(count))
 end

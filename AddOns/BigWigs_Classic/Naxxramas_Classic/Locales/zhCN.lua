@@ -4,8 +4,6 @@ if L then
 	L.add_death = "增援死亡"
 	L.add_death_desc = "当增援死亡时发出警报。"
 
-	L.wave = "%d/22：%s"
-
 	L.trainee = "学徒" -- Unrelenting Trainee NPC 16124
 	L.deathKnight = "死亡骑士" -- Unrelenting Death Knight NPC 16125
 	L.rider = "骑兵" -- Unrelenting Rider NPC 16126

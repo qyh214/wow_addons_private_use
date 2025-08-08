@@ -1,4 +1,3 @@
-
 --------------------------------------------------------------------------------
 -- Module Declaration
 --
@@ -6,6 +5,8 @@
 local mod, CL = BigWigs:NewBoss("Will of the Emperor", 1008, 677)
 if not mod then return end
 mod:RegisterEnableMob(60399, 60400) -- Qin-xi, Jan-xi
+mod:SetEncounterID(1407)
+mod:SetRespawnTime(30)
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -18,7 +19,7 @@ local strengthCounter = 0
 -- Localization
 --
 
-local L = mod:NewLocale("enUS", true)
+local L = mod:GetLocale()
 if L then
 	L.enable_zone = "Forge of the Endless" -- DUNGEON_FLOOR_MOGUSHANVAULTS3
 
@@ -54,7 +55,6 @@ if L then
 	L.bosses, L.bosses_desc = -5726, -5726
 	L.bosses_icon = "achievement_moguraid_06"
 end
-L = mod:GetLocale()
 
 --------------------------------------------------------------------------------
 -- Initialization
@@ -63,11 +63,15 @@ L = mod:GetLocale()
 function mod:GetOptions()
 	return {
 		116829,
-		"rage", {116525, "FLASH"},
+		"rage",
+		{116525, "FLASH"},
 		"strength",
 		"courage",
-		"bosses", "combo", "arc",
-		-5670, "berserk",
+		"bosses",
+		{"combo", "NAMEPLATE"},
+		{"arc", "NAMEPLATE"},
+		-5670,
+		"berserk",
 	}, {
 		[116829] = ("%s (%s)"):format(L["titan_spark"], CL["heroic"]),
 		rage = L["rage"],
@@ -93,8 +97,7 @@ function mod:OnRegister()
 end
 
 function mod:OnBossEnable()
-	-- Heroic
-	self:Emote("Engage", L["heroic_start_trigger"], L["normal_start_trigger"])
+	self:RegisterEvent("ENCOUNTER_START")
 
 	-- Rage
 	self:BossYell("Rage", L["rage_trigger"])
@@ -119,11 +122,11 @@ function mod:OnBossEnable()
 
 	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
 
-	self:Death("Win", 60399) -- Qin-xi they share hp
+	--self:Death("Win", 60399) -- Qin-xi they share hp
 end
 
 function mod:OnEngage()
-	self:Berserk(785) -- this is from heroic trigger
+	self:Berserk(785, true) -- this is from heroic trigger
 	strengthCounter = 0
 	gasCounter = 0
 end
@@ -131,6 +134,12 @@ end
 --------------------------------------------------------------------------------
 -- Event Handlers
 --
+
+function mod:ENCOUNTER_START(_, id)
+	if id == self:GetEncounterID() then
+		self:Engage()
+	end
+end
 
 function mod:Rage()
 	self:MessageOld("rage", "yellow", nil, CL["custom_sec"]:format(self:SpellName(L["rage"]), 13), L.rage_icon)
@@ -204,9 +213,21 @@ do
 		if arcs[spellId] then
 			comboCounter[unitId] = comboCounter[unitId] + 1
 
-			if UnitIsUnit("target", unitId) then
+			self:ClearNameplate(self:UnitGUID(unitId))
+			if UnitIsUnit("target", unitId) or self:UnitWithinRange(unitId, 10) then
+				if spellId == 116968 then -- Left
+					self:Nameplate("arc", 3.5, self:UnitGUID(unitId), 450906) -- misc_arrowleft
+				elseif spellId == 116971 then -- Right
+					self:Nameplate("arc", 3.5, self:UnitGUID(unitId), 450908) -- misc_arrowright
+				elseif spellId == 116972 then -- Center
+					self:Nameplate("arc", 4, self:UnitGUID(unitId), 450907) -- misc_arrowlup
+				--elseif spellId == 132425 then -- Stomp
+					--self:Nameplate("arc", 2.5, self:UnitGUID(unitId), 132368) -- ability_warstomp
+				--elseif spellId == 116969 then -- Stomp
+					--self:Nameplate("arc", 2.5, self:UnitGUID(unitId), 132368) -- ability_warstomp
+				end
 				local boss = self:UnitName(unitId)
-				self:MessageOld("arc", "orange", nil, ("%s: %s (%d)"):format(boss, self:SpellName(spellId), comboCounter[unitId]), arcs[spellId])
+				self:Message("arc", "orange", CL.other:format(boss, CL.count:format(self:SpellName(spellId), comboCounter[unitId])), arcs[spellId])
 			end
 		elseif spellId == 118365 then -- Energize
 			local t = GetTime()
@@ -214,10 +235,12 @@ do
 				energizePrev[unitId] = t
 				comboCounter[unitId] = 0
 
-				if UnitIsUnit("target", unitId) or self:Healer() then
+				self:ClearNameplate(self:UnitGUID(unitId))
+				if UnitIsUnit("target", unitId) or self:UnitWithinRange(unitId, 10) or self:Healer() then
+					self:Nameplate("combo", 20, self:UnitGUID(unitId), 135831) -- spell_fire_windsofwoe
 					local boss = self:UnitName(unitId)
-					self:Bar("combo", 20, CL["other"]:format(boss, L["combo"]), spellId)
-					self:DelayedMessage("combo", 17, "blue", L["combo_message"]:format(boss), L.arc_icon, "long")
+					self:Bar("combo", 20, CL.other:format(boss, self:SpellName(L.combo)), spellId)
+					self:DelayedMessage("combo", 17, "orange", L.combo_message:format(boss), L.arc_icon, "long")
 				end
 			end
 		end

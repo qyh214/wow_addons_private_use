@@ -26,6 +26,7 @@ mod:RegisterEnableMob(
 	158136, -- Inquisitor Darkspeak
 	158437, -- Fallen Taskmaster
 	152987, -- Faceless Willbreaker
+	164188, -- Horrific Figment
 	156641, -- Enthralled Weaponsmith
 	158158, -- Forge-Guard Hurrul
 	156795, -- SI:7 Informant
@@ -36,11 +37,19 @@ mod:RegisterEnableMob(
 	153130, -- Greater Void Elemental
 	152939, -- Boundless Corruption
 	159275, -- Portal Keeper
+	159266, -- Portal Master
 	158371, -- Zardeth of the Black Claw
 	158411, -- Unstable Servant
 	241698, -- Hogger (WANTED: Hogger!!) (Revisited only)
-	239437 -- Hogger (Mask of the Nemesis) (Revisited only)
+	239437, -- Hogger (Mask of the Nemesis) (Revisited only)
+	237991 -- Void-Scarred Gryphon (Revisited only)
 )
+
+--------------------------------------------------------------------------------
+-- Locals
+--
+
+local portalsClosed = 0
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -48,6 +57,18 @@ mod:RegisterEnableMob(
 
 local L = mod:GetLocale()
 if L then
+	L.sanity_change = "%d Sanity"
+	L.portal_closed = "Portal Closed"
+	L.portal_closed_desc = "Show a message when a portal is closed in the Mage Quarter."
+	L.portal_closed_icon = "spell_arcane_teleportstormwind"
+	L.madnesses = "Madnesses"
+	L.potions = "Potions"
+	L.buffs = "Buffs"
+	L.slowed = "Slowed"
+	L.sluggish_potion_effect = "Heal 2% every 5 sec"
+	L.sickening_potion_effect = "5% damage reduction"
+	L.spicy_potion_effect = "Breathe fire"
+
 	L.crawling_corruption = "Crawling Corruption"
 	L.enthralled_footman = "Enthralled Footman"
 	L.fallen_voidspeaker = "Fallen Voidspeaker"
@@ -72,199 +93,132 @@ if L then
 	L.zardeth_of_the_black_claw = "Zardeth of the Black Claw"
 	L.unstable_servant = "Unstable Servant"
 	L.hogger = "Hogger"
+	L.void_scarred_gryphon = "Void-Scarred Gryphon"
 
 	L.therum_deepforge_warmup_trigger = "So ye like tae play with explosives, do ye? Then let's play."
 	L.alleria_windrunner_warmup_trigger = "Mother... do not listen to the whispers!"
-
-	L["298074_icon"] = 305155 -- Rupture
-	L["298074_desc"] = 305155 -- Rupture
 end
 
 --------------------------------------------------------------------------------
 -- Initialization
 --
 
-if BigWigsLoader.isNext then
-	function mod:GetOptions()
-		return {
-			-- General
-			"altpower",
-			{311996, "CASTBAR"}, -- Open Vision
-			307870, -- Sanity Restoration Orb
-			311390, -- Madness: Entomophobia
-			306583, -- Leaden Foot
-			-- Crawling Corruption
-			296510, -- Creepy Crawler
-			-- Enthralled Footman
-			{298584, "NAMEPLATE"}, -- Repel
-			-- Fallen Voidspeaker
-			{308375, "NAMEPLATE"}, -- Psychic Scream
-			-- Void Globule
-			296492, -- Void Eruption
-			-- Fallen Heartpiercer
-			{308308, "NAMEPLATE"}, -- Piercing Shot
-			-- Fallen Riftwalker
-			{308481, "NAMEPLATE"}, -- Rift Strike
-			308575, -- Shadow Shift
-			-- Cultist Slavedriver
-			{309882, "NAMEPLATE"}, -- Brutal Smash
-			-- Cultist Tormenter
-			{296537, "NAMEPLATE"}, -- Mental Assault
-			-- Inquisitor Darkspeak
-			308366, -- Agonizing Torment
-			{308380, "NAMEPLATE"}, -- Convert
-			-- Fallen Taskmaster
-			{308998, "NAMEPLATE"}, -- Improve Morale
-			{308967, "NAMEPLATE"}, -- Continuous Beatings
-			-- Faceless Willbreaker
-			{296718, "NAMEPLATE"}, -- Dark Smash
-			-- Enthralled Weaponsmith
-			{306770, "NAMEPLATE"}, -- Forge Breath
-			-- Forge-Guard Hurrul
-			{308406, "NAMEPLATE"}, -- Entropic Leap
-			{308432, "DISPEL", "NAMEPLATE"}, -- Void-Tainted Blades
-			-- SI:7 Informant
-			{298033, "NAMEPLATE"}, -- Touch of the Abyss
-			-- Armsmaster Terenson
-			{311399, "NAMEPLATE"}, -- Blade Flourish
-			{311456, "NAMEPLATE"}, -- Roaring Blast
-			-- Burrowing Appendage
-			298074, -- Rupture
-			-- Dod
-			{264398, "NAMEPLATE"}, -- Hoppy Finish
-			{308346, "NAMEPLATE"}, -- Barrel Aged
-			-- Alx'kov the Infested
-			{308265, "DISPEL", "NAMEPLATE"}, -- Corrupted Blight
-			{296669, "NAMEPLATE"}, -- Lurking Appendage
-			{308305, "SAY"}, -- Blight Eruption
-			-- Greater Void Elemental
-			{297315, "NAMEPLATE"}, -- Void Buffet
-			-- Boundless Corruption
-			{296911, "NAMEPLATE"}, -- Chaos Breath
-			-- Zardeth of the Black Claw
-			{308801, "NAMEPLATE"}, -- Rain of Fire
-			{308878, "NAMEPLATE"}, -- Twisted Summons
-			-- Unstable Servant
-			308862, -- Unstable Eruption
-			-- Hogger
-			{1223111, "ME_ONLY", "NAMEPLATE"}, -- Vicious Slice
-			{1223112, "NAMEPLATE"}, -- Maddening Call
-			86736, -- Enrage
-		}, {
-			["altpower"] = "general",
-			[296510] = L.crawling_corruption,
-			[298584] = L.enthralled_footman,
-			[308375] = L.fallen_voidspeaker,
-			[296492] = L.void_globule,
-			[308308] = L.fallen_heartpiercer,
-			[308481] = L.fallen_riftwalker,
-			[309882] = L.cultist_slavedriver,
-			[296537] = L.cultist_tormenter,
-			[308366] = L.inquisitor_darkspeak,
-			[308998] = L.fallen_taskmaster,
-			[296718] = L.faceless_willbreaker,
-			[306770] = L.enthralled_weaponsmith,
-			[308406] = L.forge_guard_hurrul,
-			[298033] = L.si7_informant,
-			[311399] = L.armsmaster_terenson,
-			[298074] = L.burrowing_appendage,
-			[264398] = L.dod,
-			[308265] = L.alxkov_the_infested,
-			[297315] = L.greater_void_elemental,
-			[296911] = L.boundless_corruption,
-			[308801] = L.zardeth_of_the_black_claw,
-			[308862] = L.unstable_servant,
-			[1223111] = L.hogger,
-		}
-	end
-else -- XXX remove block below after 11.1.5 is live
-	function mod:GetOptions()
-		return {
-			-- General
-			"altpower",
-			{311996, "CASTBAR"}, -- Open Vision
-			307870, -- Sanity Restoration Orb
-			311390, -- Madness: Entomophobia
-			306583, -- Leaden Foot
-			-- Crawling Corruption
-			296510, -- Creepy Crawler
-			-- Enthralled Footman
-			{298584, "NAMEPLATE"}, -- Repel
-			-- Fallen Voidspeaker
-			{308375, "NAMEPLATE"}, -- Psychic Scream
-			-- Void Globule
-			296492, -- Void Eruption
-			-- Fallen Heartpiercer
-			{308308, "NAMEPLATE"}, -- Piercing Shot
-			-- Fallen Riftwalker
-			{308481, "NAMEPLATE"}, -- Rift Strike
-			308575, -- Shadow Shift
-			-- Cultist Slavedriver
-			{309882, "NAMEPLATE"}, -- Brutal Smash
-			-- Cultist Tormenter
-			{296537, "NAMEPLATE"}, -- Mental Assault
-			-- Inquisitor Darkspeak
-			308366, -- Agonizing Torment
-			{308380, "NAMEPLATE"}, -- Convert
-			-- Fallen Taskmaster
-			{308998, "NAMEPLATE"}, -- Improve Morale
-			{308967, "NAMEPLATE"}, -- Continuous Beatings
-			-- Faceless Willbreaker
-			{296718, "NAMEPLATE"}, -- Dark Smash
-			-- Enthralled Weaponsmith
-			{306770, "NAMEPLATE"}, -- Forge Breath
-			-- Forge-Guard Hurrul
-			{308406, "NAMEPLATE"}, -- Entropic Leap
-			{308432, "DISPEL", "NAMEPLATE"}, -- Void-Tainted Blades
-			-- SI:7 Informant
-			{298033, "NAMEPLATE"}, -- Touch of the Abyss
-			-- Armsmaster Terenson
-			{311399, "NAMEPLATE"}, -- Blade Flourish
-			{311456, "NAMEPLATE"}, -- Roaring Blast
-			-- Burrowing Appendage
-			298074, -- Rupture
-			-- Dod
-			{264398, "NAMEPLATE"}, -- Hoppy Finish
-			{308346, "NAMEPLATE"}, -- Barrel Aged
-			-- Alx'kov the Infested
-			{308265, "DISPEL", "NAMEPLATE"}, -- Corrupted Blight
-			{296669, "NAMEPLATE"}, -- Lurking Appendage
-			{308305, "SAY"}, -- Blight Eruption
-			-- Greater Void Elemental
-			{297315, "NAMEPLATE"}, -- Void Buffet
-			-- Boundless Corruption
-			{296911, "NAMEPLATE"}, -- Chaos Breath
-			-- Zardeth of the Black Claw
-			{308801, "NAMEPLATE"}, -- Rain of Fire
-			{308878, "NAMEPLATE"}, -- Twisted Summons
-			-- Unstable Servant
-			308862, -- Unstable Eruption
-		}, {
-			["altpower"] = "general",
-			[296510] = L.crawling_corruption,
-			[298584] = L.enthralled_footman,
-			[308375] = L.fallen_voidspeaker,
-			[296492] = L.void_globule,
-			[308308] = L.fallen_heartpiercer,
-			[308481] = L.fallen_riftwalker,
-			[309882] = L.cultist_slavedriver,
-			[296537] = L.cultist_tormenter,
-			[308366] = L.inquisitor_darkspeak,
-			[308998] = L.fallen_taskmaster,
-			[296718] = L.faceless_willbreaker,
-			[306770] = L.enthralled_weaponsmith,
-			[308406] = L.forge_guard_hurrul,
-			[298033] = L.si7_informant,
-			[311399] = L.armsmaster_terenson,
-			[298074] = L.burrowing_appendage,
-			[264398] = L.dod,
-			[308265] = L.alxkov_the_infested,
-			[297315] = L.greater_void_elemental,
-			[296911] = L.boundless_corruption,
-			[308801] = L.zardeth_of_the_black_claw,
-			[308862] = L.unstable_servant,
-		}
-	end
+function mod:GetOptions()
+	return {
+		-- General
+		"altpower",
+		{311996, "CASTBAR", "CASTBAR_COUNTDOWN"}, -- Open Vision
+		307870, -- Sanity Restoration Orb
+		"portal_closed",
+		-- Madnesses
+		{311390, "EMPHASIZE"}, -- Madness: Entomophobia
+		292240, -- Entomophobia
+		306583, -- Leaden Foot
+		315385, -- Scorched Feet
+		313303, -- Burned Bridge
+		-- Potions
+		315814, -- Fermented Mixture
+		315807, -- Noxious Mixture
+		315845, -- Sluggish Potion
+		315849, -- Sickening Potion
+		315817, -- Spicy Potion
+		-- Buffs
+		313698, -- Gift of the Titans
+		312456, -- Elite Extermination
+		314203, -- Requited Bulwark
+		312355, -- Bear Spirit
+		314165, -- Empowered
+		314087, -- Enriched
+		-- Crawling Corruption
+		296510, -- Creepy Crawler
+		-- Enthralled Footman
+		{298584, "NAMEPLATE"}, -- Repel
+		-- Fallen Voidspeaker
+		{308375, "NAMEPLATE"}, -- Psychic Scream
+		-- Void Globule
+		296492, -- Void Eruption
+		-- Fallen Heartpiercer
+		{308308, "NAMEPLATE"}, -- Piercing Shot
+		-- Fallen Riftwalker
+		{308481, "NAMEPLATE"}, -- Rift Strike
+		308575, -- Shadow Shift
+		-- Cultist Slavedriver
+		{309882, "NAMEPLATE"}, -- Brutal Smash
+		-- Cultist Tormenter
+		{296537, "NAMEPLATE"}, -- Mental Assault
+		-- Inquisitor Darkspeak
+		308366, -- Agonizing Torment
+		{308380, "NAMEPLATE"}, -- Convert
+		-- Fallen Taskmaster
+		{308998, "NAMEPLATE"}, -- Improve Morale
+		{308967, "NAMEPLATE"}, -- Continuous Beatings
+		-- Faceless Willbreaker
+		{296718, "NAMEPLATE"}, -- Dark Smash
+		-- Enthralled Weaponsmith
+		{306770, "NAMEPLATE"}, -- Forge Breath
+		-- Forge-Guard Hurrul
+		{308406, "NAMEPLATE"}, -- Entropic Leap
+		{308432, "DISPEL", "NAMEPLATE"}, -- Void-Tainted Blades
+		-- SI:7 Informant
+		{298033, "NAMEPLATE"}, -- Touch of the Abyss
+		-- Armsmaster Terenson
+		{311399, "NAMEPLATE"}, -- Blade Flourish
+		{311456, "NAMEPLATE"}, -- Roaring Blast
+		-- Burrowing Appendage
+		298074, -- Rupture
+		-- Dod
+		{264398, "NAMEPLATE"}, -- Hoppy Finish
+		{308346, "NAMEPLATE"}, -- Barrel Aged
+		-- Alx'kov the Infested
+		{308265, "DISPEL", "NAMEPLATE"}, -- Corrupted Blight
+		{296669, "NAMEPLATE"}, -- Lurking Appendage
+		{308305, "SAY"}, -- Blight Eruption
+		-- Greater Void Elemental
+		{297315, "NAMEPLATE"}, -- Void Buffet
+		-- Boundless Corruption
+		{296911, "NAMEPLATE"}, -- Chaos Breath
+		-- Zardeth of the Black Claw
+		{308801, "NAMEPLATE"}, -- Rain of Fire
+		{308878, "NAMEPLATE"}, -- Twisted Summons
+		-- Unstable Servant
+		308862, -- Unstable Eruption
+		-- Hogger
+		{1223111, "ME_ONLY", "NAMEPLATE"}, -- Vicious Slice
+		{1223112, "NAMEPLATE"}, -- Maddening Call
+		86736, -- Enrage
+		-- Void-Scarred Gryphon
+		{250505, "NAMEPLATE"}, -- Hysteria
+		{258768, "NAMEPLATE"}, -- Splitting Slash
+	}, {
+		["altpower"] = "general",
+		[311390] = L.madnesses,
+		[315814] = L.potions,
+		[313698] = L.buffs,
+		[296510] = L.crawling_corruption,
+		[298584] = L.enthralled_footman,
+		[308375] = L.fallen_voidspeaker,
+		[296492] = L.void_globule,
+		[308308] = L.fallen_heartpiercer,
+		[308481] = L.fallen_riftwalker,
+		[309882] = L.cultist_slavedriver,
+		[296537] = L.cultist_tormenter,
+		[308366] = L.inquisitor_darkspeak,
+		[308998] = L.fallen_taskmaster,
+		[296718] = L.faceless_willbreaker,
+		[306770] = L.enthralled_weaponsmith,
+		[308406] = L.forge_guard_hurrul,
+		[298033] = L.si7_informant,
+		[311399] = L.armsmaster_terenson,
+		[298074] = L.burrowing_appendage,
+		[264398] = L.dod,
+		[308265] = L.alxkov_the_infested,
+		[297315] = L.greater_void_elemental,
+		[296911] = L.boundless_corruption,
+		[308801] = L.zardeth_of_the_black_claw,
+		[308862] = L.unstable_servant,
+		[1223111] = L.hogger,
+		[250505] = L.void_scarred_gryphon,
+	}
 end
 
 function mod:OnBossEnable()
@@ -275,15 +229,26 @@ function mod:OnBossEnable()
 	self:OpenAltPower("altpower", 318335, "ZA")
 
 	self:RegisterEvent("UNIT_SPELLCAST_START") -- Open Vision, Hoppy Finish
-	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED") -- Rupture
 
 	-- Sanity Restoration Orb
 	self:Log("SPELL_CAST_START", "SanityRestorationOrb", 307870)
 
 	-- Madnesses
 	self:Log("SPELL_AURA_APPLIED_DOSE", "MadnessEntomophobiaApplied", 311390)
+	self:Log("SPELL_AURA_APPLIED", "EntomophobiaApplied", 292240)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "LeadenFootApplied", 306583)
-	self:Log("SPELL_AURA_REMOVED", "LeadenFootRemoved", 306583)
+	self:Log("SPELL_AURA_APPLIED", "ScorchedFeetApplied", 315385)
+	self:Log("SPELL_PERIODIC_ENERGIZE", "BurnedBridge", 313303)
+
+	-- Potions
+	self:Log("SPELL_ENERGIZE", "FermentedMixture", 315814)
+	self:Log("SPELL_ENERGIZE", "NoxiousMixture", 315807)
+	self:InitBuffs() -- reload protection
+	self:RegisterUnitEvent("UNIT_AURA", nil, "player")
+
+	-- Buffs
+	self:Log("SPELL_ENERGIZE", "EliteExtermination", 312456)
+	self:Log("SPELL_AURA_APPLIED", "BuffApplied", 314203, 312355, 314165, 314087) -- Requited Bulwark, Bear Spirit, Empowered, Enriched
 
 	-- Crawling Corruption
 	self:Log("SPELL_CAST_START", "CreepyCrawler", 296510)
@@ -298,7 +263,8 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "PsychicScream", 308375)
 	self:Log("SPELL_INTERRUPT", "PsychicScreamInterrupt", 308375)
 	self:Log("SPELL_CAST_SUCCESS", "PsychicScreamSuccess", 308375)
-	self:Death("FallenVoidspeakerDeath", 152722, 159275, 241718, 157700) -- Fallen Voidspeaker, Portal Keeper, Vengeful Voidspeaker, Agustus Moulaine
+	self:Death("FallenVoidspeakerDeath", 152722, 241718, 157700) -- Fallen Voidspeaker, Vengeful Voidspeaker, Agustus Moulaine
+	self:Death("PortalKeeperDeath", 159275)
 
 	-- Fallen Heartpiercer
 	self:RegisterEngageMob("FallenHeartpiercerEngaged", 158092, 241717) -- Fallen Heartpiercer, Vengeful Heartpiercer
@@ -337,9 +303,9 @@ function mod:OnBossEnable()
 	self:Death("FallenTaskmasterDeath", 158437)
 
 	-- Faceless Willbreaker
-	self:RegisterEngageMob("FacelessWillbreakerEngaged", 152987)
+	self:RegisterEngageMob("FacelessWillbreakerEngaged", 152987, 164188) -- Faceless Willbreaker, Horrific Figment
 	self:Log("SPELL_CAST_START", "DarkSmash", 296718)
-	self:Death("FacelessWillbreakerDeath", 152987)
+	self:Death("FacelessWillbreakerDeath", 152987, 164188) -- Faceless Willbreaker, Horrific Figment
 
 	-- Enthralled Weaponsmith
 	self:RegisterEngageMob("EnthralledWeaponsmithEngaged", 156641)
@@ -368,6 +334,9 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "RoaringBlast", 311456)
 	self:Death("ArmsmasterTerensonDeath", 156949)
 
+	-- Burrowing Appendage
+	self:Log("SPELL_CAST_SUCCESS", "Rupture", 298074)
+
 	-- Dod
 	self:RegisterEngageMob("DodEngaged", 156820)
 	--self:Log("SPELL_CAST_START", "HoppyFinish", 264398) no CLEU
@@ -391,6 +360,9 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "VoidBuffetSuccess", 297315)
 	self:Death("GreaterVoidElementalDeath", 153130)
 
+	-- Portal Master
+	self:Death("PortalMasterDeath", 159266)
+
 	-- Boundless Corruption
 	self:RegisterEngageMob("BoundlessCorruptionEngaged", 152939)
 	self:Log("SPELL_CAST_START", "ChaosBreath", 296911)
@@ -409,22 +381,33 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "UnstableEruption", 308862)
 
 	-- Hogger
-	if BigWigsLoader.isNext then -- XXX remove check after 11.1.5 is live
-		self:RegisterEngageMob("HoggerEngaged", 241698, 239437) -- WANTED: Hogger!!, Mask of the Nemesis
-		self:Log("SPELL_CAST_SUCCESS", "ViciousSlice", 1223111)
-		self:Log("SPELL_AURA_APPLIED", "ViciousSliceApplied", 1223111)
-		self:Log("SPELL_CAST_START", "MaddeningCall", 1223112)
-		self:Log("SPELL_INTERRUPT", "MaddeningCallInterrupt", 1223112)
-		self:Log("SPELL_CAST_SUCCESS", "MaddeningCallSuccess", 1223112)
-		self:Log("SPELL_CAST_SUCCESS", "Enrage", 86736)
-		self:Death("HoggerDeath", 241698, 239437) -- WANTED: Hogger!!, Mask of the Nemesis
-	end
+	self:RegisterEngageMob("HoggerEngaged", 241698, 239437) -- WANTED: Hogger!!, Mask of the Nemesis
+	self:Log("SPELL_CAST_SUCCESS", "ViciousSlice", 1223111)
+	self:Log("SPELL_AURA_APPLIED", "ViciousSliceApplied", 1223111)
+	self:Log("SPELL_CAST_START", "MaddeningCall", 1223112)
+	self:Log("SPELL_INTERRUPT", "MaddeningCallInterrupt", 1223112)
+	self:Log("SPELL_CAST_SUCCESS", "MaddeningCallSuccess", 1223112)
+	self:Log("SPELL_CAST_SUCCESS", "Enrage", 86736)
+	self:Death("HoggerDeath", 241698, 239437) -- WANTED: Hogger!!, Mask of the Nemesis
+
+	-- Void-Scarred Gryphon
+	self:RegisterEngageMob("VoidScarredGryphonEngaged", 237991)
+	self:Log("SPELL_CAST_START", "Hysteria", 250505)
+	self:Log("SPELL_INTERRUPT", "HysteriaInterrupt", 250505)
+	self:Log("SPELL_CAST_SUCCESS", "HysteriaSuccess", 250505)
+	self:Log("SPELL_CAST_START", "SplittingSlash", 258768)
+	self:Log("SPELL_CAST_SUCCESS", "SplittingSlashSuccess", 258768)
+	self:Death("VoidScarredGryphonDeath", 237991)
 end
 
 function mod:VerifyEnable()
 	-- some enable mobs are shared with Horrific Vision of Orgrimmar
 	local _, _, _, _, _, _, _, instanceId = GetInstanceInfo()
 	return instanceId == 2213 or instanceId == 2827
+end
+
+function mod:OnBossDisable()
+	portalsClosed = 0
 end
 
 --------------------------------------------------------------------------------
@@ -466,20 +449,6 @@ do
 	end
 end
 
-do
-	local prev = 0
-	function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, _, spellId)
-		if spellId == 298074 then -- Rupture (Burrowing Appendage)
-			local t = GetTime()
-			if t - prev > 2 then
-				prev = t
-				self:Message(spellId, "orange", nil, L["298074_icon"])
-				self:PlaySound(spellId, "alarm")
-			end
-		end
-	end
-end
-
 -- Sanity Restoration Orb
 
 function mod:SanityRestorationOrb(args)
@@ -492,28 +461,185 @@ end
 function mod:MadnessEntomophobiaApplied(args)
 	local amount = args.amount or 1
 	if self:Me(args.destGUID) and amount >= 3 then
-		self:StackMessage(args.spellId, "blue", args.destName, amount, 3)
+		self:StackMessage(args.spellId, "blue", args.destName, amount, 5)
 		self:PlaySound(args.spellId, "info")
 	end
 end
 
+function mod:EntomophobiaApplied(args)
+	if self:Me(args.destGUID) then
+		self:PersonalMessage(args.spellId)
+		self:PlaySound(args.spellId, "warning")
+	end
+end
+
+function mod:LeadenFootApplied(args)
+	local amount = args.amount or 1
+	if self:Me(args.destGUID) and amount % 5 == 0 and amount >= 10 then
+		self:StackMessage(args.spellId, "blue", args.destName, amount, 10)
+		self:PlaySound(args.spellId, "alert")
+	end
+end
+
+function mod:ScorchedFeetApplied(args)
+	if self:Me(args.destGUID) then
+		self:PersonalMessage(args.spellId)
+		self:PlaySound(args.spellId, "info")
+	end
+end
+
+function mod:BurnedBridge(args)
+	if self:Me(args.destGUID) then
+		local sanityLost = args.extraSpellId -- will be a negative number representing Sanity lost
+		self:Message(args.spellId, "blue", CL.other:format(CL.underyou:format(args.spellName), L.sanity_change:format(sanityLost)))
+		self:PlaySound(args.spellId, "underyou")
+	end
+end
+
+-- Potions
+
+function mod:FermentedMixture(args)
+	if self:Me(args.destGUID) then
+		local sanityGained = args.extraSpellId -- will be a positive number representing Sanity gained
+		self:Message(args.spellId, "green", CL.other:format(args.spellName, L.sanity_change:format(sanityGained)))
+		self:PlaySound(args.spellId, "info")
+	end
+end
+
+function mod:NoxiousMixture(args)
+	if self:Me(args.destGUID) then
+		local sanityLost = args.extraSpellId -- will be a negative number representing Sanity lost
+		self:Message(args.spellId, "yellow", CL.other:format(args.spellName, L.sanity_change:format(sanityLost)))
+		self:PlaySound(args.spellId, "warning")
+	end
+end
+
 do
-	local showRemovedWarning = false
-	function mod:LeadenFootApplied(args)
-		local amount = args.amount or 1
-		if self:Me(args.destGUID) and amount % 5 == 0 and amount >= 10 then
-			showRemovedWarning = true
-			self:StackMessage(args.spellId, "blue", args.destName, amount, 10)
-			self:PlaySound(args.spellId, "alert")
+	local trackedBuffs = {
+		[315845] = true, -- Sluggish Potion
+		[315849] = true, -- Sickening Potion
+		[315817] = true, -- Spicy Potion
+		[313698] = true, -- Gift of the Titans
+	}
+	local activeBuffs = {}
+
+	function mod:InitBuffs() -- reload protection
+		activeBuffs = {}
+		for spellId in next, trackedBuffs do
+			local auraTbl = self:GetPlayerAura(spellId)
+			if auraTbl then
+				activeBuffs[auraTbl.auraInstanceID] = {auraTbl.expirationTime, spellId}
+				if spellId == 315845 then -- Sluggish Potion
+					self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.sluggish_potion_effect)
+				elseif spellId == 315849 then -- Sickening Potion
+					self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.sickening_potion_effect)
+				elseif spellId == 315817 then -- Spicy Potion
+					self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.spicy_potion_effect)
+				elseif spellId == 313698 then -- Gift of the Titans
+					self:Bar(spellId, auraTbl.expirationTime - GetTime())
+				end
+			end
 		end
 	end
 
-	function mod:LeadenFootRemoved(args)
-		if self:Me(args.destGUID) and showRemovedWarning then
-			showRemovedWarning = false
-			self:Message(args.spellId, "green", CL.removed:format(args.spellName))
-			self:PlaySound(args.spellId, "info")
+	function mod:UNIT_AURA(_, _, updateInfo)
+		if not updateInfo or updateInfo.isFullUpdate then
+			self:InitBuffs()
+		else
+			if updateInfo.addedAuras then
+				for i = 1, #updateInfo.addedAuras do
+					local auraTbl = updateInfo.addedAuras[i]
+					local spellId = auraTbl.spellId
+
+					if trackedBuffs[spellId] then
+						activeBuffs[auraTbl.auraInstanceID] = {auraTbl.expirationTime, spellId}
+						if spellId == 315845 then -- Sluggish Potion
+							self:Message(spellId, "green", CL.other:format(CL.you:format(auraTbl.name), L.sluggish_potion_effect))
+							self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.sluggish_potion_effect)
+							self:PlaySound(spellId, "info")
+						elseif spellId == 315849 then -- Sickening Potion
+							self:Message(spellId, "green", CL.other:format(CL.you:format(auraTbl.name), L.sickening_potion_effect))
+							self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.sickening_potion_effect)
+							self:PlaySound(spellId, "info")
+						elseif spellId == 315817 then -- Spicy Potion
+							self:Message(spellId, "green", CL.other:format(CL.you:format(auraTbl.name), L.spicy_potion_effect))
+							self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.spicy_potion_effect)
+							self:PlaySound(spellId, "info")
+						elseif spellId == 313698 then -- Gift of the Titans
+							self:Message(spellId, "green", CL.you:format(auraTbl.name))
+							self:Bar(spellId, auraTbl.expirationTime - GetTime())
+							self:PlaySound(spellId, "long")
+						end
+					end
+				end
+			end
+			if updateInfo.removedAuraInstanceIDs then
+				for i = 1, #updateInfo.removedAuraInstanceIDs do
+					local hadBuff = activeBuffs[updateInfo.removedAuraInstanceIDs[i]]
+					if hadBuff then
+						local spellId = hadBuff[2]
+						activeBuffs[updateInfo.removedAuraInstanceIDs[i]] = nil
+						if spellId == 315845 then -- Sluggish Potion
+							self:Message(spellId, "blue", CL.other:format(CL.removed:format(self:SpellName(spellId)), L.slowed))
+							self:StopBar(L.sluggish_potion_effect)
+							self:PlaySound(spellId, "warning")
+						elseif spellId == 315849 then -- Sickening Potion
+							self:Message(spellId, "blue", CL.other:format(CL.removed:format(self:SpellName(spellId)), self:SpellName(315850))) -- Vomit
+							self:StopBar(L.sickening_potion_effect)
+							self:PlaySound(spellId, "warning")
+						elseif spellId == 315817 then -- Spicy Potion
+							self:Message(spellId, "blue", CL.other:format(CL.removed:format(self:SpellName(spellId)), self:SpellName(315818))) -- Burning
+							self:StopBar(L.spicy_potion_effect)
+							self:PlaySound(spellId, "warning")
+						elseif spellId == 313698 then -- Gift of the Titans
+							self:StopBar(spellId)
+						end
+					end
+				end
+			end
+			if updateInfo.updatedAuraInstanceIDs then
+				for i = 1, #updateInfo.updatedAuraInstanceIDs do
+					local hadBuff = activeBuffs[updateInfo.updatedAuraInstanceIDs[i]]
+					if hadBuff then
+						local spellId = hadBuff[2]
+						local auraTbl = self:GetPlayerAura(spellId)
+						if hadBuff[1] ~= auraTbl.expirationTime then
+							activeBuffs[updateInfo.updatedAuraInstanceIDs[i]][1] = auraTbl.expirationTime
+							if spellId == 315845 then -- Sluggish Potion
+								self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.sluggish_potion_effect)
+							elseif spellId == 315849 then -- Sickening Potion
+								self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.sickening_potion_effect)
+							elseif spellId == 315817 then -- Spicy Potion
+								self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.spicy_potion_effect)
+							elseif spellId == 313698 then -- Gift of the Titans
+								self:Bar(spellId, auraTbl.expirationTime - GetTime())
+							end
+						end
+					end
+				end
+			end
 		end
+	end
+end
+
+-- Buffs
+
+function mod:EliteExtermination(args)
+	if self:Me(args.destGUID) then
+		local sanityGained = args.extraSpellId -- will be a positive number representing Sanity gained
+		self:Message(args.spellId, "green", CL.other:format(args.spellName, L.sanity_change:format(sanityGained)))
+		self:PlaySound(args.spellId, "info")
+	end
+end
+
+function mod:BuffApplied(args)
+	if self:Me(args.destGUID) then
+		if self:Solo() then
+			self:Message(args.spellId, "green", CL.you:format(args.spellName))
+		else
+			self:Message(args.spellId, "green", CL.on_group:format(args.spellName))
+		end
+		self:PlaySound(args.spellId, "info")
 	end
 end
 
@@ -571,6 +697,13 @@ function mod:FallenVoidspeakerDeath(args)
 	self:ClearNameplate(args.destGUID)
 end
 
+function mod:PortalKeeperDeath(args)
+	portalsClosed = portalsClosed + 1
+	self:ClearNameplate(args.destGUID)
+	self:Message("portal_closed", "green", CL.count_amount:format(L.portal_closed, portalsClosed, 5), L.portal_closed_icon)
+	self:PlaySound("portal_closed", "info")
+end
+
 -- Fallen Heartpiercer
 
 function mod:FallenHeartpiercerEngaged(guid)
@@ -622,10 +755,10 @@ end
 do
 	local prev = 0
 	function mod:ShadowShift(args)
-		-- cast once at 50%
+		-- cast once at 60%
 		if args.time - prev > 1.5 then
 			prev = args.time
-			self:Message(args.spellId, "red", CL.percent:format(50, CL.casting:format(args.spellName)))
+			self:Message(args.spellId, "red", CL.percent:format(60, CL.casting:format(args.spellName)))
 			self:PlaySound(args.spellId, "alert")
 		end
 	end
@@ -641,10 +774,16 @@ function mod:CultistSlavedriverEngaged(guid)
 	self:Nameplate(309882, 3.5, guid) -- Brutal Smash
 end
 
-function mod:BrutalSmash(args)
-	self:Message(args.spellId, "orange")
-	self:Nameplate(args.spellId, 13.3, args.sourceGUID)
-	self:PlaySound(args.spellId, "alarm")
+do
+	local prev = 0
+	function mod:BrutalSmash(args)
+		self:Nameplate(args.spellId, 13.3, args.sourceGUID)
+		if args.time - prev > 1.5 then
+			prev = args.time
+			self:Message(args.spellId, "orange")
+			self:PlaySound(args.spellId, "alarm")
+		end
+	end
 end
 
 function mod:CultistSlavedriverDeath(args)
@@ -916,6 +1055,19 @@ do
 	end
 end
 
+-- Burrowing Appendage
+
+do
+	local prev = 0
+	function mod:Rupture(args)
+		if args.time - prev > 2 then
+			prev = args.time
+			self:Message(args.spellId, "orange")
+			self:PlaySound(args.spellId, "alarm")
+		end
+	end
+end
+
 -- Dod
 
 do
@@ -1063,6 +1215,14 @@ function mod:GreaterVoidElementalDeath(args)
 	self:ClearNameplate(args.destGUID)
 end
 
+-- Portal Master
+
+function mod:PortalMasterDeath(args)
+	portalsClosed = portalsClosed + 1
+	self:Message("portal_closed", "green", CL.count_amount:format(L.portal_closed, portalsClosed, 5), L.portal_closed_icon)
+	self:PlaySound("portal_closed", "info")
+end
+
 -- Boundless Corruption
 
 do
@@ -1081,7 +1241,7 @@ do
 		self:Message(args.spellId, "red")
 		self:CDBar(args.spellId, 12.2)
 		self:Nameplate(args.spellId, 12.2, args.sourceGUID)
-		timer = self:ScheduleTimer("ZardethOfTheBlackClawDeath", 30, nil, args.sourceGUID)
+		timer = self:ScheduleTimer("BoundlessCorruptionDeath", 30, nil, args.sourceGUID)
 		self:PlaySound(args.spellId, "alarm")
 	end
 
@@ -1152,9 +1312,12 @@ do
 			self:CancelTimer(timer)
 			timer = nil
 		end
+		portalsClosed = portalsClosed + 1
 		self:StopBar(308801) -- Rain of Fire
 		self:StopBar(308878) -- Twisted Summons
 		self:ClearNameplate(guidFromTimer or args.destGUID)
+		self:Message("portal_closed", "green", CL.count_amount:format(L.portal_closed, portalsClosed, 5), L.portal_closed_icon)
+		self:PlaySound("portal_closed", "info")
 	end
 end
 
@@ -1235,6 +1398,65 @@ do
 		end
 		self:StopBar(1223111) -- Vicious Slice
 		self:StopBar(1223112) -- Maddening Call
+		self:ClearNameplate(guidFromTimer or args.destGUID)
+	end
+end
+
+-- Void-Scarred Gryphon
+
+do
+	local timer
+
+	function mod:VoidScarredGryphonEngaged(guid)
+		self:CDBar(250505, 6.0) -- Hysteria
+		self:Nameplate(250505, 6.0, guid) -- Hysteria
+		self:CDBar(258768, 10.9) -- Splitting Slash
+		self:Nameplate(258768, 10.9, guid) -- Splitting Slash
+		timer = self:ScheduleTimer("VoidScarredGryphonDeath", 20, nil, guid)
+	end
+
+	function mod:Hysteria(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+		self:Nameplate(args.spellId, 0, args.sourceGUID)
+		timer = self:ScheduleTimer("VoidScarredGryphonDeath", 30, nil, args.sourceGUID)
+		self:PlaySound(args.spellId, "warning")
+	end
+
+	function mod:HysteriaInterrupt(args)
+		self:CDBar(250505, 17.5)
+		self:Nameplate(250505, 17.5, args.destGUID)
+	end
+
+	function mod:HysteriaSuccess(args)
+		self:CDBar(args.spellId, 17.5)
+		self:Nameplate(args.spellId, 17.5, args.sourceGUID)
+	end
+
+	function mod:SplittingSlash(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "orange")
+		self:Nameplate(args.spellId, 0, args.sourceGUID)
+		timer = self:ScheduleTimer("VoidScarredGryphonDeath", 30, nil, args.sourceGUID)
+		self:PlaySound(args.spellId, "alarm")
+	end
+
+	function mod:SplittingSlashSuccess(args)
+		self:CDBar(args.spellId, 20.1)
+		self:Nameplate(args.spellId, 20.1, args.sourceGUID)
+	end
+
+	function mod:VoidScarredGryphonDeath(args, guidFromTimer)
+		if timer then
+			self:CancelTimer(timer)
+			timer = nil
+		end
+		self:StopBar(250505) -- Hysteria
+		self:StopBar(258768) -- Splitting Slash
 		self:ClearNameplate(guidFromTimer or args.destGUID)
 	end
 end

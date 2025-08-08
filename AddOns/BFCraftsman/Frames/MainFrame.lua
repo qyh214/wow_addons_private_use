@@ -38,7 +38,7 @@ local function InitFrameWidgets()
     -- about
     local aboutButton = AF.CreateButton(BFCMainFrame.header, nil, "accent_hover", 20, 20)
     AF.SetPoint(aboutButton, "BOTTOMRIGHT", BFCMainFrame.header.closeBtn, "BOTTOMLEFT", 1, 0)
-    aboutButton:SetTexture(AF.GetIcon("Question1"), {14, 14})
+    aboutButton:SetTexture(AF.GetIcon("Question"), {14, 14})
     aboutButton:SetOnClick(BFC.ToggleAboutFrame)
 
     -- switch

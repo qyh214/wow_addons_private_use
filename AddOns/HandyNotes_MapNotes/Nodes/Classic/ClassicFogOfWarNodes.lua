@@ -610,3 +610,5 @@ ns.FogOfWarDataClassic = {
 		[164946879570092] = "270320,270321,270322,270323",
 	},
 }
+
+_G.FogOfWarDataClassicGlobal = ns.FogOfWarDataClassic

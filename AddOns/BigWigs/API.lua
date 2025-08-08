@@ -1,83 +1,11 @@
-
+local addonTbl
+do
+	local _
+	_, addonTbl = ...
+end
 local API = {}
+addonTbl.API = API
 local type, next, error = type, next, error
-
---------------------------------------------------------------------------------
--- Locale
---
-
-do
-	local tbl = {}
-	local myRegion = GetLocale()
-	function API:NewLocale(locale, region)
-		if region == "enUS" or region == myRegion then
-			if not tbl[locale] then
-				tbl[locale] = {}
-			end
-			return tbl[locale]
-		end
-	end
-	function API:GetLocale(locale)
-		if tbl[locale] then
-			return tbl[locale]
-		end
-	end
-end
-
---------------------------------------------------------------------------------
--- Voice
---
-
-do
-	local addons = {}
-	function API.RegisterVoicePack(pack)
-		if type(pack) ~= "string" then error("Voice pack name must be a string.") return end
-
-		if not addons[pack] then
-			addons[pack] = true
-		else
-			error(("Voice pack %s already registered."):format(pack))
-		end
-	end
-
-	function API.HasVoicePack()
-		if next(addons) then
-			return true
-		end
-	end
-end
-
---------------------------------------------------------------------------------
--- Countdown
---
-
-do
-	local voices = {}
-	function API:RegisterCountdown(id, name, data)
-		if not data then data, name = name, id end
-		if type(id) ~= "string" then error("Countdown name must be a string.") end
-		if type(data) ~= "table" or #data < 5 or #data > 10 then error("Countdown data must be an indexed table with 5-10 entries.") end
-		if voices[id] then error(("Countdown %q already registered."):format(id)) end
-
-		voices[id] = { name = name }
-		for i = 1, #data do
-			voices[id][i] = data[i]
-		end
-	end
-	function API:GetCountdownList()
-		local list = {}
-		for k, v in next, voices do
-			list[k] = v.name
-		end
-		return list
-	end
-	function API:HasCountdown(id)
-		return voices[id] and true
-	end
-	function API:GetCountdownSound(id, index)
-		return voices[id] and voices[id][index]
-	end
-end
 
 --------------------------------------------------------------------------------
 -- Bar Styles
@@ -123,20 +51,99 @@ do
 end
 
 --------------------------------------------------------------------------------
--- Automated profile imports
+-- Countdown
 --
 
 do
-	local _, tbl = ...
+	local voices = {}
+	function API:RegisterCountdown(id, name, data)
+		if not data then data, name = name, id end
+		if type(id) ~= "string" then error("Countdown name must be a string.") end
+		if type(data) ~= "table" or #data < 5 or #data > 10 then error("Countdown data must be an indexed table with 5-10 entries.") end
+		if voices[id] then error(("Countdown %q already registered."):format(id)) end
+
+		voices[id] = { name = name }
+		for i = 1, #data do
+			voices[id][i] = data[i]
+		end
+	end
+	function API:GetCountdownList()
+		local list = {}
+		for k, v in next, voices do
+			list[k] = v.name
+		end
+		return list
+	end
+	function API:HasCountdown(id)
+		return voices[id] and true
+	end
+	function API:GetCountdownSound(id, index)
+		return voices[id] and voices[id][index]
+	end
+end
+
+--------------------------------------------------------------------------------
+-- Locale
+--
+
+do
+	local tbl = {}
+	local myRegion = GetLocale()
+	function API:NewLocale(locale, region)
+		if region == "enUS" or region == myRegion then
+			if not tbl[locale] then
+				tbl[locale] = {}
+			end
+			return tbl[locale]
+		end
+	end
+	function API:GetLocale(locale)
+		if tbl[locale] then
+			return tbl[locale]
+		end
+	end
+end
+
+--------------------------------------------------------------------------------
+-- Profile imports
+--
+
+do
 	-- A custom profile name and callback function is completely optional
 	-- When specified, a callback function will be called with a boolean as the first arg. True if the user accepted, false otherwise
+	local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 	function API.RegisterProfile(addonName, profileString, optionalCustomProfileName, optionalCallbackFunction)
+		if optionalCustomProfileName == "QuaziiUI" or IsAddOnLoaded("QuaziiUI") then error("This profile is blocked from being imported until it stops tampering with BigWigs bitflag options.") end
 		if type(addonName) ~= "string" or #addonName < 3 then error("Invalid addon name for profile import.") end
 		if type(profileString) ~= "string" or #profileString < 3 then error("Invalid profile string for profile import.") end
 		if optionalCustomProfileName and (type(optionalCustomProfileName) ~= "string" or #optionalCustomProfileName < 3) then error("Invalid custom profile name for the string you want to import.") end
 		if optionalCallbackFunction and type(optionalCallbackFunction) ~= "function" then error("Invalid custom callback function for the string you want to import.") end
-		tbl.LoadCoreAndOptions()
+		addonTbl.LoadCoreAndOptions()
 		BigWigsOptions:SaveImportStringDataFromAddOn(addonName, profileString, optionalCustomProfileName, optionalCallbackFunction)
+	end
+end
+
+--------------------------------------------------------------------------------
+-- Slash commands
+--
+
+do
+	local slashTable = {}
+	local sub = string.sub
+	-- Registers a slash command
+	function API.RegisterSlashCommand(rawSlashName, slashFunc)
+		local slashName = sub(rawSlashName, 2)
+		if not slashTable[slashName] then
+			_G["SLASH_"..slashName.."1"] = rawSlashName
+			SlashCmdList[slashName] = function(text)
+				local func = slashTable[slashName]
+				func(text)
+				if slashTable[slashName] ~= func then -- Did this slash command load an addon that changed what the slash command does?
+					slashTable[slashName](text) -- Then call the new function also
+				end
+			end
+		end
+		slashTable[slashName] = slashFunc
 	end
 end
 
@@ -158,18 +165,69 @@ do
 end
 
 --------------------------------------------------------------------------------
+-- Tools option tables
+--
+
+do
+	local function CopyTable(settingsTable)
+		local copy = {}
+		for key, value in next, settingsTable do
+			if type(value) == "table" then
+				copy[key] = CopyTable(value)
+			else
+				copy[key] = value
+			end
+		end
+		return copy
+	end
+	local tbl = {}
+	-- Get all AceGUI option tables under the "Tools" category
+	function API.GetToolOptionTables()
+		return CopyTable(tbl)
+	end
+	-- Register an AceGUI options table for a module under the "Tools" category
+	function API.SetToolOptionsTable(key, settingsTable)
+		if type(key) ~= "string" then error("The key needs to be a string.") end
+		if type(settingsTable) ~= "table" then error("The settings table needs to be a table.") end
+		tbl[key] = settingsTable
+	end
+end
+
+--------------------------------------------------------------------------------
 -- Versions
 --
 
 do
-	local _, tbl = ...
 	-- Returns the BigWigs version as a number
 	function API.GetVersion()
-		return tbl.version, tbl.guildVersion
+		return addonTbl.version, addonTbl.guildVersion
 	end
 	-- Returns the BigWigs version hash from Git as a string
 	function API.GetVersionHash()
-		return tbl.versionHash
+		return addonTbl.versionHash
+	end
+end
+
+--------------------------------------------------------------------------------
+-- Voice
+--
+
+do
+	local addons = {}
+	function API.RegisterVoicePack(pack)
+		if type(pack) ~= "string" then error("Voice pack name must be a string.") return end
+
+		if not addons[pack] then
+			addons[pack] = true
+		else
+			error(("Voice pack %s already registered."):format(pack))
+		end
+	end
+
+	function API.HasVoicePack()
+		if next(addons) then
+			return true
+		end
 	end
 end
 

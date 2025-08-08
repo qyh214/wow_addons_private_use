@@ -45,7 +45,6 @@ end
 
 L = BigWigs:NewBossLocale("The Culling of Stratholme Trash", "deDE")
 if L then
-	L.custom_on_autotalk = "Automatisch ansprechen"
 	L.custom_on_autotalk_desc = "Wählt direkt Chromies und Arthas' Dialogoptionen."
 
 	L.gossip_available = "Dialog verfügbar"
@@ -90,17 +89,13 @@ end
 
 L = BigWigs:NewBossLocale("The Violet Hold Trash", "deDE")
 if L then
-	L.portals = "Portale"
 	L.portals_desc = "Informationen über Portale."
-	L.boss_message = "Boss"
-	L.portal_bar = "Portal"
 end
 
 -- Trial of the Champion
 
 L = BigWigs:NewBossLocale("Trial of the Champion Trash", "deDE")
 if L then
-	L.custom_on_autotalk = "Automatisch ansprechen"
 	L.custom_on_autotalk_desc = "Wählt direkt die Dialogoption zum Starten von Begegnungen."
 end
 

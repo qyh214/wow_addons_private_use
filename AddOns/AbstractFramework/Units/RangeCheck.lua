@@ -202,7 +202,7 @@ function AF.IsInRange(unit, check)
         return inRange
 
     else
-        if UnitCanAssist("player", unit) or UnitCanCooperate("player", unit) then
+        if UnitCanAssist("player", unit) then -- or UnitCanCooperate("player", unit)
             if not (UnitIsConnected(unit) and UnitInSamePhase(unit)) then
                 return false
             end

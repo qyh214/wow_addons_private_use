@@ -603,52 +603,66 @@ do  -- NPC Interaction
     API.CancelClosingGossipInteraction = CancelClosingGossipInteraction;
 
 
-    f:RegisterEvent("CINEMATIC_START");
-    f:RegisterEvent("CINEMATIC_STOP");
-    f:RegisterEvent("PLAY_MOVIE");
-    f:RegisterEvent("STOP_MOVIE");
-    f:RegisterEvent("LOADING_SCREEN_DISABLED");
+    local CGListener = CreateFrame("Frame");
+    do
+        local function IsPlayingCutscene()
+            if (not CGListener.CinematicFrame) and CinematicFrame then
+                CGListener.CinematicFrame = CinematicFrame;
+            end
 
-    f:SetScript("OnEvent", function(self, event, ...)
-        if event == "CINEMATIC_START" then
-            self.isPlayingCinematic = true;
-        elseif event == "CINEMATIC_STOP" then
-            self.isPlayingCinematic = false;
-        elseif event == "PLAY_MOVIE" then
-            self.isPlayingMovie = true;
-        elseif event == "STOP_MOVIE" then
-            self.isPlayingMovie = false;
-        elseif event == "LOADING_SCREEN_DISABLED" then
-            --Cutscene events can be stuck?
-            self.isPlayingCutscene = false;
-            self.isPlayingCinematic = false;
-            self.isPlayingMovie = false;
-        end
+            if (not CGListener.MovieFrame) and MovieFrame then
+                CGListener.MovieFrame = MovieFrame;
+            end
 
-        if self.isPlayingCinematic or self.isPlayingMovie then
-            self.isPlayingCutscene = true;
-            CallbackRegistry:Trigger("PlayCutscene");
-        else
-            self.isPlayingCutscene = false;
-        end
-    end);
-
-    local function IsPlayingCutscene()
-        if f.isPlayingCutscene ~= nil then
-            return f.isPlayingCutscene
-        else
-            if (CinematicFrame and CinematicFrame:IsShown()) or (MovieFrame and MovieFrame:IsShown()) then
+            if (CGListener.CinematicFrame and CGListener.CinematicFrame:IsShown()) or (CGListener.MovieFrame and CGListener.MovieFrame:IsShown()) then
                 --Cinematic played upon loading screen finished doesn't trigger events due to loading order? 11.1.0 Undermine
-                f.isPlayingCutscene = true;
-                CallbackRegistry:Trigger("PlayCutscene");
                 return true
             else
-                f.isPlayingCutscene = false;
                 return false
             end
         end
+        API.IsPlayingCutscene = IsPlayingCutscene;
+
+
+        CGListener:RegisterEvent("CINEMATIC_START");
+        CGListener:RegisterEvent("CINEMATIC_STOP");
+        CGListener:RegisterEvent("PLAY_MOVIE");
+        CGListener:RegisterEvent("STOP_MOVIE");
+        --CGListener:RegisterEvent("LOADING_SCREEN_DISABLED");
+
+        function CGListener:CheckStatus()
+            self:SetScript("OnUpdate", self.OnUpdate_CheckStatus);
+        end
+
+        function CGListener:OnUpdate_CheckStatus(elapsed)
+            self:SetScript("OnUpdate", nil);
+            self.isPlayingCutscene = IsPlayingCutscene();
+            if self.isPlayingCutscene then
+                CallbackRegistry:Trigger("PlayCutscene");
+            end
+        end
+
+        function CGListener:PauseUpdate()
+            self.paused = true;
+            self:SetScript("OnUpdate", self.OnUpdate_PauseUpdate);
+        end
+
+        function CGListener:OnUpdate_PauseUpdate(elapsed)
+            self:SetScript("OnUpdate", nil);
+            self.paused = nil;
+        end
+
+        CGListener:SetScript("OnEvent", function(self, event, ...)
+            --self:CheckStatus();
+            if event == "CINEMATIC_START" or event == "PLAY_MOVIE" then
+                if not self.paused then
+                    self:PauseUpdate();
+                    CallbackRegistry:Trigger("PlayCutscene");
+                end
+            end
+        end);
     end
-    API.IsPlayingCutscene = IsPlayingCutscene;
+
 
     local function SetPlayCutsceneCallback(callback)
         CallbackRegistry:Register("PlayCutscene", callback);
@@ -807,6 +821,18 @@ do  -- NPC Interaction
     end
     API.GetCurrentNPCInfo = GetCurrentNPCInfo;
 
+    local function GetUnitTypeAndID(unit)
+        unit = unit or "npc";
+        local guid = UnitGUID("npc");
+        if guid then
+            local unitType, id = match(guid, "^(%a+)%-0%-%d*%-%d*%-%d*%-(%d*)");
+            if unitType and id then
+                return unitType, tonumber(id)
+            end
+        end
+    end
+    API.GetUnitTypeAndID = GetUnitTypeAndID;
+
     local SkippedNPC = {
         [94398] = true,     --Fleet Command Table
         [94399] = true,     --Fleet Command Table
@@ -816,9 +842,8 @@ do  -- NPC Interaction
         [215758] = true,    --Mission Command Table
     };
     local function IsInteractingWithGameObject()
-        local guid = UnitGUID("npc");
-        if guid then
-            local unitType, id = match(guid, "^(%a+)%-0%-%d*%-%d*%-%d*%-(%d*)");
+        local unitType, id = GetUnitTypeAndID("npc");
+        if id then
             if unitType == "GameObject" or unitType == "Vehicle" then
                 return true
             elseif unitType == "Creature" and id then
@@ -1237,6 +1262,7 @@ do  -- Quest
         ["QuestBG-Web"] = "TWW-Web.png",
         ["QuestBG-1027"] = "TWW-Azeroth.png",
         ["QuestBG-Rocket"] = "TWW-Rocket.png",
+        ["QuestBG-Fist"] = "TWW-Fist.png",
     };
 
     local function GetQuestBackgroundDecor(questID)
@@ -1296,7 +1322,7 @@ do  -- Quest
         if not item then return end;
         local classID, subclassID = select(6, GetItemInfoInstant(item));
         --print(item, classID, subclassID)
-        return (classID == 12) or (classID == 0 and subclassID == 8) or (classID == 15 and (subclassID == 0 or subclassID == 4))
+        return (classID == 12) or (classID == 0 and subclassID == 8) or (classID == 15 and subclassID == 4)     ---Re-ignore Junk?
     end
     API.IsQuestLoreItem = IsQuestLoreItem;
 
@@ -1446,8 +1472,9 @@ do  -- Quest
 
     local function ShouldMuteQuestDetail(questID)
         --Temp Blizzard bug fix for weekly quest appearing repeatedly issue
-        local class = GetQuestClassification(questID);
-        if (class == 4 or class == 5) and IsOnQuest(questID) then
+        local class = GetQuestClassification and GetQuestClassification(questID);
+        if (class == 4 or class == 5 or class == nil) and IsOnQuest(questID) then
+            --Nil case is for Classic where QuestClassification doesn't exist
             return true
         else
             return false
@@ -2063,6 +2090,7 @@ do  -- Faction -- Reputation
     local function GetFactionStatusText(factionID)
         --Derived from Blizzard ReputationFrame_InitReputationRow in ReputationFrame.lua
         if not factionID then return end;
+        local factionName;
         local p1, description, standingID, barMin, barMax, barValue = GetFactionInfoByID(factionID);
 
         if type(p1) == "table" then     --Return table after TWW
@@ -2070,10 +2098,13 @@ do  -- Faction -- Reputation
             barMin = p1.currentReactionThreshold;
             barMax = p1.nextReactionThreshold;
             barValue = p1.currentStanding;
+            factionName = p1.name;
+        else
+            factionName = p1;
         end
 
-        local isParagon = C_Reputation.IsFactionParagon(factionID);
-        local isMajorFaction = C_Reputation.IsMajorFaction(factionID);
+        local isParagon = C_Reputation.IsFactionParagon and C_Reputation.IsFactionParagon(factionID);
+        local isMajorFaction = C_Reputation.IsMajorFaction and C_Reputation.IsMajorFaction(factionID);
         local repInfo = C_GossipInfo.GetFriendshipReputation(factionID);
 
         local isCapped;
@@ -2084,6 +2115,8 @@ do  -- Faction -- Reputation
 
             if repInfo.nextThreshold then
                 barMin, barMax, barValue = repInfo.reactionThreshold, repInfo.nextThreshold, repInfo.standing;
+                barValue = barValue - barMin;
+                barMax = barMax - barMin;
             else
                 barMin, barMax, barValue = 0, 1, 1;
                 isCapped = true;
@@ -2139,11 +2172,7 @@ do  -- Faction -- Reputation
             text = text .. rolloverText;
         end
 
-        if text then
-            text = " \n"..text;
-        end
-
-        return text
+        return text, factionName
     end
     API.GetFactionStatusText = GetFactionStatusText;
 
@@ -2418,6 +2447,7 @@ do  -- Tooltip
         TP:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", 0, -128);
         TP:Show();
         TP:SetScript("OnUpdate", nil);
+        TP.shouldManuallyAddItemLevel = not addon.IsToCVersionEqualOrNewerThan(50500);
 
 
         local UpdateFrame = CreateFrame("Frame");
@@ -2456,7 +2486,8 @@ do  -- Tooltip
             local tooltipData = {};
             tooltipData.dataInstanceID = 0;
 
-            local addItemLevel;
+            local shouldAddItemLevel = TP.shouldManuallyAddItemLevel;
+            local itemLevel;
             local itemLink = GetTooltipHyperlink();
 
             if itemLink then
@@ -2464,8 +2495,8 @@ do  -- Tooltip
                     UpdateFrame:OnItemChanged(numLines);
                 end
 
-                if API.IsEquippableItem(itemLink) then
-                    addItemLevel = API.GetItemLevel(itemLink);
+                if shouldAddItemLevel and API.IsEquippableItem(itemLink) then
+                    itemLevel = API.GetItemLevel(itemLink);
                 end
             end
 
@@ -2477,10 +2508,11 @@ do  -- Tooltip
 
             local fs, text;
             for i = 1, numLines do
-                if i == 2 and addItemLevel then
+                if i == 2 and shouldAddItemLevel and itemLevel then
+                    --Default tooltip shows item level after Mists
                     n = n + 1;
                     lines[n] = {
-                        leftText = L["Format Item Level"]:format(addItemLevel);
+                        leftText = L["Format Item Level"]:format(itemLevel);
                         leftColor = CreateColor(1, 0.82, 0),
                     };
                 end
@@ -3223,6 +3255,39 @@ do  -- System
         end
     end
     API.RemoveQuestObjectiveTrackerQuestPopUp = RemoveQuestObjectiveTrackerQuestPopUp;
+
+
+    local GetCurrentKeyBoardFocus = GetCurrentKeyBoardFocus;
+
+    function API.ClearEditBoxFocus()
+        local keyBoardFocus = GetCurrentKeyBoardFocus();
+        if keyBoardFocus and keyBoardFocus.ClearFocus then
+            securecallfunction(keyBoardFocus.ClearFocus, keyBoardFocus);
+        end
+    end
+    CallbackRegistry:Register("DialogueUI.Show", API.ClearEditBoxFocus);
+    CallbackRegistry:Register("BookUI.Show", API.ClearEditBoxFocus);
+
+
+    if StaticPopup_FindVisible then
+        function API.CloseGossipStaticPopups()
+            local whiches = {"GOSSIP_CONFIRM", "GOSSIP_ENTER_CODE"};
+            local soundUnmuted = true;
+            for _, which in ipairs(whiches) do
+                local dialog = StaticPopup_FindVisible(which);
+                if dialog then
+                    if soundUnmuted then
+                        soundUnmuted = false;
+                        API.BrieflyMuteUIOpenHideSound();
+                    end
+                    dialog:Show();
+                    dialog:Hide();
+                end
+            end
+        end
+    else
+        API.CloseGossipStaticPopups = AlwaysNil;
+    end
 end
 
 do  -- Zone -- Location -- Area

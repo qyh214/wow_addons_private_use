@@ -1,7 +1,6 @@
 -- Ara-Kara, City of Echoes
 
 local L = BigWigs:NewBossLocale("Ara-Kara, City of Echoes Trash", "koKR")
-if not L then return end
 if L then
 	L.discordant_attendant = "불협의 수행원"
 	L.engorged_crawler = "부풀어 오른 거미"
@@ -32,6 +31,7 @@ end
 L = BigWigs:NewBossLocale("Cinderbrew Meadery Trash", "koKR")
 if L then
 	L.venture_co_pyromaniac = "투자개발회사 불놀이꾼"
+	L.venture_co_patron = "투자개발회사 손님"
 	L.hired_muscle = "고용된 불한당"
 	L.tasting_room_attendant = "시식실 수행원"
 	L.chef_chewie = "주방장 츄이"
@@ -117,6 +117,27 @@ if L then
 	L.wriggling_darkspawn = "꿈틀거리는 어둠살이"
 end
 
+-- Eco-Dome Al'dani
+
+L = BigWigs:NewBossLocale("Eco-Dome Al'dani Trash", "koKR")
+if L then
+	L.terrified_broker = "겁에 질린 중개자"
+	L.arcane_siphon = "비전 착취"
+	L.overgorged_mite = "과식한 진드기"
+	L.voracious_gorger = "게걸스러운 먹보"
+	L.ravenous_destroyer = "게걸스러운 파괴자"
+	L.overcharged_sentinel = "과충전된 파수꾼"
+	L.wastelander_farstalker = "황무지인 천리추적자"
+	L.tamed_ruinstalker = "길든 폐허 추적자"
+	L.wastelander_ritualist = "황무지인 의식술사"
+	L.wastelander_pactspeaker = "황무지인 서약대변자"
+	L.karesh_elemental = "크아레쉬의 정령"
+	L.burrowing_creeper = "잠복하는 살금벌레"
+	L.wastes_creeper = "황원 살금벌레"
+
+	L.taahbat_and_awazj_warmup_trigger = "이럴 시간 없다. 타바트! 놈들이 더 따라오지 못하게 막아라."
+end
+
 -- Operation: Floodgate
 
 L = BigWigs:NewBossLocale("Operation: Floodgate Trash", "koKR")
@@ -197,6 +218,7 @@ end
 L = BigWigs:NewBossLocale("The Dawnbreaker Trash", "koKR")
 if L then
 	L.arathi_lamplighter = "아라시 점등원"
+	L.nightfall_curseblade = "일몰 저주칼날"
 	L.nightfall_shadowmage = "일몰 어둠마법사"
 	L.nightfall_ritualist = "일몰 의식술사"
 	L.nightfall_commander = "일몰 사령관"

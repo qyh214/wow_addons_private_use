@@ -64,8 +64,8 @@ L["Collection Collected"] = "Полученные";
 
 --String Format
 L["Format Reputation Reward Tooltip"] = "Улучшает отношение фракции %2$s на %1$d";
-L["Format You Have X"] = "- Имеется |cffffffff%d|r";
-L["Format You Have X And Y In Bank"] = "- Имеется |cffffffff%d|r (|cffffffff%d|r в банке)";
+L["Format You Have X"] = "- Имеется |cffffffff%s|r";
+L["Format You Have X And Y In Bank"] = "- Имеется |cffffffff%s|r (|cffffffff%s|r в банке)";
 L["Format Suggested Players"] = "Рекомендуется %d |4игрок:игрока:игроков;.";
 L["Format Current Skill Level"] = "Текущий уровень: |cffffffff%d/%d|r";
 L["Format Reward Title"] = "Звание: %s";
@@ -241,7 +241,7 @@ L["Nameplate Dialog"] = "Отображать диалог на неймплей
 L["Nameplate Dialog Desc"] = "Отображать диалог на неймплейте NPC, если они не предлагают выбора.\n\nЭтот параметр изменяет CVar \"SoftTarget Nameplate Interact\".";
 L["Compatibility"] = "Совместимость";
 L["Disable DUI In Instance"] = "Использовать стандартный интерфейс в подземельях";
-L["Disable DUI In Instance Desc"] = "Отключить Dialogue UI и использовать стандартный интерфейс игры, когда вы находитесь в подземелье или рейде.\n\nЕсли вы не можете взаимодействовать с NPC, который позволяет вам начинать или пропускать бои с боссами, активируйте эту опцию.";
+L["Disable DUI In Instance Desc"] = "Отключить Dialogue UI и использовать стандартный интерфейс игры, когда вы находитесь в подземелье или рейде.";
 
 L["Disable UI Motions"] = "Уменьшить движение интерфейса";
 L["Disable UI Motions Desc"] = "Уменьшает количество движений интерефейса, таких как разворачивание интерфейса или сдвигов текста кнопки";
@@ -280,6 +280,8 @@ L["TTS Include Content"] = "Включать содержимое";
 L["TTS Content NPC Name"] = "Имя NPC";
 L["TTS Content Quest Name"] = "Название задания";
 L["TTS Content Objective"] = "Цели задания";
+L["TTS Button Read Original"] = "Переключить на чтение исходного текста";
+L["TTS Button Read Translation"] = "Переключить на чтение перевода";
 
 --Book UI and Settings
 L["Readables"] = "Читаемые";   --Readable Objects
@@ -348,6 +350,8 @@ L["Match Stat DPS"] = "([,%d%.]+) ед. урона в секунду";
 L["Show Answer"] = "Показать решение.";
 L["Quest Failed Pattern"] = "^Не удалось завершить";
 L["AutoCompleteQuest HallowsEnd"] = "Кулек конфет";     --Quest:28981
+L["AutoCompleteQuest Midsummer"] = "Поклонение огню";   --Quest:29031
+L["AutoCompleteQuest Midsummer2"] = "Осквернение огня";     --Quest:11580
 
 --Asking for Directions-- (match the name to replace gossip icon)
 L["Pin Auction House"] = "Аукционный дом";

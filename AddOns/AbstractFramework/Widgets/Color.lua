@@ -12,10 +12,16 @@ local UnitInPartyIsAI = UnitInPartyIsAI
 local UnitClassBase = UnitClassBase
 local UnitGUID = UnitGUID
 
+local ACCENT_COLOR = {["hex"] = "ffff6600", ["t"] = {1, 0.4, 0, 1}, ["normal"] = {1, 0.4, 0, 0.3}, ["hover"] = {1, 0.4, 0, 0.6}}
+local ACCENT_COLOR_ALT = {["hex"] = "ffff0066", ["t"] = {1, 0, 0.4, 1}, ["normal"] = {1, 0, 0.4, 0.3}, ["hover"] = {1, 0, 0.4, 0.6}}
+
 local COLORS = {
     -- accent
-    ["accent"] = {["hex"] = "ffff6600", ["t"] = {1, 0.4, 0, 1}, ["normal"] = {1, 0.4, 0, 0.3}, ["hover"] = {1, 0.4, 0, 0.6}},
-    ["accent_alt"] = {["hex"] = "ffff0066", ["t"] = {1, 0, 0.4, 1}, ["normal"] = {1, 0, 0.4, 0.3}, ["hover"] = {1, 0, 0.4, 0.6}},
+    ["accent"] = AF.Copy(ACCENT_COLOR),
+
+    -- default accent
+    ["blazing_tangerine"] = AF.Copy(ACCENT_COLOR), -- 炽热橘
+    ["vivid_raspberry"] = AF.Copy(ACCENT_COLOR_ALT), -- 炫莓粉
 
     -- for regions
     ["background"] = {["hex"] = "d91a1a1a", ["t"] = {0.1, 0.1, 0.1, 0.85}},
@@ -26,9 +32,13 @@ local COLORS = {
     ["combat_mask"] = {["hex"] = "bf332b2b", ["t"] = {0.2, 0.17, 0.17, 0.75}},
     ["disabled"] = {["hex"] = "ff666666", ["t"] = {0.4, 0.4, 0.4, 1}},
     ["none"] = {["hex"] = "00000000", ["t"] = {0, 0, 0, 0}},
-    ["sheet_bg"] = {["t"] = {0.15, 0.15, 0.15, 0.9}},
-    ["sheet_bg2"] = {["t"] = {0.17, 0.17, 0.17, 0.9}},
-    ["sheet_row_highlight"] = {["t"] = {0.2, 0.2, 0.2, 0.9}},
+    ["yellow_text"] = {["hex"] = "ffffd100", ["t"] = {1, 0.82, 0, 1}},
+    ["shadow"] = {["hex"] = "3f000000", ["t"] = {0, 0, 0, 0.25}},
+
+    -- sheet
+    ["sheet_normal"] = {["t"] = {0.15, 0.15, 0.15, 0.9}}, -- row/column normal
+    ["sheet_normal2"] = {["t"] = {0.17, 0.17, 0.17, 0.9}}, -- row/column normal
+    ["sheet_highlight"] = {["t"] = {0.2, 0.2, 0.2, 0.9}}, -- row/column highlight
     ["sheet_cell_highlight"] = {["t"] = {0.3, 0.3, 0.3, 0.9}},
 
     -- common
@@ -40,6 +50,11 @@ local COLORS = {
     ["purple"] = {["hex"] = "ffff00ff", ["t"] = {1, 0, 1, 1}},
     ["white"] = {["hex"] = "ffffffff", ["t"] = {1, 1, 1, 1}},
     ["black"] = {["hex"] = "ff000000", ["t"] = {0, 0, 0, 1}},
+
+    -- coin colors
+    ["coin_gold"] = {["hex"] = "ffffd300", ["t"] = {1, 0.827, 0, 1}},
+    ["coin_silver"] = {["hex"] = "ffb2b2b2", ["t"] = {0.7, 0.7, 0.7, 1}},
+    ["coin_copper"] = {["hex"] = "ffcc7f3f", ["t"] = {0.8, 0.5, 0.25, 1}},
 
     -- others
     ["darkgray"] = {["hex"] = "ff919191", ["t"] = {0.57, 0.57, 0.57, 1}},
@@ -56,11 +71,13 @@ local COLORS = {
     ["lightred"] = {["hex"] = "ffff4757", ["t"] = {1, 0.28, 0.34, 1}},
     ["classicrose"] = {["hex"] = "fffbcce7", ["t"] = {0.98, 0.8, 0.91, 1}},
     ["lavender"] = {["hex"] = "fff5baff", ["t"] = {0.96, 0.73, 1, 1}},
-    ["pink"] = {["hex"] = "ffff6b81", ["t"] = {1, 0.42, 0.51, 1}},
+    ["pink"] = {["hex"] = "fffb7299", ["t"] = {0.98, 0.45, 0.6, 1}},
     ["hotpink"] = {["hex"] = "ffff4466", ["t"] = {1, 0.27, 0.4, 1}},
-    ["lime"] = {["hex"] = "ff7bed9f", ["t"] = {0.48, 0.93, 0.62, 1}},
-    ["brightgreen"] = {["hex"] = "ff2ed573", ["t"] = {0.18, 0.84, 0.45, 1}},
+    ["softlime"] = {["hex"] = "ff7bed9f", ["t"] = {0.48, 0.93, 0.62, 1}},
+    ["lime"] = {["hex"] = "ff2ed573", ["t"] = {0.18, 0.84, 0.45, 1}},
+    ["brightgreen"] = {["hex"] = "ff66ff00", ["t"] = {0.4, 1, 0, 1}},
     ["chartreuse"] = {["hex"] = "ff80ff00", ["t"] = {0.502, 1, 0, 1}},
+    ["lightblue"] = {["hex"] = "ffadd8e6", ["t"] = {0.68, 0.85, 0.9, 1}},
     ["skyblue"] = {["hex"] = "ff00ccff", ["t"] = {0, 0.8, 1, 1}},
     ["vividblue"] = {["hex"] = "ff1e90ff", ["t"] = {0.12, 0.56, 1, 1}},
     ["softblue"] = {["hex"] = "ff5352ed", ["t"] = {0.33, 0.32, 0.93, 1}},
@@ -140,16 +157,16 @@ local COLORS = {
     ["STAGGER_YELLOW"] = {["hex"] = "fffff9b7", ["t"] = {1, 0.98, 0.72}},
     ["STAGGER_RED"] = {["hex"] = "ffff6b6b", ["t"] = {1, 0.42, 0.42}},
 
-    -- quality https://warcraft.wiki.gg/wiki/Quality
-    ["Poor"] = {["hex"] = "ff9d9d9d", ["t"] = {0.62, 0.62, 0.62, 1}}, -- ITEM_QUALITY0_DESC
+    -- default quality colors https://warcraft.wiki.gg/wiki/Quality
+    ["Poor"] = {["hex"] = "ff9d9d9d", ["t"] = {0.615686297416687, 0.615686297416687, 0.615686297416687, 1}}, -- ITEM_QUALITY0_DESC
     ["Common"] = {["hex"] = "ffffffff", ["t"] = {1, 1, 1, 1}}, -- ITEM_QUALITY1_DESC
-    ["Uncommon"] = {["hex"] = "ff1eff00", ["t"] = {0.12, 1, 0, 1}}, -- ITEM_QUALITY2_DESC
-    ["Rare"] = {["hex"] = "ff0070dd", ["t"] = {0, 0.44, 0.87, 1}}, -- ITEM_QUALITY3_DESC
-    ["Epic"] = {["hex"] = "ffa335ee", ["t"] = {0.64, 0.21, 0.93, 1}}, -- ITEM_QUALITY4_DESC
-    ["Legendary"] = {["hex"] = "ffff8000", ["t"] = {1, 0.5, 0, 1}}, -- ITEM_QUALITY5_DESC
-    ["Artifact"] = {["hex"] = "ffe6cc80", ["t"] = {0.9, 0.8, 0.5, 1}}, -- ITEM_QUALITY6_DESC
-    ["Heirloom"] = {["hex"] = "ff00ccff", ["t"] = {0, 0.8, 1, 1}}, -- ITEM_QUALITY7_DESC
-    ["WoWToken"] = {["hex"] = "ff00ccff", ["t"] = {0, 0.8, 1, 1}}, -- ITEM_QUALITY8_DESC
+    ["Uncommon"] = {["hex"] = "ff1eff00", ["t"] = {0.1176470667123795, 1, 0, 1}}, -- ITEM_QUALITY2_DESC
+    ["Rare"] = {["hex"] = "ff0070dd", ["t"] = {0, 0.4392157196998596, 0.8666667342185974, 1}}, -- ITEM_QUALITY3_DESC
+    ["Epic"] = {["hex"] = "ffa335ee", ["t"] = {0.6392157077789307, 0.207843154668808, 0.9333333969116211, 1}}, -- ITEM_QUALITY4_DESC
+    ["Legendary"] = {["hex"] = "ffff8000", ["t"] = {1, 0.501960813999176, 0, 1}}, -- ITEM_QUALITY5_DESC
+    ["Artifact"] = {["hex"] = "ffe6cc80", ["t"] = {0.9019608497619629, 0.8000000715255737, 0.501960813999176, 1}}, -- ITEM_QUALITY6_DESC
+    ["Heirloom"] = {["hex"] = "ff00ccff", ["t"] = {0, 0.8000000715255737, 1, 1}}, -- ITEM_QUALITY7_DESC
+    ["WoWToken"] = {["hex"] = "ff00ccff", ["t"] = {0, 0.8000000715255737, 1, 1}}, -- ITEM_QUALITY8_DESC
 }
 
 ---@param color string
@@ -209,17 +226,40 @@ function AF.GetColorHex(color)
     return COLORS[color]["hex"]
 end
 
+---@param color string
+---@return string colorStr |caarrggbb
+function AF.GetColorStr(color)
+    local hex = AF.GetColorHex(color)
+
+    if #hex == 8 then
+        return "|c" .. hex
+    else
+        return "|cff" .. hex
+    end
+end
+
 ---@param auraType string
+---@param alpha? number
 ---@return number r
 ---@return number g
 ---@return number b
-function AF.GetAuraTypeColor(auraType)
+function AF.GetAuraTypeColor(auraType, alpha)
     auraType = auraType and "aura_" .. strlower(auraType)
     if COLORS[auraType] then
-        return AF.GetColorRGB(auraType)
+        return AF.GetColorRGB(auraType, alpha)
     else
-        return AF.GetColorRGB("black")
+        return AF.GetColorRGB("black", alpha)
     end
+end
+
+local GetItemQualityColor = C_Item.GetItemQualityColor
+---@param quality number
+---@return number r
+---@return number g
+---@return number b
+function AF.GetItemQualityColor(quality)
+    local r, g, b = GetItemQualityColor(quality)
+    return r, g, b
 end
 
 local ADDONS = AF.REGISTERED_ADDONS
@@ -243,12 +283,75 @@ local function BuildColorTable(color)
     end
 end
 
+AF.RegisterCallback("AF_LOADED", function()
+    if type(AFConfig.customAccentColor) == "table" then
+        COLORS["accent"] = AFConfig.customAccentColor
+    end
+end, "high")
+
 ---@param color string|table colorName, colorHex, colorTable
 ---@param buttonNormalColor? string|table
 ---@param buttonHoverColor? string|table
 function AF.SetAccentColor(color, buttonNormalColor, buttonHoverColor)
-    local addon = GetAddon()
-    assert(addon, "no registered addon found")
+    local t = BuildColorTable(color)
+
+    -- normal
+    local normal
+    if buttonNormalColor then
+        normal = BuildColorTable(buttonNormalColor)["t"]
+    else
+        normal = AF.Copy(t["t"])
+        normal[4] = 0.3
+    end
+
+    -- hover
+    local hover
+    if buttonHoverColor then
+        hover = BuildColorTable(buttonHoverColor)["t"]
+    else
+        hover = AF.Copy(t["t"])
+        hover[4] = 0.6
+    end
+
+    COLORS["accent"] = {["hex"] = t["hex"], ["t"] = t["t"], ["normal"] = normal, ["hover"] = hover}
+    AFConfig.customAccentColor = COLORS["accent"]
+end
+
+function AF.ResetAccentColor()
+    COLORS["accent"] = AF.Copy(ACCENT_COLOR)
+    AFConfig.customAccentColor = nil
+end
+
+---@param alpha? number
+---@param saturation? number
+---@return number r
+---@return number g
+---@return number b
+---@return number a
+function AF.GetAccentColorRGB(alpha, saturation)
+    return AF.GetColorRGB("accent", alpha, saturation)
+end
+
+---@param alpha? number
+---@param saturation? number
+---@return table
+function AF.GetAccentColorTable(alpha, saturation)
+    return AF.GetColorTable("accent", alpha, saturation)
+end
+
+---@param alpha? number
+---@param saturation? number
+---@return string
+function AF.GetAccentColorHex(alpha, saturation)
+    return AF.GetColorHex("accent", alpha, saturation)
+end
+
+---@param color string|table colorName, colorHex, colorTable
+---@param buttonNormalColor? string|table
+---@param buttonHoverColor? string|table
+function AF.SetAddonAccentColor(addon, color, buttonNormalColor, buttonHoverColor)
+    addon = addon or GetAddon()
+    assert(type(addon) == "string", "no registered addon found")
 
     local t = BuildColorTable(color)
 
@@ -279,7 +382,7 @@ end
 
 ---@param addon? string
 ---@return string accentColorName registered addon folder name or "accent"
-function AF.GetAccentColorName(addon)
+function AF.GetAddonAccentColorName(addon)
     addon = addon or GetAddon()
     if addon and COLORS[addon] then
         return addon
@@ -290,8 +393,8 @@ end
 ---@param alpha? number
 ---@param saturation? number
 ---@return table
-function AF.GetAccentColorTable(alpha, saturation)
-    return AF.GetColorTable(AF.GetAccentColorName(), alpha, saturation)
+function AF.GetAddonAccentColorTable(addon, alpha, saturation)
+    return AF.GetColorTable(AF.GetAddonAccentColorName(addon), alpha, saturation)
 end
 
 ---@param alpha? number
@@ -300,15 +403,15 @@ end
 ---@return number g
 ---@return number b
 ---@return number a
-function AF.GetAccentColorRGB(alpha, saturation)
-    return AF.GetColorRGB(AF.GetAccentColorName(), alpha, saturation)
+function AF.GetAddonAccentColorRGB(addon, alpha, saturation)
+    return AF.GetColorRGB(AF.GetAddonAccentColorName(addon), alpha, saturation)
 end
 
 ---@param alpha? number
 ---@param saturation? number
 ---@return string
-function AF.GetAccentColorHex(alpha, saturation)
-    return AF.GetColorHex(AF.GetAccentColorName(), alpha, saturation)
+function AF.GetAddonAccentColorHex(addon, alpha, saturation)
+    return AF.GetColorHex(AF.GetAddonAccentColorName(addon), alpha, saturation)
 end
 
 ---@param class string capitalized class name
@@ -450,9 +553,16 @@ end
 -- coloring
 ---------------------------------------------------------------------
 ---@param fs FontString
----@param color string
+---@param color string|table
 function AF.ColorFontString(fs, color)
-    local r, g, b, a = AF.GetColorRGB(color)
+    local r, g, b, a
+    if type(color) == "string" then
+        r, g, b, a = AF.GetColorRGB(color)
+    elseif type(color) == "table" then
+        r, g, b, a = AF.UnpackColor(color)
+    else
+        r, g, b, a = 1, 1, 1, 1
+    end
     fs:SetTextColor(r, g, b, a)
 end
 
@@ -474,6 +584,14 @@ end
 ---@return string coloredText \"|cffrrggbbtext|r\"
 function AF.WrapTextInColorRGB(text, r, g, b)
     return AF.WrapTextInColorCode(text, AF.ConvertRGBToHEX(r, g, b, 1))
+end
+
+---@param text string
+---@param quality number
+---@return string coloredText \"|cffaarrggbbtext|r\"
+function AF.WrapTextInQualityColor(text, quality)
+    local hex = select(4, GetItemQualityColor(quality))
+    return format("|c%s%s|r", hex, text)
 end
 
 ---comment

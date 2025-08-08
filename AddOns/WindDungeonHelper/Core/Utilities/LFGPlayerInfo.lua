@@ -10,10 +10,14 @@ local tinsert = tinsert
 local tonumber = tonumber
 local tostring = tostring
 
+local GetClassInfo = GetClassInfo
 local GetSpecializationInfoForClassID = GetSpecializationInfoForClassID
-local C_LFGList_GetSearchResultInfo = C_LFGList.GetSearchResultInfo
-local C_LFGList_GetSearchResultMemberInfo = C_LFGList.GetSearchResultMemberInfo
 
+local C_LFGList_GetActivityInfoTable = C_LFGList.GetActivityInfoTable
+local C_LFGList_GetSearchResultInfo = C_LFGList.GetSearchResultInfo
+local C_LFGList_GetSearchResultPlayerInfo = C_LFGList.GetSearchResultPlayerInfo
+
+local GROUP_FINDER_CATEGORY_ID_DUNGEONS = GROUP_FINDER_CATEGORY_ID_DUNGEONS
 local LOCALIZED_CLASS_NAMES_MALE = LOCALIZED_CLASS_NAMES_MALE
 
 -- Initialize
@@ -127,25 +131,34 @@ function U:Update(resultID)
 	self.cache:Clear()
 
 	for i = 1, result.numMembers do
-		local role, class, _, spec = C_LFGList_GetSearchResultMemberInfo(resultID, i)
+		local memberInfo = C_LFGList_GetSearchResultPlayerInfo(resultID, i)
+		if memberInfo then
+			local role, class, spec = memberInfo.assignedRole, memberInfo.classFilename, memberInfo.specName
 
-		if not role then
-			self:Log("debug", "cache not updated correctly, the role is nil.")
-			return
+			if not role then
+				self:Log("debug", "cache not updated correctly, the role is nil.")
+				return
+			end
+
+			if not class then
+				self:Log("debug", "cache not updated correctly, the class is nil.")
+				return
+			end
+
+			if not spec then
+				self:Log("debug", "cache not updated correctly, the spec is nil.")
+				return
+			end
+
+			self.cache:AddPlayer(role, class, spec)
 		end
-
-		if not class then
-			self:Log("debug", "cache not updated correctly, the class is nil.")
-			return
-		end
-
-		if not spec then
-			self:Log("debug", "cache not updated correctly, the spec is nil.")
-			return
-		end
-
-		self.cache:AddPlayer(role, class, spec)
 	end
+end
+
+function U:IsIDDungeons(resultID)
+	local result = C_LFGList_GetSearchResultInfo(resultID)
+	local activity = C_LFGList_GetActivityInfoTable(result.activityIDs[1])
+	return activity and activity.categoryID == GROUP_FINDER_CATEGORY_ID_DUNGEONS
 end
 
 function U:Conduct(template, role, class, spec, amount)

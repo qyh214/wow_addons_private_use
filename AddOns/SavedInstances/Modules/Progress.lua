@@ -246,6 +246,7 @@ local presets = {
       83364, -- A Savage Path Through Time - WOD Timewalking
       83360, -- A Fel Path Through Time - LEG Timewalking
       86731, -- An Original Path Through Time - CLA Timewalking
+      88805, -- A Scarred Path Through Time - BFA Timewalking
     },
     reset = "weekly",
     persists = false,
@@ -815,6 +816,17 @@ local presets = {
       [84739] = L["Fourth Cache"],
     },
   },
+  -- Delver's Bounty
+  ["tww-delvers-bounty"] = {
+    type = "single",
+    expansion = 10,
+    index = 1.1,
+    name = L["Delver's Bounty"],
+    questID = 86371,
+    reset = "weekly",
+    persists = false,
+    fullObjective = false,
+  },
   -- Lesser Keyflame
   ["tww-lesser-keyflame"] = {
     type = "list",
@@ -885,6 +897,8 @@ local presets = {
       81794, -- Sparks of War: The Ringing Deeps
       81795, -- Sparks of War: Hallowfall
       81796, -- Sparks of War: Azj-Kahet
+      86853, -- Sparks of War: Undermine
+      90781, -- Sparks of War: K'aresh?
     },
     reset = "weekly",
     persists = true,
@@ -918,6 +932,9 @@ local presets = {
       82453, -- Worldsoul: Encore!
       82489, -- Worldsoul: The Dawnbreaker
       82659, -- Worldsoul: Nerub-ar Palace
+      87417, -- Worldsoul: Dungeons
+      91052, -- Worldsoul: Overcharged Delves
+      87419, -- Worldsoul: Delves
       82490, -- Worldsoul: Priory of the Sacred Flame
       82491, -- Worldsoul: Ara-Kara, City of Echoes
       82492, -- Worldsoul: City of Threads
@@ -938,14 +955,21 @@ local presets = {
       82508, -- Worldsoul: The Rookery
       82509, -- Worldsoul: Nerub-ar Palace
       82510, -- Worldsoul: Nerub-ar Palace
+      89514, -- Worldsoul: Horrific Visions Revisited
+      87424, -- Worldsoul: World Bosses
       82511, -- Worldsoul: Awakening Machine
       82512, -- Worldsoul: World Boss
+      89492, -- Worldsoul: Dastardly Duos in the Dome!
+      87423, -- Worldsoul: Undermine Explorer
       82488, -- Worldsoul: Darkflame Cleft
+      91855, -- Worldsoul: K'aresh World Quests
       82487, -- Worldsoul: The Stonevault
       82486, -- Worldsoul: The Rookery
       82485, -- Worldsoul: Cinderbrew Meadery
       82452, -- Worldsoul: World Quests
+      87422, -- Worldsoul: Undermine World Quests
       82495, -- Worldsoul: Cinderbrew Meadery
+      89502, -- Worldsoul: Nightfall
     },
     reset = "weekly",
     persists = true,
@@ -959,8 +983,8 @@ local presets = {
     name = L["Archives"],
     questID = {
       -- https://wago.tools/db2/QuestLineXQuest?filter[QuestLineID]=5572&page=1&sort[OrderIndex]=asc
-      82678, -- Archives: The First Disc
       82679, -- Archives: Seeking History
+      82678, -- Archives: The First Disc
     },
     reset = "weekly",
     persists = true,
@@ -976,7 +1000,7 @@ local presets = {
       -- https://wago.tools/db2/QuestLineXQuest?filter[QuestLineID]=5572&page=1&sort[OrderIndex]=asc
       82708, -- Delves: Nerubian Menace
       82707, -- Delves: Earthen Defense
-      82706, -- Delves: Khaz Algar Research
+      82706, -- Delves: Worldwide Research
       82709, -- Delves: Percussive Archaeology
       82710, -- Delves: Empire-ical Exploration
       82711, -- Delves: Lost and Found
@@ -1028,17 +1052,23 @@ local presets = {
     name = L["Special Assignments"],
     questID = {
       82355, -- Special Assignment: Cinderbee Surge (Completing)
+      81647, -- Special Assignment: Titanic Resurgence (Completing)
       81649, -- Special Assignment: Titanic Resurgence (Completing)
+      81650, -- Special Assignment: Titanic Resurgence (Completing)
       81691, -- Special Assignment: Shadows Below (Completing)
       83229, -- Special Assignment: When the Deeps Stir (Completing)
       82852, -- Special Assignment: Lynx Rescue (Completing)
       82787, -- Special Assignment: Rise of the Colossals (Completing)
       82414, -- Special Assignment: A Pound of Cure (Completing)
       82531, -- Special Assignment: Bombs from Behind (Completing)
+      85487, -- Special Assignment: Boom! Headshot! (Completing)
+      85488, -- Special Assignment: Security Detail (Completing)
+      89294, -- Special Assignment: Aligned Views (Completing)
+      89293, -- Special Assignment: Overshadowed (Completing)
     },
     reset = "weekly",
     persists = false,
-    threshold = 2,
+    threshold = 4,
     progress = true,
     onlyOnOrCompleted = true,
   },
@@ -1068,6 +1098,7 @@ local presets = {
       83459, -- The Dawnbreaker
       83465, -- Ara-Kara, City of Echoes
       83469, -- City of Threads
+      86203, -- Operation: Floodgate
     },
     reset = "weekly",
     persists = false,
@@ -1175,7 +1206,7 @@ local presets = {
   ["tww-siren-isle-weekly"] = {
     type = "list",
     expansion = 10,
-    index = 16,
+    index = 18,
     name = L["Siren Isle Weekly"],
     questID = {
       -- Vrykul invasion
@@ -1205,6 +1236,170 @@ local presets = {
     threshold = 6,
     progress = true,
     onlyOnOrCompleted = true,
+  },
+  -- Free C.H.E.T.T. List
+  ["tww-free-chett-list"] = {
+    type = "single",
+    expansion = 10,
+    index = 19,
+    name = L["Free C.H.E.T.T. List"],
+    questID = 87296,
+    reset = "weekly",
+    persists = false,
+    fullObjective = false,
+  },
+  -- C.H.E.T.T. List
+  ["tww-chett-list"] = {
+    type = "list",
+    expansion = 10,
+    index = 20,
+    name = L["C.H.E.T.T. List"],
+    questID = {
+      86915, -- Side with a Cartel
+      86917, -- Ship Right
+      86918, -- Reclaimed Scrap
+      86919, -- Side Gig
+      86920, -- War Mode Violence
+      86923, -- Go Fish
+      86924, -- Gotta Catch at Least a Few
+      87302, -- Rare Rivals
+      87303, -- Clean the Sidestreets
+      87304, -- Time to Vacate
+      87305, -- Desire to D.R.I.V.E.
+      87306, -- Kaja Cruising
+      87307, -- Garbage Day
+    },
+    reset = "weekly",
+    persists = true,
+    threshold = 4,
+    progress = true,
+    onlyOnOrCompleted = true,
+    questName = {
+      [86915] = L["Side with a Cartel"],
+      [86917] = L["Ship Right"],
+      [86918] = L["Reclaimed Scrap"],
+      [86919] = L["Side Gig"],
+      [86920] = L["War Mode Violence"],
+      [86923] = L["Go Fish"],
+      [86924] = L["Gotta Catch at Least a Few"],
+      [87302] = L["Rare Rivals"],
+      [87303] = L["Clean the Sidestreets"],
+      [87304] = L["Time to Vacate"],
+      [87305] = L["Desire to D.R.I.V.E."],
+      [87306] = L["Kaja Cruising"],
+      [87307] = L["Garbage Day"],
+    },
+  },
+  -- Urge to Surge
+  ["tww-urge-to-surge"] = {
+    type = "single",
+    expansion = 10,
+    index = 21,
+    name = L["Urge to Surge"],
+    questID = 86775,
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- Many Jobs, Handle It!
+  ["tww-many-jobs-handle-it"] = {
+    type = "single",
+    expansion = 10,
+    index = 22,
+    name = L["Many Jobs, Handle It!"],
+    questID = 85869,
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- Reduce, Reuse, Resell
+  ["tww-reduce-reuse-resell"] = {
+    type = "single",
+    expansion = 10,
+    index = 23,
+    name = L["Reduce, Reuse, Resell"],
+    questID = 85879,
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- The Flame Burns Eternal
+  ["tww-nightfall-scenario"] = {
+    type = "single",
+    expansion = 10,
+    index = 24,
+    name = L["The Flame Burns Eternal"],
+    questID = 91173,
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- Nightfall Daily
+  ["tww-nightfall-daily"] = {
+    type = "list",
+    expansion = 10,
+    index = 25,
+    name = L["Nightfall Daily"],
+    questID = {
+      87475, -- Sureki Incursion: Hold the Wall
+      87477, -- Sureki Incursion: Southern Swarm
+      87480, -- Sureki Incursion: The Eastern Assault
+      88711, -- Radiant Incursion: Toxins and Pheromones
+      88916, -- Radiant Incursion: Sureki's End
+      88945, -- Radiant Incursion: Rak-Zakaz
+    },
+    reset = "daily",
+    persists = false,
+    threshold = 3,
+    progress = true,
+    onlyOnOrCompleted = true,
+  },
+  -- More Than Just a Phase
+  ["tww-more-than-just-a-phase"] = {
+    type = "single",
+    expansion = 10,
+    index = 26,
+    name = L["More Than Just a Phase"],
+    questID = 91093,
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- Ecological Succession
+  ["tww-ecological-succession"] = {
+    type = "single",
+    expansion = 10,
+    index = 27,
+    name = L["Ecological Succession"],
+    questID = 85460,
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- Tazavesh Warrant Quests
+  ["tww-tazavesh-warrant-quests"] = {
+    type = "list",
+    expansion = 10,
+    index = 28,
+    name = L["Tazavesh Warrant Quests"],
+    questID = {
+      87001, -- Warrant: Shatterpulse
+      87343, -- Warrant: Hollowbane
+      87345, -- Warrant: Xy'vox the Twisted
+      87405, -- Warrant: Grubber
+      87546, -- Warrant: Purple Peat
+      89490, -- Warrant: Arcana-Monger So'zer
+      90124, -- Eliminate Shatterpulse
+      90123, -- Eliminate Hollowbane
+      90122, -- Eliminate Xy'vox the Twisted
+      90126, -- Eliminate Grubber
+      90125, -- Eliminate Purple Peat
+      90127, -- Eliminate Arcana-Monger So'zer
+    },
+    reset = "weekly",
+    persists = false,
+    progress = true,
+    onlyOnOrCompleted = false,
   },
 }
 
@@ -1318,7 +1513,7 @@ local function ShowQuestListStore(store, entry)
 
   if entry.questAbbr then
     for _, questID in ipairs(entry.questID) do
-      if store[questID].isComplete and entry.questAbbr[questID] then
+      if store[questID] and store[questID].isComplete and entry.questAbbr[questID] then
         return entry.questAbbr[questID]
       end
     end
@@ -1328,7 +1523,7 @@ local function ShowQuestListStore(store, entry)
   local total = entry.threshold or #entry.questID
 
   for _, questID in ipairs(entry.questID) do
-    if store[questID].isComplete then
+    if store[questID] and store[questID].isComplete then
       completed = completed + 1
     end
   end
@@ -1374,7 +1569,7 @@ local function TooltipQuestListStore(_, arg)
   local total = entry.threshold or #entry.questID
 
   for _, questID in ipairs(entry.questID) do
-    if store[questID].isComplete then
+    if store[questID] and store[questID].isComplete then
       completed = completed + 1
     end
   end
@@ -1386,11 +1581,11 @@ local function TooltipQuestListStore(_, arg)
       tip:AddLine(entry.separateLines[i])
     end
 
-    if not entry.onlyOnOrCompleted or store[questID].show then
+    if not entry.onlyOnOrCompleted or (store[questID] and store[questID].show) then
       local questName = entry.questName and entry.questName[questID] or SI:QuestInfo(questID)
       local questText
       if entry.progress then
-        if not store.show then
+        if not store.show or not store[questID] then
           -- do nothing
         elseif store[questID].isComplete then
           questText = SI.questCheckMark
@@ -1403,7 +1598,8 @@ local function TooltipQuestListStore(_, arg)
         end
       else
         questText = (
-          store[questID].isComplete and (RED_FONT_COLOR_CODE .. CRITERIA_COMPLETED .. FONT_COLOR_CODE_CLOSE)
+          (store[questID] and store[questID].isComplete)
+          and (RED_FONT_COLOR_CODE .. CRITERIA_COMPLETED .. FONT_COLOR_CODE_CLOSE)
           or (GREEN_FONT_COLOR_CODE .. AVAILABLE .. FONT_COLOR_CODE_CLOSE)
         )
       end

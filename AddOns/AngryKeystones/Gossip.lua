@@ -88,12 +88,7 @@ end
 
 local function PlayCurrent()
 	if IsInActiveChallengeMode() and Addon.Config.hideTalkingHead then
-		local frame = TalkingHeadFrame
-		if (frame.finishTimer) then
-			frame.finishTimer:Cancel()
-			frame.finishTimer = nil
-		end
-		frame:Hide()
+		TalkingHeadFrame:CloseImmediately()
 	end
 end
 

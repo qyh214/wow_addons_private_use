@@ -3,7 +3,8 @@ local Private = select(2, ...)
 
 Private.Zones[42] = {
     id = 42,
-    name = "Liberation of Undermine",
+    name = "Undermine",
+    hasMultipleDifficulties = true,
     hasMultipleSizes = false,
     encounters = {
         { id = 3009, },
@@ -15,12 +16,13 @@ Private.Zones[42] = {
         { id = 3015, },
         { id = 3016, },
     },
-    difficultyIconMap = nil
+    difficultyIconMap = nil,
 }
 
 Private.Zones[1033] = {
     id = 1033,
     name = "Dragon Soul",
+    hasMultipleDifficulties = true,
     hasMultipleSizes = true,
     encounters = {
         { id = 1292, },
@@ -32,45 +34,66 @@ Private.Zones[1033] = {
         { id = 1291, },
         { id = 1299, },
     },
-    difficultyIconMap = nil
+    difficultyIconMap = nil,
 }
 
-Private.Zones[1032] = {
-    id = 1032,
-    name = "Trial of the Crusader",
+Private.Zones[1037] = {
+    id = 1037,
+    name = "Icecrown Citadel",
+    hasMultipleDifficulties = true,
     hasMultipleSizes = true,
     encounters = {
-        { id = 50629, },
-        { id = 50633, },
-        { id = 50637, },
-        { id = 50641, },
-        { id = 50645, },
+        { id = 50845, },
+        { id = 50846, },
+        { id = 50847, },
+        { id = 50848, },
+        { id = 50849, },
+        { id = 50850, },
+        { id = 50851, },
+        { id = 50852, },
+        { id = 50853, },
+        { id = 50854, },
+        { id = 50855, },
+        { id = 50856, },
     },
-    difficultyIconMap = nil
+    difficultyIconMap = nil,
 }
 
-Private.Zones[2017] = {
-    id = 2017,
-    name = "Naxxramas",
+Private.Zones[2018] = {
+    id = 2018,
+    name = "Scarlet Enclave",
+    hasMultipleDifficulties = false,
     hasMultipleSizes = true,
     encounters = {
-        { id = 201118, },
-        { id = 201111, },
-        { id = 201108, },
-        { id = 201120, },
-        { id = 201117, },
-        { id = 201112, },
-        { id = 201115, },
-        { id = 201107, },
-        { id = 201110, },
-        { id = 201116, },
-        { id = 201113, },
-        { id = 201109, },
-        { id = 201121, },
-        { id = 201119, },
-        { id = 201114, },
+        { id = 3185, },
+        { id = 3187, },
+        { id = 3186, },
+        { id = 3197, },
+        { id = 3196, },
+        { id = 3188, },
+        { id = 3190, },
+        { id = 3189, },
     },
-    difficultyIconMap = nil
+    difficultyIconMap = nil,
+}
+
+Private.Zones[1034] = {
+    id = 1034,
+    name = "Blackwing Lair",
+    hasMultipleDifficulties = false,
+    hasMultipleSizes = false,
+    encounters = {
+        { id = 150610, },
+        { id = 150611, },
+        { id = 150612, },
+        { id = 150613, },
+        { id = 150614, },
+        { id = 150615, },
+        { id = 150631, },
+        { id = 150616, },
+        { id = 150617, },
+    },
+    difficultyIconMap = nil,
 }
 
 for _, zone in pairs(Private.Zones) do

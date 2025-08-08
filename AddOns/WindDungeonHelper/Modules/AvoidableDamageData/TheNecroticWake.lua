@@ -28,7 +28,7 @@ local mistakes = {
 	{
 		-- Final Harvest
 		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 321258
+		spell = 321258,
 	},
 	-- [3] 縫補師縫肉
 	{
@@ -78,8 +78,8 @@ local mistakes = {
 		-- Gruesome Cleave
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 328423,
-		playerIsNotTank = true
-	}
+		playerIsNotTank = true,
+	},
 }
 
 local mapIds = { 1666, 1667, 1668 }

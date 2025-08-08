@@ -1,0 +1,35 @@
+## Interface: 50500
+
+## X-Curse-Project-ID: 7474
+## X-WoWI-ID: 5342
+## X-Wago-ID: aNDmqo6o
+
+## Title: WIM
+## Author: Pazza (Bronzebeard), (Updated by Sylvanaar/MysticalOS/Humfras)
+## Version: 3.12.14
+## Notes: Give whispers an instant messenger feel.
+## Notes-esES: Dale a los susurros una sensación de mensajería instantánea.
+## Notes-esMX: Dale a los susurros una sensación de mensajería instantánea.
+## Notes-ptBR: Dê aos sussurros uma sensação de mensageiro instantâneo.
+## Notes-frFR: Donnez aux chuchotements une sensation de messagerie instantanée.
+## eMail: johnlangone@gmail.com
+## X-Email: johnlangone@gmail.com
+## X-Category: Chat
+## DefaultState: Enabled
+## OptionalDeps: LibStub, CallbackHandler-1.0, ChatThrottleLib, LibSharedMedia-3.0, LibChatAnims
+## X-Embeds: LibStub, CallbackHandler-1.0, ChatThrottleLib, LibSharedMedia-3.0, LibChatAnims
+## SavedVariables: WIM3_Data, WIM3_Cache, WIM3_Filters, WIM3_History, WIM3_ChatFilters, WIM3_Alias
+
+Libs\Includes.xml
+Sources\Namespace.lua
+Sources\Locale.lua
+Localization\Includes.xml
+
+WIM.lua
+
+Sources\Includes.xml
+Modules\Includes.xml
+
+ChangeLog.lua
+
+Skins\Default\skin.lua

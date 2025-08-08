@@ -1,0 +1,19 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Script file="MoPMinimapInfo.lua"/>
+    <Script file="MoPZoneInfo.lua"/>
+    <Script file="MoPZoneFP.lua"/>
+    <Script file="MoPMinimapFP.lua"/>
+    <Script file="MoPZoneGhost.lua"/>
+    <Script file="MoPMinimapGhost.lua"/>
+    <Script file="MoPContinentInfo.lua"/>
+    <Script file="MoPWorldMapInfo.lua"/>
+    <Script file="MoPInsideDungeonNodesLocation.lua"/>    
+    <Script file="MoPFogOfWarNodes.lua"/>
+    <Script file="MoPCapitals.lua"/>
+    <Script file="MoPCapitalsMinimap.lua"/>
+    <Script file="MoPPathsZoneNodes.lua"/>
+    <Script file="MoPGeneralMiniMapNodes.lua"/>
+    <Script file="MoPGeneralZoneNodes.lua"/>
+    <Script file="MoPPathsMiniMapNodes.lua"/>
+    <Script file="MoPBlizzAreaPoisNodesInfo.lua"/>
+</Ui>

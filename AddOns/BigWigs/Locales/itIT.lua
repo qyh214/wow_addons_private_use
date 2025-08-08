@@ -1,5 +1,8 @@
-local L = BigWigsAPI:NewLocale("BigWigs", "itIT")
+local _, addonTbl = ...
+local L = addonTbl.API:NewLocale("BigWigs", "itIT")
 if not L then return end
+
+--L.tempNew = "NEW: You can now type |cFFFFFFFF/key|r to see the Mythic+ keystones of your party members."
 
 -- Core.lua
 L.berserk = "Infuriato"
@@ -18,19 +21,21 @@ L.adds = "Adds"
 L.adds_desc = "Abilita le varie funzioni relative agli add che usciranno durante il boss."
 L.health = "Salute"
 L.health_desc = "Abilita le funzioni per visualizzare le varie informazioni che riguardano la Salute durante l'incontro col boss"
+L.energy = "Energia"
+--L.energy_desc = "Enable functions for displaying information about the various energy levels during the boss encounter."
 
 L.already_registered = "|cffff0000ATTENZIONE:|r |cff00ff00%s|r (|cffffff00%s|r) esiste già come modulo di BigWigs, ma qualcosa sta cercando di caricarlo di nuovo. Questo solitamente significa che hai due copie di questo modulo nella cartella addons a causa di qualche aggiornamento sbagliato. È consigliabile reinstallare BigWigs cancellando tutte le cartelle BigWigs."
 
 -- Loader / Options.lua
 L.okay = "OK"
-L.officialRelease = "Stai usando una versione ufficiale di BigWigs %s (%s)"
-L.alphaRelease = "Stai usando una VERSIONE ALPHA di BigWigs %s (%s)"
+L.officialRelease = "Stai usando una versione ufficiale di BigWigs %s (%s)."
+L.alphaRelease = "Stai usando una VERSIONE ALPHA di BigWigs %s (%s)."
 L.sourceCheckout = "Stai usando una versione di BigWigs %s presa direttamente dal repository."
-L.littlewigsOfficialRelease = "Stai usando una versione ufficiale di LittleWigs (%s)"
-L.littlewigsAlphaRelease = "Stai usando una VERSIONE ALPHA di LittleWigs (%s)"
+L.littlewigsOfficialRelease = "Stai usando una versione ufficiale di LittleWigs (%s)."
+L.littlewigsAlphaRelease = "Stai usando una VERSIONE ALPHA di LittleWigs (%s)."
 L.littlewigsSourceCheckout = "Stai usando una versione di LittleWigs presa direttamente dal repository."
 L.guildRelease = "Stai utilizzando la versione %d di BigWigs creata per la tua Gilda, basata sulla versione %d dell'addon ufficiale."
-L.getNewRelease = "BigWigs non è aggiornato (/bwv) ma puoi farlo semplicemente usando CurseForge Client. In alternativa puoi aggiornarlo manualmente da curseforge.com o wowinterface.com."
+L.getNewRelease = "BigWigs non è aggiornato (/bwv) ma puoi farlo semplicemente usando CurseForge Client. In alternativa puoi aggiornarlo manualmente da curseforge.com o addons.wago.io."
 L.warnTwoReleases = "BigWigs è indietro di due versioni! La tua versione può avere dei bug, funzioni mancanti, o timer sbagliati. Ti consigliamo di aggiornare."
 L.warnSeveralReleases = "|cffff0000BigWigs è vecchio di %d versioni!! Ti consigliamo FORTEMENTE di aggiornare per evitare problemi di sincronizzazione con gli altri giocatori!|r"
 L.warnOldBase = "Stai utilizzando una versione di BigWigs per la gilda (%d), ma la tua versione base (%d) è vecchia di %d versioni. Potrebbe avere dei problemi."
@@ -54,6 +59,8 @@ L.removeAddOn = "Per favore rimuovi '|cFF436EEE%s|r' perché è stato rimpiazzat
 L.alternativeName = "%s (|cFF436EEE%s|r)"
 L.outOfDateContentPopup = "WARNING!\nHai aggiornato |cFF436EEE%s|r ma devi anche aggiornare l'addon principale|cFF436EEEBigWigs|r.\nIgnorando questo poterà a funzionalità anomala e non funzionante."
 L.outOfDateContentRaidWarning = "|cFF436EEE%s|r richiede la versione %d dell' addon principale |cFF436EEEBigWigs|r per funzionare correttamente, tu hai la versione %d installata attualmente."
+--L.addOnLoadFailedWithReason = "BigWigs failed to load the addon |cFF436EEE%s|r with reason %q. Tell the BigWigs devs!"
+--L.addOnLoadFailedUnknownError = "BigWigs encountered an error when loading the addon |cFF436EEE%s|r. Tell the BigWigs devs!"
 
 L.expansionNames = {
 	"Classiche", -- Classic
@@ -69,7 +76,7 @@ L.expansionNames = {
 	"The War Within", -- The War Within
 }
 L.littleWigsExtras = {
-	["LittleWigs_Delves"] = "Delves",
+	["LittleWigs_Delves"] = "Scorribande",
 	["LittleWigs_CurrentSeason"] = "Stagione attuale",
 }
 
@@ -80,6 +87,7 @@ L.Destruction = "Distruzione (Kil'jaeden)"
 L.RunAway = "Scappa ragazzina, scappa!!! (Lupo Cattivo)"
 L.spell_on_you = "BigWigs: Abilità su di te"
 L.spell_under_you = "BigWigs: Abilità sotto di te"
+--L.simple_no_voice = "Simple (No Voice)"
 
 -- Options.lua
 L.options = "Opzioni"
@@ -255,7 +263,111 @@ L.N25 = "Normale 25"
 L.H10 = "Eroico 10"
 L.H25 = "Eroico 25"
 
+-----------------------------------------------------------------------
+-- TOOLS
+-----------------------------------------------------------------------
 
+--L.tools = "Tools"
+--L.toolsDesc = "BigWigs provides various tools or \"quality of life\" features to speed up and simplify the process of fighting bosses. Expand the menu by clicking the |cFF33FF99+|r icon to see them all."
+
+-----------------------------------------------------------------------
+-- AutoRole.lua
+--
+
+--L.autoRoleTitle = "Auto Role"
+--L.autoRoleExplainer = "Whenever you join a group, or you change your talent specialization whilst being in a group, BigWigs will automatically adjust your group role (Tank, Healer, Damager) accordingly.\n\n"
+
+-----------------------------------------------------------------------
+-- Keystones.lua
+--
+
+--L.keystoneTitle = "BigWigs Keystones"
+--L.keystoneHeaderParty = "Party"
+--L.keystoneRefreshParty = "Refresh Party"
+--L.keystoneHeaderGuild = "Guild"
+--L.keystoneRefreshGuild = "Refresh Guild"
+--L.keystoneLevelTooltip = "Keystone level: |cFFFFFFFF%s|r"
+--L.keystoneMapTooltip = "Dungeon: |cFFFFFFFF%s|r"
+--L.keystoneRatingTooltip = "Mythic+ rating: |cFFFFFFFF%d|r"
+--L.keystoneHiddenTooltip = "The player has chosen to hide this information."
+--L.keystoneTabOnline = "Online"
+--L.keystoneTabAlts = "Alts"
+--L.keystoneTabTeleports = "Teleports"
+--L.keystoneHeaderMyCharacters = "My Characters"
+--L.keystoneTeleportNotLearned = "The teleport spell '|cFFFFFFFF%s|r' is |cFFFF4411not learned|r yet."
+--L.keystoneTeleportOnCooldown = "The teleport spell '|cFFFFFFFF%s|r' is currently |cFFFF4411on cooldown|r for %d |4hour:hours; and %d |4minute:minutes;."
+--L.keystoneTeleportReady = "The teleport spell '|cFFFFFFFF%s|r' is |cFF33FF99ready|r, click to cast it."
+--L.keystoneTeleportInCombat = "You cannot teleport here whilst you are in combat."
+--L.keystoneTabHistory = "History"
+--L.keystoneHeaderThisWeek = "This Week"
+--L.keystoneHeaderOlder = "Older"
+--L.keystoneScoreTooltip = "Dungeon Score: |cFFFFFFFF%d|r"
+--L.keystoneScoreGainedTooltip = "Score Gained: |cFFFFFFFF+%d|r"
+--L.keystoneCompletedTooltip = "Completed in time"
+--L.keystoneFailedTooltip = "Failed to complete in time"
+--L.keystoneExplainer = "A collection of various tools to improve the Mythic+ experience."
+--L.keystoneAutoSlot = "Auto slot keystone"
+--L.keystoneAutoSlotDesc = "Automatically place your keystone into the slot when opening the keystone holder."
+--L.keystoneAutoSlotMessage = "Automatically placed %s into the keystone slot."
+--L.keystoneModuleName = "Mythic+"
+--L.keystoneStartBar = "%s +%d" -- Format is SHORT_DUNGEON_NAME +KEYSTONE_LEVEL e.g. "ROOK +12"
+--L.keystoneStartMessage = "%s +%d begins now!" -- Format is LONG_DUNGEON_NAME +KEYSTONE_LEVEL e.g. "The Rookery +12 begins now!"
+--L.keystoneCountdownExplainer = "When you start a Mythic+ dungeon a countdown will play. Choose what voice you'd like to hear and when you want the countdown to start.\n\n"
+--L.keystoneCountdownBeginsDesc = "Choose how much time should be remaining on the Mythic+ start timer when the countdown will begin to play."
+--L.keystoneCountdownBeginsSound = "Play a sound when the Mythic+ countdown starts"
+--L.keystoneCountdownEndsSound = "Play a sound when the Mythic+ countdown ends"
+--L.keystoneViewerTitle = "Keystone Viewer"
+--L.keystoneHideGuildTitle = "Hide my keystone from my guild members"
+--L.keystoneHideGuildDesc = "|cffff4411Not recommended.|r This feature will prevent your guild members seeing what keystone you have. Anyone in your group will still be able to see it."
+--L.keystoneHideGuildWarning = "Disabling the ability for your guild members to see your keystone is |cffff4411not recommended|r.\n\nAre you sure you want to do this?"
+--L.keystoneAutoShowZoneIn = "Show when entering a dungeon"
+--L.keystoneAutoShowZoneInDesc = "Automatically show the keystone viewer when entering a Mythic dungeon.\n\n|cFF33FF99This can help remind you which player owns the keystone that you're about to do.|r"
+--L.keystoneAutoShowEndOfRun = "Show when the Mythic+ is over"
+--L.keystoneAutoShowEndOfRunDesc = "Automatically show the keystone viewer when when the Mythic+ dungeon is over.\n\n|cFF33FF99This can help you see what new keystones your party has received.|r"
+--L.keystoneViewerExplainer = "You can open the keystone viewer using the |cFF33FF99/key|r command or by clicking the button below.\n\n"
+--L.keystoneViewerOpen = "Open the keystone viewer"
+
+-- It doesn't really matter what you call it as long as it's recognizable and limited to ~6 characters
+--L.keystoneShortName_TheRookery = "ROOK"
+--L.keystoneShortName_DarkflameCleft = "DFC"
+--L.keystoneShortName_PrioryOfTheSacredFlame = "PRIORY"
+--L.keystoneShortName_CinderbrewMeadery = "BREW"
+--L.keystoneShortName_OperationFloodgate = "FLOOD"
+--L.keystoneShortName_TheaterOfPain = "TOP"
+--L.keystoneShortName_TheMotherlode = "ML"
+--L.keystoneShortName_OperationMechagonWorkshop = "WORK"
+--L.keystoneShortName_EcoDomeAldani = "ALDANI"
+--L.keystoneShortName_HallsOfAtonement = "HOA"
+--L.keystoneShortName_AraKaraCityOfEchoes = "ARAK"
+--L.keystoneShortName_TazaveshSoleahsGambit = "GAMBIT"
+--L.keystoneShortName_TazaveshStreetsOfWonder = "STREET"
+--L.keystoneShortName_TheDawnbreaker = "DAWN"
+
+-- These short names are for the bar that shows during the Mythic+ countdown
+-- Use the real dungeon names but make them shorter to fit on the bar better
+--L.keystoneShortName_TheRookery_Bar = "Rookery"
+--L.keystoneShortName_DarkflameCleft_Bar = "Darkflame"
+--L.keystoneShortName_PrioryOfTheSacredFlame_Bar = "Priory"
+--L.keystoneShortName_CinderbrewMeadery_Bar = "Cinderbrew"
+--L.keystoneShortName_OperationFloodgate_Bar = "Floodgate"
+--L.keystoneShortName_TheaterOfPain_Bar = "Theater"
+--L.keystoneShortName_TheMotherlode_Bar = "Motherlode"
+--L.keystoneShortName_OperationMechagonWorkshop_Bar = "Workshop"
+--L.keystoneShortName_EcoDomeAldani_Bar = "Al'dani"
+--L.keystoneShortName_HallsOfAtonement_Bar = "Halls"
+--L.keystoneShortName_AraKaraCityOfEchoes_Bar = "Ara-Kara"
+--L.keystoneShortName_TazaveshSoleahsGambit_Bar = "Gambit"
+--L.keystoneShortName_TazaveshStreetsOfWonder_Bar = "Streets"
+--L.keystoneShortName_TheDawnbreaker_Bar = "Dawnbreaker"
+
+-----------------------------------------------------------------------
+-- LFGTimer.lua
+--
+
+L.lfgTimerTitle = "LFG Timer"
+L.lfgTimerExplainer = "Whenever the LFG queue popup appears, BigWigs will create a timer bar telling you how long you have to accept the queue.\n\n"
+L.lfgUseMaster = "Play LFG ready sound on 'Master' audio channel"
+L.lfgUseMasterDesc = "When this option is enabled the LFG ready sound will play over the 'Master' audio channel. If you disable this option it will play over the '%s' audio channel instead."
 
 -----------------------------------------------------------------------
 -- PLUGINS
@@ -275,6 +387,7 @@ L.sizeDesc = "In genere regoli la dimesione trascinando l'ancora. Se hai necessi
 L.fontSizeDesc = "Regola la dimensione del carattere usando la barra slide o digitando i valori nella casella che ha un valore molto maggiore di 200."
 L.disabled = "Disabilitato"
 L.disableDesc = "Stai per disabilitare la funzionalità '%s' che |cffff4411non è consigliata|r.\n\nSei sicuro di questo?"
+--L.keybinding = "Keybinding"
 
 -- Anchor Points
 L.UP = "Su"
@@ -452,6 +565,7 @@ L.redirectPopupsColor = "Colore dei messaggi reindirizzati"
 L.blockDungeonPopups = "Blocca i banner popup dei dungeon"
 L.blockDungeonPopupsDesc = "I banner popup mostrati quando entri in un dungeon a volte possono contenere messaggi molto lunghi. Abilitando questa impostazione li bloccherà completamente."
 L.itemLevel = "Livello oggetto: %d"
+--L.newRespawnPoint = "New Respawn Point"
 
 L.userNotifySfx = "Gli Effetti sonori sono disabilitati dal Blocco Boss, li riattivo forzatamente."
 L.userNotifyMusic = "La Musica è stata disabilitata dal Blocco Boss, la riattivo forzatamente."
@@ -682,6 +796,8 @@ L.sendPull = "Manda un timer di ingaggio al tuo gruppo."
 L.wrongPullFormat = "Formato di timer di ingaggio non valido. Un formato corretto è: /pull 5"
 L.countdownBegins = "Inizia Conto alla Rovescia"
 L.countdownBegins_desc = "Scegli quanto tempo dovrebbe rimanere al timer di Ingaggio (in secondi) quando inizia il conto alla rovescia."
+--L.pullExplainer = "\n|cFF33FF99/pull|r will start a normal pull timer.\n|cFF33FF99/pull 7|r will start a 7 second pull timer, you can use any number.\nAlternatively, you can also set a keybinding below.\n\n"
+--L.pullKeybindingDesc = "Choose a keybinding for starting a pull timer."
 
 -----------------------------------------------------------------------
 -- RaidIcon.lua
@@ -720,7 +836,7 @@ L.resetAllCustomSound = "Se hai personalizzzato i suoni per qualsiasi boss, ques
 --
 
 L.bossStatistics = "Statistiche del Boss"
-L.bossStatsDescription = "Recording of various boss-related statistics such as the amount of times you were victorious, the amount of times you were defeated, date of first victory, and the fastest victory. Queste statistiche possono essere viste nella finestra di configurazione di ogni singolo boss, ma saranno nascoste per quei boss di cui non c'é nessuna informazione statistica."
+--L.bossStatsDescription = "Recording of various boss-related statistics such as the amount of times you were victorious, the amount of times you were defeated, date of first victory, and the fastest victory. Queste statistiche possono essere viste nella finestra di configurazione di ogni singolo boss, ma saranno nascoste per quei boss di cui non c'é nessuna informazione statistica."
 L.createTimeBar = "Mostra la barra 'Miglior Tempo'"
 L.bestTimeBar = "Migliore"
 L.healthPrint = "Salute: %s."

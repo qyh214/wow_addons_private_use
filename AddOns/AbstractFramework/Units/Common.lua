@@ -17,6 +17,8 @@ local UnitClassBase = UnitClassBase
 local UnitName = UnitName
 local GetUnitName = GetUnitName
 local GetNormalizedRealmName = GetNormalizedRealmName
+local UnitLevel = UnitLevel
+local IsLevelAtEffectiveMaxLevel = IsLevelAtEffectiveMaxLevel
 
 ---------------------------------------------------------------------
 -- group
@@ -113,7 +115,7 @@ function AF.GetPetOwnerUnitID(petUnitID)
 end
 
 ---@return function iterator
-function AF.IterateGroupMembers()
+function AF.GroupPlayersIterator()
     local groupType = IsInRaid() and "raid" or "party"
     local numGroupMembers = GetNumGroupMembers()
     local i
@@ -138,7 +140,7 @@ function AF.IterateGroupMembers()
 end
 
 ---@return function iterator
-function AF.IterateGroupPets()
+function AF.GroupPetsIterator()
     local groupType = IsInRaid() and "raid" or "party"
     local numGroupMembers = GetNumGroupMembers()
     local i = groupType == "party" and 0 or 1
@@ -238,7 +240,21 @@ function AF.GetTargetUnitInfo()
     end
 end
 
-function AF.HasPermission()
+function AF.GetPetUnit(playerUnit)
+    if not strfind(playerUnit, "^[p|r]") then return end
+
+    local unit
+    if playerUnit == "player" then
+        unit = "pet"
+    elseif strfind(playerUnit, "^party") then
+        unit = playerUnit:gsub("party", "partypet")
+    elseif strfind(playerUnit, "^raid") then
+        unit = playerUnit:gsub("raid", "raidpet")
+    end
+    return unit
+end
+
+function AF.HasGroupPermission()
     if isPartyMarkPermission and IsInGroup() and not IsInRaid() then return true end
     return UnitIsGroupLeader("player") or (IsInRaid() and UnitIsGroupAssistant("player"))
 end
@@ -254,6 +270,10 @@ end
 ---------------------------------------------------------------------
 -- unit type
 ---------------------------------------------------------------------
+
+function AF.UnitIsPlayer(unit)
+    return UnitIsPlayer(unit) or UnitInPartyIsAI(unit)
+end
 
 -- https://warcraft.wiki.gg/wiki/UnitFlag
 local OBJECT_AFFILIATION_MINE = 0x00000001
@@ -331,6 +351,18 @@ function AF.ToShortName(fullName)
     return shortName
 end
 
+function AF.ToFullName(shortName, server)
+    if not shortName then return "" end
+    local fullName = shortName
+    if not string.find(fullName, "-") then
+        server = server or GetNormalizedRealmName()
+        if server then
+            fullName = fullName.."-"..server
+        end
+    end
+    return fullName
+end
+
 function AF.GetRealmName(fullName)
     if not fullName then return "" end
     local _, realmName = strsplit("-", fullName)
@@ -347,4 +379,16 @@ function AF.IsConnectedRealm(name)
     -- normalizedRealm
     name = name:gsub(" ", ""):gsub("-", "")
     return AF.connectedRealms[name] or false
+end
+
+---------------------------------------------------------------------
+-- level
+---------------------------------------------------------------------
+
+function AF.IsMaxLevel()
+    -- local maxLevel = GetMaxLevelForLatestExpansion() --? GetMaxPlayerLevel()
+    local playerLevel = UnitLevel("player")
+    local isMaxLevel =  IsLevelAtEffectiveMaxLevel(playerLevel)
+    -- local isTrialMaxLevel =  (IsRestrictedAccount() or IsTrialAccount() or IsVeteranTrialAccount()) and (playerLevel == 20)
+    return isMaxLevel -- or isTrialMaxLevel
 end

@@ -6,6 +6,9 @@ local mod, CL = BigWigs:NewBoss("Ruins of Ahn'Qiraj Trash", 509)
 if not mod then return end
 mod.displayName = CL.trash
 mod:RegisterEnableMob(15355) -- Anubisath Guardian
+if mod:GetSeason() == 2 then
+	mod:RegisterEnableMob(15340, 15370, 15369) -- Moam, Buru, Ayamiss
+end
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -49,9 +52,36 @@ function mod:GetOptions()
 	}
 end
 
+if mod:GetSeason() == 2 then
+	function mod:GetOptions()
+		return {
+			{22997, "SAY", "ME_ONLY_EMPHASIZE"}, -- Plague
+			24340, -- Meteor
+			14297, -- Shadow Storm
+			8732, -- Thunderclap
+			8269, -- Frenzy / Enrage (different name on classic era)
+			{25698, "EMPHASIZE", "COUNTDOWN"}, -- Explode
+			17430, -- Summon Anubisath Swarmguard
+			17431, -- Summon Anubisath Warrior
+			"stages",
+			-- SoD hard mode abilities
+			{1214956, "OFF"}, -- Curse of Despair
+			1215421, -- Toxic Pool
+			{1215202, "ME_ONLY_EMPHASIZE"}, -- Noxious Burst
+		},{
+			[22997] = L.guardian,
+			[1214956] = CL.hard,
+		},{
+			[25698] = CL.explosion, -- Explode (Explosion)
+			[1214956] = CL.curse, -- Curse of Despair (Curse)
+			[1215421] = CL.underyou:format(mod:SpellName(1215421)), -- Toxic Pool (Toxic Pool under YOU)
+			[1215202] = CL.spread, -- Noxious Burst (Spread)
+		}
+	end
+end
+
 function mod:OnBossEnable()
 	guardiansAlive = 8
-	self:RegisterMessage("BigWigs_OnBossEngage", "Disable")
 
 	self:Log("SPELL_AURA_APPLIED", "PlagueApplied", 22997)
 	self:Log("SPELL_AURA_REFRESH", "PlagueApplied", 22997)
@@ -75,6 +105,15 @@ function mod:OnBossEnable()
 	self:Log("SPELL_SUMMON", "SummonAnubisathWarrior", 17431)
 
 	self:Death("GuardianKilled", 15355)
+
+	if self:GetSeason() == 2 then
+		self:Log("SPELL_AURA_APPLIED", "CurseOfDespairApplied", 1214956)
+		self:Log("SPELL_PERIODIC_DAMAGE", "ToxicPoolDamage", 1215421) -- Purposely not using APPLIED so we don't trigger for people running over it
+		self:Log("SPELL_PERIODIC_MISSED", "ToxicPoolDamage", 1215421)
+		self:Log("SPELL_AURA_APPLIED", "NoxiousBurstApplied", 1215202)
+	else
+		self:RegisterMessage("BigWigs_OnBossEngage", "Disable")
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -155,5 +194,36 @@ end
 
 function mod:GuardianKilled()
 	guardiansAlive = guardiansAlive - 1
-	self:Message("stages", "cyan", CL.mob_remaining:format(L.guardian, guardiansAlive), false)
+	self:Message("stages", "cyan", CL.mob_remaining:format(L.guardian, guardiansAlive), false, nil, 5) -- Stay onscreen for 5s
+end
+
+--[[ SoD hard mode abilities ]]--
+
+do
+	local prev = 0
+	function mod:CurseOfDespairApplied(args)
+		if args.time - prev > 10 then
+			prev = args.time
+			self:Message(args.spellId, "yellow", CL.on_group:format(CL.curse))
+			self:Bar(args.spellId, 30, CL.curse)
+		end
+	end
+end
+
+do
+	local prev = 0
+	function mod:ToxicPoolDamage(args)
+		if self:Me(args.destGUID) and args.time - prev > 4 then
+			prev = args.time
+			self:PersonalMessage(args.spellId, "underyou")
+			self:PlaySound(args.spellId, "underyou")
+		end
+	end
+end
+
+function mod:NoxiousBurstApplied(args)
+	if self:Me(args.destGUID) then
+		self:PersonalMessage(args.spellId, false, CL.spread)
+		self:PlaySound(args.spellId, "warning", nil, args.destName)
+	end
 end

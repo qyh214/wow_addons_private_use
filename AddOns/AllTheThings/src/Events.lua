@@ -1,8 +1,8 @@
 
 local appName, app = ...;
 
-local rawget, ipairs, pairs, rawset, setmetatable, print, type, pcall, tinsert
-	= rawget, ipairs, pairs, rawset, setmetatable, print, type, pcall, tinsert
+local rawget, pairs, rawset, setmetatable, print, type, pcall, tinsert
+	= rawget, pairs, rawset, setmetatable, print, type, pcall, tinsert
 
 -- Declare Custom Event Handlers
 local EventHandlers = setmetatable({
@@ -98,7 +98,20 @@ local ImmediateEvents = {
 	RowOnEnter = true,
 	RowOnLeave = true,
 	RowOnClick = true,
+	OnWindowUpdated = true,
 }
+-- Allows non-hardcoded assignment of Events which should ignore Runners and simply process immediately when fired
+-- This is helpful when an Event has an Event Sequence defined but also may occur during a Runner, which would lead to the
+-- Event Sequence processing multiple times in succession, whereas when running immediately we assign the Event Sequence
+-- to fire as CallbackEvents instead of being queued on the Runner
+app.DesignateImmediateEvent = function(event)
+	if not event then
+		app.print("DesignateImmediateEvent needs an event",event)
+		return
+	end
+
+	ImmediateEvents[event] = true
+end
 -- Represents Events which should always fire upon completion of a prior Event. These cannot be passed arguments currently
 local EventSequence = {
 	OnLoad = {
@@ -126,6 +139,28 @@ local EventSequence = {
 		"OnRefreshWindows"
 	},
 }
+-- Allows adding an EventSequence entry, preventing any duplication
+app.LinkEventSequence = function(event, followupEvent)
+	if not (event and followupEvent) then
+		app.print("LinkEventSequence needs both event and followupEvent",event,followupEvent)
+		return
+	end
+
+	local triggerEventSequence = EventSequence[event]
+	if not triggerEventSequence then
+		triggerEventSequence = {}
+		EventSequence[event] = triggerEventSequence
+	end
+
+	for i=1,#triggerEventSequence do
+		if triggerEventSequence[i] == followupEvent then
+			app.print("LinkEventSequence duplicate followupEvent defined",event,followupEvent)
+			return
+		end
+	end
+
+	triggerEventSequence[#triggerEventSequence + 1] = followupEvent
+end
 -- Classic has some convoluted refresh sequence handling with coroutines and manual calls to events and data refreshes, so
 -- I don't wanna mess with all that. We just won't link the OnRecalculate to the OnRefreshCollections for Classic --Runaway
 if app.IsRetail then
@@ -209,7 +244,7 @@ local function QueueSequenceEvents(eventName)
 	local sequenceEvents = EventSequence[eventName]
 	if sequenceEvents then
 		-- DebugQueueSequencedEvents(eventName)
-		if #SequenceEventsStack > 0 or IsRunning() then
+		if not ImmediateEvents[eventName] and (#SequenceEventsStack > 0 or IsRunning()) then
 			-- add sequence events to the SequenceEventsStack if there's a Runner running
 			for i=#sequenceEvents,1,-1 do
 				-- DebugQueuedSequenceEvent(sequenceEvents[i])
@@ -220,8 +255,8 @@ local function QueueSequenceEvents(eventName)
 			-- NOTE: Multiple Callbacks in the same frame are not guaranteed to process in the same order in which they
 			-- were registered. This might just be a nuance of how C_Timer.After() handles the set of functions registered
 			-- for the same delay...
-			for _,event in ipairs(sequenceEvents) do
-				CallbackEvent(event)
+			for i=1,#sequenceEvents do
+				CallbackEvent(sequenceEvents[i])
 			end
 		end
 	end
@@ -237,20 +272,23 @@ local function HandleEvent(eventName, ...)
 	-- to the refresh event. would rather spread that out over multiple frames so it remains unnoticeable
 	-- additionally, since some events can process on a Runner, then following Events need to also be pushed onto
 	-- the Event Runner so that they execute in the expected sequence
+	local handlers = EventHandlers[eventName]
 	if not ImmediateEvents[eventName] and (#SequenceEventsStack > 0 or RunnerEvents[eventName] or IsRunning()) then
 		-- DebugStartRunnerEvent(eventName,...)
 		-- Run(DebugEventStart, eventName, ...)
-		for i,handler in ipairs(EventHandlers[eventName]) do
-			-- Run(DebugStartRunnerFunc("Handler #",i))
-			Run(handler, ...)
-			-- Run(DebugEndRunnerFunc("Handler Done"))
+		for i=1,#handlers do
+			-- Run(DebugStartRunnerFunc,"Handler #",i)
+			Run(handlers[i], ...)
+			-- Run(DebugEndRunnerFunc,"Handler Done")
 		end
 		-- Run(DebugEventDone, eventName)
 	else
 		-- DebugEventTriggered(eventName, ...)
 		-- DebugEventStart(eventName, ...)
-		for i,handler in ipairs(EventHandlers[eventName]) do
-			handler(...);
+		for i=1,#handlers do
+			-- DebugStartRunnerFunc("Handler #",i)
+			handlers[i](...)
+			-- DebugEndRunnerFunc("Handler Done")
 		end
 		-- DebugEventDone(eventName)
 	end

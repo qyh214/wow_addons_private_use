@@ -29,7 +29,7 @@
 
 - Want to help translate BFCraftsman to your language? Simply submit a Pull Request!
 - All translation contributors will be credited in the addon.
-- Currently supported languages: enUS, zhCN.
+- Currently supported languages: enUS, zhCN, ruRU (ZamestoTV).
 
 **Screenshots:**
 
@@ -73,4 +73,4 @@ BFCraftsman 是一个简化工匠与客户之间连接的插件，提供游戏�
 
 - 想要帮助将大脚工匠翻译成你的语言？提交 Pull Request 就可以啦!
 - 所有翻译贡献者将在插件中获得署名鸣谢。
-- 目前支持的语言：英文、简体中文。
+- 目前支持的语言：英文、简体中文、俄语（ZamestoTV）。

@@ -37,13 +37,13 @@ info.eventList = {
 }
 
 info.onEvent = function(self)
-	subzone = GetSubZoneText()
-	zone = GetZoneText()
+	subzone = GetMinimapZoneText()
+	zone = GetAreaText()
 	pvpType, _, faction = GetZonePVPInfo()
 	pvpType = pvpType or "neutral"
 
 	local r, g, b = unpack(zoneInfo[pvpType][2])
-	self.text:SetText((subzone ~= "") and subzone or zone)
+	self.text:SetText(subzone)
 	self.text:SetTextColor(r, g, b)
 end
 
@@ -96,7 +96,7 @@ local zoneString = "|cffffff00|Hworldmap:%d+:%d+:%d+|h[|A:Waypoint-MapPin-ChatIc
 
 info.onMouseUp = function(_, btn)
 	if btn == "LeftButton" then
-		--if InCombatLockdown() then UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT) return end -- fix by LibShowUIPanel
+		if InCombatLockdown() then UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT) return end -- fix by LibShowUIPanel
 		ToggleFrame(WorldMapFrame)
 	elseif btn == "RightButton" then
 		local mapID = C_Map_GetBestMapForUnit("player")

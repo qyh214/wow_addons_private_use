@@ -323,27 +323,52 @@ end
 
 local Item = Class('Item', Reward)
 
+local Cache = {}
+
 function Item:Initialize(attrs)
     Reward.Initialize(self, attrs)
 
     if not self.item then
         error('Item() reward requires an item id to be set')
     end
-    self.itemLink = L['retrieving']
-    self.itemIcon = 'Interface\\Icons\\Inv_misc_questionmark'
+
+    local item = Cache[self.item]
+    if item then
+        self.itemLink = item.link
+        self.itemIcon = item.icon
+    else
+        self.itemLink = L['retrieving']
+        self.itemIcon = 'Interface\\Icons\\Inv_misc_questionmark'
+        self:CacheItem()
+    end
+end
+
+function Item:CacheItem()
     local item = _G.Item:CreateFromItemID(self.item)
     if not item:IsItemEmpty() then
         item:ContinueOnItemLoad(function()
-            self.itemLink = item:GetItemLink()
-            self.itemIcon = item:GetItemIcon()
+            local itemLink = item:GetItemLink()
+            local itemIcon = item:GetItemIcon()
+            Cache[self.item] = {link = itemLink, icon = itemIcon}
+            self.itemLink = itemLink
+            self.itemIcon = itemIcon
         end)
     end
 end
 
 function Item:Prepare() ns.PrepareLinks(self.note) end
 
+function Item:IsEnabled()
+    if not Reward.IsEnabled(self) then return false end
+    if self.profession then return ns.PlayerHasProfession(self.profession) end
+    return true
+end
+
 function Item:IsObtained()
     if self.quest then return C_QuestLog.IsQuestFlaggedCompleted(self.quest) end
+    if self.quest_account then
+        return C_QuestLog.IsQuestFlaggedCompletedOnAccount(self.quest_account)
+    end
     if self.bag then return ns.PlayerHasItem(self.item) end
     return true
 end
@@ -373,6 +398,10 @@ function Item:GetStatus()
         return format('(%s)', self.status)
     elseif self.quest then
         local completed = C_QuestLog.IsQuestFlaggedCompleted(self.quest)
+        return completed and Green(L['completed']) or Red(L['incomplete'])
+    elseif self.quest_account then
+        local completed = C_QuestLog.IsQuestFlaggedCompletedOnAccount(
+            self.quest_account)
         return completed and Green(L['completed']) or Red(L['incomplete'])
     elseif self.weekly then
         local completed = C_QuestLog.IsQuestFlaggedCompleted(self.weekly)

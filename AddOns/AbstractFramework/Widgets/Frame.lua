@@ -12,6 +12,7 @@ function AF.CreateFrame(parent, name, width, height, template)
     local f = CreateFrame("Frame", name, parent, template)
     AF.SetSize(f, width, height)
     Mixin(f, AF_FrameMixin)
+    Mixin(f, AF_BaseWidgetMixin)
     AF.AddToPixelUpdater(f)
     return f
 end
@@ -19,11 +20,6 @@ end
 ---------------------------------------------------------------------
 -- titled frame
 ---------------------------------------------------------------------
-local function HeaderedFrame_SetTitleBackgroundColor(self, color)
-    if type(color) == "string" then color = AF.GetColorTable(color) end
-    color = color or AF.GetColorTable("accent")
-end
-
 ---@class AF_HeaderedFrame:AF_Frame
 local AF_HeaderedFrameMixin = {}
 
@@ -36,6 +32,23 @@ function AF_HeaderedFrameMixin:SetTitleJustify(justify)
     else
         AF.SetPoint(self.header.text, "CENTER")
     end
+end
+
+---@param color string|table
+function AF_HeaderedFrameMixin:SetTitleColor(color)
+    self.header.text:SetColor(color)
+end
+
+---@param text string
+function AF_HeaderedFrameMixin:SetTitle(text)
+    self.header.text:SetText(text)
+end
+
+---@param color string|table color name / table
+function AF_HeaderedFrameMixin:SetTitleBackgroundColor(color)
+    if type(color) == "string" then color = AF.GetColorTable(color) end
+    color = color or AF.GetColorTable("accent")
+    self.header.tex:SetColorTexture(AF.UnpackColor(color))
 end
 
 function AF_HeaderedFrameMixin:SetTitle(title)
@@ -92,7 +105,7 @@ function AF.CreateHeaderedFrame(parent, name, title, width, height, frameStrata,
     f:SetFrameLevel(frameLevel or 1)
     f:SetToplevel(true)
     f:SetClampedToScreen(true)
-    f:SetClampRectInsets(0, 0, AF.ConvertPixelsForRegion(20, f), 0)
+    f:SetClampRectInsets(0, 0, AF.ConvertPixelsForRegion(19, f), 0)
     AF.SetSize(f, width, height)
     f:SetPoint("CENTER")
     AF.ApplyDefaultBackdropWithColors(f)
@@ -107,21 +120,26 @@ function AF.CreateHeaderedFrame(parent, name, title, width, height, frameStrata,
         f:Raise()
     end)
 
+    AF.ShowNormalGlow(f, "shadow", 2)
+    AF.ClearPoints(f.normalGlow)
+    AF.SetPoint(f.normalGlow, "TOPLEFT", header, -2, 2)
+    AF.SetPoint(f.normalGlow, "BOTTOMRIGHT", f, 2, -2)
+
     AF.SetPoint(header, "BOTTOMLEFT", f, "TOPLEFT", 0, -1)
     AF.SetPoint(header, "BOTTOMRIGHT", f, "TOPRIGHT", 0, -1)
     AF.SetHeight(header, 20)
     AF.ApplyDefaultBackdropWithColors(header, "header")
 
-    header.text = AF.CreateFontString(header, title, AF.GetAccentColorName(), "AF_FONT_TITLE")
+    header.text = AF.CreateFontString(header, title, AF.GetAddonAccentColorName(), "AF_FONT_TITLE")
     header.text:SetPoint("CENTER")
 
     header.closeBtn = AF.CreateCloseButton(header, f, 20, 20)
     header.closeBtn:SetPoint("TOPRIGHT")
     AF.RemoveFromPixelUpdater(header.closeBtn)
 
-    local r, g, b = AF.GetAccentColorRGB()
+    local r, g, b = AF.GetAddonAccentColorRGB()
     header.tex = header:CreateTexture(nil, "ARTWORK")
-    header.tex:SetAllPoints(header)
+    AF.SetOnePixelInside(header.tex, header)
     header.tex:SetColorTexture(r, g, b, 0.025)
 
     -- header.tex = AF.CreateGradientTexture(header, "Horizontal", {r, g, b, 0.25})
@@ -169,7 +187,7 @@ local AF_BorderedFrameMixin = {}
 
 function AF_BorderedFrameMixin:SetLabel(label, fontColor, font, isInside)
     if not self.label then
-        self.label = AF.CreateFontString(self, label, fontColor or "accent", font)
+        self.label = AF.CreateFontString(self, label, fontColor or self.accentColor, font)
         self.label:SetJustifyH("LEFT")
     else
         self.label:SetText(label)
@@ -190,6 +208,8 @@ function AF.CreateBorderedFrame(parent, name, width, height, color, borderColor)
     local f = CreateFrame("Frame", name, parent, "BackdropTemplate")
     AF.ApplyDefaultBackdropWithColors(f, color, borderColor)
     AF.SetSize(f, width, height)
+
+    f.accentColor = AF.GetAddonAccentColorName()
 
     Mixin(f, AF_FrameMixin)
     Mixin(f, AF_BorderedFrameMixin)
@@ -221,16 +241,21 @@ end
 
 function AF_TitledPaneMixin:SetTips(...)
     if not self.tips then
-        self.tips = AF.CreateIconButton(self, AF.GetIcon("Info1"), 16, 16, 0, "gray", "white", "NEAREST", true)
+        self.tips = AF.CreateTipsButton(self)
         self.tips:SetPoint("BOTTOMRIGHT", self.line, "TOPRIGHT")
     end
-    AF.SetTooltips(self.tips, "TOPRIGHT", 0, 0, ...)
+    self.tips:SetTips(...)
 end
 
----@param color string color name defined in Color.lua
+-- recommended position for first component is "TOPLEFT", 0, -25/-30
+---@param parent Frame
+---@param title string
+---@param width? number
+---@param height? number
+---@param color? string color name defined in Color.lua
 ---@return AF_TitledPane
 function AF.CreateTitledPane(parent, title, width, height, color)
-    color = color or "accent"
+    color = color or AF.GetAddonAccentColorName()
 
     local pane = CreateFrame("Frame", nil, parent, "BackdropTemplate")
     AF.SetSize(pane, width, height)
@@ -251,7 +276,7 @@ function AF.CreateTitledPane(parent, title, width, height, color)
     AF.SetPoint(shadow, "TOPRIGHT", line, 1, -1)
 
     -- title
-    local text = AF.CreateFontString(pane, title, "accent")
+    local text = AF.CreateFontString(pane, title, color)
     pane.title = text
     text:SetJustifyH("LEFT")
     AF.SetPoint(text, "BOTTOMLEFT", line, "TOPLEFT", 0, 2)

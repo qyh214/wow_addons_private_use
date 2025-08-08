@@ -29,7 +29,7 @@ function mod:OnBossEnable()
 		self:Log("SPELL_CAST_SUCCESS", "MightyBlow", 14099)
 	end
 	self:Log("SPELL_AURA_APPLIED_DOSE", "FuriousAngerApplied", 16791)
-	if self:Heroic() or (self:Classic() and not self:Vanilla()) then -- no encounter events in Timewalking or Cataclysm Classic
+	if self:Classic() and not self:Vanilla() then -- no encounter events in Cataclysm Classic
 		self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
 		self:Death("Win", 10435)
 	end
@@ -87,7 +87,7 @@ end
 
 function mod:FuriousAngerApplied(args)
 	if args.amount % 3 == 0 and self:Dispeller("enrage", true, args.spellId) then
-		self:Message(args.spellId, "yellow", CL.stack:format(args.amount, CL.onboss:format(args.spellName)))
+		self:Message(args.spellId, "yellow", CL.stackboss:format(args.amount, args.spellName))
 		self:PlaySound(args.spellId, "info")
 	end
 end

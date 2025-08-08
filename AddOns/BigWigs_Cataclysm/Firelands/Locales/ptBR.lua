@@ -72,6 +72,7 @@ if L then
 	L.immolationyou_message = "Armadilha Imolante"
 	L.crystal = "Armadilha de cristal"
 	L.crystal_desc = "Avisa quando Shannox lançar uma armadilha de cristal debaixo de você."
+	--L.facerage_trigger = "Go for the throat!"
 end
 
 L = BigWigs:NewBossLocale("Baleroc", "ptBR")

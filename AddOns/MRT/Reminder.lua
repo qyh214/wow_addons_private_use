@@ -8,15 +8,17 @@ local LibDeflate = LibStub:GetLibrary("LibDeflate")
 
 local VMRT = nil
 
-local UnitPowerMax, tonumber, tostring, UnitGUID, PlaySoundFile, RAID_CLASS_COLORS, floor, ceil = UnitPowerMax, tonumber, tostring, UnitGUID, PlaySoundFile, RAID_CLASS_COLORS, floor, ceil
+local UnitPowerMax, tonumber, tostring, UnitGUID, PlaySoundFile, RAID_CLASS_COLORS, floor, ceil, COMBATLOG_OBJECT_RAIDTARGET_MASK = UnitPowerMax, tonumber, tostring, UnitGUID, PlaySoundFile, RAID_CLASS_COLORS, floor, ceil, COMBATLOG_OBJECT_RAIDTARGET_MASK
 local UnitHealthMax, UnitHealth, ScheduleTimer, UnitName, GetRaidTargetIndex, UnitCastingInfo, UnitChannelInfo, UnitIsUnit, UnitIsDead = UnitHealthMax, UnitHealth, ExRT.F.ScheduleTimer, UnitName, GetRaidTargetIndex, UnitCastingInfo, UnitChannelInfo, UnitIsUnit, UnitIsDead
 local GetSpellInfo, strsplit, GetTime, UnitPower, UnitGetTotalAbsorbs, UnitClass, GetSpellCooldown, UnitGroupRolesAssigned = ExRT.F.GetSpellInfo or GetSpellInfo, strsplit, GetTime, UnitPower, UnitGetTotalAbsorbs, UnitClass, ExRT.F.GetSpellCooldown or GetSpellCooldown, UnitGroupRolesAssigned
 local pairs, ipairs, bit, string_gmatch, tremove, pcall, format, wipe, type, select, loadstring, next, max, bit_band, unpack = pairs, ipairs, bit, string.gmatch, tremove, pcall, format, wipe, type, select, loadstring, next, math.max, bit.band, unpack
 local GetSpellName = C_Spell and C_Spell.GetSpellName or GetSpellInfo
 local GetSpellTexture = C_Spell and C_Spell.GetSpellTexture or GetSpellTexture
+local GetNumSpecializationsForClassID = C_SpecializationInfo and C_SpecializationInfo.GetNumSpecializationsForClassID or GetNumSpecializationsForClassID
+local GetSpecializationInfo = C_SpecializationInfo and C_SpecializationInfo.GetSpecializationInfo or GetSpecializationInfo
 
 local senderVersion = 4
-local addonVersion = 65
+local addonVersion = 68
 
 local options = module.options
 
@@ -153,8 +155,12 @@ function frame:UpdateTextStyle(obj)
 
 	for o,t in pairs(obj and {{obj}} or {self.textBigD,self.textD,self.textSmallD}) do
 		for ci,text in pairs(t) do
-			text:SetFont(font, fontSize*text.tss, outline)
-			text.tmr:SetFont(font, fontSize*text.tss, outline)
+			if not text:SetFont(font, fontSize*text.tss, outline) then
+				text:SetFont(ExRT.F.defFont, fontSize*text.tss, outline)
+			end
+			if not text.tmr:SetFont(font, fontSize*text.tss, outline) then
+				text.tmr:SetFont(ExRT.F.defFont, fontSize*text.tss, outline)
+			end
 
 			text.te = te
 
@@ -2794,13 +2800,15 @@ function options:Load()
 
 		FILTER_AURA = true,
 
-		spell_status = {},
+		spell_status = type(VMRT.Reminder2.OptTLSpellDisabled) == "table" and VMRT.Reminder2.OptTLSpellDisabled or {},
 		spell_dur = {},
 		custom_phase = {},
 		reminder_hide = {},
 
 		saved_colors = {}
 	}
+
+	VMRT.Reminder2.OptTLSpellDisabled = options.timeLine.spell_status
 
 	function options.timeLine.util_sort_by2(a,b) return a[2]<b[2] end
 
@@ -3061,6 +3069,24 @@ function options:Load()
 		end
 	end
 
+	local function CheckReminderFilterByPlayerName(data,names)
+		for p in pairs(data.players) do
+			for name in pairs(names) do
+				if p:lower():find(name,1,true) then
+					return true
+				end
+			end
+		end
+
+		for name in pairs(names) do
+			local class = select(2,UnitClass(name))
+	
+			if class and data["class"..class] then
+				return true
+			end
+		end
+	end
+
 	function options.timeLine:GetRemindersList()
 		local timeLineData = self.timeLineData
 
@@ -3106,7 +3132,8 @@ function options:Load()
 							data.triggers[1].eventCLEU == "SPELL_AURA_APPLIED"
 						))
 					) and
-					(not self.FILTER_REM_ONLYMY or module:CheckPlayerCondition(data))
+					(not self.FILTER_REM_ONLYMY or module:CheckPlayerCondition(data)) and
+					(not self.FILTER_BYPLAYERNAME or CheckReminderFilterByPlayerName(data,self.FILTER_BYPLAYERNAME))
 				then
 					local time = module:ConvertMinuteStrToNum(data.triggers[1].delayTime)
 					time = time and time[1] or 0
@@ -3578,8 +3605,112 @@ function options:Load()
 		self.List[ #self.List+1 ] = {
 			text = L.ReminderFightSaved,
 			subMenu = subMenu,
-			prio = 100000,
+			prio = 100001,
 		}
+
+		if VMRT.Reminder2.TLHistory then
+			local tlSubMenu = {}
+			self.List[#self.List+1] = {
+				text = "Per boss history",
+				subMenu = tlSubMenu,
+				Lines=15,
+				prio = 100000,
+			}
+			for diffID,diffData in pairs(VMRT.Reminder2.TLHistory) do
+				for bossID,bossData in pairs(diffData) do
+					local toadd
+
+					local zone, bossNum
+					for i=1,#ExRT.GDB.EncountersList do
+						local z = ExRT.GDB.EncountersList[i]
+						for j=2,#z do
+							if z[j] == bossID then
+								zone = z
+								bossNum = j
+								break
+							end
+						end
+					end
+					if zone then
+						toadd = ExRT.F.table_find3(tlSubMenu,zone[1],"arg3")
+						if not toadd then
+							local text = GetMapNameByID(zone[1])
+	
+							local zoneImg
+							local zoneMapID
+							local ej_bossID = ExRT.GDB.encounterIDtoEJ[bossID]
+							if ej_bossID and EJ_GetEncounterInfo then
+								local name, description, journalEncounterID, rootSectionID, link, journalInstanceID, dungeonEncounterID, instanceID = EJ_GetEncounterInfo(ej_bossID)
+								if journalInstanceID then
+									local name, description, bgImage, buttonImage1, loreImage, buttonImage2, dungeonAreaMapID, link, shouldDisplayDifficulty, mapID = EJ_GetInstanceInfo(journalInstanceID)
+									zoneImg = buttonImage1
+									text = name or text
+									zoneMapID = mapID
+								end
+							end
+	
+							toadd = {text = text, arg3 = zone[1], subMenu = {}, zonemd = zone, prio = 40000+zone[1]+(zoneMapID and SORT_DUNG_LIST[ zoneMapID ] and SORT_DUNG_LIST[ zoneMapID ]*5000 or 0), icon = zoneImg}
+							tlSubMenu[#tlSubMenu+1] = toadd
+						end
+						toadd = toadd.subMenu
+					end
+					if not toadd then
+						toadd = tlSubMenu
+					end
+
+					local bossImg
+					if ExRT.GDB.encounterIDtoEJ[bossID] and EJ_GetCreatureInfo then
+						bossImg = select(5, EJ_GetCreatureInfo(1, ExRT.GDB.encounterIDtoEJ[bossID]))
+					end
+					local bossName = ExRT.L.bossName[bossID]
+
+					local toadd2 = ExRT.F.table_find3(toadd,bossID,"arg3")
+					if not toadd2 then
+						toadd2 = {
+							text = bossName,
+							arg3 = bossID,
+							subMenu = {},
+							icon = bossImg,
+							iconsize = 32,
+							prio = bossNum or 1+(bossID/100000),
+						}
+						toadd[#toadd+1] = toadd2
+					end
+					toadd2 = toadd2.subMenu
+
+					for _,fightData in pairs(bossData) do
+						local data = fightData
+						local text = (GetDifficultyInfo and GetDifficultyInfo(diffID) or "diff ID: "..diffID)..(fightData.d and fightData.d[2] and format(" %d:%02d",fightData.d[2]/60,fightData.d[2]%60) or "")
+						local boss_list = {
+							text = text,
+							arg1 = bossID,
+							arg2 = bossName.." "..text,
+							arg3 = 3,
+							arg4 = {tl = data,id = bossID},
+							func = self.SetValue,
+						}
+						toadd2[#toadd2+1] = boss_list
+					end
+				end
+			end
+
+			for i=1,#tlSubMenu do
+				local list = tlSubMenu[i]
+				if list.zonemd then
+					sort(list.subMenu,function(a,b) return (a.prio or 0) > (b.prio or 0) end)
+				end
+			end
+			sort(tlSubMenu,function(a,b)
+				return (a.prio or 0) > (b.prio or 0) 
+			end)
+
+			if #tlSubMenu == 0 then
+				tlSubMenu[#tlSubMenu+1] = {
+					isTitle = true,
+					text = "No fight saved yet",
+				}
+			end
+		end
 
 		local dungBossList = ExRT.F.GetEncountersList(false,false,false,true)
 		local dungIDs = {}
@@ -7173,7 +7304,7 @@ function options:Load()
 
 		gluerange = 2,
 
-		spell_status = {},
+		spell_status = type(VMRT.Reminder2.OptAssigSpellDisabled) == "table" and VMRT.Reminder2.OptAssigSpellDisabled or {},
 		spell_dur = {},
 		custom_phase = {},
 		reminder_hide = {},
@@ -7212,12 +7343,14 @@ function options:Load()
 		OPTS_MARKSHARED = VMRT.Reminder2.OptAssigMarkShared,
 		OPTS_SOUNDDELAY = VMRT.Reminder2.OptAssigSoundDelay,
 		OPTS_DURDEF = VMRT.Reminder2.OptAssigDur,
+		OPTS_NOSPELLCD = VMRT.Reminder2.OptAssigNospellcd,
 	}
 
 	VMRT.Reminder2.OptAssigQFClass = self.assign.QFILTER_CLASS
 	VMRT.Reminder2.OptAssigQFRole = self.assign.QFILTER_ROLE
 	VMRT.Reminder2.OptAssigQFSpell = self.assign.QFILTER_SPELL
 	VMRT.Reminder2.OptAssigCustomCD = self.assign.custom_cd
+	VMRT.Reminder2.OptAssigSpellDisabled = self.assign.spell_status
 
 	options.assign.GetTimeLineData = options.timeLine.GetTimeLineData
 
@@ -7493,6 +7626,34 @@ function options:Load()
 			arg2 = "OptAssigMarkShared",
 			alter = false,
 		},{
+			text = "Filter by player names:",
+		},{
+			text = " ", 
+			isTitle = true, 
+			edit = "",
+			editFunc = function(this)
+				local search = this:GetText()
+				if search and search:trim() == "" then
+					search = nil
+				end
+				search = search and search:lower()
+				if search then
+					local t = {}
+					for name in search:gmatch("[^ ,]+") do
+						t[name] = true
+					end
+					search = t
+				end
+				options.assign.FILTER_BYPLAYERNAME = search
+				if not options.assign.tmp_resetpage then
+					options.assign.tmp_resetpage = C_Timer.NewTimer(.5,function()
+						options.assign.tmp_resetpage = nil
+						options.assign:Update()
+					end)
+				end
+			end,
+			tmpID = 1,
+		},{
 			text = " ",
 			isTitle = true,
 		},{
@@ -7531,6 +7692,13 @@ function options:Load()
 			arg1 = "OPTS_NOSPELLNAME",
 			arg2 = "OptAssigNospellname",
 			alter = false,
+		},{
+			text = "Don't check on spell CD",
+			checkable = true,
+			func = self.assignSettingsButton.SetFilterValue,
+			arg1 = "OPTS_NOSPELLCD",
+			arg2 = "OptAssigNospellcd",
+			alter = false,
 		},
 	}
 	function self.assignSettingsButton:PreUpdate()
@@ -7541,6 +7709,8 @@ function options:Load()
 				if line.hidF then
 					line.isHidden = not line.hidF()
 				end
+			elseif line.editFunc and line.tmpID == 1 then
+				line.edit = options.assign.FILTER_BYPLAYERNAME and ExRT.F.table_keys_to_string(options.assign.FILTER_BYPLAYERNAME) or ""
 			end
 		end
 	end
@@ -8108,6 +8278,10 @@ function options:Load()
 			GameTooltip:AddLine("From start: "..module:FormatTime2(pd))
 		end
 		GameTooltip:AddLine(module:FormatMsg(data.msg or ""))
+		GameTooltip:AddLine(" ")
+		GameTooltip:AddLine("Left click - config")
+		GameTooltip:AddLine("Shift+Left click - advanced config")
+		GameTooltip:AddLine("Right click - remove")
 		GameTooltip:Show()
 	end
 	options.assign.Util_LineAssignOnLeave = function(self)
@@ -8754,6 +8928,9 @@ function options:Load()
 					data.sound = "TTS:"..data.msg:match("^{spell:%d+} *(.-)$")
 				end
 				data.msg = data.msg:gsub("^({spell:%d+}).-$","%1")
+			end
+			if self.OPTS_NOSPELLCD then
+				data.triggers[2] = nil
 			end
 			if self.OPTS_DURDEF then
 				data.dur = self.OPTS_DURDEF
@@ -10939,6 +11116,9 @@ function options:Load()
 	self.profileDropDown.leftText:SetTextColor(1,.82,0)
 	self.profileDropDown.leftText:SetFont(self.profileDropDown.leftText:GetFont(),10)
 
+	self.profileDropDown.rightIcon = ELib:Icon(self.profileDropDown,nil,20,true):Atlas("Ping_Chat_Warning"):Tooltip("No personal profile selected.\nAll newly created reminders will not be saved."):Point("LEFT",self.profileDropDown,"RIGHT",3,0)
+	self.profileDropDown.rightIcon:SetShown(VMRT.Reminder2.Profile == -1)
+
 	local function SetProfile(_,arg1)
 		module:SetProfile(arg1,VMRT.Reminder2.ProfileShared)
 		ELib:DropDownClose()
@@ -11827,6 +12007,7 @@ function options:Load()
 		[2232] = 2549,	--adh
 		[2292] = 2657,	--n
 		[2406] = 2769,	--lod
+		[2460] = 2810,	--mo
 	}
 
 	self.SyncButton = ELib:Button(self.tab.tabs[1],L.ReminderSend):Point("TOPLEFT",self.AddButton,"BOTTOMLEFT",0,-5):Size(100,20):OnClick(function(self)
@@ -16097,13 +16278,13 @@ function options:Load()
 			if UnitClass(name) then
 				name = "|c" .. RAID_CLASS_COLORS[select(2,UnitClass(name))].colorStr .. name
 			end
-			local mark = module.datas.markToIndex[flags]
+			local mark = module.datas.markToIndex[bit.band(flags, COMBATLOG_OBJECT_RAIDTARGET_MASK)]
 			if mark and mark > 0 then
 				name = ExRT.F.GetRaidTargetText(mark).." " .. name
 			end
 			return name
 		elseif flags then
-			local mark = module.datas.markToIndex[flags]
+			local mark = module.datas.markToIndex[bit.band(flags, COMBATLOG_OBJECT_RAIDTARGET_MASK)]
 			if mark and mark > 0 then
 				return ExRT.F.GetRaidTargetText(mark)
 			end
@@ -16926,6 +17107,14 @@ function options:Load()
 	end)
 	ELib:Text(self.options_tab.tabs[1],L.ReminderSpellsHistoryCount..":",11):Point("RIGHT",self.sliderHistoryNumSaved,"LEFT",-5,0):Color(1,.82,0,1):Right()
 
+	self.chkSyncOnlyPersonal = ELib:Check(self.options_tab.tabs[1],"\"Send\" only personal"..":",VMRT.Reminder2.SyncOnlyPersonal):Point("TOPLEFT",self.chkHistorySync,"BOTTOMLEFT",0,-50):Left(5):OnClick(function(self) 
+		if self:GetChecked() then
+			VMRT.Reminder2.SyncOnlyPersonal = true
+		else
+			VMRT.Reminder2.SyncOnlyPersonal = nil
+		end
+	end):Tooltip("Syncing reminders will only send your personal reminders.\nAny shared reminders will not be removed for receivers.")
+
 	local function dropDownGenSoundSetValue(_,arg1,arg2)
 		ELib:DropDownClose()
 		VMRT.Reminder2["generalSound"..arg1] = arg2
@@ -17494,7 +17683,7 @@ function module:CheckAllTriggers(trigger, printLog)
 	if remType == REM.TYPE_TEXT and not check and data.hideTextChanged then
 		for j=#module.db.showedReminders,1,-1 do
 			local showed = module.db.showedReminders[j]
-			if showed.data == data then
+			if showed.data == data or showed.data.uid == data.uid then
 				if showed.voice then
 					showed.voice:Cancel()
 				end
@@ -17921,7 +18110,7 @@ do
 		if not data.copy then
 			for j=#module.db.showedReminders,1,-1 do
 				local showed = module.db.showedReminders[j]
-				if showed.data == data then
+				if showed.data.uid == data.uid then
 					if data.norewrite then
 						return
 					end
@@ -18187,17 +18376,44 @@ do
 			if sound == "TTS" or isCustomTTS then
 				if C_VoiceChat and C_VoiceChat.SpeakText and reminder then
 					local msg = module:FormatMsgForChat( module:FormatMsg(isCustomTTS and sound:gsub("^TTS:","") or reminder.data.msg or "",reminder.params) )
-					C_Timer.After(0.01,function()	--Try to fix lag
-						--C_VoiceChat.StopSpeakingText()
-						C_VoiceChat.SpeakText(
-							--VMRT.Reminder2.ttsVoice or TextToSpeech_GetSelectedVoice(Enum.TtsVoiceType.Standard).voiceID or 1, 
-							module:GetTTSVoiceID(), 
-							FormatMsgForSound( msg ), 
-							Enum.VoiceTtsDestination.QueuedLocalPlayback, 
-							VMRT.Reminder2.ttsSpeechRate or C_TTSSettings.GetSpeechRate() or 0, 
-							VMRT.Reminder2.ttsVolume or C_TTSSettings.GetSpeechVolume() or 100
-						)
-					end)
+					local isPass = true
+
+					if reminder.data.msg and reminder.data.msg:find("^{spell:%d+}") and msg:trim() == "" and sound:find("^TTS:") then
+						local sound_msg = sound:gsub("^TTS:","")
+						local spellID = reminder.data.msg:match("^{spell:(%d+)}")
+						if module:TTSPrerecorded(spellID) and sound_msg:trim() == GetSpellName(tonumber(spellID)) then
+							sound = module:TTSPrerecorded(spellID)
+							isPass = false
+						end
+					elseif reminder.data.msg and reminder.data.msg:find("^{spell:%d+}") and msg:trim() == "" then
+						local spellID = reminder.data.msg:match("^{spell:(%d+)}")
+						if module:TTSPrerecorded(spellID) then
+							sound = module:TTSPrerecorded(spellID)
+							isPass = false
+						end
+					elseif reminder.data.msg and reminder.data.msg:find("^{spell:%d+}") then
+						local spellID = reminder.data.msg:match("^{spell:(%d+)}")
+						if module:TTSPrerecorded(spellID) and msg:trim() == GetSpellName(tonumber(spellID)) then
+							sound = module:TTSPrerecorded(spellID)
+							isPass = false
+						end
+					end
+			
+					if isPass then
+						C_Timer.After(0.01,function()	--Try to fix lag
+							--C_VoiceChat.StopSpeakingText()
+							C_VoiceChat.SpeakText(
+								--VMRT.Reminder2.ttsVoice or TextToSpeech_GetSelectedVoice(Enum.TtsVoiceType.Standard).voiceID or 1, 
+								module:GetTTSVoiceID(), 
+								FormatMsgForSound( msg ), 
+								Enum.VoiceTtsDestination.QueuedLocalPlayback, 
+								VMRT.Reminder2.ttsSpeechRate or C_TTSSettings.GetSpeechRate() or 0, 
+								VMRT.Reminder2.ttsVolume or C_TTSSettings.GetSpeechVolume() or 100
+							)
+						end)
+					else
+						pcall(PlaySoundFile, sound, "Master")
+					end
 				end
 			else
 				pcall(PlaySoundFile, sound, "Master")
@@ -18279,6 +18495,7 @@ do
 			self:Update()
 			if total_c == 0 then
 				self:Hide()
+				tmr = 1
 			end
 		end
 	end)
@@ -18340,11 +18557,11 @@ function module.main.COMBAT_LOG_EVENT_UNFILTERED(timestamp,event,hideCaster,sour
 				(not triggerData.spellName or triggerData.spellName == spellName) and
 				(not trigger.DsourceName or sourceName and trigger.DsourceName[sourceName]) and
 				(not trigger.DsourceID or trigger.DsourceID(sourceGUID)) and
-				(not triggerData.sourceMark or module.datas.markToIndex[sourceFlags2] == triggerData.sourceMark) and
+				(not triggerData.sourceMark or module.datas.markToIndex[bit_band(sourceFlags2, COMBATLOG_OBJECT_RAIDTARGET_MASK)] == triggerData.sourceMark) and
 				(not triggerData.sourceUnit or module:CheckUnit(triggerData.sourceUnit,sourceGUID,trigger)) and
 				(not trigger.DtargetName or destName and trigger.DtargetName[destName]) and
 				(not trigger.DtargetID or trigger.DtargetID(destGUID)) and
-				(not triggerData.targetMark or module.datas.markToIndex[destFlags2] == triggerData.targetMark) and
+				(not triggerData.targetMark or module.datas.markToIndex[bit_band(destFlags2, COMBATLOG_OBJECT_RAIDTARGET_MASK)] == triggerData.targetMark) and
 				(not triggerData.targetUnit or module:CheckUnit(triggerData.targetUnit,destGUID,trigger)) and
 				(not triggerData.extraSpellID or triggerData.extraSpellID == arg1) and
 				(not trigger.Dstacks or module:CheckNumber(trigger.Dstacks,(event == "SPELL_AURA_APPLIED_DOSE" or event == "SPELL_AURA_REMOVED_DOSE") and arg2 or 1)) and
@@ -18360,9 +18577,9 @@ function module.main.COMBAT_LOG_EVENT_UNFILTERED(timestamp,event,hideCaster,sour
 				then
 					local vars = {
 						sourceName = sourceName,
-						sourceMark = module.datas.markToIndex[sourceFlags2],
+						sourceMark = module.datas.markToIndex[bit_band(sourceFlags2, COMBATLOG_OBJECT_RAIDTARGET_MASK)],
 						targetName = destName,
-						targetMark = module.datas.markToIndex[destFlags2],
+						targetMark = module.datas.markToIndex[bit_band(destFlags2, COMBATLOG_OBJECT_RAIDTARGET_MASK)],
 						spellName = spellName,
 						spellID = spellID,
 						extraSpellID = arg1,
@@ -19627,7 +19844,7 @@ function module:TriggerSpellCD(triggers)
 				if not enabled then
 					duration = 3600
 				end
-				local cdCheck = duration > gduration and duration > 0
+				local cdCheck = duration > gduration and duration > 1.5
 
 				if not trigger.statuses[1] and cdCheck then
 					module:AddTriggerCounter(trigger)
@@ -20259,7 +20476,7 @@ do
 	end
 	function module.main:RAID_TARGET_UPDATE()
 		if not scheduled then
-			scheduled = ExRT.F.After(0.05,scheduleFunc)
+			scheduled = ExRT.F.Timer(scheduleFunc,0.05)
 		end
 	end
 end
@@ -21084,6 +21301,8 @@ function module:SetProfile(profile,sharedProfile)
 	if options.profileDropDown then
 		options.profileDropDown:AutoText(VMRT.Reminder2.Profile)
 		options.sharedProfileDropDown:AutoText(VMRT.Reminder2.ProfileShared)
+
+		options.profileDropDown.rightIcon:SetShown(profile == -1)
 	end
 	CURRENT_DATA = VMRT.Reminder2.data[VMRT.Reminder2.Profile or -1] or {}
 	CURRENT_DATA_SHARED = VMRT.Reminder2.data[VMRT.Reminder2.ProfileShared or -1] or {}
@@ -21117,7 +21336,7 @@ function module.main:ADDON_LOADED()
 	}
 	VMRT.Reminder2.data = VMRT.Reminder2.data or {}
 	VMRT.Reminder2.options = VMRT.Reminder2.options or {}
-	VMRT.Reminder2.removed = nil
+	VMRT.Reminder2.removed = VMRT.Reminder2.removed or {}
 	VMRT.Reminder2.zoneNames = VMRT.Reminder2.zoneNames or {}
 
 	if VMRT.Reminder2.HistorySession then
@@ -21127,6 +21346,7 @@ function module.main:ADDON_LOADED()
 		module.db.history = {{}}
 		VMRT.Reminder2.history = nil
 	end
+	VMRT.Reminder2.TLHistory = VMRT.Reminder2.TLHistory or {}
 
 	if not VMRT.Reminder2.v21 then
 		local new = {}
@@ -21191,6 +21411,21 @@ function module.main:ADDON_LOADED()
 		--"NewCharacter-Horde" for classic
 		ExRT.Options:AddIcon(module.name,{"CharacterCreate-NewLabel",40,isAtlas=true})
 	end
+
+	C_Timer.After(1,module.ScanForTTS)
+end
+
+local TTSSpellsList = {}
+function module:ScanForTTS()
+	for key,soundPath in ExRT.F.IterateMediaData("sound") do
+		local spellID = type(soundPath) == "string" and soundPath:match("[\\/](%d+)%.ogg$")
+		if spellID then
+			TTSSpellsList[spellID] = soundPath
+		end
+	end
+end
+function module:TTSPrerecorded(spellID)
+	return TTSSpellsList[spellID] or TTSSpellsList[tostring(spellID)]
 end
 
 function module.main:CHALLENGE_MODE_START()
@@ -21328,7 +21563,17 @@ function module:StartHistoryRecord(mode)
 		IsHistoryEnabled = false
 	end
 end
-function module:SaveHistorySegment(ignoreFightLen)
+
+function module:SaveHistorySegmentIsMatchDiff(difficultyID)
+	if not difficultyID then
+		return
+	end
+	if difficultyID == 16 or difficultyID == 15 or difficultyID == 14 or difficultyID == 194 or difficultyID == 193 or difficultyID == 175 or difficultyID == 176 then
+		return true
+	end
+end
+
+function module:SaveHistorySegment(ignoreFightLen, difficultyID, isKill)
 	if IsHistoryEnabled then
 		module:AddHistoryRecord(0)
 
@@ -21357,7 +21602,65 @@ function module:SaveHistorySegment(ignoreFightLen)
 				module:SendLastHistory(tosend)
 			end)
 		end
+
+		if enoughLength and tosend and module:SaveHistorySegmentIsMatchDiff(difficultyID) then
+			C_Timer.After(2,function()
+				module:SaveLastHistory(tosend, difficultyID, isKill)
+			end)
+		end
 	end
+end
+function module:SaveLastHistory(history, difficultyID, isKill)
+	history = history or module.db.history[1]
+	if not history then
+		return
+	end
+	local customtl,bossID,len = module:CreateCustomTimelineFromHistory(history)
+
+	local diffConverted = 3
+	if difficultyID == 16 or difficultyID == 194 or difficultyID == 193 then
+		diffConverted = 4
+	elseif difficultyID == 14 then
+		diffConverted = 2
+	end
+
+	customtl.d = {
+		diffConverted,
+		len,
+	}
+
+	if not VMRT.Reminder2.TLHistory then
+		print('VMRT.Reminder2.TLHistory error')
+		return
+	end
+
+	local diffData = VMRT.Reminder2.TLHistory[ difficultyID ]
+	if not diffData then
+		diffData = {}
+		VMRT.Reminder2.TLHistory[ difficultyID ] = diffData
+	end
+
+	local bossData = diffData[ bossID ]
+	if not bossData then
+		bossData = {}
+		diffData[ bossID ] = bossData
+	end
+
+	local long = bossData.l
+	if not long or not long.d or long.d[2] < len then
+		bossData.l = customtl
+		return
+	end
+
+	if isKill then
+		local kill = bossData.k
+		if not kill or not kill.d or kill.d[2] > len then
+			bossData.k = customtl
+			return
+		end
+	end
+
+	bossData.r = customtl
 end
 function module:SendLastHistory(history)
 	history = history or module.db.history[1]
@@ -21492,13 +21795,13 @@ function module:CreateCustomTimelineFromHistory(fight)
 	return data, fight[1] and fight[1][3], #fight > 1 and fight[#fight][1] - fight[1][1]
 end
 
-function module.main:ENCOUNTER_END(encounterID, encounterName, difficultyID, groupSize)
+function module.main:ENCOUNTER_END(encounterID, encounterName, difficultyID, groupSize, success)
 	module.db.encounterID = nil
 	module.db.encounterDiff = nil
 	module.db.encounterBossmod = nil
 
 	if not module.db.InChallengeMode then
-		module:SaveHistorySegment()
+		module:SaveHistorySegment(nil, difficultyID, success == 1)
 		IsHistoryEnabled = false
 	else
 		module:AddHistoryRecord(0)		
@@ -21660,6 +21963,21 @@ function module:FindNumberInString(num,str)
 	num = tostring(num)
 	for n in string_gmatch(str,"[^, ]+") do
 		if n == num then
+			return true
+		end
+	end
+end
+
+function module:FindArrayNumberInString(arr,str)
+	if type(str) == "number" then
+		if arr[str] then
+			return true
+		end
+	elseif type(str) ~= "string" then
+		return
+	end
+	for n in string_gmatch(str,"[^, ]+") do
+		if arr[n] then
 			return true
 		end
 	end
@@ -22390,11 +22708,45 @@ do
 			return
 		end
 
-		local _,_,profileName = strsplit(DELIMITER_1,data[1])
+		local _,_,profileName,options_str = strsplit(DELIMITER_1,data[1])
 		if profileName and profileName ~= "" then
 			profileName = profileName:gsub(STRING_CONVERT.decodePatt,STRING_CONVERT.decodeFunc):sub(1,100)
 		else
 			profileName = nil
+		end
+
+		local o_notReset
+		local o_resetBoss
+		local o_resetZone
+
+		if options_str then
+			repeat
+				local opt_str,rest = strsplit(";",options_str,2)
+				options_str = rest
+
+				local opt_name,opt_data = strsplit(":",opt_str,2)
+				if opt_name == "NR" then
+					o_notReset = true
+				elseif opt_name == "RB" then
+					local list = {strsplit(",",opt_data)}
+					o_resetBoss = {}
+					for i=1,#list do
+						local bossID = tonumber(list[i])
+						if bossID then
+							o_resetBoss[bossID] = true
+						end
+					end
+				elseif opt_name == "RZ" then
+					local list = {strsplit(",",opt_data)}
+					o_resetZone = {}
+					for i=1,#list do
+						local zoneID = tonumber(list[i])
+						if zoneID then
+							o_resetZone[zoneID] = true
+						end
+					end
+				end
+			until (not options_str)
 		end
 
 		local time_now = time()
@@ -22404,9 +22756,35 @@ do
 			workingArray = CURRENT_DATA
 		else
 			workingArray, sharedProfileNum = module:GetSharedProfileByName(profileName,true)
-			if #data > 2 and not isLiveSession then
+			local updInfo
+			if #data > 2 and not isLiveSession and not o_notReset then
 				wipe(workingArray)
 
+				updInfo = true
+			end
+			if o_resetBoss and not isLiveSession then
+				for uid_key,data in pairs(workingArray) do
+					if 
+						data.bossID and o_resetBoss[data.bossID]
+					then
+						workingArray[uid_key] = nil
+					end
+				end
+
+				updInfo = true
+			end
+			if o_resetZone and not isLiveSession then
+				for uid_key,data in pairs(workingArray) do
+					if 
+						data.zoneID and module:FindArrayNumberInString(o_resetZone,data.zoneID)
+					then
+						workingArray[uid_key] = nil
+					end
+				end
+
+				updInfo = true
+			end
+			if updInfo then
 				if not VMRT.Reminder2.profilesinfo[sharedProfileNum] then
 					VMRT.Reminder2.profilesinfo[sharedProfileNum] = {}
 				end
@@ -22738,6 +23116,9 @@ function module:RemGetSource(uid)
 end
 function module:RemRem(uid)
 	if not uid then return end
+	if not isLiveSession and VMRT.Reminder2.SyncOnlyPersonal and module:RemGetSource(uid) ~= 0 then
+		VMRT.Reminder2.removed[uid] = time()
+	end
 	CURRENT_DATA[uid] = nil
 	CURRENT_DATA_SHARED[uid] = nil
 	if isLiveSession then
@@ -22799,13 +23180,27 @@ function module:GetCurrentProfileInfo()
 	return {}
 end
 
+local function ArrayKeysOrNumToStr(arr)
+	if type(arr) == "number" then
+		return arr
+	elseif type(arr) ~= "table" then
+		return ""
+	else
+		local str = ""
+		for k in pairs(arr) do
+			str = str .. (str ~= "" and "," or "") .. k
+		end
+		return str
+	end
+end
+
 do
 	local antiSpam = 0
 	local nextSyncGuild, nextSyncGuildTmr
 	function module:SyncGuild()
 		nextSyncGuild = true
 	end
-	function module:Sync(isExport,bossID,zoneID,oneUID,liveSession,customList)
+	function module:Sync(isExport,bossID,zoneID,oneUID,liveSession,customList,customFilterFunc)
 		local isGuild = nextSyncGuild
 		nextSyncGuild = nil
 
@@ -22816,7 +23211,32 @@ do
 			profileName = ""
 		end
 
-		local r = senderVersion..DELIMITER_1..addonVersion..DELIMITER_1..profileName.."\n"
+		local options_str = ""
+
+		if not liveSession and not customList and not oneUID and not isExport then
+			if VMRT.Reminder2.SyncOnlyPersonal then
+				options_str = options_str .. (options_str ~= "" and ";" or "") .. "NR"
+			else
+				if bossID then
+					options_str = options_str .. (options_str ~= "" and ";" or "") .. "NR;RB:" .. ArrayKeysOrNumToStr(bossID)
+				end
+				if zoneID then
+					options_str = options_str .. (options_str ~= "" and ";" or "") .. "NR;RZ:" .. zoneID
+				end
+			end
+		end
+
+		if VMRT.Reminder2.SyncOnlyPersonal and not liveSession and not oneUID then
+			customFilterFunc = function(uid)
+				if module:RemGetSource(uid) ~= 0 then
+					return true
+				else
+					return false
+				end
+			end
+		end
+
+		local r = senderVersion..DELIMITER_1..addonVersion..DELIMITER_1..profileName..DELIMITER_1..options_str.."\n"
 		local rc = 0
 		local reminders
 		if customList then
@@ -22835,9 +23255,10 @@ do
 				  (bossID and ((type(bossID) == "table" and data.bossID and bossID[data.bossID]) or (type(bossID) ~= "table" and data.bossID == bossID))) or
 				  (zoneID and module:FindNumberInString(zoneID,data.zoneID)) or
 				  (oneUID and uid == oneUID)
-				 ) and
-				 (not oneUID or uid == oneUID)
-				)
+				 ) or
+				 (not bossID and not zoneID and not oneUID)
+				) and
+				(not customFilterFunc or customFilterFunc(uid,data))
 			then
 				local players,roles,classes,checks = "",0,0,0
 				for k in pairs(data.players) do
@@ -22893,6 +23314,15 @@ do
 
 				if not isExport and not liveSession and module:RemGetSource(uid) ~= 0 then
 					module:RemAdd(uid,data,true)
+				end
+			end
+		end
+		local now = time()
+		if VMRT.Reminder2.SyncOnlyPersonal and not liveSession and not oneUID then
+			for uid,time in pairs(VMRT.Reminder2.removed) do
+				r = r .. uid .. DELIMITER_1.."\n"
+				if now - time > 7776000 then --90*24*60*60
+					VMRT.Reminder2.removed[uid] = nil
 				end
 			end
 		end

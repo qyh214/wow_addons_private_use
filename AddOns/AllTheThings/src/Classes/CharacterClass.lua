@@ -30,10 +30,8 @@ local ClassInfoByID, ClassInfoByClassFile, ClassInfoByClassName = {}, {}, {};
 local GetSpecializationInfoByID, SpecInfoMetatable = GetSpecializationInfoByID, nil;
 if GetSpecializationInfoByID then
 	SpecInfoMetatable = { __index = function(t, key)
-		local specID = math_floor(key);
-		if specID ~= key then
-			specID = math_floor((1000 * (key - specID)) + 0.00001);
-		end
+		local classID = math_floor(key);
+		local specID = math_floor((1000 * (key - classID)) + 0.00001);
 		local specID, name, description, icon, role, classFile = GetSpecializationInfoByID(specID);
 		if name then
 			local specInfo = {
@@ -59,11 +57,11 @@ if GetSpecializationInfoByID then
 			icon = ClassIcons[key] or 134400,
 			file = "WARRIOR",
 			name = UNKNOWN,
-			classID = key,
+			classID = classID,
 			colorStr = app.Colors.SourceIgnored,
 			text = Colorize(UNKNOWN, app.Colors.SourceIgnored),
 			isValid = false,
-			c = { key },
+			c = { classID },
 		};
 		info.icontext = "|T" .. info.icon .. ":0|t " .. info.text;
 		rawset(t, key, info);
@@ -173,7 +171,9 @@ app.GetClassesString = GetClassesString
 -- Implementation
 app.CreateCharacterClass = app.CreateClassWithInfo("CharacterClass", "classID", ClassInfoByID, {
 	["nmc"] = function(t)
-		return t.classID ~= app.ClassIndex;
+		local nmc = math_floor(t.classID) ~= app.ClassIndex
+		t.nmc = nmc
+		return nmc
 	end,
 	["ignoreSourceLookup"] = function(t)
 		return true;
@@ -188,7 +188,7 @@ app.CreateUnit = app.CreateClass("Unit", "unit", {
 		for guid,character in pairs(ATTCharacterData) do
 			if guid == unit or character.name == unit then
 				rawset(t, "guid", character.guid);
-				rawset(t, "name", ("%s - %s"):format(character.name, character.realm or UNKNOWN));
+				rawset(t, "name", ("%s - %s"):format(character.name or UNKNOWN, character.realm or UNKNOWN));
 				rawset(t, "lvl", character.lvl);
 				if character.classID then
 					rawset(t, "classID", character.classID);

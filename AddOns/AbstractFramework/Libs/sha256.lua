@@ -1,4 +1,10 @@
-local MAJOR_VERSION = "SHA256"
+-------------------------------------------------
+-- https://github.com/OGabrieLima
+-- compatible with WoW Lua
+-- edit by enderneko
+-- 2025-04-15
+-------------------------------------------------
+local MAJOR_VERSION = "AF_SHA256"
 local MINOR_VERSION = 1
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib, oldversion = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
@@ -13,12 +19,6 @@ if not lib then return end
                The `sha256` function can be used to calculate the SHA-256 hash of a message.
   Creation Date: 2024-04-08
 ]]
-
--------------------------------------------------
--- compatible with WoW Lua
--- updated by enderneko 2025-03-24
--- fixed using AI (Claude 3.7)
--------------------------------------------------
 
 local band = bit.band
 local bor = bit.bor

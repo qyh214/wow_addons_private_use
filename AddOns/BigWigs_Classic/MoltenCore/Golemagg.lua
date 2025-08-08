@@ -14,7 +14,7 @@ mod:SetEncounterID(670)
 function mod:GetOptions()
 	return {
 		13880, -- Magma Splash
-		{20228, "SAY", "SAY_COUNTDOWN", "ME_ONLY_EMPHASIZE", "ME_ONLY"}, -- Pyroblast
+		20228, -- Pyroblast
 	}
 end
 
@@ -22,19 +22,21 @@ if mod:GetSeason() == 2 then
 	function mod:GetOptions()
 		return {
 			13880, -- Magma Splash
-			{20228, "SAY", "SAY_COUNTDOWN", "ME_ONLY_EMPHASIZE", "ME_ONLY"}, -- Pyroblast
+			{460858, "SAY", "SAY_COUNTDOWN", "ME_ONLY_EMPHASIZE", "ME_ONLY"}, -- Pyroblast
 			461463, -- Falling Rocks
 		},nil,{
-			[20228] = CL.explosion, -- Pyroblast (Explosion)
+			[460858] = CL.explosion, -- Pyroblast (Explosion)
 		}
 	end
 end
 
 function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED_DOSE", "MagmaSplashApplied", 13880)
-	self:Log("SPELL_AURA_APPLIED", "PyroblastApplied", 20228)
+	self:Log("SPELL_AURA_APPLIED", "PyroblastApplied", 20228) -- Normal, Level 1
+	self:Log("SPELL_AURA_REFRESH", "PyroblastApplied", 20228)
 	if self:GetSeason() == 2  then
-		self:Log("SPELL_AURA_APPLIED", "PyroblastAppliedSoD", 460858)
+		self:Log("SPELL_AURA_APPLIED", "PyroblastAppliedSoD", 460858) -- Level 2 & 3
+		self:Log("SPELL_AURA_REFRESH", "PyroblastAppliedSoD", 460858)
 		self:Log("SPELL_AURA_REMOVED", "PyroblastRemovedSoD", 460858)
 		self:Log("SPELL_CAST_SUCCESS", "FallingRocks", 461463)
 	end
@@ -63,25 +65,23 @@ end
 
 function mod:PyroblastApplied(args)
 	self:TargetMessage(args.spellId, "orange", args.destName)
-	if self:Me(args.destGUID) then
-		self:PlaySound(args.spellId, "alarm", nil, args.destName)
-	end
 end
 
-function mod:PyroblastAppliedSoD(args)
-	self:TargetMessage(20228, "orange", args.destName)
+function mod:PyroblastAppliedSoD(args) -- On heat level 2 & 3 you cast explosion (465155) when it expires
+	self:TargetMessage(args.spellId, "orange", args.destName)
+	self:TargetBar(args.spellId, 8, args.destName, CL.explosion)
 	if self:Me(args.destGUID) then
-		self:Say(20228, nil, nil, "Pyroblast")
-		self:SayCountdown(20228, 8, CL.explosion, nil, "Explosion")
-		self:TargetBar(20228, 8, args.destName, CL.explosion)
-		self:PlaySound(20228, "alarm", nil, args.destName)
+		self:CancelSayCountdown(args.spellId)
+		self:Say(args.spellId, CL.extra:format(args.spellName, CL.explosion), nil, "Pyroblast (Explosion)")
+		self:SayCountdown(args.spellId, 8, CL.explosion, nil, "Explosion")
 	end
+	self:PlaySound(args.spellId, "alarm", nil, args.destName)
 end
 
 function mod:PyroblastRemovedSoD(args)
+	self:StopBar(CL.explosion, args.destName)
 	if self:Me(args.destGUID) then
-		self:CancelSayCountdown(20228)
-		self:StopBar(CL.explosion, args.destName)
+		self:CancelSayCountdown(args.spellId)
 	end
 end
 

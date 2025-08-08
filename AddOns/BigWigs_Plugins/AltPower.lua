@@ -4,14 +4,13 @@
 
 if BigWigsLoader.isVanilla then return end
 
-local plugin = BigWigs:NewPlugin("AltPower")
+local plugin, L = BigWigs:NewPlugin("AltPower")
 if not plugin then return end
 
 --------------------------------------------------------------------------------
 -- Locals
 --
 
-local L = BigWigsAPI:GetLocale("BigWigs")
 local media = LibStub("LibSharedMedia-3.0")
 local FONT = media.MediaType and media.MediaType.FONT or "font"
 plugin.displayName = L.altPowerTitle
@@ -637,8 +636,8 @@ do
 
 		local colorTbl = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
 		local sortedUnitListTest, powerListTest = {}, {}
-		local amount = db.expanded and 26 or 10
-		for i = 1, amount do
+		local count = db.expanded and 26 or 10
+		for i = 1, count do
 			sortedUnitListTest[i] = i
 			powerListTest[i] = math.random(1, 99)
 		end
@@ -650,7 +649,7 @@ do
 				return px > py
 			end
 		end)
-		for i = 1, amount do
+		for i = 1, count do
 			local unitNumber = sortedUnitListTest[i]
 			local tableSize = #classList
 			local tableEntry = unitNumber % tableSize

@@ -256,7 +256,7 @@ end
 function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, castGUID, spellId)
 	if spellId == 40693 and not castCollector[castGUID] then -- Cage Trap
 		castCollector[castGUID] = true
-		self:MessageOld(40695, "red", "info", CL.spawned:format(self:SpellName(spellId)), 199341) -- 199341: ability_hunter_traplauncher / icon 461122
+		self:MessageOld(40695, "red", "info", CL.spawned:format(self:SpellName(spellId)), "ability_hunter_traplauncher") -- ability_hunter_traplauncher / icon 461122
 	end
 end
 

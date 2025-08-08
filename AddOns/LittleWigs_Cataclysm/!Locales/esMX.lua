@@ -12,7 +12,7 @@ end
 L = BigWigs:NewBossLocale("Erudax", "esMX")
 if L then
 	--L.summon = "Summon Faceless Corruptor"
-	--L.summon_desc = "Warn when Erudax summons a Faceless Corruptor"
+	--L.summon_desc = "Warn when Erudax summons a Faceless Corruptor."
 	--L.summon_message = "Faceless Corruptor Summoned"
 	--L.summon_trigger = "summons a"
 end
@@ -35,7 +35,6 @@ end
 
 L = BigWigs:NewBossLocale("The Hour of Twilight Trash", "esMX")
 if L then
-	L.custom_on_autotalk = "Hablar automáticamente"
 	--L.custom_on_autotalk_desc = "Instantly select Thrall's gossip options."
 end
 
@@ -91,12 +90,6 @@ if L then
 	--L.high_tide_trigger2 = "Destroy these intruders! Leave them for the great dark beyond!"
 end
 
-L = BigWigs:NewBossLocale("Ozumat", "esMX")
-if L then
-	--L.custom_on_autotalk = "Autotalk"
-	--L.custom_on_autotalk_desc = "Instantly selects the gossip option to start the fight."
-end
-
 -- The Vortex Pinnacle
 
 L = BigWigs:NewBossLocale("The Vortex Pinnacle Trash", "esMX")
@@ -115,17 +108,10 @@ if L then
 	L.minister_of_air = "Ministro del Aire"
 end
 
-L = BigWigs:NewBossLocale("Altairus", "esMX")
-if L then
-	--L.upwind = "Upwind on you (safe)"
-	--L.downwind = "Downwind on you (unsafe)"
-end
-
 -- Well of Eternity
 
 L = BigWigs:NewBossLocale("Well Of Eternity Trash", "esMX")
 if L then
-	--L.custom_on_autotalk = "Autotalk"
 	--L.custom_on_autotalk_desc = "Instantly select Illidan's gossip option."
 end
 

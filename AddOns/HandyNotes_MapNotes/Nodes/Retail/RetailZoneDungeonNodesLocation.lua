@@ -4,11 +4,12 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 function ns.LoadZoneDungeonMapNodesLocationinfo(self)
 local db = ns.Addon.db.profile
 local nodes = ns.nodes
+ns._currentSourceFile = "RetailZoneDungeonNodesLocation.lua"
 
 --#####################################################################################################
 --##########################        function to hide all nodes below         ##########################
 --#####################################################################################################
-if not db.activate.HideMapNote then
+  if not db.activate.HideMapNote then
 
 
     --#####################################################################################################
@@ -66,9 +67,9 @@ if not db.activate.HideMapNote then
 
         -- Kalimdor Dungeons without ClassicIcons is activ
           if self.db.profile.showZoneDungeons and not db.activate.ClassicIcons then
-            nodes[69][60323015] = { id = 230, lfgid = 36, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Capital Gardens - West left Entrance 
-            nodes[69][60303130] = { id = 230, lfgid = 36, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Capital Gardens - West right Entrance 
-            nodes[69][62502490] = { id = 230, lfgid = 38, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Gordok Commons - North  
+            nodes[69][60323015] = { id = 230, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Capital Gardens - West left Entrance 
+            nodes[69][60303130] = { id = 230, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Capital Gardens - West right Entrance 
+            nodes[69][62502490] = { id = 1277, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Gordok Commons - North  
             nodes[67][78285518] = { id = 232, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Maraudon Foulspore Cavern 
             nodes[68][52152417] = { id = 232, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Maraudon Foulspore Cavern 
             nodes[68][44517669] = { id = 232, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Maraudon Foulspore Cavern first Entrance
@@ -91,7 +92,7 @@ if not db.activate.HideMapNote then
           nodes[1527][15130940] = { id = 743, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Ruins of Ahn'Qiraj
           nodes[1527][07180499] = { id = 744, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Temple of Ahn'Qiraj
           nodes[1527][37008143] = { id = 74, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Throne of the Four Winds
-          nodes[1527][38238069] = { dnID = L["Position of the real Instance Entrance"], id = 74, type = "Raid", showInZone = false, showOnContinent = false, showOnMinimap = false } -- Throne of the Four Winds
+          nodes[1527][38238069] = { dnID = L["Position of the real Instance Entrance"], id = 74, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Throne of the Four Winds
           nodes[1527][55184395] = { dnID = L["Instance Entrance"] .. " " .. L["switches weekly between"] .. " " .. L["Uldum"] .. " (" .. L["Kalimdor"] ..")" .. " & " .. L["Vale of Eternal Blossoms"] .. " (" .. L["Pandaria"] .. ")", id = 1180, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Ny'alotha the Waking City
           nodes[71][12668471] = { dnID = L["Instance Entrance"] .. " " .. L["switches weekly between"] .. " " .. L["Uldum"] .. " (" .. L["Kalimdor"] ..")" .. " & " .. L["Vale of Eternal Blossoms"] .. " (" .. L["Pandaria"] .. ")", id = 1180, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Ny'alotha the Waking City
           nodes[75][39601704] = { id = 750, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- The Battle of Mount Hyjal
@@ -106,8 +107,8 @@ if not db.activate.HideMapNote then
             nodes[10][38916921] = { mnID = 11, id = 240, TransportName = L["Way to the Instance Entrance"], name = "", type = "PassageDungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Wailing Caverns 
             nodes[66][29226253] = { dnID = L["Way to the Instance Entrance"], id = 232, type = "PassageDungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Maraudon Outside
             nodes[63][14161380] = { dnID = L["Way to the Instance Entrance"], id = 227, type = "PassageDungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Blackfathom Deeps 
-            nodes[69][65503524] = { dnID = L["Way to the Instance Entrance"], id = 230, lfgid = 34, type = "PassageDungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Warpwood Quarter - East above Camp Mojache   
-            nodes[69][77073692] = { dnID = L["Way to the Instance Entrance"], id = 230, lfgid = 34, type = "PassageDungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Warpwood Quarter - East above Camp Mojache   
+            nodes[69][65503524] = { dnID = L["Way to the Instance Entrance"], id = 1276, type = "PassageDungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Warpwood Quarter - East above Camp Mojache   
+            nodes[69][77073692] = { dnID = L["Way to the Instance Entrance"], id = 1276, type = "PassageDungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Warpwood Quarter - East above Camp Mojache   
           end
 
 
@@ -120,8 +121,8 @@ if not db.activate.HideMapNote then
               nodes[1527][71755222] = { dnID = L["Way to the Instance Entrance"], id = 70, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Halls of Origination
               nodes[63][14161380] = { dnID = L["Way to the Instance Entrance"], id = 227, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Blackfathom Deeps 
               nodes[66][29226253] = { dnID = L["Way to the Instance Entrance"], id = 232, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Maraudon Outside
-              --nodes[69][65503524] = { id = 230, lfgid = 34, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Warpwood Quarter - East above Camp Mojache   
-              --nodes[69][77073692] = { id = 230, lfgid = 34, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Warpwood Quarter - East above Camp Mojache   
+              --nodes[69][65503524] = { id = 1276, lfgid = 34, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Warpwood Quarter - East above Camp Mojache   
+              --nodes[69][77073692] = { id = 1276, lfgid = 34, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Dire Maul - Warpwood Quarter - East above Camp Mojache   
             end
 
             if self.db.profile.showZoneMultiple then
@@ -155,8 +156,6 @@ if not db.activate.HideMapNote then
 
         -- Eastern Kingdom Dungeons
           if self.db.profile.showZoneDungeons then
-            nodes[122][61303090] = { id = 249, type = "Dungeon", showOnContinent = false } -- Magisters' Terrace 
-            nodes[95][85206430] = { id = 77, type = "Dungeon", showOnContinent = false } -- Zul'Aman 
             nodes[16][36502765] = { id = 239, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Uldaman (inside cave) 
             nodes[42][46866979] = { id = 860, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Return to Karazhan 
             nodes[55][24735143] = { id = 63, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Deadmines
@@ -178,8 +177,6 @@ if not db.activate.HideMapNote then
             nodes[21][44926788] = { id = 64, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Shadowfang Keep
             nodes[18][85323227] = { id = 311, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Scarlet Halls
             nodes[18][84823043] = { id = 316, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Scarlet Monastery
-            nodes[18][85263295] = { id = 311, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = false } -- Scarlet Halls
-            nodes[18][84542943] = { id = 316, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = false } -- Scarlet Monastery
             nodes[19][79146119] = { id = 311, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Scarlet Halls
             nodes[19][68082061] = { id = 316, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Scarlet Monastery
             nodes[22][28811749] = { id = 311, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Scarlet Halls
@@ -225,7 +222,7 @@ if not db.activate.HideMapNote then
             nodes[36][20643322] = { mnID = 33, hideInfo = true, id = { 741, 742, 66, 228, 229, 559 }, name = L["Way to the Instance Entrance"], type = "PassageDungeonRaidMulti", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
             nodes[32][35268404] = { mnID = 33, name = "", type = "PassageDungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
             nodes[15][58543698] = { dnID = L["Way to the Instance Entrance"], id = 239, name = "", type = "PassageDungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Uldaman (Secondary Entrance) 
-            nodes[23][43251854] = { dnID = L["Way to the Instance Entrance"], id = 236, lfgid = 274, type = "PassageDungeon", showInZone = true, showOnContinent = false, showOnMinimap = false }-- Stratholme Service Entrance 
+            nodes[23][43251854] = { dnID = L["Way to the Instance Entrance"], id = 1292, type = "PassageDungeon", showInZone = true, showOnContinent = false, showOnMinimap = false }-- Stratholme Service Entrance 
             nodes[33][68635371] = { mnID = 34, hideInfo = true, id = { 66 }, name = L["Way to the Instance Entrance"], type = "PassageDungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Blackrock Caverns
             nodes[33][65896169] = { mnID = 34, hideInfo = true, id = { 66 }, name = L["Way to the Instance Entrance"], type = "PassageDungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Blackrock Caverns
             nodes[33][45004700] = { mnID = 35, hideInfo = true, id = { 741, 228 }, name = L["Way to the Instance Entrance"], type = "PassageRaid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Blackrock Depths
@@ -274,13 +271,9 @@ if not db.activate.HideMapNote then
             nodes[2070][82333243] = { mnID = 19, name = L["Use the Old Keyring"], dnID = L["Graveyard"] .. " - " .. L["Old Version"] .. "\n" .. L["Cathedral"] .. " - " .. L["Old Version"] .. "\n" .. L["Library"] .. " - " .. L["Old Version"] .. "\n" .. L["Armory"] .. " - " .. L["Old Version"], type = "MultiVInstanceD", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Scarlet Monastery Key for Old dungeons
             nodes[2070][83812772] = { id = 316, name ="", type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Scarlet Monastery
             nodes[2070][85483158] = { id = 311, name ="", type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Scarlet Halls 
-            nodes[18][85353028] = { mnID = 304, name = L["Cathedral"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = false } -- Scarlet Monastery - Cathedral 
             nodes[19][78882223] = { mnID = 304, name = L["Cathedral"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Scarlet Monastery - Cathedral"
-            nodes[18][85153180] = { mnID = 303, name = L["Library"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = false } -- Scarlet Monastery - Library 
             nodes[19][78255762] = { mnID = 303, name = L["Library"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Scarlet Monastery -"
-            nodes[18][85573138] = { mnID = 304, name = L["Armory"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = false } -- Scarlet Monastery - Armory
             nodes[19][86414766] = { mnID = 304, name = L["Armory"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Scarlet Mona"
-            nodes[18][84763039] = { mnID = 302, name = L["Graveyard"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = false } -- Scarlet Monastery - Graveyard 
             nodes[19][68832372] = { mnID = 302, name = L["Graveyard"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Scarlet Monastery - Graveyard  
             nodes[22][69767181] = { mnID = 306, name = L["Secret Entrance"] .. " " .. L["(Memory of Scholomance - Achievement)"] .. " - " .. L["Old Version"], type = "VInstanceD", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Old Scholomance version - Memory of Scholomance - Secret Entrance Old Scholomance version
           end
@@ -326,7 +319,7 @@ if not db.activate.HideMapNote then
             nodes[100][46575283] = { id = 747, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Magtheridon's Lair
             nodes[105][69062414] = { id = 746, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Gruul's Lair
             nodes[109][06895168] = { id = 746, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Gruul's Lair
-            nodes[109][73596372] = { id = 746, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- The Eye
+            nodes[109][73596372] = { id = 749, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- The Eye
           end
         end
 
@@ -710,7 +703,7 @@ if not db.activate.HideMapNote then
           -- Raid Nodes above Blizzards Icons to make it Clickable for maximized Maps
             nodes[2200][27313104] = { id = 1207, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Amirdrassil, the Dream's Hope
             nodes[2025][74855511] = { id = 1200, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Vault of the Incarnates
-            nodes[2025][73065567] = { dnID = L["Position of the real Instance Entrance"], id = 1200, type = "Raid", showInZone = false, showOnContinent = false, showOnMinimap = false } -- Vault of the Incarnates
+            nodes[2025][73065567] = { dnID = L["Position of the real Instance Entrance"], id = 1200, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Vault of the Incarnates
             nodes[2133][48451191] = { id = 1208, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Aberrus, the Shadowed Crucible          
           end
 
@@ -757,6 +750,10 @@ if not db.activate.HideMapNote then
               nodes[2216][52164580] = { id = 1271, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Ara-Kara, City of Echoes
               nodes[2213][52164580] = { id = 1271, type = "Dungeon", dnID = DUNGEON_FLOOR_GILNEAS2, showInZone = true, showOnContinent = false, showOnMinimap = false } -- Ara-Kara, City of Echoes
               nodes[2213][44191124] = { id = 1274, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- City of Threads
+              nodes[2371][65246841] = { id = 1303, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Eco-Dome Al'dani
+              nodes[2371][63587021] = { id = 1194, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Tazavesh, the Veiled Market
+              nodes[2472][43860393] = { id = 1303, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Eco-Dome Al'dani
+              nodes[2472][36321209] = { id = 1194, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Tazavesh, the Veiled Market
             end
 
           -- Khaz Algar Raids
@@ -768,6 +765,7 @@ if not db.activate.HideMapNote then
               nodes[2213][35047242] = { id = 1273, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Nerub-ar Palace       
               nodes[2216][35047242] = { id = 1273, type = "Raid", dnID = DUNGEON_FLOOR_GILNEAS3, showInZone = true, showOnContinent = false, showOnMinimap = false } -- Nerub-ar Palace
               nodes[2346][42045031] = { id = 1296, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Liberation of Undermine
+              nodes[2371][41662152] = { id = 1302, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Manaforge Omega
             end
 
         end
@@ -776,4 +774,5 @@ if not db.activate.HideMapNote then
 
     end
   end
+
 end

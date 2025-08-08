@@ -9,7 +9,6 @@ NARCI_GRADIENT = "|cffd177ffN|cffc480fba|cffb787f6r|cffa98ef2c|cff9a94edi|cff8a9
 L["Developer Info"] = "Developed by Peterodox";
 
 NARCI_NEW_ENTRY_PREFIX = "|cff40C7EB";
-NARCI_COLOR_GREY_85 = "|cffd8d8d8";
 NARCI_COLOR_GREY_70 = "|cffb3b3b3";
 NARCI_COLOR_RED_MILD = "|cffff5050";
 NARCI_COLOR_GREEN_MILD = "|cff7cc576";
@@ -33,6 +32,7 @@ if IsMacClient() then
 end
 
 NARCI_WORDBREAK_COMMA = ", ";
+BINDING_HEADER_NARCISSUS = "Narcissus";
 
 --Date--
 L["Today"] = COMMUNITIES_CHAT_FRAME_TODAY_NOTIFICATION;
@@ -255,7 +255,7 @@ L["Tooltip Style 2"] = "The Original";
 L["Addtional Info"] = "Additional Info";
 L["Item ID"] = "Item ID";
 L["Camera Reset Notification"] = "Camera offset has been reset to zero. If you wish to disable this feature, go to Preferences - Camera, then toggle off Camera Safe Mode.";
-L["Binding Name Open Narcissus"] = "Open Narcissus Character Panel";
+L["Binding Name Open Narcissus"] = "Toggle Narcissus Character Panel";
 L["Developer Colon"] = "Developer: ";
 L["Project Page"] = "Project Page";
 L["Press Copy Yellow"] = "Press |cffffd100".. NARCI_SHORTCUTS_COPY .."|r to Copy";
@@ -316,6 +316,7 @@ L["Animation"] = "Animation";
 L["Animation Tooltip"] = "Browse, search animations";
 L["Animation Variation"] = "Variation";
 L["Reset Slider"] = "Reset to zero";
+L["Available Count"] = "%d available";
 
 --Spell Visual Browser--
 L["Visuals"] = "Visuals";
@@ -392,7 +393,7 @@ NARCI_CRITICAL_STRIKE = STAT_CRITICAL_STRIKE;
 
 
 --Equipment Comparison--
-NARCI_AZERITE_POWERS = "Azerite Powers";
+L["Azerite Powers"] = "Azerite Powers";
 L["Gem Tooltip Format1"] = "%s and %s";
 L["Gem Tooltip Format2"] = "%s, %s and %s more...";
 
@@ -483,6 +484,10 @@ L["Click And Hold"] = "Click and Hold";
 L["To Do List"] = "To-Do";
 L["Error Alert Bookmarks Too Many"] = "You may only bookmark %d achievements at a time.";
 L["Instruction Add To To Do List"] = string.format("%s Left Click on an unearned achievement to add it to your to-do list.", NARCI_MODIFIER_ALT);
+L["Instruction Remove From To Do List"] = string.format("%s Left Click to remove from to-do list.", NARCI_MODIFIER_ALT);
+L["DIY"] = "DIY";
+L["DIY Tab Tooltip"] = "Create a custom Achievement for screenshot purpose.";
+L["Binding Name Open Achievement"] = "Toggle Narcissus Achievement UI";
 
 --Barbershop--
 L["Save New Look"] = "Save New Look";
@@ -490,7 +495,7 @@ L["No Available Slot"] = "No Available Save Slot";
 L["Look Saved"] = "Look Saved";
 L["Cannot Save Forms"] = "Cannot Save This Form";
 L["Profile"] = "Profile";
-L["Share"] =  SOCIAL_SHARE_TEXT or "Share";
+L["Share"] = SOCIAL_SHARE_TEXT or "Share";
 L["Save Notify"] = "Notify You to Save New Appearance";
 L["Save Notify Tooltip"] = "Notify you to save the customization after clicking Accept button.";
 L["Show Randomize Button"] = "Show Randomize Appearance Button";
@@ -523,6 +528,7 @@ L["Profile Type Tooltip"] = "Select the profile to use on this character.\n\nPri
 L["No Saves"] = "No Saves";
 L["Profile Migration Tooltip"] = "You can copy existing presets to the public profile.";
 L["Profile Migration Okay"] = "Okey dokey";
+L["Profile Migration CopyButton Tooltip"] = "Copy this preset to your public profile.";
 
 --Tutorial--
 L["Alert"] = "Warning";

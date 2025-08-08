@@ -30,6 +30,7 @@ L["DeModal is loaded, this addon is known to cause issues, consider replacing it
 L["Detached windows can be moved and resized independently from the parent."] = "Detached windows can be moved and resized independently from the parent."
 L["Do not remember"] = "Do not remember"
 L["Enable the Blizzmove_Debug plugin, to find more debugging information."] = "Enable the Blizzmove_Debug plugin, to find more debugging information."
+L["Failed to make frame movable:"] = "Failed to make frame movable:"
 L["Filter"] = "Filter"
 L["Found bad anchor connections, copy the popup window contents to analyze them."] = "Found bad anchor connections, copy the popup window contents to analyze them."
 L["frame positions are remembered until you switch to another option, click the reset button, or disable BlizzMove"] = "frame positions are remembered until you switch to another option, click the reset button, or disable BlizzMove"

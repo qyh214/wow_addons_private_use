@@ -1,4 +1,5 @@
-local L = BigWigsAPI:NewLocale("BigWigs: Common", "zhCN")
+local _, addonTbl = ...
+local L = addonTbl.API:NewLocale("BigWigs: Common", "zhCN")
 if not L then return end
 
 -- Prototype.lua common words
@@ -13,8 +14,10 @@ L.buff_other = "%s获得增益：%s"
 L.magic_buff_boss = "首领魔法增益: %s" -- Magic buff on BOSS: SPELL_NAME
 L.magic_buff_other = "%s获得魔法增益: %s" -- Magic buff on NPC_NAME: SPELL_NAME
 L.on = "%s：%s"
-L.stack = "%3$s：%1$d层%2$s"
-L.stackyou = "你：%d层%s"
+L.stack = "%3$s：%1$d层%2$s" -- "5x SPELL_NAME on PLAYER_OR_NPC" showing how many stacks of a buff/debuff are on a player or NPC
+L.stackyou = "你：%d层%s" -- "5x SPELL_NAME on YOU" showing how many stacks of a buff/debuff are on you
+L.stackboss = "首领：%d层%s" -- "5x SPELL_NAME on BOSS" showing how many stacks of a buff/debuff are on the boss
+L.stack_gained = "获得 %d层" -- "Gained 5x" for situations where we show how many stacks of a buff were gained since last time a message showed
 L.cast = "<施放：%s>"
 L.casting = "正在施放：%s"
 L.soon = "即将：%s"
@@ -43,10 +46,11 @@ L.dead = "死亡" -- When a player is dead
 L.general = "通用" -- General settings, i.e. things that apply to normal, heroic and mythic mode.
 L.health = "血量" -- The health of an NPC
 L.health_percent = "%d%% 血量" -- "10% Health" The health percentage of an NPC
-L.door_open = "门开了" -- When a door is open, usually after a speech from an NPC
-L.gate_open = "门开了" -- When a gate is open, usually after a speech from an NPC
-L.threat = "威胁"
 L.energy = "能量"
+L.energy_percent = "%d%% 能量" -- "80% Energy" The energy percentage of an NPC
+L.door_open = "开门" -- When a door is open, usually after a speech from an NPC
+L.gate_open = "开门" -- When a gate is open, usually after a speech from an NPC
+L.threat = "威胁"
 
 L.remaining = "剩余：%d" -- 5 remaining
 L.duration = "%s持续 %s 秒" -- Spell for 10 seconds
@@ -69,11 +73,13 @@ L.next_ability = "下个技能" -- We don't know what ability will be next, we o
 L.boss_landing = "%s 正在着陆" -- "NPC_NAME is landing" Used when a flying NPC/dragon/boss is landing
 L.landing = "着陆" -- Used when a flying NPC/dragon/boss is landing
 L.flying_available = "可以起飞"  --改为简短提示
-L.bosses_too_close = "首领过于靠近" -- When 2 or more bosses are too close to each other, buffing each other with a shield, extra damage, etc.
+L.bosses_too_close = "首领距离过近" -- When 2 or more bosses are too close to each other, buffing each other with a shield, extra damage, etc.
 L.keep_moving = "保持移动" -- An ability that forces you to keep moving or you will take damage
 L.stand_still = "禁止移动" -- An ability that forces you to stand still or you will take damage
 L.safe_to_stop = "停止移动" -- When an ability that forces you to keep moving fades from you, allowing you to stop moving
 L.safe_to_move = "可以移动" -- When an ability to forces you to stand still fades from you, allowing you to move again
+L.safe = "安全" -- You are safe from a bad ability
+L.unsafe = "危险" -- You are unsafe (in danger) of a bad ability
 
 -- Add related
 L.add_spawned = "增援出现" -- singular
@@ -131,6 +137,9 @@ L.marker = "%s标记"
 L.marker_player_desc = "标记受到%s影响的玩家为%s，需要权限。" -- Mark players affected by 'SPELL_NAME' with SKULL_ICON
 L.marker_npc_desc = "标记%s为%s，需要权限。" -- Mark NPC_NAME with SKULL_ICON
 L.marker_npc_aura_desc = "标记受到'%s'影响的 NPC 为%s，需要权限。" -- Mark NPCs affected by 'SPELL_NAME' with SKULL_ICON
+L.disabled = "禁用"
+L.none = "无"
+L.markers = "标记" -- Plural of marker
 
 -- Ability where two players have to move close to each other
 L.link = "连接"
@@ -151,10 +160,14 @@ L.seconds = "%.1f秒" -- 1.1 seconds
 
 -- Directions
 L.top = "上"
+L.top_right = "右上"
+L.top_left = "左上"
 L.up = "向上"
 L.middle = "中"
 L.down = "向下"
 L.bottom = "下"
+L.bottom_right = "右下"
+L.bottom_left = "左下"
 L.left = "左"
 L.right = "右"
 L.north = "北"
@@ -165,6 +178,11 @@ L.south = "南"
 L.south_west = "西南"
 L.west = "西"
 L.north_west = "西北"
+
+-- Sizes
+L.small = "小"
+L.medium = "中"
+L.large = "大"
 
 -- Schools
 L.fire = "火焰"
@@ -177,6 +195,7 @@ L.arcane = "奥术"
 L.autotalk = "自动与NPC对话"
 L.autotalk_boss_desc = "自动选择NPC对话选项，使首领战开始。"
 L.autotalk_generic_desc = "自动选择使你进入地下城下一阶段的NPC对话选项。"
+L.autotalk_notice = "自动与NPC %s 交互。"
 
 -- Common ability name replacements
 L.absorb = "吸收" -- Used for shield-like abilities that absorb damage or healing
@@ -230,24 +249,27 @@ L.spell_reflection = "法术反射" -- Any ability that reflects spells
 L.rooted = "定身" -- Any ability that roots you in place, preventing you from moving
 
 -- Common ability name replacements A-Z
+L.ball = "球" -- A ball, like a football, basketball, etc
+L.balls = "球" -- Plural of L.ball
 L.blind = "致盲" -- Any ability that blinds or disorientates you. Usually an ability a boss casts and you need to turn away from the boss or it will blind you.
 L.dodge = "躲开" -- When you need to continually run around to dodge abilities, like missiles landing on the ground under you
 L.enrage = "激怒" -- Any enrage buff that can be removed by players using abilities like Soothe (Druid), Tranquilizing Shot (Hunter) and Shiv (Rogue)
 L.fear = "恐惧" -- Similar to a warlock or priest ability, when a boss casts a fear on a player or multiple players, that makes them run around out of control
 L.fixate = "锁定" -- Used when a boss or add is chasing/fixated on a player
 L.fixates = "锁定" -- Plural of L.fixate
-L.group_damage = "小队伤害" -- Any ability that causes damage to every player in the 5 player group
+L.group_damage = "群体伤害" -- Any ability that causes damage to every player in the 5 player group 也可以称“AOE”
 L.health_drain = "吸血" -- Any ability that drains health from the player
 L.parasite = "寄生" -- Any ability where a parasite is involved e.g. "Parasitic Infection", "Parasitic Growth", etc
 L.parasites = "寄生" -- Plural of L.parasite
 L.pull_in = "拉扯" -- An ability that pulls you in towards the boss against your will
-L.raid_damage = "团队伤害" -- Any ability that causes damage to every player in the raid
+L.raid_damage = "群体伤害" -- Any ability that causes damage to every player in the raid 也可以称“AOE”
 L.smash = "重击" -- Short for any ability with the name "smash" in it e.g. "Darkrift Smash" or "Seismic Smash" or "Arcing Smash"
 L.soak = "分摊" -- Abilities you have to stand in on purpose to soak the damage, like a sponge soaks water. Commonly for abilities that split damage between everyone standing in them.
 L.soaks = "分摊" -- Plural of L.soak
 L.spike = "尖刺" -- Short for any ability with the name "spike" in it e.g. "Glacial Spike" or "Fel Spike" or "Volatile Spike"
 L.spikes = "尖刺" -- Plural of L.spike
 L.spread = "分散" -- An ability that forces you to spread out away from other players, or you might damage them
+L.tank_bomb = "坦克炸弹" -- Similar to L.bomb but only applies to tanks
 L.tank_combo = "坦克连击" -- Used for tank swap mechanics where the boss casts a sequence of tank buster attacks
 L.tank_debuff = "坦克减益" -- Used for debuffs that only apply to tanks, usually an indicator that you need to taunt
 L.tank_frontal = "坦克正面" -- Similar to L.frontal_cone but only applies to tanks
@@ -255,3 +277,5 @@ L.tank_soak = "坦克分摊" -- Similar to L.soak but only applies to tanks
 L.tentacle = "触手" -- Used for bosses that summon tentacles
 L.tentacles = "触手" -- Plural of L.tentacle
 L.waves = "波浪" -- Multiple waves of a bad ability coming from a boss, like waves in the ocean
+L.whelp = "雏龙" -- Short for Whelpling, a baby dragonkin (Dragon Whelp)
+L.whelps = "雏龙" -- Plural of L.whelp

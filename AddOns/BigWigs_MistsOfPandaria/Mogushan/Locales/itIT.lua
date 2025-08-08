@@ -1,11 +1,10 @@
 local L = BigWigs:NewBossLocale("The Stone Guard", "itIT")
 if not L then return end
 if L then
-	L.petrifications = "Pietrificazione"
-	L.petrifications_desc = "Avvisa quando il boss comincia la pietrificazione"
-
-	L.overload = "Sovraccarico"
-	L.overload_desc = "Avviso per tutti i tipi di Sovraccarico."
+	L[60051] = "|T134398:0|t Cobalto" -- Cobalt Guardian
+	L[60047] = "|T134399:0|t Ametista" -- Amethyst Guardian
+	L[60043] = "|T134397:0|t Giada" -- Jade Guardian
+	L[59915] = "|T134396:0|t Diaspro" -- Jasper Guardian
 end
 
 L = BigWigs:NewBossLocale("Feng the Accursed", "itIT")

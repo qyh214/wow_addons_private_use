@@ -14,9 +14,6 @@ do
 	core.name = "BigWigs"
 end
 
-local adb = LibStub("AceDB-3.0")
-local lds = LibStub("LibDualSpec-1.0", true)
-
 local CL = BigWigsAPI:GetLocale("BigWigs: Common")
 local loader = BigWigsLoader
 core.SendMessage = loader.SendMessage
@@ -42,11 +39,14 @@ local pName = loader.UnitName("player")
 
 do
 	local noEvent = "Module %q tried to register/unregister an event without specifying which event."
-	local noFunc = "Module %q tried to register an event with the function '%s' which doesn't exist in the module."
+	local noFunc = "Module %q tried to register event %q to the function %q which doesn't exist in the module."
+	local curEvent = "Module %q tried to register event %q to the function %q but the event is in the middle of dispatching."
 
 	local eventMap = {}
 	local bwUtilityFrame = CreateFrame("Frame")
+	local currentEvent = nil
 	bwUtilityFrame:SetScript("OnEvent", function(_, event, ...)
+		currentEvent = event
 		for k,v in next, eventMap[event] do
 			if type(v) == "function" then
 				v(event, ...)
@@ -54,14 +54,23 @@ do
 				k[v](k, event, ...)
 			end
 		end
+		currentEvent = nil
 	end)
 
 	function core:RegisterEvent(event, func)
 		if type(event) ~= "string" then error((noEvent):format(self.moduleName)) end
-		if (not func and not self[event]) or (type(func) == "string" and not self[func]) then error((noFunc):format(self.moduleName or "?", func or event)) end
+		if (not func and not self[event]) or (type(func) == "string" and not self[func]) then error((noFunc):format(self.moduleName or "?", event, func or event)) end
 		if not eventMap[event] then eventMap[event] = {} end
-		eventMap[event][self] = func or event
-		bwUtilityFrame:RegisterEvent(event)
+
+		if eventMap[event][self] then -- Event is already registered to this specific module, just change the assigned function
+			eventMap[event][self] = func or event
+		else -- Event has not been previously registered to this specific module
+			if event == currentEvent then
+				core:Error(curEvent:format(self.moduleName or "?", event, func or event))
+			end
+			eventMap[event][self] = func or event
+			bwUtilityFrame:RegisterEvent(event)
+		end
 	end
 	function core:UnregisterEvent(event)
 		if type(event) ~= "string" then error((noEvent):format(self.moduleName)) end
@@ -91,7 +100,7 @@ end
 -- ENCOUNTER event handler
 --
 
-if loader.isRetail or loader.isCata then
+if loader.isRetail or loader.isMists or loader.isCata then
 	function mod:ENCOUNTER_START(_, encounterId)
 		for _, module in next, bosses do
 			if module:IsEncounterID(encounterId) and not module:IsEnabled() then
@@ -232,34 +241,9 @@ do
 		end
 	end
 
-	local function profileUpdate()
-		core:SendMessage("BigWigs_ProfileUpdate")
-	end
-
 	local addonName = ...
 	function mod:ADDON_LOADED(_, name)
 		if name ~= addonName then return end
-
-		local defaults = {
-			profile = {
-				showZoneMessages = true,
-				fakeDBMVersion = false,
-				englishSayMessages = false,
-			},
-			global = {
-				optionShiftIndexes = {},
-				watchedMovies = {},
-			},
-		}
-		local db = adb:New("BigWigs3DB", defaults, true)
-		if lds then
-			lds:EnhanceDatabase(db, "BigWigs3DB")
-		end
-
-		db.RegisterCallback(mod, "OnProfileChanged", profileUpdate)
-		db.RegisterCallback(mod, "OnProfileCopied", profileUpdate)
-		db.RegisterCallback(mod, "OnProfileReset", profileUpdate)
-		core.db = db
 
 		mod.ADDON_LOADED = InitializeModules
 		InitializeModules()
@@ -392,7 +376,7 @@ do
 	local errorAlreadyRegistered = "%q already exists as a module in BigWigs, but something is trying to register it again."
 	local errorJournalIdInvalid = "%q is using the invalid journal id of %q."
 	local bossMeta = { __index = bossPrototype, __metatable = false }
-	local EJ_GetEncounterInfo = loader.isCata and function(key)
+	local EJ_GetEncounterInfo = (loader.isCata or loader.isMists) and function(key)
 		return EJ_GetEncounterInfo(key) or BigWigsAPI:GetLocale("BigWigs: Encounters")[key]
 	end or loader.isRetail and EJ_GetEncounterInfo or function(key)
 		return BigWigsAPI:GetLocale("BigWigs: Encounters")[key]
@@ -440,6 +424,7 @@ do
 		end
 	end
 
+	local L = BigWigsAPI:GetLocale("BigWigs")
 	local pluginMeta = { __index = pluginPrototype, __metatable = false }
 	function core:NewPlugin(moduleName, globalFuncs)
 		if plugins[moduleName] then
@@ -463,7 +448,7 @@ do
 			plugins[moduleName] = m
 			initModules[#initModules+1] = m
 
-			return m, CL
+			return m, L
 		end
 	end
 end
@@ -507,7 +492,7 @@ function core:GetPlugin(moduleName, silent)
 end
 
 do
-	local C_EncounterJournal_GetSectionInfo = loader.isCata and function(key)
+	local C_EncounterJournal_GetSectionInfo = (loader.isCata or loader.isMists) and function(key)
 		return C_EncounterJournal.GetSectionInfo(key) or BigWigsAPI:GetLocale("BigWigs: Encounter Info")[key]
 	end or loader.isRetail and C_EncounterJournal.GetSectionInfo or function(key)
 		return BigWigsAPI:GetLocale("BigWigs: Encounter Info")[key]
@@ -584,6 +569,8 @@ do
 					local custom = v:match("^custom_(o[nf]f?)_.*")
 					if custom then
 						module.toggleDefaults[v] = custom == "on" and true or false
+					elseif v:find("custom_select", nil, true) then
+						module.toggleDefaults[v] = 1
 					else
 						module.toggleDefaults[v] = bitflags
 					end
@@ -599,16 +586,25 @@ do
 					end
 				end
 			end
-			module.db = core.db:RegisterNamespace(module.name, { profile = module.toggleDefaults })
+			module.db = loader.db:RegisterNamespace(module.name, { profile = module.toggleDefaults })
+			local db = module.db.profile
+			for k, v in next, db do -- Option validation
+				local defaultType = type(module.toggleDefaults[k])
+				if defaultType == "nil" then
+					db[k] = nil
+				elseif type(v) ~= defaultType then
+					db[k] = module.toggleDefaults[k]
+				end
+			end
 		end
 	end
 
 	local function moduleOptions(self)
 		if self.GetOptions then
-			local toggles, headers, altNames = self:GetOptions(CL)
+			local toggles, headers, notes = self:GetOptions(CL) -- XXX stop passing CL at some point
 			if toggles then self.toggleOptions = toggles end
 			if headers then self.optionHeaders = headers end
-			if altNames then self.altNames = altNames end
+			if notes then self.notes = notes end
 			self.GetOptions = nil
 		end
 		setupOptions(self)
@@ -629,7 +625,7 @@ do
 
 	function core:RegisterPlugin(module)
 		if type(module.defaultDB) == "table" then
-			module.db = core.db:RegisterNamespace(module.name, { profile = module.defaultDB } )
+			module.db = loader.db:RegisterNamespace(module.name, { profile = module.defaultDB } )
 		end
 
 		-- Call the module's OnRegister (which is our OnInitialize replacement)

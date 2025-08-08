@@ -7,9 +7,9 @@ local MOVER_ON_TOP_FRAME_LEVEL = 777
 local FINE_TUNING_FRAME_LEVEL = 800
 local movers = {}
 
-local moverParent, moverDialog, alignmentGrid, positionAdjustmentFrame
+local moverParent, moverDialog, alignmentGrid, positionEditorFrame
 local anchorLockedText
-local AnchorPositionAdjustmentFrame, UpdateAndSave, UpdatePositionAdjustmentFrame
+local CreatePositionEditorFrame, AnchorPositionEditorFrame, UpdateAndSave, UpdatePositionEditorFrame
 local isAnchorLocked = false
 local modified = {}
 
@@ -45,18 +45,18 @@ local function UpdateLines()
     local centerY = math.floor((height - 1) / 2)
 
     -- v center
-    CreateLine("v0", "red", 0.75, 0, 0, 1, height, 1)
+    CreateLine("c_v", "red", 0.75, 0, 0, 1, height, 1)
 
     -- h center
-    CreateLine("h0", "red", 0.75, 0, 0, width, 1, 1)
+    CreateLine("c_h", "red", 0.75, 0, 0, width, 1, 1)
 
     -- vleft
     local n = 0
     local offset = 0
     repeat
-        n = n - 1
+        n = n + 1
         offset = offset - 25
-        CreateLine("v" .. n, "gray", 0.35, offset, 0, 1, height)
+        CreateLine("l_" .. n, "gray", 0.35, offset, 0, 1, height)
     until offset < -halfWidth
 
     -- vright
@@ -65,16 +65,16 @@ local function UpdateLines()
     repeat
         n = n + 1
         offset = offset + 25
-        CreateLine("v" .. n, "gray", 0.35, offset, 0, 1, height)
+        CreateLine("r_" .. n, "gray", 0.35, offset, 0, 1, height)
     until offset > halfWidth
 
     -- hbottom
     n = 0
     offset = 0
     repeat
-        n = n - 1
+        n = n + 1
         offset = offset - 25
-        CreateLine("h" .. n, "gray", 0.35, 0, offset, width, 1)
+        CreateLine("b_" .. n, "gray", 0.35, 0, offset, width, 1)
     until offset < -halfHeight
 
     -- htop
@@ -83,29 +83,29 @@ local function UpdateLines()
     repeat
         n = n + 1
         offset = offset + 25
-        CreateLine("h" .. n, "gray", 0.35, 0, offset, width, 1)
+        CreateLine("t_" .. n, "gray", 0.35, 0, offset, width, 1)
     until offset > halfHeight
 end
 
 local function CreateAlignmentGrid()
     alignmentGrid = CreateFrame("Frame", "AFAlignmentGrid", moverParent)
     alignmentGrid:SetFrameStrata("BACKGROUND")
-    -- alignmentGrid:SetBackdrop({bgFile=AF.GetPlainTexture()})
-    -- alignmentGrid:SetBackdropColor(AF.GetColorRGB("disabled", 0)) -- for user customization?
+    AF.ApplyDefaultBackdrop_NoBorder(alignmentGrid)
+    alignmentGrid:SetBackdropColor(AF.GetColorRGB("gray", 0.2))
     alignmentGrid:SetAllPoints()
-    -- alignmentGrid:SetIgnoreParentScale(true)
-    alignmentGrid:SetScale(AF.GetPixelFactor())
 
     -- DISPLAY_SIZE_CHANGED
     alignmentGrid:RegisterEvent("DISPLAY_SIZE_CHANGED")
     alignmentGrid:SetScript("OnEvent", UpdateLines)
+    AF.RegisterCallback("AF_SCALE_CHANGED", UpdateLines)
 
     UpdateLines()
 end
 
 local function CreateMoverDialog()
-    moverDialog = AF.CreateHeaderedFrame(moverParent, "AFMoverDialog", _G.HUD_EDIT_MODE_MENU, 300, 180, "FULLSCREEN_DIALOG", nil, true)
+    moverDialog = AF.CreateHeaderedFrame(moverParent, "AFMoverDialog", "AF " .. _G.HUD_EDIT_MODE_MENU, 300, 180, "FULLSCREEN_DIALOG", nil, true)
     moverDialog:SetFrameStrata("FULLSCREEN_DIALOG")
+    moverDialog:Hide()
 
     anchorLockedText = AF.CreateFontString(moverDialog, L["Anchor Locked"], "accent", "AF_FONT_OUTLINE")
     anchorLockedText:Hide()
@@ -136,6 +136,7 @@ local function CreateMoverDialog()
 
     -- dropdown
     local moverGroups = AF.CreateDropdown(moverDialog, 20, 7)
+    moverDialog.moverGroups = moverGroups
     AF.SetPoint(moverGroups, "BOTTOMLEFT", 7, 7)
     AF.SetPoint(moverGroups, "RIGHT", undo, "LEFT", -7, 0)
     local items = {}
@@ -176,7 +177,11 @@ local function CreateMoverDialog()
         })
 
         moverGroups:SetItems(items)
-        moverGroups:SetSelectedValue("all")
+        -- moverGroups:SetSelectedValue("all")
+
+        -- update pixels
+        AF.UpdatePixelsForRegionAndChildren(moverDialog)
+        AF.UpdatePixelsForRegionAndChildren(positionEditorFrame)
     end)
 
     -- OnHide
@@ -185,7 +190,9 @@ local function CreateMoverDialog()
     end)
 end
 
-local function CreateMoverParent()
+function AF.InitMoverParent()
+    if moverParent then return end
+
     moverParent = CreateFrame("Frame", "AFMoverParent", AF.UIParent)
     moverParent:SetFrameStrata("FULLSCREEN")
     moverParent:SetFrameLevel(MOVER_PARENT_FRAME_LEVEL)
@@ -198,8 +205,12 @@ local function CreateMoverParent()
         AF.HideMovers()
     end)
 
-    CreateMoverDialog()
-    CreateAlignmentGrid()
+    moverParent:SetScript("OnShow", function()
+        moverParent:SetScript("OnShow", nil)
+        CreateMoverDialog()
+        CreatePositionEditorFrame()
+        CreateAlignmentGrid()
+    end)
 end
 
 ---------------------------------------------------------------------
@@ -207,17 +218,27 @@ end
 ---------------------------------------------------------------------
 function AF.CalcPoint(owner)
     local point, x, y
+    local scale = owner:GetScale()
 
     if isAnchorLocked then
         point, _, _, x, y = owner:GetPoint()
     else
-        local centerX, centerY = AF.UIParent:GetCenter()
-        local width = AF.UIParent:GetRight()
         x, y = owner:GetCenter()
+
+        local centerX, centerY = AF.UIParent:GetCenter()
+        centerX = centerX / scale
+        centerY = centerY / scale
+
+        local width = AF.UIParent:GetRight()
+        width = width / scale
+
+        -- local ownerScale = owner:GetEffectiveScale()
+        -- local parentScale = AF.UIParent:GetEffectiveScale()
+        -- local scaleFactor = parentScale / ownerScale
 
         if y >= centerY then
             point = "TOP"
-            y = -(AF.UIParent:GetTop() - owner:GetTop())
+            y = -(AF.UIParent:GetTop() / scale - owner:GetTop())
         else
             point = "BOTTOM"
             y = owner:GetBottom()
@@ -234,8 +255,6 @@ function AF.CalcPoint(owner)
         end
     end
 
-    -- x = tonumber(string.format("%.2f", x))
-    -- y = tonumber(string.format("%.2f", y))
     x = AF.RoundToDecimal(x, 1)
     y = AF.RoundToDecimal(y, 1)
 
@@ -243,12 +262,18 @@ function AF.CalcPoint(owner)
 end
 
 local function RePoint(owner, newPoint)
+    local scale = owner:GetScale()
     local x, y = owner:GetCenter()
+
     local centerX, centerY = AF.UIParent:GetCenter()
+    centerX = centerX / scale
+    centerY = centerY / scale
+
     local width = AF.UIParent:GetRight()
+    width = width / scale
 
     if strfind(newPoint, "^TOP") then
-        y = -(AF.UIParent:GetTop() - owner:GetTop())
+        y = -(AF.UIParent:GetTop() / scale - owner:GetTop())
     elseif strfind(newPoint, "^BOTTOM") then
         y = owner:GetBottom()
     else
@@ -266,27 +291,27 @@ local function RePoint(owner, newPoint)
     owner:ClearAllPoints()
     owner:SetPoint(newPoint, x, y)
     UpdateAndSave(owner, newPoint, x, y)
-    UpdatePositionAdjustmentFrame(owner)
+    UpdatePositionEditorFrame(owner)
 end
 
 ---------------------------------------------------------------------
--- position adjustment frame
+-- position editor frame
 ---------------------------------------------------------------------
-local function CreatePositionAdjustmentFrame()
-    positionAdjustmentFrame = AF.CreateBorderedFrame(moverParent, nil, nil, nil, nil, "accent")
-    positionAdjustmentFrame:SetFrameLevel(FINE_TUNING_FRAME_LEVEL)
-    positionAdjustmentFrame:EnableMouse(true)
-    positionAdjustmentFrame:SetClampedToScreen(true)
-    AF.SetSize(positionAdjustmentFrame, 200, 91)
-    positionAdjustmentFrame:Hide()
+CreatePositionEditorFrame = function()
+    positionEditorFrame = AF.CreateBorderedFrame(moverParent, "AFPositionEditorFrame", nil, nil, nil, "accent")
+    positionEditorFrame:SetFrameLevel(FINE_TUNING_FRAME_LEVEL)
+    positionEditorFrame:EnableMouse(true)
+    positionEditorFrame:SetClampedToScreen(true)
+    AF.SetSize(positionEditorFrame, 218, 91)
+    positionEditorFrame:Hide()
 
     -- title
-    positionAdjustmentFrame.tp = AF.CreateTitledPane(positionAdjustmentFrame, "")
-    AF.SetPoint(positionAdjustmentFrame.tp, "TOPLEFT", 7, -7)
-    AF.SetPoint(positionAdjustmentFrame.tp, "BOTTOMRIGHT", -7, 7)
+    positionEditorFrame.tp = AF.CreateTitledPane(positionEditorFrame, "")
+    AF.SetPoint(positionEditorFrame.tp, "TOPLEFT", 7, -7)
+    AF.SetPoint(positionEditorFrame.tp, "BOTTOMRIGHT", -7, 7)
 
     -- anchor
-    positionAdjustmentFrame.anchor = AF.CreateDropdown(positionAdjustmentFrame.tp, 20, 9, "texture", true, true, nil, 1)
+    positionEditorFrame.anchor = AF.CreateDropdown(positionEditorFrame.tp, 20, 9, "texture", true, true, nil, 1)
 
     local items = {}
     local anchors = {"CENTER", "LEFT", "BOTTOMLEFT", "BOTTOM", "BOTTOMRIGHT", "RIGHT", "TOPLEFT", "TOP", "TOPRIGHT"}
@@ -296,156 +321,157 @@ local function CreatePositionAdjustmentFrame()
             ["value"] = anchor,
             ["texture"] = AF.GetIcon("Anchor_" .. anchor),
             ["onClick"] = function()
-                RePoint(positionAdjustmentFrame.owner, anchor)
+                RePoint(positionEditorFrame.owner, anchor)
             end
         })
     end
-    positionAdjustmentFrame.anchor:SetItems(items)
-    AF.SetPoint(positionAdjustmentFrame.anchor, "TOPLEFT", 0, -30)
+    positionEditorFrame.anchor:SetItems(items)
+    AF.SetPoint(positionEditorFrame.anchor, "TOPLEFT", 0, -30)
 
     -- lock anchor
-    positionAdjustmentFrame.anchor.lock = AF.CreateTexture(positionAdjustmentFrame.anchor.button, AF.GetIcon("SmallLock"), "white", "OVERLAY")
-    AF.SetSize(positionAdjustmentFrame.anchor.lock, 20, 20)
-    AF.SetPoint(positionAdjustmentFrame.anchor.lock, "CENTER", 2, -2)
-    positionAdjustmentFrame.anchor.lock:Hide()
-    positionAdjustmentFrame.anchor.button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
-    positionAdjustmentFrame.anchor.button:HookScript("OnClick", function(self, button)
+    positionEditorFrame.anchor.lock = AF.CreateTexture(positionEditorFrame.anchor.button, AF.GetIcon("SmallLock"), "white", "OVERLAY")
+    AF.SetSize(positionEditorFrame.anchor.lock, 20, 20)
+    AF.SetPoint(positionEditorFrame.anchor.lock, "CENTER", 2, -2)
+    positionEditorFrame.anchor.lock:Hide()
+    positionEditorFrame.anchor.button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    positionEditorFrame.anchor.button:HookScript("OnClick", function(self, button)
         if button == "RightButton" then
             isAnchorLocked = not isAnchorLocked
-            positionAdjustmentFrame.anchor.lock:SetShown(isAnchorLocked)
+            positionEditorFrame.anchor.lock:SetShown(isAnchorLocked)
             anchorLockedText:SetShown(isAnchorLocked)
         end
     end)
 
     -- x
-    positionAdjustmentFrame.x = AF.CreateEditBox(positionAdjustmentFrame.tp, "", 60, 20)
-    AF.SetPoint(positionAdjustmentFrame.x, "LEFT", positionAdjustmentFrame.anchor, "RIGHT", 20, 0)
+    positionEditorFrame.x = AF.CreateEditBox(positionEditorFrame.tp, "", 69, 20)
+    AF.SetPoint(positionEditorFrame.x, "LEFT", positionEditorFrame.anchor, "RIGHT", 20, 0)
 
-    local x = AF.CreateFontString(positionAdjustmentFrame.tp, "X", "accent")
-    AF.SetPoint(x, "RIGHT", positionAdjustmentFrame.x, "LEFT", -2, 0)
+    local x = AF.CreateFontString(positionEditorFrame.tp, "X", "accent")
+    AF.SetPoint(x, "RIGHT", positionEditorFrame.x, "LEFT", -2, 0)
 
     -- y
-    positionAdjustmentFrame.y = AF.CreateEditBox(positionAdjustmentFrame.tp, "", 60, 20)
-    AF.SetPoint(positionAdjustmentFrame.y, "BOTTOM", positionAdjustmentFrame.x)
-    AF.SetPoint(positionAdjustmentFrame.y, "RIGHT")
+    positionEditorFrame.y = AF.CreateEditBox(positionEditorFrame.tp, "", 69, 20)
+    AF.SetPoint(positionEditorFrame.y, "BOTTOM", positionEditorFrame.x)
+    AF.SetPoint(positionEditorFrame.y, "RIGHT")
 
-    local y = AF.CreateFontString(positionAdjustmentFrame.tp, "Y", "accent")
-    AF.SetPoint(y, "RIGHT", positionAdjustmentFrame.y, "LEFT", -2, 0)
+    local y = AF.CreateFontString(positionEditorFrame.tp, "Y", "accent")
+    AF.SetPoint(y, "RIGHT", positionEditorFrame.y, "LEFT", -2, 0)
 
     -- edit x
-    positionAdjustmentFrame.x:SetOnEditFocusGained(function()
-        positionAdjustmentFrame._x = positionAdjustmentFrame.x:GetNumber()
+    positionEditorFrame.x:SetOnEditFocusGained(function()
+        positionEditorFrame._x = positionEditorFrame.x:GetNumber()
     end)
-    positionAdjustmentFrame.x:SetOnEditFocusLost(function()
-        positionAdjustmentFrame.x:SetText(positionAdjustmentFrame._x)
+    positionEditorFrame.x:SetOnEditFocusLost(function()
+        positionEditorFrame.x:SetText(positionEditorFrame._x)
     end)
-    positionAdjustmentFrame.x:SetOnEnterPressed(function(text)
+    positionEditorFrame.x:SetOnEnterPressed(function(text)
         local v = tonumber(text)
         if v then
-            positionAdjustmentFrame._x = v
+            positionEditorFrame._x = v
 
-            local owner = positionAdjustmentFrame.owner
+            local owner = positionEditorFrame.owner
             local _p, _, _, _x, _y = owner:GetPoint()
 
             -- validate
-            local mv = AF.UIParent:GetRight() - owner:GetWidth()
+            local mv = AF.UIParent:GetRight() / owner:GetScale() - owner:GetWidth()
             if strfind(_p, "LEFT$") then
-                v = max(v, 0)
-                v = min(v, mv)
+                v = AF.Clamp(v, 0, mv)
             elseif strfind(_p, "RIGHT$") then
-                v = max(-mv, v)
-                v = min(v, 0)
+                v = AF.Clamp(v, -mv, 0)
             else
-                v = max(v, -mv / 2)
-                v = min(v, mv / 2)
+                v = AF.Clamp(v, -mv / 2, mv / 2)
             end
 
             owner:ClearAllPoints()
             owner:SetPoint(_p, v, _y)
 
             UpdateAndSave(owner, AF.CalcPoint(owner))
-            AnchorPositionAdjustmentFrame(owner)
+            AnchorPositionEditorFrame(owner)
         end
     end)
 
     -- edit y
-    positionAdjustmentFrame.y:SetOnEditFocusGained(function()
-        positionAdjustmentFrame._y = positionAdjustmentFrame.y:GetNumber()
+    positionEditorFrame.y:SetOnEditFocusGained(function()
+        positionEditorFrame._y = positionEditorFrame.y:GetNumber()
     end)
-    positionAdjustmentFrame.y:SetOnEditFocusLost(function()
-        positionAdjustmentFrame.y:SetText(positionAdjustmentFrame._y)
+    positionEditorFrame.y:SetOnEditFocusLost(function()
+        positionEditorFrame.y:SetText(positionEditorFrame._y)
     end)
-    positionAdjustmentFrame.y:SetOnEnterPressed(function(text)
+    positionEditorFrame.y:SetOnEnterPressed(function(text)
         local v = tonumber(text)
         if v then
-            positionAdjustmentFrame._y = v
+            positionEditorFrame._y = v
 
-            local owner = positionAdjustmentFrame.owner
+            local owner = positionEditorFrame.owner
             local _p, _, _, _x, _y = owner:GetPoint()
 
             -- validate
-            local mv = AF.UIParent:GetTop() - owner:GetHeight()
+            local mv = AF.UIParent:GetTop() / owner:GetScale() - owner:GetHeight()
             if strfind(_p, "^BOTTOM") then
-                v = max(v, 0)
-                v = min(v, mv)
+                v = AF.Clamp(v, 0, mv)
             elseif strfind(_p, "^TOP") then
-                v = max(-mv, v)
-                v = min(v, 0)
+                v = AF.Clamp(v, -mv, 0)
             else
-                v = max(v, -mv / 2)
-                v = min(v, mv / 2)
+                v = AF.Clamp(v, -mv / 2, mv / 2)
             end
 
             owner:ClearAllPoints()
             owner:SetPoint(_p, _x, v)
 
             UpdateAndSave(owner, AF.CalcPoint(owner))
-            AnchorPositionAdjustmentFrame(owner)
+            AnchorPositionEditorFrame(owner)
         end
     end)
 
+    -- scale
+    positionEditorFrame.scale = AF.CreateFontString(positionEditorFrame.tp, nil, "darkgray")
+    AF.SetPoint(positionEditorFrame.scale, "BOTTOMRIGHT", positionEditorFrame.tp.line, "TOPRIGHT", 0, 2)
+
     -- undo previous
-    positionAdjustmentFrame.undo = AF.CreateButton(positionAdjustmentFrame.tp, L["Undo"], "accent", 17, 17)
-    positionAdjustmentFrame.undo:SetEnabled(false)
-    AF.SetPoint(positionAdjustmentFrame.undo, "BOTTOMLEFT")
-    AF.SetPoint(positionAdjustmentFrame.undo, "BOTTOMRIGHT")
-    positionAdjustmentFrame.undo:SetScript("OnClick", function()
-        positionAdjustmentFrame.undo:SetEnabled(false)
-        local owner = positionAdjustmentFrame.owner
+    positionEditorFrame.undo = AF.CreateButton(positionEditorFrame.tp, L["Undo"], "accent", 17, 17)
+    positionEditorFrame.undo:SetEnabled(false)
+    AF.SetPoint(positionEditorFrame.undo, "BOTTOMLEFT")
+    AF.SetPoint(positionEditorFrame.undo, "BOTTOMRIGHT")
+    positionEditorFrame.undo:SetScript("OnClick", function()
+        positionEditorFrame.undo:SetEnabled(false)
+        local owner = positionEditorFrame.owner
         UpdateAndSave(owner, owner.mover._original[1], owner.mover._original[2], owner.mover._original[3], true)
-        AnchorPositionAdjustmentFrame(owner)
+        AnchorPositionEditorFrame(owner)
     end)
 end
 
-UpdatePositionAdjustmentFrame = function(owner)
-    if not (positionAdjustmentFrame and positionAdjustmentFrame:IsShown()) then return end
+UpdatePositionEditorFrame = function(owner)
+    if not (positionEditorFrame and positionEditorFrame:IsShown()) then return end
 
-    positionAdjustmentFrame.tp:SetTitle(owner.mover.text:GetText())
+    positionEditorFrame.tp:SetTitle(owner.mover.text:GetText())
 
     local p, _, _, x, y = owner:GetPoint()
     x = AF.RoundToDecimal(x, 1)
     y = AF.RoundToDecimal(y, 1)
 
-    positionAdjustmentFrame.x:ClearFocus()
-    positionAdjustmentFrame.y:ClearFocus()
+    positionEditorFrame.x:ClearFocus()
+    positionEditorFrame.y:ClearFocus()
 
-    positionAdjustmentFrame.anchor:SetSelectedValue(p)
+    positionEditorFrame.anchor:SetSelectedValue(p)
     AF.CloseDropdown()
-    positionAdjustmentFrame.x:SetText(x)
-    positionAdjustmentFrame.y:SetText(y)
+    positionEditorFrame.x:SetText(x)
+    positionEditorFrame.y:SetText(y)
+
+    positionEditorFrame.scale:SetFormattedText("x%.2f", owner:GetScale())
 
     if owner.mover._original and (owner.mover._original[1] ~= p or owner.mover._original[2] ~= x or owner.mover._original[3] ~= y) then
-        positionAdjustmentFrame.undo:SetEnabled(true)
+        positionEditorFrame.undo:SetEnabled(true)
     else
-        positionAdjustmentFrame.undo:SetEnabled(false)
+        positionEditorFrame.undo:SetEnabled(false)
     end
 end
 
-AnchorPositionAdjustmentFrame = function(owner)
-    if not positionAdjustmentFrame then return end
+AnchorPositionEditorFrame = function(owner)
+    if not positionEditorFrame then return end
 
-    positionAdjustmentFrame.owner = owner
+    positionEditorFrame.owner = owner
 
+    -- NOTE: mover's parent is AFMoverParent, scale is always 1
     local centerX, centerY = AF.UIParent:GetCenter()
     local width = AF.UIParent:GetRight()
     local x, y = owner.mover:GetCenter()
@@ -468,8 +494,8 @@ AnchorPositionAdjustmentFrame = function(owner)
         end
     end
 
-    AF.ClearPoints(positionAdjustmentFrame)
-    AF.SetPoint(positionAdjustmentFrame, point, owner.mover, relativePoint, x, y)
+    AF.ClearPoints(positionEditorFrame)
+    AF.SetPoint(positionEditorFrame, point, owner.mover, relativePoint, x, y)
 
     AF.ClearPoints(anchorLockedText)
     if point == "TOP" then
@@ -478,18 +504,16 @@ AnchorPositionAdjustmentFrame = function(owner)
         AF.SetPoint(anchorLockedText, "TOP", owner.mover, "BOTTOM", 0, -1)
     end
 
-    UpdatePositionAdjustmentFrame(owner)
+    UpdatePositionEditorFrame(owner)
 end
 
 local function TogglePositionAdjustmentFrame(owner)
-    if not positionAdjustmentFrame then CreatePositionAdjustmentFrame() end
-
-    if positionAdjustmentFrame:IsShown() then
-        positionAdjustmentFrame:Hide()
-        positionAdjustmentFrame.owner = nil
+    if positionEditorFrame:IsShown() then
+        positionEditorFrame:Hide()
+        positionEditorFrame.owner = nil
     else
-        positionAdjustmentFrame:Show()
-        AnchorPositionAdjustmentFrame(owner)
+        positionEditorFrame:Show()
+        AnchorPositionEditorFrame(owner)
     end
 end
 
@@ -540,6 +564,44 @@ local function StopMoving(owner)
 end
 
 ---------------------------------------------------------------------
+-- min.max
+---------------------------------------------------------------------
+local function GetMinMaxOffsets(owner)
+    local point = owner:GetPoint()
+    local scale = owner:GetScale()
+
+    local width, height = AF.UIParent:GetWidth(), AF.UIParent:GetHeight()
+    width = width / scale
+    height = height / scale
+
+    local minX, maxX, minY, maxY
+
+    if strfind(point, "^BOTTOM") then
+        minY = 0
+        maxY = height - owner:GetHeight()
+    elseif strfind(point, "^TOP") then
+        minY = -(height - owner:GetHeight())
+        maxY = 0
+    else -- LEFT/RIGHT/CENTER
+        minY = -((height - owner:GetHeight()) / 2)
+        maxY = (height - owner:GetHeight()) / 2
+    end
+
+    if strfind(point, "LEFT$") then
+        minX = 0
+        maxX = width - owner:GetWidth()
+    elseif strfind(point, "RIGHT$") then
+        minX = -(width - owner:GetWidth())
+        maxX = 0
+    else -- TOP/BOTTOM/CENTER
+        minX = -((width - owner:GetWidth()) / 2)
+        maxX = (width - owner:GetWidth()) / 2
+    end
+
+    return minX, maxX, minY, maxY
+end
+
+---------------------------------------------------------------------
 -- create mover
 ---------------------------------------------------------------------
 ---@param save function|table
@@ -551,10 +613,10 @@ function AF.CreateMover(owner, group, text, save)
     -- or
     -- its parent must SetAllPoints(AF.UIParent)
 
-    if not moverParent then CreateMoverParent() end
-
-    local mover = AF.CreateBorderedFrame(moverParent, nil, nil, nil, nil, "accent")
+    local mover = AF.CreateBorderedFrame(moverParent)
     mover:SetBackdropColor(AF.GetColorRGB("background", 0.8))
+    mover.accentColor = AF.GetAddonAccentColorName()
+    mover:SetBackdropBorderColor(AF.GetColorRGB(mover.accentColor))
 
     owner.mover = mover
     mover.owner = owner
@@ -568,7 +630,7 @@ function AF.CreateMover(owner, group, text, save)
     mover:EnableMouse(true)
     mover:Hide()
 
-    mover.text = AF.CreateFontString(mover, text, nil, "AF_FONT_OUTLINE", "OVERLAY")
+    mover.text = AF.CreateFontString(mover, text, mover.accentColor, "AF_FONT_OUTLINE", "OVERLAY")
     mover.text:SetPoint("CENTER")
     mover.text:SetText(text)
 
@@ -576,37 +638,13 @@ function AF.CreateMover(owner, group, text, save)
         if button ~= "LeftButton" then return end
         mover.isDragging = true
 
-        local scale = owner:GetEffectiveScale()
         local mouseX, mouseY = GetCursorPosition()
+        local lastX, lastY = mouseX, mouseY
 
-        local minX, maxX, minY, maxY
-
+        local effectiveScale = owner:GetEffectiveScale()
         local point, _, _, startX, startY = owner:GetPoint()
 
-        if strfind(point, "^BOTTOM") then
-            minY = 0
-            maxY = AF.UIParent:GetHeight() - owner:GetHeight()
-        elseif strfind(point, "^TOP") then
-            minY = -(AF.UIParent:GetHeight() - owner:GetHeight())
-            maxY = 0
-        else -- LEFT/RIGHT/CENTER
-            minY = -((AF.UIParent:GetHeight() - owner:GetHeight()) / 2)
-            maxY = (AF.UIParent:GetHeight() - owner:GetHeight()) / 2
-        end
-
-        if strfind(point, "LEFT$") then
-            minX = 0
-            maxX = AF.UIParent:GetWidth() - owner:GetWidth()
-        elseif strfind(point, "RIGHT$") then
-            minX = -(AF.UIParent:GetWidth() - owner:GetWidth())
-            maxX = 0
-        else -- TOP/BOTTOM/CENTER
-            minX = -((AF.UIParent:GetWidth() - owner:GetWidth()) / 2)
-            maxX = (AF.UIParent:GetWidth() - owner:GetWidth()) / 2
-        end
-
-        local lastX = mouseX
-        local lastY = mouseY
+        local minX, maxX, minY, maxY = GetMinMaxOffsets(owner)
 
         mover:SetScript("OnUpdate", function()
             local newMouseX, newMouseY = GetCursorPosition()
@@ -615,29 +653,27 @@ function AF.CreateMover(owner, group, text, save)
             lastX = newMouseX
             lastY = newMouseY
 
-            local newX = startX + (newMouseX - mouseX) / scale
-            newX = max(newX, minX)
-            newX = min(newX, maxX)
+            local newX = startX + (newMouseX - mouseX) / effectiveScale
+            newX = AF.Clamp(newX, minX, maxX)
 
-            local newY = startY + (newMouseY - mouseY) / scale
-            newY = max(newY, minY)
-            newY = min(newY, maxY)
+            local newY = startY + (newMouseY - mouseY) / effectiveScale
+            newY = AF.Clamp(newY, minY, maxY)
 
             -- print(newX, newY)
             owner:ClearAllPoints()
             owner:SetPoint(point, newX, newY)
             mover.moved = true
 
-            AnchorPositionAdjustmentFrame(owner)
+            AnchorPositionEditorFrame(owner)
         end)
     end)
 
     mover:SetScript("OnMouseUp", function(self, button)
         if button == "RightButton" then
             if IsShiftKeyDown() then -- hide mover
-                if positionAdjustmentFrame and positionAdjustmentFrame.owner == owner and positionAdjustmentFrame:IsShown() then
-                    positionAdjustmentFrame.owner = nil
-                    positionAdjustmentFrame:Hide()
+                if positionEditorFrame and positionEditorFrame.owner == owner and positionEditorFrame:IsShown() then
+                    positionEditorFrame.owner = nil
+                    positionEditorFrame:Hide()
                 end
                 mover:Hide()
                 mover.text:SetColor("accent")
@@ -651,7 +687,7 @@ function AF.CreateMover(owner, group, text, save)
         StopMoving(owner)
 
         -- update
-        UpdatePositionAdjustmentFrame(owner)
+        UpdatePositionEditorFrame(owner)
     end)
 
     mover:SetScript("OnMouseWheel", function(self, delta)
@@ -663,28 +699,30 @@ function AF.CreateMover(owner, group, text, save)
 
         mover.moved = true
 
+        local minX, maxX, minY, maxY = GetMinMaxOffsets(owner)
+
         if delta == 1 then
             if IsShiftKeyDown() then
                 -- move right
-                owner:SetPoint(point, startX + 1, startY)
+                owner:SetPoint(point, AF.Clamp(startX + 1, minX, maxX), startY)
             else
                 -- move up
-                owner:SetPoint(point, startX, startY + 1)
+                owner:SetPoint(point, startX, AF.Clamp(startY + 1, minY, maxY))
             end
         else
             if IsShiftKeyDown() then
                 -- move left
-                owner:SetPoint(point, startX - 1, startY)
+                owner:SetPoint(point, AF.Clamp(startX - 1, minX, maxX), startY)
             else
                 -- move down
-                owner:SetPoint(point, startX, startY - 1)
+                owner:SetPoint(point, startX, AF.Clamp(startY - 1, minY, maxY))
             end
         end
 
         StopMoving(owner)
 
         -- update
-        UpdatePositionAdjustmentFrame(owner)
+        UpdatePositionEditorFrame(owner)
     end)
 
     mover:SetScript("OnEnter", function()
@@ -695,21 +733,21 @@ function AF.CreateMover(owner, group, text, save)
                     m:SetFrameLevel(MOVER_ON_TOP_FRAME_LEVEL)
                     AF.FrameFadeIn(m, 0.25)
                 elseif m:IsShown() then
-                    m.text:SetColor("accent")
+                    m.text:SetColor(m.accentColor)
                     m:SetFrameLevel(MOVER_PARENT_FRAME_LEVEL)
                     AF.FrameFadeOut(m, 0.25, nil, 0.5)
                 end
             end
         end
 
-        AnchorPositionAdjustmentFrame(owner)
+        AnchorPositionEditorFrame(owner)
     end)
 
     mover:SetScript("onLeave", function()
         for _, g in pairs(movers) do
             for _, m in pairs(g) do
                 if m:IsShown() then
-                    m.text:SetColor("accent")
+                    m.text:SetColor(m.accentColor)
                     m:SetFrameLevel(MOVER_PARENT_FRAME_LEVEL)
                     AF.FrameFadeIn(m, 0.25)
                 end
@@ -736,7 +774,6 @@ end
 ---------------------------------------------------------------------
 function AF.ShowMovers(group)
     if InCombatLockdown() then return end
-    if not moverParent then CreateMoverParent() end
 
     for g, gt in pairs(movers) do
         local show
@@ -755,7 +792,8 @@ function AF.ShowMovers(group)
     end
     moverParent:Show()
     moverDialog:Show()
-    if positionAdjustmentFrame then positionAdjustmentFrame:Hide() end
+    moverDialog.moverGroups:SetSelectedValue(group or "all")
+    if positionEditorFrame then positionEditorFrame:Hide() end
 end
 
 function AF.HideMovers()
@@ -768,7 +806,7 @@ function AF.HideMovers()
         end
     end
     moverParent:Hide()
-    if positionAdjustmentFrame then positionAdjustmentFrame:Hide() end
+    if positionEditorFrame then positionEditorFrame:Hide() end
 end
 
 function AF.ToggleMovers()
@@ -791,5 +829,5 @@ function AF.UndoMovers()
             end
         end
     end
-    if positionAdjustmentFrame then positionAdjustmentFrame:Hide() end
+    if positionEditorFrame then positionEditorFrame:Hide() end
 end

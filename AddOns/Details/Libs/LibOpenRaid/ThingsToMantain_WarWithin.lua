@@ -181,6 +181,7 @@ do
 		LIB_OPEN_RAID_HEALING_POTIONS = {
 			[431416] = true, --Healing Potion algari
 			[431419] = true, --Cavedweller's Delight
+			[452767] = true, --Heartseeking Health Injector (engineering tinker)
 		}
 
 		LIB_OPEN_RAID_MANA_POTIONS = {
@@ -260,6 +261,7 @@ do
 			--[281954] = {cooldown = 900,	duration = 0,	specs = {},			talent = false,	charges = 1, raceid = {[31] = true}, race = "ZandalariTroll",	class = "",	type = 9}, --Pterrordax Swoop (ZandalariTroll)
 			[291944] = {cooldown = 150,	duration = 0,	specs = {},			talent = false,	charges = 1, raceid = {[31] = true}, race = "ZandalariTroll",	class = "",	type = 9}, --Regeneratin' (ZandalariTroll)
 			[255654] = {cooldown = 120,	duration = 0,	specs = {},			talent = false,	charges = 1, raceid = {[28] = true}, race = "HighmountainTauren",	class = "",	type = 9}, --Bull Rush (HighmountainTauren)
+			[255723] = {cooldown = 120,	duration = 0,	specs = {},			talent = false,	charges = 1, raceid = {[28] = true}, race = "HighmountainTauren",	class = "",	type = 9}, --Bull Rush (HighmountainTauren)
 			[260364] = {cooldown = 180,	duration = 0,	specs = {},			talent = false,	charges = 1, raceid = {[27] = true}, race = "Nightborne",	class = "",	type = 9}, --Arcane Pulse (Nightborne)
 			--[255661] = {cooldown = 600,	duration = 0,	specs = {},			talent = false,	charges = 1, raceid = {[27] = true}, race = "Nightborne",	class = "",	type = 9}, --Cantrips (Nightborne)
 			--[69046] = {cooldown = 1800,	duration = 0,	specs = {},			talent = false,	charges = 1, raceid = {[9] = true}, race = "Goblin",	class = "",	type = 9}, --Pack Hobgoblin (Goblin)
@@ -290,6 +292,9 @@ do
 			[20594] = {cooldown = 120,	duration = 0,	specs = {},			talent = false,	charges = 1, raceid = {[3] = true}, race = "Dwarf",	class = "",	type = 9}, --Stoneform (Dwarf)
 			[58984] = {cooldown = 120,	duration = 0,	specs = {},			talent = false,	charges = 1, raceid = {[4] = true}, race = "NightElf",	class = "",	type = 9}, --Shadowmeld (NightElf)
 			[59542] = {cooldown = 180,	duration = 0,	specs = {},			talent = false,	charges = 1, raceid = {[11] = true}, race = "Draenei",	class = "",	type = 9}, --Gift of the Naaru (Draenei)
+
+			--255723
+
 
 			--interrupts
 			[6552] =	{duration = 0, class = "WARRIOR",	specs = {71, 72, 73}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Pummel
@@ -375,7 +380,7 @@ do
 			[23920] = {cooldown = 25, duration = 0, 	specs = {}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 5}, --Spell Refleciton
 			[385060] = {cooldown = 45, duration = 0, 	specs = {}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 5}, --Odyn's Fury (can remove root with Avatar)
 			[3411] = {cooldown = 30, duration = 6, 		specs = {73}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 3}, --Intervene
-			[386071] = {cooldown = 90, duration = 6, 	specs = {73}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 8}, --Disrupting Shout
+			[386071] = {cooldown = 90, duration = 6, 	specs = {73}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 6}, --Disrupting Shout
 			[385952] = {cooldown = 45, duration = 4, 	specs = {73}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 5}, --Shield Charge
 			[1160] = {cooldown = 45, duration = 8, 		specs = {73}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 2}, --Demoralizing Shout
 			[385952] = {cooldown = 45, duration = 4, 	specs = {71, 72, 73}, 		talent = false,	charges = 1,	class = "WARRIOR",	type = 8}, --Shield Charge
@@ -1186,6 +1191,28 @@ do
 			[223182] = 119369, --Web Marauder
 			[224731] = 119369, --Web Marauder
 			[219984] = 119732, --Xeph'itik
+		}
+
+		--overwrite values in this table only after PEW event.
+		--tickInterval: amount of seconds between each tick, default: 3. lower this to increase precision on when the cooldown ended.
+		LIB_OPEN_RAID_COOLDOWNS_CONFIG = {
+			[6552] =	{tickInterval = 1, latencyCompensation = 0.5}, --Pummel
+			[2139] =	{tickInterval = 1, latencyCompensation = 0.5}, --Counterspell
+			[15487] =	{tickInterval = 1, latencyCompensation = 0.5}, --Silence (shadow) Last Word Talent to reduce cooldown in 15 seconds
+			[1766] =	{tickInterval = 1, latencyCompensation = 0.5}, --Kick
+			[96231] =	{tickInterval = 1, latencyCompensation = 0.5}, --Rebuke (protection and retribution)
+			[116705] =	{tickInterval = 1, latencyCompensation = 0.5}, --Spear Hand Strike (brewmaster and windwalker)
+			[57994] =	{tickInterval = 1, latencyCompensation = 0.5}, --Wind Shear
+			[47528] =	{tickInterval = 1, latencyCompensation = 0.5}, --Mind Freeze
+			[106839] =	{tickInterval = 1, latencyCompensation = 0.5}, --Skull Bash (feral, guardian)
+			[78675] =	{tickInterval = 1, latencyCompensation = 0.5}, --Solar Beam (balance)
+			[147362] =	{tickInterval = 1, latencyCompensation = 0.5}, --Counter Shot (beast mastery, marksmanship)
+			[187707] =	{tickInterval = 1, latencyCompensation = 0.5}, --Muzzle (survival)
+			[183752] =	{tickInterval = 1, latencyCompensation = 0.5}, --Disrupt
+			[19647] =	{tickInterval = 1, latencyCompensation = 0.5}, --Spell Lock (pet felhunter ability)
+			[132409] =	{tickInterval = 1, latencyCompensation = 0.5}, --Spell Lock with felhunter Sacrified by Grimeoire of Sacrifice
+			[89766] =	{tickInterval = 1, latencyCompensation = 0.5}, --Axe Toss (pet felguard ability)
+			[351338] =	{tickInterval = 1, latencyCompensation = 0.5}, --Quell (Evoker)
 		}
 
 		LIB_OPEN_RAID_DATABASE_LOADED = true

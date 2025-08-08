@@ -35,3 +35,23 @@ if C_Spell and C_Spell.GetSpellInfo then	--11.0
 		return chargeInfo.currentCharges, chargeInfo.maxCharges, chargeInfo.cooldownStartTime, chargeInfo.cooldownDuration
 	end
 end
+
+if C_SpecializationInfo and C_SpecializationInfo.GetTalentInfo then
+	--Interface/AddOns/Blizzard_DeprecatedSpecialization/Deprecated_Specialization_Mists.lua
+	ExRT.F.GetTalentInfoMoP = function(talentTier, talentColumn, specGroupIndex, isInspect, target)
+		local talentInfoQuery = {};
+		talentInfoQuery.tier = talentTier;
+		talentInfoQuery.column = talentColumn;
+		talentInfoQuery.groupIndex = specGroupIndex;
+		talentInfoQuery.isInspect = isInspect;
+		talentInfoQuery.target = target;
+		local talentInfo = C_SpecializationInfo.GetTalentInfo(talentInfoQuery);
+		if not talentInfo then
+			return nil;
+		end
+
+		return talentInfo.talentID, talentInfo.name, talentInfo.icon, talentInfo.selected,
+			talentInfo.available, talentInfo.spellID, talentInfo.isPVPTalentUnlocked, talentInfo.tier,
+			talentInfo.column, talentInfo.known, talentInfo.isGrantedByAura;
+	end
+end

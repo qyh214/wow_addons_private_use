@@ -129,7 +129,11 @@ function CM:CHAT_MSG_ADDON(prefix, message, _, sender)
 				spellID = tonumber(spellID)
 				if ( spellID ) then
 					if ( spellID > 0 ) then
-						info.talentData[spellID] = tonumber(rank) or 1
+						if ( rank == "h" ) then
+							info.heroSpecID = spellID
+						else
+							info.talentData[spellID] = tonumber(rank) or 1
+						end
 					else
 						info.talentData[-spellID] = "PVP"
 					end
@@ -322,11 +326,11 @@ function CM.SyncCooldowns(guid, encodedData)
 
 				local active = icon.active and info.active[spellID]
 				if duration == 0 then
+					if spellID == 6262 then
+						SetHealthstoneCD(info, icon, charges, active and now - active.startTime < 10)
+					end
 
 					if active then
-						if spellID == 6262 then
-							SetHealthstoneCD(info, icon, charges, now - active.startTime < 10)
-						end
 						icon:ResetCooldown(true)
 						info.spellModRates[spellID] = modRate
 						icon.modRate = modRate
@@ -337,7 +341,8 @@ function CM.SyncCooldowns(guid, encodedData)
 
 						abs(active.startTime + active.duration - now - remainingTime) > 1 or
 						abs(active.modRate - modRate) > 0.1 or
-						spellID ~= 6262 and active.charges ~= charges then
+
+						active.charges ~= charges then
 
 
 						if isOutlawMinor and active and spellID ~= 5277 and spellID ~= 1966 then
@@ -431,13 +436,19 @@ local function CooldownSyncFrame_OnUpdate(_, elapsed)
 		if startTime then
 			local active = info.active[spellID]
 
+			local updateStack
 			if spellID == 6262 then
 
 				charges = C_Item.GetItemCount(5512, false, true)
+				local icon = info.spellIcons[6262]
+				if icon then
+					local count = tonumber(icon.count:GetText())
+					updateStack = charges ~= count
+				end
 			end
 
 			if duration == 0 then
-				if E.sync_reset[spellID] and active then
+				if E.sync_reset[spellID] and active or updateStack then
 					cooldownData[c + 1] = spellID
 					cooldownData[c + 2] = OFF_CD
 					cooldownData[c + 3] = charges or -1
@@ -449,7 +460,7 @@ local function CooldownSyncFrame_OnUpdate(_, elapsed)
 				if not active or
 					abs(remainingTime - (active.startTime + active.duration - now)) > 1 or
 					abs(modRate - active.modRate) > 0.1 or
-					spellID ~= 6262 and charges ~= active.charges then
+					spellID ~= 6262 and charges ~= active.charges or updateStack then
 
 					if modRate == 1 then
 						remainingTime = floor(remainingTime)

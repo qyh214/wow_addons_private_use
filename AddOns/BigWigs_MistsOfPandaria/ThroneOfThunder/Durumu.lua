@@ -158,9 +158,9 @@ do
 	end
 end
 
-local function mark(unit, mark)
-	if not unit or not mark or not mod.db.profile.custom_off_ray_controllers then return end
-	mod:CustomIcon(false, unit, mark)
+local function mark(unit, number)
+	if not unit or not number or not mod.db.profile.custom_off_ray_controllers then return end
+	mod:CustomIcon(false, unit, number)
 end
 
 -- Clear icons on wipe/win

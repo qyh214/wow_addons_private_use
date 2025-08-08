@@ -58,7 +58,7 @@ L = mod:GetLocale()
 -- Initialization
 --
 
-function mod:GetOptions(CL)
+function mod:GetOptions()
 	return {
 		{106371, "FLASH"}, "cast",
 		105925, {"lightself", "FLASH"}, {"lighttank", "FLASH", "TANK"},
@@ -66,7 +66,7 @@ function mod:GetOptions(CL)
 	}, {
 		[106371] = L["twilight"],
 		[105925] = mod:SpellName(105925),
-		warmup = CL["general"],
+		warmup = CL.general,
 	}
 end
 

@@ -2,8 +2,8 @@
 - [Ace3](https://www.wowace.com/projects/ace3)
 
 # Sites
-- [https://www.wowhead.com/](https://www.wowhead.com/)
-- [https://wow.gamepedia.com](https://wow.gamepedia.com)
+- [https://www.wowhead.com](https://www.wowhead.com)
+- [https://wowpedia.fandom.com](https://wowpedia.fandom.com/wiki/Wowpedia)
 
 # Codes
 - Avoidable Damage

@@ -1,7 +1,6 @@
 -- Atal'Dazar
 
 local L = BigWigs:NewBossLocale("Atal'Dazar Trash", "frFR")
-if not L then return end
 if L then
 	L.skyscreamer = "Hurleciel becqueteur"
 	L.tlonja = "T'lonja"
@@ -16,9 +15,9 @@ if L then
 	L.augur = "Augure dazar'ai"
 	L.reanimated_honor_guard = "Garde d'honneur ressuscité"
 
-	--L.stairs_open = "Stairs Open"
-	--L.stairs_open_desc = "Show a bar indicating when the stairs open to Yazma."
-	--L.stairs_open_trigger = "Impressive. You made it farther than I thought... but I will still be drinking your blood."
+	L.stairs_open = "Escaliers ouverts"
+	L.stairs_open_desc = "Affichage une barre indiquant lorsque les escaliers s'ouvrent vers Yazma."
+	L.stairs_open_trigger = "Impressionnant. Vous avez survécu plus longtemps que je ne pensais… mais je boirai quand même votre sang."
 end
 
 -- Freehold
@@ -58,23 +57,29 @@ end
 L = BigWigs:NewBossLocale("Ring of Booty", "frFR")
 if L then
 	-- Gather 'round and place yer bets! We got a new set of vict-- uh... competitors! Take it away, Gurgthok and Wodin!
-	--L.lightning_warmup = "new set of vict--"
+	L.lightning_warmup = "nouveau groupe de vict…"
 	-- It's a greased up pig? I'm beginning to think this is not a professional setup. Oh well... grab the pig and you win
-	--L.lightning_warmup_2 = "not a professional setup"
+	L.lightning_warmup_2 = "cette bande d’amateurs ?"
 
 	L.lightning = "Foudre"
-	--L.lightning_caught = "Lightning caught after %.1f seconds!"
+	L.lightning_caught = "Foudre attrapé après %.1f secondes !"
 	L.ludwig = "Ludwig Von Tortollan"
 	L.trothak = "Trothak"
-
-	--L.left = "%s (Left)"
-	--L.right = "%s (Right)"
 end
 
 -- Horrific Vision of Orgrimmar
 
 L = BigWigs:NewBossLocale("Horrific Vision of Orgrimmar Trash", "frFR")
 if L then
+	L.sanity_change = "%d santé mentale"
+	L.madnesses = "Démences"
+	L.potions = "Potions"
+	L.buffs = "Améliorations"
+	L.slowed = "Ralenti"
+	L.sluggish_potion_effect = "Soigne 2% toutes les 5 sec"
+	L.sickening_potion_effect = "5% réduction de dégâts"
+	L.spicy_potion_effect = "Souffle de feu"
+
 	L.voidbound_shaman = "Chaman lié par le Vide"
 	L.endless_hunger_totem = "Totem de faim sans fin"
 	L.crawling_corruption = "Corruption rampante"
@@ -100,6 +105,7 @@ if L then
 	L.aqir_bonecrusher = "Broie-les-os aqir"
 	L.aqir_mindhunter = "Traque-esprit aqir"
 	L.aqir_venomweaver = "Tisse-venin aqir"
+	L.gamon = "Gamon"
 end
 
 L = BigWigs:NewBossLocale("Thrall", "frFR")
@@ -134,6 +140,17 @@ end
 
 L = BigWigs:NewBossLocale("Horrific Vision of Stormwind Trash", "frFR")
 if L then
+	L.sanity_change = "%d santé mentale"
+	L.portal_closed = "Portail fermé"
+	L.portal_closed_desc = "Affiche un message lorsqu'un portail est fermé dans le Quartier des Mages."
+	L.madnesses = "Démences"
+	L.potions = "Potions"
+	L.buffs = "Améliorations"
+	L.slowed = "Ralenti"
+	L.sluggish_potion_effect = "Soigne 2% toutes les 5 sec"
+	L.sickening_potion_effect = "5% réduction de dégâts"
+	L.spicy_potion_effect = "Souffle de feu"
+
 	L.crawling_corruption = "Corruption rampante"
 	L.enthralled_footman = "Fantassin ensorcelé"
 	L.fallen_voidspeaker = "Parlevide déchu"
@@ -158,6 +175,7 @@ if L then
 	L.zardeth_of_the_black_claw = "Zardeth de la Griffe noire"
 	L.unstable_servant = "Serviteur instable"
 	L.hogger = "Lardeur"
+	L.void_scarred_gryphon = "Griffon marqué par le Vide"
 
 	--L.therum_deepforge_warmup_trigger = "So ye like tae play with explosives, do ye? Then let's play."
 	--L.alleria_windrunner_warmup_trigger = "Mother... do not listen to the whispers!"
@@ -192,7 +210,7 @@ end
 
 L = BigWigs:NewBossLocale("Dazar, The First King", "frFR")
 if L then
-	--L.spears_active = "Spear Launchers Active"
+	L.spears_active = "Spear Launchers Active"
 end
 
 L = BigWigs:NewBossLocale("King's Rest Trash", "frFR")
@@ -220,9 +238,6 @@ if L then
 	L.beastmaster = "Belluaire spectrale"
 	L.brute = "Brute spectrale"
 	L.zul = "Ombre de Zul"
-
-	L.casting_on_you = "Est en train d'incanter %s sur VOUS"
-	L.casting_on_other = "Est en train d'incanter %s: %s"
 end
 
 -- Operation: Mechagon
@@ -250,8 +265,8 @@ if L then
 	L.bomb_tonk = "Chariotte bombe"
 	L.rocket_tonk = "Chariotte fusée"
 	L.waste_processing_unit = "Unité de traitement des déchets"
-	--L.metal_gunk = "Metal Gunk"
-	--L.junkyard_d0g = "Junkyard D.0.G."
+	L.metal_gunk = "Crasse métallique"
+	L.junkyard_d0g = "C.H.1.3.N. de la casse"
 	L.mechagon_tinkerer = "Bricoleuse mécagonienne"
 	L.anti_personnel_squirrel = "Ecureuil antipersonnel"
 	L.defense_bot_mk_iii = "Robot de défense Mod. III"
@@ -263,11 +278,6 @@ end
 L = BigWigs:NewBossLocale("Tussle Tonks", "frFR")
 if L then
 	--L.warmup_trigger = "Now this is a statistical anomaly! Our visitors are still alive!"
-end
-
-L = BigWigs:NewBossLocale("K.U.-J.0.", "frFR")
-if L then
-	L.safe = "En sécurité"
 end
 
 L = BigWigs:NewBossLocale("King Mechagon", "frFR")
@@ -282,13 +292,13 @@ end
 
 L = BigWigs:NewBossLocale("Aqu'sirr", "frFR")
 if L then
-	--L.warmup_trigger = "How dare you sully this holy place with your presence!"
+	L.warmup_trigger = "Comment osez-vous souiller ce lieu sacré de votre présence ?!"
 end
 
 L = BigWigs:NewBossLocale("Lord Stormsong", "frFR")
 if L then
 	--L.warmup_trigger_horde = "Intruders?! I shall cast your bodies to the blackened depths, to be crushed for eternity!"
-	--L.warmup_trigger_alliance = "Master! Stop this madness at once! The Kul Tiran fleet must not fall to darkness!"
+	L.warmup_trigger_alliance = "Maître ! Mettez un terme à cette folie ! La flotte de Kul Tiras ne doit pas sombrer dans les ténèbres !"
 end
 
 L = BigWigs:NewBossLocale("Shrine of the Storm Trash", "frFR")
@@ -331,7 +341,7 @@ if L then
 	L.cutthroat = "Coupe-gorge des Soutaillons"
 	L.invader = "Envahisseur corsandre"
 
-	--L.gate_open_desc = "Show a bar indicating when the gate to the next area will open after defeating each boss."
+	L.gate_open_desc = "Affiche une barre indiquant lorsque la porte vers la prochaine zone s'ouvrira, après avoir vaincu chaque boss."
 end
 
 L = BigWigs:NewBossLocale("Dread Captain Lockwood", "frFR")
@@ -351,11 +361,6 @@ if L then
 	L.incubator = "Incubateur dément"
 	L.nimbus = "Nimbus agité"
 	L.doctor = "Médecin de peste"
-end
-
-L = BigWigs:NewBossLocale("Galvazzt", "frFR")
-if L then
-	--L.percent = "%s (%d%%)"
 end
 
 -- The MOTHERLODE!!
@@ -438,5 +443,5 @@ end
 
 L = BigWigs:NewBossLocale("Gorak Tul", "frFR")
 if L then
-	--L.add_killed = "Add killed - Ready to burn"
+	L.add_killed = "Add tué - Prêt à brûler"
 end

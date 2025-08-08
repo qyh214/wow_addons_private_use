@@ -20,6 +20,9 @@
     <Include file="tabs/mythicPlus/MythicPlus.xml" />
     <Include file="tabs/mythicPlus/MythicPlusRow.xml" />
     
+    <Include file="tabs/delves/Delves.xml" />
+    <Include file="tabs/delves/DelvesRow.xml" />
+    
     <Include file="tabs/raid/Raid.xml" />
     <Include file="tabs/raid/RaidRow.xml" />
     

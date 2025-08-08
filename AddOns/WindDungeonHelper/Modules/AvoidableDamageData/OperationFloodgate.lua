@@ -3,6 +3,16 @@ local AD = W:GetModule("AvoidableDamage")
 
 local mistakes = {
 	{
+		-- 飛艇彈幕
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 1213704,
+	},
+	{
+		-- 電能水池
+		type = AD.MISTAKE.AURA,
+		spell = 1215089,
+	},
+	{
 		-- 高速衝鋒 (布隆特)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 460965,
@@ -21,11 +31,6 @@ local mistakes = {
 		-- 上緊發條 (裝貨機器人)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 465128,
-	},
-	{
-		-- 泡泡潰擊 (泡泡)
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 465487,
 	},
 	{
 		-- 電池箭 (暗融起跳者)
@@ -48,7 +53,7 @@ local mistakes = {
 		spell = 468604,
 	},
 	{
-		-- 跳躍火花 (基澤‧巨電)
+		-- 跳躍火花 (基澤‧巨電, 跳躍火花)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 468647,
 	},
@@ -66,11 +71,6 @@ local mistakes = {
 		-- 流水電擊
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 468741,
-	},
-	{
-		-- 泡泡 (泡泡)
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 469819,
 	},
 	{
 		-- 勘查地面 (風險投資公司勘測員)
@@ -118,7 +118,7 @@ local mistakes = {
 		spell = 473287,
 	},
 	{
-		-- 超級大爆炸！ (姬薩‧迅融)
+		-- 超級大爆炸！ (滴答作響的定時炸彈, 姬薩‧迅融)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 473526,
 	},
@@ -146,11 +146,6 @@ local mistakes = {
 		-- 電能水池
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 1215071,
-	},
-	{
-		-- 水花噴濺 (泡泡)
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 1217496,
 	},
 	{
 		-- B.B.B.F.G. (姬薩‧迅融)

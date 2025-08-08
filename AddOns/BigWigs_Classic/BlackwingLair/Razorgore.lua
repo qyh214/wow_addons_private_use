@@ -36,9 +36,10 @@ end
 function mod:GetOptions()
 	return {
 		14515, -- Dominate Mind
-		{23023, "ICON"}, -- Conflagration
+		23023, -- Conflagration
 		"eggs",
 		"stages",
+		"adds",
 	},nil,{
 		[14515] = CL.mind_control, -- Dominate Mind (Mind Control)
 	}
@@ -48,7 +49,7 @@ if mod:GetSeason() == 2 then
 	function mod:GetOptions()
 		return {
 			14515, -- Dominate Mind
-			{23023, "ICON"}, -- Conflagration
+			23023, -- Conflagration
 			367873, -- Blinding Ash
 			366909, -- Ruby Flames
 			367740, -- Creeping Chill
@@ -67,8 +68,8 @@ function mod:OnBossEnable()
 
 	self:Log("SPELL_AURA_APPLIED", "DominateMind", 14515)
 	self:Log("SPELL_CAST_SUCCESS", "DestroyEgg", 19873)
-	self:Log("SPELL_AURA_APPLIED", "Conflagration", 23023)
-	self:Log("SPELL_AURA_REMOVED", "ConflagrationOver", 23023)
+	self:Log("SPELL_CAST_SUCCESS", "Conflagration", 23023)
+	self:Log("SPELL_AURA_APPLIED", "ConflagrationApplied", 23023)
 	if self:GetSeason() == 2 then
 		self:Log("SPELL_AURA_APPLIED", "GroundDamage", 367873, 366909) -- Blinding Ash, Ruby Flames
 		self:Log("SPELL_PERIODIC_DAMAGE", "GroundDamage", 367873, 366909)
@@ -82,9 +83,10 @@ function mod:OnEngage()
 	eggs = 0
 	self:SetStage(1)
 	self:Message("stages", "cyan", CL.stage:format(1), false)
-	self:Bar("stages", 45, CL.adds, "Spell_Holy_PrayerOfHealing")
+	self:Bar("adds", 45, CL.adds, "Spell_Holy_PrayerOfHealing")
+	self:ScheduleTimer(function() self:Message("adds", "cyan", CL.adds_spawning, false) end, 45)
 	if self:GetPlayerAura(467047) then -- Black Essence
-		self:Bar("stages", 120, CL.big_add, "inv_misc_head_dragon_01")
+		self:Bar("adds", 120, CL.big_add, "inv_misc_head_dragon_01")
 		timer = self:ScheduleTimer("BigAdd", 120)
 	end
 end
@@ -101,10 +103,8 @@ end
 
 function mod:DominateMind(args)
 	self:TargetMessage(args.spellId, "red", args.destName, CL.mind_control)
-	if self:Me(args.destGUID) then
+	if self:Me(args.destGUID) or self:Dispeller("magic") then
 		self:PlaySound(args.spellId, "alert", nil, args.destName)
-	elseif self:Dispeller("magic") then
-		self:PlaySound(args.spellId, "alert")
 	end
 end
 
@@ -114,13 +114,13 @@ function mod:BigAdd()
 		self:CancelTimer(timer)
 		timer = nil
 	end
-	self:Message("stages", "cyan", CL.big_add, "inv_misc_head_dragon_01")
-	self:PlaySound("stages", "long")
+	self:Message("adds", "cyan", CL.big_add, "inv_misc_head_dragon_01")
+	self:PlaySound("adds", "long")
 end
 
 function mod:DestroyEgg()
 	eggs = eggs + 1
-	self:Message("eggs", "green", L.eggs_message:format(eggs), L.eggs_icon)
+	self:Message("eggs", "green", L.eggs_message:format(eggs), L.eggs_icon, nil, eggs < 30 and self:Classic() and 3) -- Stay onscreen for 3s
 	if eggs == 30 then
 		self:SetStage(2)
 		self:Message("stages", "cyan", CL.stage:format(2), false)
@@ -130,18 +130,19 @@ function mod:DestroyEgg()
 	end
 end
 
-function mod:Conflagration(args)
-	if self:Player(args.destFlags) then -- Players only, can apply to enemy NPCs
-		self:TargetMessage(args.spellId, "orange", args.destName)
-		self:TargetBar(args.spellId, 10, args.destName)
-		self:PrimaryIcon(args.spellId, args.destName)
-		self:PlaySound(args.spellId, "info", nil, args.destName)
+do
+	local playerList = {}
+	function mod:Conflagration()
+		playerList = {}
 	end
-end
 
-function mod:ConflagrationOver(args)
-	self:StopBar(args.spellName, args.destName)
-	self:PrimaryIcon(args.spellId)
+	function mod:ConflagrationApplied(args)
+		if self:Player(args.destFlags) then -- Players only, can apply to enemy NPCs
+			playerList[#playerList+1] = args.destName
+			self:TargetsMessage(args.spellId, "orange", playerList)
+			self:PlaySound(args.spellId, "info", nil, playerList)
+		end
+	end
 end
 
 do

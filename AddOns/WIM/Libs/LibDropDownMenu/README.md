@@ -1,5 +1,5 @@
 # LibDropDownMenu (WoW AddOn Library)
-![Build](https://github.com/HizurosWoWAddOns/LibDropDownMenu/actions/workflows/bigwigsmods-packager.yml/badge.svg)
+![Build](https://img.shields.io/github/actions/workflow/status/HizurosWoWAddOns/LibDropDownMenu/packager.yml?style=flat-square)
 ![Tag](https://img.shields.io/github/v/tag/HizurosWoWAddOns/LibDropDownMenu?style=flat-square)
 ![Downloads](https://img.shields.io/github/downloads/HizurosWoWAddOns/LibDropDownMenu/total?style=flat-square)
 ![Downloads](https://img.shields.io/github/downloads/HizurosWoWAddOns/LibDropDownMenu/latest/total?style=flat-square)

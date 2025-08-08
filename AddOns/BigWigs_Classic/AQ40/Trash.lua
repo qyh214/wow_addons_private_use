@@ -14,6 +14,9 @@ mod:RegisterEnableMob(
 	234830, -- Anubisath Defender (Season of Discovery)
 	15240 -- Vekniss Hive Crawler
 )
+if mod:GetSeason() == 2 then
+	mod:RegisterEnableMob(15516, 15510, 15299) -- Sartura, Fankriss, Viscidus
+end
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -48,10 +51,13 @@ end
 
 function mod:GetOptions()
 	return {
+		-- Anubisath Sentinel
 		"target_buffs",
-		26565, -- Heal Brethren
+		{26565, "OFF"}, -- Heal Brethren
 		8599, -- Enrage
+		-- Qiraji Brainwasher
 		{26079, "ICON", "SAY", "SAY_COUNTDOWN"}, -- Cause Insanity
+		-- Anubisath Defender
 		{26556, "SAY", "ME_ONLY_EMPHASIZE"}, -- Plague
 		8269, -- Frenzy / Enrage (different name on classic era)
 		26554, -- Thunderclap
@@ -61,6 +67,7 @@ function mod:GetOptions()
 		17430, -- Summon Anubisath Swarmguard
 		17431, -- Summon Anubisath Warrior
 		"stages",
+		-- Vekniss Hive Crawler
 		25051, -- Sunder Armor
 	},{
 		["target_buffs"] = L.sentinel,
@@ -72,9 +79,48 @@ function mod:GetOptions()
 	}
 end
 
+if mod:GetSeason() == 2 then
+	function mod:GetOptions()
+		return {
+			-- Anubisath Sentinel
+			"target_buffs",
+			{26565, "OFF"}, -- Heal Brethren
+			8599, -- Enrage
+			-- Qiraji Brainwasher
+			{26079, "ICON", "SAY", "SAY_COUNTDOWN"}, -- Cause Insanity
+			-- Anubisath Defender
+			{26556, "SAY", "ME_ONLY_EMPHASIZE"}, -- Plague
+			8269, -- Frenzy / Enrage (different name on classic era)
+			26554, -- Thunderclap
+			26558, -- Meteor
+			26555, -- Shadow Storm
+			{25698, "EMPHASIZE", "COUNTDOWN"}, -- Explode
+			17430, -- Summon Anubisath Swarmguard
+			17431, -- Summon Anubisath Warrior
+			"stages",
+			-- Vekniss Hive Crawler
+			25051, -- Sunder Armor
+			-- SoD hard mode abilities
+			{1214956, "OFF"}, -- Curse of Despair
+			1215421, -- Toxic Pool
+			{1215202, "ME_ONLY_EMPHASIZE"}, -- Noxious Burst
+		},{
+			["target_buffs"] = L.sentinel,
+			[26079] = L.brainwasher,
+			[26556] = L.defender,
+			[25051] = L.crawler,
+			[1214956] = CL.hard,
+		},{
+			[26079] = CL.mind_control, -- Cause Insanity (Mind Control)
+			[1214956] = CL.curse, -- Curse of Despair (Curse)
+			[1215421] = CL.underyou:format(mod:SpellName(1215421)), -- Toxic Pool (Toxic Pool under YOU)
+			[1215202] = CL.spread, -- Noxious Burst (Spread)
+		}
+	end
+end
+
 function mod:OnBossEnable()
 	defendersAlive = 5
-	self:RegisterMessage("BigWigs_OnBossEngage", "Disable")
 
 	self:RegisterEvent("PLAYER_TARGET_CHANGED")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
@@ -111,11 +157,20 @@ function mod:OnBossEnable()
 
 	self:Log("SPELL_SUMMON", "SummonAnubisathSwarmguard", 17430)
 	self:Log("SPELL_SUMMON", "SummonAnubisathWarrior", 17431)
-	self:Death("DefenderKilled", 15277, 234830)
+	self:Death("DefenderKilled", 15277, 234830) -- Anubisath Defender, Anubisath Defender (Season of Discovery)
 
 	self:Log("SPELL_AURA_APPLIED", "SunderArmor", 25051)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "SunderArmor", 25051)
 	self:Log("SPELL_AURA_REMOVED", "SunderArmorRemoved", 25051)
+
+	if self:GetSeason() == 2 then
+		self:Log("SPELL_AURA_APPLIED", "CurseOfDespairApplied", 1214956)
+		self:Log("SPELL_PERIODIC_DAMAGE", "ToxicPoolDamage", 1215421) -- Purposely not using APPLIED so we don't trigger for people running over it
+		self:Log("SPELL_PERIODIC_MISSED", "ToxicPoolDamage", 1215421)
+		self:Log("SPELL_AURA_APPLIED", "NoxiousBurstApplied", 1215202)
+	else
+		self:RegisterMessage("BigWigs_OnBossEngage", "Disable")
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -211,7 +266,7 @@ do
 end
 
 function mod:EnrageApplied(args)
-	if self:MobId(args.destGUID) == 15264 then -- Anubisath Sentinel
+	if args.destGUID == self:UnitGUID("target") and self:MobId(args.destGUID) == 15264 then -- Anubisath Sentinel
 		local icon = self:GetIconTexture(self:GetIcon(args.destRaidFlags))
 		if icon then
 			self:Message(args.spellId, "red", icon .. CL.percent:format(30, args.spellName))
@@ -301,8 +356,11 @@ do
 end
 
 function mod:FrenzyEnrage(args)
-	self:Message(args.spellId, "red")
-	self:PlaySound(args.spellId, "long")
+	local id = self:MobId(args.destGUID) -- Battleguard Sartura also gains this, lock to trash only
+	if id == 15277 or id == 234830 then -- Anubisath Defender, Anubisath Defender (Season of Discovery)
+		self:Message(args.spellId, "red")
+		self:PlaySound(args.spellId, "long")
+	end
 end
 
 function mod:ExplodeApplied(args)
@@ -325,7 +383,7 @@ end
 
 function mod:DefenderKilled()
 	defendersAlive = defendersAlive - 1
-	self:Message("stages", "cyan", CL.mob_remaining:format(L.defender, defendersAlive), false)
+	self:Message("stages", "cyan", CL.mob_remaining:format(L.defender, defendersAlive), false, nil, 5) -- Stay onscreen for 5s
 end
 
 --[[ Vekniss Hive Crawler ]]--
@@ -339,4 +397,35 @@ end
 
 function mod:SunderArmorRemoved(args)
 	self:StopBar(args.spellName, args.destName)
+end
+
+--[[ SoD hard mode abilities ]]--
+
+do
+	local prev = 0
+	function mod:CurseOfDespairApplied(args)
+		if args.time - prev > 10 then
+			prev = args.time
+			self:Message(args.spellId, "yellow", CL.on_group:format(CL.curse))
+			self:Bar(args.spellId, 30, CL.curse)
+		end
+	end
+end
+
+do
+	local prev = 0
+	function mod:ToxicPoolDamage(args)
+		if self:Me(args.destGUID) and args.time - prev > 4 then
+			prev = args.time
+			self:PersonalMessage(args.spellId, "underyou")
+			self:PlaySound(args.spellId, "underyou")
+		end
+	end
+end
+
+function mod:NoxiousBurstApplied(args)
+	if self:Me(args.destGUID) then
+		self:PersonalMessage(args.spellId, false, CL.spread)
+		self:PlaySound(args.spellId, "warning", nil, args.destName)
+	end
 end

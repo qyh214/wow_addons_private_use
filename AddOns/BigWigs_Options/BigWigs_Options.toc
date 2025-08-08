@@ -1,4 +1,4 @@
-## Interface: 11506, 11507, 20504, 30404, 40402, 40401, 110105, 110007, 110100
+## Interface: 11506, 11507, 20504, 30405, 40402, 40401, 50500, 110105, 110107, 110200
 
 ## Title: BigWigs [|cffeda55fOptions|r]
 ## Title-zhCN: BigWigs [|cffeda55f选项|r]
@@ -23,7 +23,7 @@
 ## Notes-esES: Opciones de configuración de BigWigs.
 ## Notes-esMX: Opciones de configuración de BigWigs.
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
-## Version: v382.1
+## Version: v392.7
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs, BigWigs_Core, BigWigs_Plugins

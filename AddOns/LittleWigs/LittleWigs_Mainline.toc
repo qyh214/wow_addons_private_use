@@ -1,4 +1,4 @@
-## Interface: 110105, 110007, 110100
+## Interface: 110105, 110107, 110200
 
 ## Title: LittleWigs
 ## Notes: Boss warnings for 5-man dungeons & scenarios.
@@ -23,30 +23,12 @@
 
 ## Dependencies: BigWigs
 ## LoadOnDemand: 1
-## Version: v11.1.29
+## Version: v11.2.4
 
 ## X-BigWigs-Minimum: 381
-## X-BigWigs-LoadOn-InstanceId: 2648,2649,2651,2652,2660,2661,2662,2669,2773, 2710, 2664,2679,2680,2681,2682,2683,2684,2685,2686,2687,2688,2689,2690,2815,2826,2831
+## X-BigWigs-LoadOn-InstanceId: 2648,2649,2651,2652,2660,2661,2662,2669,2773,2830, 2710, 2664,2679,2680,2681,2682,2683,2684,2685,2686,2687,2688,2689,2690,2803,2815,2826,2831,2951
 
 WarWithin\modules.xml
-WarWithin\!Locales\deDE.lua
-WarWithin\!Locales\esES.lua
-WarWithin\!Locales\esMX.lua
-WarWithin\!Locales\frFR.lua
-WarWithin\!Locales\itIT.lua
-WarWithin\!Locales\koKR.lua
-WarWithin\!Locales\ptBR.lua
-WarWithin\!Locales\ruRU.lua
-WarWithin\!Locales\zhCN.lua
-WarWithin\!Locales\zhTW.lua
+WarWithin\!Locales\[TextLocale].lua [AllowLoadTextLocale deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW]
 Delves\modules.xml
-Delves\!Locales\deDE.lua
-Delves\!Locales\esES.lua
-Delves\!Locales\esMX.lua
-Delves\!Locales\frFR.lua
-Delves\!Locales\itIT.lua
-Delves\!Locales\koKR.lua
-Delves\!Locales\ptBR.lua
-Delves\!Locales\ruRU.lua
-Delves\!Locales\zhCN.lua
-Delves\!Locales\zhTW.lua
+Delves\!Locales\[TextLocale].lua [AllowLoadTextLocale deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW]

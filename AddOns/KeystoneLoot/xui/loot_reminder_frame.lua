@@ -109,108 +109,60 @@ local function LootSpec_OnClick(self)
 	PlaySound(SOUNDKIT.UI_CLASS_TALENT_SPEC_ACTIVATE);
 end
 
--- https://gist.github.com/sapphyrus/fd9aeb871e3ce966cc4b0b969f62f539
-local function deep_equals(o1, o2, ignore_mt)
-    if (o1 == o2) then
-		return true;
-	end
-
-    local o1Type = type(o1);
-    local o2Type = type(o2);
-
-    if (o1Type ~= o2Type) then
-		return false;
-	end
-
-    if (o1Type ~= 'table') then
-		return false;
-	end
-
-    if (not ignore_mt) then
-        local mt1 = getmetatable(o1);
-        if (mt1 and mt1.__eq) then
-            return o1 == o2;
-        end
-    end
-
-    for key1, value1 in next, o1 do
-        local value2 = o2[key1];
-        if (value2 == nil or deep_equals(value1, value2, ignore_mt) == false) then
-            return false;
-        end
-    end
-
-    for key2 in next, o2 do
-        if (o1[key2] == nil) then
-			return false;
-		end
-    end
-
-    return true;
-end
-
-local function IsOnItemList(specItemList, itemId)
-	for index, item in next, specItemList do
-		if (item.itemId == itemId) then
-			return true;
-		end
-	end
-end
-
-local function IsEverythingTheSame(itemList)
-	local _tmp = {};
-	for specId, items in next, itemList do
-		_tmp[specId] = {};
-
-		for _, item in next, items do
-			table.insert(_tmp[specId], item.itemId);
-		end
-
-		table.sort(_tmp[specId], function(a, b)
-			return a < b;
-		end);
-	end
-
-    local firstSubtable;
-    for _, subtable in next, _tmp do
-        if (not firstSubtable) then
-            firstSubtable = subtable
-        elseif (not deep_equals(firstSubtable, subtable)) then
-            return false
-        end
-    end
-
-    return true
-end
-
 local function GetLootReminderItemList(challengeModeId)
 	local favoriteLoot = KeystoneLootCharDB.favoriteLoot;
 	local _itemList = {};
+	local specHasFavoritedItem = {};
+	local favoriteItems = {};
 
-	if (favoriteLoot[challengeModeId] == nil) then
+	if (not favoriteLoot[challengeModeId]) then
 		return {};
 	end
 
 	local _, _, classId = UnitClass('player');
 	local numSpecs = GetNumSpecializations();
-	for i=1, numSpecs do
+
+	for i = 1, numSpecs do
 		local specId = GetSpecializationInfo(i);
+		local specFavorites = favoriteLoot[challengeModeId][specId];
 
-		for itemId, itemInfo in next, favoriteLoot[challengeModeId][specId] or {} do
-			local specList = KeystoneLoot:GetItemInfo(itemId).classes[classId];
-			local numItemSpecs = #specList;
+		if (specFavorites and next(specFavorites)) then
+			specHasFavoritedItem[specId] = true;
 
-			if (numItemSpecs ~= numSpecs) then
-				for index, specId in next, specList do
-					if (_itemList[specId] == nil) then
-						_itemList[specId] = {};
+			for itemId, itemInfo in next, specFavorites do
+				if (not favoriteItems[itemId]) then
+					favoriteItems[itemId] = {
+						info = itemInfo,
+						favoritedBy = { [specId] = true }
+					};
+				else
+					favoriteItems[itemId].favoritedBy[specId] = true;
+				end
+			end
+		end
+	end
+
+	for itemId, data in next, favoriteItems do
+		local specList = KeystoneLoot:GetItemInfo(itemId).classes[classId];
+
+		if (specList and #specList ~= numSpecs) then
+			for _, dropSpecId in next, specList do
+				if (specHasFavoritedItem[dropSpecId]) then
+					_itemList[dropSpecId] = _itemList[dropSpecId] or {};
+
+					local isDuplicate = false;
+					for _, existingItem in next, _itemList[dropSpecId] do
+						if (existingItem.itemId == itemId) then
+							isDuplicate = true;
+							break;
+						end
 					end
 
-					if (not IsOnItemList(_itemList[specId], itemId)) then
-						table.insert(_itemList[specId], {
+					if (not isDuplicate) then
+						table.insert(_itemList[dropSpecId], {
 							itemId = itemId,
-							specId = specId,
-							icon = itemInfo.icon
+							specId = dropSpecId,
+							icon = data.info.icon
 						});
 					end
 				end
@@ -223,12 +175,38 @@ local function GetLootReminderItemList(challengeModeId)
 		lootSpecId = GetSpecializationInfo(GetSpecialization());
 	end
 
-	local countSpecs = 0;
-	for specId in next, _itemList do
-		countSpecs = countSpecs + 1;
+	if (not _itemList[lootSpecId]) then
+		return _itemList;
 	end
 
-	if ((countSpecs == 1 and _itemList[lootSpecId]) or (countSpecs > 1 and _itemList[lootSpecId] and IsEverythingTheSame(_itemList))) then
+	local hasItemsRequiringOtherSpec = false;
+	for specId, items in next, _itemList do
+		if (specId ~= lootSpecId) then
+			for _, item in next, items do
+				local isAvailableForCurrentLootSpec = false;
+
+				if (_itemList[lootSpecId]) then
+					for _, currentSpecItem in next, _itemList[lootSpecId] do
+						if (currentSpecItem.itemId == item.itemId) then
+							isAvailableForCurrentLootSpec = true;
+							break;
+						end
+					end
+				end
+
+				if (not isAvailableForCurrentLootSpec) then
+					hasItemsRequiringOtherSpec = true;
+					break;
+				end
+			end
+		end
+
+		if (hasItemsRequiringOtherSpec) then
+			break;
+		end
+	end
+
+	if (not hasItemsRequiringOtherSpec) then
 		return {};
 	end
 
@@ -269,7 +247,7 @@ local function CreateSpecializationFrame()
 	Active:SetText(SPEC_ACTIVE);
 
 	SpecFrame.itemFrames = {};
-	for index=1, 8 do
+	for index = 1, 8 do
 		local ItemButton = KeystoneLoot:CreateItemButton(SpecFrame);
 		ItemButton.lootReminder = true;
 
@@ -319,7 +297,7 @@ function KeystoneLoot:UpdateLootReminder(challengeModeId)
 
 		local _, specName = GetSpecializationInfoByID(specId);
 		SpecFrame.Title:SetText(specName);
-		SpecFrame.Bg:SetAtlas('spec-thumbnail-'..(SPEC_FORMAT_STRINGS[specId] or 'mage-arcane'));
+		SpecFrame.Bg:SetAtlas('spec-thumbnail-' .. (SPEC_FORMAT_STRINGS[specId] or 'mage-arcane'));
 
 		local lootSpecId = GetLootSpecialization();
 		if (lootSpecId == 0) then
@@ -337,7 +315,7 @@ function KeystoneLoot:UpdateLootReminder(challengeModeId)
 		return;
 	end
 
-	for index=(numSpec + 1), #_specializationFrames do
+	for index = (numSpec + 1), #_specializationFrames do
 		local SpecFrame = _specializationFrames[index];
 		SpecFrame:Hide();
 	end

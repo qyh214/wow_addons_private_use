@@ -1,14 +1,14 @@
-## Interface: 110100
+## Interface: 110200
 ## Title: ItemUpgradeTip
 ## Notes: Add information to item tooltips for item upgrade costs
-## OptionalDeps: _DebugLog
+## OptionalDeps: _DebugLog, GW2_UI
 ## AddonCompartmentFuncOnEnter: ItemUpgradeTip_OnAddonCompartmentEnter
 ## AddonCompartmentFuncOnLeave: ItemUpgradeTip_OnAddonCompartmentLeave
 ## AddonCompartmentFunc: ItemUpgradeTip_OnAddonCompartmentClick
 ## IconTexture: 463447
 ## SavedVariables: ItemUpgradeTipDB
 ## Author: Belazor
-## Version: v3.6.2
+## Version: v4.0.2
 ## Group: ItemUpgradeTip
 ## Category-enUS: Equipment
 ## Category-deDE: Ausrüstung
@@ -17,8 +17,8 @@
 ## Category-frFR: Équipement
 ## Category-itIT: Equipaggiamento
 ## Category-koKR: 장비
-## Category-ptBR: 
-## Category-ruRU: снаряжение
+## Category-ptBR: Equipamento
+## Category-ruRU: Экипировка
 ## Category-zhCN: 装备
 ## Category-zhTW: 裝備
 ## X-Curse-Project-ID: 709548
@@ -55,3 +55,5 @@ upgradeHandlers\Conquest.lua
 
 Tooltip.lua
 ItemUpgradeTip.lua
+
+skins\GW2\GW2.lua

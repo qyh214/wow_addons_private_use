@@ -54,13 +54,13 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "BoneBarrier", 29061)
 	self:Death("Deaths", 16803) -- Death Knight Understudy
 
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
 	self:Death("Win", 16061)
 end
 
 function mod:OnEngage()
 	understudyIcons = {}
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 
 	self:Bar(55543, 15) -- Disrupting Shout
 	self:DelayedMessage(55543, 10, "orange", CL.soon:format(self:SpellName(55543)), 55543, "alert")

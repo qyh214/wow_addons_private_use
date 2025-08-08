@@ -924,6 +924,10 @@ do  --Scroll Anim
 
         local pageOffset;
 
+        if self.ScrollFrame:IsAtPageTop() then
+            return 1
+        end
+
         if self.ScrollFrame:IsAtPageBottom() then
             return maxPage
         end
@@ -1453,6 +1457,7 @@ do  --Main UI
         self:SetScript("OnGamePadStick", self.OnGamePadStick);
         self:SetScript("OnGamePadButtonDown", self.OnGamePadButtonDown);
         addon.SharedVignette:TryShow();
+        CallbackRegistry:Trigger("BookUI.Show");
     end
 
     function DUIBookUIMixin:OnHide()

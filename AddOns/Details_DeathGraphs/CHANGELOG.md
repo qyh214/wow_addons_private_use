@@ -1,6 +1,6 @@
 # Details!: Advanced Death Logs (plugin)
 
-## [v11.1.0.129](https://github.com/Tercioo/AdvancedDeathLogs/tree/v11.1.0.129) (2025-02-25)
-[Full Changelog](https://github.com/Tercioo/AdvancedDeathLogs/compare/v11.0.7.128...v11.1.0.129) 
+## [v11.2.0.133](https://github.com/Tercioo/AdvancedDeathLogs/tree/v11.2.0.133) (2025-08-06)
+[Full Changelog](https://github.com/Tercioo/AdvancedDeathLogs/compare/v11.1.5.132...v11.2.0.133) 
 
 - ToC Update  

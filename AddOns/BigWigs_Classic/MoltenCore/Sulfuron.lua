@@ -14,7 +14,7 @@ mod:SetEncounterID(669)
 function mod:GetOptions()
 	return {
 		19779, -- Inspire
-		19775, -- Dark Mending
+		{19775, "NAMEPLATE"}, -- Dark Mending
 		19778, -- Demoralizing Shout
 	}
 end
@@ -23,7 +23,7 @@ if mod:GetSeason() == 2 then
 	function mod:GetOptions()
 		return {
 			19779, -- Inspire
-			19775, -- Dark Mending
+			{19775, "NAMEPLATE"}, -- Dark Mending
 			19778, -- Demoralizing Shout
 			461103, -- Living Fallout
 		},nil,{
@@ -37,7 +37,8 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_REMOVED", "InspireRemoved", 19779)
 	self:Log("SPELL_CAST_SUCCESS", "DemoralizingShout", 19778)
 	self:Log("SPELL_CAST_START", "DarkMending", 19775)
-	if self:GetSeason() == 2  then
+	self:Death("FlamewakerPriestDeath", 11662, 228838) -- Flamewaker Priest, Flamewaker Priest (Season of Discovery)
+	if self:GetSeason() == 2 then
 		self:Log("SPELL_AURA_APPLIED", "LivingFalloutDamage", 461103)
 		self:Log("SPELL_PERIODIC_DAMAGE", "LivingFalloutDamage", 461103)
 		self:Log("SPELL_PERIODIC_MISSED", "LivingFalloutDamage", 461103)
@@ -75,6 +76,7 @@ function mod:DemoralizingShout(args)
 end
 
 function mod:DarkMending(args)
+	self:Nameplate(args.spellId, self:GetSeason() == 2 and 13 or 6.5, args.sourceGUID)
 	local isPossible, isReady = self:Interrupter(args.sourceGUID)
 	if isPossible then
 		self:Message(args.spellId, "red")
@@ -84,10 +86,14 @@ function mod:DarkMending(args)
 	end
 end
 
+function mod:FlamewakerPriestDeath(args)
+	self:StopNameplate(19775, args.destGUID)
+end
+
 do
 	local prev = 0
 	function mod:LivingFalloutDamage(args)
-		if self:Me(args.destGUID) and args.time - prev > 2 then
+		if self:Me(args.destGUID) and args.time - prev > 3 then
 			prev = args.time
 			self:PersonalMessage(args.spellId, "underyou", CL.fire)
 			self:PlaySound(args.spellId, "underyou")

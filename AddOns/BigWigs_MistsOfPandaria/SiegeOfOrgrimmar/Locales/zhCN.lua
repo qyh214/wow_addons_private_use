@@ -4,10 +4,10 @@ if L then
 L["defile_you"] = "自身脚下亵渎大地"
 L["defile_you_desc"] = "当你脚下亵渎大地时发出警报。"
 L["inferno_self"] = "自身炼狱打击"
-L["inferno_self_bar"] = ">你< 爆炸！"
+L["inferno_self_bar"] = "你 爆炸！"
 L["inferno_self_desc"] = "当你受到炼狱打击时显示特殊冷却计时条。"
 L["intermission_desc"] = "当首领使用背水一战时发出警报。"
-L["no_meditative_field"] = ">你< 不在保护罩！"
+L["no_meditative_field"] = "你 不在保护罩！"
 
 	L.custom_off_bane_marks = "暗言术：蛊标记"
 	L.custom_off_bane_marks_desc = "帮助驱散分配，给最初受到暗言术：蛊的玩家使用 {rt1}{rt2}{rt3}{rt4}{rt5} 进行标记（按照这个顺序，不是所有标记会被用到），需要权限。"
@@ -122,7 +122,7 @@ end
 L = BigWigs:NewBossLocale("Siegecrafter Blackfuse", "zhCN")
 if L then
 L["assembly_line_items"] = "物品（%d）：%s"
-L["assembly_line_message"] = "零散的武器 >%d<"
+L["assembly_line_message"] = "零散的武器 %d"
 L["assembly_line_trigger"] = "未完成的武器从装配流水线上传送出来了。"
 L["disabled"] = "已禁用"
 L["item_deathdealer"] = "死亡执行者"
@@ -130,7 +130,7 @@ L["item_laser"] = "激光"
 L["item_magnet"] = "电磁体"
 L["item_mines"] = "地雷"
 L["item_missile"] = "导弹"
-L["laser_on_you"] = ">你< 激光 BIU BIU！"
+L["laser_on_you"] = "你 激光 BIU BIU！"
 L["overcharged_crawler_mine"] = "超载的蛛形地雷"
 L["shockwave_missile_trigger"] = "为各位送上"
 L["shredder_engage_trigger"] = "一台自动伐木机正在靠近！"
@@ -141,13 +141,13 @@ end
 
 L = BigWigs:NewBossLocale("Paragons of the Klaxxi", "zhCN")
 if L then
-	L.catalyst_match = "催化药剂：|c%s 引爆 >你<|r" -- might not be best for colorblind?
+	L.catalyst_match = "催化药剂：|c%s 引爆 你|r" -- might not be best for colorblind?
 	L.you_ate = "你已吃寄生虫（%d 剩余）"
 	L.other_ate = "%s 已吃 %s 寄生虫（%d 剩余）"
-	L.parasites_up = "%d |4寄生虫:寄生虫; 可用"
+	L.parasites_up = "剩余：%d 寄生虫"
 	L.dance = "%s, 跳舞"
 	L.prey_message = "使用控制诱捕寄生虫"
-	L.injection_over_soon = "注射即将结束 >%s<！"
+	L.injection_over_soon = "注射即将结束 %s！"
 
 	L.one = "依约库克选择：一！"
 	L.two = "依约库克选择：二！"
@@ -157,7 +157,7 @@ if L then
 
 	L.custom_off_edge_marks = "炎界标记"
 	L.custom_off_edge_marks_desc = "基于计算给谁将会炎界的玩家使用 {rt1}{rt2}{rt3}{rt4}{rt5}{rt6}{rt7}{rt8} 进行标记，需要权限。\n|cFFFF0000团队中只有1名应该启用此选项以防止标记冲突。|r"
-	L.edge_message = ">你< 炎界"
+	L.edge_message = "你 炎界"
 
 	L.custom_off_parasite_marks = "寄生虫标记"
 	L.custom_off_parasite_marks_desc = "帮助群体控制和诱捕分配，给寄生虫使用 {rt1}{rt2}{rt3}{rt4}{rt5}{rt6}{rt7} 进行标记，需要权限。\n|cFFFF0000团队中只有1名应该启用此选项以防止标记冲突。|r"
@@ -174,8 +174,8 @@ L["chain_heal_bar"] = "焦点：先祖治疗链"
 L["chain_heal_desc"] = "{focus}治疗一个友方目标40%最大生命，会跳到附近友方目标身上。"
 L["chain_heal_message"] = "你的焦点目标正在施放先祖治疗链！"
 L["clump_check_desc"] = "在呼叫轰炸阶段时每3秒检查扎堆的玩家，如果检查到群体存在库卡隆钢铁之星将会出现。"
-L["clump_check_warning"] = "发现呼叫轰炸，即将 >钢铁之星<！"
-L["empowered_message"] = ">%s< 强化腐蚀！"
+L["clump_check_warning"] = "发现呼叫轰炸，即将 钢铁之星！"
+L["empowered_message"] = "%s 强化腐蚀！"
 L["farseer_trigger"] = "先知们，为我们治疗！"
 L["ironstar_impact_desc"] = "当钢铁之星将撞击墙壁另一边时显示计时条。"
 L["ironstar_rolling"] = "钢铁之星翻滚！"

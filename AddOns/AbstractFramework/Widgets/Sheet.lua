@@ -109,7 +109,7 @@ end
 
 local function Row_OnEnter(row)
     if row.parent then row = row.parent end
-    row:SetBackdropColor(AF.GetColorRGB("sheet_row_highlight"))
+    row:SetBackdropColor(AF.GetColorRGB("sheet_highlight"))
 end
 
 local function Row_OnLeave(row)
@@ -366,7 +366,7 @@ function AF.CreateSheet(parent, name, config, onSizeChanged)
     -- update backdrop
     content:ClearBackdrop()
     AF.ApplyDefaultBackdrop(content.slotFrame)
-    AF.ApplyDefaultBackdropWithColors(content.slotFrame, "sheet_bg")
+    AF.ApplyDefaultBackdropWithColors(content.slotFrame, "sheet_normal")
 
     sheet.onSizeChanged = onSizeChanged
     Mixin(sheet, AF_SheetMixin)

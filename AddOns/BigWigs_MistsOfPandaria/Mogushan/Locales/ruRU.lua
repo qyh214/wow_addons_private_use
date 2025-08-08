@@ -1,11 +1,10 @@
 local L = BigWigs:NewBossLocale("The Stone Guard", "ruRU")
 if not L then return end
 if L then
-	L.petrifications = "Окаменение"
-	L.petrifications_desc = "Предупреждать, когда боссы начинают окаменение."
-
-	L.overload = "Перенасыщение"
-	L.overload_desc = "Предупреждать о всех типах перенасыщения."
+	L[60051] = "|T134398:0|t Кобальтовый" -- Cobalt Guardian
+	L[60047] = "|T134399:0|t Аметистовый" -- Amethyst Guardian
+	L[60043] = "|T134397:0|t Нефритовый" -- Jade Guardian
+	L[59915] = "|T134396:0|t Яшмовый" -- Jasper Guardian
 end
 
 L = BigWigs:NewBossLocale("Feng the Accursed", "ruRU")

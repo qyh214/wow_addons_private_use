@@ -19,11 +19,11 @@ local function OnEnter(self)
 
 		GameTooltip:AddLine(' ');
 		if (numSpecs == 2) then
-			GameTooltip:AddLine('|A:quest-important-available:16:16:0:0|a '..FOR_OR_SPECIALIZATIONS:format(specNames[1], specNames[2]));
+			GameTooltip:AddLine('|A:quest-important-available:16:16:0:0|a ' .. FOR_OR_SPECIALIZATIONS:format(specNames[1], specNames[2]));
 		elseif (numSpecs == 1) then
-				GameTooltip:AddLine('|A:quest-important-available:16:16:0:0|a '..FOR_SPECIALIZATION:format(specNames[1]));
+			GameTooltip:AddLine('|A:quest-important-available:16:16:0:0|a ' .. FOR_SPECIALIZATION:format(specNames[1]));
 		else
-			GameTooltip:AddLine('|A:quest-important-available:16:16:0:0|a '..FOR_SPECIALIZATION:format(table.concat(self.specNames, '/')));
+			GameTooltip:AddLine('|A:quest-important-available:16:16:0:0|a ' .. FOR_SPECIALIZATION:format(table.concat(self.specNames, '/')));
 		end
 	end
 
@@ -60,6 +60,9 @@ local function OnLeave(self)
 end
 
 local function OnClick(self)
+	StaticPopup_Hide('KEYSTONELOOT_EXPORT_DIALOG');
+	StaticPopup_Hide('KEYSTONELOOT_IMPORT_DIALOG');
+
 	local itemId = self.itemId;
 
 	if (IsModifierKeyDown()) then
@@ -155,9 +158,9 @@ local function UpdateStatVisibility(self)
 	end
 
 	local hasItemStat;
-    if (not itemInfo.stats) then
-        hasItemStat = KeystoneLootCharDB.statHighlightingNoStatsEnabled;
-    end
+	if (not itemInfo.stats) then
+		hasItemStat = KeystoneLootCharDB.statHighlightingNoStatsEnabled;
+	end
 
 	if (hasItemStat == nil) then
 		local critEnabled = KeystoneLootCharDB.statHighlightingCritEnabled;

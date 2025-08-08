@@ -1,6 +1,6 @@
-## Interface: 110007
+## Interface: 110105
 ## Author: KittenBall
-## Version: 2.0.27
+## Version: 2.030
 ## Title: ImprovedAddonList
 ## Title-zhCN: 暴雪插件列表增强
 ## IconTexture: Interface\AddOns\ImprovedAddonList\Media\icon.png
@@ -19,6 +19,7 @@ Lib\LibCustomGlow-1.0.lua
 
 Locales\enUS.lua
 Locales\zhCN.lua
+Locales\ruRU.lua
 
 Tools.lua
 Repository.lua

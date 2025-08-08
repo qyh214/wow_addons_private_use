@@ -35,11 +35,11 @@ function mod:OnBossEnable()
 
 	self:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE")
 
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
 end
 
 function mod:OnEngage()
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:CDBar(58663, 47) -- Stomp
 	self:DelayedMessage(58663, 42, "yellow", L["stomp_warning"])
 	self:Berserk(300)

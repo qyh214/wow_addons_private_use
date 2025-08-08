@@ -1,5 +1,6 @@
 --Parent: Narci_EquipmentFlyoutFrame (Narcissus.xml)
 local _, addon = ...
+local L = Narci.L;
 
 local EquipmentFlyoutFrame;
 local hasGapAdjusted = false;
@@ -24,6 +25,7 @@ local RequestLoadItemData = C_Item.RequestLoadItemData;
 local GetCombatRating = GetCombatRating;
 local GetItemInfoInstant = C_Item.GetItemInfoInstant;
 local GetSpellInfo = addon.TransitionAPI.GetSpellInfo;
+local IsAzeriteItemLocationBankBag = AzeriteUtil.IsAzeriteItemLocationBankBag or AzeriteUtil.IsAzeriteItemLocationBankTab;
 
 local GetGemBorderTexture = NarciAPI.GetGemBorderTexture;
 --local DoesItemHaveDomationSocket = NarciAPI.DoesItemHaveDomationSocket;
@@ -580,7 +582,7 @@ function Narci_Comparison_SetComparison(itemLocation, itemButton)
 
     --Azerite Empowered Items
     if C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(itemLocation) then
-        headerText:SetText(NARCI_AZERITE_POWERS);
+        headerText:SetText(L["Azerite Powers"]);
         SubTooltip.Header:SetWidth(math.max(74, headerText:GetWidth() + 14))
         BuildAzeiteTraitsFrame(TraitsFrame, itemLocation, itemButton);
         extraText:Hide();
@@ -676,7 +678,7 @@ NT:SetScript("OnEvent",function(self,event,...)
         local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
         if azeriteItemLocation then
             --Credit: flowerpew     Bug Fix: Can't retrieve level if Heart of Azeroth is in the bank
-            if AzeriteUtil.IsAzeriteItemLocationBankBag(azeriteItemLocation) then
+            if IsAzeriteItemLocationBankBag(azeriteItemLocation) then
                 HEART_LEVEL = 0;
             else
                 HEART_LEVEL = C_AzeriteItem.GetPowerLevel(azeriteItemLocation) or 0;

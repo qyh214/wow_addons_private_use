@@ -1,7 +1,6 @@
 -- Artifact Scenarios
 
 local L = BigWigs:NewBossLocale("Tugar Bloodtotem", "zhCN")
-if not L then return end
 if L then
 	L.tugar = "图加·鲜血图腾"
 	L.jormog = "“巨兽”乔莫格"
@@ -26,8 +25,6 @@ if L then
 	L.handFromBeyond = "异世之手"
 
 	L.rune_desc = "在地面上放置一个召唤符文。如果没有站在上面会出现梦魇之物。"
-
-	L.killed = "%s已击杀"
 
 	L.warmup_text = "卡兰姆·法师之矛激活"
 	L.warmup_trigger = "你真蠢，居然跟着我来到这里，兄弟。扭曲虚空滋养了我的力量。我的强大已经超出了你的想象！"
@@ -81,7 +78,6 @@ if L then
 	L.warmup_trigger2 = "此刻，我的萨亚德正在诱惑软弱的法师，你的盟友会自愿倒向军团！" -- 16
 	L.warmup_trigger3 = "但，你得先为抢走我的宠物付出代价！" -- 3
 
-	L.absorb = "吸收"
 	L.stacks = "层数"
 end
 
@@ -92,15 +88,12 @@ if L then
 	L.faljar = "符文先知法尔加"
 
 	L.warmup_trigger = "什么？外来者来阻止我了？"
-
-	L.absorb = "吸收"
 end
 
 -- Assault on Violet Hold
 
 L = BigWigs:NewBossLocale("Assault on Violet Hold Trash", "zhCN")
 if L then
-	L.custom_on_autotalk = "自动对话"
 	L.custom_on_autotalk_desc = "立即选择辛克莱尔中尉对话选项开始突袭紫罗兰监狱。"
 	L.keeper = "传送门看护者"
 	L.guardian = "传送门守卫者"
@@ -151,7 +144,6 @@ end
 
 L = BigWigs:NewBossLocale("Domatrax", "zhCN")
 if L then
-	L.custom_on_autotalk = "自动对话"
 	L.custom_on_autotalk_desc = "立即选择阿格拉玛之盾对话开始与多玛塔克斯战斗。"
 
 	L.missing_aegis = "你没站在盾内" -- Aegis is a short name for Aegis of Aggramar
@@ -347,7 +339,6 @@ end
 L = BigWigs:NewBossLocale("Karazhan Trash", "zhCN")
 if L then
 	-- Opera Event
-	L.custom_on_autotalk = "自动对话"
 	L.custom_on_autotalk_desc = "立即选择巴内斯对话选项开始歌剧院战斗。"
 	L.opera_hall_wikket_story_text = "歌剧院：魔法坏女巫"
 	L.opera_hall_wikket_story_trigger = "唱戏的家伙少废话" -- 唱戏的家伙少废话，美猴王有了个新想法！
@@ -429,7 +420,6 @@ end
 
 L = BigWigs:NewBossLocale("Viceroy Nezhar", "zhCN")
 if L then
-	L.tentacles = "触须"
 	L.guards = "影卫"
 	L.interrupted = "%s已打断%s（%.1f秒剩余）！"
 end
@@ -443,7 +433,6 @@ end
 
 L = BigWigs:NewBossLocale("Seat of the Triumvirate Trash", "zhCN")
 if L then
-	L.custom_on_autotalk = "自动对话"
 	L.custom_on_autotalk_desc = "立即选择奥蕾莉亚·风行者对话选项。"
 	L.gossip_available = "可对话"
 	L.alleria_gossip_trigger = "跟我走！" -- Allerias yell after the first boss is defeated
@@ -475,14 +464,8 @@ if L then
 	L.light_dropped = "%s 丢掉了艾露恩之光。"
 	L.light_picked = "%s 拾取了艾露恩之光。"
 
-	L.warmup_text = "科达娜·邪歌激活"
 	L.warmup_trigger = "我拿到想要的东西了。但我要留下来了结你们……永除后患！"
 	L.warmup_trigger_2 = "你们掉进了我的陷阱。让我看看你们在黑暗中的本事吧。"
-end
-
-L = BigWigs:NewBossLocale("Glazer", "zhCN")
-if L then
-	L.radiation_level = "%s：%d%%"
 end
 
 L = BigWigs:NewBossLocale("Tirathon Saltheril", "zhCN")

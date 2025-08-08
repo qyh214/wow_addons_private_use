@@ -1,7 +1,6 @@
 -- De Other Side
 
 local L = BigWigs:NewBossLocale("De Other Side Trash", "deDE")
-if not L then return end
 if L then
 	-- [[ The ring ]] --
 	L.cultist = "Auferstandener Kultist"
@@ -31,16 +30,17 @@ end
 
 L = BigWigs:NewBossLocale("Halls of Atonement Trash", "deDE")
 if L then
-	L.houndmaster = "Verkommener Hundemeister"
-	L.gargon = "Boshafter Gargon"
-	L.loyalstoneborn = "Treuer Steingeborener"
-	L.darkblade = "Verkommene Dunkelklinge"
-	L.obliterator = "Verkommener Vernichter"
-	L.collector = "Verkommener Sammler"
-	L.shard = "Splitter von Halkias"
-	L.reaver = "Steingeborener Häscher"
-	L.slasher = "Steingeborener Schlitzer"
-	L.sigar = "Inquisitor Sigar"
+	L.depraved_houndmaster = "Verkommener Hundemeister"
+	L.vicious_gargon = "Boshafter Gargon"
+	L.loyal_stoneborn = "Treuer Steingeborener"
+	L.depraved_darkblade = "Verkommene Dunkelklinge"
+	L.depraved_obliterator = "Verkommener Vernichter"
+	L.depraved_collector = "Verkommener Sammler"
+	L.stoneborn_slasher = "Steingeborener Schlitzer"
+	L.shard_of_halkias = "Splitter von Halkias"
+	L.stoneborn_reaver = "Steingeborener Häscher"
+	L.stoneborn_eviscerator = "Steingeborene Ausweiderin"
+	L.inquisitor_sigar = "Inquisitor Sigar"
 end
 
 -- Mists of Tirna Scithe
@@ -148,11 +148,6 @@ end
 
 -- Tazavesh, the Veiled Market
 
-L = BigWigs:NewBossLocale("Zo'phex the Sentinel", "deDE")
-if L then
-	L.zophex_warmup_trigger = "Gebt alle... Schmuggelware... ab..."
-end
-
 L = BigWigs:NewBossLocale("The Grand Menagerie", "deDE")
 if L then
 	L.achillite_warmup_trigger = "Ruinieren Euch rasende Riesenbestien den Tag? Wir haben die Lösung!"
@@ -170,16 +165,20 @@ if L then
 	L.add_wave_killed = "Add Welle getötet (%d/%d)"
 end
 
+L = BigWigs:NewBossLocale("So'leah", "deDE")
+if L then
+	L.group = "GRUPPE"
+end
+
 L = BigWigs:NewBossLocale("Tazavesh Trash", "deDE")
 if L then
+	L.zophex_warmup_trigger = "Gebt alle... Schmuggelware... ab..."
 	L.menagerie_warmup_trigger = "Und nun zu dem Posten, auf den alle warten! Die angeblich dämonenverfluchte Schneide des Vergessens!"
 	L.soazmi_warmup_trigger = "Entschuldigt unser Eindringen, So'leah. Ich hoffe, wir stören."
 	L.portal_authority = "Portalbehörde von Tazavesh"
-	L.custom_on_portal_autotalk = "Automatisch ansprechen"
 	L.custom_on_portal_autotalk_desc = "Portale zurück zum Eingang sofort öffnen wenn mit Mittlern gesprochen wird."
 	L.trading_game = "Handels-Event"
 	L.trading_game_desc = "Warnungen mit korrektem Password während des Handels-Event."
-	L.custom_on_trading_game_autotalk = "Automatisch ansprechen"
 	L.custom_on_trading_game_autotalk_desc = "Wählt direkt das korrekte Passwort nach Abschluss des Handels-Events."
 	L.password_triggers = {
 		["Elfenbeinmuschel"] = 53259,
@@ -193,28 +192,37 @@ if L then
 		["Fahlblume"] = 53267,
 		["Purpurmesser"] = 53268
 	}
+	L.gatewarden_zomazz = "Torwächter Zo'mazz"
+	L.customs_security = "Zollsicherheit"
 	L.interrogation_specialist = "Verhörspezialist"
 	L.portalmancer_zohonn = "Portalmagier Zo'honn"
-	L.armored_overseer_tracker_zokorss = "Gepanzerter Aufseher / Fährtenleser Zo'korss"
+	L.armored_overseer = "Gepanzerter Aufseher"
+	L.support_officer = "Unterstützungsoffizier"
 	L.tracker_zokorss = "Fährtenleser Zo'korss"
 	L.ancient_core_hound = "Uralter Kernhund"
 	L.enraged_direhorn = "Wütendes Terrorhorn"
+	L.cartel_skulker = "Kartellschleicher"
+	L.cartel_wiseguy = "Kartellmitglied"
 	L.cartel_muscle = "Kartellkraftprotz"
 	L.cartel_smuggler = "Kartellschmuggler"
-	L.support_officer = "Unterstützungsoffizier"
 	L.defective_sorter = "Defekter Sortierer"
+	L.overloaded_mailemental = "Überladener Eilementarl"
+	L.post_worker = "P.O.S.T.-Mitarbeiter"
+	--L.bazaar_overseer = "Bazaar Overseer"
 	L.market_peacekeeper = "Friedensbewahrer des Marktes"
 	L.veteran_sparkcaster = "Erfahrener Funkenzauberer"
 	L.commerce_enforcer = "Handelsvollstrecker"
-	L.commerce_enforcer_commander_zofar = "Handelsvollstrecker / Kommandant Zo'far"
 	L.commander_zofar = "Kommandant Zo'far"
 
 	L.tazavesh_soleahs_gambit = "Tazavesh: So'leahs Schachzug"
 	L.murkbrine_scalebinder = "Schuppenbinder der Finstergischt"
+	L.murkbrine_fishmancer = "Fischomant der Finstergischt"
 	L.murkbrine_shellcrusher = "Panzerbrecher der Finstergischt"
 	L.coastwalker_goliath = "Küstenschreitergoliath"
 	L.stormforged_guardian = "Sturmgeschmiedeter Wächter"
 	L.burly_deckhand = "Bulliger Deckmatrose"
+	L.hourglass_tidesage = "Gezeitenweiser der Stundenglas"
+	L.corsair_officer = "Offizier der Korsaren"
 	L.adorned_starseer = "Geschmückter Sternenseher"
 	L.focused_ritualist = "Fokussierter Ritualist"
 	L.devoted_accomplice = "Hingebungsvoller Komplize"

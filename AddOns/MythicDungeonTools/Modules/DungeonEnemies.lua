@@ -374,6 +374,12 @@ local createEnemyContextMenu = function(frame)
       submenu:CreateRadio(iconPath.." "..iconName, IsSelected, SetSelected, { enemyIdx = frame.enemyIdx, cloneIdx = frame.cloneIdx, index = i })
     end
     submenu:CreateRadio(L["None"], IsSelected, SetSelected, { enemyIdx = frame.enemyIdx, cloneIdx = frame.cloneIdx, index = 0 })
+    submenu:CreateButton(L["Clear all Markers"], function()
+      twipe(assignments)
+      MDT:Async(function()
+        MDT:DungeonEnemies_UpdateEnemiesAsync()
+      end, "ClearAllMarkers")
+    end)
     rootDescription:CreateButton(L["Open Enemy Info"], function()
       MDT:ShowEnemyInfoFrame(frame)
     end)
@@ -598,8 +604,8 @@ function MDT:DisplayBlipTooltip(blip, shown)
 
   -- if this mob grants a bonus buff, show it in the tooltip ad-hoc
   if blip.data.bonusSpell then
-    local name, _, icon = GetSpellInfo(blip.data.bonusSpell)
-    local bonusDesc = GetSpellDescription(blip.data.bonusSpell)
+    local name, _, icon = C_Spell.GetSpellInfo(blip.data.bonusSpell)
+    local bonusDesc = C_Spell.GetSpellDescription(blip.data.bonusSpell)
     local bonusIcon = tooltip.bonusIcon or tooltip:CreateTexture(nil, "OVERLAY", nil, 0);
     bonusIcon:SetWidth(54);
     bonusIcon:SetHeight(54);
@@ -1004,6 +1010,24 @@ function MDT:GetBlip(enemyIdx, cloneIdx)
   end
 end
 
+local function isCloneConstrained(clone)
+  if not clone.constrained then return false end
+  local amount = 0
+  local data = MDT.dungeonEnemies[db.currentDungeonIdx]
+  for enemyIdx, enemy in pairs(data) do
+    for cloneIdx, c in pairs(enemy.clones) do
+      if c.constrained and c.constrained.index == clone.constrained.index and MDT:IsCloneInPulls(enemyIdx, cloneIdx) then
+        amount = amount + 1
+      end
+    end
+  end
+  if amount >= clone.constrained.amount then
+    print(L["MDT: Cannot add enemy - you are trying to add too many enemies of the same kind"])
+    return true
+  end
+  return false
+end
+
 ---DungeonEnemies_AddOrRemoveBlipToCurrentPull
 ---Adds or removes an enemy clone and all it's linked npcs to the currently selected pull
 function MDT:DungeonEnemies_AddOrRemoveBlipToCurrentPull(blip, add, ignoreGrouped, pulls, pull, ignoreUpdates)
@@ -1026,6 +1050,7 @@ function MDT:DungeonEnemies_AddOrRemoveBlipToCurrentPull(blip, add, ignoreGroupe
     -- if not ignoreUpdates then self:UpdatePullButtonNPCData(pullIdx) end
   end
   if add then
+    if isCloneConstrained(blip.clone) then return end
     if blip then blip.selected = true end
     local found = false
     for _, v in pairs(pulls[pull][enemyIdx]) do

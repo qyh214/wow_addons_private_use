@@ -1,0 +1,15 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+    <!-- Load -->
+    <Script file="Load.lua"/>
+
+    <!-- Core -->
+    <Script file="Core/ContextMenu_Script.lua"/>
+    <Script file="Core/ContextMenu_Variables.lua"/>
+	<Script file="Core/ContextMenu_Elements.lua"/>
+
+	<!-- Prefabs -->
+	<Script file="Prefabs/Prefabs_ContextMenu.lua"/>
+	<Script file="Prefabs/Prefabs_ContextMenu_Templates_Mixin.lua"/>
+	<Include file="Prefabs/Prefabs_ContextMenu_Templates.xml"/>
+</Ui>

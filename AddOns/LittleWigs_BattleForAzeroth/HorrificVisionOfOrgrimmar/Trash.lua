@@ -32,6 +32,7 @@ mod:RegisterEnableMob(
 	153942, -- Annihilator Lak'hal
 	153401, -- K'thir Dominator
 	157610, -- K'thir Dominator
+	244186, -- K'thir Dominator (Revisited only)
 	154524, -- K'thir Mindcarver
 	157609, -- K'thir Mindcarver
 	156653, -- Coagulated Horror
@@ -42,7 +43,9 @@ mod:RegisterEnableMob(
 	153532, -- Aqir Mindhunter
 	156089, -- Aqir Venomweaver
 	153526, -- Aqir Swarmer
-	153527 -- Aqir Swarmer
+	153527, -- Aqir Swarmer
+	241702, -- Gamon (Gamon's Axe) (Revisited only)
+	240672 -- Gamon (Mask of the Nemesis) (Revisited only)
 )
 
 --------------------------------------------------------------------------------
@@ -51,6 +54,15 @@ mod:RegisterEnableMob(
 
 local L = mod:GetLocale()
 if L then
+	L.sanity_change = "%d Sanity"
+	L.madnesses = "Madnesses"
+	L.potions = "Potions"
+	L.buffs = "Buffs"
+	L.slowed = "Slowed"
+	L.sluggish_potion_effect = "Heal 2% every 5 sec"
+	L.sickening_potion_effect = "5% damage reduction"
+	L.spicy_potion_effect = "Breathe fire"
+
 	L.voidbound_shaman = "Voidbound Shaman"
 	L.endless_hunger_totem = "Endless Hunger Totem"
 	L.crawling_corruption = "Crawling Corruption"
@@ -76,9 +88,7 @@ if L then
 	L.aqir_bonecrusher = "Aqir Bonecrusher"
 	L.aqir_mindhunter = "Aqir Mindhunter"
 	L.aqir_venomweaver = "Aqir Venomweaver"
-
-	L["298074_icon"] = 305155 -- Rupture
-	L["298074_desc"] = 305155 -- Rupture
+	L.gamon = "Gamon"
 end
 
 --------------------------------------------------------------------------------
@@ -91,10 +101,27 @@ function mod:GetOptions()
 		-- General
 		"altpower",
 		autotalk,
-		{311996, "CASTBAR"}, -- Open Vision
+		{311996, "CASTBAR", "CASTBAR_COUNTDOWN"}, -- Open Vision
 		307870, -- Sanity Restoration Orb
-		311390, -- Madness: Entomophobia
+		-- Madnesses
+		{311390, "EMPHASIZE"}, -- Madness: Entomophobia
+		292240, -- Entomophobia
 		306583, -- Leaden Foot
+		315385, -- Scorched Feet
+		313303, -- Burned Bridge
+		-- Potions
+		315814, -- Fermented Mixture
+		315807, -- Noxious Mixture
+		315845, -- Sluggish Potion
+		315849, -- Sickening Potion
+		315817, -- Spicy Potion
+		-- Buffs
+		313698, -- Gift of the Titans
+		312456, -- Elite Extermination
+		313770, -- Smith's Strength
+		1225675, -- Prohibition
+		313670, -- Spirit of Wind
+		313961, -- Ethereal Essence
 		-- Voidbound Shaman
 		{297237, "NAMEPLATE"}, -- Endless Hunger Totem
 		-- Endless Hunger Totem
@@ -154,8 +181,14 @@ function mod:GetOptions()
 		-- Aqir Venomweaver
 		{312584, "NAMEPLATE"}, -- Concentrated Venom
 		{305236, "OFF"}, -- Venom Bolt
+		-- Gamon
+		{314720, "NAMEPLATE"}, -- Whirlwind
+		{314723, "NAMEPLATE"}, -- War Stomp
 	}, {
 		["altpower"] = "general",
+		[311390] = L.madnesses,
+		[315814] = L.potions,
+		[313698] = L.buffs,
 		[297237] = L.voidbound_shaman,
 		[297302] = L.endless_hunger_totem,
 		[296510] = L.crawling_corruption,
@@ -179,6 +212,7 @@ function mod:GetOptions()
 		[298502] = L.aqir_bonecrusher,
 		[304169] = L.aqir_mindhunter,
 		[312584] = L.aqir_venomweaver,
+		[314720] = L.gamon,
 	}
 end
 
@@ -190,15 +224,27 @@ function mod:OnBossEnable()
 	self:RegisterEvent("GOSSIP_SHOW")
 
 	self:RegisterEvent("UNIT_SPELLCAST_START") -- Open Vision
-	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED") -- Rupture
+	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED") -- War Stomp
 
 	-- Sanity Restoration Orb
 	self:Log("SPELL_CAST_START", "SanityRestorationOrb", 307870)
 
 	-- Madnesses
 	self:Log("SPELL_AURA_APPLIED_DOSE", "MadnessEntomophobiaApplied", 311390)
+	self:Log("SPELL_AURA_APPLIED", "EntomophobiaApplied", 292240)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "LeadenFootApplied", 306583)
-	self:Log("SPELL_AURA_REMOVED", "LeadenFootRemoved", 306583)
+	self:Log("SPELL_AURA_APPLIED", "ScorchedFeetApplied", 315385)
+	self:Log("SPELL_PERIODIC_ENERGIZE", "BurnedBridge", 313303)
+
+	-- Potions
+	self:Log("SPELL_ENERGIZE", "FermentedMixture", 315814)
+	self:Log("SPELL_ENERGIZE", "NoxiousMixture", 315807)
+	self:InitBuffs() -- reload protection
+	self:RegisterUnitEvent("UNIT_AURA", nil, "player")
+
+	-- Buffs
+	self:Log("SPELL_ENERGIZE", "EliteExtermination", 312456)
+	self:Log("SPELL_AURA_APPLIED", "BuffApplied", 313770, 1225675, 313670, 313961) -- Smith's Strength, Prohibition, Spirit of Wind, Ethereal Essence
 
 	-- Voidbound Shaman
 	self:Log("SPELL_CAST_SUCCESS", "EndlessHungerTotem", 297237)
@@ -233,7 +279,7 @@ function mod:OnBossEnable()
 	self:Log("SPELL_INTERRUPT", "ForgeBreathInterrupt", 306770)
 	self:Log("SPELL_CAST_SUCCESS", "ForgeBreathSuccess", 306770)
 	self:Log("SPELL_CAST_SUCCESS", "ShadowBrand", 319304)
-	self:Log("SPELL_AURA_APPLIED", "ShadowBrandApplied", 319304)
+	self:Log("SPELL_AURA_APPLIED", "ShadowBrandAppliedNaros", 319304)
 	self:Death("NarosDeath", 158565)
 
 	-- Barkeep Morag
@@ -269,6 +315,9 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "DarkSmash", 296718)
 	self:Death("FacelessWillbreakerDeath", 152987, 157608, 164188) -- Faceless Willbreaker, Faceless Willbreaker, Horrific Figment
 
+	-- Burrowing Appendage
+	self:Log("SPELL_CAST_SUCCESS", "Rupture", 298074)
+
 	-- Annihilator Lak'hal
 	self:RegisterEngageMob("AnnihilatorLakhalEngaged", 153942)
 	self:Log("SPELL_CAST_START", "OrbOfAnnihilation", 299110)
@@ -276,11 +325,11 @@ function mod:OnBossEnable()
 	self:Death("AnnihilatorLakhalDeath", 153942)
 
 	-- K'thir Dominator
-	self:RegisterEngageMob("KthirDominatorEngaged", 153401, 157610)
+	self:RegisterEngageMob("KthirDominatorEngaged", 153401, 157610, 244186)
 	self:Log("SPELL_CAST_START", "TouchOfTheAbyss", 298033)
 	self:Log("SPELL_INTERRUPT", "TouchOfTheAbyssInterrupt", 298033)
 	self:Log("SPELL_CAST_SUCCESS", "TouchOfTheAbyssSuccess", 298033)
-	self:Death("KthirDominatorDeath", 153401, 157610)
+	self:Death("KthirDominatorDeath", 153401, 157610, 244186)
 
 	-- K'thir Mindcarver
 	self:RegisterEvent("UNIT_POWER_FREQUENT")
@@ -324,7 +373,11 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "VenomBolt", 305236)
 	self:Death("AqirVenomweaverDeath", 156089)
 
-	-- Dark Smash from Horrific Figment should be in both (already in SW?)
+	-- Gamon
+	self:RegisterEngageMob("GamonEngaged", 241702, 240672) -- Gamon's Axe, Mask of the Nemesis
+	self:Log("SPELL_CAST_START", "Whirlwind", 314720)
+	--self:Log("SPELL_CAST_SUCCESS", "WarStomp", 314723) no CLEU
+	self:Death("GamonDeath", 241702, 240672) -- Gamon's Axe, Mask of the Nemesis
 end
 
 function mod:VerifyEnable()
@@ -354,21 +407,17 @@ function mod:UNIT_SPELLCAST_START(event, _, _, spellId)
 	if spellId == 311996 then -- Open Vision
 		self:UnregisterEvent(event)
 		self:Message(spellId, "cyan")
-		self:CastBar(spellId, 10) -- Open Vision
+		self:CastBar(spellId, 10)
 		self:PlaySound(spellId, "long")
 	end
 end
 
 do
-	local prev = 0
-	function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, _, spellId)
-		if spellId == 298074 then -- Rupture (Burrowing Appendage)
-			local t = GetTime()
-			if t - prev > 2 then
-				prev = t
-				self:Message(spellId, "orange", nil, L["298074_icon"])
-				self:PlaySound(spellId, "alarm")
-			end
+	local prevCast = nil
+	function mod:UNIT_SPELLCAST_SUCCEEDED(_, unit, castGUID, spellId)
+		if spellId == 314723 and castGUID ~= prevCast then -- War Stomp (Gamon)
+			prevCast = castGUID
+			self:WarStomp({sourceGUID = self:UnitGUID(unit)})
 		end
 	end
 end
@@ -385,28 +434,185 @@ end
 function mod:MadnessEntomophobiaApplied(args)
 	local amount = args.amount or 1
 	if self:Me(args.destGUID) and amount >= 3 then
-		self:StackMessage(args.spellId, "blue", args.destName, amount, 3)
+		self:StackMessage(args.spellId, "blue", args.destName, amount, 5)
 		self:PlaySound(args.spellId, "info")
 	end
 end
 
+function mod:EntomophobiaApplied(args)
+	if self:Me(args.destGUID) then
+		self:PersonalMessage(args.spellId)
+		self:PlaySound(args.spellId, "warning")
+	end
+end
+
+function mod:LeadenFootApplied(args)
+	local amount = args.amount or 1
+	if self:Me(args.destGUID) and amount % 5 == 0 and amount >= 10 then
+		self:StackMessage(args.spellId, "blue", args.destName, amount, 10)
+		self:PlaySound(args.spellId, "alert")
+	end
+end
+
+function mod:ScorchedFeetApplied(args)
+	if self:Me(args.destGUID) then
+		self:PersonalMessage(args.spellId)
+		self:PlaySound(args.spellId, "info")
+	end
+end
+
+function mod:BurnedBridge(args)
+	if self:Me(args.destGUID) then
+		local sanityLost = args.extraSpellId -- will be a negative number representing Sanity lost
+		self:Message(args.spellId, "blue", CL.other:format(CL.underyou:format(args.spellName), L.sanity_change:format(sanityLost)))
+		self:PlaySound(args.spellId, "underyou")
+	end
+end
+
+-- Potions
+
+function mod:FermentedMixture(args)
+	if self:Me(args.destGUID) then
+		local sanityGained = args.extraSpellId -- will be a positive number representing Sanity gained
+		self:Message(args.spellId, "green", CL.other:format(args.spellName, L.sanity_change:format(sanityGained)))
+		self:PlaySound(args.spellId, "info")
+	end
+end
+
+function mod:NoxiousMixture(args)
+	if self:Me(args.destGUID) then
+		local sanityLost = args.extraSpellId -- will be a negative number representing Sanity lost
+		self:Message(args.spellId, "yellow", CL.other:format(args.spellName, L.sanity_change:format(sanityLost)))
+		self:PlaySound(args.spellId, "warning")
+	end
+end
+
 do
-	local showRemovedWarning = false
-	function mod:LeadenFootApplied(args)
-		local amount = args.amount or 1
-		if self:Me(args.destGUID) and amount % 5 == 0 and amount >= 10 then
-			showRemovedWarning = true
-			self:StackMessage(args.spellId, "blue", args.destName, amount, 10)
-			self:PlaySound(args.spellId, "alert")
+	local trackedBuffs = {
+		[315845] = true, -- Sluggish Potion
+		[315849] = true, -- Sickening Potion
+		[315817] = true, -- Spicy Potion
+		[313698] = true, -- Gift of the Titans
+	}
+	local activeBuffs = {}
+
+	function mod:InitBuffs() -- reload protection
+		activeBuffs = {}
+		for spellId in next, trackedBuffs do
+			local auraTbl = self:GetPlayerAura(spellId)
+			if auraTbl then
+				activeBuffs[auraTbl.auraInstanceID] = {auraTbl.expirationTime, spellId}
+				if spellId == 315845 then -- Sluggish Potion
+					self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.sluggish_potion_effect)
+				elseif spellId == 315849 then -- Sickening Potion
+					self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.sickening_potion_effect)
+				elseif spellId == 315817 then -- Spicy Potion
+					self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.spicy_potion_effect)
+				elseif spellId == 313698 then -- Gift of the Titans
+					self:Bar(spellId, auraTbl.expirationTime - GetTime())
+				end
+			end
 		end
 	end
 
-	function mod:LeadenFootRemoved(args)
-		if self:Me(args.destGUID) and showRemovedWarning then
-			showRemovedWarning = false
-			self:Message(args.spellId, "green", CL.removed:format(args.spellName))
-			self:PlaySound(args.spellId, "info")
+	function mod:UNIT_AURA(_, _, updateInfo)
+		if not updateInfo or updateInfo.isFullUpdate then
+			self:InitBuffs()
+		else
+			if updateInfo.addedAuras then
+				for i = 1, #updateInfo.addedAuras do
+					local auraTbl = updateInfo.addedAuras[i]
+					local spellId = auraTbl.spellId
+
+					if trackedBuffs[spellId] then
+						activeBuffs[auraTbl.auraInstanceID] = {auraTbl.expirationTime, spellId}
+						if spellId == 315845 then -- Sluggish Potion
+							self:Message(spellId, "green", CL.other:format(CL.you:format(auraTbl.name), L.sluggish_potion_effect))
+							self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.sluggish_potion_effect)
+							self:PlaySound(spellId, "info")
+						elseif spellId == 315849 then -- Sickening Potion
+							self:Message(spellId, "green", CL.other:format(CL.you:format(auraTbl.name), L.sickening_potion_effect))
+							self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.sickening_potion_effect)
+							self:PlaySound(spellId, "info")
+						elseif spellId == 315817 then -- Spicy Potion
+							self:Message(spellId, "green", CL.other:format(CL.you:format(auraTbl.name), L.spicy_potion_effect))
+							self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.spicy_potion_effect)
+							self:PlaySound(spellId, "info")
+						elseif spellId == 313698 then -- Gift of the Titans
+							self:Message(spellId, "green", CL.you:format(auraTbl.name))
+							self:Bar(spellId, auraTbl.expirationTime - GetTime())
+							self:PlaySound(spellId, "long")
+						end
+					end
+				end
+			end
+			if updateInfo.removedAuraInstanceIDs then
+				for i = 1, #updateInfo.removedAuraInstanceIDs do
+					local hadBuff = activeBuffs[updateInfo.removedAuraInstanceIDs[i]]
+					if hadBuff then
+						local spellId = hadBuff[2]
+						activeBuffs[updateInfo.removedAuraInstanceIDs[i]] = nil
+						if spellId == 315845 then -- Sluggish Potion
+							self:Message(spellId, "blue", CL.other:format(CL.removed:format(self:SpellName(spellId)), L.slowed))
+							self:StopBar(L.sluggish_potion_effect)
+							self:PlaySound(spellId, "warning")
+						elseif spellId == 315849 then -- Sickening Potion
+							self:Message(spellId, "blue", CL.other:format(CL.removed:format(self:SpellName(spellId)), self:SpellName(315850))) -- Vomit
+							self:StopBar(L.sickening_potion_effect)
+							self:PlaySound(spellId, "warning")
+						elseif spellId == 315817 then -- Spicy Potion
+							self:Message(spellId, "blue", CL.other:format(CL.removed:format(self:SpellName(spellId)), self:SpellName(315818))) -- Burning
+							self:StopBar(L.spicy_potion_effect)
+							self:PlaySound(spellId, "warning")
+						elseif spellId == 313698 then -- Gift of the Titans
+							self:StopBar(spellId)
+						end
+					end
+				end
+			end
+			if updateInfo.updatedAuraInstanceIDs then
+				for i = 1, #updateInfo.updatedAuraInstanceIDs do
+					local hadBuff = activeBuffs[updateInfo.updatedAuraInstanceIDs[i]]
+					if hadBuff then
+						local spellId = hadBuff[2]
+						local auraTbl = self:GetPlayerAura(spellId)
+						if hadBuff[1] ~= auraTbl.expirationTime then
+							activeBuffs[updateInfo.updatedAuraInstanceIDs[i]][1] = auraTbl.expirationTime
+							if spellId == 315845 then -- Sluggish Potion
+								self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.sluggish_potion_effect)
+							elseif spellId == 315849 then -- Sickening Potion
+								self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.sickening_potion_effect)
+							elseif spellId == 315817 then -- Spicy Potion
+								self:Bar(spellId, auraTbl.expirationTime - GetTime(), L.spicy_potion_effect)
+							elseif spellId == 313698 then -- Gift of the Titans
+								self:Bar(spellId, auraTbl.expirationTime - GetTime())
+							end
+						end
+					end
+				end
+			end
 		end
+	end
+end
+
+-- Buffs
+
+function mod:EliteExtermination(args)
+	if self:Me(args.destGUID) then
+		local sanityGained = args.extraSpellId -- will be a positive number representing Sanity gained
+		self:Message(args.spellId, "green", CL.other:format(args.spellName, L.sanity_change:format(sanityGained)))
+		self:PlaySound(args.spellId, "info")
+	end
+end
+
+function mod:BuffApplied(args)
+	if self:Me(args.destGUID) then
+		if self:Solo() then
+			self:Message(args.spellId, "green", CL.you:format(args.spellName))
+		else
+			self:Message(args.spellId, "green", CL.on_group:format(args.spellName))
+		end
+		self:PlaySound(args.spellId, "info")
 	end
 end
 
@@ -568,7 +774,7 @@ do
 		timer = self:ScheduleTimer("NarosDeath", 30, nil, args.sourceGUID)
 	end
 
-	function mod:ShadowBrandApplied(args)
+	function mod:ShadowBrandAppliedNaros(args)
 		if self:Me(args.destGUID) or self:Dispeller("curse", nil, args.spellId) then
 			self:TargetMessage(args.spellId, "yellow", args.destName)
 			self:PlaySound(args.spellId, "alert", nil, args.destName)
@@ -670,10 +876,14 @@ end
 
 -- Voidbound Berserker
 
-function mod:ShadowBrandApplied(args)
-	if self:Me(args.destGUID) or self:Dispeller("curse", nil, args.spellId) then
-		self:TargetMessage(args.spellId, "yellow", args.destName)
-		self:PlaySound(args.spellId, "alert", nil, args.destName)
+do
+	local prev = 0
+	function mod:ShadowBrandApplied(args)
+		if (self:Me(args.destGUID) or self:Dispeller("curse", nil, args.spellId)) and args.time - prev > 2 then
+			prev = args.time
+			self:TargetMessage(args.spellId, "yellow", args.destName)
+			self:PlaySound(args.spellId, "alert", nil, args.destName)
+		end
 	end
 end
 
@@ -745,14 +955,33 @@ function mod:FacelessWillbreakerEngaged(guid)
 	self:Nameplate(296718, 3.4, guid) -- Dark Smash
 end
 
-function mod:DarkSmash(args)
-	self:Message(args.spellId, "orange")
-	self:Nameplate(args.spellId, 7.2, args.sourceGUID)
-	self:PlaySound(args.spellId, "alarm")
+do
+	local prev = 0
+	function mod:DarkSmash(args)
+		self:Nameplate(args.spellId, 7.2, args.sourceGUID)
+		if args.time - prev > 2 then
+			prev = args.time
+			self:Message(args.spellId, "orange")
+			self:PlaySound(args.spellId, "alarm")
+		end
+	end
 end
 
 function mod:FacelessWillbreakerDeath(args)
 	self:ClearNameplate(args.destGUID)
+end
+
+-- Burrowing Appendage
+
+do
+	local prev = 0
+	function mod:Rupture(args)
+		if args.time - prev > 2 then
+			prev = args.time
+			self:Message(args.spellId, "orange")
+			self:PlaySound(args.spellId, "alarm")
+		end
+	end
 end
 
 -- Annihilator Lak'hal
@@ -1075,4 +1304,52 @@ end
 
 function mod:AqirVenomweaverDeath(args)
 	self:ClearNameplate(args.destGUID)
+end
+
+-- Gamon
+
+do
+	local timer
+
+	function mod:GamonEngaged(guid)
+		self:CDBar(314720, 2.0) -- Whirlwind
+		self:Nameplate(314720, 2.0, guid) -- Whirlwind
+		self:CDBar(314723, 5.5) -- War Stomp
+		self:Nameplate(314723, 5.5, guid) -- War Stomp
+		timer = self:ScheduleTimer("GamonDeath", 20, nil, guid)
+	end
+
+	function mod:Whirlwind(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "orange")
+		self:CDBar(args.spellId, 7.2)
+		self:Nameplate(args.spellId, 7.2, args.sourceGUID)
+		timer = self:ScheduleTimer("GamonDeath", 30, nil, args.sourceGUID)
+		self:PlaySound(args.spellId, "alarm")
+	end
+
+	function mod:WarStomp(args) -- not in CLEU, so can't use args.spellId
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(314723, "yellow")
+		self:CDBar(314723, 15.7)
+		if args.sourceGUID then -- remove check if this is added to CLEU
+			self:Nameplate(314723, 15.7, args.sourceGUID)
+			timer = self:ScheduleTimer("GamonDeath", 30, nil, args.sourceGUID)
+		end
+		self:PlaySound(314723, "info")
+	end
+
+	function mod:GamonDeath(args, guidFromTimer)
+		if timer then
+			self:CancelTimer(timer)
+			timer = nil
+		end
+		self:StopBar(314720) -- Whirlwind
+		self:StopBar(314723) -- War Stomp
+		self:ClearNameplate(guidFromTimer or args.destGUID)
+	end
 end

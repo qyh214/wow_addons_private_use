@@ -149,7 +149,7 @@ function mod:Thundercrash(args)
 end
 
 function mod:EnlargeApplied(args)
-	self:Message(args.spellId, "orange", CL.buff_other:format(args.destName, args.spellName))
+	self:Message(args.spellId, "orange", CL.magic_buff_other:format(args.destName, args.spellName))
 	if self:Dispeller("magic", true) then
 		self:PlaySound(args.spellId, "alarm")
 	end

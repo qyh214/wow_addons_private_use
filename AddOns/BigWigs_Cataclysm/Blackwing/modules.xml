@@ -8,6 +8,6 @@
 <Script file="Maloriak.lua" />
 <Script file="Nefarian.lua" />
 
-<Include file="Options\options.xml"/>
+<Script file="!Options.lua"/>
 
 </Ui>

@@ -4,8 +4,6 @@ if L then
 	L.add_death = "Aviso de muerte de esbirros"
 	L.add_death_desc = "Avisa cuando muere un esbirro."
 
-	L.wave = "%d/22: %s"
-
 	L.trainee = "Practicante" -- Unrelenting Trainee NPC 16124
 	L.deathKnight = "Caballero de la Muerte" -- Unrelenting Death Knight NPC 16125
 	L.rider = "Jinete" -- Unrelenting Rider NPC 16126

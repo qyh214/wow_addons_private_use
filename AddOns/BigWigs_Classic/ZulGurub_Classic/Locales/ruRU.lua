@@ -2,13 +2,6 @@ local L = BigWigs:NewBossLocale("High Priestess Jeklik", "ruRU")
 if not L then return end
 if L then
 	L.bossName = "Верховная жрица Джеклик"
-
-	-- L.swarm_desc = "Warn for the Bat swarms"
-	-- L.swarm_message = "Incoming bat swarm!"
-
-	-- L.bomb_desc = "Warn for Bomb Bats"
-	-- L.bomb_trigger = "I command you to rain fire down upon these invaders!"
-	-- L.bomb_message = "Incoming bomb bats!"
 end
 
 L = BigWigs:NewBossLocale("High Priest Venoxis", "ruRU")
@@ -38,8 +31,6 @@ end
 L = BigWigs:NewBossLocale("Hakkar", "ruRU")
 if L then
 	L.bossName = "Хаккар"
-
-	-- L.mc_bar = "MC: %s"
 end
 
 L = BigWigs:NewBossLocale("Bloodlord Mandokir", "ruRU")
@@ -50,8 +41,6 @@ end
 L = BigWigs:NewBossLocale("Jin'do the Hexxer", "ruRU")
 if L then
 	L.bossName = "Проклинатель Джин'до"
-
-	L.brain_wash_message = "Зомбирующего тотема"
 end
 
 L = BigWigs:NewBossLocale("Gahz'ranka", "ruRU")

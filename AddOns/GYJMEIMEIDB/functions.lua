@@ -15,3 +15,9 @@ function GYJMEIMEIAPI:GetCastInfo(unit)
     end
     return name, duration, expirationTime, icon, notInterruptible, spellID, castType
 end
+
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("PLAYER_LOGIN")
+frame:SetScript("OnEvent", function(self, event)
+    print("|cffffc0cbGYJMEIMEIDB:插件版本20250426|r")
+end)

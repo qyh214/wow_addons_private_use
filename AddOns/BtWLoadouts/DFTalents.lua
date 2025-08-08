@@ -103,7 +103,7 @@ local function RefreshSet(set)
                 local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID);
                 -- Ignore invisible nodes and hero talents
                 if nodeInfo.isVisible and nodeInfo.type ~= Enum.TraitNodeType.SubTreeSelection and nodeInfo.subTreeID == nil then
-                    if #nodeInfo.entryIDs > 1 then
+                    if nodeInfo.type == Enum.TraitNodeType.Selection and #nodeInfo.entryIDs > 1 then
                         if nodeInfo.activeEntry then
                             for index,entryID in ipairs(nodeInfo.entryIDs) do
                                 if entryID == nodeInfo.activeEntry.entryID then
@@ -204,7 +204,7 @@ local function IsSetActive(set)
     for nodeID,value in pairs(set.nodes) do
         local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID);
         if nodeInfo and nodeInfo.isVisible then
-            if #nodeInfo.entryIDs > 1 then
+            if nodeInfo.type == Enum.TraitNodeType.Selection and #nodeInfo.entryIDs > 1 then
                 if not nodeInfo.activeEntry then
                     return false;
                 end
@@ -258,7 +258,7 @@ local function SetRequirements(set)
         local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID);
         if nodeInfo.isVisible and nodeInfo.subTreeID == nil then
             local value = set.nodes[nodeID];
-            if #nodeInfo.entryIDs > 1 then
+            if nodeInfo.type == Enum.TraitNodeType.Selection and #nodeInfo.entryIDs > 1 then
                 -- Talent is selected, we either dont want a talent or its the wront talent
                 if nodeInfo.activeEntry and nodeInfo.activeEntry.entryID and (not value or nodeInfo.entryIDs[value] ~= nodeInfo.activeEntry.entryID) then
                     isActive = false;
@@ -489,7 +489,7 @@ function Internal.RefreshSetFromConfigID(set, configID)
         local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID);
         -- Ignore invisible nodes and hero talents
         if nodeInfo.isVisible and nodeInfo.type ~= Enum.TraitNodeType.SubTreeSelection and nodeInfo.subTreeID == nil then
-            if #nodeInfo.entryIDs > 1 then
+            if nodeInfo.type == Enum.TraitNodeType.Selection and #nodeInfo.entryIDs > 1 then
                 if nodeInfo.activeEntry then
                     for index,entryID in ipairs(nodeInfo.entryIDs) do
                         if entryID == nodeInfo.activeEntry.entryID then
@@ -1277,7 +1277,7 @@ function BtWLoadoutsDFTalentsMixin:UpdateTreeCurrencyInfo(skipButtonUpdates)
         local value = self.set.nodes[nodeID];
         if value then
             local nodeInfo = Internal.GetNodeInfoBySpecID(self.set.specID, nodeID);
-            if #nodeInfo.entryIDs > 1 then
+            if nodeInfo.type == Enum.TraitNodeType.Selection and #nodeInfo.entryIDs > 1 then
                 value = 1;
             end
             if nodeInfo.costs then
@@ -1341,15 +1341,7 @@ function BtWLoadoutsDFTalentsMixin:GetAndCacheNodeInfo(nodeID)
         end
 
         if self.set.nodes[nodeID] then
-            if #result.entryIDs == 1 then
-                if result.maxRanks < self.set.nodes[nodeID] then
-                    self.set.nodes[nodeID] = result.maxRanks;
-                end
-                result.activeRank = self.set.nodes[nodeID];
-                result.currentRank = self.set.nodes[nodeID];
-                result.ranksPurchased = self.set.nodes[nodeID];
-                result.activeEntry.rank = self.set.nodes[nodeID];
-            else
+            if result.type == Enum.TraitNodeType.Selection and #result.entryIDs > 1 then
                 result.activeRank = 1;
                 result.currentRank = 1;
                 result.ranksPurchased = 1;
@@ -1357,9 +1349,25 @@ function BtWLoadoutsDFTalentsMixin:GetAndCacheNodeInfo(nodeID)
                     entryID = result.entryIDs[self.set.nodes[nodeID]],
                     rank = 1,
                 }
+            else
+                if result.maxRanks < self.set.nodes[nodeID] then
+                    self.set.nodes[nodeID] = result.maxRanks;
+                end
+                result.activeRank = self.set.nodes[nodeID];
+                result.currentRank = self.set.nodes[nodeID];
+                result.ranksPurchased = self.set.nodes[nodeID];
+                result.activeEntry = {
+                    entryID = result.entryIDs[1],
+                    rank = self.set.nodes[nodeID],
+                }
             end
-        elseif #result.entryIDs > 1 then
+        elseif result.type == Enum.TraitNodeType.Selection and #result.entryIDs > 1 then
             result.activeEntry = nil;
+        else
+            result.activeEntry = {
+                entryID = result.entryIDs[1],
+                rank = 0,
+            }
         end
 
         return result;
@@ -1401,7 +1409,7 @@ function BtWLoadoutsDFTalentsMixin:GetAndCacheCondInfo(condID)
                 for _,nodeID in ipairs(C_Traits.GetTreeNodes(tree.ID)) do
                     local nodeInfo = Internal.GetNodeInfoBySpecID(self.set.specID, nodeID);
                     if nodeInfo and self.set.nodes[nodeID] and not tContains(nodeInfo.conditionIDs, gate.conditionID) then
-                        local purchased = #nodeInfo.entryIDs == 1 and self.set.nodes[nodeID] or 1;
+                        local purchased = nodeInfo.type == Enum.TraitNodeType.Selection and 1 or self.set.nodes[nodeID];
                         if nodeInfo.costs then
                             for _,cost in ipairs(nodeInfo.costs) do
                                 if cost.ID == gate.traitCurrencyID then

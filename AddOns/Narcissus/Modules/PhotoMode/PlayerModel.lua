@@ -22,7 +22,7 @@ local FadeIn = NarciFadeUI.FadeIn;
 local After = C_Timer.After;
 local SmartSetActorName = NarciAPI.SmartSetActorName;
 local NarciAnimationInfo = NarciAnimationInfo;
-local NarciSpellVisualBrowser = NarciSpellVisualBrowser;
+local NarciSpellVisualUtil = NarciSpellVisualUtil;
 local GetCursorPosition = GetCursorPosition;
 local IsAltKeyDown = IsAltKeyDown;
 local Screenshot = Screenshot;	--This is an API: screen capture
@@ -2147,7 +2147,9 @@ function NarciFavoriteStarMixin:OnClick()
 	local id = AnimationIDEditBox:GetNumber();
 	if isFavorite then
 		NarciAnimationInfo.AddFavorite(id);
-		self:PlayStarAnimation();
+		if not Narci_AnimationBrowser:IsShown() then
+			self:PlayStarAnimation();
+		end
 	else
 		NarciAnimationInfo.RemoveFavorite(id);
 	end
@@ -2567,7 +2569,7 @@ local function SetModelActive(index)
 	end
 	
 	--Load Spell Visual History
-	NarciSpellVisualBrowser:LoadHistory();
+	NarciSpellVisualUtil:LoadHistory();
 
 	--Update Play/Pause Button
 	if model.isPaused then
@@ -2932,6 +2934,7 @@ function NarciGenericModelMixin:OnModelLoaded()
 	self.isAnimationCached = nil;
 	self.animationList = {};
 	RedressPlayerAfterLoading(self);
+	self:ReloadSpellVisuals();
 end
 
 function NarciGenericModelMixin:OnAnimFinished()
@@ -3116,6 +3119,17 @@ function NarciGenericModelMixin:EquipItemBySourceID(sourceID, slotID)
 	end
 end
 
+function NarciGenericModelMixin:ReloadSpellVisuals()
+	--visuals with item model require longer delay to load
+	if self.AppliedVisuals and #self.AppliedVisuals > 0 then
+		After(0.1, function()
+			for _, visualID in ipairs(self.AppliedVisuals) do
+				self:ApplySpellVisualKit(visualID, false);
+			end
+		end);
+	end
+end
+
 --------------------------------------------------------------------------------
 NarciMainModelMixin = CreateFromMixins(NarciGenericModelMixin);
 
@@ -3174,6 +3188,7 @@ function NarciMainModelMixin:OnModelLoaded()
 	self.isAnimationCached = nil;
 	self.animationList = {};
 	RedressPlayerAfterLoading(self);
+	self:ReloadSpellVisuals();
 end
 
 ----------------------------------------------------------------------
@@ -4371,7 +4386,6 @@ end
 function NarciModelSettingsMixin:SetPanelAlpha(value, smoothing)
     local SpellVisualBrowser = self.SpellPanel;
     local fromAlpha = self.BasicPanel:GetAlpha();
-	local UIFrameFadeIn = FadeFrame;
     if smoothing then
         local fadeDuation;
         if value == 1 then
@@ -4380,10 +4394,10 @@ function NarciModelSettingsMixin:SetPanelAlpha(value, smoothing)
             fadeDuation = 0.5;
         end
         if SpellVisualBrowser.isActive then
-            UIFrameFadeIn(SpellVisualBrowser, fadeDuation, fromAlpha, value);
+            FadeFrame(SpellVisualBrowser, fadeDuation, fromAlpha, value);
         end
-        UIFrameFadeIn(self.ActorPanel, fadeDuation, fromAlpha, value);
-        UIFrameFadeIn(self.BasicPanel, fadeDuation, fromAlpha, value);
+        FadeFrame(self.ActorPanel, fadeDuation, fromAlpha, value);
+        FadeFrame(self.BasicPanel, fadeDuation, fromAlpha, value);
     else
         if SpellVisualBrowser.isActive then
             SpellVisualBrowser:SetAlpha(value);

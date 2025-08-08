@@ -1,5 +1,6 @@
 ﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
 	<Include file="modules\addon.lua"/>
+	<Include file="modules\api.lua"/>
 	<Include file="modules\command.lua"/>
 	<Include file="modules\dialog.lua"/>
 	<Include file="modules\data.lua"/>

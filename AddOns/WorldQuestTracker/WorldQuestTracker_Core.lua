@@ -246,7 +246,7 @@ WorldQuestTracker.OnToggleWorldMap = function(self)
 
 	if (WorldMapFrame:IsShown()) then
 		--� a primeira vez que � mostrado?
-		if (not WorldMapFrame.hadItsFirstRunAlready) then
+		if (not WorldMapFrame.hadItsFirstRunAlready and not InCombatLockdown()) then
 			local currentMapId = WorldMapFrame.mapID
 
 			if (WorldQuestTracker.DoesMapHasWorldQuests(currentMapId)) then
@@ -1262,6 +1262,13 @@ WorldQuestTracker.OnToggleWorldMap = function(self)
 			local worldQuestTrackerPathProvider = CreateFromMixins(MapCanvasDataProviderMixin)
 
 			function worldQuestTrackerPathProvider:HideLine()
+				if (InCombatLockdown()) then
+					C_Timer.After(0.5, function()
+						worldQuestTrackerPathProvider:HideLine()
+					end)
+					return
+				end
+
 				self:GetMap():RemoveAllPinsByTemplate("WorldQuestTrackerPathPinTemplate")
 				for i = 1, #WQTPathFrame.texturePool do
 					local Dot = WQTPathFrame.texturePool[i]
@@ -1271,6 +1278,13 @@ WorldQuestTracker.OnToggleWorldMap = function(self)
 			end
 
 			function worldQuestTrackerPathProvider:ShowLine()
+				if (InCombatLockdown()) then
+					C_Timer.After(0.5, function()
+						worldQuestTrackerPathProvider:ShowLine()
+					end)
+					return
+				end
+
 				WQTPathFrame.LinePin = self:GetMap():AcquirePin("WorldQuestTrackerPathPinTemplate")
 				WQTPathFrame.bIsShowingLine = true
 			end
@@ -1368,7 +1382,7 @@ WorldQuestTracker.OnToggleWorldMap = function(self)
 
 			WQTPathFrame:SetScript("OnUpdate", function()
 				--check if the map is opened and if the player is flying
-				if (WorldMapFrame:IsShown() and IsFlying() and not IsInInstance() and WorldQuestTracker.db.profile.path.enabled and GetPlayerFacing()) then
+				if (WorldMapFrame:IsShown() and IsFlying() and not IsInInstance() and WorldQuestTracker.db.profile.path.enabled and GetPlayerFacing() and not InCombatLockdown()) then
 					--get the direction the player is facing
 					local direction = GetPlayerFacing()
 					--build a forward vector based on the the direction the player is facing

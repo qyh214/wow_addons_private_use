@@ -250,6 +250,11 @@ L['nightfarm_growthling_note'] = 'Utilisez 3x {item:206350} pour allumer la {obj
 
 L['thunder_lynx_note'] = '1. Utilisez 3x {item:206350} pour allumer la {object:Flammeclé inférieure} à la {location:Mine Torche-Vive} pour faire apparaître {npc:212419}.\n\n2. Parlez à {npc:212419} et écoutez toutes les lignes de dialogue supplémentaires pour révéler {quest:82007}.\n\n3. Trouvez chaque bébé lynx : {npc:222373} ({dot:Blue}), {npc:222372} ({dot:Green}), {npc:222375} ({dot:Orange}), et {npc:222374} ({dot:Red}).\n\n{note:Assurez-vous de commencer {quest:76169} au même moment pour recevoir la {item:219198} ou utilisez un objet similaire tel qu\'une {item:219148}. Vous aurez besoin de lumière pour faire apparaître {npc:222373} dans la {location:Grotte d’Ombre-Froid}.}\n\n4. Sauvez chaque jeune lynx et retournez auprès d\'{npc:212419}.'
 
+L['options_icons_fighter'] = '{achievement:41999}'
+L['options_icons_fighter_desc'] = 'Afficher les emplacements des créatures élite de {object:Noctechute} pour le haut-fait {achievement:41999}'
+L['suspicious_document_label'] = 'Document suspect'
+L['suspicious_document_note'] = 'Ouvrez le {object:Document suspect} pour invoquer une créature élite de {object:Noctechute}.'
+
 -------------------------------------------------------------------------------
 ---------------------------------- AZJ-KAHET ----------------------------------
 -------------------------------------------------------------------------------
@@ -323,7 +328,7 @@ L['kej_pet_vendor_note'] = 'Chaque mascotte est limitée en stock et coûte 2250
 L['options_icons_back_to_the_wall'] = '{achievement:40620}'
 L['options_icons_back_to_the_wall_desc'] = 'Afficher les emplacements des {npc:222119} pour le haut-fait {achievement:40620}.'
 L['arathi_prisoner_suffix'] = 'Prisonniers arathi sauvés'
-L['arathi_prisoner_note'] = 'Libérez les {npc:222119} enveloppés de toiles pendant l\'expédition {wq:Mission spéciale : une livre de remède}.'
+L['arathi_prisoner_note'] = 'Libérez les {npc:222119} enveloppés de toiles.'
 
 -------------------------------------------------------------------------------
 ----------------------------------- DELVES ------------------------------------
@@ -458,7 +463,7 @@ L['peculiar_gem_note'] = 'Descendez par le trou dissimulé dans la grotte jusqu\
 
 -- KARAZHAN CATACOMBS
 L['karazhan_catacombs_label'] = 'Catacombes de Karazhan'
-L['karazhan_catacombs_entrance_note'] = 'Récupérez la {item:44124} en partant du {location:Cratère d\'Un\'Goro} en {location:Kalimdor}\n\nRécupérez la {item:228938} en partant de {location:Dornogal} en {location:Khaz Algar}\n\nCombinez la gemme et la clé pour obtenir la {item:44124}.\n\nUne fois la {item:44124} dans vos sacs et la {item:208092} active, approchez de la porte pour révéler une entrée d\'instance rouge.'
+L['karazhan_catacombs_entrance_note'] = 'Récupérez la {item:228941} en partant du {location:Cratère d\'Un\'Goro} en {location:Kalimdor}\n\nRécupérez la {item:228938} en partant de {location:Dornogal} en {location:Khaz Algar}\n\nCombinez la gemme et la clé pour obtenir la {item:44124}.\n\nUne fois la {item:44124} dans vos sacs et la {item:208092} active, approchez de la porte pour révéler une entrée d\'instance rouge.'
 
 -- ORB 1
 L['orb_1_label'] = 'Orbe 1'
@@ -637,9 +642,32 @@ L['undermine_clam_chowder_label'] = 'Guide culinaire authentique de Terremine'
 L['undermine_clam_chowder_location'] = 'Sur une étagère derrière {npc:226728} dans la ruelle de la {location:Cuverie}.'
 L['undermine_clam_chowder_note'] = '1. Pour obtenir cette recette, vous devez d\'abord connaître {item:16767} qui peut être achetée auprès de deux vendeurs {object:Classiques} contre %s.\n\n{npc:54232} à {location:Baie-du-Butin} au {location:Cap Strangleronce}\n\n{npc:48060} à {location:Lumèche} dans les {location:Terres Ingrates}\n\n2. Une fois que vous connaissez l\'ancienne recette, ouvrez le {object:Guide culinaire authentique de Terremine} et lisez-le jusqu\'à la dernière page. Notez la recette pour recevoir {item:235800}.'
 
+L['breakneck_race_note'] = 'Les améliorations suivantes du {object:G-99 Ventraterre} sont recommandées pour faciliter l\'obtention de l\'|cFFFFD700Or|r :\n\n%s\n\n%s\n\n%s'
+L['upgrade_the_pozzik_standard'] = '{item:232982} (Moteur) : Obtenez le |cFFCD7F32Bronze|r dans toutes les {object:courses effrénées} normales et inversées.'
+L['upgrade_22h_slicks'] = '{item:232985} (Roues) : Fabriquées par les ingénieurs et vendues à l\'hôtel des ventes.'
+L['upgrade_turbo_handcrank'] = '{item:232984} (Turbo) : Combinez les 5 pièces récupérées sur les monstres rares ou achetées à l\'hôtel des ventes.'
+
 L['blazefeather_peacock_note'] = 'Après avoir terminé la suite de quêtes {quest:83421}, parlez à {npc:226555} et payez-le %s pour invoquer un {npc:226561} domptable.'
 L['radioactive_subject_note'] = 'Utilisez les tuyaux à proximité, aidez-vous des objets {item:237276}, {item:109076}, {item:231099} ou de toute autre technique de saut pour atteindre le toit du bâtiment des {location:Laboratoires de Gentepression} à la {location:Cuverie}.'
 L['george_the_big_pinch_note'] = 'Cliquez rapidement sur les 5 {npc:238189} pour recevoir le buff {spell:1219679} et ainsi pouvoir dompter {npc:233938}.'
 
-L['crumpled_schematic_note'] = 'Récupérez les {object:Schémas froissés} pour recevoir le {item:235037}.\n\nUne fois obtenu, il sera disponible à l\'achat auprès des vendeurs de fournitures d\'ingénierie tels que la {npc:219098} à {location:Dornogal}.'
-L['crumpled_schematic_location'] = 'Au premier étage d\'un bâtiment situé entre la {location:Cuverie} et {location:La Pile}.'
+-------------------------------------------------------------------------------
+----------------------------------- K'ARESH -----------------------------------
+-------------------------------------------------------------------------------
+
+L['options_icons_karesh_lore_hunter'] = '{achievement:60890}'
+L['options_icons_karesh_lore_hunter_desc'] = 'Afficher les emplacements des objets d\'histoire pour le haut-fait {achievement:60890}.'
+
+L['options_icons_purrkins'] = '{achievement:42729}'
+L['options_icons_purrkins_desc'] = 'Afficher les emplacements des félidrons pour le haut-fait {achievement:42729}.'
+L['purrkins_note'] = '{emote:/Caressez} le félidron.'
+L['kareshire_sublabel'] = 'Apparaît et disparaît par phase.'
+L['in_a_tree'] = 'En haut d\'un arbre.'
+L['little_ms_phaser_sublabel'] = 'Apparaît et disparaît par phase.'
+
+L['mailroom_distribution_note'] = 'Interagissez avec le chariot à l\'extérieur, puis ouvrez la porte de la salle du courrier. Placez-vous sur les cercles et utilisez le bouton d\'action supplémentaire. Le trésor apparaîtra près de la porte.'
+L['gift_of_the_brothers_note'] = 'Interagissez avec la {object:Lanterne vacillante} et parlez à {npc:233881}, allez ensuite trouver {npc:234112} ({dot:Red}), {npc:234113} ({dot:Yellow}) et {npc:234075} ({dot:Green}), puis retournez voir {npc:233881} près de la {object:Lanterne vacillante}.'
+L['ancient_coffer_note'] = 'Récupérez le {item:233794}({dot:Red}) et la {item:233799}({dot:Yellow}), puis retournez à l\'emplacement du {object:Coffre ancien} pour recevoir {item:245269}.'
+
+L['sthaarbs_note'] = 'Utilisez le téléporteur près du {object:Conduit de phase} pour atteindre {npc:234845}.'
+L['heka_tamos_note'] = nil

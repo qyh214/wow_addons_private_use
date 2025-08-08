@@ -43,6 +43,12 @@ local function CreateListFrame()
     hooksecurefunc(list, "Show", function()
         list:UpdatePixels()
         horizontalList:Hide()
+
+        local scrollThumb = list.scrollThumb
+        scrollThumb.r, scrollThumb.g, scrollThumb.b = AF.GetColorRGB(list.dropdown.accentColor)
+        scrollThumb:SetBackdropColor(scrollThumb.r, scrollThumb.g, scrollThumb.b, 0.7)
+        highlight:SetBackdropBorderColor(scrollThumb.r, scrollThumb.g, scrollThumb.b)
+
         if list.dropdown.selected then
             highlight:UpdatePixels()
             if list.dropdown.selected > list.slotNum then
@@ -96,6 +102,9 @@ local function CreateHorizontalList()
     hooksecurefunc(horizontalList, "Show", function()
         list:Hide()
         horizontalList:UpdatePixels()
+
+        highlight:SetBackdropBorderColor(AF.GetColorRGB(horizontalList.dropdown.accentColor))
+
         for _, b in pairs(horizontalList.buttons) do
             b:UpdatePixels()
         end
@@ -213,10 +222,30 @@ function AF_DropdownMixin:SetIconBGColor(color)
 end
 
 -- update items ---------------------------------
+-- {
+--     {
+--         ["text"] = (string),
+--         ["value"] = (any),
+--         ["texture"] = (string),
+--         ["font"] = (string),
+--         ["icon"] = (string),
+--         ["disabled"] = (boolean),
+--         ["onClick"] = (function)
+--     },
+-- }
+
+---@param items table array of items (table|string|number)
 function AF_DropdownMixin:SetItems(items)
-    -- validate item.value
-    for _, item in ipairs(items) do
-        if not item.value then item.value = item.text end
+    -- validate items
+    for i, item in ipairs(items) do
+        if type(item) ~= "table" then
+            items[i] = {
+                text = item,
+                value = item,
+            }
+        else
+            if not item.value then item.value = item.text end
+        end
     end
     self.items = items
     self.reloadRequired = true
@@ -307,6 +336,7 @@ function AF_DropdownMixin:LoadItems()
 
         tinsert(self.buttons, b)
         b:SetEnabled(not item.disabled)
+        b:SetColor(self.accentColor .. "_transparent")
 
         -- icon
         if item.icon then
@@ -417,7 +447,7 @@ function AF_DropdownMixin:SetEnabled(enabled)
     end
 end
 
----@param maxSlots number max shown items
+---@param maxSlots number max shown items, not available for mini horizontal dropdown
 ---@return AF_Dropdown
 function AF.CreateDropdown(parent, width, maxSlots, dropdownType, isMini, isHorizontal, justify, textureAlpha)
     if not list then CreateListFrame() end
@@ -428,6 +458,8 @@ function AF.CreateDropdown(parent, width, maxSlots, dropdownType, isMini, isHori
 
     local dropdown = AF.CreateBorderedFrame(parent, nil, width, 20, "widget")
     dropdown:EnableMouse(true)
+
+    dropdown.accentColor = AF.GetAddonAccentColorName()
 
     dropdown.enabled = true
     dropdown.width = width
@@ -465,6 +497,8 @@ function AF.CreateDropdown(parent, width, maxSlots, dropdownType, isMini, isHori
         AF.SetPoint(dropdown.text, "RIGHT", dropdown.button, "LEFT", -5, 0)
         dropdown.text:SetJustifyH(justify or "LEFT")
     end
+
+    dropdown.button:SetColor(dropdown.accentColor .. "_hover")
 
     -- iconBG
     dropdown.iconBG = AF.CreateTexture(isMini and dropdown.button or dropdown, nil, nil, "ARTWORK", -2)

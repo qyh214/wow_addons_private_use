@@ -1,4 +1,3 @@
-
 --------------------------------------------------------------------------------
 -- Module Declaration
 --
@@ -13,11 +12,10 @@ mod.worldBoss = 62346
 -- Localization
 --
 
-local L = mod:NewLocale("enUS", true)
+local L = mod:GetLocale()
 if L then
-	L.engage_yell = "Bring me their corpses!"
+	L.adds_icon = "inv_weapon_halberd_12"
 end
-L = mod:GetLocale()
 
 --------------------------------------------------------------------------------
 -- Initialization
@@ -25,38 +23,47 @@ L = mod:GetLocale()
 
 function mod:GetOptions()
 	return {
-		121600, 121787, -6200,
+		121600, -- Cannon Barrage
+		121787, -- Stomp
+		"adds",
 	}
 end
 
 function mod:OnBossEnable()
-	self:BossYell("Engage", L.engage_yell)
-
-	self:Emote("CannonBarrage", "121600")
-	self:Emote("Stomp", "121787")
-
-	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
-	self:Death("Win", 62346) --Galleon
+	self:ScheduleTimer("CheckForEngage", 1)
+	self:Death("Win", 62346) -- Galleon
 end
 
 function mod:OnEngage()
-	self:Bar(121600, 23) -- Cannon Barrage
-	self:Bar(121787, 50) -- Stomp
+	self:CheckForWipe()
+
+	-- World bosses will wipe but keep listening to events if you fly away, so we only register OnEngage
+	self:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE")
+
+	self:CDBar(121600, 23) -- Cannon Barrage
+	self:CDBar(121787, 50) -- Stomp
 end
 
 --------------------------------------------------------------------------------
 -- Event Handlers
 --
 
-function mod:CannonBarrage()
-	self:MessageOld(121600, "orange", nil, CL["incoming"]:format(self:SpellName(121600)))
-	self:Bar(121600, 60)
+do
+	local function AddsArrived()
+		mod:Message("adds", "cyan", CL.adds, L.adds_icon)
+		mod:PlaySound("adds", "info")
+	end
+	function mod:CHAT_MSG_RAID_BOSS_EMOTE(_, msg)
+		if msg:find("spell:121600", nil, true) then
+			self:Message(121600, "orange", CL.incoming:format(self:SpellName(121600)))
+			self:CDBar(121600, 60)
+			self:PlaySound(121600, "long")
+		elseif msg:find("spell:121787", nil, true) then
+			self:Message(121787, "red", CL.incoming:format(self:SpellName(121787)))
+			self:CDBar(121787, 60)
+			self:Bar("adds", 10, CL.adds, L.adds_icon) -- Adds
+			self:ScheduleTimer(AddsArrived, 10)
+			self:PlaySound(121787, "alarm")
+		end
+	end
 end
-
-function mod:Stomp()
-	self:MessageOld(121787, "red", "alarm", CL["incoming"]:format(self:SpellName(121787)))
-	self:Bar(121787, 60)
-	self:DelayedMessage(-6200, 10, "yellow", CL["adds"], 121747) -- Salyin Warmonger
-end
-

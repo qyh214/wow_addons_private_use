@@ -73,6 +73,7 @@ if L then
 	L.immolationyou_message = "제물의 덫"
 	L.crystal = "수정 감옥 덫"
 	L.crystal_desc = "수정 감옥 덫에 대해 알립니다."
+	--L.facerage_trigger = "Go for the throat!"
 end
 
 L = BigWigs:NewBossLocale("Baleroc", "koKR")

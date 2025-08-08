@@ -40,6 +40,14 @@ function BitDecoder.decodeFixedFloat(state, beforeByteCount, afterByteCount)
 	return result, state
 end
 
+---decode a fixed-precision percentile value
+---@param state ParseState
+---@return number, ParseState
+function BitDecoder.decodePercentileFixed(state)
+	local value, newState = BitDecoder.decodeInteger(state, 2)
+	return value / 100, newState
+end
+
 ---@param state ParseState
 ---@param lookup table<number, string>
 ---@return string, ParseState
@@ -60,7 +68,7 @@ function BitDecoder.decodeString(state, lookup)
 end
 
 ---@param state ParseState
----@return string, ParseState
+---@return boolean, ParseState
 function BitDecoder.decodeBoolean(state)
 	local result, newState = BitDecoder.decodeInteger(state, 1)
 	return result == 1, newState

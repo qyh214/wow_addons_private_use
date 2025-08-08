@@ -1,5 +1,9 @@
-## Changed in v82
+## Changed in v89
 
-* Undermine: add some missing loot, and a hidden shirt
-* Delves: story progress achievements weren't showing on the Undermine delve tooltips
+* K'aresh:
+    * Change the icon for phase conduits
+    * Add Dangerous Prowlers of K'aresh
+    * Add the Delves and their loot
+    * Tweak how the nearby points for Heka'tamos are displayed
+* Undermine: the discovery achievement was missing from the delve tooltips
 

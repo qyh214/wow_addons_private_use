@@ -49,6 +49,9 @@ if L then
 	L.venture_co_war_machine = "Venture Co. War Machine"
 	L.crawler_mine = "Crawler Mine"
 	L.ordnance_specialist = "Ordnance Specialist"
+
+	L["1217279_desc"] = 1217280 -- Uppercut, 1217279 has no description
+	L["1214751_desc"] = 1214752 -- Brutal Charge, 1214752 has a better description
 end
 
 --------------------------------------------------------------------------------
@@ -61,6 +64,7 @@ function mod:GetOptions()
 		{280604, "DISPEL", "NAMEPLATE"}, -- Iced Spritzer
 		-- Mech Jockey
 		267433, -- Activate Mech
+		{267980, "NAMEPLATE", "OFF"}, -- Grease Gun
 		-- Mechanized Peacekeeper
 		{263628, "NAMEPLATE"}, -- Charged Shield
 		{472041, "NAMEPLATE"}, -- Tear Gas
@@ -85,10 +89,12 @@ function mod:GetOptions()
 		-- Taskmaster Askari
 		{1214754, "NAMEPLATE"}, -- Massive Slam
 		{1213139, "DISPEL", "NAMEPLATE"}, -- Overtime!
+		{1214751, "ME_ONLY", "NAMEPLATE"}, -- Brutal Charge
 		-- Weapons Tester
 		{268846, "NAMEPLATE"}, -- Echo Blade
 		-- Venture Co. Mastermind
 		{473304, "NAMEPLATE"}, -- Brainstorm
+		{262794, "ME_ONLY"}, -- Mind Lash
 		-- Venture Co. Alchemist
 		{268797, "DISPEL", "NAMEPLATE"}, -- Transmute: Enemy to Goo
 		-- Venture Co. War Machine
@@ -134,6 +140,7 @@ function mod:OnBossEnable()
 
 	-- Mech Jockey
 	self:Log("SPELL_CAST_START", "ActivateMech", 267433) --  Heroic and Mythic only
+	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED") -- Grease Gun
 
 	-- Mechanized Peacekeeper
 	self:RegisterEngageMob("MechanizedPeacekeeperEngaged", 130485, 136139) -- Mech Jockey summon, regular
@@ -194,6 +201,7 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "Overtime", 1213139)
 	self:Log("SPELL_AURA_APPLIED", "OvertimeApplied", 1213139)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "OvertimeApplied", 1213139)
+	self:Log("SPELL_CAST_SUCCESS", "BrutalCharge", 1214751)
 	self:Death("TaskmasterAskariDeath", 134012)
 
 	-- Weapons Tester
@@ -205,6 +213,7 @@ function mod:OnBossEnable()
 	-- Venture Co. Mastermind
 	self:RegisterEngageMob("VentureCoMastermindEngaged", 133430)
 	self:Log("SPELL_CAST_SUCCESS", "Brainstorm", 473304)
+	self:Log("SPELL_CAST_START", "MindLash", 262794)
 	self:Death("VentureCoMastermindDeath", 133430)
 
 	-- Venture Co. Alchemist
@@ -299,6 +308,24 @@ do
 			prev = args.time
 			self:Message(args.spellId, "yellow")
 			self:PlaySound(args.spellId, "warning")
+		end
+	end
+end
+
+do
+	local prev = 0
+	function mod:UNIT_SPELLCAST_SUCCEEDED(_, unit, _, spellId)
+		if spellId == 267980 then -- Grease Gun
+			local sourceGUID = self:UnitGUID(unit)
+			if sourceGUID then
+				self:Nameplate(spellId, 4.8, sourceGUID)
+			end
+			local t = GetTime()
+			if t - prev > 2 then
+				prev = t
+				self:Message(spellId, "yellow")
+				self:PlaySound(spellId, "info")
+			end
 		end
 	end
 end
@@ -607,37 +634,73 @@ end
 
 -- Taskmaster Askari
 
-function mod:TaskmasterAskariEngaged(guid)
-	if self:Dispeller("enrage", true, 1213139) then
-		self:Nameplate(1213139, 7.8, guid) -- Overtime!
+do
+	local timer
+
+	function mod:TaskmasterAskariEngaged(guid)
+		if self:Dispeller("enrage", true, 1213139) then
+			self:CDBar(1213139, 7.8) -- Overtime!
+			self:Nameplate(1213139, 7.8, guid) -- Overtime!
+		end
+		self:CDBar(1214751, 10.7) -- Brutal Charge
+		self:Nameplate(1214751, 10.7, guid) -- Brutal Charge
+		self:CDBar(1214754, 11.5) -- Massive Slam
+		self:Nameplate(1214754, 11.5, guid) -- Massive Slam
+		timer = self:ScheduleTimer("TaskmasterAskariDeath", 20, nil, guid)
 	end
-	self:Nameplate(1214754, 11.5, guid) -- Massive Slam
-end
 
-function mod:MassiveSlam(args)
-	self:Message(args.spellId, "orange")
-	self:Nameplate(args.spellId, 18.2, args.sourceGUID)
-	self:PlaySound(args.spellId, "alarm")
-end
-
-function mod:Overtime(args)
-	if self:Dispeller("enrage", true, args.spellId) then
-		self:Nameplate(args.spellId, 17.8, args.sourceGUID)
+	function mod:MassiveSlam(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "orange")
+		self:CDBar(args.spellId, 18.2)
+		self:Nameplate(args.spellId, 18.2, args.sourceGUID)
+		timer = self:ScheduleTimer("TaskmasterAskariDeath", 30, nil, args.sourceGUID)
+		self:PlaySound(args.spellId, "alarm")
 	end
-end
 
-function mod:OvertimeApplied(args)
-	if self:Dispeller("enrage", true, args.spellId) and self:MobId(args.destGUID) == 134012 then -- Taskmaster Askari
+	function mod:Overtime(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		if self:Dispeller("enrage", true, args.spellId) then
+			self:CDBar(args.spellId, 14.6)
+			self:Nameplate(args.spellId, 14.6, args.sourceGUID)
+		end
+		timer = self:ScheduleTimer("TaskmasterAskariDeath", 30, nil, args.sourceGUID)
+	end
+
+	function mod:OvertimeApplied(args)
+		-- caps at 10 stacks
 		local amount = args.amount or 1
-		if amount % 2 == 1 or amount == 10 then -- caps at 10
+		if (amount % 2 == 1 or amount == 10) and self:Dispeller("enrage", true, args.spellId) and self:MobId(args.destGUID) == 134012 then -- Taskmaster Askari
 			self:Message(args.spellId, "yellow", CL.stack:format(amount, args.spellName, args.destName))
 			self:PlaySound(args.spellId, "info")
 		end
 	end
-end
 
-function mod:TaskmasterAskariDeath(args)
-	self:ClearNameplate(args.destGUID)
+	function mod:BrutalCharge(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:TargetMessage(args.spellId, "red", args.destName)
+		self:CDBar(args.spellId, 18.2)
+		self:Nameplate(args.spellId, 18.2, args.sourceGUID)
+		timer = self:ScheduleTimer("TaskmasterAskariDeath", 30, nil, args.sourceGUID)
+		self:PlaySound(args.spellId, "info", nil, args.destName)
+	end
+
+	function mod:TaskmasterAskariDeath(args, guidFromTimer)
+		if timer then
+			self:CancelTimer(timer)
+			timer = nil
+		end
+		self:StopBar(1213139) -- Overtime!
+		self:StopBar(1214751) -- Brutal Charge
+		self:StopBar(1214754) -- Massive Slam
+		self:ClearNameplate(guidFromTimer or args.destGUID)
+	end
 end
 
 -- Weapons Tester
@@ -676,6 +739,17 @@ function mod:Brainstorm(args)
 	self:Message(args.spellId, "orange")
 	self:Nameplate(args.spellId, 16.6, args.sourceGUID)
 	self:PlaySound(args.spellId, "alarm")
+end
+
+do
+	local function printTarget(self, name)
+		self:TargetMessage(262794, "yellow", name)
+		self:PlaySound(262794, "info", nil, name)
+	end
+
+	function mod:MindLash(args)
+		self:GetUnitTarget(printTarget, 0.2, args.sourceGUID)
+	end
 end
 
 function mod:VentureCoMastermindDeath(args)

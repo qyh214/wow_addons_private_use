@@ -11,7 +11,6 @@ end
 L = BigWigs:NewBossLocale("Vaelastrasz the Corrupt", "zhCN")
 if L then
 	L.warmup_trigger = "太晚了，朋友们" -- 太晚了，朋友们！奈法利安的堕落力量已经生效……我无法……控制自己。
-	L.tank_bomb = "坦克炸弹"
 end
 
 L = BigWigs:NewBossLocale("Chromaggus", "zhCN")

@@ -478,7 +478,7 @@ function M:ItemLevel_Containers()
 		end
 	end
 	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItemSlots", M.ItemLevel_HandleSlots)
-	hooksecurefunc(AccountBankPanel, "GenerateItemSlotsForSelectedTab", M.ItemLevel_HandleSlots)
+	hooksecurefunc(BankFrame.BankPanel, "GenerateItemSlotsForSelectedTab", M.ItemLevel_HandleSlots)
 end
 
 function M:ShowItemLevel()

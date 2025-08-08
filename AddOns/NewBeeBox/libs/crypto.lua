@@ -14,7 +14,7 @@ for i = 0, 255 do
 end
 
 -- CRC32 计算函数
-function CRC32(input)
+function NewBeeHash32(input)
     local crc = 0xFFFFFFFF
     for i = 1, #input do
         local byte = input:byte(i)
@@ -24,7 +24,7 @@ function CRC32(input)
 end
 
 -- FNV-1a 32位哈希算法实现
-function Hash32(input)
+function NewBeeHash32(input)
     local hash = 0x811C9DC5 -- FNV偏移基础值
     for i = 1, #input do
         local byte = input:byte(i)

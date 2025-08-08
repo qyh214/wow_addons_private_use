@@ -2,8 +2,8 @@
 local L = BigWigs:NewBossLocale("Protectors of the Endless", "zhCN")
 if not L then return end
 if L then
-	L.under = "%s：>%s<脚下！"
-	L.heal = ">%s< 开始治疗！"
+	L.under = "%s：%s 脚下！"
+	L.heal = "%s 开始治疗！"
 end
 
 L = BigWigs:NewBossLocale("Tsulong", "zhCN")
@@ -30,14 +30,14 @@ end
 
 L = BigWigs:NewBossLocale("Sha of Fear", "zhCN")
 if L then
-	L.fading_soon = ">%s< 即将潜水"
+	L.fading_soon = "%s 即将潜水"
 
 	L.swing = "连续打击"
 	L.swing_desc = "计算先前的痛击连续次数。"
 
 	L.throw = "投掷！"
 	L.ball_dropped = "球掉落！"
-	L.ball_you = ">你< 球！"
+	L.ball_you = "你 球！"
 	L.ball = "球"
 
 	L.cooldown_reset = "冷却已被重置！"

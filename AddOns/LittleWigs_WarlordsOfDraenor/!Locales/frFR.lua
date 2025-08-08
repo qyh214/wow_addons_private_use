@@ -1,7 +1,14 @@
 -- Auchindoun
 
-local L = BigWigs:NewBossLocale("Auchindoun Trash", "frFR")
+local L = BigWigs:NewBossLocale("Teron'gor", "frFR")
 if not L then return end
+if L then
+	L.affliction = "Affliction"
+	L.demonology = "Démonologie"
+	L.destruction = "Destruction"
+end
+
+L = BigWigs:NewBossLocale("Auchindoun Trash", "frFR")
 if L then
 	L.abyssal = "Abyssal gangrelien"
 end
@@ -19,8 +26,8 @@ end
 
 L = BigWigs:NewBossLocale("Nitrogg Thundertower", "frFR")
 if L then
-	--L.dropped = "%s dropped!"
-	L.add_trigger1 = "Montrez-leur qui vous êtes, les gars !"
+	L.dropped = "%s lâché !"
+	L.add_trigger1 = "Montrez-leur qui vous êtes, les gars !"
 	L.add_trigger2 = "Donnez-leur tout ce que vous avez."
 
 	L.waves[1] = "1x Boumeur grom’kar, 1x Mitrailleur grom’kar"
@@ -51,12 +58,12 @@ end
 
 L = BigWigs:NewBossLocale("Grimrail Enforcers", "frFR")
 if L then
-	--L.sphere_fail_message = "Shield was broken - They're all healing :("
+	L.sphere_fail_message = "Bouclier est cassé- Ils se soignet tous :("
 end
 
 L = BigWigs:NewBossLocale("Oshir", "frFR")
 if L then
-	--L.freed = "Freed after %.1f sec!"
+	L.freed = "Libéré après %.1f sec !"
 	L.wolves = "Loups"
 	L.rylak = "Rylak"
 end
@@ -77,20 +84,14 @@ end
 
 -- Shadowmoon Burial Grounds
 
-L = BigWigs:NewBossLocale("Sadana Bloodfury", "frFR")
-if L then
-	--L.custom_on_markadd = "Mark the Dark Communion Add"
-	--L.custom_on_markadd_desc = "Mark the add spawned by Dark Communion with {rt8}, requires promoted or leader."
-end
-
 L = BigWigs:NewBossLocale("Bonemaw", "frFR")
 if L then
-	--L.summon_worms = "Summon Carrion Worms"
-	--L.summon_worms_desc = "Bonemaw summons two Carrion Worms."
+	L.summon_worms = "Invocation ver putride"
+	L.summon_worms_desc = "Ossegueule invoque deux vers putrides."
 	--L.summon_worms_trigger = "piercing screech attracts nearby Carrion Worms!"
 
 	L.submerge = "Submerger"
-	--L.submerge_desc = "Bonemaw submerges and repositions."
+	L.submerge_desc = "Ossegueule submerge et se repositionne."
 	--L.submerge_trigger = "hisses, slinking back into the shadowy depths!"
 end
 
@@ -112,17 +113,15 @@ end
 
 L = BigWigs:NewBossLocale("High Sage Viryx", "frFR")
 if L then
-	--L.custom_on_markadd = "Mark the Solar Zealot"
-	--L.custom_on_markadd_desc = "Mark the Solar Zealot with {rt8}, requires promoted or leader."
-
-	L.construct = "Assemblage-bouclier d’Orée-du-Ciel" -- NPC ID 76292
+	L.solar_zealot = "Zélote solaire"
+	L.construct = "Assemblage-bouclier d’Orée-du-Ciel"
 end
 
 -- The Everbloom
 
 L = BigWigs:NewBossLocale("Witherbark", "frFR")
 if L then
-	--L.energyStatus = "A Globule reached Witherbark: %d%% energy"
+	L.energyStatus = "Un globule a atteint Fanécorce : %d%% énergie"
 end
 
 L = BigWigs:NewBossLocale("The Everbloom Trash", "frFR")
@@ -139,7 +138,7 @@ if L then
 	L.putrid_pyromancer = "Pyromancien putride"
 	L.addled_arcanomancer = "Arcanomancien perturbé"
 
-	--L.gate_open_desc = "Show a bar indicating when Undermage Kesalon will open the gate to Yalnu."
+	L.gate_open_desc = "Affiche une barre indiquant lorsque le Sous-mage Kesalon ouvrira la porter vers Yalnu."
 	--L.yalnu_warmup_trigger = "The portal is lost! We must stop this beast before it can escape!"
 end
 

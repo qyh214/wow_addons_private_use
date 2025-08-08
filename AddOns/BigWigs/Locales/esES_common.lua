@@ -1,4 +1,5 @@
-local L = BigWigsAPI:NewLocale("BigWigs: Common", "esES")
+local _, addonTbl = ...
+local L = addonTbl.API:NewLocale("BigWigs: Common", "esES")
 if not L then return end
 
 -- Prototype.lua common words
@@ -13,8 +14,10 @@ L.buff_other = "Beneficio en %s: %s"
 L.magic_buff_boss = "Beneficio de magia en el JEFE: %s" -- Magic buff on BOSS: SPELL_NAME
 L.magic_buff_other = "Beneficio de magia en %s: %s" -- Magic buff on NPC_NAME: SPELL_NAME
 L.on = "%s en %s"
-L.stack = "%dx %s en %s"
-L.stackyou = "%dx %s en TI"
+L.stack = "%dx %s en %s" -- "5x SPELL_NAME on PLAYER_OR_NPC" showing how many stacks of a buff/debuff are on a player or NPC
+L.stackyou = "%dx %s en TI" -- "5x SPELL_NAME on YOU" showing how many stacks of a buff/debuff are on you
+L.stackboss = "%dx %s en el JEFE" -- "5x SPELL_NAME on BOSS" showing how many stacks of a buff/debuff are on the boss
+L.stack_gained = "Obtenido %dx" -- "Gained 5x" for situations where we show how many stacks of a buff were gained since last time a message showed
 L.cast = "<Lanza %s>"
 L.casting = "Lanzando %s"
 L.soon = "%s pronto"
@@ -43,10 +46,11 @@ L.dead = "Muerto" -- When a player is dead
 L.general = "General" -- General settings, i.e. things that apply to normal, heroic and mythic mode.
 L.health = "Salud" -- The health of an NPC
 L.health_percent = "%d%% Salud" -- "10% Health" The health percentage of an NPC
+L.energy = "Energía"
+L.energy_percent = "%d%% Energía" -- "80% Energy" The energy percentage of an NPC
 L.door_open = "Puerta abierta" -- When a door is open, usually after a speech from an NPC
 L.gate_open = "Puerta abierta" -- When a gate is open, usually after a speech from an NPC
 L.threat = "Amenaza"
-L.energy = "Energía"
 
 L.remaining = "%d restantes" -- 5 remaining
 L.duration = "%s durante %s seg" -- Spell for 10 seconds
@@ -70,19 +74,21 @@ L.boss_landing = "%s está aterrizando" -- "NPC_NAME is landing" Used when a fly
 L.landing = "Aterrizando" -- Used when a flying NPC/dragon/boss is landing
 L.flying_available = "Puedes volar ahora"
 L.bosses_too_close = "Los Jefes están demasiado cerca" -- When 2 or more bosses are too close to each other, buffing each other with a shield, extra damage, etc.
---L.keep_moving = "Keep moving" -- An ability that forces you to keep moving or you will take damage
---L.stand_still = "Stand still" -- An ability that forces you to stand still or you will take damage
---L.safe_to_stop = "Safe to stop" -- When an ability that forces you to keep moving fades from you, allowing you to stop moving
---L.safe_to_move = "Safe to move" -- When an ability to forces you to stand still fades from you, allowing you to move again
+L.keep_moving = "Sigue moviéndote" -- An ability that forces you to keep moving or you will take damage
+L.stand_still = "No te muevas" -- An ability that forces you to stand still or you will take damage
+L.safe_to_stop = "Puedes pararte" -- When an ability that forces you to keep moving fades from you, allowing you to stop moving
+L.safe_to_move = "Puedes moverte" -- When an ability to forces you to stand still fades from you, allowing you to move again
+L.safe = "Seguro" -- You are safe from a bad ability
+L.unsafe = "Peligro" -- You are unsafe (in danger) of a bad ability
 
 -- Add related
-L.add_spawned = "Esbirro apareció" -- singular
-L.adds_spawned = "Esbirros aparecieron" -- plural
+L.add_spawned = "Sale Esbirro" -- singular
+L.adds_spawned = "Salen Esbirros" -- plural
 L.adds_spawned_count = "%d |4enemigo aparecido:enemigos aparecidos;" -- 1 add spawned / 2 adds spawned
-L.add_spawning = "Enemigo apareciendo" -- singular
-L.adds_spawning = "Enemigos apareciendo" -- plural
+L.add_spawning = "Esbirro saliendo" -- singular
+L.adds_spawning = "Esbirros saliendo" -- plural
 L.spawned = "%s apareció"
-L.spawning = "%s aparece"
+L.spawning = "%s apareciendo"
 L.next_add = "Siguiente esbirro"
 L.add_killed = "Esbirro muerto (%d/%d)"
 L.add_remaining = "Esbirro muerto, %d restantes"
@@ -131,13 +137,16 @@ L.marker = "%s marcador"
 L.marker_player_desc = "Marca jugadores afectados por %s con %s, requiere ayudante o líder." -- Mark players affected by 'SPELL_NAME' with SKULL_ICON
 L.marker_npc_desc = "Marca %s con %s, requiere ayudante o líder." -- Mark NPC_NAME with SKULL_ICON
 L.marker_npc_aura_desc = "Marcar NPCs afectados por '%s' con %s, requiere ser ayudante o líder." -- Mark NPCs affected by 'SPELL_NAME' with SKULL_ICON
+L.disabled = "Desactivado"
+L.none = "Nada"
+L.markers = "Marcas" -- Plural of marker
 
 -- Ability where two players have to move close to each other
 L.link = "Enlace"
 L.link_with = "Enlazado con %s"
 L.link_with_icon = "Enlazado con |T13700%d:0|t%s"
 L.link_with_rticon = "{rt%d}Enlazado con %s"
- L.link_both = "%s + %s están vinculados"
+L.link_both = "%s + %s están vinculados"
 L.link_both_icon = "|T13700%d:0|t%s + |T13700%d:0|t%s están vinculados"
 L.link_removed = "Enlace eliminado"
 L.link_say_option_name = "Repetir mensajes de 'Vinculado' en el chat"
@@ -150,11 +159,15 @@ L.amount_three = "%dK" -- Thousands 1,000
 L.seconds = "%.1fs" -- 1.1 seconds
 
 -- Directions
-L.top = "Tope"
+L.top = "Superior"
+L.top_right = "Superior Derecha"
+L.top_left = "Superior Izquierda"
 L.up = "Arriba"
-L.middle = "Medio"
+L.middle = "Centro"
 L.down = "Abajo"
-L.bottom = "Fondo"
+L.bottom = "Inferior"
+L.bottom_right = "Inferior Derecha"
+L.bottom_left = "Inferior Izquierda"
 L.left = "Izquierda"
 L.right = "Derecha"
 L.north = "Norte"
@@ -165,6 +178,11 @@ L.south = "Sur"
 L.south_west = "Suroeste"
 L.west = "Oeste"
 L.north_west = "Noroeste"
+
+-- Sizes
+L.small = "Pequeño"
+L.medium = "Mediano"
+L.large = "Grande"
 
 -- Schools
 L.fire = "Fuego"
@@ -177,6 +195,7 @@ L.arcane = "Arcano"
 L.autotalk = "Interacción automática con NPC"
 L.autotalk_boss_desc = "Seleccionar automáticamente las opciones de diálogo del NPC que hacen que comience el encuentro con el jefe."
 L.autotalk_generic_desc = "Seleccionar automáticamente las opciones de diálogo del NPC que te permiten avanzar a la siguiente etapa de la mazmorra."
+--L.autotalk_notice = "Automatically interacting with NPC %s."
 
 -- Common ability name replacements
 L.absorb = "Absorber" -- Used for shield-like abilities that absorb damage or healing
@@ -230,6 +249,8 @@ L.spell_reflection = "Reflejo de hechizos" -- Any ability that reflects spells
 L.rooted = "Enraizado" -- Any ability that roots you in place, preventing you from moving
 
 -- Common ability name replacements A-Z
+L.ball = "Bola" -- A ball, like a football, basketball, etc
+L.balls = "Bolas" -- Plural of L.ball
 L.blind = "Ceguera" -- Any ability that blinds or disorientates you. Usually an ability a boss casts and you need to turn away from the boss or it will blind you.
 L.dodge = "Esquivar" -- When you need to continually run around to dodge abilities, like missiles landing on the ground under you
 L.enrage = "Enfurecer" -- Any enrage buff that can be removed by players using abilities like Soothe (Druid), Tranquilizing Shot (Hunter) and Shiv (Rogue)
@@ -239,7 +260,7 @@ L.fixates = "Fijaciones" -- Plural of L.fixate
 L.group_damage = "Daño grupal" -- Any ability that causes damage to every player in the 5 player group
 L.health_drain = "Absorción de salud" -- Any ability that drains health from the player
 L.parasite = "Parásito" -- Any ability where a parasite is involved e.g. "Parasitic Infection", "Parasitic Growth", etc
---L.parasites = "Parasites" -- Plural of L.parasite
+L.parasites = "Parásitos" -- Plural of L.parasite
 L.pull_in = "Atraer" -- An ability that pulls you in towards the boss against your will
 L.raid_damage = "Daño de raid" -- Any ability that causes damage to every player in the raid
 L.smash = "Machaque" -- Short for any ability with the name "smash" in it e.g. "Darkrift Smash" or "Seismic Smash" or "Arcing Smash"
@@ -248,10 +269,13 @@ L.soaks = "Soaks" -- Plural of L.soak
 L.spike = "Púa" -- Short for any ability with the name "spike" in it e.g. "Glacial Spike" or "Fel Spike" or "Volatile Spike"
 L.spikes = "Púas" -- Plural of L.spike
 L.spread = "Sepárate" -- An ability that forces you to spread out away from other players, or you might damage them
+L.tank_bomb = "Bomba de Tanque" -- Similar to L.bomb but only applies to tanks
 L.tank_combo = "Combo de Tanque" -- Used for tank swap mechanics where the boss casts a sequence of tank buster attacks
---L.tank_debuff = "Tank Debuff" -- Used for debuffs that only apply to tanks, usually an indicator that you need to taunt
---L.tank_frontal = "Tank Frontal" -- Similar to L.frontal_cone but only applies to tanks
---L.tank_soak = "Tank Soak" -- Similar to L.soak but only applies to tanks
+L.tank_debuff = "Debuff de Tanque" -- Used for debuffs that only apply to tanks, usually an indicator that you need to taunt
+L.tank_frontal = "Frontal de Tanque" -- Similar to L.frontal_cone but only applies to tanks
+L.tank_soak = "Soak de Tanque" -- Similar to L.soak but only applies to tanks
 L.tentacle = "Tentáculo" -- Used for bosses that summon tentacles
 L.tentacles = "Tentáculos" -- Plural of L.tentacle
 L.waves = "Oleadas" -- Multiple waves of a bad ability coming from a boss, like waves in the ocean
+L.whelp = "Cría" -- Short for Whelpling, a baby dragonkin (Dragon Whelp)
+L.whelps = "Crías" -- Plural of L.whelp

@@ -3,21 +3,16 @@ local Private = select(2, ...)
 
 Private.CharacterBaseUrl = "/character/%s/%s/%s?utm_source=addon"
 
----@type table<string, true>
-local testCharacters = {
-	["Xepheris-Blackmoore-EU"] = true,
-	["Bearnodders-Gehennas-EU"] = true,
-	["Novanter-LivingFlame-EU"] = true,
-	["Ragraz-LoneWolf-EU"] = true,
-	["Velody-LoneWolf-EU"] = true,
-	["Velody-Gehennas-EU"] = true,
-	["Yaxz-LivingFlame-EU"] = true,
-	["Yaxz-LoneWolf-EU"] = true,
-}
+Private.IsTestCharacter = false
 
 table.insert(Private.LoginFnQueue, function()
-	Private.IsTestCharacter = testCharacters[UnitName("player") .. "-" .. Private.CurrentRealm.name .. "-" .. Private.CurrentRealm.region] ~= nil
+	Private.IsTestCharacter = Private.db.IsTestCharacter or false
 end)
+
+function ArchonTooltip.ToggleTesting()
+	Private.db.IsTestCharacter = not Private.db.IsTestCharacter
+	ReloadUI()
+end
 
 ---@type table<string, string>
 local specToSpecIconMap = {
@@ -37,7 +32,7 @@ local specToSpecIconMap = {
 	--
 	["Hunter-BeastMastery"] = "ability_hunter_bestialdiscipline",
 	["Hunter-Marksmanship"] = "ability_hunter_focusedaim",
-	["Hunter-Survival"] = Private.IsClassicEra and "ability_hunter_swiftstrike" or "ability_hunter_camouflage",
+	["Hunter-Survival"] = "ability_hunter_camouflage",
 	["Hunter-Melee"] = "inv_throwingknife_06",
 	["Hunter-Ranged"] = "ability_hunter_focusedaim",
 	--
@@ -55,7 +50,7 @@ local specToSpecIconMap = {
 	["Priest-Holy"] = "spell_holy_guardianspirit",
 	["Priest-Shadow"] = "spell_shadow_shadowwordpain",
 	--
-	["Rogue-Assassination"] = Private.IsClassicEra and "ability_rogue_eviscerate" or "ability_rogue_deadlybrew",
+	["Rogue-Assassination"] = "ability_rogue_deadlybrew",
 	["Rogue-Combat"] = "ability_backstab",
 	["Rogue-Outlaw"] = "ability_rogue_waylay",
 	["Rogue-Subtlety"] = "ability_stealth",
@@ -88,6 +83,17 @@ local specToSpecIconMap = {
 	["DemonHunter-Vengeance"] = "ability_demonhunter_spectank",
 	["DemonHunter-Havoc"] = "ability_demonhunter_specdps",
 }
+
+table.insert(Private.LoginFnQueue, function()
+	if Private.IsWrath and Private.CurrentRealm.region == "CN" then
+		specToSpecIconMap["Hunter-BeastMastery"] = "ability_hunter_beasttaming"
+		specToSpecIconMap["Hunter-Survival"] = "ability_hunter_swiftstrike"
+		specToSpecIconMap["Warrior-Gladiator"] = "achievement_featsofstrength_gladiator_03"
+	elseif Private.IsClassicEra then
+		specToSpecIconMap["Rogue-Assassination"] = "ability_rogue_eviscerate"
+		specToSpecIconMap["Hunter-Survival"] = "ability_hunter_swiftstrike"
+	end
+end)
 
 ---@param spec string
 ---@return string

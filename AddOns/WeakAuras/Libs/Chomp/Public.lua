@@ -282,9 +282,9 @@ function Chomp.SmartAddonMessage(prefix, data, kind, target, messageOptions)
 
 	local bitField = 0x000
 
-	-- v20+: Always set the CODECV2 bit. All clients on the network at this
-	--       point should support it. Setting this bit unconditionally will
-	--       eventually allow us to deprecate receipt of v1 codec data.
+	-- v32: Always set the VERSION16 and CODECV2 bits. Versions older than
+	--      this will discard messages without these bits set. Once newer
+	--      versions are widely distributed, we can stop setting these bits.
 	bitField = bit.bor(bitField, Internal.BITS.VERSION16, Internal.BITS.CODECV2)
 
 	if messageOptions.serialize then

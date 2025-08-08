@@ -247,8 +247,10 @@ do
 		if self:Me(args.destGUID) then
 			local timeSinceCastStart = args.time - madnessCastStartTime
 			local remainingTime = (self:Classic() and 60 or 55) - timeSinceCastStart
-			self:Bar(64059, remainingTime)
-			self:DelayedMessage(64059, remainingTime - 10, "orange", L.madness_warning, false, "warning")
+			if remainingTime > 0 then -- XXX we should start a minimum timer when madnessCastStartTime is 0, instead of no timer at all
+				self:Bar(64059, remainingTime)
+				self:DelayedMessage(64059, remainingTime - 10, "orange", L.madness_warning, false, "warning")
+			end
 		end
 	end
 

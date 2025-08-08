@@ -47,22 +47,33 @@ local function OnChatMessage(self, event, text, ...)
 		return false
 	end
 
+	local progress = {}
 	local specs = {}
+	local bestSection = profile.sections[1]
 
-	for _, spec in ipairs(profile.specs) do
-		local percentile = spec.average == nil and "" or Private.EncodeWithPercentileColor(spec.average, Private.FormatAveragePercentile(spec.average))
-		table.insert(specs, string.format("%s %s", Private.EncodeWithTexture(Private.GetSpecIcon(spec.type)), percentile))
+	if bestSection ~= nil then
+		progress.zoneId = bestSection.zoneId
+		progress.difficultyId = bestSection.difficultyId
+		progress.sizeId = bestSection.sizeId
+		progress.killed = bestSection.anySpecRankings.progressKilled
+		progress.possible = bestSection.anySpecRankings.progressPossible
+
+		for _, rankings in ipairs(bestSection.perSpecRankings) do
+			local percentile = Private.EncodeWithPercentileColor(rankings.bestAverage, Private.FormatAveragePercentile(rankings.bestAverage))
+			table.insert(specs, string.format("%s %s", Private.EncodeWithTexture(Private.GetSpecIcon(rankings.spec)), percentile))
+		end
+	else
+		progress.zoneId = profile.summary.zoneId
+		progress.difficultyId = profile.summary.difficultyId
+		progress.sizeId = profile.summary.sizeId
+		progress.killed = profile.summary.progressKilled
+		progress.possible = profile.summary.progressPossible
 	end
 
-	local progress = string.format(
-		"%d/%d %s %s",
-		profile.progress.count,
-		profile.progress.total,
-		Private.GetDifficultyString(profile.difficulty, profile.size, profile.zoneId),
-		table.concat(specs, " ")
-	)
+	local profileString =
+		string.format("%s %s", Private.GetProgressString(progress.zoneId, progress.difficultyId, progress.sizeId, progress.killed, progress.possible, false), table.concat(specs, " "))
 
-	return false, text .. " - " .. progress, ...
+	return false, text .. " - " .. profileString, ...
 end
 
 ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", OnChatMessage)

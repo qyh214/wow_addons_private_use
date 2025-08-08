@@ -7,6 +7,7 @@ if not mod then return end
 mod.displayName = CL.trash
 mod:RegisterEnableMob(
 	218671, -- Venture Co. Pyromaniac
+	214668, -- Venture Co. Patron
 	210269, -- Hired Muscle
 	214920, -- Tasting Room Attendant
 	214697, -- Chef Chewie
@@ -24,12 +25,19 @@ mod:RegisterEnableMob(
 )
 
 --------------------------------------------------------------------------------
+-- Locals
+--
+
+local thirstyMobs = {}
+
+--------------------------------------------------------------------------------
 -- Localization
 --
 
 local L = mod:GetLocale()
 if L then
 	L.venture_co_pyromaniac = "Venture Co. Pyromaniac"
+	L.venture_co_patron = "Venture Co. Patron"
 	L.hired_muscle = "Hired Muscle"
 	L.tasting_room_attendant = "Tasting Room Attendant"
 	L.chef_chewie = "Chef Chewie"
@@ -65,9 +73,12 @@ function mod:GetOptions()
 		-- Venture Co. Pyromaniac
 		{437721, "NAMEPLATE"}, -- Boiling Flames
 		{437956, "NAMEPLATE"}, -- Erupting Inferno
+		-- Venture Co. Patron
+		{434773, "NAMEPLATE", "ME_ONLY", "OFF"}, -- Mean Mug
 		-- Hired Musle
 		{463218, "HEALER", "NAMEPLATE"}, -- Volatile Keg
 		{434756, "ME_ONLY", "NAMEPLATE"}, -- Throw Chair
+		{441408, "DISPEL"}, -- Thirsty
 		-- Tasting Room Attendant
 		{434706, "NAMEPLATE"}, -- Cinderbrew Toss
 		-- Chef Chewie
@@ -125,10 +136,19 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED", "EruptingInfernoApplied", 437956)
 	self:Death("VentureCoPyromaniacDeath", 218671)
 
+	-- Venture Co. Patron
+	self:RegisterEngageMob("VentureCoPatronEngaged", 214668)
+	self:Log("SPELL_CAST_START", "MeanMug", 434773)
+	self:Log("SPELL_CAST_SUCCESS", "MeanMugSuccess", 434773)
+	self:Log("SPELL_AURA_APPLIED_DOSE", "MeanMugApplied", 434773)
+	self:Death("VentureCoPatronDeath", 214668)
+
 	-- Hired Muscle
 	self:RegisterEngageMob("HiredMuscleEngaged", 210269)
 	self:Log("SPELL_CAST_START", "VolatileKeg", 463218)
 	self:Log("SPELL_CAST_START", "ThrowChair", 434756)
+	self:Log("SPELL_AURA_APPLIED", "ThirstyApplied", 441408)
+	self:Log("SPELL_AURA_REMOVED", "ThirstyRemoved", 441408)
 	self:Death("HiredMuscleDeath", 210269)
 
 	-- Tasting Room Attendant
@@ -198,6 +218,10 @@ function mod:OnBossEnable()
 	self:Death("YesManDeath", 219588)
 end
 
+function mod:OnBossDisable()
+	thirstyMobs = {}
+end
+
 --------------------------------------------------------------------------------
 -- Event Handlers
 --
@@ -249,11 +273,41 @@ function mod:VentureCoPyromaniacDeath(args)
 	self:ClearNameplate(args.destGUID)
 end
 
+-- Venture Co. Patron
+
+function mod:VentureCoPatronEngaged(guid)
+	self:Nameplate(434773, 8.3, guid) -- Mean Mug
+end
+
+function mod:MeanMug(args)
+	self:Nameplate(args.spellId, 0, args.sourceGUID)
+end
+
+function mod:MeanMugSuccess(args)
+	self:Nameplate(args.spellId, 14.8, args.sourceGUID)
+end
+
+function mod:MeanMugApplied(args)
+	if args.amount > 2 and args.amount % 2 == 1 then -- 3, 5, 7...
+		self:StackMessage(args.spellId, "yellow", args.destName, args.amount, 5)
+		self:PlaySound(args.spellId, "info", nil, args.destName)
+	end
+end
+
+function mod:VentureCoPatronDeath(args)
+	self:ClearNameplate(args.destGUID)
+end
+
 -- Hired Muscle
 
 function mod:HiredMuscleEngaged(guid)
 	self:Nameplate(463218, 8.0, guid) -- Volatile Keg
 	self:Nameplate(434756, 12.0, guid) -- Throw Chair
+	-- Thirsty is only applied out of combat, alert on engage if it's still present
+	if thirstyMobs[guid] and self:Dispeller("enrage", true, 441408) then
+		self:Message(441408, "cyan", CL.on:format(self:SpellName(441408), thirstyMobs[guid]))
+		self:PlaySound(441408, "info")
+	end
 end
 
 function mod:VolatileKeg(args)
@@ -272,6 +326,16 @@ do
 		self:GetUnitTarget(printTarget, 0.2, args.sourceGUID)
 		self:Nameplate(args.spellId, 15.7, args.sourceGUID)
 	end
+end
+
+function mod:ThirstyApplied(args)
+	-- this applies to Hired Muscle, Venture Co. Patron, and Venture Co. Pyromaniac when out of combat.
+	-- the alert for this is in :HiredMuscleEnaged only, the other mobs are less important to dispel.
+	thirstyMobs[args.destGUID] = args.destName
+end
+
+function mod:ThirstyRemoved(args)
+	thirstyMobs[args.destGUID] = nil
 end
 
 function mod:HiredMuscleDeath(args)
@@ -435,7 +499,7 @@ end
 do
 	local prev = 0
 	function mod:OozingHoneyDamage(args)
-		if self:MobId(args.sourceGUID) == 223562 then -- Brew Drop, trash version
+		if self:MobId(args.sourceGUID) ~= 219301 then -- Brew Drop, boss version
 			if self:Me(args.destGUID) and args.time - prev > 2 then
 				prev = args.time
 				self:PersonalMessage(args.spellId, "underyou")

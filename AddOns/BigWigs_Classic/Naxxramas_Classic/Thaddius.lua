@@ -300,6 +300,8 @@ end
 function mod:NegativeCharge(args)
 	if self:Me(args.destGUID) then
 		self:Say(args.spellId, "{rt7}--", true)
+		self:Message(args.spellId, "blue", args.spellName, ICON_NEGATIVE)
+
 		local opt = self:GetOption("custom_off_select_charge_position")
 		local strategy_first = INITIAL_DIRECTION[opt]
 		local strategy_change, direction
@@ -322,15 +324,18 @@ function mod:NegativeCharge(args)
 		else
 			direction = strategy_change
 		end
-		self:Message(args.spellId, "blue", args.spellName, ICON_NEGATIVE)
-		if self:GetOption("custom_off_charge_graphic") then
-			DIRECTION_ARROW[direction]()
-		end
-		if self:GetOption("custom_off_charge_text") then
-			self:Message(args.spellId, "blue", L[direction], ICON_NEGATIVE)
-		end
-		if self:GetOption("custom_off_charge_voice") then
-			self:PlaySoundFile(DIRECTION_SOUND[direction])
+		if direction then
+			if self:GetOption("custom_off_charge_graphic") then
+				DIRECTION_ARROW[direction]()
+			end
+			if self:GetOption("custom_off_charge_text") then
+				self:Message(args.spellId, "blue", L[direction], ICON_NEGATIVE)
+			end
+			if self:GetOption("custom_off_charge_voice") then
+				self:PlaySoundFile(DIRECTION_SOUND[direction])
+			else
+				self:PlaySound(args.spellId, "warning")
+			end
 		else
 			self:PlaySound(args.spellId, "warning")
 		end
@@ -339,6 +344,8 @@ end
 
 function mod:NegativeChargeRefresh(args)
 	if self:Me(args.destGUID) then
+		self:Message(args.spellId, "blue", args.spellName, ICON_NEGATIVE, true) -- Disable emphasize
+
 		local strategy_nochange
 		local opt = self:GetOption("custom_off_select_charge_movement")
 		if opt == 1 then -- through
@@ -354,15 +361,16 @@ function mod:NegativeChargeRefresh(args)
 		end
 
 		local direction = strategy_nochange
-		self:Message(args.spellId, "blue", args.spellName, ICON_NEGATIVE, true) -- Disable emphasize
-		if self:GetOption("custom_off_charge_graphic") then
-			DIRECTION_ARROW[direction]()
-		end
-		if self:GetOption("custom_off_charge_text") then
-			self:Message(args.spellId, "blue", L[direction], ICON_NEGATIVE, true) -- Disable emphasize
-		end
-		if self:GetOption("custom_off_charge_voice") then
-			self:PlaySoundFile(DIRECTION_SOUND[direction])
+		if direction then
+			if self:GetOption("custom_off_charge_graphic") then
+				DIRECTION_ARROW[direction]()
+			end
+			if self:GetOption("custom_off_charge_text") then
+				self:Message(args.spellId, "blue", L[direction], ICON_NEGATIVE, true) -- Disable emphasize
+			end
+			if self:GetOption("custom_off_charge_voice") then
+				self:PlaySoundFile(DIRECTION_SOUND[direction])
+			end
 		end
 	end
 end
@@ -370,6 +378,8 @@ end
 function mod:PositiveCharge(args)
 	if self:Me(args.destGUID) then
 		self:Say(args.spellId, "{rt6}++", true)
+		self:Message(args.spellId, "blue", args.spellName, ICON_POSITIVE)
+
 		local opt = self:GetOption("custom_off_select_charge_position")
 		local strategy_first = INITIAL_DIRECTION[opt]
 		local strategy_change, direction
@@ -392,15 +402,18 @@ function mod:PositiveCharge(args)
 		else
 			direction = strategy_change
 		end
-		self:Message(args.spellId, "blue", args.spellName, ICON_POSITIVE)
-		if self:GetOption("custom_off_charge_graphic") then
-			DIRECTION_ARROW[direction]()
-		end
-		if self:GetOption("custom_off_charge_text") then
-			self:Message(args.spellId, "blue", L[direction], ICON_POSITIVE)
-		end
-		if self:GetOption("custom_off_charge_voice") then
-			self:PlaySoundFile(DIRECTION_SOUND[direction])
+		if direction then
+			if self:GetOption("custom_off_charge_graphic") then
+				DIRECTION_ARROW[direction]()
+			end
+			if self:GetOption("custom_off_charge_text") then
+				self:Message(args.spellId, "blue", L[direction], ICON_POSITIVE)
+			end
+			if self:GetOption("custom_off_charge_voice") then
+				self:PlaySoundFile(DIRECTION_SOUND[direction])
+			else
+				self:PlaySound(args.spellId, "warning")
+			end
 		else
 			self:PlaySound(args.spellId, "warning")
 		end
@@ -409,6 +422,8 @@ end
 
 function mod:PositiveChargeRefresh(args)
 	if self:Me(args.destGUID) then
+		self:Message(args.spellId, "blue", args.spellName, ICON_POSITIVE, true) -- Disable emphasize
+
 		local strategy_nochange
 		local opt = self:GetOption("custom_off_select_charge_movement")
 		if opt == 1 then -- through
@@ -424,15 +439,16 @@ function mod:PositiveChargeRefresh(args)
 		end
 
 		local direction = strategy_nochange
-		self:Message(args.spellId, "blue", args.spellName, ICON_POSITIVE, true) -- Disable emphasize
-		if self:GetOption("custom_off_charge_graphic") then
-			DIRECTION_ARROW[direction]()
-		end
-		if self:GetOption("custom_off_charge_text") then
-			self:Message(args.spellId, "blue", L[direction], ICON_POSITIVE, true) -- Disable emphasize
-		end
-		if self:GetOption("custom_off_charge_voice") then
-			self:PlaySoundFile(DIRECTION_SOUND[direction])
+		if direction then
+			if self:GetOption("custom_off_charge_graphic") then
+				DIRECTION_ARROW[direction]()
+			end
+			if self:GetOption("custom_off_charge_text") then
+				self:Message(args.spellId, "blue", L[direction], ICON_POSITIVE, true) -- Disable emphasize
+			end
+			if self:GetOption("custom_off_charge_voice") then
+				self:PlaySoundFile(DIRECTION_SOUND[direction])
+			end
 		end
 	end
 end

@@ -3,9 +3,13 @@ local isRetail = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE)
 local isClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
 local isWrath = (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC)
 local isCata = (WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC)
+local isMop = (WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC)
 
 ham.healthstone = ham.Item.new(5512, "Healthstone")
 ham.demonicHealthstone = ham.Item.new(224464, "Demonic Healthstone") ---1 Minute CD due to Pact of Gluttony
+ham.invigoratingHealingPotionR3 = ham.Item.new(244839, "Invigorating Healing Potion")
+ham.invigoratingHealingPotionR2 = ham.Item.new(244838, "Invigorating Healing Potion")
+ham.invigoratingHealingPotionR1 = ham.Item.new(244835, "Invigorating Healing Potion")
 ham.algariHealingPotionR3 = ham.Item.new(211880, "Algari Healing Potion")
 ham.algariHealingPotionR2 = ham.Item.new(211879, "Algari Healing Potion")
 ham.algariHealingPotionR1 = ham.Item.new(211878, "Algari Healing Potion")
@@ -42,7 +46,9 @@ ham.coastal = ham.Item.new(152494, "Coastal Healing Potion")
 ham.ancient = ham.Item.new(127834, "Ancient Healing Potion")
 ham.aged = ham.Item.new(136569, "Aged Health Potion")
 ham.tonic = ham.Item.new(109223, "Healing Tonic")
+--Mists
 ham.master = ham.Item.new(76097, "Master Healing Potion")
+--Cata
 ham.roguesDraught = ham.Item.new(63300, "Rogue's Draught")
 ham.mythical = ham.Item.new(57191, "Mythical Healing Potion")
 ham.crazy_alch = ham.Item.new(40077, "Crazy Alchemist's Potion")
@@ -63,6 +69,9 @@ ham.superior = ham.Item.new(3928, "Superior Healing Potion")
 ham.minor = ham.Item.new(118, "Minor Healing Potion")
 ham.greater = ham.Item.new(1710, "Greater Healing Potion")
 ham.healingPotion = ham.Item.new(929, "Healing Potion")
+  -- Classic PvP battleground-only draughts
+  ham.majorHealingDraught = ham.Item.new(17348, "Major Healing Draught")
+  ham.superiorHealingDraught = ham.Item.new(17349, "Superior Healing Draught")
 
 ------Healthstones for Classic------
 ham.minor0 = ham.Item.new(5512, "Minor Healthstone")
@@ -120,6 +129,9 @@ end
 function ham.getPots()
   if isRetail then
     local pots = {
+      ham.invigoratingHealingPotionR3,
+      ham.invigoratingHealingPotionR2,
+      ham.invigoratingHealingPotionR1,
       ham.fleetingAlgariHealingPotionR3,
       ham.algariHealingPotionR3,
       ham.fleetingAlgariHealingPotionR2,
@@ -184,7 +196,8 @@ function ham.getPots()
     return pots
   end
   if isClassic then
-    return {
+    -- Base Classic potions list
+    local pots = {
       ham.major,
       ham.combat,
       ham.superior,
@@ -193,6 +206,17 @@ function ham.getPots()
       ham.lesser,
       ham.minor
     }
+
+    -- If in a PvP battleground, prioritize battleground draughts
+    local inInstance, instanceType = IsInInstance()
+    local isInBattleground = inInstance and instanceType == "pvp"
+    if isInBattleground then
+      -- Insert in reverse order so final priority is Major then Superior
+      table.insert(pots, 1, ham.superiorHealingDraught)
+      table.insert(pots, 1, ham.majorHealingDraught)
+    end
+
+    return pots
   end
 
   if isWrath then
@@ -218,6 +242,30 @@ function ham.getPots()
 
   if isCata then
     return {
+      ham.roguesDraught,
+      ham.mythical,
+      ham.crazy_alch,
+      ham.runic_inject,
+      ham.runic,
+      ham.superreju,
+      ham.endless,
+      ham.injector,
+      ham.resurgent,
+      ham.super,
+      ham.argent,
+      ham.auchenai,
+      ham.major,
+      ham.superior,
+      ham.greater,
+      ham.healingPotion,
+      ham.lesser,
+      ham.minor
+    }
+  end
+
+  if isMop then
+    return {
+      ham.master,
       ham.roguesDraught,
       ham.mythical,
       ham.crazy_alch,
@@ -295,6 +343,37 @@ function ham.getHealthstonesClassic()
 
   if isCata then
     return {
+      ham.fel2,
+      ham.fel1,
+      ham.fel0,
+      ham.demonicWotLK2,
+      ham.demonicWotLK1,
+      ham.demonicWotLK0,
+      ham.master2,
+      ham.master1,
+      ham.master0,
+      ham.major2,
+      ham.major1,
+      ham.major0,
+      ham.greater2,
+      ham.greater1,
+      ham.greater0,
+      ham.healtsthone2,
+      ham.healtsthone1,
+      ham.healtsthone0,
+      ham.lesser2,
+      ham.lesser1,
+      ham.lesser0,
+      ham.minor2,
+      ham.minor1,
+      ham.minor0
+    }
+  end
+
+  if isMop then
+    return {
+      ham.healthstone,
+      --probably remove the stuff below since there should only be one healtsthone left with MoP
       ham.fel2,
       ham.fel1,
       ham.fel0,

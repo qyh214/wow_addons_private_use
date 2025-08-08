@@ -388,7 +388,7 @@ end
 ---------------------------------------------------------------------
 local function Aura_SetTooltipPosition(aura)
     -- TODO: more anchorTo
-    if aura.tooltipAnchorTo == "aura" then
+    if aura.tooltipAnchorTo == "self" then
         GameTooltip:SetOwner(aura, "ANCHOR_NONE")
         GameTooltip:SetPoint(aura.tooltipPosition[1], aura, aura.tooltipPosition[2], aura.tooltipPosition[3], aura.tooltipPosition[4])
     else -- default

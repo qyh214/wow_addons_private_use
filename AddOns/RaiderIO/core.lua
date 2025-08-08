@@ -22,7 +22,7 @@ local ScrollBoxUtil do
     ---@class CallbackRegistryMixin
     ---@field public RegisterCallback fun(event: string|any, callback: fun())
 
-    ---@class ScrollBoxBaseMixin : CallbackRegistryMixin
+    ---@class ScrollBoxBaseMixin : CallbackRegistryMixin, Frame
     ---@field public GetFrames fun(): Frame[]
     ---@field public Update fun()
     ---@field public buttons? Button[]
@@ -76,13 +76,34 @@ end
 
 local HookUtil do
 
+    ---@alias ScriptAnyWidgetHandler
+    ---|ScriptAnimation
+    ---|ScriptAnimationGroup
+    ---|ScriptBrowser
+    ---|ScriptButton
+    ---|ScriptCheckout
+    ---|ScriptCinematicModel
+    ---|ScriptColorSelect
+    ---|ScriptCooldown
+    ---|ScriptDressUpModel
+    ---|ScriptEditBox
+    ---|ScriptFogOfWarFrame
+    ---|ScriptFrame
+    ---|ScriptGameTooltip
+    ---|ScriptModel
+    ---|ScriptModelSceneActor
+    ---|ScriptMovieFrame
+    ---|ScriptScrollFrame
+    ---|ScriptSlider
+    ---|ScriptStatusBar
+
     HookUtil = {}
 
     local hooked = {}
 
     ---@param frame Frame
     ---@param callback fun(self: Frame, ...)
-    ---@param ... string
+    ---@param ... ScriptAnyWidgetHandler
     function HookUtil:On(frame, callback, ...)
         local hook = hooked[frame]
         if not hook then
@@ -104,7 +125,7 @@ local HookUtil do
 
     ---@param frames Frame[]
     ---@param callback fun(self: Frame, ...)
-    ---@param ... string
+    ---@param ... ScriptAnyWidgetHandler
     function HookUtil:OnAll(frames, callback, ...)
         for _, frame in ipairs(frames) do
             HookUtil:On(frame, callback, ...)
@@ -112,7 +133,7 @@ local HookUtil do
     end
 
     ---@param object Frame[]|Frame
-    ---@param map table<string, fun()>
+    ---@param map table<ScriptAnyWidgetHandler, fun()>
     function HookUtil:MapOn(object, map)
         if type(object) ~= "table" then
             return
@@ -1500,6 +1521,7 @@ do
     ---@field public replaySelection ReplayFrameSelections Defaults to `user_best_replay`
     ---@field public replayPoint ConfigProfilePoint Defaults to `{ point = nil, x = 0, y = 0 }`
     ---@field public profilePoint ConfigProfilePoint Defaults to `{ point = nil, x = 0, y = 0 }`
+    ---@field public rwfMiniPoint ConfigProfilePoint Defaults to `{ point = nil, x = 0, y = 0 }`
     ---@field public replayBackground ConfigReplayColor Defaults to `{ r = 0, g = 0, b = 0, a = 0.5 }`
     ---@field public minimapIcon MinimapIconDB Defaults to `{ hide = false, lock = false, showInCompartment = true, minimapPos = 180 }`
 
@@ -1508,6 +1530,69 @@ do
     ---@field public lock boolean `false`
     ---@field public showInCompartment boolean `true`
     ---@field public minimapPos number `180`
+
+    -- These settings have no other way to be changed other than directly setting their value:
+    -- /run RaiderIO_Config.alwaysExtendTooltip = false
+    -- /run RaiderIO_Config.disableCheckingRegion = false
+    -- /run RaiderIO_Config.rwfBackgroundMode = true
+    -- /run RaiderIO_Config.rwfBackgroundRemindAt = 10
+    -- /run RaiderIO_Config.showMedalsInsteadOfText = false
+
+    --- Manually updated to match `fallbackConfig` keys. This can be replaced once `keyof` becomes supported.
+    ---@alias FallbackConfigKey
+    ---|"enableUnitTooltips"
+    ---|"enableLFGTooltips"
+    ---|"enableFriendsTooltips"
+    ---|"enableLFGDropdown"
+    ---|"enableWhoTooltips"
+    ---|"enableWhoMessages"
+    ---|"enableGuildTooltips"
+    ---|"enableKeystoneTooltips"
+    ---|"showAverageScore"
+    ---|"mplusHeadlineMode"
+    ---|"useEnglishAbbreviations"
+    ---|"showMainsScore"
+    ---|"showMainBestScore"
+    ---|"showWarbandScore"
+    ---|"showDropDownCopyURL"
+    ---|"showSimpleScoreColors"
+    ---|"showScoreInCombat"
+    ---|"showScoreModifier" @NEW in 9.0
+    ---|"disableScoreColors"
+    ---|"enableClientEnhancements"
+    ---|"showClientGuildBest"
+    ---|"displayWeeklyGuildBest"
+    ---|"allowClientToControlCombatLog"
+    ---|"enableCombatLogTracking"
+    ---|"previouslyEnabledLogging"
+    ---|"showRaiderIOProfile"
+    ---|"hidePersonalRaiderIOProfile"
+    ---|"showRaidEncountersInProfile"
+    ---|"enableProfileModifier"
+    ---|"inverseProfileModifier"
+    ---|"alwaysExtendTooltip"
+    ---|"positionProfileAuto"
+    ---|"lockProfile"
+    ---|"enableLFGExportButton" @NEW in 11.1
+    ---|"showRoleIcons"
+    ---|"profilePoint" @`ConfigProfilePoint`
+    ---|"debugMode"
+    ---|"disableCheckingRegion" @NEW in 11.1.5
+    ---|"rwfMode" @NEW in 9.1
+    ---|"rwfBackgroundMode" @NEW in 9.2
+    ---|"rwfBackgroundRemindAt" @NEW in 9.2
+    ---|"rwfMiniPoint" @`ConfigProfilePoint` NEW in 9.2
+    ---|"showMedalsInsteadOfText" @NEW in 9.1.5
+    ---|"replayStyle" @NEW in 10.0.7
+    ---|"replayTiming" @NEW in 10.1.5
+    ---|"replaySelection" @NEW in 10.1.5
+    ---|"replayBackground" @`ConfigReplayColor` NEW in 10.1.5
+    ---|"replayAlpha" @NEW in 10.1.5
+    ---|"enableReplay" @NEW in 10.1.5
+    ---|"dockReplay" @NEW in 10.1.5
+    ---|"lockReplay" @NEW in 10.1.5
+    ---|"replayPoint" @`ConfigProfilePoint` NEW in 10.1.5
+    ---|"minimapIcon" @`MinimapIconDB` NEW in 10.2.6
 
     -- fallback saved variables
     ---@class FallbackConfig
@@ -1520,6 +1605,7 @@ do
         enableWhoMessages = true,
         enableGuildTooltips = true,
         enableKeystoneTooltips = true,
+        showAverageScore = false,
         mplusHeadlineMode = 0,
         useEnglishAbbreviations = false,
         showMainsScore = true,
@@ -1535,37 +1621,40 @@ do
         displayWeeklyGuildBest = false,
         allowClientToControlCombatLog = true,
         enableCombatLogTracking = false,
+        previouslyEnabledLogging = false,
         showRaiderIOProfile = true,
         hidePersonalRaiderIOProfile = false,
         showRaidEncountersInProfile = true,
         enableProfileModifier = true,
         inverseProfileModifier = false,
+        alwaysExtendTooltip = false,
         positionProfileAuto = true,
         lockProfile = false,
         enableLFGExportButton = true, -- NEW in 11.1
         showRoleIcons = true,
-        profilePoint = { point = nil, x = 0, y = 0 },
+        profilePoint = { point = nil, x = 0, y = 0 }, -- `ConfigProfilePoint`
         debugMode = false,
+        disableCheckingRegion = false, -- NEW in 11.1.5
         rwfMode = false, -- NEW in 9.1
         rwfBackgroundMode = true, -- NEW in 9.2
         rwfBackgroundRemindAt = 10, -- NEW in 9.2
-        rwfMiniPoint = { point = nil, x = 0, y = 0 }, -- NEW in 9.2
+        rwfMiniPoint = { point = nil, x = 0, y = 0 }, -- `ConfigProfilePoint` NEW in 9.2
         showMedalsInsteadOfText = false, -- NEW in 9.1.5
         replayStyle = "MODERN", -- NEW in 10.0.7
         replayTiming = "BOSS", -- NEW in 10.1.5
         replaySelection = "user_best_replay", -- NEW in 10.1.5
-        replayBackground = { r = 0, g = 0, b = 0, a = 0.5 }, -- NEW in 10.1.5
+        replayBackground = { r = 0, g = 0, b = 0, a = 0.5 }, -- `ConfigReplayColor` NEW in 10.1.5
         replayAlpha = 1, -- NEW in 10.1.5
         enableReplay = true, -- NEW in 10.1.5
         dockReplay = true, -- NEW in 10.1.5
         lockReplay = false, -- NEW in 10.1.5
-        replayPoint = { point = nil, x = 0, y = 0 }, -- NEW in 10.1.5
-        minimapIcon = { hide = false, lock = false, showInCompartment = true, minimapPos = 180 }, -- NEW in 10.2.6
+        replayPoint = { point = nil, x = 0, y = 0 }, -- `ConfigProfilePoint` NEW in 10.1.5
+        minimapIcon = { hide = false, lock = false, showInCompartment = true, minimapPos = 180 }, -- `MinimapIconDB` NEW in 10.2.6
     }
 
     -- fallback metatable looks up missing keys into the fallback config table
     local fallbackMetatable = {
-        ---@param key string
+        ---@param key FallbackConfigKey
         __index = function(_, key)
             return fallbackConfig[key]
         end
@@ -1598,14 +1687,14 @@ do
         callback:RegisterEventOnce(OnPlayerLogin, "RAIDERIO_PLAYER_LOGIN")
     end
 
-    ---@param key string
+    ---@param key FallbackConfigKey
     ---@param val any
     function config:Set(key, val)
         assert(self:IsEnabled(), "Raider.IO Config expects Set(key, val) to only be used after the addon saved variables have been loaded.")
         RaiderIO_Config[key] = val
     end
 
-    ---@param key string
+    ---@param key FallbackConfigKey
     ---@param fallback? any
     ---@return any
     function config:Get(key, fallback)
@@ -1617,7 +1706,7 @@ do
         return val
     end
 
-    ---@param key string
+    ---@param key FallbackConfigKey
     ---@return any
     function config:GetDefault(key)
         return fallbackConfig[key]
@@ -1849,6 +1938,11 @@ do
         -- whotooltip.lua
         if IsParentedBy(frame, WhoFrame.ScrollBox) then return true end
         if IsParentedBy(frame, WhoListScrollFrame and WhoListScrollFrame:GetParent()) then return true end
+        -- lfgtooltip.lua
+        if LFGListFrame and LFGListFrame.SearchPanel and LFGListFrame.ApplicationViewer then
+            if IsParentedBy(frame, LFGListFrame.SearchPanel.ScrollBox) then return true end
+            if IsParentedBy(frame, LFGListFrame.ApplicationViewer.ScrollBox) then return true end
+        end
         -- guildtooltip.lua
         if IsParentedBy(frame, GuildRosterContainer) then return true end
         if IsParentedBy(frame, GuildListScrollFrame and GuildListScrollFrame:GetParent()) then return true end
@@ -1869,9 +1963,12 @@ do
     ---| 1 #Script handler ignored due to safety concerns.
     ---| 2 #Script handler executed successfully.
     ---| 3 #Script handler executed but silently errored.
+    ---| 4 #Script handler ignored due to before-callback.
+
+    ---@alias ExecuteWidgetOnEnterSafelyBefore fun(focus: Frame|ScriptRegion): boolean?
 
     ---@param object? Frame|ScriptRegion @Any interface widget object that supports the methods GetScript.
-    ---@param before? fun() @Optional function to run right before the OnEnter script executes.
+    ---@param before? ExecuteWidgetOnEnterSafelyBefore @Optional function to run right before the OnEnter script executes.
     ---@return ExecuteWidgetOnEnterSafelyStatus @Returns a status enum to indicate the outcome of the call.
     function util:ExecuteWidgetOnEnterSafely(object, before)
         if not object or type(object) ~= "table" or type(object.GetScript) ~= "function" then
@@ -1884,8 +1981,12 @@ do
         if not IsOnEnterSafe(object, func) then
             return 1
         end
+        local call ---@type boolean?
         if type(before) == "function" then
-            before()
+            call = before(object)
+        end
+        if call == false then
+            return 4
         end
         if not pcall(func, object) then
             return 3
@@ -1918,9 +2019,23 @@ do
         end
     end
 
-    ---@param before? fun() @Optional function to run right before the OnEnter script executes.
+    ---@param before? ExecuteWidgetOnEnterSafelyBefore @Optional function to run right before the OnEnter script executes.
     ---@return ExecuteWidgetOnEnterSafelyStatus @Returns a status enum to indicate the outcome of the call.
     function util:ExecuteFocusWidgetOnEnterSafely(before)
+        local focus = util:GetMouseFocus()
+        if not focus then
+            return 0
+        end
+        return self:ExecuteWidgetOnEnterSafely(focus, before)
+    end
+
+    ---@param widget ScriptRegion
+    ---@param before? ExecuteWidgetOnEnterSafelyBefore @Optional function to run right before the OnEnter script executes.
+    ---@return ExecuteWidgetOnEnterSafelyStatus @Returns a status enum to indicate the outcome of the call.
+    function util:ExecuteIsMouseOverWidgetOnEnterSafely(widget, before)
+        if not widget:IsMouseOver() then
+            return 0
+        end
         local focus = util:GetMouseFocus()
         if not focus then
             return 0
@@ -2254,8 +2369,8 @@ do
     ---@param playerLink string @The player link can be any valid clickable chat link for messaging
     ---@return string?, string?, number? @Returns the name and realm, or nil for both if invalid
     function util:GetNameRealmFromPlayerLink(playerLink)
-        local linkString, linkText = LinkUtil.SplitLink(playerLink)
-        local linkType, linkData = ExtractLinkData(linkString) ---@type string, string
+        local linkString, linkText = playerLink:match("^|H(.+)|h(.*)|h$") ---@type string, string
+        local linkType, linkData = linkString:match("(.-):(.*)")---@type string, string
         if linkType == "player" then
             local name, realm, unit = util:GetNameRealm(linkData)
             return name, realm
@@ -3396,7 +3511,7 @@ do
                     outdated = outdated and max(outdated, provider.outdated) or provider.outdated
                 end
                 if not config:Get("debugMode") then
-                    if provider.region ~= ns.PLAYER_REGION then
+                    if provider.region ~= ns.PLAYER_REGION and not config:Get("disableCheckingRegion") then
                         C_AddOns.DisableAddOn(provider.name)
                         table.wipe(provider)
                         table.remove(providers, i)
@@ -5887,6 +6002,12 @@ do
         -- if unit simply refresh the unit and the original hook will force update the tooltip with the desired behavior
         local _, tooltipUnit = tooltip:GetUnit()
         if tooltipUnit then
+            ---@diagnostic disable-next-line: undefined-field
+            local refreshData = tooltip.RefreshData ---@type fun(self: GameTooltip)?
+            if refreshData then
+                refreshData(tooltip)
+                return
+            end
             tooltip:SetUnit(tooltipUnit)
             return
         end
@@ -6132,8 +6253,12 @@ do
         GameTooltip:Hide()
     end
 
-    local function OnScroll()
+    ---@param frame Frame
+    local function OnScroll(frame)
         if not config:Get("enableWhoTooltips") then
+            return
+        end
+        if not frame:IsMouseOver() then
             return
         end
         GameTooltip:Hide()
@@ -6665,7 +6790,14 @@ if IS_RETAIL then
         end
         hooked = true
         hooksecurefunc(frame, "PlayBanner", OnChallengeModeCompleteBannerPlay)
-        local mapID, level, time, onTime, keystoneUpgradeLevels, practiceRun, oldDungeonScore, newDungeonScore, isAffixRecord, isMapRecord, primaryAffix, isEligibleForScore, upgradeMembers = C_ChallengeMode.GetCompletionInfo()
+        ---@type number, number, number, boolean, number, boolean, number, number, boolean, boolean, 0, boolean, ChallengeModeCompletionMemberInfo[]
+        local mapID, level, time, onTime, keystoneUpgradeLevels, practiceRun, oldDungeonScore, newDungeonScore, isAffixRecord, isMapRecord, primaryAffix, isEligibleForScore, upgradeMembers
+        if C_ChallengeMode.GetChallengeCompletionInfo then
+            local info = C_ChallengeMode.GetChallengeCompletionInfo()
+            mapID, level, time, onTime, keystoneUpgradeLevels, practiceRun, oldDungeonScore, newDungeonScore, isAffixRecord, isMapRecord, primaryAffix, isEligibleForScore, upgradeMembers = info.mapChallengeModeID, info.level, info.time, info.onTime, info.keystoneUpgradeLevels, info.practiceRun, info.oldOverallDungeonScore, info.newOverallDungeonScore, info.isAffixRecord, info.isMapRecord, 0, info.isEligibleForScore, info.members
+        else
+            mapID, level, time, onTime, keystoneUpgradeLevels, practiceRun, oldDungeonScore, newDungeonScore, isAffixRecord, isMapRecord, primaryAffix, isEligibleForScore, upgradeMembers = C_ChallengeMode.GetCompletionInfo() ---@diagnostic disable-line: deprecated
+        end
         if not practiceRun then
             local bannerData = { mapID = mapID, level = level, time = time, onTime = onTime, keystoneUpgradeLevels = keystoneUpgradeLevels or 0, oldDungeonScore = oldDungeonScore, newDungeonScore = newDungeonScore, isAffixRecord = isAffixRecord, isMapRecord = isMapRecord, primaryAffix = primaryAffix, isEligibleForScore = isEligibleForScore, upgradeMembers = upgradeMembers } ---@type ChallengeModeCompleteBannerData
             OnChallengeModeCompleteBannerPlay(frame, bannerData)
@@ -7195,7 +7327,11 @@ if not IS_CLASSIC_ERA then
         return false
     end
 
-    local function OnScroll()
+    ---@param frame ScrollBoxBaseMixin
+    local function OnScroll(frame)
+        if not frame:IsMouseOver() then
+            return
+        end
         GameTooltip:Hide()
         util:ExecuteFocusWidgetOnEnterSafely()
     end
@@ -7312,8 +7448,12 @@ if IS_CLASSIC_ERA then
         GameTooltip:Hide()
     end
 
-    local function OnScroll()
+    ---@param frame Frame
+    local function OnScroll(frame)
         if not config:Get("enableGuildTooltips") then
+            return
+        end
+        if not frame:IsMouseOver() then
             return
         end
         GameTooltip:Hide()
@@ -7433,8 +7573,12 @@ do
         return true
     end
 
-    local function OnScroll()
+    ---@param frame ScrollBoxBaseMixin
+    local function OnScroll(frame)
         if not config:Get("enableGuildTooltips") then
+            return
+        end
+        if not frame:IsMouseOver() then
             return
         end
         GameTooltip:Hide()
@@ -7835,12 +7979,7 @@ if IS_RETAIL then
             self.GuildBests[i]:SetUp(currentRuns[i + self.offset])
         end
 
-        if self:IsMouseOver(0, 0, 0, 0) then
-            local focus = util:GetMouseFocus()
-            if focus and focus ~= GameTooltip:GetOwner() then
-                util:ExecuteWidgetOnEnterSafely(focus) ---@diagnostic disable-line: param-type-mismatch
-            end
-        end
+        util:ExecuteIsMouseOverWidgetOnEnterSafely(self, function(focus) return focus ~= GameTooltip:GetOwner() end)
 
         self:SetHeight(35 + (numVisibleRuns > 0 and numVisibleRuns * self.GuildBests[1]:GetHeight() or 0) + switchRealHeight)
 
@@ -8877,7 +9016,6 @@ if IS_RETAIL then
                         if isTrash then
                             -- `quantityString` is not provided, but we attempt to read it in case it comes back
                             -- https://github.com/Stanzilla/WoWUIBugs/issues/592
-                            ---@diagnostic disable-next-line: undefined-field
                             local quantityString = criteriaInfo.quantityString ---@type string?
                             local quantity = criteriaInfo.quantity
                             local totalQuantity = criteriaInfo.totalQuantity
@@ -9386,31 +9524,18 @@ if IS_RETAIL then
         ---@field public UpdatePartitions fun(self: UIWidgetBaseStatusBarTemplateMixin, barValue: number)
         ---@field public OnReset fun(self: UIWidgetBaseStatusBarTemplateMixin)
 
-        ---@class UIWidgetBaseStatusBarTemplate : StatusBar, UIWidgetBaseStatusBarTemplateMixin
-        ---@field public BackgroundGlow Texture
-        ---@field public BGLeft Texture
-        ---@field public BGRight Texture
-        ---@field public BGCenter Texture
-        ---@field public GlowLeft Texture
-        ---@field public GlowRight Texture
-        ---@field public GlowCenter Texture
-        ---@field public BorderLeft Texture
-        ---@field public BorderRight Texture
-        ---@field public BorderCenter Texture
-        ---@field public Spark Texture
-        ---@field public SparkMask Texture
-        ---@field public Label UIWidgetBaseTextMixin
-
         ---@class UIWidgetTemplateStatusBarMixin
         ---@field public SanitizeTextureKits fun(self: UIWidgetTemplateStatusBarMixin, widgetInfo: StatusBarWidgetVisualizationInfoPolyfill)
         ---@field public Setup fun(self: UIWidgetTemplateStatusBarMixin, widgetInfo: StatusBarWidgetVisualizationInfoPolyfill, widgetContainer: Region)
         ---@field public EvaluateTutorials fun(self: UIWidgetTemplateStatusBarMixin)
         ---@field public OnReset fun(self: UIWidgetTemplateStatusBarMixin)
 
+        ---@class UIWidgetBaseStatusBarTemplate : StatusBar
+        ---@field public value number
+
         ---@class UIWidgetTemplateStatusBar : Frame, UIWidgetTemplateStatusBarMixin
-        ---@field public Bar UIWidgetBaseStatusBarTemplate
-        ---@field public Label FontString
         ---@field public widgetContainer Region @Custom property assigned to be the same as the object used when calling `Setup`.
+        ---@field public Bar UIWidgetBaseStatusBarTemplate
         ---@field public SetBarValue fun(self: UIWidgetTemplateStatusBar, barValue: number, barMin?: number, barMax?: number, forceUpdate?: boolean) @Custom function assigned to wrap around `Setup` for updating the bar widget.
 
         ---@type StatusBarWidgetVisualizationInfoPolyfill
@@ -12485,7 +12610,10 @@ if IS_RETAIL then
 
         ---@class RaiderIORWFLootFrameButton : Button
         ---@field public tooltip string
-        ---@field public GetAppropriateTooltip fun()
+        ---@field public GetAppropriateTooltip fun(): GameTooltip
+
+        ---@type fun(): GameTooltip
+        local GetAppropriateTooltip = GetAppropriateTooltip or UIButtonMixin.GetAppropriateTooltip
 
         frame.EnableModule = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@type RaiderIORWFLootFrameButton
         frame.EnableModule:SetSize(80, 22)
@@ -12493,7 +12621,7 @@ if IS_RETAIL then
         frame.EnableModule:SetScript("OnClick", function() config:Set("rwfMode", true) ReloadUI() end)
         frame.EnableModule:SetText(L.ENABLE_RWF_MODE_BUTTON)
         frame.EnableModule.tooltip = L.ENABLE_RWF_MODE_BUTTON_TOOLTIP
-        frame.EnableModule.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.EnableModule.GetAppropriateTooltip = GetAppropriateTooltip
         frame.EnableModule:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.EnableModule:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
@@ -12503,7 +12631,7 @@ if IS_RETAIL then
         frame.DisableModule:SetScript("OnClick", function() config:Set("rwfMode", false) _G.RaiderIO_RWF = {} ReloadUI() end)
         frame.DisableModule:SetText(L.DISABLE_RWF_MODE_BUTTON)
         frame.DisableModule.tooltip = L.DISABLE_RWF_MODE_BUTTON_TOOLTIP
-        frame.DisableModule.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.DisableModule.GetAppropriateTooltip = GetAppropriateTooltip
         frame.DisableModule:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.DisableModule:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
@@ -12513,7 +12641,7 @@ if IS_RETAIL then
         frame.ReloadUI:SetScript("OnClick", ReloadUI)
         frame.ReloadUI:SetText(L.RELOAD_RWF_MODE_BUTTON)
         frame.ReloadUI.tooltip = L.RELOAD_RWF_MODE_BUTTON_TOOLTIP
-        frame.ReloadUI.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.ReloadUI.GetAppropriateTooltip = GetAppropriateTooltip
         frame.ReloadUI:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.ReloadUI:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
@@ -12523,7 +12651,7 @@ if IS_RETAIL then
         frame.WipeLog:SetScript("OnClick", function() _G.RaiderIO_RWF = {} ReloadUI() end)
         frame.WipeLog:SetText(L.WIPE_RWF_MODE_BUTTON)
         frame.WipeLog.tooltip = L.WIPE_RWF_MODE_BUTTON_TOOLTIP
-        frame.WipeLog.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.WipeLog.GetAppropriateTooltip = GetAppropriateTooltip
         frame.WipeLog:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.WipeLog:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
@@ -12555,7 +12683,7 @@ if IS_RETAIL then
         frame.MiniFrame:SetHighlightFontObject(GameFontHighlightHuge)
         frame.MiniFrame:SetNormalFontObject(GameFontHighlightHuge)
         frame.MiniFrame.tooltip = L.RWF_MINIBUTTON_TOOLTIP
-        frame.MiniFrame.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.MiniFrame.GetAppropriateTooltip = GetAppropriateTooltip
         frame.MiniFrame:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.MiniFrame:SetScript("OnLeave", UIButtonMixin.OnLeave)
         frame.MiniFrame:SetMotionScriptsWhileDisabled(true)
@@ -13851,11 +13979,11 @@ do
 
         ---@class RaiderIOSettingsToggleWidget : RaiderIOSettingsBaseWidget
         ---@field public tooltip? string
-        ---@field public cvar? string
+        ---@field public cvar? FallbackConfigKey
 
         ---@param label string
         ---@param description? string
-        ---@param cvar? string
+        ---@param cvar? FallbackConfigKey
         ---@param configOptions? RaiderIOSettingsBaseWidgetConfigOptions
         ---| RaiderIOSettingsDropDownWidgetOptions
         ---| RaiderIOSettingsColorPickerWidgetOptions
@@ -13885,7 +14013,7 @@ do
 
         ---@param label string
         ---@param description? string
-        ---@param cvar? string
+        ---@param cvar? FallbackConfigKey
         ---@param configOptions? RaiderIOSettingsBaseWidgetConfigOptions
         function configOptions.CreateOptionToggle(self, label, description, cvar, configOptions)
             ---@class RaiderIOSettingsToggleWidget
@@ -13902,7 +14030,7 @@ do
 
         ---@param label string
         ---@param description? string
-        ---@param cvar string
+        ---@param cvar FallbackConfigKey
         ---@param value? any
         ---@param configOptions? RaiderIOSettingsBaseWidgetConfigOptions
         function configOptions.CreateRadioToggle(self, label, description, cvar, value, configOptions)
@@ -14028,7 +14156,7 @@ do
         ---@param self RaiderIOConfigOptions
         ---@param label string
         ---@param description string
-        ---@param cvar string
+        ---@param cvar FallbackConfigKey
         ---@param configOptions RaiderIOSettingsDropDownWidgetOptions
         function configOptions.CreateDropDown(self, label, description, cvar, configOptions)
             ---@class RaiderIOSettingsDropDownWidget
@@ -14145,7 +14273,7 @@ do
         ---@param self RaiderIOConfigOptions
         ---@param label string
         ---@param description string
-        ---@param cvar string
+        ---@param cvar FallbackConfigKey
         ---@param configOptions RaiderIOSettingsColorPickerWidgetOptions
         function configOptions.CreateColorPicker(self, label, description, cvar, configOptions)
             ---@class RaiderIOSettingsColorPickerWidget
@@ -14221,7 +14349,7 @@ do
         ---@param self RaiderIOConfigOptions
         ---@param label string
         ---@param description string
-        ---@param cvar string
+        ---@param cvar FallbackConfigKey
         ---@param configOptions RaiderIOSettingsSliderWidgetOptions
         function configOptions.CreateSlider(self, label, description, cvar, configOptions)
             ---@class RaiderIOSettingsSliderWidget
@@ -14790,10 +14918,10 @@ do
         "UNIT_TARGET",
     }
 
-    local COMBATLOG_OBJECT_AFFILIATION_MINE = _G.COMBATLOG_OBJECT_AFFILIATION_MINE or 0x00000001
-    local COMBATLOG_OBJECT_AFFILIATION_OUTSIDER = _G.COMBATLOG_OBJECT_AFFILIATION_OUTSIDER or 0x00000008
-    local COMBATLOG_OBJECT_CONTROL_PLAYER = _G.COMBATLOG_OBJECT_CONTROL_PLAYER or 0x00000100
-    local COMBATLOG_OBJECT_TYPE_PLAYER = _G.COMBATLOG_OBJECT_TYPE_PLAYER or 0x00000400
+    local COMBATLOG_OBJECT_AFFILIATION_MINE = _G.COMBATLOG_OBJECT_AFFILIATION_MINE or 0x00000001 ---@diagnostic disable-line: undefined-field
+    local COMBATLOG_OBJECT_AFFILIATION_OUTSIDER = _G.COMBATLOG_OBJECT_AFFILIATION_OUTSIDER or 0x00000008 ---@diagnostic disable-line: undefined-field
+    local COMBATLOG_OBJECT_CONTROL_PLAYER = _G.COMBATLOG_OBJECT_CONTROL_PLAYER or 0x00000100 ---@diagnostic disable-line: undefined-field
+    local COMBATLOG_OBJECT_TYPE_PLAYER = _G.COMBATLOG_OBJECT_TYPE_PLAYER or 0x00000400 ---@diagnostic disable-line: undefined-field
 
     local MINE = bor(COMBATLOG_OBJECT_AFFILIATION_MINE, COMBATLOG_OBJECT_CONTROL_PLAYER)
     local OTHER_PLAYER = bor(COMBATLOG_OBJECT_AFFILIATION_OUTSIDER, COMBATLOG_OBJECT_CONTROL_PLAYER, COMBATLOG_OBJECT_TYPE_PLAYER)

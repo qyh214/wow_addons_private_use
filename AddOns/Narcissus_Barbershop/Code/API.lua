@@ -31,6 +31,18 @@ end
 API.GetActiveAppearanceName = GetActiveAppearanceName;
 
 
+local function IsMultiFormRace(raceID)
+    return raceID == 22 or raceID == 52 or raceID == 70
+end
+API.IsMultiFormRace = IsMultiFormRace;
+
+
+local function IsPlayerMultiForm()
+    local raceID = GetPlayerRaceID();
+    return IsMultiFormRace(raceID)
+end
+API.IsPlayerMultiForm = IsPlayerMultiForm;
+
 
 local COLOR_PRESETS = {
     red = {0.9333, 0.1961, 0.1412},
@@ -40,6 +52,7 @@ local COLOR_PRESETS = {
     focused = {0.8, 0.8, 0.8},
     disabled = {0.2, 0.2, 0.2},
 };
+COLOR_PRESETS.gray = COLOR_PRESETS.grey;
 
 local function GetColorByKey(k)
     if COLOR_PRESETS[k] then
@@ -91,6 +104,11 @@ local DRUID_CHR_MODEL = {
     [192] = 3,   --Travel
 };
 
+local PET_CHR_MODEL = { --Customizable Pet
+    --[chrModelID] = speciesID
+    [212] = 4793,   --Weechi
+};
+
 local SHAPESHIFT_SPELLS = {
     [1]  = 768,     --Cat
     [2]  = 53691,   --Tree of Life
@@ -101,6 +119,7 @@ local SHAPESHIFT_SPELLS = {
     [31] = 24858,   --Moonkin
     [36] = 114282,  --Treant
 };
+
 
 local SUPPORTED_FORMS = {
     [31] = true,    --Moonkin
@@ -115,8 +134,10 @@ API.IsFormSavable = IsFormSavable;
 local function GetShapeshiftFormName(formID)
     local spellID = formID and SHAPESHIFT_SPELLS[formID];
     if spellID then
-        local name = GetSpellInfo(spellID);
-        return name
+        local info = C_Spell.GetSpellInfo(spellID);
+        if info then
+            return info.name
+        end
     end
 end
 
@@ -127,7 +148,7 @@ end
 
 local MOUNT_CHR_MODEL = {
     --Dragonriding
-    --/dump GetMouseFocus().mountID
+    --/dump GetMouseFoci()[1].mountID
     [124] = 1589,
     [129] = 1590,
     [123] = 1563,
@@ -136,6 +157,8 @@ local MOUNT_CHR_MODEL = {
     [149] = 1744,
     [188] = 1830,
     [186] = 1792,   --Algarian Stormrider
+    [202] = 2144,   --Delver's Dirigible
+    [206] = 2296,   --Delver's Gob-Trotter
 };
 
 local function IsDragonridingChrModel(chrModelID)
@@ -152,6 +175,11 @@ local function GetChrModelName(chrModelID)
     if MOUNT_CHR_MODEL[chrModelID] then
         local mountID = MOUNT_CHR_MODEL[chrModelID];
         return GetMountNameByID(mountID);
+    end
+
+    if PET_CHR_MODEL[chrModelID] then
+        local speciesID = PET_CHR_MODEL[chrModelID];
+        return C_PetJournal.GetPetInfoBySpeciesID(speciesID)
     end
 end
 API.GetChrModelName = GetChrModelName;
@@ -240,6 +268,8 @@ local CAMERA_DATA_FILEID = {
     [5143343] = {-0.59, -1.86, -2.57, 0.44},    --Grotto Netherwing Drake
     [5228774] = {-0.24, -1.38, -2.56, 0.44},    --Flourishing Whimsydrake
     [5305977] = {0.2, -0.5, -1.87, 0.35},       --Algarian Stormrider
+    [5486691] = {-2.75, -0.37, -1.76, 0.78},    --Delver's Dirigible
+
 
     --Druid
     [1139162] = {1.73, -0.22, -2.48, 0.61},     --Moonkin, Classic
@@ -248,6 +278,10 @@ local CAMERA_DATA_FILEID = {
     [1139164] = {1.75, -0.23, -2.46, 0.61},     --Moonkin, Full Transform, Tauren
     [2393672] = {1.67, -0.24, -2.49, 0.61},     --Moonkin, Full Transform, Highmountain Tauren
     [1949828] = {3.08, -0.2, -1.55, 0.61},      --Moonkin, Full Transform, Zandalari
+
+
+    --Pet
+    [6597704] = {2.91, -0.1, -0.55, 0.52},     --Weechi
 };
 
 CAMERA_DATA_FILEID[968705] = CAMERA_DATA_FILEID[1630218];   --Tauren
@@ -262,8 +296,26 @@ local function GetPortraitCameraInfoByModelFileID(fileID)
         return CAMERA_DATA_FILEID[fileID]
     end
 end
-
 API.GetPortraitCameraInfoByModelFileID = GetPortraitCameraInfoByModelFileID;
+
+
+local function GetRaceIcon(raceID, sex, isAlteredForm)
+    --Actually Atlas
+    local info = C_CreatureInfo.GetRaceInfo(raceID);
+    if info then
+        local sexName = sex == 0 and "male" or "female";
+        local fileName = string.lower(info.clientFileString);
+        if isAlteredForm then
+            if fileName == "dracthyr" then
+                fileName = "dracthyrvisage";
+            elseif fileName == "worgen" then
+                fileName = "human";
+            end
+        end
+        return string.format("raceicon-%s-%s", fileName, sexName);
+    end
+end
+API.GetRaceIcon = GetRaceIcon;
 
 --[[
 local CAMERA_PROFILES_BY_RACE = {

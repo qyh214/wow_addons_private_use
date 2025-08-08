@@ -72,6 +72,7 @@ if L then
 	L.immolationyou_message = "獻祭陷阱"
 	L.crystal = "投擲水晶"
 	L.crystal_desc = "當夏諾克斯施放水晶囚牢陷阱時發出警報。"
+	--L.facerage_trigger = "Go for the throat!"
 end
 
 L = BigWigs:NewBossLocale("Baleroc", "zhTW")

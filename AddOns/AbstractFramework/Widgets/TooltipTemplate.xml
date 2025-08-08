@@ -11,14 +11,14 @@
         </KeyValues> -->
         <Layers>
             <Layer level="ARTWORK">
-                <FontString name="$parentTextLeft1" inherits="AF_FONT_TITLE" justifyH="LEFT" hidden="true"/>
-				<FontString name="$parentTextRight1" inherits="AF_FONT_TITLE" justifyH="RIGHT" hidden="true">
+                <FontString name="$parentTextLeft1" inherits="AF_FONT_TOOLTIP_HEADER" justifyH="LEFT" hidden="true"/>
+				<FontString name="$parentTextRight1" inherits="AF_FONT_TOOLTIP_HEADER" justifyH="RIGHT" hidden="true">
 					<Anchors>
 						<Anchor point="RIGHT" relativeTo="$parentTextLeft1" relativePoint="LEFT" x="40" y="0"/>
 					</Anchors>
 				</FontString>
-				<FontString name="$parentTextLeft2" inherits="AF_FONT_NORMAL" justifyH="LEFT" hidden="true"/>
-				<FontString name="$parentTextRight2" inherits="AF_FONT_NORMAL" justifyH="RIGHT" hidden="true">
+				<FontString name="$parentTextLeft2" inherits="AF_FONT_TOOLTIP" justifyH="LEFT" hidden="true"/>
+				<FontString name="$parentTextRight2" inherits="AF_FONT_TOOLTIP" justifyH="RIGHT" hidden="true">
 					<Anchors>
 						<Anchor point="RIGHT" relativeTo="$parentTextLeft2" relativePoint="LEFT" x="40" y="0"/>
 					</Anchors>
@@ -55,5 +55,11 @@
                 <Texture name="$parentTexture30" inherits="TooltipTextureTemplate"/>
             </Layer>
         </Layers>
+        <Scripts>
+            <OnTooltipCleared>
+                GameTooltip_ClearMoney(self)
+                SharedTooltip_ClearInsertedFrames(self)
+            </OnTooltipCleared>
+        </Scripts>
     </GameTooltip>
 </Ui>

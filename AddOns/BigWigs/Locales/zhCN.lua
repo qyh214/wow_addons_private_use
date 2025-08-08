@@ -1,5 +1,8 @@
-local L = BigWigsAPI:NewLocale("BigWigs", "zhCN")
+local _, addonTbl = ...
+local L = addonTbl.API:NewLocale("BigWigs", "zhCN")
 if not L then return end
+
+L.tempNew = "新：现在输入 |cFFFFFFFF/key|r 可以查看队伍的史诗钥石信息。"
 
 -- Core.lua
 L.berserk = "狂暴"
@@ -18,19 +21,21 @@ L.adds = "增援"
 L.adds_desc = "启用与首领战斗中出现的各种增援相关的功能。"
 L.health = "血量"
 L.health_desc = "启用与首领战斗时显示血量变化信息。"
+L.energy = "能量"
+L.energy_desc = "启用与首领战斗中各种能量等级信息的功能。"
 
 L.already_registered = "|cffff0000警告：|r |cff00ff00%s|r（|cffffff00%s|r）在 BigWigs 中已经存在，但该模块仍试图重新注册。这可能是因为更新失败，导致您的插件文件夹中同时存在两份相同模块的拷贝。建议删除所有 BigWigs 文件夹并重新安装。"
 
 -- Loader / Options.lua
 L.okay = "确定"
-L.officialRelease = "你所使用的 BigWigs %s 为官方正式版（%s）"
-L.alphaRelease = "你所使用的 BigWigs %s 为“α测试版”（%s）"
+L.officialRelease = "你所使用的 BigWigs %s 为官方正式版（%s）。"
+L.alphaRelease = "你所使用的 BigWigs %s 为“α测试版”（%s）。"
 L.sourceCheckout = "你所使用的 BigWigs %s 是从原始代码仓库直接下载的。"
-L.littlewigsOfficialRelease = "你所使用的 LittleWigs 为官方正式版（%s）"
-L.littlewigsAlphaRelease = "你所使用的 LittleWigs 为“α测试版”（%s）"
+L.littlewigsOfficialRelease = "你所使用的 LittleWigs 为官方正式版（%s）。"
+L.littlewigsAlphaRelease = "你所使用的 LittleWigs 为“α测试版”（%s）。"
 L.littlewigsSourceCheckout = "你所使用的 LittleWigs 是从原始代码仓库直接下载的。"
 L.guildRelease = "你正在使用 BigWigs 公会版，版本 %d ，其基于官方版本 %d 。"
-L.getNewRelease = "你的 BigWigs 已过期（/bwv）但是可以使用 CurseForge 客户端轻松升级。另外，也可以从 curseforge.com 或 wowinterface.com 手动升级。"
+L.getNewRelease = "你的 BigWigs 已过期（/bwv）但是可以使用 CurseForge 客户端轻松升级。另外，也可以从 curseforge.com 或 addons.wago.io 手动升级。"
 L.warnTwoReleases = "你的 BigWigs 已过期2个发行版！你的版本可能有错误，功能缺失或不正确的计时器。所以强烈建议你升级。"
 L.warnSeveralReleases = "|cffff0000你的 BigWigs 已过期 %d 个发行版！！我们*强烈*建议你更新，以防止把问题同步给其他玩家！|r"
 L.warnOldBase = "你正在使用公会版本 BigWigs（%d），但是它是基于官方版本（%d）已过期 %d 个版本。可能出现一些问题。"
@@ -54,6 +59,8 @@ L.removeAddOn = "请移除“|cFF436EEE%s|r”，其已被“|cFF436EEE%s|r”�
 L.alternativeName = "%s（|cFF436EEE%s|r）"
 L.outOfDateContentPopup = "警告！\n你更新了 |cFF436EEE%s|r 但你还需要更新 |cFF436EEEBigWigs|r 主插件。\n忽略这一点将导致功能崩溃。"
 L.outOfDateContentRaidWarning = "|cFF436EEE%s|r 需要安装 %d 版本的 |cFF436EEEBigWigs|r 主插件才能正常运行，但你使用了 %d 版本。"
+L.addOnLoadFailedWithReason = "BigWigs 未能加载 |cFF436EEE%s|r 插件，原因： %q。请通知 BigWigs 的开发者！"
+L.addOnLoadFailedUnknownError = "BigWigs 在加载 |cFF436EEE%s|r 插件时遇到了错误。请通知 BigWigs 的开发者！"
 
 L.expansionNames = {
 	"经典旧世", -- Classic
@@ -80,6 +87,7 @@ L.Destruction = "毁灭（基尔加丹）"
 L.RunAway = "快跑吧小姑娘，快跑……（大灰狼）"
 L.spell_on_you = "BigWigs：法术在你身上"
 L.spell_under_you = "BigWigs：法术在你脚下"
+L.simple_no_voice = "简单（无语音）"
 
 -- Options.lua
 L.options = "选项"
@@ -256,7 +264,111 @@ L.N25 = "25人普通"
 L.H10 = "10人英雄"
 L.H25 = "25人英雄"
 
+-----------------------------------------------------------------------
+-- TOOLS
+-----------------------------------------------------------------------
 
+L.tools = "工具"
+L.toolsDesc = "BigWigs 提供多种工具和\"便利功能\"用于简化和加速首领战斗流程。点击 |cFF33FF99+|r 图标展开菜单可查看所有功能。"
+
+-----------------------------------------------------------------------
+-- AutoRole.lua
+--
+
+L.autoRoleTitle = "自动分配职责"
+L.autoRoleExplainer = "当你加入一个队伍，或者在队伍中切换你的天赋专精时，BigWigs 将自动调整你在队伍中的职责（坦克、治疗者、伤害输出者）。\n\n"
+
+-----------------------------------------------------------------------
+-- Keystones.lua
+--
+
+L.keystoneTitle = "BigWigs 钥石信息"
+L.keystoneHeaderParty = "队伍"
+L.keystoneRefreshParty = "刷新队伍"
+L.keystoneHeaderGuild = "公会"
+L.keystoneRefreshGuild = "刷新公会"
+L.keystoneLevelTooltip = "钥石等级：|cFFFFFFFF%s|r"
+L.keystoneMapTooltip = "地下城：|cFFFFFFFF%s|r"
+L.keystoneRatingTooltip = "史诗评分：|cFFFFFFFF%d|r"
+L.keystoneHiddenTooltip = "该玩家选择隐藏此信息。"
+L.keystoneTabOnline = "在线"
+L.keystoneTabAlts = "角色"
+L.keystoneTabTeleports = "传送"
+L.keystoneHeaderMyCharacters = "我的角色"
+L.keystoneTeleportNotLearned = "传送法术 '|cFFFFFFFF%s|r' |cFFFF4411尚未学习|r 。"
+L.keystoneTeleportOnCooldown = "传送法术 '|cFFFFFFFF%s|r' 目前处于 |cFFFF4411冷却中|r ，还需 %d 小时 %d 分钟可用。"
+L.keystoneTeleportReady = "传送法术 '|cFFFFFFFF%s|r' |cFF33FF99已就绪|r，点击施放。"
+L.keystoneTeleportInCombat = "你不能在战斗中传送。"
+L.keystoneTabHistory = "历史记录"
+L.keystoneHeaderThisWeek = "本周"
+L.keystoneHeaderOlder = "更早"
+L.keystoneScoreTooltip = "史诗钥石评分：|cFFFFFFFF%d|r"
+L.keystoneScoreGainedTooltip = "获得评分：|cFFFFFFFF+%d|r"
+L.keystoneCompletedTooltip = "限时完成"
+L.keystoneFailedTooltip = "未能在限时内完成"
+L.keystoneExplainer = "一个包含多种工具的集合，旨在提升史诗钥石地下城的游戏体验。"
+L.keystoneAutoSlot = "自动插入史诗钥石"
+L.keystoneAutoSlotDesc = "打开钥石界面时，自动将你的史诗钥石插入。"
+L.keystoneAutoSlotMessage = "已将 %s 自动插入钥石界面。"
+L.keystoneModuleName = "史诗钥石地下城"
+L.keystoneStartBar = "%s +%d" -- Format is SHORT_DUNGEON_NAME +KEYSTONE_LEVEL e.g. "ROOK +12"
+L.keystoneStartMessage = "%s +%d 挑战开始！" -- Format is LONG_DUNGEON_NAME +KEYSTONE_LEVEL e.g. "The Rookery +12 begins now!"
+L.keystoneCountdownExplainer = "当你开始一个史诗钥石地下城时，将会播放倒数语音。请选择你想听到的语音以及你希望倒数何时开始。\n\n"
+L.keystoneCountdownBeginsDesc = "史诗钥石地下城的倒数计时器还剩多少时，开始播放倒数语音。"
+L.keystoneCountdownBeginsSound = "史诗钥石地下城倒数计时器开始时播放的音效"
+L.keystoneCountdownEndsSound = "史诗钥石地下城倒数计时器结束时播放的音效"
+L.keystoneViewerTitle = "钥石查看器"
+L.keystoneHideGuildTitle = "向公会成员隐藏我的钥石信息"
+L.keystoneHideGuildDesc = "|cffff4411不推荐。|r 此功能将阻止公会成员看到你拥有的钥石信息。你队伍中的其他成员仍然可以看到它。"
+L.keystoneHideGuildWarning = "禁用公会成员查看你钥石信息的功能是 |cffff4411不推荐|r 的。\n\n你确定要这样做吗？"
+L.keystoneAutoShowZoneIn = "进入地下城时显示"
+L.keystoneAutoShowZoneInDesc = "进入史诗地下城时自动显示钥石查看器。\n\n|cFF33FF99这可以帮助你记住你们要打的钥石属于哪位玩家。|r"
+L.keystoneAutoShowEndOfRun = "史诗钥石地下城结束时显示"
+L.keystoneAutoShowEndOfRunDesc = "当史诗钥石地下城结束时自动显示钥石查看器。\n\n|cFF33FF99这可以帮助你查看队伍成员获得了哪些新钥石。|r"
+L.keystoneViewerExplainer = "你可以使用|cFF33FF99/key|r 命令或点击下方按钮打开钥石查看器。\n\n"
+L.keystoneViewerOpen = "打开钥石查看器"
+
+-- It doesn't really matter what you call it as long as it's recognizable and limited to ~6 characters
+L.keystoneShortName_TheRookery = "驭雷"
+L.keystoneShortName_DarkflameCleft = "暗焰"
+L.keystoneShortName_PrioryOfTheSacredFlame = "隐修院"
+L.keystoneShortName_CinderbrewMeadery = "燧酿"
+L.keystoneShortName_OperationFloodgate = "水闸"
+L.keystoneShortName_TheaterOfPain = "伤势"
+L.keystoneShortName_TheMotherlode = "暴富"
+L.keystoneShortName_OperationMechagonWorkshop = "车间"
+L.keystoneShortName_EcoDomeAldani = "生态圆顶"
+L.keystoneShortName_HallsOfAtonement = "赎罪"
+L.keystoneShortName_AraKaraCityOfEchoes = "回响"
+L.keystoneShortName_TazaveshSoleahsGambit = "宏图"
+L.keystoneShortName_TazaveshStreetsOfWonder = "天街"
+L.keystoneShortName_TheDawnbreaker = "破晨"
+
+-- These short names are for the bar that shows during the Mythic+ countdown
+-- Use the real dungeon names but make them shorter to fit on the bar better
+L.keystoneShortName_TheRookery_Bar = "驭雷栖巢"
+L.keystoneShortName_DarkflameCleft_Bar = "暗焰裂口"
+L.keystoneShortName_PrioryOfTheSacredFlame_Bar = "隐修院"
+L.keystoneShortName_CinderbrewMeadery_Bar = "燧酿酒庄"
+L.keystoneShortName_OperationFloodgate_Bar = "水闸行动"
+L.keystoneShortName_TheaterOfPain_Bar = "伤逝剧场"
+L.keystoneShortName_TheMotherlode_Bar = "暴富矿区"
+L.keystoneShortName_OperationMechagonWorkshop_Bar = "车间"
+L.keystoneShortName_EcoDomeAldani_Bar = "生态圆顶"
+L.keystoneShortName_HallsOfAtonement_Bar = "赎罪大厅"
+L.keystoneShortName_AraKaraCityOfEchoes_Bar = "回响之城"
+L.keystoneShortName_TazaveshSoleahsGambit_Bar = "索·莉亚宏图"
+L.keystoneShortName_TazaveshStreetsOfWonder_Bar = "琳彩天街"
+L.keystoneShortName_TheDawnbreaker_Bar = "破晨号"
+
+-----------------------------------------------------------------------
+-- LFGTimer.lua
+--
+
+L.lfgTimerTitle = "寻找组队计时器"
+L.lfgTimerExplainer = "每当寻找组队队列确认窗口出现时，BigWigs 会创建一个计时条，告诉你还有多长时间必须接受队列。\n\n"
+L.lfgUseMaster = "在'主'声道播放寻找组队就绪提示音"
+L.lfgUseMasterDesc = "启用此选项后，寻找组队就绪提示音将通过'主'声道播放。如果禁用此选项，则会通过'%s'声道播放。"
 
 -----------------------------------------------------------------------
 -- PLUGINS
@@ -276,6 +388,7 @@ L.sizeDesc = "通常情况下，您可以通过移动滑条来设置尺寸。如
 L.fontSizeDesc = "使用滑条或在框内输入数值可调整字体尺寸，最大数值为200。"
 L.disabled = "禁用"
 L.disableDesc = "将禁用“%s”功能，但|cffff4411不建议|r这么做。\n\n你确定要这么做吗？"
+L.keybinding = "按键设置"
 
 -- Anchor Points
 L.UP = "向上"
@@ -453,6 +566,7 @@ L.redirectPopupsColor = "横幅信息的颜色"
 L.blockDungeonPopups = "屏蔽地下城弹出式横幅"
 L.blockDungeonPopupsDesc = "进入地下城时弹出的横幅有时会包含很长的文字。启用此功能将完全屏蔽它们。"
 L.itemLevel = "物品等级%d"
+L.newRespawnPoint = "新复活位置"
 
 L.userNotifySfx = "首领屏蔽禁用了声音效果，强制它重新启用。"
 L.userNotifyMusic = "首领屏蔽禁用了音乐，强制它重新启用。"
@@ -683,6 +797,8 @@ L.sendPull = "向您的队伍/团队发送开怪倒数计时器。"
 L.wrongPullFormat = "无效的开怪倒数。正确用法：/pull 5"
 L.countdownBegins = "开始倒计时"
 L.countdownBegins_desc = "选择开怪计时器上倒计开始时应剩余多少时间（以秒为单位）。"
+L.pullExplainer = "\n|cFF33FF99/pull|r 将开启默认开怪计时器。\n|cFF33FF99/pull 7|r 将开启7秒拉怪计时器，数字可任意指定。\n您也可以在下方的按键设置中设置快捷键。\n\n"
+L.pullKeybindingDesc = "为启用开怪计时器选择一个按键设置。"
 
 -----------------------------------------------------------------------
 -- RaidIcon.lua

@@ -39,12 +39,12 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED", "Freeze", 72090)
 	self:Death("Win", 38433)
 
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
 end
 
 function mod:OnEngage()
 	count = 1
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:Bar(72091, 15) -- Frozen Orb
 	self:Bar(72034, 30, L["whiteout_bar"]:format(count))
 end

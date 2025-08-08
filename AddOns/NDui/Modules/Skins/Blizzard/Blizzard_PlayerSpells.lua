@@ -162,7 +162,6 @@ C.themes["Blizzard_PlayerSpells"] = function()
 		B.ReskinArrow(spellBook.PagedSpellsFrame.PagingControls.PrevPageButton, "left")
 		B.ReskinArrow(spellBook.PagedSpellsFrame.PagingControls.NextPageButton, "right")
 		spellBook.PagedSpellsFrame.PagingControls.PageText:SetTextColor(1, 1, 1)
-		B.ReskinCheck(spellBook.HidePassivesCheckButton.Button)
 		B.ReskinEditBox(spellBook.SearchBox)
 		spellBook.SearchBox.__bg:SetPoint("TOPLEFT", -5, -3)
 		spellBook.SearchBox.__bg:SetPoint("BOTTOMRIGHT", 2, 3)
@@ -184,5 +183,13 @@ C.themes["Blizzard_PlayerSpells"] = function()
 				end
 			end
 		end)
+
+		local button = spellBook.AssistedCombatRotationSpellFrame.Button
+		if button then
+			button.Border:Hide()
+			button:SetPushedTexture(0)
+			button:GetHighlightTexture():SetColorTexture(1, 1, 1, .25)
+			B.ReskinIcon(button.Icon)
+		end
 	end
 end

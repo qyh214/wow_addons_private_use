@@ -5,7 +5,7 @@
 ## IconTexture: interface/cursor/ui-cursor-move.blp
 ## X-WoWI-ID: 23875
 ## X-Curse-Project-ID: 17809
-## Version: v3.6.15
+## Version: v3.7.3
 ## OptionalDeps: Ace3
 ## SavedVariables: BlizzMoveDB
 ## Category-enUS: User Interface

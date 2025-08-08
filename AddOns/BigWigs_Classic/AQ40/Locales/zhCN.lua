@@ -19,16 +19,21 @@ if L then
 	L.freeze_warn_frost = "%d 冰霜攻击 - 还需%d下！"
 end
 
+L = BigWigs:NewBossLocale("Silithid Royalty", "zhCN")
+if L then
+	L[15543] = "亚尔基"
+	L[15544] = "维姆"
+	L[15511] = "克里"
+end
+
 L = BigWigs:NewBossLocale("Ouro", "zhCN")
 if L then
-	L.engage_message = "奥罗已进入战斗！90秒后可能下潜！"
-	L.possible_submerge_bar = "可能下潜"
-
 	L.emerge_message = "奥罗已出现"
 	L.emerge_bar = "奥罗出现"
 
 	L.submerge_message = "奥罗已下潜"
 	L.submerge_bar = "奥罗下潜"
+	L.submerge_early_message = "提前下潜 - 无人在攻击范围内"
 
 	L.scarab = "甲虫消失"
 	L.scarab_desc = "当甲虫消失时发出警报。"
@@ -52,7 +57,7 @@ if L then
 	L.weakened_desc = "虚弱状态警报。"
 
 	L.dark_glare_message = "%s: %s (队伍 %s)" -- Dark Glare: PLAYER_NAME (Group 1)
-	L.stomach = "胃"
+	L.stomach = "内场"
 end
 
 L = BigWigs:NewBossLocale("Ahn'Qiraj Trash", "zhCN")

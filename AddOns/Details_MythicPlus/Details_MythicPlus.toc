@@ -1,0 +1,42 @@
+## Interface: 110105, 110107
+## Title: Details!: Mythic Plus Extension
+## Title-ruRU: Details!: Расширение М+
+## Notes: Add Mythic Plus stuff on Details!
+## Notes-ruRU: Добавляет в Details! гибкое расширение М+
+## SavedVariables: Details_MythicPlusDB
+## SavedVariablesPerCharacter: Details_MythicPlus_CharacterDB
+## RequiredDeps: Details
+## Version: #DMP.20250806.007
+## IconTexture: Interface\AddOns\Details\images\minimap
+
+## X-Wago-ID: 4N2m7QGL
+## X-Curse-Project-ID: 1220909
+
+locales\enUS.lua
+locales\deDE.lua
+locales\esES.lua
+locales\esMX.lua
+locales\frFR.lua
+locales\itIT.lua
+locales\koKR.lua
+locales\ptBR.lua
+locales\ruRU.lua
+locales\zhCN.lua
+locales\zhTW.lua
+
+start.lua
+templates.lua
+frames.lua
+parser.lua
+options.lua
+scoreboard_column.lua
+scoreboard.lua
+scoreboard_layout.lua
+scoreboard_runselectordropdown.lua
+activityframe.lua
+events.lua
+functions.lua
+slash.lua
+rundata.lua
+migrations.lua
+comm.lua

@@ -80,7 +80,6 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED", "ChainsOfKelThuzad", 28410)
 
 	self:RegisterEvent("ENCOUNTER_START") -- Fires with P2, like to M'uru
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 
 	self:BossYell("Engage", L.phase1_trigger)
 	self:BossYell("Phase2", L.phase2_trigger1, L.phase2_trigger2, L.phase2_trigger3)
@@ -90,6 +89,7 @@ function mod:OnBossEnable()
 end
 
 function mod:OnEngage()
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:Message("stages", "yellow", CL.custom_start:format(self.displayName, CL.active, 3), false)
 	self:Bar("stages", 210, CL.phase:format(2), "spell_shadow_raisedead")
 

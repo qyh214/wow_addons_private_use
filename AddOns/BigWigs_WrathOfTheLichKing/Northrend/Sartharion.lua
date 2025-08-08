@@ -93,7 +93,6 @@ function mod:OnBossEnable()
 	self:Death("VesperonDies", 30452)
 
 	self:BossYell("Engage", L.engage_trigger)
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:Death("Win", 28860)
 end
 
@@ -101,6 +100,7 @@ function mod:OnEngage()
 	tormentOnMe = false
 	isInfoOpen = false
 	flameTsunamiList = {}
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:Berserk(900)
 	self:CDBar(57491, 29) -- Flame Tsunami
 end

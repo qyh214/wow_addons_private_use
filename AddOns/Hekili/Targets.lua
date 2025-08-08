@@ -213,7 +213,10 @@ local enemyExclusions = {
     [231788] = true,              -- Mug'Zee: Unstable Crawler Mine
     [233474] = true,              -- Mug'Zee: Gallagio Goon (they are within a cage with LoS restrictions)
     [231727] = true,              -- Gallywix: 1500-Pound "Dud"
-    [151579] = true               -- Operation: Mechagon - Shield Generator
+    [237967] = true,              -- Gallywix: Discharged Giga Bomb
+    [237968] = true,              -- Gallywix: Charged Giga Bomb
+    [151579] = true,              -- Operation: Mechagon - Shield Generator
+    [219588] = true               -- Cinderbrew Meadery - Yes Man (etc.)
 }
 
 local requiredForInclusion = {
@@ -638,11 +641,13 @@ function ns.dumpNameplateInfo()
 end
 
 
-function ns.updateTarget( id, time, mine )
+function ns.updateTarget( id, time, mine, spellID )
     local spec = rawget( Hekili.DB.profile.specs, state.spec.id )
     if not spec or not spec.damage then return end
 
-    if id == state.GUID then
+    id, time, mine, spellID = ns.callHook( "filter_target", id, time, mine, spellID )
+
+    if id == nil or id == state.GUID then
         return
     end
 
@@ -1246,6 +1251,8 @@ do
     end
 
     function Hekili:GetTTD( unit, isGUID )
+        if state.target.is_dummy then return 180 end
+
         local default = ( isGUID or UnitIsTrivial(unit) and UnitLevel(unit) > -1 ) and TRIVIAL or FOREVER
         local guid = isGUID and unit or UnitExists(unit) and UnitCanAttack("player", unit) and UnitGUID(unit)
 
@@ -1253,7 +1260,7 @@ do
             return default
         end
 
-        local enemy = db[guid]
+        local enemy = db [guid ]
         if not enemy then
             return default
         end
@@ -1385,7 +1392,7 @@ do
         local dummy_override = state.target.is_dummy
 
         for k, v in pairs(db) do
-            if dummy_override or not CheckEnemyExclusion( k ) and max( 0, v.deathTime ) <= x then
+            if not dummy_override and not CheckEnemyExclusion( k ) and max( 0, v.deathTime ) <= x then
                 count = count + 1
             end
         end
@@ -1499,7 +1506,7 @@ do
 
         for k, v in pairs( db ) do
             local unit = ( v.unit or "unknown" )
-            local excluded = CheckEnemyExclusions( k )
+            local excluded = CheckEnemyExclusion( k )
 
             if v.n > 3 then
                 output = output .. format( "\n    %-11s: %4ds [%d] #%6s%s %s", unit, v.deathTime, v.n, v.npcid, excluded and "*" or "", UnitName( v.unit ) or "Unknown" )

@@ -28,7 +28,7 @@ function mod:GetOptions()
 		{260813, "SAY", "ME_ONLY_EMPHASIZE"}, -- Homing Missile
 		{276229, "CASTBAR"}, -- Micro Missiles (Mythic)
 		-- Stage Two: Drill!
-		{271456, "SAY", "SAY_COUNTDOWN"}, -- Drill Smash
+		{271456, "SAY", "SAY_COUNTDOWN", "ME_ONLY_EMPHASIZE"}, -- Drill Smash
 	}, {
 		[260280] = -18916, -- Stage One: Big Guns
 		[271456] = -17498, -- Stage Two: Drill!
@@ -45,6 +45,7 @@ function mod:OnBossEnable()
 
 	-- Stage Two: Drill!
 	self:Log("SPELL_CAST_START", "DrillSmash", 271456)
+	self:Log("SPELL_CAST_SUCCESS", "DrillSmashSuccess", 271456)
 	self:Log("SPELL_CAST_SUCCESS", "ConfigurationCombat", 260190)
 	self:Death("MogulRazdunkVehicleDeath", 129232)
 end
@@ -141,14 +142,23 @@ do
 		if self:Me(guid) then
 			self:Say(271456, nil, nil, "Drill Smash")
 			self:SayCountdown(271456, 5 - elapsed)
+			self:PlaySound(271456, "warning", nil, name)
+		else
+			self:PlaySound(271456, "alert", nil, name)
 		end
-		self:PlaySound(271456, "alert", nil, name)
 	end
 
 	function mod:DrillSmash(args)
-		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.2, args.sourceGUID)
 		-- time until next depends on the travel time of the previous Drill Smash
 		self:CDBar(args.spellId, 8.5)
+	end
+
+	function mod:DrillSmashSuccess(args)
+		if self:Me(args.destGUID) then
+			self:Message(args.spellId, "green", CL.removed:format(args.spellName))
+			self:PlaySound(args.spellId, "info")
+		end
 	end
 end
 

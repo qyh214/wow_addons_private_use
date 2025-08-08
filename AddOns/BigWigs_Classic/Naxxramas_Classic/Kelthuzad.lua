@@ -70,13 +70,17 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_REMOVED", "DetonateManaRemoved", 27819)
 	self:Log("SPELL_CAST_SUCCESS", "ChainsOfKelThuzad", 28408)
 	self:Log("SPELL_AURA_APPLIED", "ChainsOfKelThuzadApplied", 28410)
+	if self:GetSeason() == 2 then
+		self:Log("SPELL_CAST_SUCCESS", "HowlingBlast", 1220680)
+		self:Log("SPELL_CAST_SUCCESS", "RaiseDead", 1220687)
+	end
 end
 
 function mod:OnEngage()
 	self:SetStage(1)
 
 	self:Message("stages", "cyan", CL.stage:format(1), false)
-	self:CDBar("stages", self:GetSeason() == 2 and 221 or 308, CL.stage:format(2), "inv_jewelry_trinket_04")
+	self:CDBar("stages", 221, CL.stage:format(2), "inv_jewelry_trinket_04")
 end
 
 --------------------------------------------------------------------------------
@@ -180,4 +184,20 @@ function mod:UNIT_HEALTH(event, unit)
 			end
 		end
 	end
+end
+
+function mod:HowlingBlast(args)
+	self:SetStage(3.5)
+	self:StopBar(27808) -- Frost Blast
+	self:StopBar(CL.bomb) -- Detonate Mana
+	self:StopBar(CL.mind_control) -- Chains of Kel'Thuzad
+	self:Message("stages", "cyan", CL.intermission, args.spellId)
+	self:Bar("stages", 20, CL.intermission, args.spellId)
+	self:PlaySound("stages", "long")
+end
+
+function mod:RaiseDead()
+	self:SetStage(4)
+	self:Message("stages", "cyan", CL.stage:format(4), false)
+	self:PlaySound("stages", "info")
 end

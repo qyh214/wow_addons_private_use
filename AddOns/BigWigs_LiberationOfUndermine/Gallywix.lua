@@ -187,7 +187,7 @@ local timersHeroic = {
 			{ 22.0, 0 },
 			{ 6.9, 35.0, 0 },
 			{ 27.9, 0 },
-			{ 3.4 },
+			{ 3.4, 38.6 },
 		},
 		[1214607] = { -- Bigger Badder Bomb Blast
 			{ 8.0, 36.0, 0 },
@@ -228,9 +228,9 @@ local timersMythic = {
 	{ -- Phase 2
 		[469327] = { 49.6, 56.5, 43.6 }, -- Giga Blast
 		[1218546] = { 37.5, 48.0, 54.1 }, -- Biggest Baddest Bomb Barrage
-		[1218488] = { 12.6, 42.5, 37.0, 34.5 }, -- Scatterbomb Canisters
-		[466958] = { 21.1, 26.5, 28.6, 27.9, 20.5 }, -- Ego Check
-		[467182] = { 23.1, 44.0, 44.9 }, -- Suppression
+		[1218488] = { 12.6, 42.5, 37.0, 34.5, 51.6 }, -- Scatterbomb Canisters
+		[466958] = { 21.1, 26.5, 28.6, 27.9, 29.0, 22.1 }, -- Ego Check
+		[467182] = { 23.1, 44.0, 44.9, 55.1 }, -- Suppression
 		[466751] = { 9.0, 35.0, 19.6, 36.9, 20.5, 25.1 }, -- Venting Heat
 	},
 	{ -- Phase 3
@@ -643,7 +643,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(_, msg)
 		self:PlaySound(465952, "alert")
 		bombsCount = bombsCount + 1
 		fullBombsCount = fullBombsCount + 1
-		spawnedDuds = 0
+		spawnedDuds = self:Mythic() and 4 or 2
 		if not self:Story() then
 			local bombsCD = cd(465952, bombsCount)
 			if bombsCD and bombsCD > 0 then
@@ -678,7 +678,7 @@ end
 -- 	fullBombsCount = fullBombsCount + 1
 -- 	self:CDBar(args.spellId, cd(465952, bombsCount), CL.count:format(CL.bombs, fullBombsCount))
 
--- 	spawnedDuds = 0
+-- 	spawnedDuds = self:Mythic() and 4 or 2
 -- 	self:Bar(466153, 9.7) -- Bad Belated Boom
 -- end
 
@@ -711,7 +711,6 @@ do
 	local prev = 0
 	function mod:FifteenHundredPoundDudApplied(args)
 		-- self:StopBar(L.duds_soak:format(spawnedDuds))
-		-- spawnedDuds = spawnedDuds + 1
 		if args.time - prev > 2 then
 			self:Bar(args.spellId, 15, L.duds)
 		end
@@ -872,7 +871,9 @@ function mod:UNIT_SPELLCAST_START(_, unit, _, spellId)
 
 		if self:Mythic() then
 			gigaCoilsCount = gigaCoilsCount + 1
-			self:CDBar(469286, cd(469286, gigaCoilsCount), CL.count:format(self:SpellName(469286), gigaCoilsCount))
+			if gigaCoilsCount < 5 then
+				self:CDBar(469286, cd(469286, gigaCoilsCount), CL.count:format(self:SpellName(469286), gigaCoilsCount))
+			end
 
 			-- In mythic, after two sets of Giga Coils, the adds drop down instead of start on a platform
 			if gigaCoilsCount == 3 then
@@ -1297,7 +1298,11 @@ function mod:CircuitRebootRemoved(args)
 	self:CDBar(1218546, cd(1218546, bombsCount) - 4.5, CL.count:format(CL.bombs, fullBombsCount)) -- Biggest Baddest Bomb Barrage
 	self:CDBar(469327, cd(469327, gigaBlastCount), CL.count:format(self:SpellName(469327), gigaBlastCount)) -- Giga Blast
 
-	if encounterStart > 0 and self:GetStage() == 3 then
+	-- XXX should probably compare against the enrage time
+	if stage == 2 then
+		self:Bar(469286, 159.2 - 2, CL.count:format(self:SpellName(469286), gigaCoilsCount)) -- Giga Coils
+		self:Bar("stages", 167.2, CL.intermission, "ability_mount_rocketmountblue")
+	elseif stage == 3 and encounterStart > 0 then
 		-- hard enrage at 9:38
 		local enrageCD = 578 - (GetTime() - encounterStart)
 		self:Bar(1222831, enrageCD) -- Overloaded Coils

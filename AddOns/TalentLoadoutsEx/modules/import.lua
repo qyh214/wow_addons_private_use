@@ -74,7 +74,11 @@ function Addon:GetLoadoutEntryInfo(importText, configID)
 		return false;
 	end
 
-	local loadoutContent = talentsFrame:ReadLoadoutContent(importStream, treeID);
+	local success, loadoutContent = pcall(talentsFrame.ReadLoadoutContent, talentsFrame, importStream, treeID);
+	if not success then
+		return false;
+	end
+
 	loadoutEntryInfo = ConvertToImportLoadoutEntryInfo(specID, configID, treeID, loadoutContent);
 	if not loadoutEntryInfo then
 		return false;

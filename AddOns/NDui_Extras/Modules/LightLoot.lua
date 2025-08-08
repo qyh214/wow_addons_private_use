@@ -202,7 +202,7 @@ function LightLoot:LOOT_OPENED(event, autoloot)
 
 				if (lootQuality and lootQuality >= 0) or questId or isQuestItem then
 					if questId or isQuestItem then
-						r, g, b = 1, .8, 0
+						r, g, b = 1, 1, 0
 					end
 					slot.name:SetTextColor(r, g, b)
 					slot.icBD:SetBackdropBorderColor(r, g, b)

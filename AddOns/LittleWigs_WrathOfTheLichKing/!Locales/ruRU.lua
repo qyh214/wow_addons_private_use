@@ -45,7 +45,6 @@ end
 
 L = BigWigs:NewBossLocale("The Culling of Stratholme Trash", "ruRU")
 if L then
-	--L.custom_on_autotalk = "Autotalk"
 	--L.custom_on_autotalk_desc = "Instantly select Chromie's and Arthas's gossip options."
 
 	--L.gossip_available = "Gossip available"
@@ -90,17 +89,13 @@ end
 
 L = BigWigs:NewBossLocale("The Violet Hold Trash", "ruRU")
 if L then
-	--L.portals = "Portals"
 	--L.portals_desc = "Information about portals."
-	L.boss_message = "босс"
-	L.portal_bar = "Портал"
 end
 
 -- Trial of the Champion
 
 L = BigWigs:NewBossLocale("Trial of the Champion Trash", "ruRU")
 if L then
-	--L.custom_on_autotalk = "Autotalk"
 	--L.custom_on_autotalk_desc = "Instantly select gossip option to start encounters."
 end
 

@@ -77,7 +77,7 @@ end
 -- Initialization
 --
 
-function mod:GetOptions(CL)
+function mod:GetOptions()
 	return {
 	-- Phase 1 and 3
 		90125, -- Breath

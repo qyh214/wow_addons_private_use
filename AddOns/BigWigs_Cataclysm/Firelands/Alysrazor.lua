@@ -183,7 +183,7 @@ do
 		scheduled = nil
 	end
 	function mod:Wound(args)
-		if not UnitIsPlayer(args.destName) then return end --Avoid those shadowfiends
+		if not self:Player(args.destFlags) then return end --Avoid those shadowfiends
 		woundTargets[#woundTargets + 1] = args.destName
 		if not scheduled then
 			scheduled = true

@@ -10,6 +10,7 @@
 	<Include file="DarkheartThicket.lua"/>
 	<Include file="DawnOfTheInfinite.lua"/>
 	<Include file="DeOtherSide.lua"/>
+	<Include file="EcoDomeAldani.lua"/>
 	<Include file="Everbloom.lua"/>
 	<Include file="GrimBatol.lua"/>
 	<Include file="GrimrailDepot.lua"/>

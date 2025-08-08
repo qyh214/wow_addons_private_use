@@ -57,8 +57,8 @@ L["Quest Completed On Account"] = (ACCOUNT_COMPLETED_QUEST_NOTICE or "Seu Grupo 
 
 --String Format
 L["Format Reputation Reward Tooltip"] = QUEST_REPUTATION_REWARD_TOOLTIP or "Concede %d de reputação com %s";
-L["Format You Have X"] = "- Você tem |cffffffff%d|r";
-L["Format You Have X And Y In Bank"] = "- Você tem |cffffffff%d|r (|cffffffff%d|r no banco)";
+L["Format You Have X"] = "- Você tem |cffffffff%s|r";
+L["Format You Have X And Y In Bank"] = "- Você tem |cffffffff%s|r (|cffffffff%s|r no banco)";
 L["Format Suggested Players"] = QUEST_SUGGESTED_GROUP_NUM or "Jogadores Sugeridos [%d]";
 L["Format Current Skill Level"] = "Nível Atual: |cffffffff%d/%d|r";
 L["Format Reward Title"] = HONOR_REWARD_TITLE or "Título: %s";
@@ -225,6 +225,8 @@ L["Match Stat DPS"] = "([,%d%.]+) de dano por segundo";
 L["Show Answer"] = "Mostrar solução.";
 L["Quest Failed Pattern"] = "^A entrega de";
 L["AutoCompleteQuest HallowsEnd"] = "Balde de Doces";     --Quest:28981
+L["AutoCompleteQuest Midsummer"] = "Reverencie a chama";   --Quest:29031
+L["AutoCompleteQuest Midsummer2"] = "Profane o fogo!";     --Quest:11580
 
 --Asking for Directions-- (match the name to replace gossip icon)
 L["Pin Auction House"] = "Casa de Leilões";

@@ -11,6 +11,10 @@ function AF_HelpTipMixin:OnShow()
     self.elapsed = 0
     self:SetFrameStrata("TOOLTIP")
     self:Raise()
+    if self.calloutGlow then
+        self.calloutGlow:SetParent(self.widget)
+        AF.SetFrameLevel(self.calloutGlow, 1)
+    end
 end
 
 ---@private
@@ -48,7 +52,7 @@ local function HelpTipBuilder()
     Mixin(tip, AF_HelpTipMixin)
 
     -- glow
-    AF.ShowNormalGlow(tip, 3, "#dbb800")
+    AF.ShowNormalGlow(tip, "#dbb800", 3)
 
     -- bg
     local bg = AF.CreateGradientTexture(tip, "VERTICAL", "#010000", "#3a2f00", nil, "BACKGROUND")
@@ -64,22 +68,24 @@ local function HelpTipBuilder()
     tip.elapsed = 0
     tip:SetOnUpdate(function(self, elapsed)
         self:SetHeight(self.text:GetHeight() + 25)
-        if not self.widget or not self.widget:IsVisible() then
-            self:Hide()
+        if pool:IsActive(self) and (not self.widget or not self.widget:IsVisible()) then
+            pool:Release(self)
         end
     end)
 
     -- close
-    local close = AF.CreateIconButton(tip, AF.GetIcon("Close1"), 14, 14, 1, "gold")
+    local close = AF.CreateIconButton(tip, AF.GetIcon("Close"), 14, 14, 1, "gold")
     tip.close = close
     AF.SetPoint(close, "TOPRIGHT")
 
     close:HookOnMouseDown(function()
         if tip.closeHoldDuration == 0 then return end
-        if tip.timer:IsPaused() then
+        if tip.timer:IsShown() and tip.timer:IsPaused() then
             tip.timer:Resume()
         else
+            tip.timer:Show()
             tip.timer:SetCooldownDuration(tip.closeHoldDuration)
+            tip.timer:Resume() --! or the 3rd time, the timer will not start, why?
         end
     end)
 
@@ -95,10 +101,11 @@ local function HelpTipBuilder()
     end)
 
     -- timer
-    local timer = AF.CreateCooldown(tip, nil, AF.GetIcon("Circle2"), "gold", true)
+    local timer = AF.CreateCooldown(tip, nil, AF.GetIcon("Circle_Filled"), "gold", true)
     tip.timer = timer
     AF.SetPoint(timer, "RIGHT", close, "LEFT")
     AF.SetSize(timer, 10, 10)
+    timer:Hide()
     timer:SetOnCooldownDone(function()
         tip:Close()
     end)
@@ -128,6 +135,8 @@ end
 local function Release(_, tip)
     AF.ClearPoints(tip)
     tip:Hide()
+    tip.timer:Hide()
+    AF.HideCalloutGlow(tip)
     tip.widget = nil
     tip.callback = nil
     tip.nextTip = nil

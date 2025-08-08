@@ -242,6 +242,9 @@ local onleave_scale_animation = function(self, scale)
 	local originalScale = self.OriginalScale
 
 	if (self.OnLeaveAnimation.ScaleAnimation.SetScaleFrom) then
+		if (not currentScale) then
+			currentScale = 1
+		end
 		self.OnLeaveAnimation.ScaleAnimation:SetScaleFrom(currentScale, currentScale) --error bad argument #1 to 'SetScaleFrom' (Usage: self:SetScaleFrom(scale))
 		self.OnLeaveAnimation.ScaleAnimation:SetScaleTo(originalScale, originalScale)
 	else
@@ -1307,6 +1310,9 @@ local questLoadFailedAmount = {}
 local worldQuestLockedIndex = 1
 -- ~world -- ~update
 function WorldQuestTracker.UpdateWorldQuestsOnWorldMap(noCache, showFade, isQuestFlaggedRecheck, forceCriteriaAnimation, questList)
+	if InCombatLockdown() then
+		return
+	end
 	if (UnitLevel("player") < 50) then --this has to be improved
 		WorldQuestTracker.HideWorldQuestsOnWorldMap()
 

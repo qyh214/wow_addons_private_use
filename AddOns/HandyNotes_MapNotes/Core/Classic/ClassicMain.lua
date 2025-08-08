@@ -13,8 +13,6 @@ local MNMMBIcon = LibStub("LibDBIcon-1.0", true)
 local db = { }
 local nodes = { }
 local minimap = { }
-local lfgIDs = { }
-local extraInformations = { }
 
 ns.RestoreStaticPopUps()
 
@@ -23,23 +21,121 @@ function MapNotesMiniButton:OnInitialize() --mmb.lua
   MNMMBIcon:Register("MNMiniMapButton", ns.miniButton, self.db.profile.minimap)
 end
 
-local function updateextraInformation()
-    table.wipe(extraInformations)
-    for i=1,GetNumSavedInstances() do
-        local name, _, _, _, locked, _, _, _, _, difficultyName, numEncounters, encounterProgress = GetSavedInstanceInfo(i)
-        if (locked) then
-          --print(name, difficultyName, numEncounters, encounterProgress)
-          if (not extraInformations[name]) then
-          extraInformations[name] = { }
-          end
-          extraInformations[name][difficultyName] = encounterProgress .. "/" .. numEncounters
+function ns.MiniMapPlayerArrow()
+    if MMPA then return MMPA end
+
+    local scale = ns.Addon.db.profile.MinimapArrowScale or 1
+    local baseSize = 20
+    local size = baseSize * scale
+
+    MMPA = CreateFrame("Frame", "MMPA", Minimap)
+    MMPA:SetSize(size, size)
+    MMPA:SetFrameStrata("MEDIUM")
+    MMPA:SetPoint("CENTER", Minimap, "CENTER", 0, 0)
+    MMPA.texture = MMPA:CreateTexture(nil, "OVERLAY")
+    MMPA.texture:SetTexture("Interface\\Minimap\\MinimapArrow")
+    MMPA.texture:SetSize(size, size)
+    MMPA.texture:SetPoint("CENTER", MMPA, "CENTER", 0, 0)
+    MMPA.texture:SetTexelSnappingBias(0)
+    MMPA.texture:SetSnapToPixelGrid(false)
+    MMPA.elapsed = 0
+    MMPA.facing = nil
+
+    MMPA:SetScript("OnEnter", function(self)
+      if ns.Addon.db.profile.activate.MinimapArrowOnEnter and ns.Addon.db.profile.activate.MinimapArrow then
+        self:Hide()
+      end
+    end)
+
+    MMPA:SetScript("OnLeave", function(self)
+      if ns.Addon.db.profile.activate.MinimapArrowOnEnter and ns.Addon.db.profile.activate.MinimapArrow  then
+        C_Timer.After(ns.Addon.db.profile.activate.MinimapArrowOnEnterTime, function()
+          self:Show()
+        end)
+      end
+    end)
+
+    MMPA:SetScript("OnUpdate", function(self, elapsed)
+      self.elapsed = self.elapsed + elapsed
+      if self.elapsed < 0.05 then return end
+      self.elapsed = 0
+
+      local facing = GetPlayerFacing()
+      if not facing then
+        self.texture:Hide()
+        return
+      end
+
+      self.texture:Show()
+      if facing ~= self.facing then
+        self.facing = facing
+        self.texture:SetRotation(facing)
+      end
+    end)
+
+    if ns.Addon.db.profile.activate.MinimapArrow then
+      MMPA:Show()
+    else
+      MMPA:Hide()
+    end
+
+      C_Timer.After(1, function()
+      local facing = GetPlayerFacing()
+      if facing and MMPA and MMPA.texture then
+        MMPA.facing = facing
+        MMPA.texture:SetRotation(facing)
+      end
+    end)
+
+    return MMPA
+end
+
+function ns.UpdateMinimapArrow()
+    local scale = ns.Addon.db.profile.MinimapArrowScale or 1
+    local baseSize = 20
+    local size = baseSize * scale
+
+    if MMPA and MMPA.texture then
+        MMPA:SetSize(size, size)
+        MMPA.texture:SetSize(size, size)
+
+        if ns.Addon.db.profile.activate.MinimapArrow then
+            MMPA:Show()
+        else
+            MMPA:Hide()
         end
     end
 end
 
 local pluginHandler = { }
-function pluginHandler:OnEnter(uiMapId, coord)
+ns.pluginHandler = pluginHandler
+function ns.pluginHandler:OnEnter(uiMapId, coord)
+  ns.nodes[uiMapId][coord] = nodes[uiMapId][coord]
+  ns.minimap[uiMapId][coord] = minimap[uiMapId][coord]
+
   local nodeData = nil
+  local GetCurrentMapID = WorldMapFrame:GetMapID()
+
+  if not self.highlight then
+    self.highlight = self:CreateTexture(nil, "OVERLAY")
+    self.highlight:SetBlendMode("ADD")
+    self.highlight:SetAlpha(1)
+    self.highlight:SetAllPoints()
+  end
+
+  if self.highlight:GetTexture() ~= self.texture:GetTexture() then
+    self.highlight:SetTexture(self.texture:GetTexture())
+  end
+
+  self.highlight:Show()
+
+  if self.highlight and self.highlight.SetDrawLayer then
+    self.highlight:SetDrawLayer("OVERLAY", 6)
+  end
+
+  if self.texture and self.texture.SetDrawLayer then
+    self.texture:SetDrawLayer("OVERLAY", 5)
+  end
 
   if (minimap[uiMapId] and minimap[uiMapId][coord]) then
     nodeData = minimap[uiMapId][coord]
@@ -48,9 +144,9 @@ function pluginHandler:OnEnter(uiMapId, coord)
 	if (nodes[uiMapId] and nodes[uiMapId][coord]) then
 	  nodeData = nodes[uiMapId][coord]
 	end
-	
+
 	if (not nodeData) then return end
-	
+
 	local tooltip = self:GetParent() == WorldMapButton and WorldMapTooltip or GameTooltip
 	if ( self:GetCenter() > UIParent:GetCenter() ) then -- compare X coordinate
 	  tooltip:SetOwner(self, "ANCHOR_LEFT")
@@ -62,50 +158,29 @@ function pluginHandler:OnEnter(uiMapId, coord)
 
 	local instances = { strsplit("\n", nodeData.name) }
 
-	updateextraInformation()
-	
+
 	for i, v in pairs(instances) do
-    --print(i, v)
-	  if (db.extraInformation and (extraInformations[v] or (lfgIDs[v] and extraInformations[lfgIDs[v]]))) then
- 	    if (extraInformations[v]) then
-        --print("Dungeon/Raid is locked")
-	      for a,b in pairs(extraInformations[v]) do
-          --tooltip:AddLine(v .. ": " .. a .. " " .. b, nil, nil, nil, false)
-	        tooltip:AddDoubleLine(v, a .. " " .. b, 1, 1, 1, 1, 1, 1)
- 	      end
-	    end
-      if (lfgIDs[v] and extraInformations[lfgIDs[v]]) then
-        for a,b in pairs(extraInformations[lfgIDs[v]]) do
-          --tooltip:AddLine(v .. ": " .. a .. " " .. b, nil, nil, nil, false)
-          tooltip:AddDoubleLine(v, a .. " " .. b, 1, 1, 1, 1, 1, 1)
-        end
+	  tooltip:AddLine(v, nil, nil, nil, false)
+    if ns.DeveloperMode == true then
+      if nodeData.dnID then
+        tooltip:AddLine("Type:  " .. nodeData.dnID, nil, nil, false)
       end
-	  else
-	    tooltip:AddLine(v, nil, nil, nil, false)
-      if ns.DeveloperMode == true then
-        if nodeData.dnID then
-          tooltip:AddLine("Type:  " .. nodeData.dnID, nil, nil, false)
-        end
-        if nodeData.type then
-          tooltip:AddLine("IconName:  " .. nodeData.type, nil, nil, false)
-        end
-        tooltip:AddDoubleLine("uiMapID:  " .. uiMapId, "Coord:  " .. coord, nil, nil, false)
-        tooltip:AddDoubleLine("uiMapID:  " .. uiMapId, "==>   " .. C_Map.GetMapInfo(uiMapId).name, nil, nil, false)
-        if nodeData.mnID then
-          tooltip:AddDoubleLine("mnID:  " .. nodeData.mnID,"==>   " .. C_Map.GetMapInfo(nodeData.mnID).name, nil, nil, false)
-        end
-        if nodeData.mnID2 then
-          tooltip:AddDoubleLine("mnID2:  " .. nodeData.mnID2, C_Map.GetMapInfo(nodeData.mnID2).name, nil, nil, false)
-        end
-        if nodeData.mnID3 then
-          tooltip:AddDoubleLine("mnID3:  " .. nodeData.mnID3, C_Map.GetMapInfo(nodeData.mnID3).name, nil, nil, false)
-        end
-        --if nodeData.id then
-        --  tooltip:AddLine("Instance-ID:  " .. nodeData.id, nil, nil, false)
-        --end
-        tooltip:AddLine(" ", nil, nil, false)
+      if nodeData.type then
+        tooltip:AddLine("IconName:  " .. nodeData.type, nil, nil, false)
       end
-	  end
+      tooltip:AddDoubleLine("uiMapID:  " .. uiMapId, "Coord:  " .. coord, nil, nil, false)
+      tooltip:AddDoubleLine("uiMapID:  " .. uiMapId, "==>   " .. C_Map.GetMapInfo(uiMapId).name, nil, nil, false)
+      if nodeData.mnID then
+        tooltip:AddDoubleLine("mnID:  " .. nodeData.mnID,"==>   " .. C_Map.GetMapInfo(nodeData.mnID).name, nil, nil, false)
+      end
+      if nodeData.mnID2 then
+        tooltip:AddDoubleLine("mnID2:  " .. nodeData.mnID2, C_Map.GetMapInfo(nodeData.mnID2).name, nil, nil, false)
+      end
+      if nodeData.mnID3 then
+        tooltip:AddDoubleLine("mnID3:  " .. nodeData.mnID3, C_Map.GetMapInfo(nodeData.mnID3).name, nil, nil, false)
+      end
+      tooltip:AddLine(" ", nil, nil, false)
+    end
 
     if nodeData.TransportName then -- outputs transport name for TomTom to the tooltip
       tooltip:AddDoubleLine(nodeData.TransportName, nil, nil, false)
@@ -171,8 +246,8 @@ function pluginHandler:OnEnter(uiMapId, coord)
           tooltip:AddDoubleLine("|cffffffff" .. nodeData.wwwLink, nil, nil, false)
           tooltip:AddLine("\n" .. L["Has not been unlocked yet"] .. "\n" .. "\n", 1, 0, 0)
           if ns.Addon.db.profile.ExtraTooltip then
-            tooltip:AddDoubleLine("|cff00ff00".. "< " .. L["Middle mouse button to post the link in the chat"] .. " >" .. "\n" .. "< " .. L["Activate the „Link“ function from MapNotes in the General tab to create clickable links and email addresses in the chat"] .. " >", nil, nil, false)
-          end
+            tooltip:AddDoubleLine("\n" .. "|cff00ff00".. "< " .. L["Activate the 'Link' function in the MapNotes menu to generate a clickable web link"] .. " >" .. "\n" .. "< " .. L["Middle mouse button to post the link in the chat"] .. " >", nil, nil, false)
+            end
         end
       end
 
@@ -198,7 +273,7 @@ function pluginHandler:OnEnter(uiMapId, coord)
           tooltip:AddDoubleLine("|cffffffff" .. nodeData.wwwLink, nil, nil, false)
           tooltip:AddLine("\n" .. L["Has not been unlocked yet"], 1, 0, 0)
           if ns.Addon.db.profile.ExtraTooltip then
-            tooltip:AddDoubleLine("\n" .. "|cff00ff00".. "< " .. L["Middle mouse button to post the link in the chat"] .. " >" .. "\n" .. "< " .. L["Use the addon 'Prat', 'Chat Copy Paste' for example to then copy this link from the chat"] .. " >", nil, nil, false)
+            tooltip:AddDoubleLine("|cff00ff00".. "< " .. L["Activate the „Link“ function from MapNotes in the General tab to create clickable links and email addresses in the chat"] .. " >" .. "\n" .. "< " .. L["Middle mouse button to post the link in the chat"] .. " >", nil, nil, false)
           end
         end
         
@@ -227,12 +302,21 @@ function SlashCmdList.DeveloperMode(msg, editbox)
   end
 end
 
-function pluginHandler:OnLeave(uiMapID, coord)
-    if self:GetParent() == WorldMapButton then
-      WorldMapTooltip:Hide()
-    else
-      GameTooltip:Hide()
-    end
+function ns.pluginHandler:OnLeave(uiMapId, coord)
+  if self:GetParent() == WorldMapButton then
+    WorldMapTooltip:Hide()
+  else
+    GameTooltip:Hide()
+  end
+
+  if self.highlight then
+    self.highlight:Hide()
+    self.highlight:SetTexture(nil)
+  end
+
+  if self.texture then
+    self.texture:SetDrawLayer("OVERLAY", 5)
+  end
 end
 
 
@@ -265,6 +349,8 @@ do
 
 		local data = t.data
 		local state, value = next(data, prestate)
+    local GetCurrentMapID = WorldMapFrame:GetMapID()
+    local GetBestMapForUnit = C_Map.GetBestMapForUnit("player")
 
 		while value do
 			local alpha
@@ -292,47 +378,38 @@ do
       
       ns.CapitalIDs =
         --Cataclysm
-        WorldMapFrame:GetMapID() == 1454 or -- Orgrimmar
-        WorldMapFrame:GetMapID() == 1456 or -- Thunder Bluff
-        WorldMapFrame:GetMapID() == 1458 or -- Undercity
-        WorldMapFrame:GetMapID() == 1954 or -- Silvermoon
-        WorldMapFrame:GetMapID() == 1947 or -- Exodar
-        WorldMapFrame:GetMapID() == 1457 or -- Darnassus
-        WorldMapFrame:GetMapID() == 1453 or -- Stormwind
-        WorldMapFrame:GetMapID() == 1455 or -- Ironforge
-        WorldMapFrame:GetMapID() == 1955 or -- Shattrath
+        GetCurrentMapID == 1454 or -- Orgrimmar
+        GetCurrentMapID == 1456 or -- Thunder Bluff
+        GetCurrentMapID == 1458 or -- Undercity
+        GetCurrentMapID == 1954 or -- Silvermoon
+        GetCurrentMapID == 1947 or -- Exodar
+        GetCurrentMapID == 1457 or -- Darnassus
+        GetCurrentMapID == 1453 or -- Stormwind
+        GetCurrentMapID == 1455 or -- Ironforge
+        GetCurrentMapID == 1955 or -- Shattrath
         --Retail & Cataclysm
-        WorldMapFrame:GetMapID() == 86 or -- Ragefire Chasmn
-        WorldMapFrame:GetMapID() == 125 or  -- Dalaran Northrend
-        WorldMapFrame:GetMapID() == 126   -- Dalaran Northrend Basement
+        GetCurrentMapID == 86 or -- Ragefire Chasmn
+        GetCurrentMapID == 125 or  -- Dalaran Northrend
+        GetCurrentMapID == 126   -- Dalaran Northrend Basement
 
       ns.CapitalMiniMapIDs =
         --Cataclysm
-        C_Map.GetBestMapForUnit("player") == 1454 or -- Orgrimmar
-        C_Map.GetBestMapForUnit("player") == 1456 or -- Thunder Bluff
-        C_Map.GetBestMapForUnit("player") == 1458 or -- Undercity
-        C_Map.GetBestMapForUnit("player") == 1954 or -- Silvermoon
-        C_Map.GetBestMapForUnit("player") == 1947 or -- Exodar
-        C_Map.GetBestMapForUnit("player") == 1457 or -- Darnassus
-        C_Map.GetBestMapForUnit("player") == 1453 or -- Stormwind
-        C_Map.GetBestMapForUnit("player") == 1455 or -- Ironforge
-        C_Map.GetBestMapForUnit("player") == 1955 or -- Shattrath
+        GetBestMapForUnit == 1454 or -- Orgrimmar
+        GetBestMapForUnit == 1456 or -- Thunder Bluff
+        GetBestMapForUnit == 1458 or -- Undercity
+        GetBestMapForUnit == 1954 or -- Silvermoon
+        GetBestMapForUnit == 1947 or -- Exodar
+        GetBestMapForUnit == 1457 or -- Darnassus
+        GetBestMapForUnit == 1453 or -- Stormwind
+        GetBestMapForUnit == 1455 or -- Ironforge
+        GetBestMapForUnit == 1955 or -- Shattrath
         --Retail & Cataclysm
-        C_Map.GetBestMapForUnit("player") == 86 or -- Ragefire Chasmn
-        C_Map.GetBestMapForUnit("player") == 125 or  -- Dalaran Northrend
-        C_Map.GetBestMapForUnit("player") == 126   -- Dalaran Northrend Basement
+        GetBestMapForUnit == 86 or -- Ragefire Chasmn
+        GetBestMapForUnit == 125 or  -- Dalaran Northrend
+        GetBestMapForUnit == 126   -- Dalaran Northrend Basement
       
 			if value.name == nil then value.name = value.id or value.mnID end
       
-			local instances = { strsplit("\n", value.name) }
-			for i, v in pairs(instances) do
-				if (not extraInformations[v] and not extraInformations[lfgIDs[v]]) then
-					allLocked = false
-				else
-					anyLocked = true
-				end
-			end
-
       if (anyLocked and db.graymultipleID) or ((allLocked and not db.graymultipleID) and db.assignedgray) then
         icon = ns.icons["Gray"]
       end
@@ -460,7 +537,7 @@ do
       -- X = 6 =	Orphan 	
 
       if t.uiMapId == 948 -- Mahlstrom Continent 
-        or WorldMapFrame:GetMapID() == 2274 -- PTR: Khaz Algar - The War Within. Continent Scale atm on Beta a Zone not a Continent!!
+        or GetCurrentMapID == 2274 -- PTR: Khaz Algar - The War Within. Continent Scale atm on Beta a Zone not a Continent!!
         or (mapInfo.mapType == 0 and (ns.dbChar.AzerothDeletedIcons[t.uiMapId] and not ns.dbChar.AzerothDeletedIcons[t.uiMapId][state])) -- Cosmos
         or (mapInfo.mapType == 1 and (ns.dbChar.AzerothDeletedIcons[t.uiMapId] and not ns.dbChar.AzerothDeletedIcons[t.uiMapId][state])) -- Azeroth
         or (not ns.CapitalIDs and (mapInfo.mapType == 4 or mapInfo.mapType == 6) and (ns.dbChar.DungeonDeletedIcons[t.uiMapId] and not ns.dbChar.DungeonDeletedIcons[t.uiMapId][state])) -- Dungeon
@@ -499,15 +576,6 @@ do
 					local allLocked = true
 					local anyLocked = false
           
-					local instances = { strsplit("\n", value.name) }
-					for i, v in pairs(instances) do
-						if (not extraInformations[v] and not extraInformations[lfgIDs[v]]) then
-							allLocked = false
-						else
-							anyLocked = true
-						end
-					end
-
           if (anyLocked and db.graymultipleID) or ((allLocked and not db.graymultipleID) and db.assignedgray) then   
 						icon = ns.icons["Gray"]
 					end
@@ -547,7 +615,7 @@ do
 		tablepool[t] = true
 	end
 
-function pluginHandler:GetNodes2(uiMapId, isMinimapUpdate)
+function ns.pluginHandler:GetNodes2(uiMapId, isMinimapUpdate)
   --print(uiMapId)
       local C = deepCopy(HandyNotes:GetContinentZoneList(uiMapId)) -- Is this a continent?
       if C then
@@ -575,26 +643,53 @@ function pluginHandler:GetNodes2(uiMapId, isMinimapUpdate)
   end
 end
 
-local waypoints = {}
 local function setWaypoint(uiMapID, coord)
-    local dungeon = nodes[uiMapID][coord]
 
-    local waypoint = nodes[dungeon]
-    if waypoint and TomTom:IsValidWaypoint(waypoint) then
-        return
-    end
-    
-    local title = dungeon.name
+  local function getMNIDName(mnID)
+    return C_Map.GetMapInfo(mnID) and C_Map.GetMapInfo(mnID).name or nil
+  end
+
+  local dungeon = nodes[uiMapID] and nodes[uiMapID][coord]
+  if not dungeon then
+      return
+  end
+
+  local function getCoordinatesForTomTom(coord)
     local x, y = HandyNotes:getXY(coord)
-    waypoints[dungeon] = TomTom:AddWaypoint(uiMapID , x, y, {
-        title = dungeon.TransportName or dungeon.name,
-        persistent = nil,
-        minimap = true,
-        world = true
-    })  
+    return x, y
+  end
+
+  if IsAddOnLoaded("TomTom") and TomTom and type(TomTom.AddWaypoint) == "function" then
+    local x, y = getCoordinatesForTomTom(coord)
+
+    local mnIDName = dungeon.mnID and getMNIDName(dungeon.mnID) or nil
+    local title
+    if mnIDName and mnIDName ~= "" then
+        if dungeon.name and dungeon.name ~= "" then
+            title = TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "\n" .. L["Way to"] .. "\n" .. dungeon.name .. " " .. mnIDName
+        else
+            title = TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "\n" .. L["Way to"] .. "\n" .. mnIDName
+        end
+    elseif dungeon.dnID and dungeon.dnID ~= "" then
+        title = TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "\n" .. L["Way to"] .. "\n" .. dungeon.dnID
+    elseif dungeon.TransportName and dungeon.TransportName ~= "" then
+        title = TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "\n" .. L["Way to"] .. "\n" .. dungeon.TransportName .. "\n" .. dungeon.name
+    elseif dungeon.name and dungeon.name ~= "" then
+        title = TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "\n" .. L["Way to"] .. "\n" .. dungeon.name
+    else
+        title = "Unbekannter Titel"  -- Fallback
+    end
+
+    TomTom:AddWaypoint(uiMapID, x, y, {
+      title = title,
+      persistent = nil,
+      minimap = true,
+      world = true
+    })
+  end
 end
 
-function pluginHandler:OnClick(button, pressed, uiMapId, coord, value)
+function ns.pluginHandler:OnClick(button, pressed, uiMapId, coord, value)
 
 local mnID = nodes[uiMapId][coord].mnID
 local mnID2 = nodes[uiMapId][coord].mnID2
@@ -604,9 +699,10 @@ ns.achievementID = nodes[uiMapId][coord].achievementID
 ns.questID = nodes[uiMapId][coord].questID
 
 local mapInfo = C_Map.GetMapInfo(uiMapId)
-local CapitalIDs = WorldMapFrame:GetMapID() == 1454 or WorldMapFrame:GetMapID() == 1456 or WorldMapFrame:GetMapID() == 1458 or WorldMapFrame:GetMapID() == 1954
-                   or WorldMapFrame:GetMapID() == 1947 or WorldMapFrame:GetMapID() == 1457 or WorldMapFrame:GetMapID() == 1453 or WorldMapFrame:GetMapID() == 1455
-                   or WorldMapFrame:GetMapID() == 1955 or WorldMapFrame:GetMapID() == 86 or WorldMapFrame:GetMapID() == 125 or WorldMapFrame:GetMapID() == 126 
+local GetCurrentMapID = WorldMapFrame:GetMapID()
+local CapitalIDs = GetCurrentMapID == 1454 or GetCurrentMapID == 1456 or GetCurrentMapID == 1458 or GetCurrentMapID == 1954
+                   or GetCurrentMapID == 1947 or GetCurrentMapID == 1457 or GetCurrentMapID == 1453 or GetCurrentMapID == 1455
+                   or GetCurrentMapID == 1955 or GetCurrentMapID == 86 or GetCurrentMapID == 125 or GetCurrentMapID == 126 
 
   StaticPopupDialogs["Delete_Icon?"] = {
     text = TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. ": " .. L["Delete this icon"] .. " ? " .. TextIconMNL4:GetIconString(),
@@ -653,7 +749,7 @@ local CapitalIDs = WorldMapFrame:GetMapID() == 1454 or WorldMapFrame:GetMapID() 
 
   if (not pressed) then return end
 
-  if (button == "RightButton" and db.tomtom and TomTom and IsShiftKeyDown()) then
+  if (button == "RightButton" and ns.Addon.db.profile.WayPoints and IsShiftKeyDown()) then
       setWaypoint(uiMapId, coord)
       return
   end
@@ -674,98 +770,41 @@ local CapitalIDs = WorldMapFrame:GetMapID() == 1454 or WorldMapFrame:GetMapID() 
       WorldMapFrame:SetMapID(mnID3)
   end
 
+  if (not pressed) then return end
 
-  if not db.activate.ShiftWorld then
-
-    if (not pressed) then return end
-
-    if (button == "MiddleButton") then
-      if wwwLink and not (ns.achievementID or ns.questID) then
-        print(wwwLink)
-      elseif ns.questID then
-        --SendChatMessage("www.wowhead.com/quest=" .. questID, "WHISPER", "Common", GetUnitName("PLAYER"));
-        print("|cffff0000Map|r|cff00ccffNotes|r", "|cffffff00" .. LOOT_JOURNAL_LEGENDARIES_SOURCE_QUEST, COMMUNITIES_INVITE_MANAGER_COLUMN_TITLE_LINK .. ":" .. "|r", "https://www.wowhead.com/quest=" .. ns.questID)
-      elseif ns.achievementID then
-        print("|cffff0000Map|r|cff00ccffNotes|r", "|cffffff00" .. LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT, COMMUNITIES_INVITE_MANAGER_COLUMN_TITLE_LINK .. ":" .. "|r", "https://www.wowhead.com/achievement=" .. ns.achievementID)
-        --SendChatMessage("MapNotes: https://www.wowhead.com/achievement=" .. achievementID, "WHISPER", "Common", GetUnitName("PLAYER"));
-      end
+  if (button == "MiddleButton") then
+    if wwwLink and not (ns.achievementID or ns.questID) then
+      print(wwwLink)
+    elseif ns.questID then
+      print("|cffff0000Map|r|cff00ccffNotes|r", "|cffffff00" .. LOOT_JOURNAL_LEGENDARIES_SOURCE_QUEST, COMMUNITIES_INVITE_MANAGER_COLUMN_TITLE_LINK .. ":" .. "|r", "https://www.wowhead.com/quest=" .. ns.questID)
+    elseif ns.achievementID then
+      print("|cffff0000Map|r|cff00ccffNotes|r", "|cffffff00" .. LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT, COMMUNITIES_INVITE_MANAGER_COLUMN_TITLE_LINK .. ":" .. "|r", "https://www.wowhead.com/achievement=" .. ns.achievementID)
     end
+  end
 
-    if (button == "LeftButton" and not IsAltKeyDown()) then
+  if (button == "LeftButton" and not IsAltKeyDown()) then
 
-      local mnID = nodes[uiMapId][coord].mnID
-      if mnID then
-        WorldMapFrame:SetMapID(mnID)
-      end
+    local mnID = nodes[uiMapId][coord].mnID
+    if mnID then
+      WorldMapFrame:SetMapID(mnID)
+    end
       
-      if nodes[uiMapId][coord].mnID and nodes[uiMapId][coord].id then
-        mnID = nodes[uiMapId][coord].mnID[1] --change id function to mnID function
-      else
-        mnID = nodes[uiMapId][coord].mnID --single coords function
-      end
-
-      local dungeonID
-      if (type(nodes[uiMapId][coord].id) == "table") then
-        dungeonID = nodes[uiMapId][coord].id[1] --multi coords journal function
-      else
-        dungeonID = nodes[uiMapId][coord].id --single coords function
-      end
-
-      if (not dungeonID) then return end
+    if nodes[uiMapId][coord].mnID and nodes[uiMapId][coord].id then
+      mnID = nodes[uiMapId][coord].mnID[1] --change id function to mnID function
+    else
+      mnID = nodes[uiMapId][coord].mnID --single coords function
     end
 
+    local dungeonID
+    if (type(nodes[uiMapId][coord].id) == "table") then
+      dungeonID = nodes[uiMapId][coord].id[1] --multi coords journal function
+    else
+      dungeonID = nodes[uiMapId][coord].id --single coords function
+    end
+
+    if (not dungeonID) then return end
   end
 
-  if ns.Addon.db.profile.activate.ShiftWorld then
-
-    if (not pressed) then return end
-
-    if IsShiftKeyDown() and (button == "MiddleButton") then
-      local www = nodes[uiMapId][coord].www
-      if www then
-        print(www)
-      end
-    end
-
-    if db.activate.ShiftWorld then
-
-      if (not pressed) then return end
-  
-      if IsShiftKeyDown() and (button == "RightButton" and db.tomtom and TomTom) then
-          setWaypoint(uiMapId, coord)
-      return end
-
-      if IsShiftKeyDown() and (button == "MiddleButton") then
-        local wwwLink = nodes[uiMapId][coord].wwwLink
-        if wwwLink then
-          print(wwwLink)
-        end
-      end
-  
-      if IsShiftKeyDown() and (button == "LeftButton") then
-  
-        local mnID = nodes[uiMapId][coord].mnID
-        if mnID then
-           WorldMapFrame:SetMapID(mnID)
-        end
-        
-        if nodes[uiMapId][coord].mnID and nodes[uiMapId][coord].id then
-          mnID = nodes[uiMapId][coord].mnID[1] --change id function to mnID function
-        else
-          mnID = nodes[uiMapId][coord].mnID --single coords function
-        end
-  
-        local dungeonID
-        if (type(nodes[uiMapId][coord].id) == "table") then
-          dungeonID = nodes[uiMapId][coord].id[1] --multi coords journal function
-        else
-          dungeonID = nodes[uiMapId][coord].id --single coords journal function
-        end
-  
-        if (not dungeonID) then return end
-      end
-    end
-  end
 end
 
 local Addon = CreateFrame("Frame")
@@ -773,14 +812,13 @@ Addon:RegisterEvent("PLAYER_LOGIN")
 Addon:SetScript("OnEvent", function(self, event, ...) return self[event](self, ...)end)
 
 local function updateStuff()
-  updateextraInformation()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
 end
 
 function Addon:ZONE_CHANGED_NEW_AREA()
   local mapID = C_Map.GetBestMapForUnit("player")
   if mapID then
-    if ns.Addon.db.profile.activate.ZoneChanged then
+    if ns.Addon.db.profile.ZoneChanged then
       print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00" .. " " .. L["Location"] .. ": ", "|cff00ff00" .. "==>  " .. C_Map.GetMapInfo(mapID).name .. "  <==")
     end
   end
@@ -788,7 +826,7 @@ end
 
 local subzone = GetSubZoneText()
 function Addon:ZONE_CHANGED_INDOORS()
-    if ns.Addon.db.profile.activate.ZoneChanged and ns.Addon.db.profile.activate.ZoneChangedDetail and not ns.CapitalMiniMapIDs then
+    if ns.Addon.db.profile.ZoneChanged and ns.Addon.db.profile.ZoneChangedDetail and not ns.CapitalMiniMapIDs then
       print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00" .. " " .. L["Location"] .. ": ", "|cff00ff00" .. "==>  " .. "|cff00ff00" .. GetZoneText() .. " " .. "|cff00ccff" .. GetSubZoneText().. "|cff00ff00" .. "  <==")
     end
 end
@@ -796,7 +834,7 @@ end
 function Addon:ZONE_CHANGED()
   local mapID = C_Map.GetBestMapForUnit("player")
   if mapID then
-    if ns.Addon.db.profile.activate.ZoneChanged and ns.Addon.db.profile.activate.ZoneChangedDetail and not ns.CapitalMiniMapIDs then
+    if ns.Addon.db.profile.ZoneChanged and ns.Addon.db.profile.ZoneChangedDetail and not ns.CapitalMiniMapIDs then
       print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00" .. " " .. L["Location"] .. ": ", "|cff00ff00" .. "==>  " .. GetZoneText() .. " " .. "|cff00ccff" .. GetSubZoneText() .. "|cff00ff00" .. "  <==")
     end
   end
@@ -806,16 +844,41 @@ function Addon:OnProfileChanged(event, database, profileKeys)
   db = database.profile
   ns.dbChar = database.profile.deletedIcons
   ns.FogOfWar = database.profile.FogOfWarColor
-  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been changed"])
-  HandyNotes:GetModule("FogOfWarButton"):Refresh()  
+
+  ns.ApplySavedCoords()
+  ns.ReloadAreaMapSettings()
+  ns.UpdateMinimapArrow()
+
+  if ns.SetAreaMapMenuVisibility then
+    ns.SetAreaMapMenuVisibility(ns.Addon.db.profile.areaMap.showAreaMapDropDownMenu)
+  end
+
+  HandyNotes:GetModule("FogOfWarButton"):Refresh()
+  if ns.Addon.db.profile.CoreChatMassage then
+    print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " ..
+      TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been changed"])
+  end
   ns.Addon:FullUpdate()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
 end
 
-function Addon:OnProfileReset(event, database, newProfileKey)
+function Addon:OnProfileReset(event, database, profileKeys)
 	db = database.profile
   ns.dbChar = database.profile.deletedIcons
   ns.FogOfWar = database.profile.FogOfWarColor
+
+  ns.DefaultPlayerCoords()
+  ns.DefaultMouseCoords()
+  ns.DefaultPlayerAlpha()
+  ns.DefaultMouseAlpha()
+  ns.UpdateAreaMapFogOfWar()
+  ns.ResetAreaMapToPlayerLocation()
+  ns.UpdateMinimapArrow()
+
+  if ns.SetAreaMapMenuVisibility then
+    ns.SetAreaMapMenuVisibility(ns.Addon.db.profile.areaMap.showAreaMapDropDownMenu)
+  end
+
   wipe(ns.dbChar.CapitalsDeletedIcons)
   wipe(ns.dbChar.MinimapCapitalsDeletedIcons)
   wipe(ns.dbChar.CapitalsDeletedIcons)
@@ -825,28 +888,45 @@ function Addon:OnProfileReset(event, database, newProfileKey)
   wipe(ns.dbChar.ZoneDeletedIcons)
   wipe(ns.dbChar.MinimapZoneDeletedIcons)
   wipe(ns.dbChar.DungeonDeletedIcons)
-  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been reset to default"])
+
+  if ns.Addon.db.profile.CoreChatMassage then
+    print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been reset to default"])
+  end
   HandyNotes:GetModule("FogOfWarButton"):Refresh()
   ns.Addon:FullUpdate()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
 end
 
-function Addon:OnProfileCopied(event, database, newProfileKey)
+function Addon:OnProfileCopied(event, database, profileKeys)
 	db = database.profile
   ns.dbChar = database.profile.deletedIcons
   ns.FogOfWar = database.profile.FogOfWarColor
+
+  ns.ApplySavedCoords()
+  ns.ReloadAreaMapSettings()
+  ns.UpdateMinimapArrow()
+
+  if ns.SetAreaMapMenuVisibility then
+    ns.SetAreaMapMenuVisibility(ns.Addon.db.profile.areaMap.showAreaMapDropDownMenu)
+  end
+
   HandyNotes:GetModule("FogOfWarButton"):Refresh()
-  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been adopted"])
+  if ns.Addon.db.profile.CoreChatMassage then
+    print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been adopted"])
+  end
   ns.Addon:FullUpdate()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
 end
 
-function Addon:OnProfileDeleted (event, database, newProfileKey)
+function Addon:OnProfileDeleted(event, database, profileKeys)
 	db = database.profile
   ns.dbChar = database.profile.deletedIcons
   ns.FogOfWar = database.profile.FogOfWarColor
+
   HandyNotes:GetModule("FogOfWarButton"):Refresh()
-  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been deleted"])
+  if ns.Addon.db.profile.CoreChatMassage then
+    print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been deleted"])
+  end
   ns.Addon:FullUpdate()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
 end
@@ -857,7 +937,6 @@ function Addon:PLAYER_ENTERING_WORLD()
       self:PopulateTable()
       self:PopulateMinimap()
   end
-    updateextraInformation()
     updateStuff()
 end
 
@@ -881,7 +960,7 @@ function Addon:PLAYER_LOGIN()
   ns.FogOfWar = self.db.profile.FogOfWarColor
 
   -- Register options 
-  HandyNotes:RegisterPluginDB("MapNotes", pluginHandler, ns.options)
+  HandyNotes:RegisterPluginDB("MapNotes", ns.pluginHandler, ns.options)
   LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("MapNotes", ns.options)
 
   -- Get the option table for profiles
@@ -894,6 +973,9 @@ function Addon:PLAYER_LOGIN()
   Addon:RegisterEvent("ZONE_CHANGED_NEW_AREA")
   Addon:RegisterEvent("ZONE_CHANGED")
   Addon:RegisterEvent("ZONE_CHANGED_INDOORS")
+
+  -- Check for PlayerArrow on Minimap
+  ns.MiniMapPlayerArrow()
 
   -- Check for Links
   ns.CreateAndCopyLink()
@@ -917,26 +999,37 @@ function Addon:PLAYER_LOGIN()
 
   --remove BlizzPOIs for MapNotes icons function
   function ns.RemoveBlizzPOIs()
-    if (not ns.Addon.db.profile.activate.RemoveBlizzPOIs or ns.Addon.db.profile.activate.HideMapNote) then return end
+    if (ns.Addon.db.profile.activate.HideMapNote) then return end
 
     for pin in WorldMapFrame:EnumeratePinsByTemplate("AreaPOIPinTemplate") do
-      for _, poiID in pairs(ns.BlizzAreaPoisInfo) do
-        local poi = C_AreaPoiInfo.GetAreaPOIInfo(WorldMapFrame:GetMapID(), pin.areaPoiID)
-        if (poi ~= nil and poi.areaPoiID == poiID) then
-            WorldMapFrame:RemovePin(pin)
+
+      if ns.Addon.db.profile.activate.RemoveBlizzPOIs then
+        if not ns.BlizzAreaPoisLookup then
+            ns.BlizzAreaPoisLookup = {}
+            for _, poiID in pairs(ns.BlizzAreaPoisInfo) do
+                ns.BlizzAreaPoisLookup[poiID] = true
+            end
+        end
+
+        for _, poiID in pairs(ns.BlizzAreaPoisInfo) do
+          local poi = C_AreaPoiInfo.GetAreaPOIInfo(WorldMapFrame:GetMapID(), pin.areaPoiID)
+          if (poi ~= nil and poi.areaPoiID == poiID) then
+              WorldMapFrame:RemovePin(pin)
+          end
         end
       end
+
     end
+
   end
 
-  hooksecurefunc(WorldMapFrame, "OnMapChanged", function()
-    ns.RemoveBlizzPOIs()
-  end)
-
-  WorldMapFrame:HookScript("OnShow", function()
-    ns.RemoveBlizzPOIs()
-    HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
-  end)
+  for dp in pairs(WorldMapFrame.dataProviders) do
+      if (not dp.GetPinTemplates and type(dp.GetPinTemplate) == "function") then
+          if (dp:GetPinTemplate() == "AreaPOIPinTemplate") then
+              hooksecurefunc(dp, "RefreshAllData", ns.RemoveBlizzPOIs)
+          end
+      end
+  end
 
 end
 
@@ -984,11 +1077,6 @@ function Addon:UpdateInstanceNames(node)
   local dungeonInfo = EJ_GetInstanceInfo
     local id = node.id
 
-      if (node.lfgid) then
-        dungeonInfo = GetLFGDungeonInfo
-        id = node.lfgid 
-      end
-
       if (type(id) == "table") then
         for i,v in pairs(node.id) do
           local name = dungeonInfo(v)
@@ -1005,8 +1093,11 @@ function Addon:UpdateInstanceNames(node)
       end
 end
 
-
 function Addon:FullUpdate()
   self:PopulateTable()
   self:PopulateMinimap()
 end
+
+C_Timer.After(0, function()
+  ns.AreaMapFrame = BattlefieldMapFrame
+end)

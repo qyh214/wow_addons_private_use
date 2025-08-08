@@ -91,8 +91,12 @@ local function CacheInfo(t, field)
 	local id = t.headerID;
 	local _t = cache.GetCached(t);
 	local data = GetAutomaticHeaderData(id, type);
-	for key,value in pairs(data) do
-		_t[key] = value;
+	if data then
+		for key,value in pairs(data) do
+			_t[key] = value;
+		end
+	else
+		print("FAILED TO FIND AUTO HEADER DATA", id, type);
 	end
 	if field then return _t[field]; end
 end

@@ -174,10 +174,8 @@ L["S_WORLDQUESTS"] = "전역 퀘스트"
 L["S_APOWER_AVAILABLE"] = "획득 가능"
 L["S_APOWER_NEXTLEVEL"] = "다음 등급"
 L["S_DECREASESIZE"] = "크기 줄이기"
---[[Translation missing --]]
-L["S_DUNGEON"] = "Dungeon"
---[[Translation missing --]]
-L["S_ENABLE"] = "Enable"
+L["S_DUNGEON"] = "던전"
+L["S_ENABLE"] = "활성화"
 L["S_ENABLED"] = "사용"
 L["S_ERROR_NOTIMELEFT"] = "이 퀘스트는 만료되었습니다."
 L["S_ERROR_NOTLOADEDYET"] = "이 퀘스트를 아직 불러오지 못했습니다, 몇 초만 기다려주세요."
@@ -239,9 +237,8 @@ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = "'/wqt statusbar' 또는 인터�
 L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = "상태 표시줄 표시"
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "상단에 고정"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "현재 지역만"
-L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE"] = "추적기 크기 비율: %s"
---[[Translation missing --]]
-L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE_NAME"] = "Tracker Scale"
+L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE"] = "추적기 크기: %s"
+L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE_NAME"] = "추적기 크기"
 L["S_MAPBAR_OPTIONSMENU_TRACKERCONFIG"] = "추적기 설정"
 L["S_MAPBAR_OPTIONSMENU_TRACKERMOVABLE_AUTO"] = "자동"
 L["S_MAPBAR_OPTIONSMENU_TRACKERMOVABLE_CUSTOM"] = "사용자 설정 위치"
@@ -258,94 +255,59 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SHOWTEXT"] = "남은 시간 문자"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "시간 별 정렬"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "남은 시간"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "모든 계정"
---[[Translation missing --]]
-L["S_OPENWORLD"] = "Open World"
+L["S_OPENWORLD"] = "필드"
 L["S_OPTIONS_ACCESSIBILITY"] = "접근성"
 L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = "추가 추적 표시"
 L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "현상금 고리 표시"
 L["S_OPTIONS_ANIMATIONS"] = "애니메이션 사용"
---[[Translation missing --]]
-L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Don't Show if Already in Group"
---[[Translation missing --]]
-L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Show Options Button"
+L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "이미 그룹에 있는 경우 표시 안 함"
+L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "옵션 버튼 표시"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "지도 창 중앙 고정"
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "먼저 '지도 창 크기 조절' 을 활성화해야 하며, 값이 변경되지 않았습니다."
 L["S_OPTIONS_MAPFRAME_SCALE"] = "지도 창 크기 조절"
 L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = "지도 창 크기 조절 활성화"
---[[Translation missing --]]
-L["S_OPTIONS_OPEN"] = "Open Options Panel"
---[[Translation missing --]]
-L["S_OPTIONS_OPEN_FROM_INTERFACE_PANEL"] = "Open World Quest Tracker Options Menu"
---[[Translation missing --]]
-L["S_OPTIONS_PATHLINE"] = "Path Line"
---[[Translation missing --]]
-L["S_OPTIONS_QUEST_EMISSARY"] = "Emissary Quest Info"
+L["S_OPTIONS_OPEN"] = "옵션 패널 열기"
+L["S_OPTIONS_OPEN_FROM_INTERFACE_PANEL"] = "필드 퀘스트 추적 옵션 메뉴"
+L["S_OPTIONS_PATHLINE"] = "경로선"
+L["S_OPTIONS_QUEST_EMISSARY"] = "사절 임무 정보"
 L["S_OPTIONS_QUESTBLACKLIST"] = "퀘스트 차단 목록"
 L["S_OPTIONS_RESET"] = "재설정"
---[[Translation missing --]]
-L["S_OPTIONS_SHOW_FILTER_BUTTON"] = "Show Filter Button"
---[[Translation missing --]]
-L["S_OPTIONS_SHOW_MINIMIZE_BUTTON"] = "Show Minimize Button"
---[[Translation missing --]]
-L["S_OPTIONS_SHOW_SORT_BUTTON"] = "Show Sort Button"
---[[Translation missing --]]
-L["S_OPTIONS_SHOW_TIMELEFT_BUTTON"] = "Show Time Left Button"
---[[Translation missing --]]
-L["S_OPTIONS_SHOW_WARBAND_REP_WARNING"] = "Show Warband no Rep [!]"
---[[Translation missing --]]
-L["S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON"] = "Show World Shortcuts"
+L["S_OPTIONS_SHOW_FILTER_BUTTON"] = "필터 버튼 표시"
+L["S_OPTIONS_SHOW_MINIMIZE_BUTTON"] = "최소화 버튼 표시"
+L["S_OPTIONS_SHOW_SORT_BUTTON"] = "정렬 버튼 표시"
+L["S_OPTIONS_SHOW_TIMELEFT_BUTTON"] = "남은 시간 표시 버튼"
+L["S_OPTIONS_SHOW_WARBAND_REP_WARNING"] = "전투 부대 표시 안 함 [!]"
+L["S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON"] = "빠른 이동 표시"
 L["S_OPTIONS_SHOWFACTIONS"] = "사절 표시"
---[[Translation missing --]]
-L["S_OPTIONS_TALKINGHEADS"] = "Supress Talking Heads"
+L["S_OPTIONS_TALKINGHEADS"] = "작업 대화 창 닫기"
 L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = "남은 시간별 우선 순위 없음"
---[[Translation missing --]]
-L["S_OPTIONS_TRACKER_ATTACH_TO_QUESTLOG"] = "Attach to Quest Log"
---[[Translation missing --]]
-L["S_OPTIONS_TRACKER_FLIGHTMASTER"] = "Oribos Flight Master"
+L["S_OPTIONS_TRACKER_ATTACH_TO_QUESTLOG"] = "퀘스트 로그에 추가"
+L["S_OPTIONS_TRACKER_FLIGHTMASTER"] = "오리보스 비행 조련사"
 L["S_OPTIONS_TRACKER_RESETPOSITION"] = "위치 재설정"
 L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = "왼쪽으로 고정"
 L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = "오른쪽으로 고정"
---[[Translation missing --]]
-L["S_OPTIONS_WORLD_ICONSPERROW"] = "Quest Amount Per Row"
+L["S_OPTIONS_WORLD_ICONSPERROW"] = "행당 퀘스트 양"
 L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "지역별 정리"
 L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "퀘스트 유형별 정리"
---[[Translation missing --]]
-L["S_OPTIONS_WORLD_SUMMARY_ALPHA"] = "Summary Alpha"
---[[Translation missing --]]
-L["S_OPTIONS_WORLDMAP_ANCHOR_TO"] = "Attach To"
---[[Translation missing --]]
-L["S_OPTIONS_WORLDMAP_ORGANIZEBY"] = "Organize Quests By"
---[[Translation missing --]]
-L["S_OPTIONS_WORLDMAP_WIDGET_ALPHA"] = "Pin Alpha"
+L["S_OPTIONS_WORLD_SUMMARY_ALPHA"] = "요약 투명도"
+L["S_OPTIONS_WORLDMAP_ANCHOR_TO"] = "부착"
+L["S_OPTIONS_WORLDMAP_ORGANIZEBY"] = "퀘스트 분류 기준"
+L["S_OPTIONS_WORLDMAP_WIDGET_ALPHA"] = "핀 투명도"
 L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "추적중인것만 표시"
---[[Translation missing --]]
-L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST"] = "Auto Accept Abandon Quests"
---[[Translation missing --]]
-L["S_OPTTIONS_DRAGONRACE_MINIMAP"] = "Show Track Minimap"
---[[Translation missing --]]
-L["S_OPTTIONS_DRAGONRACE_TRACKCOLOR"] = "Track Color"
---[[Translation missing --]]
-L["S_OPTTIONS_NUMERATE_QUEST"] = "Enumerate Quests"
---[[Translation missing --]]
-L["S_OPTTIONS_QUESTLOCATIONSCALE_BYWORLDMAP"] = "Quest Scale by World Map"
---[[Translation missing --]]
-L["S_OPTTIONS_TAB_DRAGONRACE_SETTINGS"] = "Dragon Race"
---[[Translation missing --]]
-L["S_OPTTIONS_TAB_GENERAL_SETTINGS"] = "General Settings"
---[[Translation missing --]]
-L["S_OPTTIONS_TAB_GROUPFINDER_SETTINGS"] = "Group Finder"
---[[Translation missing --]]
-L["S_OPTTIONS_TAB_IGNOREDQUESTS_SETTINGS"] = "Ignored Quests"
---[[Translation missing --]]
-L["S_OPTTIONS_TAB_RARES_SETTINGS"] = "Rares"
---[[Translation missing --]]
-L["S_OPTTIONS_TAB_TRACKER_SETTINGS"] = "Tracker"
---[[Translation missing --]]
-L["S_OPTTIONS_TAB_WORLDMAP_SETTINGS"] = "World Map"
---[[Translation missing --]]
-L["S_OPTTIONS_TAB_ZONEMAP_SETTINGS"] = "Zone Map"
---[[Translation missing --]]
-L["S_OPTTIONS_WORLDMAP_HUB_ENABLE"] = "Which World Maps Show Quests"
+L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST"] = "퀘스트 자동 포기 수락"
+L["S_OPTTIONS_DRAGONRACE_MINIMAP"] = "추적 미니맵 표시"
+L["S_OPTTIONS_DRAGONRACE_TRACKCOLOR"] = "추적 색상"
+L["S_OPTTIONS_NUMERATE_QUEST"] = "퀘스트 목록"
+L["S_OPTTIONS_QUESTLOCATIONSCALE_BYWORLDMAP"] = "세계 지도별 퀘스트 크기"
+L["S_OPTTIONS_TAB_DRAGONRACE_SETTINGS"] = "용 경주"
+L["S_OPTTIONS_TAB_GENERAL_SETTINGS"] = "일반 설정"
+L["S_OPTTIONS_TAB_GROUPFINDER_SETTINGS"] = "파티 찾기"
+L["S_OPTTIONS_TAB_IGNOREDQUESTS_SETTINGS"] = "무시된 퀘스트"
+L["S_OPTTIONS_TAB_RARES_SETTINGS"] = "희귀"
+L["S_OPTTIONS_TAB_TRACKER_SETTINGS"] = "추적"
+L["S_OPTTIONS_TAB_WORLDMAP_SETTINGS"] = "세계 지도"
+L["S_OPTTIONS_TAB_ZONEMAP_SETTINGS"] = "지역 지도"
+L["S_OPTTIONS_WORLDMAP_HUB_ENABLE"] = "퀘스트를 표시하는 세계 지도"
 L["S_OVERALL"] = "종합"
 L["S_PARTY"] = "파티"
 L["S_PARTY_DESC1"] = "파란색 별이 표시된 퀘스트는 모든 파티원이 수행 중이라는 의미입니다."
@@ -362,8 +324,7 @@ L["S_QUESTTYPE_PROFESSION"] = "전문 기술"
 L["S_QUESTTYPE_PVP"] = "PvP"
 L["S_QUESTTYPE_RESOURCE"] = "자원"
 L["S_QUESTTYPE_TRADESKILL"] = "전문 기술 재료"
---[[Translation missing --]]
-L["S_RAID"] = "Raid"
+L["S_RAID"] = "공격대"
 L["S_RAREFINDER_ADDFROMPREMADE"] = "파티 구성하기에 발견한 희귀 몬스터 추가"
 L["S_RAREFINDER_NPC_NOTREGISTERED"] = "데이터베이스에 없는 희귀 몬스터"
 L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = "항상 영어로 검색"
@@ -376,29 +337,20 @@ L["S_RAREFINDER_TOOLTIP_REMOVE"] = "제거"
 L["S_RAREFINDER_TOOLTIP_SEACHREALM"] = "다른 서버 검색"
 L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "발견"
 L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = "전"
---[[Translation missing --]]
-L["S_SCALE"] = "Scale"
---[[Translation missing --]]
-L["S_SLASH_OPENMAP_FIRST"] = "World Quest Tracker did not loaded yet, open the map to load."
---[[Translation missing --]]
-L["S_SPEEDRUN"] = "Speed Run"
---[[Translation missing --]]
-L["S_SPEEDRUN_AUTO_ACCEPT"] = "Auto Accept Quests"
---[[Translation missing --]]
-L["S_SPEEDRUN_AUTO_COMPLETE"] = "Auto Complete Quests"
---[[Translation missing --]]
-L["S_SPEEDRUN_CANCEL_CINEMATIC"] = "Auto Skip Cinematics"
+L["S_SCALE"] = "크기"
+L["S_SLASH_OPENMAP_FIRST"] = "World Quest Tracker가 아직 로드되지 않았습니다. 지도를 열어 로드하세요."
+L["S_SPEEDRUN"] = "스피드런"
+L["S_SPEEDRUN_AUTO_ACCEPT"] = "퀘스트 자동 수락"
+L["S_SPEEDRUN_AUTO_COMPLETE"] = "퀘스트 자동 완료"
+L["S_SPEEDRUN_CANCEL_CINEMATIC"] = "영상 자동 스킵"
 L["S_SUMMARYPANEL_EXPIRED"] = "만료"
 L["S_SUMMARYPANEL_LAST15DAYS"] = "최근 15일"
 L["S_SUMMARYPANEL_LIFETIMESTATISTICS_ACCOUNT"] = "계정 전체 시간 통계"
 L["S_SUMMARYPANEL_LIFETIMESTATISTICS_CHARACTER"] = "캐릭터 전체 시간 통계"
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "다른 캐릭터"
---[[Translation missing --]]
-L["S_TEXT_SIZE"] = "Text Size"
---[[Translation missing --]]
-L["S_TORGAST"] = "Torgasth"
---[[Translation missing --]]
-L["S_TRACKEROPTIONS_BACKGROUNDALPHA"] = "Background Alpha"
+L["S_TEXT_SIZE"] = "글자 크기"
+L["S_TORGAST"] = "토르가스트"
+L["S_TRACKEROPTIONS_BACKGROUNDALPHA"] = "배경 투명도"
 L["S_TUTORIAL_AMOUNT"] = "받을 수 있는 보상의 양을 나타냅니다"
 L["S_TUTORIAL_CLICKTOTRACK"] = "퀘스트를 추적하려면 클릭하세요."
 L["S_TUTORIAL_PARTY"] = "파티 중일 때 모든 파티원이 수행 중인 퀘스트에 파란색 별이 표시됩니다!"
@@ -413,8 +365,7 @@ L["S_TUTORIAL_WORLDBUTTONS"] = [=[3가지 유형의 요약을 보려면 여기�
 퀘스트 지역을 숨기려면 |cFFFFAA11퀘스트 표시 전환|r을 클릭하세요.]=]
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "이 버튼을 누르면 부서진 섬 지도로 변경됩니다."
 L["S_UNKNOWNQUEST"] = "알 수 없는 퀘스트"
---[[Translation missing --]]
-L["S_VISIBILITY"] = "Visibility"
+L["S_VISIBILITY"] = "가시성"
 L["S_WHATSNEW"] = "새 소식"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "유형 별 정렬"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "지역 별 정렬"

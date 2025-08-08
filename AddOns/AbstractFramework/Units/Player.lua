@@ -18,13 +18,14 @@ local GetSpecializationInfo = GetSpecializationInfo
 -- player info
 ---------------------------------------------------------------------
 AF.player = {}
+AF.player.localizedClass, AF.player.class, AF.player.classID = UnitClass("player")
 
-local playerInfoHandler = AF.CreateSimpleEventHandler("PLAYER_LOGIN")
+--* AF_PLAYER_DATA_UPDATE
+-- payload: isLogin boolean, if true, this is the first time the player data is loaded
 
-function playerInfoHandler:PLAYER_LOGIN()
+local function PLAYER_LOGIN()
     AF.player.name = UnitName("player")
     AF.player.fullName = AF.UnitFullName("player")
-    AF.player.localizedClass, AF.player.class, AF.player.classID = UnitClass("player")
     AF.player.level = UnitLevel("player")
     AF.player.guid = UnitGUID("player")
     AF.player.realm = GetRealmName()
@@ -34,18 +35,25 @@ function playerInfoHandler:PLAYER_LOGIN()
     AF.player.sex = UnitSex("player")
 
     if AF.isRetail then
-        playerInfoHandler:ACTIVE_TALENT_GROUP_CHANGED()
+        AF.player.specIndex = GetSpecialization()
+        AF.player.specID = GetSpecializationInfo(AF.player.specIndex)
     end
 
     -- connected realms
     AF.connectedRealms = AF.TransposeTable(GetAutoCompleteRealms())
     AF.connectedRealms[AF.player.normalizedRealm] = true
+
+    AF.Fire("AF_PLAYER_DATA_UPDATE", true)
 end
+AF.RegisterCallback("AF_PLAYER_LOGIN", PLAYER_LOGIN, "high")
 
 if AF.isRetail then
-    playerInfoHandler:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
-    function playerInfoHandler:ACTIVE_TALENT_GROUP_CHANGED()
+    local function ACTIVE_TALENT_GROUP_CHANGED()
         AF.player.specIndex = GetSpecialization()
         AF.player.specID = GetSpecializationInfo(AF.player.specIndex)
+        AF.Fire("AF_PLAYER_DATA_UPDATE")
     end
+    AF.CreateBasicEventHandler(AF.GetDelayedInvoker(0.1, ACTIVE_TALENT_GROUP_CHANGED), "ACTIVE_TALENT_GROUP_CHANGED")
 end
+
+-- TODO: level, sex ... changed

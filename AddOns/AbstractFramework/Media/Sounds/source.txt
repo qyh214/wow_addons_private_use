@@ -6,3 +6,27 @@ https://pixabay.com/sound-effects/ding-sound-246413/
 
 pop.ogg
 https://pixabay.com/sound-effects/happy-pop-3-185288/
+
+smooth_alert1.ogg
+https://pixabay.com/sound-effects/system-notification-alert-toast-warn-274740/
+
+smooth_alert2.ogg
+https://pixabay.com/sound-effects/smooth-completed-notify-starting-alert-274739/
+
+smooth_alert3.ogg
+https://pixabay.com/sound-effects/smooth-completed-notify-274735/
+
+smooth_alert4.ogg
+https://pixabay.com/sound-effects/simple-notify-completed-process-274737/
+
+smooth_alert5.ogg
+https://pixabay.com/sound-effects/smooth-simple-notification-274738/
+
+smooth_alert6.ogg
+https://pixabay.com/sound-effects/smooth-notify-alert-toast-warn-274736/
+
+alert1.ogg
+https://pixabay.com/sound-effects/notification-alert-10-331721/
+
+alert2.ogg
+https://pixabay.com/sound-effects/level-up-3-199576/

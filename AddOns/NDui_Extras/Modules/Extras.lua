@@ -13,21 +13,26 @@ end
 function EX:OnLogin()
 	for name, func in pairs(EX_LIST) do
 		if name and type(func) == "function" then
-			func()
+			xpcall(func, geterrorhandler())
 		end
 	end
 
-	self:ActionBarGlow()
-	self:DisableCPUStats()
+	--self:ActionBarGlow()
 	self:DisableGuildFilter()
-	self:InstanceAutoMarke()
+	--self:InstanceAutoMarke()
 	self:InstanceDifficulty()
 	self:InstanceReset()
-	self:MDEnhance()
+	--self:MDEnhance()
+	self:DisableAddOnProfiler()
 
 	-- 不需要的功能直接注释掉
-	self:AutoConfirm() -- 自动确认出售可交易物品提示
+	--self:AutoConfirm() -- 自动确认出售可交易物品提示
 	--self:AutoHideName() -- 自动隐藏名字，防止卡屏
+end
+
+-- 禁用插件性能统计
+function EX:DisableAddOnProfiler()
+    C_AddOnProfiler.IsEnabled = function() return false end
 end
 
 -- 自动隐藏名字，防止卡屏
@@ -40,12 +45,6 @@ function EX:AutoHideName()
 	SetCVar("UnitNameFriendlyPetName", 0)
 	SetCVar("UnitNameFriendlyPlayerName", 0)
 	SetCVar("UnitNameFriendlyTotemName", 0)
-end
-
--- 禁用插件列表CPU统计，防止卡屏
-function EX:DisableCPUStats()
-	C_CVar.RegisterCVar("addonProfilerEnabled", "1")
-	C_CVar.SetCVar("addonProfilerEnabled", "0")
 end
 
 -- 禁用公会过滤，防止卡屏

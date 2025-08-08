@@ -247,6 +247,68 @@ end)
 
 ----> Minimap Icon
 
+--[=[
+
+local LDB = LibStub("LibDataBroker-1.1",true)
+local LDBI = LibStub("LibDBIcon-1.0",true)
+
+if LDB and LDBI then
+	local dataBroker = LDB:NewDataObject("MRT",
+		{type = "launcher", label = "Method Raid Tools", icon = "Interface\\AddOns\\"..GlobalAddonName.."\\media\\MiniMap"}
+	)
+	
+	function dataBroker.OnClick(self, button)
+		if button == "RightButton" then
+			for _,func in pairs(MRT.MiniMapMenu) do
+				func:miniMapMenu()
+			end
+			MRT.Options:UpdateModulesList()
+			ELib.ScrollDropDown.EasyMenu(self,MRT.F.menuTable,150)
+		elseif button == "LeftButton" then
+			MRT.Options:Open()
+		end
+	end
+	
+	function dataBroker.OnEnter(self)
+		GameTooltip:SetOwner(self, "ANCHOR_LEFT") 
+		GameTooltip:AddLine("Method Raid Tools") 
+		GameTooltip:AddLine(L.minimaptooltiplmp,1,1,1) 
+		GameTooltip:AddLine(L.minimaptooltiprmp,1,1,1) 
+		GameTooltip:Show() 
+		if not self.anim then
+			self.iconMini = self:CreateTexture(nil, "ARTWORK")
+			self.iconMini:SetTexture("Interface\\AddOns\\"..GlobalAddonName.."\\media\\MiniMap")
+			self.iconMini:SetSize(18,18)
+			self.iconMini:SetPoint("CENTER", self, "CENTER")
+			self.iconMini:SetVertexColor(1,.5,.5,1)
+			self.iconMini:Hide()
+
+			self.anim = self:CreateAnimationGroup()
+			self.anim:SetLooping("BOUNCE")
+			self.timer = self.anim:CreateAnimation()
+			self.timer:SetDuration(2)
+			self.timer:SetScript("OnUpdate", function(s,elapsed) 
+				self.iconMini:SetAlpha(s:GetProgress())
+			end)
+		end
+		self.anim:Play()
+		self.iconMini:Show()
+	end
+
+	function dataBroker.OnLeave(self)
+		GameTooltip:Hide()
+		if self.anim then
+			self.anim:Stop()
+			self.iconMini:Hide()
+		end
+	end
+
+	VMRT.IconDB = VMRT.IconDB or {}
+	LDBI:Register("MRT", dataBroker, VMRT.IconDB)
+end
+
+]=]
+
 local MiniMapIcon = CreateFrame("Button", "LibDBIcon10_MethodRaidTools", Minimap)
 MRT.MiniMapIcon = MiniMapIcon
 MiniMapIcon:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight") 
@@ -1103,7 +1165,8 @@ local function pmove_OnUpdate(self,elapsed)
 	if self.isReverse and self:IsMouseOver() and IsMouseButtonDown() then
 		self.isReverse = false
 	end
-	pmove_pos = pmove_pos + (self.isReverse and -1 or 1) * (100 / GetFramerate() * 0.333)
+	--pmove_pos = pmove_pos + (self.isReverse and -1 or 1) * (100 / GetFramerate() * 0.333)
+	pmove_pos = pmove_pos + (self.isReverse and -1 or 1) * (100 / 60 * 0.333)
 	if self.isReverse and pmove_pos < 40 then
 		pmove_pos = 40
 		self:SetScript("OnUpdate",nil)
@@ -1172,7 +1235,7 @@ OptionsFrame.dateChecks:SetScript("OnShow",function(self)
 			isSnowDay = true
 		end
 	end
-	if (today.wday == 6 and today.day % 2 == 0) and not MRT.isClassic then
+	if (today.wday == 6 and today.day % 2 == 0 and today.day > 16) and not MRT.isClassic then
 		isFrierenFriday = true
 	end	
 	
@@ -1490,7 +1553,7 @@ end
 OptionsFrame.Changelog = ELib:ScrollFrame(OptionsFrame):Size(680,180):Point("TOP",0,-335):OnShow(function(self)
 	local text = MRT.Options.Changelog or ""
 	text = text:gsub("(v%.%d+([^\n]*).-\n\n)",function(a,b)
-		if (b == "-Classic" and MRT.isClassic and not MRT.isBC) or (b == "-BC" and MRT.isBC and not MRT.isLK) or (b == "-LK" and MRT.isLK and not MRT.isCata) or (b == "-Cata" and MRT.isCata) or (b == "-LK" and MRT.isCata and tonumber(a:match("%d+") or "4841")<=4840) or ((b ~= "-Classic" and b ~= "-BC" and b ~= "-LK" and b ~= "-Cata") and not MRT.isClassic) then
+		if (b == "-Classic" and MRT.isClassic and not MRT.isBC) or (b == "-BC" and MRT.isBC and not MRT.isLK) or (b == "-LK" and MRT.isLK and not MRT.isCata) or (b == "-Cata" and MRT.isCata) or (b == "-MoP" and MRT.isMoP) or (b == "-LK" and MRT.isCata and tonumber(a:match("%d+") or "4841")<=4840) or (b == "-Cata" and MRT.isMoP and tonumber(a:match("%d+") or "5181")<=5180) or ((b ~= "-Classic" and b ~= "-BC" and b ~= "-LK" and b ~= "-Cata" and b ~= "-MoP") and not MRT.isClassic) then
 			return a
 		else
 			return ""

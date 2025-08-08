@@ -1,7 +1,6 @@
 local ADDON_NAME, ns = ...
 local buildVersion = GetBuildInfo() -- buildVersion == "11.1.0"
 
-
   ns.BlizzDelveAreaPoisInfoIDs = {
     -- DELVES 
     [7863] = 2269, -- Earthcrawl Mines
@@ -20,6 +19,8 @@ local buildVersion = GetBuildInfo() -- buildVersion == "11.1.0"
     [8142] = 2425, -- Demolition Dome
     [8143] = 2396, -- Excavation Site 9
     [8140] = 2423, -- Sidestreet Sluice
+    [8274] = 2452, -- Archival Assault
+    [8323] = 2484, -- Voidrazor Sanctuary
   }
 
   ns.BlizzBountifulDelveAreaPoisInfoIDs = {
@@ -38,4 +39,5 @@ local buildVersion = GetBuildInfo() -- buildVersion == "11.1.0"
     [7790] = 2347, -- The Spiral Weave
     [8181] = 2396, -- Excavation Site 9
     [8246] = 2423, -- Sidestreet Sluice
+    [8273] = 2452, -- Archival Assault
   }

@@ -4,6 +4,6 @@
 <Script file="Conclave.lua" />
 <Script file="Alakir.lua" />
 
-<Include file="Options\options.xml"/>
+<Script file="!Options.lua"/>
 
 </Ui>

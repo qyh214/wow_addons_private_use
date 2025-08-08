@@ -45,7 +45,6 @@ end
 
 L = BigWigs:NewBossLocale("The Culling of Stratholme Trash", "zhCN")
 if L then
-	L.custom_on_autotalk = "自动对话"
 	L.custom_on_autotalk_desc = "立即选择克罗米和阿尔萨斯对话选项。"
 
 	L.gossip_available = "可对话"
@@ -90,17 +89,13 @@ end
 
 L = BigWigs:NewBossLocale("The Violet Hold Trash", "zhCN")
 if L then
-	L.portals = "传送门"
 	L.portals_desc = "传送门相关信息。"
-	L.boss_message = "首领"
-	L.portal_bar = "传送门"
 end
 
 -- Trial of the Champion
 
 L = BigWigs:NewBossLocale("Trial of the Champion Trash", "zhCN")
 if L then
-	L.custom_on_autotalk = "自动对话"
 	L.custom_on_autotalk_desc = "立即选择对话选项开始战斗。"
 end
 

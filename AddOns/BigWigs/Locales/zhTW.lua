@@ -1,5 +1,8 @@
-local L = BigWigsAPI:NewLocale("BigWigs", "zhTW")
+local _, addonTbl = ...
+local L = addonTbl.API:NewLocale("BigWigs", "zhTW")
 if not L then return end
+
+L.tempNew = "新功能：你可以輸入 |cFFFFFFFF/key|r 查看隊友的鑰石。"
 
 -- Core.lua
 L.berserk = "狂暴"
@@ -11,26 +14,28 @@ L.infobox_desc = "顯示當前戰鬥相關的訊息。"
 L.stages = "階段"
 L.stages_desc = "啟用首領戰鬥中與階段相關的各種功能，例如階段轉換的訊息提示、階段持續時間的計時器等。"
 L.warmup = "預備"
-L.warmup_desc = "首領戰鬥之前的預備時間。"
+L.warmup_desc = "首領戰鬥開始之前的預備時間。"
 L.proximity = "玩家雷達"
 L.proximity_desc = "顯示玩家雷達視窗，列出距離你過近的玩家。"
 L.adds = "增援"
 L.adds_desc = "啟用與首領戰鬥中出現的增援相關的各種功能。"
 L.health = "生命值"
 L.health_desc = "顯示與首領戰鬥中相關的生命值資訊。"
+L.energy = "能量"
+L.energy_desc = "啟用後，在首領戰鬥中顯示各種能量等級的資訊。"
 
 L.already_registered = "|cffff0000警告：|r |cff00ff00%s|r（|cffffff00%s|r）在 BigWigs 中已經存在，但該模組仍試圖重新註冊。通常來說，這可能是由於更新失敗導致你的插件資料夾中同時存在兩份相同模組的拷貝。建議刪除所有 BigWigs 資料夾並重新安裝。"
 
 -- Loader / Options.lua
 L.okay = "確定"
-L.officialRelease = "你所使用的 BigWigs %s 為官方正式版（%s）"
-L.alphaRelease = "你所使用的 BigWigs %s 為「α測試版（%s）」"
+L.officialRelease = "你所使用的 BigWigs %s 為官方正式版（%s）。"
+L.alphaRelease = "你所使用的 BigWigs %s 為「α測試版（%s）」。"
 L.sourceCheckout = "你所使用的 BigWigs（%s）是直接從原始碼倉庫下載的版本。"
-L.littlewigsOfficialRelease = "你所使用的 LittleWigs 為官方正式版（%s）"
-L.littlewigsAlphaRelease = "你所使用的 LittleWigs 為「α測試版（%s）」"
+L.littlewigsOfficialRelease = "你所使用的 LittleWigs 為官方正式版（%s）。"
+L.littlewigsAlphaRelease = "你所使用的 LittleWigs 為「α測試版（%s）」。"
 L.littlewigsSourceCheckout = "你所使用的 LittleWigs 是直接從原始碼倉庫下載的版本。"
 L.guildRelease = "你正在使用公會製作的 BigWigs，版本 %d，其基於官方版 %d。"
-L.getNewRelease = "你的 BigWigs 已過期（/bwv）但是可以使用 CurseForge 客戶端簡單升級。另外，也可以從 curseforge.com 或 wowinterface.com 手動升級。"
+L.getNewRelease = "你的 BigWigs 已過期（/bwv）但是可以使用 CurseForge 客戶端簡單升級。另外，也可以從 curseforge.com 或 addons.wago.io 手動升級。"
 L.warnTwoReleases = "你的 BigWigs 已過期 2 個發行版！你的版本可能有錯誤、功能缺失或不正確的計時器。所以強烈建議你升級。"
 L.warnSeveralReleases = "|cffff0000你的 BigWigs 已過期 %d 個發行版！！我們「強烈」建議你更新，以防止把問題同步給其他玩家！|r"
 L.warnOldBase = "你正在使用公會版 BigWigs（%d），但它所基於的官方版 （%d）已經過期了 %d 個版本，可能會導致問題。"
@@ -48,12 +53,14 @@ L.offline = "離線"
 L.missingAddOnPopup = "缺少 |cFF436EEE%s|r 模組！"
 L.missingAddOnRaidWarning = "缺少 |cFF436EEE%s|r 模組！無法為此區域提供計時條！"
 L.outOfDateAddOnPopup = "|cFF436EEE%s|r 模組已過期！"
---L.outOfDateAddOnRaidWarning = "|cFF436EEE%s|r 模組已過期！You have v%d.%d.%d but the latest is v%d.%d.%d!"
+L.outOfDateAddOnRaidWarning = "|cFF436EEE%s|r 模組已過期！你使用的版本是 v%d.%d.%d，但最新版是 v%d.%d.%d。"
 L.disabledAddOn = "模組 |cFF436EEE%s|r 已被禁用，無法顯示計時器。"
 L.removeAddOn = "請移除「|cFF436EEE%s|r」，其已被「|cFF436EEE%s|r」所替代。"
 L.alternativeName = "%s（|cFF436EEE%s|r）"
 L.outOfDateContentPopup = "警告！\n你更新了 |cFF436EEE%s|r，但還需要更新 |cFF436EEEBigWigs|r 主程式，\n忽略這件事可能使插件故障。"
 L.outOfDateContentRaidWarning = "需要安裝版本 %2$d 的|cFF436EEEBigWigs|r 主程式，才能使用 |cFF436EEE%1$s|r，但你目前使用的版本是 %3$d。"
+L.addOnLoadFailedWithReason = "BigWigs 無法載入模組 |cFF436EEE%s|r，原因是 %q；請將此問題回報給 BigWigs 開發團隊！"
+L.addOnLoadFailedUnknownError = "BigWigs 在載入模組 |cFF436EEE%s|r 的過程中發生錯誤。請將此問題回報給 BigWigs 開發團隊！"
 
 L.expansionNames = {
 	"艾澤拉斯", -- Classic
@@ -69,7 +76,7 @@ L.expansionNames = {
 	"地心之戰", -- The War Within
 }
 L.littleWigsExtras = {
-	["LittleWigs_Delves"] = "Delves",
+	["LittleWigs_Delves"] = "探究",
 	["LittleWigs_CurrentSeason"] = "當前賽季",
 }
 
@@ -80,6 +87,7 @@ L.Destruction = "毀滅（基爾加丹）"
 L.RunAway = "快逃啊小女孩，快逃……（大野狼）"
 L.spell_on_you = "BigWigs: 法術在你身上"
 L.spell_under_you = "BigWigs: 法術在你腳下"
+--L.simple_no_voice = "Simple (No Voice)"
 
 -- Options.lua
 L.options = "選項"
@@ -256,7 +264,111 @@ L.N25 = "25人普通"
 L.H10 = "10人英雄"
 L.H25 = "25人英雄"
 
+-----------------------------------------------------------------------
+-- TOOLS
+-----------------------------------------------------------------------
 
+L.tools = "工具"
+L.toolsDesc = "BigWigs 提供了多種實用工具或便利功能，讓你可以輕鬆寫意地擊敗首領。點擊 |cFF33FF99+|r 圖示以展開選單，查看所有功能。"
+
+-----------------------------------------------------------------------
+-- AutoRole.lua
+--
+
+L.autoRoleTitle = "自動設定職責"
+L.autoRoleExplainer = "當你加入隊伍或是在隊伍中更換專精時，BigWigs 會自動根據你的專精調整你的隊伍職責（坦克、治療者、傷害輸出）。\n\n"
+
+-----------------------------------------------------------------------
+-- Keystones.lua
+--
+
+L.keystoneTitle = "BigWigs 鑰石資訊"
+L.keystoneHeaderParty = "隊伍"
+L.keystoneRefreshParty = "更新隊伍"
+L.keystoneHeaderGuild = "公會"
+L.keystoneRefreshGuild = "更新公會"
+L.keystoneLevelTooltip = "鑰石等級：|cFFFFFFFF%s|r"
+L.keystoneMapTooltip = "地城：|cFFFFFFFF%s|r"
+L.keystoneRatingTooltip = "傳奇鑰石分數：|cFFFFFFFF%d|r" --按I介面就是傳奇鑰石分數，不是傳奇+
+L.keystoneHiddenTooltip = "該玩家隱藏了資訊。"
+L.keystoneTabOnline = "線上"
+L.keystoneTabAlts = "分身" --NOT SURE
+L.keystoneTabTeleports = "傳送"
+L.keystoneHeaderMyCharacters = "我的角色"
+L.keystoneTeleportNotLearned = "|cFFFF4411尚未學會|r傳送法術「|cFFFFFFFF%s|r」。"
+L.keystoneTeleportOnCooldown = "傳送法術「|cFFFFFFFF%s|r」正在|cFFFF4411冷卻中|r，%d 小時  %d 分後可用。"
+L.keystoneTeleportReady = "傳送法術「|cFFFFFFFF%s|r」已|cFF33FF99就緒|r，點擊施放。"
+--L.keystoneTeleportInCombat = "You cannot teleport here whilst you are in combat."
+--L.keystoneTabHistory = "History"
+--L.keystoneHeaderThisWeek = "This Week"
+--L.keystoneHeaderOlder = "Older"
+--L.keystoneScoreTooltip = "Dungeon Score: |cFFFFFFFF%d|r"
+--L.keystoneScoreGainedTooltip = "Score Gained: |cFFFFFFFF+%d|r"
+--L.keystoneCompletedTooltip = "Completed in time"
+--L.keystoneFailedTooltip = "Failed to complete in time"
+--L.keystoneExplainer = "A collection of various tools to improve the Mythic+ experience."
+--L.keystoneAutoSlot = "Auto slot keystone"
+--L.keystoneAutoSlotDesc = "Automatically place your keystone into the slot when opening the keystone holder."
+--L.keystoneAutoSlotMessage = "Automatically placed %s into the keystone slot."
+--L.keystoneModuleName = "Mythic+"
+--L.keystoneStartBar = "%s +%d" -- Format is SHORT_DUNGEON_NAME +KEYSTONE_LEVEL e.g. "ROOK +12"
+--L.keystoneStartMessage = "%s +%d begins now!" -- Format is LONG_DUNGEON_NAME +KEYSTONE_LEVEL e.g. "The Rookery +12 begins now!"
+--L.keystoneCountdownExplainer = "When you start a Mythic+ dungeon a countdown will play. Choose what voice you'd like to hear and when you want the countdown to start.\n\n"
+--L.keystoneCountdownBeginsDesc = "Choose how much time should be remaining on the Mythic+ start timer when the countdown will begin to play."
+--L.keystoneCountdownBeginsSound = "Play a sound when the Mythic+ countdown starts"
+--L.keystoneCountdownEndsSound = "Play a sound when the Mythic+ countdown ends"
+--L.keystoneViewerTitle = "Keystone Viewer"
+--L.keystoneHideGuildTitle = "Hide my keystone from my guild members"
+--L.keystoneHideGuildDesc = "|cffff4411Not recommended.|r This feature will prevent your guild members seeing what keystone you have. Anyone in your group will still be able to see it."
+--L.keystoneHideGuildWarning = "Disabling the ability for your guild members to see your keystone is |cffff4411not recommended|r.\n\nAre you sure you want to do this?"
+--L.keystoneAutoShowZoneIn = "Show when entering a dungeon"
+--L.keystoneAutoShowZoneInDesc = "Automatically show the keystone viewer when entering a Mythic dungeon.\n\n|cFF33FF99This can help remind you which player owns the keystone that you're about to do.|r"
+--L.keystoneAutoShowEndOfRun = "Show when the Mythic+ is over"
+--L.keystoneAutoShowEndOfRunDesc = "Automatically show the keystone viewer when when the Mythic+ dungeon is over.\n\n|cFF33FF99This can help you see what new keystones your party has received.|r"
+--L.keystoneViewerExplainer = "You can open the keystone viewer using the |cFF33FF99/key|r command or by clicking the button below.\n\n"
+--L.keystoneViewerOpen = "Open the keystone viewer"
+
+-- It doesn't really matter what you call it as long as it's recognizable and limited to ~6 characters
+L.keystoneShortName_TheRookery = "培育所" --培育
+L.keystoneShortName_DarkflameCleft = "暗焰裂縫" --暗焰
+L.keystoneShortName_PrioryOfTheSacredFlame = "聖焰隱修院" --聖焰
+L.keystoneShortName_CinderbrewMeadery = "燼釀酒莊" --酒莊
+L.keystoneShortName_OperationFloodgate = "水閘行動" --水閘
+L.keystoneShortName_TheaterOfPain = "苦痛劇場" --劇場
+L.keystoneShortName_TheMotherlode = "晶喜鎮" --晶喜
+L.keystoneShortName_OperationMechagonWorkshop = "工坊"
+L.keystoneShortName_EcoDomeAldani = "埃達尼秘境" --秘境
+L.keystoneShortName_HallsOfAtonement = "贖罪之殿" --贖罪
+L.keystoneShortName_AraKaraCityOfEchoes = "回音之城" --回音
+L.keystoneShortName_TazaveshSoleahsGambit = "索利亞的險招" --索立亞?
+L.keystoneShortName_TazaveshStreetsOfWonder = "奇觀街道" --街道
+L.keystoneShortName_TheDawnbreaker = "破曉者號" --破曉
+
+-- These short names are for the bar that shows during the Mythic+ countdown
+-- Use the real dungeon names but make them shorter to fit on the bar better
+--L.keystoneShortName_TheRookery_Bar = "Rookery"
+--L.keystoneShortName_DarkflameCleft_Bar = "Darkflame"
+--L.keystoneShortName_PrioryOfTheSacredFlame_Bar = "Priory"
+--L.keystoneShortName_CinderbrewMeadery_Bar = "Cinderbrew"
+--L.keystoneShortName_OperationFloodgate_Bar = "Floodgate"
+--L.keystoneShortName_TheaterOfPain_Bar = "Theater"
+--L.keystoneShortName_TheMotherlode_Bar = "Motherlode"
+--L.keystoneShortName_OperationMechagonWorkshop_Bar = "Workshop"
+--L.keystoneShortName_EcoDomeAldani_Bar = "Al'dani"
+--L.keystoneShortName_HallsOfAtonement_Bar = "Halls"
+--L.keystoneShortName_AraKaraCityOfEchoes_Bar = "Ara-Kara"
+--L.keystoneShortName_TazaveshSoleahsGambit_Bar = "Gambit"
+--L.keystoneShortName_TazaveshStreetsOfWonder_Bar = "Streets"
+--L.keystoneShortName_TheDawnbreaker_Bar = "Dawnbreaker"
+
+-----------------------------------------------------------------------
+-- LFGTimer.lua
+--
+
+L.lfgTimerTitle = "佇列就續計時" --加入佇列/從佇列移除/副本已就續/離開佇列
+L.lfgTimerExplainer = "「副本已就續」的視窗彈出時，BigWigs 會在確認視窗下方顯示一個計時條，告訴你還有幾秒可以接受邀請。\n\n"
+L.lfgUseMaster = "以主音效頻道播放準備確認音效"
+L.lfgUseMasterDesc = "啟用後，以主音效頻道播放副本就續的提示音效。若停用此選項，則會改為透過「%s」頻道播放。"
 
 -----------------------------------------------------------------------
 -- PLUGINS
@@ -276,6 +388,7 @@ L.sizeDesc = "通常透過拖動錨點來條整尺寸，如果你需要一個精
 L.fontSizeDesc = "調整捲動軸以更改字型大小，或在輸入框輸入精確數值，最大可以到 200。"
 L.disabled = "停用"
 L.disableDesc = "即將禁用「%s」的功能，但|cffff4411不建議|r這麼做。\n\n你確定要這麼做嗎？"
+L.keybinding = "按鍵綁定"
 
 -- Anchor Points
 L.UP = "向上"
@@ -453,6 +566,7 @@ L.redirectPopupsColor = "橫幅替代訊息顏色"
 L.blockDungeonPopups = "封鎖地城通知橫幅"
 L.blockDungeonPopupsDesc = "有時候，進入地城彈出的通知橫幅會顯示很長的文本，啟用此選項可以完全隱藏它們。"
 L.itemLevel = "物品等級%d"
+--L.newRespawnPoint = "New Respawn Point"
 
 L.userNotifySfx = "音效原被「首領戰訊息封鎖」功能關閉，現已強制重啟。"
 L.userNotifyMusic = "音樂原被「首領戰訊息封鎖」功能關閉，現已強制重啟。"
@@ -608,8 +722,8 @@ L.fixate_test = "鎖定" -- Text that displays to test on the frame
 L.resetNameplateTextDesc = "將名條的文字設定全部重設為預設值。"
 L.glowAt = "開始發光（秒）"
 L.glowAt_desc = "設定技能的冷卻時間剩下幾秒時觸發發光效果。"
---L.headerIconSizeTarget = "Icon size of your current target"
---L.headerIconSizeOthers = "Icon size of all other targets"
+L.headerIconSizeTarget = "當前目標的圖示尺寸"
+L.headerIconSizeOthers = "其他目標的圖示尺寸"
 
 -- Glow types as part of LibCustomGlow
 L.pixelGlow = "像素發光"
@@ -683,6 +797,8 @@ L.sendPull = "向你的團隊發送開怪倒數計時器。"
 L.wrongPullFormat = "無效倒數。正確的格式範例： /pull 5"
 L.countdownBegins = "開始倒數"
 L.countdownBegins_desc = "以秒為單位，選擇在開怪計時器剩餘幾秒時開始倒數。"
+L.pullExplainer = "\n|cFF33FF99/pull|r 會啟動預設的 10 秒倒數計時器。\n|cFF33FF99/pull 7|r 會啟動一個 7 秒倒數計時器，你可以自行設定秒數。\n另外，你也可以在下方設定倒數快捷鍵。\n\n"
+L.pullKeybindingDesc = "設定用來啟動開怪倒數的快捷鍵。"
 
 -----------------------------------------------------------------------
 -- RaidIcon.lua

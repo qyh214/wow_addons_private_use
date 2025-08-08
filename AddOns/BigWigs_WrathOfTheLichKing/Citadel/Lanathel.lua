@@ -61,12 +61,12 @@ function mod:OnBossEnable()
 	self:BossYell("Engage", L["engage_trigger"])
 	self:Emote("Shadows", L["shadow"])
 
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:Death("Win", 37955)
 end
 
 function mod:OnEngage(diff)
 	self:SetStage(1)
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:Berserk(320, true)
 	self:OpenProximity("proximity", 6)
 	self:Bar(71772, airPhaseTimers[diff][1], L["phase2_bar"])

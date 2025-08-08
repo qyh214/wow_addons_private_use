@@ -12,12 +12,16 @@ mod:SetRespawnTime(30)
 -- Locals
 --
 
-local refractedSinlightTime = 0
-local crumblingSlamCount = 0
+local nextSinlightVisions = 0
 
 --------------------------------------------------------------------------------
 -- Initialization
 --
+
+function mod:OnRegister()
+	self:SetSpellRename(322711, CL.beams) -- Refracted Sinlight (Beams)
+	self:SetSpellRename(339237, CL.fear) -- Sinlight Visions (Fear)
+end
 
 function mod:GetOptions()
 	return {
@@ -33,21 +37,25 @@ function mod:GetOptions()
 end
 
 function mod:OnBossEnable()
-	self:Log("SPELL_AURA_APPLIED", "GlassShardsDamage", 323001)
 	self:Log("SPELL_PERIODIC_DAMAGE", "GlassShardsDamage", 323001)
 	self:Log("SPELL_PERIODIC_MISSED", "GlassShardsDamage", 323001)
 	self:Log("SPELL_CAST_START", "CrumblingSlam", 322936)
-	self:Log("SPELL_CAST_SUCCESS", "HeaveDebris", 322943)
+	self:Log("SPELL_CAST_START", "HeaveDebris", 322943)
 	self:Log("SPELL_CAST_START", "RefractedSinlight", 322711)
+	self:Log("SPELL_CAST_START", "SinlightVisions", 322977) -- Heroic/Normal only
 	self:Log("SPELL_AURA_APPLIED", "SinlightVisionsApplied", 339237, 322977) -- Mythic, Heroic/Normal
 end
 
 function mod:OnEngage()
-	refractedSinlightTime = GetTime() + 49.8
-	crumblingSlamCount = 0
-	self:CDBar(322936, 4.9) -- Crumbling Slam
-	self:CDBar(322943, 13.7) -- Heave Debris
-	self:CDBar(322711, 49.8, CL.beams) -- Refracted Sinlight
+	self:CDBar(322936, 4.4) -- Crumbling Slam
+	self:CDBar(322943, 12.0) -- Heave Debris
+	if self:Mythic() then
+		self:CDBar(322711, 32.8, CL.beams) -- Refracted Sinlight
+	else -- Heroic/Normal
+		nextSinlightVisions = GetTime() + 19.2
+		self:CDBar(339237, 19.2, CL.fear) -- Sinlight Visions
+		self:CDBar(322711, 32.6, CL.beams) -- Refracted Sinlight
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -57,46 +65,52 @@ end
 do
 	local prev = 0
 	function mod:GlassShardsDamage(args)
-		if self:Me(args.destGUID) then
-			local t = args.time
-			if t - prev > 2 then
-				prev = t
-				self:PersonalMessage(args.spellId, "underyou")
-				self:PlaySound(args.spellId, "underyou", nil, args.destName)
-			end
+		if self:Me(args.destGUID) and args.time - prev > 2.25 then -- 0.5s tick rate
+			prev = args.time
+			self:PersonalMessage(args.spellId, "underyou")
+			self:PlaySound(args.spellId, "underyou")
 		end
 	end
 end
 
 function mod:CrumblingSlam(args)
 	self:Message(args.spellId, "purple")
+	self:CDBar(args.spellId, 13.3)
 	self:PlaySound(args.spellId, "alert")
-	crumblingSlamCount = crumblingSlamCount + 1
-	if refractedSinlightTime - GetTime() > 12.1 then
-		-- only the second Crumbling Slam of the fight is delayed
-		self:CDBar(args.spellId, crumblingSlamCount == 1 and 13.4 or 12.1)
-	else
-		self:StopBar(args.spellId)
-	end
 end
 
 function mod:HeaveDebris(args)
 	self:Message(args.spellId, "yellow")
-	self:PlaySound(args.spellId, "alarm")
-	if refractedSinlightTime - GetTime() > 12.1 then
-		self:CDBar(args.spellId, 12.1)
-	else
-		self:StopBar(args.spellId)
+	if self:Mythic() then
+		self:CDBar(args.spellId, 13.3)
+	else -- Heroic / Normal
+		self:CDBar(args.spellId, 11.0)
 	end
+	self:PlaySound(args.spellId, "alarm")
 end
 
 function mod:RefractedSinlight(args)
-	refractedSinlightTime = GetTime() + 45
 	self:Message(args.spellId, "red", CL.beams)
+	if self:Mythic() then
+		self:CDBar(322943, 15.0) -- Heave Debris
+		self:CDBar(322936, 21.8) -- Crumbling Slam
+		self:CDBar(args.spellId, 49.7, CL.beams)
+	else -- Heroic / Normal
+		self:CDBar(322936, 15.6) -- Crumbling Slam
+		self:CDBar(322943, 15.6) -- Heave Debris
+		local t = GetTime()
+		if nextSinlightVisions - t < 15.6 then
+			nextSinlightVisions = t + 15.6
+			self:CDBar(339237, {15.6, 24.4}, CL.fear) -- Sinlight Visions
+		end
+		self:CDBar(args.spellId, 46.4, CL.beams)
+	end
 	self:PlaySound(args.spellId, "warning")
-	self:CDBar(args.spellId, 47.3, CL.beams)
-	self:CDBar(322936, 15.7) -- Crumbling Slam
-	self:CDBar(322943, 17.2) -- Heave Debris
+end
+
+function mod:SinlightVisions(args) -- Heroic/Normal only
+	nextSinlightVisions = GetTime() + 24.4
+	self:CDBar(339237, 24.4, CL.fear) -- Sinlight Visions
 end
 
 function mod:SinlightVisionsApplied(args)

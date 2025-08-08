@@ -93,13 +93,13 @@ E.L_HIGHLIGHTS = {
 	["essence"] = L["Essence"],
 }
 
-if E.preCata then
+if E.preMoP then
 	E.L_PRIORITY.essence = nil
 	E.L_PRIORITY.covenant = nil
 	E.L_HIGHLIGHTS.covenant = nil
 end
 
-E.TEXTURES = E.preCata and {
+E.TEXTURES = E.preMoP and {
 	["White8x8"] = "Interface\\BUTTONS\\White8x8",
 	["CLASS"] = "Interface\\Icons\\classicon_",
 	["DEATHKNIGHT"] = "Interface\\Icons\\spell_deathknight_classicon",

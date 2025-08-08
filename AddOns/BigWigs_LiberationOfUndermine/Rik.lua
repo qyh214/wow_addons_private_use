@@ -30,6 +30,7 @@ local fullSparkblastIgnitionCount = 1
 
 local mobCollector = {}
 local mobMarks = {}
+local tankDebuffOnMe = false
 
 local timersNormal = {
 	[473748] = { 9.5, 40.1, 37.8, 0 }, -- Amplification!
@@ -78,7 +79,7 @@ function mod:GetOptions()
 		473748, -- Amplification!
 			1217122, -- Lingering Voltage
 			468119, -- Resonant Echoes
-				1214598, -- Entranced!
+				1214598, -- Entranced
 			-- 465795, -- Noise Pollution
 			466093, -- Haywire -- XXX Check if this warning is needed
 		466866, -- Echoing Chant
@@ -86,26 +87,30 @@ function mod:GetOptions()
 		466979, -- Faulty Zap
 		472306, -- Sparkblast Ignition
 			1214164, -- Excitement
-		464518, -- Tinnitus
+		{464518, "EMPHASIZE"}, -- Tinnitus
 		-- Stage Two: Hype Hustle
-		{473260, "CASTBAR"}, -- Blaring Drop
+		{473260, "CASTBAR", "CASTBAR_COUNTDOWN"}, -- Blaring Drop
 		{473655, "CASTBAR"}, -- Hype Fever!
 	},{ -- Sections
 		[473748] = -31656, -- Stage 1
 		[473260] = -31655, -- Stage 2
 	},{ -- Renames
 		[473748] = L.amplification, -- Amplification! (Amplifiers)
+		[1214598] = CL.mind_control, -- Entranced (Mind Control)
 		[466866] = L.echoing_chant, -- Echoing Chant (Echoes)
 		[466979] = L.faulty_zap, -- Faulty Zap (Zaps)
 		[472306] = L.sparkblast_ignition, -- Sparkblast Ignition (Barrels)
+		[464518] = CL.tank_debuff, -- Tinnitus (Tank Debuff)
 	}
 end
 
 function mod:OnRegister()
 	self:SetSpellRename(473748, L.amplification) -- Amplification! (Amplifiers)
+	self:SetSpellRename(1214598, CL.mind_control) -- Entranced (Mind Control)
 	self:SetSpellRename(466866, L.echoing_chant) -- Echoing Chant (Echoes)
 	self:SetSpellRename(466979, L.faulty_zap) -- Faulty Zap (Zaps)
 	self:SetSpellRename(472306, L.sparkblast_ignition) -- Sparkblast Ignition (Barrels)
+	self:SetSpellRename(464518, CL.tank_debuff) -- Tinnitus (Tank Debuff)
 end
 
 function mod:OnBossEnable()
@@ -124,10 +129,10 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "FaultyZap", 466979)
 	self:Log("SPELL_AURA_APPLIED", "FaultyZapApplied", 467108) -- pre debuffs
 	self:Log("SPELL_SUMMON", "PyrotechnicsSpawn", 1214688) -- Sparkblast Ignition
-	self:Log("SPELL_AURA_APPLIED", "ExcitementApplied", 1214164)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "ExcitementApplied", 1214164)
 	self:Log("SPELL_AURA_APPLIED", "TinnitusApplied", 464518)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "TinnitusApplied", 464518)
+	self:Log("SPELL_AURA_REMOVED", "TinnitusRemoved", 464518)
 
 	-- Stage Two: Hype Hustle
 	self:Log("SPELL_AURA_APPLIED", "SoundCloudApplied", 1213817)
@@ -159,6 +164,7 @@ function mod:OnEngage()
 
 	mobCollector = {}
 	mobMarks = {}
+	tankDebuffOnMe = false
 
 	self:CDBar(473748, timers[473748][amplificationCount], CL.count:format(L.amplification, fullAmplificationCount)) -- Amplification!
 	if not self:Easy() then
@@ -211,10 +217,10 @@ end
 function mod:Amplification(args)
 	self:StopBar(CL.count:format(L.amplification, fullAmplificationCount))
 	self:Message(args.spellId, "yellow", CL.count:format(L.amplification, fullAmplificationCount))
-	self:PlaySound(args.spellId, "alert") -- spawning amplifier
 	amplificationCount = amplificationCount + 1
 	fullAmplificationCount = fullAmplificationCount + 1
 	self:CDBar(args.spellId, timers[args.spellId][amplificationCount], CL.count:format(L.amplification, fullAmplificationCount))
+	self:PlaySound(args.spellId, "alert") -- spawning amplifier
 end
 
 function mod:LingeringVoltageApplied(args)
@@ -233,16 +239,26 @@ end
 function mod:ResonantEchoesApplied(args)
 	if self:Me(args.destGUID) then
 		self:StackMessage(args.spellId, "blue", args.destName, args.amount, 1)
-		if self:Easy() then -- Warning sound in heroic+ from Entranced!
-			self:PlaySound(args.spellId, "alarm") -- watch stacks
+		if not self:Mythic() then -- We warn for Entranced (Mind Control) on mythic
+			self:PlaySound(args.spellId, "warning") -- watch stacks
 		end
 	end
 end
 
-function mod:EntrancedApplied(args)
-	self:TargetMessage(args.spellId, "red", args.destName)
-	if self:Me(args.destGUID) then
-		self:PlaySound(args.spellId, "warning") -- lured in
+do
+	local playerList = {}
+	local prev = 0
+	function mod:EntrancedApplied(args) -- Mind Control (Mythic)
+		if args.time - prev > 0.5 then
+			prev = args.time
+			playerList = {}
+		end
+
+		playerList[#playerList + 1] = args.destName
+		self:TargetsMessage(args.spellId, "red", playerList, nil, CL.mind_control, nil, 0.5)
+		if self:Me(args.destGUID) then
+			self:PlaySound(args.spellId, "warning")
+		end
 	end
 end
 
@@ -257,12 +273,12 @@ end
 function mod:EchoingChant(args)
 	self:StopBar(CL.count:format(L.echoing_chant, fullEchoingChantCount))
 	self:Message(args.spellId, "orange", CL.count:format(L.echoing_chant, fullEchoingChantCount))
-	self:PlaySound(args.spellId, "alert") -- watch amplifiers
 	echoingChantCount = echoingChantCount + 1
 	fullEchoingChantCount = fullEchoingChantCount + 1
 
 	local cd = timers[args.spellId][echoingChantCount]
 	self:Bar(args.spellId, cd, CL.count:format(L.echoing_chant, fullEchoingChantCount))
+	self:PlaySound(args.spellId, "alert") -- watch amplifiers
 end
 
 function mod:SoundCannon(args)
@@ -274,7 +290,6 @@ function mod:SoundCannonApplied(args)
 	self:TargetMessage(467606, "red", args.destName, CL.count:format(self:SpellName(467606), fullSoundCannonCount))
 	self:TargetBar(467606, 5, args.destName)
 	if self:Me(args.destGUID) then
-		self:PlaySound(467606, "warning")
 		if self:Mythic() then -- soak
 			self:Yell(467606, nil, nil, "Sound Cannon")
 			self:YellCountdown(467606, 5)
@@ -282,6 +297,7 @@ function mod:SoundCannonApplied(args)
 			self:Say(467606, nil, nil, "Sound Cannon")
 			self:SayCountdown(467606, 5)
 		end
+		self:PlaySound(467606, "warning")
 	else
 		self:PlaySound(467606, "alert", nil, args.destName) -- avoid / soak
 	end
@@ -326,34 +342,50 @@ do
 			prev = args.time
 			self:StopBar(CL.count:format(L.sparkblast_ignition, fullSparkblastIgnitionCount))
 			self:Message(472306, "cyan", CL.count:format(L.sparkblast_ignition, fullSparkblastIgnitionCount))
-			self:PlaySound(472306, "info") -- adds
 			sparkblastIgnitionCount = sparkblastIgnitionCount + 1
 			fullSparkblastIgnitionCount = fullSparkblastIgnitionCount + 1
 			self:Bar(472306, timers[472306][sparkblastIgnitionCount], CL.count:format(L.sparkblast_ignition, fullSparkblastIgnitionCount))
+			self:PlaySound(472306, "info") -- adds
 		end
 	end
 end
 
 function mod:ExcitementApplied(args)
-	if self:Me(args.destGUID) then
-		local amount = args.amount or 1
-		if amount % 2 == 1 then
-			self:Message(args.spellId, "green", CL.stackyou:format(amount, args.spellName))
-			self:PlaySound(args.spellId, "info") -- buffs!
-		end
+	if self:Me(args.destGUID) and args.amount == 3 then -- 3 is the max
+		self:Message(args.spellId, "green", CL.stackyou:format(args.amount, args.spellName))
+		self:PlaySound(args.spellId, "info") -- buffs!
 	end
 end
 
 function mod:TinnitusApplied(args)
 	if self:Tank() and self:Tank(args.destName) then
-		local amount = args.amount or 1
-		self:StackMessage(args.spellId, "purple", args.destName, amount, 0)
-		if amount > 5 and amount % 2 == 0 then -- 6, 8...
-			self:PlaySound(args.spellId, "warning") -- swap?
+		if self:Me(args.destGUID) then
+			tankDebuffOnMe = true
+			if not args.amount or args.amount >= 5 then -- 1x (move if you're not tanking) or 5+
+				self:StackMessage(args.spellId, "blue", args.destName, args.amount, 100, CL.tank_debuff) -- No emphasize when on you
+			end
+		else
+			local amount = args.amount or 1
+			if amount >= 5 then
+				self:StackMessage(args.spellId, "purple", args.destName, amount, tankDebuffOnMe and 100 or 6, CL.tank_debuff) -- Only emphasize when not on you and reached 6+
+				if amount >= 6 then
+					self:PlaySound(args.spellId, "warning") -- Swap?
+				end
+			end
 		end
 	elseif self:Me(args.destGUID) then -- Not a tank
-		self:StackMessage(args.spellId, "blue", args.destName, args.amount, 0)
-		self:PlaySound(args.spellId, "warning")
+		local amount = args.amount or 1
+		local shouldEmphasize = amount == 2 and amount or amount == 3 and amount or 100
+		self:StackMessage(args.spellId, "blue", args.destName, amount, shouldEmphasize, CL.tank_debuff) -- Emphasize on 2 or 3, nothing else
+		if amount <= 3 then -- If we reach 4+ we likely don't care
+			self:PlaySound(args.spellId, "warning")
+		end
+	end
+end
+
+function mod:TinnitusRemoved(args)
+	if self:Me(args.destGUID) then
+		tankDebuffOnMe = false
 	end
 end
 
@@ -367,36 +399,33 @@ function mod:SoundCloudApplied(args)
 	self:StopBar(CL.count:format(self:SpellName(466979), fullFaultyZapCount)) -- Faulty Zap
 	self:StopBar(CL.stage:format(2))
 
+	blaringDropCount = 1
 	self:SetStage(2)
-	self:Message("stages", "cyan", CL.stage:format(2), false)
-	self:PlaySound("stages", "long") -- stage 2
 	soundCloudCount = soundCloudCount + 1
+	self:Message("stages", "cyan", CL.stage:format(2), false)
 	if soundCloudCount < 3 then
 		self:Bar("stages", self:Mythic() and 28 or 32, CL.stage:format(1), args.spellId)
 	end
 
-	blaringDropCount = 1
+	self:PlaySound("stages", "long") -- stage 2
 end
 
 function mod:SoundCloudRemoved(args)
 	if self:GetStage() == 3 then return end
 	self:StopBar(CL.stage:format(1))
 
-	self:SetStage(1)
-	self:Message("stages", "cyan", CL.stage:format(1), false)
-	self:PlaySound("stages", "long") -- stage 1
-	if soundCloudCount < 3 then
-		self:Bar("stages", 120, CL.stage:format(2), 66911) -- disco ball icon // until _applied
-	else
-		self:Bar(473655, 115) -- third cast -> Hype Fever
-	end
-
 	amplificationCount = 1
 	echoingChantCount = 1
 	soundCannonCount = 1
 	faultyZapCount = 1
 	sparkblastIgnitionCount = 1
+	self:SetStage(1)
 
+	if soundCloudCount < 3 then
+		self:Bar("stages", 120, CL.stage:format(2), 66911) -- disco ball icon // until _applied
+	else
+		self:Bar(473655, 115) -- third cast -> Hype Fever
+	end
 	self:CDBar(473748, timers[473748][amplificationCount], CL.count:format(L.amplification, fullAmplificationCount)) -- Amplification!
 	if not self:Easy() then
 		self:Bar(472306, timers[472306][sparkblastIgnitionCount], CL.count:format(L.sparkblast_ignition, fullSparkblastIgnitionCount)) -- Sparkblast Ignition
@@ -404,13 +433,16 @@ function mod:SoundCloudRemoved(args)
 	self:Bar(466866, timers[466866][echoingChantCount], CL.count:format(L.echoing_chant, fullEchoingChantCount)) -- Echoing Chant
 	self:Bar(467606, timers[467606][soundCannonCount], CL.count:format(self:SpellName(467606), fullSoundCannonCount)) -- Sound Cannon
 	self:Bar(466979, timers[466979][faultyZapCount], CL.count:format(L.faulty_zap, fullFaultyZapCount)) -- Faulty Zap
+
+	self:Message("stages", "cyan", CL.stage:format(1), false)
+	self:PlaySound("stages", "long") -- stage 1
 end
 
 function mod:BlaringDropStart(args)
 	self:Message(args.spellId, "red", CL.count:format(args.spellName, blaringDropCount))
-	self:PlaySound(args.spellId, "warning") -- go amplifier
-	self:CastBar(args.spellId, 5, CL.count_amount:format(args.spellName, blaringDropCount, 4))
+	self:CastBar(args.spellId, self:Mythic() and 5 or 6, CL.count_amount:format(args.spellName, blaringDropCount, 4))
 	blaringDropCount = blaringDropCount + 1
+	self:PlaySound(args.spellId, "warning") -- go amplifier
 end
 
 function mod:BlaringDropApplied(args)
@@ -421,6 +453,8 @@ function mod:BlaringDropApplied(args)
 end
 
 function mod:HypeFever(args)
+	blaringDropCount = 1
+
 	self:StopBar(args.spellId)
 	self:StopBar(CL.count:format(L.amplification, fullAmplificationCount)) -- Amplification!
 	self:StopBar(CL.count:format(L.echoing_chant, fullEchoingChantCount)) -- Echoing Chant
@@ -430,10 +464,8 @@ function mod:HypeFever(args)
 
 	self:SetStage(3)
 	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, "long")
 	self:CastBar(args.spellId, 5)
-
-	blaringDropCount = 1
+	self:PlaySound(args.spellId, "long")
 end
 
 function mod:HypeFeverSuccess(args)

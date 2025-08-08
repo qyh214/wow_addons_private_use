@@ -34,7 +34,7 @@ local function CreateButton()
     b:SetTextJustifyH("LEFT")
 
     -- favorite icon
-    b:SetTexture(AF.GetIcon("Star2"), {15, 15}, {"LEFT", 2, 0})
+    b:SetTexture(AF.GetIcon("Star_Filled"), {15, 15}, {"LEFT", 2, 0})
     b:SetTextureColor("gold")
 
     -- crafting fee

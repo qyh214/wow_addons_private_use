@@ -57,8 +57,10 @@ function mod:WhirlwindRemoved(args)
 end
 
 function mod:FrenzyEnrage(args)
-	self:Message(args.spellId, "orange", CL.percent:format(25, args.spellName))
-	self:PlaySound(args.spellId, "long")
+	if self:MobId(args.destGUID) == 15516 then -- Battleguard Sartura (Check ID since trash gains this also)
+		self:Message(args.spellId, "orange", CL.percent:format(25, args.spellName))
+		self:PlaySound(args.spellId, "long")
+	end
 end
 
 function mod:UNIT_HEALTH(event, unit)

@@ -26,6 +26,8 @@ L["DeModal is loaded, this addon is known to cause issues, consider replacing it
 L["Detached windows can be moved and resized independently from the parent."] = "分離的視窗可以獨立移動和調整大小，不受父視窗影響。"
 L["Do not remember"] = "不要記住"
 L["Enable the Blizzmove_Debug plugin, to find more debugging information."] = "啟用 Blizzmove_Debug 外掛套件，取得更多除錯資訊。"
+--[[Translation missing --]]
+L["Failed to make frame movable:"] = "Failed to make frame movable:"
 L["Filter"] = "過濾方式"
 L["Found bad anchor connections, copy the popup window contents to analyze them."] = "發現錯誤的對齊點連結，請複製彈出視窗的內容進行分析。"
 L["frame positions are remembered until you switch to another option, click the reset button, or disable BlizzMove"] = "會記住框架位置，直到您切換成另一個選項、點擊重置按鈕或停用移動暴雪視窗 BlizzMove"

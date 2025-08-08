@@ -18,7 +18,7 @@ end
 local function UpdateTabs()
 	local OverviewFrame = KeystoneLoot:GetOverview();
 
-	table.sort(_tabs, function (a, b)
+	table.sort(_tabs, function(a, b)
 		return a.order < b.order;
 	end);
 
@@ -40,6 +40,9 @@ local function UpdateTabs()
 end
 
 local function OnClick(self, button)
+	StaticPopup_Hide('KEYSTONELOOT_EXPORT_DIALOG');
+	StaticPopup_Hide('KEYSTONELOOT_IMPORT_DIALOG');
+
 	SetTab(self.id);
 
 	KeystoneLoot:GetOverview().TooltipFrame:Hide();

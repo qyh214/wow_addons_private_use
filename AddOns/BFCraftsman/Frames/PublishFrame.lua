@@ -338,7 +338,7 @@ local function CreateCharacterPane()
 
     -- delete
     local delButton = AF.CreateButton(pane, nil, "red_hover", 21, 21)
-    delButton:SetTexture(AF.GetIcon("Close1"), {16, 16}, {"CENTER", 0, 0})
+    delButton:SetTexture(AF.GetIcon("Close"), {16, 16}, {"CENTER", 0, 0})
     AF.SetPoint(delButton, "TOPRIGHT", pane)
     AF.SetTooltips(delButton, "TOPRIGHT", 0, 1, L["Delete Character"], L["Alt-Click to delete"])
     delButton:SetOnClick(function()
@@ -446,7 +446,7 @@ end
 ---------------------------------------------------------------------
 -- show
 ---------------------------------------------------------------------
-AF.RegisterCallback("BFC_ShowFrame", function(which)
+AF.RegisterCallback("BFC_ShowFrame", function(_, which)
     if which == "Publish" then
         if not publishFrame then
             CreatePublishFrame()

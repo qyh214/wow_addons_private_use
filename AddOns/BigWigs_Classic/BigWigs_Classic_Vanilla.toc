@@ -25,7 +25,7 @@
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
-## Version: v11.1.16
+## Version: v11.1.52
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
 
 ## X-Category: Raid
@@ -37,7 +37,7 @@
 ## X-BigWigs-LoadOn-InstanceId: 409, 469, 509, 531, 533, 309, 249, 48, 90, 109, 2789, 2791, 2804, 2832, 2856
 ## X-BigWigs-ExtraMenu: -947
 ## X-BigWigs-LoadOn-WorldBoss: -1447, 6109, -1419, 12397, -1440, 14889, -1425, 14888, -1431, 14890, -1444, 14887
-## X-BigWigs-Minimum: 382
+## X-BigWigs-Minimum: 388
 
 MoltenCore\modules.xml
 BlackwingLair\modules.xml

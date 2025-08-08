@@ -68,11 +68,6 @@ local mistakes = {
 		spell = 428170,
 	},
 	{
-		-- 擲矛 (德爾凱隊長)
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 447272,
-	},
-	{
 		-- 神聖火焰 (女院長莫普芮)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 451606,
@@ -81,6 +76,11 @@ local mistakes = {
 		-- 釘爪刺 (熱情狙擊手)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 453461,
+	},
+	{
+		-- 碎地長矛 (德爾凱隊長)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 1238782,
 	},
 }
 

@@ -16,6 +16,8 @@ mod.worldBoss = 14888
 
 local warnHP = 80
 local whirlCount = 0
+local tankDebuffOnMe = false
+local drawSpiritPercent = 100
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -57,11 +59,12 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "NoxiousBreath", 24818)
 	self:Log("SPELL_AURA_APPLIED", "NoxiousBreathApplied", 24818)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "NoxiousBreathApplied", 24818)
+	self:Log("SPELL_AURA_REMOVED", "NoxiousBreathRemoved", 24818)
 	self:Log("SPELL_CAST_SUCCESS", "SeepingFog", 24814)
 	self:Log("SPELL_CAST_SUCCESS", "DrawSpirit", 24811)
-	self:Log("SPELL_CAST_SUCCESS", "ShadowBoltWhirl", 24821)
+	self:Log("SPELL_DAMAGE", "ShadowBoltWhirlDamage", 24820, 24821, 24822, 24823, 24835, 24836, 24837, 24838)
+	self:Log("SPELL_MISSED", "ShadowBoltWhirlDamage", 24820, 24821, 24822, 24823, 24835, 24836, 24837, 24838)
 
-	self:RegisterMessage("BigWigs_BossComm")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
 
 	self:Death("Win", 14888)
@@ -69,6 +72,8 @@ end
 
 function mod:OnEngage()
 	warnHP = 80
+	tankDebuffOnMe = false
+	drawSpiritPercent = 100
 	self:RegisterEvent("UNIT_HEALTH")
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 end
@@ -92,11 +97,27 @@ end
 
 function mod:NoxiousBreathApplied(args)
 	local unit, targetUnit = self:GetUnitIdByGUID(args.sourceGUID), self:UnitTokenFromGUID(args.destGUID)
-	if unit and targetUnit and self:Tanking(unit, targetUnit) then
-		self:StackMessage(args.spellId, "purple", args.destName, args.amount, 4, CL.breath)
-		if args.amount >= 4 then
-			self:PlaySound(args.spellId, "warning", nil, args.destName)
+	if unit and targetUnit then
+		local tanking = self:Tanking(unit, targetUnit)
+		if self:Me(args.destGUID) then
+			tankDebuffOnMe = true
+			if not tanking then -- Not tanking, 1+
+				self:StackMessage(args.spellId, "purple", args.destName, args.amount, 1, CL.breath)
+			elseif args.amount then -- Tanking, 2+
+				self:StackMessage(args.spellId, "purple", args.destName, args.amount, 100, CL.breath) -- No emphasize when on you
+			end
+		elseif tanking and args.amount then -- On a tank that isn't me, 2+
+			self:StackMessage(args.spellId, "purple", args.destName, args.amount, (tankDebuffOnMe or args.amount >= 6) and 100 or 3, CL.breath)
+			if not tankDebuffOnMe and args.amount >= 3 and args.amount <= 5 then
+				self:PlaySound(args.spellId, "warning", nil, args.destName)
+			end
 		end
+	end
+end
+
+function mod:NoxiousBreathRemoved(args)
+	if self:Me(args.destGUID) then
+		tankDebuffOnMe = false
 	end
 end
 
@@ -113,35 +134,25 @@ do
 end
 
 function mod:DrawSpirit(args)
-	self:Message(args.spellId, "red")
+	drawSpiritPercent = drawSpiritPercent - 25
+	self:Message(args.spellId, "red", CL.percent:format(drawSpiritPercent, args.spellName))
 	self:Bar(args.spellId, 5)
 	self:PlaySound(args.spellId, "long")
 end
 
 do
 	local prev = 0
-	function mod:BigWigs_BossComm(_, msg, extra)
-		if msg ~= "ShadowBoltWhirl" then return end
-
-		local t = GetTime()
-		if t-prev > 2 then
-			prev = t
-			whirlCount = extra
-			-- cast every 5s, announce on the 4th for swapping sides
+	function mod:ShadowBoltWhirlDamage(args) -- Bolts are fired 4x on left side then 4x on right side of the dragon, we warn on the 4th to turn the dragon 180 degrees
+		if args.time-prev > 4 then
+			prev = args.time
+			whirlCount = whirlCount + 1
 			if whirlCount == 4 then
 				whirlCount = 0
-				self:Message(24821, "yellow", CL.count:format(self:SpellName(24821), extra))
+				self:Message(24821, "yellow", CL.count:format(self:SpellName(24821), 4))
+				self:Bar(24821, 20)
 				self:PlaySound(24821, "alert")
 			end
-			whirlCount = whirlCount + 1
 		end
-	end
-end
-
-function mod:ShadowBoltWhirl()
-	-- I'm really worried about this getting out of sync and being annoying (yay combat log range)
-	if whirlCount > 0 then
-		self:Sync("ShadowBoltWhirl", whirlCount)
 	end
 end
 

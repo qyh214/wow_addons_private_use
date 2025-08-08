@@ -27,6 +27,8 @@ function BarFrameIconMixin:ResetCooldown(resetAllCharges)
 		return
 	end
 
+
+
 	local active = info.active[self.spellID]
 	if not active then
 		return
@@ -295,7 +297,7 @@ function BarFrameIconMixin:StartCooldown(cd, isRecharge, noGlow, reducedStartTim
 	end
 end
 
-local MIN_RESET_DURATION = ((E.isWOTLKC or E.isCata) or E.TocVersion > 90100) and 120 or 180
+local MIN_RESET_DURATION = (E.isWOTLKC or E.isCata or E.TocVersion > 90100) and 120 or 180
 function P:ResetAllIcons(reason, clearSession)
 	local notEncounterEnd = reason ~= "encounterEnd"
 	for guid, info in pairs(self.groupInfo) do

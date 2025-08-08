@@ -1,0 +1,39 @@
+## Interface: 50500
+
+## Title: BigWigs [|cffeda55fCataclysm|r]
+## Title-zhCN: BigWigs [|cffeda55f大地的裂变|r]
+## Title-zhTW: BigWigs [|cffeda55fCataclysm|r]
+## Title-deDE: BigWigs [|cffeda55fCataclysm|r]
+## Title-frFR: BigWigs [|cffeda55fCataclysm|r]
+## Title-itIT: BigWigs [|cffeda55fCataclysm|r]
+## Title-koKR: BigWigs [|cffeda55f대격변|r]
+## Title-ruRU: BigWigs [|cffeda55fCataclysm|r]
+## Title-ptBR: BigWigs [|cffeda55fCataclysm|r]
+## Title-esES: BigWigs [|cffeda55fCataclysm|r]
+## Title-esMX: BigWigs [|cffeda55fCataclysm|r]
+## Notes: A collection of BigWigs modules from the Cataclysm era.
+## Notes-zhCN: BigWigs 大地的裂变模块。
+## Notes-zhTW: A collection of BigWigs modules from the Cataclysm era.
+## Notes-deDE: Eine Sammlung von BigWigs-Modulen aus der Ära Cataclysm.
+## Notes-frFR: A collection of BigWigs modules from the Cataclysm era.
+## Notes-itIT: Una collezione di moduli BigWigs dell'era di Cataclysm.
+## Notes-koKR: 대격변 BigWigs 모듈 모음집입니다.
+## Notes-ruRU: A collection of BigWigs modules from the Cataclysm era.
+## Notes-ptBR: A collection of BigWigs modules from the Cataclysm era.
+## Notes-esES: A collection of BigWigs modules from the Cataclysm era.
+## Notes-esMX: A collection of BigWigs modules from the Cataclysm era.
+
+## LoadOnDemand: 1
+## Dependencies: BigWigs
+## Version: v11.1.7
+## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_legacy.tga
+
+## X-Category: Raid
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
+## X-Curse-Project-ID: 45694
+## X-WoWI-ID: 21755
+## X-Wago-ID: kGr0z76y
+## X-BigWigs-LoadOn-InstanceId: 669, 671, 720, 754, 757, 967
+## X-BigWigs-Minimum: 382
+
+modules.xml

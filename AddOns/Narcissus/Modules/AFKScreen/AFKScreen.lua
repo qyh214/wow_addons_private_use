@@ -22,11 +22,17 @@ end
 
 
 local function CanShowAFKScreen()
-    --IsInCinematicScene() or InCinematic()
+    if Narci and Narci.isActive then
+        return false
+    end
+
     local canShow = not(C_PvP.IsActiveBattlefield() or CinematicFrame:IsShown() or MovieFrame:IsShown() or InCombatLockdown() or (BarberShopFrame and BarberShopFrame:IsShown()));
     if C_PlayerInteractionManager and C_PlayerInteractionManager.IsInteractingWithNpcOfType then
         canShow = canShow and C_PlayerInteractionManager.IsInteractingWithNpcOfType(0);
+        --IsInteractingWithNpcOfType(0) == true means player is not interacting with an NPC
+        --There is a chance IsInteractingWithNpcOfType stuck at false until player interacts then stops interacting with an NPC
     end
+
     return canShow
 end
 
@@ -71,7 +77,7 @@ local function CreateAFKCountdown()
     countdown:SetShadowOffset(2, -2);
 
     local function Countdown_OnPlay(self)
-        countdown:SetText(f.t);
+        countdown:SetText(f.counter);
     end
 
     local function Countdown_OnFinished(self)
@@ -79,9 +85,8 @@ local function CreateAFKCountdown()
             f:Hide();
             return
         end
-
-        f.t = f.t - 1;
-        if f.t <= 0 then
+        f.counter = f.counter - 1;
+        if f.counter <= 0 then
             f:Hide();
             if CanShowAFKScreen() then
                 ShowAFKScreen();
@@ -121,7 +126,7 @@ local function CreateAFKCountdown()
 
     function f:ResetCountdown()
         self:StopAnimating();
-        self.t = 5;
+        self.counter = 5;
         countdown:SetText("");
         self.FadeIn:Play();
         self:RegisterEvent("PLAYER_STARTED_MOVING");

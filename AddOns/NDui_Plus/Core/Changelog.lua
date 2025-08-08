@@ -2,6 +2,36 @@ local _, ns = ...
 local B, C, L, DB, P = unpack(ns)
 
 P.Changelog = [[
+v11.2.0
+[主要] 更新版本号至11.2.0
+[聊天] 更新超链接图标
+[鼠标提示] PvE进度更新地心之战S3数据
+[美化] 修复 WeakAurasOptions 按钮重叠
+[美化] 修复 MountsJournal 美化
+[美化] 更新 WorldQuestTab (LanceDH) 美化 
+
+v11.1.6
+[主要] 更新版本号至11.1.7
+[易用性] 虫洞助手支持 DialogueUI 插件
+[美化] 修复 TinyInspect 面板重叠
+[美化] 修复 WeakAurasOptions 代码片段
+[美化] 修复 Immersion 奖励边框染色
+
+v11.1.5
+[易用性] 添加自动Roll点功能
+[易用性] 更新巅峰声望宝箱数据
+[美化] 更新部分插件美化
+
+v11.1.4
+[聊天] 修复聊天框插槽装备链接图标
+[其他] 修复默认客户端战网聊天宠物链接乱码问题
+[其他] 删除坐骑链接修复功能
+
+v11.1.3
+[聊天] 修复聊天框物品链接图标
+[美化] 添加 WarpDeplete 美化
+[易用性] 修复Roll点增强报错
+
 v11.1.2
 [美化] 添加 Collectionator 美化
 [美化] 更新部分插件美化

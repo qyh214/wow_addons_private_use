@@ -1,5 +1,5 @@
 
-local L = BigWigsAPI:GetLocale("BigWigs")
+local L
 local mod, public = {}, {}
 local bwFrame = CreateFrame("Frame")
 
@@ -12,14 +12,21 @@ local strfind = string.find
 -- Generate our version variables
 --
 
-local BIGWIGS_VERSION = 382
+local BIGWIGS_VERSION = 392
 local CONTENT_PACK_VERSIONS = {
-	["LittleWigs"] = {11, 1, 29},
-	["BigWigs_Classic"] = {11, 1, 16},
-	["BigWigs_WrathOfTheLichKing"] = {11, 1, 2},
-	["BigWigs_Cataclysm"] = {11, 1, 3},
+	["LittleWigs"] = {11, 1, 67},
+	["BigWigs_Classic"] = {11, 1, 52},
+	["BigWigs_BurningCrusade"] = {11, 1, 4},
+	["BigWigs_WrathOfTheLichKing"] = {11, 1, 7},
+	["BigWigs_Cataclysm"] = {11, 1, 7},
+	["BigWigs_MistsOfPandaria"] = {11, 1, 7},
+	["BigWigs_WarlordsOfDraenor"] = {11, 1, 1},
+	["BigWigs_Legion"] = {11, 1, 1},
+	["BigWigs_BattleForAzeroth"] = {11, 1, 1},
+	["BigWigs_Shadowlands"] = {11, 1, 1},
+	["BigWigs_Dragonflight"] = {11, 1, 2},
 }
-local BIGWIGS_RELEASE_STRING, BIGWIGS_VERSION_STRING
+local BIGWIGS_RELEASE_STRING
 local versionQueryString, versionResponseString = "Q^%d^%s^%d^%s", "V^%d^%s^%d^%s"
 local customGuildName = false
 local BIGWIGS_GUILD_VERSION = 0
@@ -28,6 +35,7 @@ local guildDisableContentWarnings = false
 
 do
 	local _, tbl = ...
+	L = tbl.API:GetLocale("BigWigs")
 	tbl.loaderPublic = public
 	tbl.loaderPrivate = mod
 	tbl.version = BIGWIGS_VERSION
@@ -39,6 +47,7 @@ do
 	public.isTBC = tbl.isTBC
 	public.isWrath = tbl.isWrath
 	public.isCata = tbl.isCata
+	public.isMists = tbl.isMists
 	public.dbmPrefix = "D5"
 	public.littlewigsVersionString = L.missingAddOnPopup:format("LittleWigs")
 
@@ -47,7 +56,7 @@ do
 	local ALPHA = "ALPHA"
 
 	local releaseType
-	local myGitHash = "6d57661" -- The ZIP packager will replace this with the Git hash.
+	local myGitHash = "3a15012" -- The ZIP packager will replace this with the Git hash.
 	local releaseString
 	--[=[@alpha@
 	-- The following code will only be present in alpha ZIPs.
@@ -82,11 +91,9 @@ do
 		releaseString = L.guildRelease:format(BIGWIGS_GUILD_VERSION, BIGWIGS_VERSION)
 		versionQueryString = versionQueryString:format(BIGWIGS_VERSION, myGitHash, tbl.guildVersion, tbl.guildName)
 		versionResponseString = versionResponseString:format(BIGWIGS_VERSION, myGitHash, tbl.guildVersion, tbl.guildName)
-		BIGWIGS_VERSION_STRING = ("%d/%d-%s"):format(BIGWIGS_GUILD_VERSION, BIGWIGS_VERSION, myGitHash)
 	else
 		versionQueryString = versionQueryString:format(BIGWIGS_VERSION, myGitHash, 0, "")
 		versionResponseString = versionResponseString:format(BIGWIGS_VERSION, myGitHash, 0, "")
-		BIGWIGS_VERSION_STRING = ("%d-%s"):format(BIGWIGS_VERSION, myGitHash)
 	end
 
 	BIGWIGS_RELEASE_STRING = releaseString
@@ -97,8 +104,7 @@ end
 -- Locals
 --
 
-local tooltipFunctions = {}
-local next, tonumber, type, strsplit, strsub = next, tonumber, type, strsplit, string.sub
+local next, tonumber, type, strsplit = next, tonumber, type, strsplit
 local SendAddonMessage, RegisterAddonMessagePrefix, CTimerAfter, CTimerNewTimer = C_ChatInfo.SendAddonMessage, C_ChatInfo.RegisterAddonMessagePrefix, C_Timer.After, C_Timer.NewTimer
 local GetInstanceInfo, GetBestMapForUnit, GetMapInfo = GetInstanceInfo, C_Map.GetBestMapForUnit, C_Map.GetMapInfo
 local Ambiguate, UnitNameUnmodified, UnitGUID = Ambiguate, UnitNameUnmodified, UnitGUID
@@ -106,6 +112,9 @@ local debugstack, print = debugstack, print
 local myLocale = GetLocale()
 local myName = UnitNameUnmodified("player")
 local myGUID = UnitGUID("player")
+local function sysprint(msg)
+	print("|cFF33FF99BigWigs|r: "..msg)
+end
 
 -- Try to grab unhooked copies of critical funcs (hooked by some crappy addons)
 public.date = date
@@ -118,17 +127,20 @@ public.GetBestMapForUnit = GetBestMapForUnit
 public.GetInstanceInfo = GetInstanceInfo
 public.GetMapInfo = GetMapInfo
 public.GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
-public.GetSpellCooldown = C_Spell.GetSpellCooldown
+public.GetSpellCooldown = C_Spell.GetSpellCooldown or GetSpellCooldown -- XXX [Mainline:✓ MoP:✓ Wrath:✓ Vanilla:✗]
 public.GetSpellDescription = C_Spell.GetSpellDescription
 public.GetSpellLink = C_Spell.GetSpellLink
 public.GetSpellName = C_Spell.GetSpellName
 public.GetSpellTexture = C_Spell.GetSpellTexture
 public.IsItemInRange = C_Item.IsItemInRange
+public.IsSpellKnownOrInSpellBook = C_SpellBook.IsSpellKnownOrInSpellBook -- XXX [Mainline:✓ MoP:✗ Wrath:✗ Vanilla:✗]
+public.IsPlayerSpell = public.IsSpellKnownOrInSpellBook or IsPlayerSpell
+public.IsSpellKnown = public.IsSpellKnownOrInSpellBook or IsSpellKnown
 public.PlaySoundFile = PlaySoundFile
 public.RegisterAddonMessagePrefix = RegisterAddonMessagePrefix
 public.SendAddonMessage = SendAddonMessage
 public.SetRaidTarget = SetRaidTarget
-public.SendChatMessage = SendChatMessage
+public.SendChatMessage = C_ChatInfo and C_ChatInfo.SendChatMessage or SendChatMessage -- XXX [Mainline:✓ MoP:✗ Wrath:✗ Vanilla:✗]
 public.UnitCanAttack = UnitCanAttack
 public.UnitDetailedThreatSituation = UnitDetailedThreatSituation
 public.UnitThreatSituation = UnitThreatSituation
@@ -136,14 +148,17 @@ public.UnitGUID = UnitGUID
 public.UnitHealth = UnitHealth
 public.UnitHealthMax = UnitHealthMax
 public.UnitIsDeadOrGhost = UnitIsDeadOrGhost
+public.UnitIsPlayer = UnitIsPlayer
+public.UnitLevel = UnitLevel
 public.UnitName = UnitNameUnmodified
 public.UnitSex = UnitSex
 public.UnitTokenFromGUID = UnitTokenFromGUID
-public.isTestBuild = GetCurrentRegion() == 72 or GetCurrentRegion() == 90 or (IsPublicTestClient and IsPublicTestClient()) -- PTR/beta
+public.Print = sysprint
+public.isTestBuild = IsPublicTestClient and IsPublicTestClient() -- PTR/beta XXX [Mainline:✓ MoP:✓ Wrath:✓ Vanilla:✗]
 do
 	local _, _, _, build = GetBuildInfo()
 	public.isBeta = build >= 120000
-	public.isNext = build >= 110105
+	public.isNext = build >= 110200
 end
 
 -- Version
@@ -157,10 +172,9 @@ local highestFoundGuildVersion = BIGWIGS_GUILD_VERSION
 local dbmPrefix = public.dbmPrefix
 
 -- Loading
-local isMouseDown = false
+--local isMouseDown = false
 local loadOnCoreEnabled = {} -- BigWigs modulepacks that should load when a hostile zone is entered or the core is manually enabled, this would be the default plugins Bars, Messages etc
 local loadOnZone = {} -- BigWigs modulepack that should load on a specific zone
-local loadOnSlash = {} -- BigWigs modulepacks that can load from a chat command
 local menus = {} -- contains the menus for BigWigs, once the core is loaded they will get injected
 local enableZones = {} -- contains the zones in which BigWigs will enable
 local disabledZones -- contains the zones in which BigWigs will enable, but the user has disabled the addon
@@ -182,7 +196,7 @@ do
 	local bc = "BigWigs_BurningCrusade"
 	local wotlk = "BigWigs_WrathOfTheLichKing"
 	local cata = "BigWigs_Cataclysm"
-	local mop = "BigWigs_MistsOfPandaria"
+	local mists = "BigWigs_MistsOfPandaria"
 	local wod = "BigWigs_WarlordsOfDraenor"
 	local l = "BigWigs_Legion"
 	local bfa = "BigWigs_BattleForAzeroth"
@@ -193,7 +207,7 @@ do
 	local lw_bc = "LittleWigs_BurningCrusade"
 	local lw_wotlk = "LittleWigs_WrathOfTheLichKing"
 	local lw_cata = "LittleWigs_Cataclysm"
-	local lw_mop = "LittleWigs_MistsOfPandaria"
+	local lw_mists = "LittleWigs_MistsOfPandaria"
 	local lw_wod = "LittleWigs_WarlordsOfDraenor"
 	local lw_l = "LittleWigs_Legion"
 	local lw_bfa = "LittleWigs_BattleForAzeroth"
@@ -233,6 +247,14 @@ do
 			name = cata,
 			bigWigsBundled = {},
 			littlewigsDefault = lw_cata,
+			littleWigsBundled = {},
+			zones = {},
+		}
+	elseif public.isMists then
+		public.currentExpansion = {
+			name = mists,
+			bigWigsBundled = {},
+			littlewigsDefault = lw_mists,
 			littleWigsBundled = {},
 			zones = {},
 		}
@@ -277,6 +299,7 @@ do
 			zones = {
 				[2657] = "BigWigs_NerubarPalace",
 				[2769] = "BigWigs_LiberationOfUndermine",
+				[2810] = public.isNext and "BigWigs_ManaforgeOmega" or nil,
 			}
 		}
 	end
@@ -328,12 +351,12 @@ do
 		[720] = cata, -- Firelands
 		[967] = cata, -- Dragon Soul
 		--[[ BigWigs: Mists of Pandaria ]]--
-		[-424] = mop, -- Pandaria (Fake Menu)
-		[1009] = mop, -- Heart of Fear
-		[996] = mop, -- Terrace of Endless Spring
-		[1008] = mop, -- Mogu'shan Vaults
-		[1098] = mop, -- Throne of Thunder
-		[1136] = mop, -- Siege of Orgrimmar
+		[-424] = mists, -- Pandaria (Fake Menu)
+		[1009] = mists, -- Heart of Fear
+		[996] = mists, -- Terrace of Endless Spring
+		[1008] = mists, -- Mogu'shan Vaults
+		[1098] = mists, -- Throne of Thunder
+		[1136] = mists, -- Siege of Orgrimmar
 		--[[ BigWigs: Warlords of Draenor ]]--
 		[-572] = wod, -- Draenor (Fake Menu)
 		[1228] = wod, -- Highmaul
@@ -367,6 +390,7 @@ do
 		[-2274] = tww, -- Khaz Algar (Fake Menu)
 		[2657] = tww, -- Nerub'ar Palace
 		[2769] = tww, -- Liberation of Undermine
+		[2810] = tww, -- Manaforge Omega
 
 		--[[ LittleWigs: Classic ]]--
 		[33] = not (public.isVanilla or public.isTBC or public.isWrath) and lw_cata or nil, -- Shadowfang Keep
@@ -437,16 +461,16 @@ do
 		[657] = lw_cata, -- The Vortex Pinnacle
 		[670] = lw_cata, -- Grim Batol
 		--[[ LittleWigs: Mists of Pandaria ]]--
-		[959] = lw_mop, -- Shado-Pan Monastery
-		[960] = lw_mop, -- Temple of the Jade Serpent
-		[961] = lw_mop, -- Stormstout Brewery
-		[962] = lw_mop, -- Gate of the Setting Sun
-		[994] = lw_mop, -- Mogu'shan Palace
-		[1001] = lw_mop, -- Scarlet Halls
-		[1007] = lw_mop, -- Scholomance
-		[1011] = lw_mop, -- Siege of Niuzao Temple
-		[1112] = lw_mop, -- Pursuing the Black Harvest
-		[1004] = lw_mop, -- Scarlet Monastery
+		[959] = lw_mists, -- Shado-Pan Monastery
+		[960] = lw_mists, -- Temple of the Jade Serpent
+		[961] = lw_mists, -- Stormstout Brewery
+		[962] = lw_mists, -- Gate of the Setting Sun
+		[994] = lw_mists, -- Mogu'shan Palace
+		[1001] = lw_mists, -- Scarlet Halls
+		[1007] = lw_mists, -- Scholomance
+		[1011] = lw_mists, -- Siege of Niuzao Temple
+		[1112] = lw_mists, -- Pursuing the Black Harvest
+		[1004] = lw_mists, -- Scarlet Monastery
 		--[[ LittleWigs: Warlords of Draenor ]]--
 		[1209] = lw_wod, -- Skyreach
 		[1176] = lw_wod, -- Shadowmoon Burial Grounds
@@ -478,25 +502,25 @@ do
 		[1864] = lw_bfa, -- Shrine of the Storm
 		[1822] = lw_bfa, -- Siege of Boralus
 		[1877] = lw_bfa, -- Temple of Sethraliss
-		[1594] = public.isRetail and {lw_bfa, lw_cs} or lw_bfa, -- The Motherlode!!
+		[1594] = (public.isRetail and not public.isNext) and {lw_bfa, lw_cs} or lw_bfa, -- The MOTHERLODE!!
 		[1771] = lw_bfa, -- Tol Dagor
-		[1841] = lw_bfa, -- Underrot
+		[1841] = lw_bfa, -- The Underrot
 		[1862] = lw_bfa, -- Waycrest Manor
-		[2097] = public.isRetail and {lw_bfa, lw_cs} or lw_bfa, -- Operation: Mechagon
-		[2212] = lw_bfa, -- Horrific Vision of Orgrimmar
-		[2213] = lw_bfa, -- Horrific Vision of Stormwind
+		[2097] = (public.isRetail and not public.isNext) and {lw_bfa, lw_cs} or lw_bfa, -- Operation: Mechagon
+		[2212] = (public.isRetail and not public.isNext) and {lw_bfa, lw_cs} or lw_bfa, -- Horrific Vision of Orgrimmar
+		[2213] = (public.isRetail and not public.isNext) and {lw_bfa, lw_cs} or lw_bfa, -- Horrific Vision of Stormwind
 		[2827] = lw_bfa, -- Horrific Vision of Stormwind (Revisited)
 		[2828] = lw_bfa, -- Horrific Vision of Orgrimmar (Revisited)
 		--[[ LittleWigs: Shadowlands ]]--
 		[2284] = lw_s, -- Sanguine Depths
 		[2285] = lw_s, -- Spires of Ascension
 		[2286] = lw_s, -- The Necrotic Wake
-		[2287] = lw_s, -- Halls of Atonement
+		[2287] = (public.isRetail and public.isNext) and {lw_s, lw_cs} or lw_s, -- Halls of Atonement
 		[2289] = lw_s, -- Plaguefall
 		[2290] = lw_s, -- Mists of Tirna Scithe
 		[2291] = lw_s, -- De Other Side
-		[2293] = public.isRetail and {lw_s, lw_cs} or lw_s, -- Theater of Pain
-		[2441] = lw_s, -- Tazavesh, the Veiled Market
+		[2293] = (public.isRetail and not public.isNext) and {lw_s, lw_cs} or lw_s, -- Theater of Pain
+		[2441] = (public.isRetail and public.isNext) and {lw_s, lw_cs} or lw_s, -- Tazavesh, the Veiled Market
 		--[[ LittleWigs: Dragonflight ]]--
 		[2451] = lw_df, -- Uldaman: Legacy of Tyr
 		[2515] = lw_df, -- The Azure Vault
@@ -508,16 +532,18 @@ do
 		[2527] = lw_df, -- Halls of Infusion
 		[2579] = lw_df, -- Dawn of the Infinite
 		--[[ LittleWigs: The War Within ]]--
-		[2648] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- The Rookery
+		[2648] = (public.isRetail and not public.isNext) and {lw_tww, lw_cs} or lw_tww, -- The Rookery
 		[2649] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- Priory of the Sacred Flame
-		[2651] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- Darkflame Cleft
+		[2651] = (public.isRetail and not public.isNext) and {lw_tww, lw_cs} or lw_tww, -- Darkflame Cleft
 		[2652] = lw_tww, -- The Stonevault
-		[2660] = lw_tww, -- Ara-Kara, City of Echoes
-		[2661] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- Cinderbrew Meadery
-		[2662] = lw_tww, -- The Dawnbreaker
+		[2660] = (public.isRetail and public.isNext) and {lw_tww, lw_cs} or lw_tww, -- Ara-Kara, City of Echoes
+		[2661] = (public.isRetail and not public.isNext) and {lw_tww, lw_cs} or lw_tww, -- Cinderbrew Meadery
+		[2662] = (public.isRetail and public.isNext) and {lw_tww, lw_cs} or lw_tww, -- The Dawnbreaker
 		[2669] = lw_tww, -- City of Threads
 		[2710] = lw_tww, -- Awakening the Machine
 		[2773] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- Operation: Floodgate
+		[2830] = (public.isRetail and public.isNext) and {lw_tww, lw_cs} or nil, -- Eco-Dome Al'dani
+		--[2849] = public.isRetail and lw_cs or nil, -- Dastardly Dome
 		--[[ LittleWigs: Delves ]]--
 		[2664] = lw_delves, -- Fungal Folly
 		[2679] = lw_delves, -- Mycomancer Cavern
@@ -532,9 +558,11 @@ do
 		[2688] = lw_delves, -- The Spiral Weave
 		[2689] = lw_delves, -- Tak-Rethan Abyss
 		[2690] = lw_delves, -- The Underkeep
+		[2803] = lw_delves, -- Archival Assault
 		[2815] = lw_delves, -- Excavation Site 9
 		[2826] = lw_delves, -- Sidestreet Sluice
 		[2831] = lw_delves, -- Demolition Dome
+		[2951] = lw_delves, -- Voidrazor Sanctuary
 
 		--[[ Capping ]]--
 		[30] = cap, -- Alterac Valley
@@ -590,6 +618,7 @@ local GetAddOnOptionalDependencies = C_AddOns.GetAddOnOptionalDependencies
 local GetNumAddOns = C_AddOns.GetNumAddOns
 local IsAddOnLoadOnDemand = C_AddOns.IsAddOnLoadOnDemand
 local GetAddOnEnableState = C_AddOns.GetAddOnEnableState
+local DoesAddOnHaveLoadError = C_AddOns.DoesAddOnHaveLoadError
 local IsInGroup, IsInRaid = IsInGroup, IsInRaid
 public.EnableAddOn = EnableAddOn
 
@@ -599,84 +628,36 @@ local reqFuncAddons = {
 	BigWigs_Plugins = true,
 }
 
-local function sysprint(msg)
-	print("|cFF33FF99BigWigs|r: "..msg)
-end
+local Popup = public.isRetail and function(msg, focus)
+	local frame = CreateFrame("Frame", nil, UIParent, focus and "PortraitFrameTexturedBaseTemplate" or "PortraitFrameFlatBaseTemplate")
+	frame:SetFrameStrata("DIALOG")
+	frame:SetToplevel(true)
+	frame:SetSize(400, 150)
+	frame:SetPoint("CENTER")
+	frame:SetTitle("BigWigs")
+	frame:SetTitleOffsets(0, 0)
+	frame:SetBorder("HeldBagLayout")
+	frame:SetPortraitTextureSizeAndOffset(38, -5, 0)
+	frame:SetPortraitTextureRaw("Interface\\AddOns\\BigWigs\\Media\\Icons\\minimap_raid.tga")
 
-local function load(obj, index)
-	if obj then return true end
+	local text = frame:CreateFontString(nil, nil, "GameFontRedLarge")
+	text:SetSize(380, 0)
+	text:SetJustifyH("CENTER")
+	text:SetJustifyV("TOP")
+	text:SetNonSpaceWrap(true)
+	text:SetPoint("TOP", 0, -40)
 
-	if loadOnSlash[index] then
-		if not IsAddOnLoaded(index) then -- Check if we need remove our slash handler stub.
-			for _, slash in next, loadOnSlash[index] do
-				hash_SlashCmdList[slash] = nil
-			end
-		end
-		loadOnSlash[index] = nil
-	end
+	local button = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+	button:SetSize(128, 32)
+	button:SetPoint("BOTTOM", 0, 16)
+	button:SetScript("OnClick", function(self)
+		self:GetParent():Hide()
+	end)
+	button:SetText(L.okay)
 
-	if reqFuncAddons[index] then
-		reqFuncAddons[index] = nil
-		if index == "BigWigs_Core" then
-			reqFuncAddons.BigWigs_Plugins = nil
-		end
-	end
-
-	EnableAddOn(index) -- Make sure it wasn't left disabled for whatever reason
-	local loaded, reason = LoadAddOn(index)
-	if not loaded then
-		sysprint(ADDON_LOAD_FAILED:format(GetAddOnInfo(index), _G["ADDON_"..reason]))
-	end
-	return loaded
-end
-
-local function loadAddons(tbl)
-	if not tbl[1] then return end
-
-	for i = 1, #tbl do
-		local index = tbl[i]
-		if not IsAddOnLoaded(index) and load(nil, index) then
-			local name = GetAddOnInfo(index)
-			public:SendMessage("BigWigs_ModulePackLoaded", name)
-		end
-	end
-	for i = #tbl, 1, -1 do
-		tbl[i] = nil
-	end
-end
-
-local function loadZone(zone)
-	if loadOnZone[zone] then
-		loadAddons(loadOnZone[zone])
-	end
-end
-
-local function loadAndEnableCore()
-	local loaded = load(BigWigs, "BigWigs_Core")
-	if not BigWigs then return end
-	loadAddons(loadOnCoreEnabled)
-	BigWigs:Enable()
-	return loaded
-end
-
-local function loadCoreAndOptions()
-	loadAndEnableCore()
-	load(BigWigsOptions, "BigWigs_Options")
-end
-
-do
-	local _, tbl = ...
-	tbl.LoadCoreAndOptions = loadCoreAndOptions
-end
-
-local function loadCoreAndOpenOptions()
-	loadCoreAndOptions()
-	if BigWigsOptions then
-		BigWigsOptions:Open()
-	end
-end
-
-local function Popup(msg, focus)
+	text:SetText(msg)
+	frame:Show()
+end or function(msg, focus)
 	local frame = CreateFrame("Frame")
 	frame:SetFrameStrata("DIALOG")
 	frame:SetToplevel(true)
@@ -701,14 +682,82 @@ local function Popup(msg, focus)
 	button:SetHighlightFontObject("DialogButtonHighlightText")
 
 	text:SetText(msg)
-	frame:Show()
+end
+
+local function load(index)
+	if IsAddOnLoaded(index) then return true end
+
+	EnableAddOn(index) -- Make sure it wasn't left disabled for whatever reason
+	local loaded, reason = LoadAddOn(index)
+	if not loaded then
+		local addonName = GetAddOnInfo(index)
+		local msg = L.addOnLoadFailedWithReason:format(addonName, reason)
+		sysprint(msg)
+		Popup(msg, true)
+	--elseif DoesAddOnHaveLoadError and DoesAddOnHaveLoadError(index) then -- XXX their implementation is broken
+	--	local addonName = GetAddOnInfo(index)
+	--	local msg = L.addOnLoadFailedUnknownError:format(addonName)
+	--	sysprint(msg)
+	--	Popup(msg, true)
+	end
+	return loaded
+end
+
+local function loadAddons(tbl)
+	if not tbl[1] then return end
+
+	for i = 1, #tbl do
+		local index = tbl[i]
+		if not IsAddOnLoaded(index) and load(index) then
+			local name = GetAddOnInfo(index)
+			public:SendMessage("BigWigs_ModulePackLoaded", name)
+		end
+	end
+	for i = #tbl, 1, -1 do
+		tbl[i] = nil
+	end
+end
+
+local function loadZone(zone)
+	if loadOnZone[zone] then
+		loadAddons(loadOnZone[zone])
+	end
+end
+
+local indexOfCore
+local function loadAndEnableCore()
+	if indexOfCore then -- Repo users don't have separate addons
+		load(indexOfCore)
+	end
+	if not BigWigs then return end
+	loadAddons(loadOnCoreEnabled)
+	BigWigs:Enable()
+	return true
+end
+
+local indexOfOptions
+local function loadCoreAndOptions()
+	loadAndEnableCore()
+	if indexOfOptions then -- Repo users don't have separate addons
+		load(indexOfOptions)
+	end
+end
+
+do
+	local _, tbl = ...
+	tbl.LoadCoreAndOptions = loadCoreAndOptions
+end
+
+local function loadCoreAndOpenOptions()
+	loadCoreAndOptions()
+	if BigWigsOptions then
+		BigWigsOptions:Open()
+	end
 end
 
 C_PartyInfo.DoCountdown = function(num) -- Overwrite Blizz countdown
 	loadAndEnableCore()
-	if SlashCmdList.BIGWIGSPULL then
-		SlashCmdList.BIGWIGSPULL(num)
-	end
+	SlashCmdList.pull(num)
 end
 
 -----------------------------------------------------------------------
@@ -748,23 +797,13 @@ function dataBroker.OnTooltipShow(tt)
 			end
 		end
 	end
-	for i = 1, #tooltipFunctions do
-		tooltipFunctions[i](tt)
-	end
-	tt:AddLine(L.tooltipHint, 0.2, 1, 0.2, true)
-end
-
------------------------------------------------------------------------
--- Version listing functions
---
-
-tooltipFunctions[#tooltipFunctions+1] = function(tt)
 	for _, version in next, usersVersion do
 		if version < highestFoundVersion then
 			tt:AddLine(L.oldVersionsInGroup, 1, 1, 1, true)
 			break
 		end
 	end
+	tt:AddLine(L.tooltipHint, 0.2, 1, 0.2, true)
 end
 
 -----------------------------------------------------------------------
@@ -777,9 +816,19 @@ do
 	local extraMenus = {} -- Addons that contain extra zone menus to appear in the GUI
 	local noMenus = {} -- Addons that contain zones that shouldn't create a menu
 	local blockedMenus = {} -- Zones that shouldn't create a menu
+	local RegisterSlashCommand
+	do
+		local _, tbl = ...
+		RegisterSlashCommand = tbl.API.RegisterSlashCommand
+	end
 
 	for i = 1, GetNumAddOns() do
 		local name, _, _, _, addonState = GetAddOnInfo(i)
+		if name == "BigWigs_Core" then
+			indexOfCore = i
+		elseif name == "BigWigs_Options" then
+			indexOfOptions = i
+		end
 		if reqFuncAddons[name] then
 			EnableAddOn(i) -- Make sure it wasn't left disabled for whatever reason
 		end
@@ -821,32 +870,16 @@ do
 			end
 			meta = GetAddOnMetadata(i, "X-BigWigs-LoadOn-Slash")
 			if meta then
-				loadOnSlash[i] = {}
-				local tbl = {strsplit(",", meta)}
-				for j=1, #tbl do
-					local slash = tbl[j]:trim():upper()
-					local slashName = "BIGWIGS"..strsub(slash, 2) -- strip the "/"
-					_G["SLASH_"..slashName.."1"] = slash
-					SlashCmdList[slashName] = function(text)
+				local slashCommandsTable = {strsplit(",", meta)}
+				for slashNumInTable = 1, #slashCommandsTable do
+					local slash = slashCommandsTable[slashNumInTable]:trim()
+					RegisterSlashCommand(slash, function()
 						if strfind(name, "BigWigs", nil, true) then
 							-- Attempting to be smart. Only load core & config if it's a BW plugin.
 							loadCoreAndOptions()
 						end
-						if load(nil, i) then -- Load the addon/plugin
-							-- Call the slash command again, which should have been set by the addon.
-							-- Authors, do NOT delay setting it in OnInitialize/OnEnable/etc.
-							ChatFrame_ImportListToHash(SlashCmdList, hash_SlashCmdList)
-							local func = hash_SlashCmdList[slash]
-							if func then
-								func(text)
-								return
-							end
-						end
-						-- Addon didn't register the slash command for whatever reason, print the default invalid slash message.
-						local info = ChatTypeInfo["SYSTEM"]
-						DEFAULT_CHAT_FRAME:AddMessage(HELP_TEXT_SIMPLE, info.r, info.g, info.b, info.id)
-					end
-					loadOnSlash[i][j] = slash
+						load(i) -- Load the addon/plugin
+					end)
 				end
 			end
 		else
@@ -879,10 +912,6 @@ do
 					end
 				end
 			end
-		end
-
-		if next(loadOnSlash) then
-			ChatFrame_ImportListToHash(SlashCmdList, hash_SlashCmdList) -- Add our slashes to the hash.
 		end
 	end
 
@@ -1021,147 +1050,158 @@ do
 	end
 end
 
-function mod:ADDON_LOADED(addon)
-	if addon ~= "BigWigs" then
-		-- If you are a dev and need the BigWigs options loaded to do something, please come talk to us on Discord about your use case
-		--if reqFuncAddons[addon] then
-		--	local trace = debugstack(2)
-		--	public.lstack = trace
-		--	sysprint("|cFFff0000WARNING!|r")
-		--	sysprint("One of your addons is force loading the BigWigs options.")
-		--	sysprint("Contact us on the BigWigs Discord about this, it should not be happening.")
-		--	reqFuncAddons = {}
-		--end
-		return
-	end
-
-	--bwFrame:RegisterEvent("GLOBAL_MOUSE_DOWN")
-	--bwFrame:RegisterEvent("GLOBAL_MOUSE_UP")
-
-	if C_EventUtils.IsEventValid("PLAYER_MAP_CHANGED") then
-		bwFrame:RegisterEvent("PLAYER_MAP_CHANGED")
-	end
-	bwFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-	bwFrame:RegisterEvent("GROUP_FORMED")
-	bwFrame:RegisterEvent("GROUP_LEFT")
-	bwFrame:RegisterEvent("START_PLAYER_COUNTDOWN")
-	bwFrame:RegisterEvent("CANCEL_PLAYER_COUNTDOWN")
-	TimerTracker:UnregisterEvent("START_PLAYER_COUNTDOWN")
-	TimerTracker:UnregisterEvent("CANCEL_PLAYER_COUNTDOWN")
-
-	bwFrame:RegisterEvent("CHAT_MSG_ADDON")
-	local oldResult, result = RegisterAddonMessagePrefix("BigWigs")
-	if type(result) == "number" and result > 2 then
+if C_EventUtils.IsEventValid("PLAYER_MAP_CHANGED") then
+	bwFrame:RegisterEvent("PLAYER_MAP_CHANGED")
+end
+bwFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+bwFrame:RegisterEvent("GROUP_FORMED")
+bwFrame:RegisterEvent("GROUP_LEFT")
+bwFrame:RegisterEvent("START_PLAYER_COUNTDOWN")
+bwFrame:RegisterEvent("CANCEL_PLAYER_COUNTDOWN")
+TimerTracker:UnregisterEvent("START_PLAYER_COUNTDOWN")
+TimerTracker:UnregisterEvent("CANCEL_PLAYER_COUNTDOWN")
+bwFrame:RegisterEvent("CHAT_MSG_ADDON")
+do
+	local result = RegisterAddonMessagePrefix("BigWigs")
+	-- 0=success, 1=duplicate, 2=invalid, 3=toomany
+	if type(result) == "number" and result > 1 then
 		sysprint("Failed to register the BigWigs addon message prefix. Error code: ".. result)
 		geterrorhandler()("BigWigs: Failed to register the BigWigs addon message prefix. Error code: ".. result)
 	end
 	RegisterAddonMessagePrefix(dbmPrefix) -- DBM
+end
+do
+	local num = tonumber(C_CVar.GetCVar("Sound_NumChannels")) or 0
+	if num < 90 then
+		C_CVar.SetCVar("Sound_NumChannels", "90") -- 64 is the default, enforce a little higher as a minimum to prevent sound clipping issues with addons
+	end
+	local cache = tonumber(C_CVar.GetCVar("Sound_MaxCacheSizeInBytes")) or 0
+	if cache < 134217728 then
+		C_CVar.SetCVar("Sound_MaxCacheSizeInBytes", "134217728") -- "Large (128MB)" is the default, enforce it as a minimum
+	end
+end
 
+if not public.isVanilla then -- XXX Support for LoadSavedVariablesFirst [Mainline:✓ MoP:✓ Wrath:✓ Vanilla:✗]
 	-- LibDBIcon setup
 	if type(BigWigsIconDB) ~= "table" then
 		BigWigsIconDB = {}
 	end
 	ldbi:Register("BigWigs", dataBroker, BigWigsIconDB)
 
-	-- Updates for BigWigsStatsDB, 11.0.0
-	if type(BigWigsStatsDB) == "table" then
-		local knownStats = {
-			["story"]=true, ["timewalk"]=true, ["LFR"]=true, ["normal"]=true, ["heroic"]=true, ["mythic"]=true,
-			["10N"]=true, ["25N"]=true, ["10H"]=true, ["25H"]=true,
-			["SOD"]=true, ["level1"]=true, ["level2"]=true, ["level3"]=true, ["hardcore"]=true,
-			["10"]=true,["25"]=true,["10h"]=true,["25h"]=true,["flex"]=true,["lfr"]=true,
-			["N10"]=true, ["N25"]=true,["H10"]=true,["H25"]=true,
-		}
-		local thingsToModify = {}
-		local lookup = {["10N"]="N10", ["25N"]="N25", ["10H"]="H10", ["25H"]="H25"}
-		-- BigWigsStatsDB[instanceId][journalId][diff].[best|kills|wipes|fkWipes|fkDuration|fkDate|bestDate]
-		for instanceId, encounters in next, BigWigsStatsDB do
-			for journalId, difficulties in next, encounters do
-				for diff, statEntry in next, difficulties do
-					if diff == "normal" and (instanceId == 2789 or instanceId == 2791 or instanceId == 109 or instanceId == 90 or instanceId == 48) then
-						-- Kazzak, Azuregos, Sunken Temple, Gnomeregan, Blackfathom Deeps
-						if not thingsToModify[instanceId] then thingsToModify[instanceId] = {} end
-						if not thingsToModify[instanceId][journalId] then thingsToModify[instanceId][journalId] = {} end
-						thingsToModify[instanceId][journalId][diff] = true
-					elseif lookup[diff] then
-						if not thingsToModify[instanceId] then thingsToModify[instanceId] = {} end
-						if not thingsToModify[instanceId][journalId] then thingsToModify[instanceId][journalId] = {} end
-						thingsToModify[instanceId][journalId][diff] = true
-					elseif not knownStats[diff] then
-						sysprint("Unknown stat: ".. tostring(diff))
-						geterrorhandler()("BigWigs: Unknown stat: ".. tostring(diff))
-					end
-				end
-			end
-		end
-		for instanceId, encounters in next, thingsToModify do
-			for journalId, difficulties in next, encounters do
-				for diff, statEntry in next, difficulties do
-					if diff == "normal" and (instanceId == 2789 or instanceId == 2791 or instanceId == 109 or instanceId == 90 or instanceId == 48) then
-						-- Kazzak, Azuregos, Sunken Temple, Gnomeregan, Blackfathom Deeps
-						BigWigsStatsDB[instanceId][journalId].SOD = BigWigsStatsDB[instanceId][journalId][diff]
-						BigWigsStatsDB[instanceId][journalId][diff] = nil
-					elseif lookup[diff] then
-						BigWigsStatsDB[instanceId][journalId][lookup[diff]] = BigWigsStatsDB[instanceId][journalId][diff]
-						BigWigsStatsDB[instanceId][journalId][diff] = nil
-					end
-				end
-			end
-		end
-		-- Add old stats to new stats? [10,25,10h,25h,flex,lfr]
+	-- Core DB setup
+	local defaults = {
+		profile = {
+			showZoneMessages = true,
+			fakeDBMVersion = false,
+			englishSayMessages = false,
+		},
+		global = {
+			watchedMovies = {},
+		},
+	}
+	local db = LibStub("AceDB-3.0"):New("BigWigs3DB", defaults, true)
+	local lds = LibStub("LibDualSpec-1.0", true)
+	if lds then
+		lds:EnhanceDatabase(db, "BigWigs3DB")
 	end
 
-	if BigWigs3DB then
-		-- Somewhat ugly, but saves loading AceDB with the loader instead of with the core
-		if BigWigs3DB.profileKeys and BigWigs3DB.profiles then
-			local realm = GetRealmName()
-			if myName and realm and BigWigs3DB.profileKeys[myName.." - "..realm] then
-				local key = BigWigs3DB.profiles[BigWigs3DB.profileKeys[myName.." - "..realm]]
-				if key then
-					self.isFakingDBM = key.fakeDBMVersion
-					self.isShowingZoneMessages = key.showZoneMessages
-				end
-				if BigWigs3DB.namespaces and BigWigs3DB.namespaces.BigWigs_Plugins_Sounds and BigWigs3DB.namespaces.BigWigs_Plugins_Sounds.profiles and BigWigs3DB.namespaces.BigWigs_Plugins_Sounds.profiles[BigWigs3DB.profileKeys[myName.." - "..realm]] then
-					self.isSoundOn = BigWigs3DB.namespaces.BigWigs_Plugins_Sounds.profiles[BigWigs3DB.profileKeys[myName.." - "..realm]].sound
-				end
+	local function profileUpdate()
+		public:SendMessage("BigWigs_ProfileUpdate")
+	end
+
+	db.RegisterCallback(mod, "OnProfileChanged", profileUpdate)
+	db.RegisterCallback(mod, "OnProfileCopied", profileUpdate)
+	db.RegisterCallback(mod, "OnProfileReset", profileUpdate)
+	public.db = db
+
+	local _, _, _, _, addonState = GetAddOnInfo("QuaziiUI")
+	if type(BigWigs3DB.namespaces) == "table" and addonState ~= "MISSING" then
+		for k,v in next, BigWigs3DB.namespaces do
+			if strfind(k, " Trash", nil, true) or strfind(k, " Rares", nil, true) then
+				BigWigs3DB.namespaces[k] = nil
 			end
 		end
-		-- Cleanup function.
-		-- TODO: look into having a way for our boss modules not to create a table when no options are changed.
-		if BigWigs3DB.namespaces then
+	end
+else
+	bwFrame:RegisterEvent("ADDON_LOADED")
+	local _, addonTbl = ...
+	function mod:ADDON_LOADED(addon)
+		if addon ~= "BigWigs" then
+			-- If you are a dev and need the BigWigs options loaded to do something, please come talk to us on Discord about your use case
+			--if reqFuncAddons[addon] then
+			--	local trace = debugstack(2)
+			--	public.lstack = trace
+			--	sysprint("|cFFff0000WARNING!|r")
+			--	sysprint("One of your addons is force loading the BigWigs options.")
+			--	sysprint("Contact us on the BigWigs Discord about this, it should not be happening.")
+			--	reqFuncAddons = {}
+			--end
+			return
+		end
+		--bwFrame:RegisterEvent("GLOBAL_MOUSE_DOWN")
+		--bwFrame:RegisterEvent("GLOBAL_MOUSE_UP")
+
+		-- LibDBIcon setup
+		if type(BigWigsIconDB) ~= "table" then
+			BigWigsIconDB = {}
+		end
+		ldbi:Register("BigWigs", dataBroker, BigWigsIconDB)
+
+		-- Core DB setup
+		local defaults = {
+			profile = {
+				showZoneMessages = true,
+				fakeDBMVersion = false,
+				englishSayMessages = false,
+			},
+			global = {
+				watchedMovies = {},
+			},
+		}
+		local db = LibStub("AceDB-3.0"):New("BigWigs3DB", defaults, true)
+		local lds = LibStub("LibDualSpec-1.0", true)
+		if lds then
+			lds:EnhanceDatabase(db, "BigWigs3DB")
+		end
+
+		local function profileUpdate()
+			public:SendMessage("BigWigs_ProfileUpdate")
+		end
+
+		db.RegisterCallback(mod, "OnProfileChanged", profileUpdate)
+		db.RegisterCallback(mod, "OnProfileCopied", profileUpdate)
+		db.RegisterCallback(mod, "OnProfileReset", profileUpdate)
+		public.db = db
+
+		local _, _, _, _, addonState = GetAddOnInfo("QuaziiUI")
+		if type(BigWigs3DB.namespaces) == "table" and addonState ~= "MISSING" then
 			for k,v in next, BigWigs3DB.namespaces do
-				if strfind(k, "BigWigs_Bosses_", nil, true) and not next(v) then
+				if strfind(k, " Trash", nil, true) or strfind(k, " Rares", nil, true) then
 					BigWigs3DB.namespaces[k] = nil
 				end
 			end
 		end
-	end
-	self:BigWigs_CoreOptionToggled(nil, "fakeDBMVersion", self.isFakingDBM)
 
-	local num = tonumber(C_CVar.GetCVar("Sound_NumChannels")) or 0
-	if num < 90 then
-		C_CVar.SetCVar("Sound_NumChannels", "90") -- 64 is the default, enforce a little higher as a minimum to prevent sound clipping issues with addons
-	end
-	num = tonumber(C_CVar.GetCVar("Sound_MaxCacheSizeInBytes")) or 0
-	if num < 134217728 then
-		C_CVar.SetCVar("Sound_MaxCacheSizeInBytes", "134217728") -- "Large (128MB)" is the default, enforce it as a minimum
-	end
-
-	--bwFrame:UnregisterEvent("ADDON_LOADED")
-	--self.ADDON_LOADED = nil
-end
-
-function mod:GLOBAL_MOUSE_DOWN(button)
-	if button == "RightButton" then
-		isMouseDown = true
+		if addonTbl.initToolDBForClassicTemp then
+			addonTbl.initToolDBForClassicTemp()
+			addonTbl.initToolDBForClassicTemp = nil
+		end
+		bwFrame:UnregisterEvent("ADDON_LOADED")
+		self.ADDON_LOADED = nil
 	end
 end
 
-function mod:GLOBAL_MOUSE_UP(button)
-	if button == "RightButton" then
-		isMouseDown = false
-	end
-end
+--function mod:GLOBAL_MOUSE_DOWN(button)
+--	if button == "RightButton" then
+--		isMouseDown = true
+--	end
+--end
+
+--function mod:GLOBAL_MOUSE_UP(button)
+--	if button == "RightButton" then
+--		isMouseDown = false
+--	end
+--end
 
 function mod:START_PLAYER_COUNTDOWN(...)
 	loadAndEnableCore()
@@ -1172,17 +1212,10 @@ function mod:CANCEL_PLAYER_COUNTDOWN(...)
 	public:SendMessage("Blizz_StopCountdown", ...)
 end
 
--- We can't do our addon loading in ADDON_LOADED as the target addons may be registering that
--- which would break that event for those addons. Use this event instead.
-function mod:UPDATE_FLOATING_CHAT_WINDOWS()
-	bwFrame:UnregisterEvent("UPDATE_FLOATING_CHAT_WINDOWS")
-	self.UPDATE_FLOATING_CHAT_WINDOWS = nil
+-----------------------------------------------------------------------
+-- Popups and user notifications
+--
 
-	self:GROUP_FORMED()
-	self:PLAYER_ENTERING_WORLD()
-end
-
--- Various temporary printing stuff
 do
 	local old = {
 		BigWigs_Ulduar = "BigWigs_WrathOfTheLichKing",
@@ -1278,6 +1311,7 @@ do
 		BigWigs_DragonIsles = "BigWigs_Dragonflight",
 		BigWigs_VaultOfTheIncarnates = "BigWigs_Dragonflight",
 	}
+	local DisableAddOn = C_AddOns.DisableAddOn
 	local delayedMessages = {}
 	local foundReqAddons = {} -- Deciding whether or not we show a warning for core/options/plugins addons not existing
 	local printMissingExpansionAddon = true
@@ -1312,6 +1346,7 @@ do
 		-- Dynamic content
 		BigWigs_NerubarPalace = true,
 		BigWigs_LiberationOfUndermine = true,
+		BigWigs_ManaforgeOmega = true,
 	}
 	-- Try to teach people not to force load our modules.
 	for i = 1, GetNumAddOns() do
@@ -1337,13 +1372,15 @@ do
 			if name == "BigWigs_Shadowlands" then
 				local meta = GetAddOnMetadata(i, "X-BigWigs-LoadOn-InstanceId")
 				if not meta then
+					DisableAddOn(i)
 					local msg = L.removeAddOn:format(name, old[name])
 					delayedMessages[#delayedMessages+1] = msg
-					if not BasicMessageDialog:IsShown() then -- Don't overwrite other messages with this as the message is confusing, show it last
-						Popup(msg, true)
-					end
+					Popup(msg, true)
+				else
+					EnableAddOn(i) -- XXX temp as we were accidentally disabling the Shadowlands addon for a while
 				end
 			else
+				DisableAddOn(i)
 				local msg = L.removeAddOn:format(name, old[name])
 				delayedMessages[#delayedMessages+1] = msg
 				Popup(msg, true)
@@ -1367,10 +1404,10 @@ do
 				local wowMajor, wowMinor, actualVersion = tonumber(wowMajorStr), tonumber(wowMinorStr), tonumber(actualVersionStr)
 				if wowMajor and wowMinor and actualVersion then
 					local versionDifference = addonToCheck[3] - actualVersion
-					if addonToCheck[1] ~= wowMajor or addonToCheck[2] ~= wowMinor or versionDifference > 0 then -- Any version difference = chat print
+					if addonToCheck[1] > wowMajor or (addonToCheck[1] == wowMajor and addonToCheck[2] > wowMinor) or (addonToCheck[1] == wowMajor and addonToCheck[2] == wowMinor and versionDifference > 0) then -- Any version difference = chat print
 						delayedMessages[#delayedMessages+1] = L.outOfDateAddOnRaidWarning:format(name, wowMajor, wowMinor, actualVersion, addonToCheck[1], addonToCheck[2], addonToCheck[3])
 					end
-					if addonToCheck[1] ~= wowMajor or addonToCheck[2] ~= wowMinor or versionDifference >= 3 then -- Large version difference = popup
+					if addonToCheck[1] > wowMajor or (addonToCheck[1] == wowMajor and addonToCheck[2] > wowMinor) or (addonToCheck[1] == wowMajor and addonToCheck[2] == wowMinor and versionDifference >= 3) then -- Large version difference = popup
 						Popup(L.outOfDateAddOnPopup:format(name), true)
 					end
 				elseif not strfind(meta, "@", nil, true) then -- Don't error for repo users
@@ -1402,19 +1439,19 @@ do
 		--ruRU = "Russian (ruRU)",
 		--zhCN = "Simplified Chinese (zhCN)",
 		--zhTW = "Traditional Chinese (zhTW)",
-		itIT = "Italian (itIT)",
+		--itIT = "Italian (itIT)",
 		--koKR = "Korean (koKR)",
 		--esES = "Spanish (esES)",
 		--esMX = "Spanish (esMX)",
 		--deDE = "German (deDE)",
-		ptBR = "Portuguese (ptBR)",
+		--ptBR = "Portuguese (ptBR)",
 		--frFR = "French (frFR)",
 	}
 	local realms = {
 		--[542] = locales.frFR, -- frFR
-		[3207] = locales.ptBR, [3208] = locales.ptBR, [3209] = locales.ptBR, [3210] = locales.ptBR, [3234] = locales.ptBR, -- ptBR
+		--[3207] = locales.ptBR, [3208] = locales.ptBR, [3209] = locales.ptBR, [3210] = locales.ptBR, [3234] = locales.ptBR, -- ptBR
 		--[1425] = locales.esMX, [1427] = locales.esMX, [1428] = locales.esMX, -- esMX
-		[1309] = locales.itIT, [1316] = locales.itIT, -- itIT
+		--[1309] = locales.itIT, [1316] = locales.itIT, -- itIT
 		--[1378] = locales.esES, [1379] = locales.esES, [1380] = locales.esES, [1381] = locales.esES, [1382] = locales.esES, [1383] = locales.esES, -- esES
 		--[1384] = locales.esES, [1385] = locales.esES, [1386] = locales.esES, [1387] = locales.esES, [1395] = locales.esES, -- esES
 	}
@@ -1454,6 +1491,11 @@ do
 		end
 		bwFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
 	end
+
+	if public.isRetail and not BigWigsTempKeystones then -- XXX temp
+		BigWigsTempKeystones = true
+		Popup(L.tempNew, true)
+	end
 end
 
 -----------------------------------------------------------------------
@@ -1462,12 +1504,13 @@ end
 
 do
 	local callbackMap = {}
-	function public:RegisterMessage(msg, func)
+	local currentEvent = nil
+	function public:RegisterMessage(event, func)
 		if self == BigWigsLoader then
 			error(".RegisterMessage(addon, message, function) attempted to register a function to BigWigsLoader, you might be using : instead of . to register the callback.")
 		end
 
-		if type(msg) ~= "string" then
+		if type(event) ~= "string" then
 			error(":RegisterMessage(message, function) attempted to register invalid message, must be a string!")
 		end
 
@@ -1475,37 +1518,43 @@ do
 		if funcType == "string" then
 			if not self[func] then error((":RegisterMessage(message, function) attempted to register the function '%s' but it doesn't exist!"):format(func)) end
 		elseif funcType == "nil" then
-			if not self[msg] then error((":RegisterMessage(message, function) attempted to register the function '%s' but it doesn't exist!"):format(msg)) end
+			if not self[event] then error((":RegisterMessage(message, function) attempted to register the function '%s' but it doesn't exist!"):format(event)) end
 		elseif funcType ~= "function" then
 			error(":RegisterMessage(message, function) attempted to register an invalid function!")
 		end
 
-		if not callbackMap[msg] then callbackMap[msg] = {} end
-		callbackMap[msg][self] = func or msg
+		if not callbackMap[event] then callbackMap[event] = {} end
+		if callbackMap[event][self] or event ~= currentEvent then -- Event is already registered to this specific module, just change the assigned function
+			callbackMap[event][self] = func or event
+		else -- Event has not been previously registered to this specific module and the same event is currently in the middle of dispatching
+			CTimerAfter(0, function() callbackMap[event][self] = func or event end)
+		end
 	end
-	function public:UnregisterMessage(msg)
+	function public:UnregisterMessage(event)
 		if self == BigWigsLoader then
 			error(".UnregisterMessage(addon, message, function) attempted to unregister a function from BigWigsLoader, you might be using : instead of . to register the callback.")
 		end
 
-		if type(msg) ~= "string" then error(":UnregisterMessage(message) attempted to unregister an invalid message, must be a string!") end
-		if not callbackMap[msg] then return end
-		callbackMap[msg][self] = nil
-		if not next(callbackMap[msg]) then
-			callbackMap[msg] = nil
+		if type(event) ~= "string" then error(":UnregisterMessage(message) attempted to unregister an invalid message, must be a string!") end
+		if not callbackMap[event] then return end
+		callbackMap[event][self] = nil
+		if not next(callbackMap[event]) then
+			callbackMap[event] = nil
 		end
 	end
 
 	local securecallfunction = securecallfunction
-	function public:SendMessage(msg, ...)
-		if callbackMap[msg] then
-			for k,v in next, callbackMap[msg] do
+	function public:SendMessage(event, ...)
+		if callbackMap[event] then
+			for k,v in next, callbackMap[event] do
+				currentEvent = event
 				if type(v) == "function" then
-					securecallfunction(v, msg, ...)
+					securecallfunction(v, event, ...)
 				else
-					securecallfunction(k[v], k, msg, ...)
+					securecallfunction(k[v], k, event, ...)
 				end
 			end
+			currentEvent = nil
 		end
 	end
 
@@ -1528,12 +1577,12 @@ end
 --
 
 do
-	local DBMdotRevision = "20250411230356" -- The changing version of the local client, changes with every new zip using the project-date-integer packager replacement.
-	local DBMdotDisplayVersion = "11.1.16" -- "N.N.N" for a release and "N.N.N alpha" for the alpha duration.
-	local DBMdotReleaseRevision = "20250411000000" -- Hardcoded time, manually changed every release, they use it to track the highest release version, a new DBM release is the only time it will change.
+	local DBMdotRevision = "20250805133414" -- The changing version of the local client, changes with every new zip using the project-date-integer packager replacement.
+	local DBMdotDisplayVersion = "11.2.5" -- "N.N.N" for a release and "N.N.N alpha" for the alpha duration.
+	local DBMdotReleaseRevision = "20250805000000" -- Hardcoded time, manually changed every release, they use it to track the highest release version, a new DBM release is the only time it will change.
 	local protocol = 3
 	local versionPrefix = "V"
-	local PForceDisable = 17
+	local PForceDisable = 19
 
 	local timer = nil
 	local function sendDBMMsg()
@@ -1555,7 +1604,7 @@ do
 		timer = nil
 	end
 	function mod:DBM_VersionCheck(prefix, sender, _, _, displayVersion)
-		if prefix == "H" and (BigWigs and BigWigs.db and BigWigs.db.profile.fakeDBMVersion or self.isFakingDBM) then
+		if prefix == "H" and public.db.profile.fakeDBMVersion then
 			if timer then timer:Cancel() end
 			timer = CTimerNewTimer(3, sendDBMMsg)
 		elseif prefix == "V" then
@@ -1564,13 +1613,6 @@ do
 	end
 end
 
-function mod:BigWigs_CoreOptionToggled(_, key, value)
-	if key == "fakeDBMVersion" and value and IsInGroup() then
-		self:DBM_VersionCheck("H") -- Send addon message if feature is being turned on inside a raid/group.
-	end
-end
-public.RegisterMessage(mod, "BigWigs_CoreOptionToggled")
-
 -----------------------------------------------------------------------
 -- Events
 --
@@ -1578,8 +1620,6 @@ public.RegisterMessage(mod, "BigWigs_CoreOptionToggled")
 bwFrame:SetScript("OnEvent", function(_, event, ...)
 	mod[event](mod, ...)
 end)
-bwFrame:RegisterEvent("ADDON_LOADED")
-bwFrame:RegisterEvent("UPDATE_FLOATING_CHAT_WINDOWS")
 
 function mod:CHAT_MSG_ADDON(prefix, msg, channel, sender)
 	if channel ~= "RAID" and channel ~= "PARTY" and channel ~= "INSTANCE_CHAT" then
@@ -1843,7 +1883,7 @@ do
 		end
 
 		-- Lacking zone modules
-		if (BigWigs and BigWigs.db.profile.showZoneMessages == false) or mod.isShowingZoneMessages == false then return end
+		if not public.db.profile.showZoneMessages then return end
 		local zoneAddon = public.zoneTbl[id]
 		if type(zoneAddon) == "table" then
 			-- default to the expansion addon for current season modules
@@ -1918,6 +1958,7 @@ do
 		end
 	end
 	mod.GROUP_LEFT = mod.GROUP_FORMED
+	mod:GROUP_FORMED() -- If you're already in a group, the event only fires when logging on, not when reloading UI, so we force a check
 end
 
 function mod:BigWigs_BossModuleRegistered(_, _, module)
@@ -1968,11 +2009,6 @@ function mod:BigWigs_CoreEnabled()
 		dataBroker.icon = "Interface\\AddOns\\BigWigs\\Media\\Icons\\minimap_raid.tga"
 	end
 
-	-- Core is loaded, nil these to force checking BigWigs.db.profile.option
-	self.isFakingDBM = nil
-	self.isShowingZoneMessages = nil
-	self.isSoundOn = nil
-
 	-- Make sure we've loaded everything. git checkout installs will load core
 	-- immediately, but won't hit loadAndEnableCore until a boss module loads.
 	-- E.g., LoD assets not being available for local, break, and pull bars.
@@ -1989,21 +2025,8 @@ public.RegisterMessage(mod, "BigWigs_CoreDisabled")
 -- API
 --
 
-function public:RegisterTooltipInfo(func)
-	for i = 1, #tooltipFunctions do
-		if tooltipFunctions[i] == func then
-			error(("The function %q has already been registered."):format(func))
-		end
-	end
-	tooltipFunctions[#tooltipFunctions+1] = func
-end
-
 function public:GetReleaseString()
 	return BIGWIGS_RELEASE_STRING
-end
-
-function public:GetVersionString()
-	return BIGWIGS_VERSION_STRING
 end
 
 function public:GetZoneMenus()
@@ -2027,6 +2050,9 @@ end
 -----------------------------------------------------------------------
 -- Slash commands
 --
+
+-- XXX compat code
+SlashCmdList.BIGWIGSPULL = function() Popup("Use /pull to start pull timers.", true) error("Use /pull to start pull timers.") end
 
 SLASH_BigWigs1 = "/bw"
 SLASH_BigWigs2 = "/bigwigs"
@@ -2128,11 +2154,3 @@ end
 --
 
 BigWigsLoader = setmetatable({}, { __index = public, __newindex = function() end, __metatable = false })
-
--- XXX Temp locale compat
-local tempLocale = BigWigsAPI:NewLocale("BigWigs: Plugins", myLocale)
-if tempLocale then
-	for k,v in next, L do
-		tempLocale[k] = v
-	end
-end

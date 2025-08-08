@@ -108,11 +108,7 @@ do
 
 		if args.time - prev > 5 then
 			prev = args.time
-			local markMsg = CL.count:format(CL.mark, markCounter)
-			if markCounter % 2 == 0 then -- Try reduce the amount of overall messages
-				self:Message("mark", "red", markMsg, L.mark_icon)
-			end
-			self:StopBar(markMsg)
+			self:StopBar(CL.count:format(CL.mark, markCounter))
 			markCounter = markCounter + 1
 			self:CDBar("mark", 12.9, CL.count:format(CL.mark, markCounter), L.mark_icon)
 		end
@@ -130,9 +126,9 @@ end
 
 function mod:Meteor(args)
 	self:CDBar(args.spellId, 12) -- 11~14
-	self:Message(args.spellId, "red")
 	local unit = self:GetUnitIdByGUID(args.sourceGUID)
 	if not unit or self:UnitWithinRange(unit, 35) or args.sourceGUID == self:UnitGUID("target") then
+		self:Message(args.spellId, "red")
 		self:PlaySound(args.spellId, "info")
 	end
 end
@@ -144,9 +140,9 @@ function mod:VoidZone(args)
 		self:PersonalMessage(args.spellId, "underyou")
 		self:PlaySound(args.spellId, "underyou")
 	else
-		self:TargetMessage(args.spellId, "orange", args.destName)
 		local unit = self:GetUnitIdByGUID(args.sourceGUID)
 		if not unit or self:UnitWithinRange(unit, 35) or args.sourceGUID == self:UnitGUID("target") then
+			self:TargetMessage(args.spellId, "orange", args.destName)
 			self:PlaySound(args.spellId, "alarm", nil, args.destName)
 		end
 	end
@@ -154,9 +150,9 @@ end
 
 function mod:HolyWrath(args)
 	self:CDBar(args.spellId, 12) -- 11~14
-	self:Message(args.spellId, "yellow")
 	local unit = self:GetUnitIdByGUID(args.sourceGUID)
 	if not unit or self:UnitWithinRange(unit, 35) or args.sourceGUID == self:UnitGUID("target") then
+		self:Message(args.spellId, "yellow")
 		self:PlaySound(args.spellId, "alert")
 	end
 end
@@ -176,8 +172,10 @@ end
 
 do
 	local unitTracker = {}
+	local currentHealth = {}
 	function mod:Deaths(args)
 		unitTracker[args.mobId] = nil
+		currentHealth[args.mobId] = nil
 		killedBosses[args.mobId] = true
 		local count = #killedBosses + 1
 		killedBosses[count] = true
@@ -196,6 +194,8 @@ do
 
 		if count < 4 then
 			self:Message("stages", "cyan", CL.mob_killed:format(args.destName, count, 4), false)
+		else
+			unitTracker, currentHealth = {}, {}
 		end
 	end
 
@@ -212,8 +212,11 @@ do
 		for npcId, unitToken in next, unitTracker do
 			local line = bossList[npcId]
 			local currentHealthPercent = math.floor(mod:GetHealth(unitToken))
-			mod:SetInfoBar("health", line, currentHealthPercent/100)
-			mod:SetInfo("health", line + 1, ("%d%%"):format(currentHealthPercent))
+			if currentHealthPercent ~= currentHealth[npcId] then
+				currentHealth[npcId] = currentHealthPercent
+				mod:SetInfoBar("health", line, currentHealthPercent/100)
+				mod:SetInfo("health", line + 1, ("%d%%"):format(currentHealthPercent))
+			end
 		end
 	end
 end

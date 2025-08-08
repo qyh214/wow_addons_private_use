@@ -66,14 +66,14 @@ end
 
 ---@private
 function AF_SliderMixin:OnEnter()
-    self.thumb:SetColor("accent")
+    self.thumb:SetColor(self.accentColor)
     self.highlight:Show()
     self.valueBeforeClick = self.value
 end
 
 ---@private
 function AF_SliderMixin:OnLeave()
-    self.thumb:SetColor(AF.GetColorTable("accent", 0.7))
+    self.thumb:SetColor(AF.GetColorTable(self.accentColor, 0.7))
     self.highlight:Hide()
 end
 
@@ -96,9 +96,9 @@ end
 function AF_SliderMixin:OnEnable()
     self.label:SetColor("white")
     self.eb:SetEnabled(true)
-    self.thumb:SetColor(AF.GetColorTable("accent", 0.7))
+    self.thumb:SetColor(AF.GetColorTable(self.accentColor, 0.7))
     self.thumbBG:SetColor(AF.GetColorTable("black", 1))
-    self.thumbBG2:SetColor(AF.GetColorTable("accent", 0.25))
+    self.thumbBG2:SetColor(AF.GetColorTable(self.accentColor, 0.25))
     self.lowText:SetColor("gray")
     self.highText:SetColor("gray")
     self.percentSign:SetColor("gray")
@@ -127,6 +127,8 @@ function AF.CreateSlider(parent, text, width, low, high, step, isPercentage, sho
     slider:SetObeyStepOnDrag(true)
     slider:SetOrientation("HORIZONTAL")
     AF.SetSize(slider, width, 10)
+
+    slider.accentColor = AF.GetAddonAccentColorName()
 
     -- label --------------------------------------------------------
     local label = AF.CreateFontString(slider, text)
@@ -157,12 +159,12 @@ function AF.CreateSlider(parent, text, width, low, high, step, isPercentage, sho
     AF.SetSize(thumbBG, 10, 10)
     slider:SetThumbTexture(thumbBG)
 
-    local thumbBG2 =  AF.CreateTexture(slider, nil, AF.GetColorTable("accent", 0.25), "BACKGROUND", 2)
+    local thumbBG2 =  AF.CreateTexture(slider, nil, AF.GetColorTable(slider.accentColor, 0.25), "BACKGROUND", 2)
     slider.thumbBG2 = thumbBG2
     AF.SetPoint(thumbBG2, "TOPLEFT", 1, -1)
     AF.SetPoint(thumbBG2, "BOTTOMRIGHT", thumbBG, "BOTTOMLEFT")
 
-    local thumb = AF.CreateTexture(slider, nil, AF.GetColorTable("accent", 0.7), "OVERLAY", 7)
+    local thumb = AF.CreateTexture(slider, nil, AF.GetColorTable(slider.accentColor, 0.7), "OVERLAY", 7)
     slider.thumb = thumb
     AF.SetPoint(thumb, "TOPLEFT", thumbBG, 1, -1)
     AF.SetPoint(thumb, "BOTTOMRIGHT", thumbBG, -1, 1)
@@ -200,6 +202,8 @@ function AF.CreateSlider(parent, text, width, low, high, step, isPercentage, sho
     eb:SetScript("OnShow", function(self)
         if slider.value then self:SetText(slider.value * (isPercentage and 100 or 1)) end
     end)
+
+    eb.highlight:SetColor(AF.GetColorTable(slider.accentColor, 0.07))
     -----------------------------------------------------------------
 
     -- percentage ---------------------------------------------------
@@ -217,7 +221,7 @@ function AF.CreateSlider(parent, text, width, low, high, step, isPercentage, sho
     -----------------------------------------------------------------
 
     -- highlight ----------------------------------------------------
-    local highlight = AF.CreateTexture(slider, nil, AF.GetColorTable("accent", 0.05), "BACKGROUND", 1)
+    local highlight = AF.CreateTexture(slider, nil, AF.GetColorTable(slider.accentColor, 0.05), "BACKGROUND", 1)
     slider.highlight = highlight
     AF.SetPoint(highlight, "TOPLEFT", 1, -1)
     AF.SetPoint(highlight, "BOTTOMRIGHT", -1, 1)
@@ -357,6 +361,7 @@ function AF.CreateVerticalSlider(parent, text, height, low, high, step, isPercen
     slider.high = high
     slider.isPercentage = isPercentage
     slider.step = step
+    slider.accentColor = AF.GetAddonAccentColorName()
 
     -- label --------------------------------------------------------
     AF.ClearPoints(slider.label)
@@ -380,7 +385,7 @@ function AF.CreateVerticalSlider(parent, text, height, low, high, step, isPercen
     AF.SetPoint(slider.thumbBG2, "TOPLEFT", slider.thumbBG, "BOTTOMLEFT")
     AF.SetPoint(slider.thumbBG2, "BOTTOMRIGHT", -1, 1)
 
-    local thumbText = AF.CreateFontString(slider, nil, "accent")
+    local thumbText = AF.CreateFontString(slider, nil, slider.accentColor)
     AF.SetPoint(thumbText, "RIGHT", slider.thumbBG, "LEFT", -2, 0)
     thumbText:Hide()
     AF.CreateFadeInOutAnimation(thumbText)

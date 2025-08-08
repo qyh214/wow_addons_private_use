@@ -31,7 +31,7 @@ end
 -- Preferences
 -- ----------------------------------------------------------------------------
 local metaVersion = C_AddOns.GetAddOnMetadata(AddOnFolderName, "Version")
-local isDevelopmentVersion = metaVersion == "v3.6.2"
+local isDevelopmentVersion = metaVersion == "v4.0.2"
 
 local buildVersion = isDevelopmentVersion and "Development Version" or metaVersion
 
@@ -56,7 +56,7 @@ local Preferences = {
     },
     GetOptions = function()
         if not Options then
-            local DB = private.DB.profile
+            local DB = private.DB.profile or {}
 
             local count = 1
             local function increment() count = count + 1; return count end;
@@ -80,6 +80,7 @@ local Preferences = {
                                 get = function()
                                     return DB.CompactTooltips
                                 end,
+                                ---@diagnostic disable-next-line: unused-local
                                 set = function(arg1, value)
                                     DB.CompactTooltips = value
                                 end,

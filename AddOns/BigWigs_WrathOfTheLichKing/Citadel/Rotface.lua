@@ -44,13 +44,13 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "Explode", 69839)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "Ooze", 69558)
 
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:BossYell("Engage", L["engage_trigger"])
 
 	self:Death("Win", 36627)
 end
 
 function mod:OnEngage()
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
 	self:Berserk(600, true)
 	self:Bar(69508, 19, L["spray_bar"])
 	if self:Heroic() then

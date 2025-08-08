@@ -1,0 +1,37 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<!-- Load -->
+	<Script file="Load.lua"/>
+
+	<!-- Library -->
+	<Include file="Library/Load.xml"/>
+
+	<!-- Core -->
+	<Script file="Core/Common_Shared.lua"/>
+	<Script file="Core/Common_Variables.lua"/>
+
+	<!-- Packages -->
+	<Include file="Packages/addon.C.TagManager/Load.xml"/>
+	<Include file="Packages/addon.C.CallbackRegistry/Load.xml"/>
+	<Include file="Packages/addon.C.PrefabRegistry/Load.xml"/>
+
+	<!-- Modules -->
+	<Include file="Modules/addon.C.SharedVariables/Load.xml"/>
+	<Include file="Modules/!addon.C.AddonInfo/Load.xml"/>
+	<Include file="Modules/addon.C.Database/Load.xml"/>
+	<Include file="Modules/addon.C.Frame/Load.xml"/>
+	<Include file="Modules/addon.C.Fonts/Load.xml"/>
+	<Include file="Modules/addon.C.EventListener/Load.xml"/>
+	<Include file="Modules/addon.C.Animation/Load.xml"/>
+
+	<Include file="Modules/addon.C.API/Load.xml"/>
+	<Include file="Modules/addon.C.Sound/Load.xml"/>
+	<Include file="Modules/addon.C.DevTools/Load.xml"/>
+	<Include file="Modules/addon.C.FrameTemplates/Load.xml"/>
+	<Include file="Modules/addon.C.WoWClient/Load.xml"/>
+	<Include file="Modules/addon.C.SlashCommand/Load.xml"/>
+
+	<Include file="Modules/addon.C.Config/Load.xml"/>
+	<Include file="Modules/addon.C.Initializer/Load.xml"/>
+</Ui>

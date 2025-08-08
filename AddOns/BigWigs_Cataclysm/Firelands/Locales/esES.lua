@@ -72,6 +72,7 @@ if L then
 	L.immolationyou_message = "Trampa de inmolación"
 	L.crystal = "Trampa de cristal"
 	L.crystal_desc = "Avisa a quien Shannox lance una trampa de cristal debajo."
+	--L.facerage_trigger = "Go for the throat!"
 end
 
 L = BigWigs:NewBossLocale("Baleroc", "esES")

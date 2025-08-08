@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2024 Bernhard Saumweber
+-- Copyright (C) 2025 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ local function ShouldCancelApplication(resultID)
         local _, appStatus, pendingStatus, appDuration = C_LFGList.GetApplicationInfo(resultID)
         local isApplication = appStatus ~= "none" or pendingStatus
         local searchResultInfo = PGF.GetSearchResultInfo(resultID)
-        return not isApplication and not searchResultInfo.isDelisted
+        return not isApplication and searchResultInfo and not searchResultInfo.isDelisted
     end
     return false
 end

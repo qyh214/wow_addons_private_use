@@ -2,25 +2,25 @@
 -- Module Declaration
 --
 
-local plugin = BigWigs:NewPlugin("Countdown")
+local plugin, L = BigWigs:NewPlugin("Countdown")
 if not plugin then return end
 
-local voiceMap = {
-	enUS = {"English: Default (%s)", "Male", "Female"},
-	deDE = {"Deutsch: Standard (%s)", "Männlich", "Weiblich"},
-	esES = {"Español (es): Predeterminado (%s)", "Masculino", "Femenino"},
-	esMX = {"Español (mx): Predeterminado (%s)", "Masculino", "Femenino"},
-	frFR = {"Français : Défaut (%s)", "Homme", "Femme"},
-	itIT = {"Italiano: Predefinito (%s)", "Maschio", "Femmina"},
-	koKR = {"한국어 : 기본 (%s)", "남성", "여성"},
-	ptBR = {"Português: Padrão (%s)", "Masculino", "Feminino"},
-	ruRU = {"Русский: По умолчанию (%s)", "Мужской", "Женский"},
-	zhCN = {"简体中文:默认(%s)", "男性", "女性"},
-	zhTW = {"繁體中文:預設值(%s)", "男性", "女性"},
-}
 local defaultVoice = "English: Amy"
 do
 	local locale = GetLocale()
+	local voiceMap = {
+		enUS = {"English: Default (%s)", "Male", "Female"},
+		deDE = {"Deutsch: Standard (%s)", "Männlich", "Weiblich"},
+		esES = {"Español (es): Predeterminado (%s)", "Masculino", "Femenino"},
+		esMX = {"Español (mx): Predeterminado (%s)", "Masculino", "Femenino"},
+		frFR = {"Français : Défaut (%s)", "Homme", "Femme"},
+		itIT = {"Italiano: Predefinito (%s)", "Maschio", "Femmina"},
+		koKR = {"한국어 : 기본 (%s)", "남성", "여성"},
+		ptBR = {"Português: Padrão (%s)", "Masculino", "Feminino"},
+		ruRU = {"Русский: По умолчанию (%s)", "Мужской", "Женский"},
+		zhCN = {"简体中文:默认(%s)", "男性", "女性"},
+		zhTW = {"繁體中文:預設值(%s)", "男性", "女性"},
+	}
 	if locale ~= "enUS" and voiceMap[locale] then
 		defaultVoice = ("%s: Default (Female)"):format(locale)
 	end
@@ -33,7 +33,6 @@ end
 local media = LibStub("LibSharedMedia-3.0")
 local FONT = media.MediaType and media.MediaType.FONT or "font"
 local BigWigsAPI = BigWigsAPI
-local L = BigWigsAPI:GetLocale("BigWigs")
 plugin.displayName = L.countdown
 
 local countdownAnchor = nil
@@ -140,73 +139,6 @@ local function updateProfile()
 	end
 end
 
--------------------------------------------------------------------------------
--- Countdown Registration
---
-
-BigWigsAPI:RegisterCountdown(L.none, { false, false, false, false, false })
-BigWigsAPI:RegisterCountdown("English: Amy", {
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Amy\\1.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Amy\\2.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Amy\\3.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Amy\\4.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Amy\\5.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Amy\\6.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Amy\\7.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Amy\\8.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Amy\\9.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Amy\\10.ogg",
-})
-BigWigsAPI:RegisterCountdown("English: David", {
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\David\\1.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\David\\2.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\David\\3.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\David\\4.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\David\\5.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\David\\6.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\David\\7.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\David\\8.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\David\\9.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\David\\10.ogg",
-})
-BigWigsAPI:RegisterCountdown("English: Jim", {
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Jim\\1.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Jim\\2.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Jim\\3.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Jim\\4.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Jim\\5.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Jim\\6.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Jim\\7.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Jim\\8.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Jim\\9.ogg",
-	"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Jim\\10.ogg",
-})
-
-for locale, info in next, voiceMap do
-	local name, male, female = unpack(info)
-
-	BigWigsAPI:RegisterCountdown(("%s: Default (Male)"):format(locale), name:format(male), {
-		"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Heroes\\"..locale.."\\male\\1.ogg",
-		"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Heroes\\"..locale.."\\male\\2.ogg",
-		"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Heroes\\"..locale.."\\male\\3.ogg",
-		"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Heroes\\"..locale.."\\male\\4.ogg",
-		"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Heroes\\"..locale.."\\male\\5.ogg",
-	})
-
-	local id = ("%s: Default (Female)"):format(locale)
-	if locale == "esMX" then
-		-- never extracted the esMX female announcer and it's gone now, so just use esES
-		locale = "esES"
-	end
-	BigWigsAPI:RegisterCountdown(id, name:format(female), {
-		"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Heroes\\"..locale.."\\female\\1.ogg",
-		"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Heroes\\"..locale.."\\female\\2.ogg",
-		"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Heroes\\"..locale.."\\female\\3.ogg",
-		"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Heroes\\"..locale.."\\female\\4.ogg",
-		"Interface\\AddOns\\BigWigs\\Media\\Sounds\\Heroes\\"..locale.."\\female\\5.ogg",
-	})
-end
-
 --------------------------------------------------------------------------------
 -- Anchors & Frames
 --
@@ -289,12 +221,13 @@ local function voiceSorting()
 	local list = BigWigsAPI:GetCountdownList()
 	local sorted = {}
 	for k in next, list do
-		if k ~= L.none then
+		if k ~= "none" and k ~= "simple" then
 			sorted[#sorted + 1] = k
 		end
 	end
-	sort(sorted, function(a, b) return list[a] < list[b] end)
-	tinsert(sorted, 1, L.none)
+	table.sort(sorted, function(a, b) return list[a] < list[b] end)
+	table.insert(sorted, 1, "none")
+	table.insert(sorted, 2, "simple")
 	return sorted
 end
 
@@ -630,7 +563,7 @@ do
 			return lowestCountdownTable == tableToMatch
 		end
 
-		function plugin:BigWigs_StartCountdown(_, module, key, text, time, guid, customVoice, customStart, audioOnly)
+		function plugin:BigWigs_StartCountdown(_, module, key, text, time, guid, customVoice, customStart, audioOnly, customAudioStart)
 			if module and time >= 1 then
 				local countdownTable = {GetTime()+time}
 				if guid then
@@ -670,7 +603,7 @@ do
 								plugin:SetText(textCount, countdownTable)
 							end
 							local voice = customVoice or plugin.db.profile.bossCountdowns[module.name] and plugin.db.profile.bossCountdowns[module.name][key] or plugin.db.profile.voice
-							local sound = BigWigsAPI:GetCountdownSound(voice, textCount)
+							local sound = textCount <= (customAudioStart or textCount) and BigWigsAPI:GetCountdownSound(voice, textCount)
 							if sound then
 								self:PlaySoundFile(sound)
 							end

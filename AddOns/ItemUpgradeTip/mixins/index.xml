@@ -18,6 +18,9 @@
     <Script file="tabs/mythicPlus/MythicPlusMixin.lua" />
     <Script file="tabs/mythicPlus/MythicPlusRowMixin.lua" />
     
+    <Script file="tabs/delves/DelvesMixin.lua" />
+    <Script file="tabs/delves/DelvesRowMixin.lua" />
+    
     <Script file="tabs/raid/RaidMixin.lua" />
     <Script file="tabs/raid/RaidRowMixin.lua" />
     

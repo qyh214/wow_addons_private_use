@@ -273,28 +273,6 @@ function Addon:DeleteData()
 	end
 end
 
-local function GetNewName(name, isGroup)
-	local nameDictionary = {};
-	local specTable = Addon:GetSpecTable();
-	for _, data in ipairs(specTable) do
-		nameDictionary[data.name] = true;
-	end
-
-	local prefix = name and #name > 0 and name or (isGroup and "New Group" or "New Config");
-	if not nameDictionary[prefix] then
-		return prefix;
-	end
-
-	local number = 1
-	while true do
-		number = number + 1;
-		local newName = string.format("%s %02d", prefix, number);
-		if not nameDictionary[newName] then
-			return newName;
-		end
-	end
-end
-
 local function GetImportDataList(lines)
 	local tempDataList = {};
 
@@ -353,7 +331,7 @@ function Addon:ImportDataText(lines)
 		if tempData.text then
 			-- Config
 			local data = {
-				name = GetNewName(tempData.name),
+				name = Addon:GetNewName(tempData.name),
 				icon = tempData.icon or Addon.DEFAULT_ICON,
 				pvp1 = tempData.pvp1,
 				pvp2 = tempData.pvp2,
@@ -375,7 +353,7 @@ function Addon:ImportDataText(lines)
 			table.insert(
 				specTable,
 				{
-					name = GetNewName(tempData.name, true),
+					name = Addon:GetNewName(tempData.name, true),
 					icon = tempData.icon or Addon.DEFAULT_ICON,
 					isExpanded = false;
 				}
@@ -455,21 +433,26 @@ function Addon:InspectImport()
 		isInGroup = false,
 	};
 
+	local classID = Addon.TalentsFrame:GetClassID();
+	local classFilename = classID and select(2, GetClassInfo(classID));
+	local specID = Addon.TalentsFrame:GetSpecID();
+	if not classFilename or not specID then
+		Addon:Print("Error: Failed to get class/spec info.");
+	end
+
 	local specTable = nil;
-	local classFilename, classID = select(2, UnitClass("target"));
-	if classFilename and classID then
-		local specID = GetInspectSpecialization("target");
-		for specIndex = 1, C_SpecializationInfo.GetNumSpecializationsForClassID(classID) do
-			if specID == GetSpecializationInfoForClassID(classID, specIndex) then
-				specTable = Addon:GetSpecTable(classFilename, specIndex);
-			end
+	for specIndex = 1, C_SpecializationInfo.GetNumSpecializationsForClassID(classID) do
+		if specID == GetSpecializationInfoForClassID(classID, specIndex) then
+			specTable = Addon:GetSpecTable(classFilename, specIndex);
 		end
 	end
 
 	if not specTable then
-		Addon:Print("Error: Failed to get the unit class/spec info.");
+		Addon:Print("Error: Failed to get the unit class/spec data.");
 		return;
 	end
+
+	newData.name = Addon:GetNewName("Imported Data", false, specTable);
 
 	local parent = Addon.ParentFrame;
 	local text = parent:GetInspectUnit() and C_Traits.GenerateInspectImportString(parent:GetInspectUnit()) or parent:GetInspectString();
@@ -480,36 +463,10 @@ function Addon:InspectImport()
 		return;
 	end
 
-	local unitName = UnitName("target");
-	if unitName and #unitName > 0 then
-		newData.name = "Imported from "..unitName;
-	else
-		Addon:Print("Error: Failed to get the unit name.");
-		return;
-	end
-
 	for talentIndex = 1, 3 do
 		newData["pvp"..talentIndex] = C_SpecializationInfo.GetInspectSelectedPvpTalent("target", talentIndex);
 	end
 
-	-- Update
-	for _, data in pairs(specTable) do
-		if data.name == newData.name then
-			if data.text then
-				data.text = newData.text;
-				data.pvp1 = newData.pvp1;
-				data.pvp2 = newData.pvp2;
-				data.pvp3 = newData.pvp3;
-				Addon:Print("Success:", newData.name, "(Update)");
-				return;
-			else
-				Addon:Print("Error: Cannot import because a group with the same name already exists.");
-				return;
-			end
-		end
-	end
-
-	-- Add
 	table.insert(specTable, 1, newData);
 	Addon:Print("Success:", newData.name);
 end

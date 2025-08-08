@@ -4,11 +4,12 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 function ns.LoadMiniMapLocationinfo(self)
 local db = ns.Addon.db.profile
 local minimap = ns.minimap
+ns._currentSourceFile = "RetailZoneMiniMapLocation.lua"
 
 --#####################################################################################################
 --##########################        function to hide all minimap below         ##########################
 --#####################################################################################################
-if not db.activate.HideMapNote then
+  if not db.activate.HideMapNote then
 
     
     --#####################################################################################################
@@ -754,11 +755,6 @@ if not db.activate.HideMapNote then
     
         if self.db.profile.showMiniMapKhazAlgar then
 
-        -- Khaz Algar MapNotesIcons
-          if self.db.profile.showMiniMapHordeAllyIcons then
-            minimap[2248][49764405] = { mnID = 2339, name = "", type = "MNL", showInZone = true, TransportName = L["Dornogal"] .. " - " .. FACTION_NEUTRAL .. "\n" .. "\n" .. L["Portals"] .. "\n" .. " ==> " .. ORGRIMMAR .. "\n" .. " ==> " .. STORMWIND .. "\n" .. "\n" .. L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. SPLASH_BATTLEFORAZEROTH_8_2_0_FEATURE1_TITLE .. "\n" .. " ==> " .. L["Maldraxxus"] .. "\n" .. " ==> " .. L["Zuldazar"] .."\n" .. "\n" .. CALENDAR_TYPE_DUNGEON .. "\n" .. " ==> " .. "The Rookery" } -- Dornogal
-          end
-
           -- Khaz Algar Transporting 
           if db.activate.MiniMapTransporting then
 
@@ -767,9 +763,11 @@ if not db.activate.HideMapNote then
               minimap[2255][57344184] = { mnID = 2339, name = L["Portal"], dnID = "",  achievementID = 19559, showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=19559", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dornogal to Azj-Kahet if u finished the achievement=19559
               minimap[2367][49953591] = { mnID = 2339, name = L["Portal"], dnID = "",  achievementID = 40725, showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=40725",  type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Chamber of Memory
               minimap[2248][53024511] = { mnID = 2339, name = L["Portal"], dnID = "",  achievementID = 19559, showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=19559", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dornogal to Azj-Kahet if u finished the achievement=19559
-              minimap[2248][50554183] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. L["Ardenweald"] .. "\n" .. " ==> " .. L["Bastion"] .. "\n" .. " ==> " .. L["Tiragarde Sound"] .. "\n" .. " ==> " .. L["Twilight Highlands"] } --  Portal from Dornogal to the Timeways
+              minimap[2248][50554183] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. "Tazavesh" .. "\n" .. " ==> " .. "Revendreth" } --  Portal from Dornogal to the Timeways
               minimap[2248][44634679] = { mnID = 2367, name = L["Portal"], dnID = "",  achievementID =  40725, showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=40725", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Chamber of Memory
               minimap[2346][27805398] = { mnID = 2339, name = L["Portal"], dnID = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/quest=86535/test-run", questID = 86535, type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Undermine to Dornogal
+              minimap[2472][62549423] = { mnID = 2339, name = L["Portal"], dnID = "", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Tazavesh to Dornogal
+              minimap[2371][69358829] = { mnID = 2339, name = L["Portal"], dnID = "", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Tazavesh to Dornogal
 
               if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                 minimap[2248][46913872] = { mnID = 2339, name = "", type = "HPortal", TransportName = L["Portal"] .. "\n" .. ORGRIMMAR, showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dornogal to Orgrimmar
@@ -844,7 +842,7 @@ if not db.activate.HideMapNote then
             if self.db.profile.showMiniMapFishing then
               minimap[2216][51422519] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
               minimap[2213][51422519] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-            
+              minimap[2371][75503411] = { npcID = 244485, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
             end
           
             if self.db.profile.showMiniMapCooking then
@@ -887,4 +885,5 @@ if not db.activate.HideMapNote then
         end
       end
   end
+  
 end

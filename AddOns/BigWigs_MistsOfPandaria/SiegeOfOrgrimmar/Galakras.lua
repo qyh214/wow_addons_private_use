@@ -288,7 +288,7 @@ function mod:Adds(_, _, unit, _, _, target)
 			self:Bar("adds", 59, L.adds, L.adds_icon)
 			self:Bar("drakes", 168, L.drakes, L.drakes_icon)
 			addsCounter = 1
-		elseif UnitIsPlayer(target) then
+		elseif self:UnitIsPlayer(target) then
 			self:MessageOld("adds", "yellow", "info", CL.incoming:format(L.adds), L.adds_icon)
 			addsCounter = addsCounter + 1
 			if (addsCounter + 1) % 4 == 0 then

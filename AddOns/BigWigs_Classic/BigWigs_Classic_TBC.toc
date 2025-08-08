@@ -8,9 +8,9 @@
 ## Title-itIT: BigWigs [|cffeda55fClassic|r]
 ## Title-koKR: BigWigs [|cffeda55f오리지널|r]
 ## Title-ruRU: BigWigs [|cffeda55fClassic|r]
-## Title-ptBR: BigWigs [|cffeda55fClassic|r]
-## Title-esES: BigWigs [|cffeda55fClassic|r]
-## Title-esMX: BigWigs [|cffeda55fClassic|r]
+## Title-ptBR: BigWigs [|cffeda55fClássico|r]
+## Title-esES: BigWigs [|cffeda55fClásico|r]
+## Title-esMX: BigWigs [|cffeda55fClásico|r]
 ## Notes: A collection of BigWigs modules from the Classic era.
 ## Notes-zhCN: BigWigs 经典旧世模块。
 ## Notes-zhTW: A collection of BigWigs modules from the Classic era.
@@ -19,13 +19,13 @@
 ## Notes-itIT: A collection of BigWigs modules from the Classic era.
 ## Notes-koKR: 오리지널 BigWigs 모듈 모음집입니다.
 ## Notes-ruRU: A collection of BigWigs modules from the Classic era.
-## Notes-ptBR: A collection of BigWigs modules from the Classic era.
-## Notes-esES: A collection of BigWigs modules from the Classic era.
-## Notes-esMX: A collection of BigWigs modules from the Classic era.
+## Notes-ptBR: Uma coleção de módulos BigWigs da era clássica.
+## Notes-esES: Una colección de módulos BigWigs de la era clásica.
+## Notes-esMX: Una colección de módulos BigWigs de la era clásica.
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
-## Version: v11.1.16
+## Version: v11.1.52
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_legacy.tga
 
 ## X-Category: Raid

@@ -2,14 +2,13 @@
 -- Module Declaration
 --
 
-local plugin = BigWigs:NewPlugin("Break")
+local plugin, L = BigWigs:NewPlugin("Break")
 if not plugin then return end
 
 -------------------------------------------------------------------------------
 -- Locals
 --
 
-local L = BigWigsAPI:GetLocale("BigWigs")
 --local GetInstanceInfo = BigWigsLoader.GetInstanceInfo
 --local DoCountdown = BigWigsLoader.DoCountdown
 --local zoneTable = BigWigsLoader.zoneTbl
@@ -173,7 +172,7 @@ end
 
 local SendAddonMessage = BigWigsLoader.SendAddonMessage
 local dbmPrefix = BigWigsLoader.dbmPrefix
-SlashCmdList.BIGWIGSBREAK = function(input)
+BigWigsAPI.RegisterSlashCommand("/break", function(input)
 	if not plugin:IsEnabled() then BigWigs:Enable() end
 	if IsEncounterInProgress() then BigWigs:Print(L.encounterRestricted) return end -- Doesn't make sense to allow this in combat
 	if not IsInGroup() or UnitIsGroupLeader("player") or UnitIsGroupAssistant("player") then -- Solo or leader/assist
@@ -198,5 +197,4 @@ SlashCmdList.BIGWIGSBREAK = function(input)
 	else
 		BigWigs:Print(L.requiresLeadOrAssist)
 	end
-end
-SLASH_BIGWIGSBREAK1 = "/break"
+end)

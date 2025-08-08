@@ -12,6 +12,7 @@ mod:SetEncounterID(664)
 --
 
 local castCollector = {}
+local fireThrottle = 2
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -66,8 +67,9 @@ end
 
 function mod:OnEngage()
 	castCollector = {}
-	self:CDBar(19451, 8.1) -- Enrage / Frenzy
-	self:CDBar(19408, 9.7, CL.fear, L["19408_icon"]) -- Panic
+	fireThrottle = 2
+	self:CDBar(19451, 7.1) -- Enrage / Frenzy
+	self:CDBar(19408, 8.7, CL.fear, L["19408_icon"]) -- Panic
 end
 
 --------------------------------------------------------------------------------
@@ -119,9 +121,14 @@ function mod:EnrageFrenzyDispelled(args)
 	end
 end
 
-function mod:ConflagrationApplied(args)
-	if self:Me(args.destGUID) then
-		self:PersonalMessage(args.spellId, "underyou", CL.fire)
-		self:PlaySound(args.spellId, "underyou")
+do
+	local prev = 0
+	function mod:ConflagrationApplied(args)
+		if self:Me(args.destGUID) and args.time - prev > fireThrottle then -- Some people (warriors) enjoy cleansing away their sins (building rage)
+			prev = args.time
+			fireThrottle = fireThrottle + 1
+			self:PersonalMessage(args.spellId, "underyou", CL.fire)
+			self:PlaySound(args.spellId, "underyou")
+		end
 	end
 end

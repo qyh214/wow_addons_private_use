@@ -56,6 +56,7 @@ local list = {
 		{AuraID = 371124, UnitID = "player"},	-- 沉静西风药水
 		{AuraID = 371024, UnitID = "player"},	-- 元素强能药水
 		{AuraID = 371028, UnitID = "player"},	-- 究极元素强能药水
+		{AuraID = 431932, UnitID = "player"},	-- 淬火药水
 		-- 11.0 饰品
 		{AuraID = 92099, UnitID = "player"},	-- 灰鳞的优雅
 		{AuraID = 268769, UnitID = "player"},	-- 望远镜饰品
@@ -67,6 +68,7 @@ local list = {
 		{AuraID = 449947, UnitID = "player", Text = NPE_JUMP},	-- 奸邪发射机，跳3下
 		{AuraID = 1213433, UnitID = "player", Text = L["Crit"]},	-- 哈哈棱镜
 		{AuraID = 1213434, UnitID = "player", Text = L["Haste"]},	-- 哈哈棱镜
+		{AuraID = 466681, UnitID = "player"},	-- 纸牌屋
 		-- 10.0 饰品
 		{AuraID = 381476, UnitID = "player"},	-- 爆发烈焰
 		{AuraID = 383941, UnitID = "player"},	-- 崩坏之力
@@ -283,6 +285,7 @@ local list = {
 		{AuraID = 333299, UnitID = "player"},	-- 伤逝剧场，荒芜诅咒
 		{AuraID = 319637, UnitID = "player"},	-- 伤逝剧场，魂魄归体
 		{AuraID = 330725, UnitID = "player", Flash = true},	-- 伤逝剧场，暗影易伤
+		{AuraID = 458082, UnitID = "player", Flash = true},	-- 驭雷栖巢，驭雷者电荷
 		-- Raids
 		{AuraID = 464748, UnitID = "player", Flash = true},	-- 束缚之网，流丝
 	},

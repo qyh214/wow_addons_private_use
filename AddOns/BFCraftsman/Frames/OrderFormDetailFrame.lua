@@ -71,7 +71,7 @@ local function GetCraftersOnMyServer(t)
     if not t then return end
     local craftersOnMyServer = {}
     for _, crafter in pairs(t) do
-        if AF.IsConnectedRealm(crafter[1]) and (crafter[3] == AF.player.faction or not crafter[3]) then
+        if AF.IsConnectedRealm(crafter[1]) then -- and (crafter[3] == AF.player.faction or not crafter[3]) then
             -- NOTE: same realm, same faction, or no faction (old data)
             tinsert(craftersOnMyServer, crafter)
         end
@@ -109,7 +109,8 @@ local crafterPanePool = AF.CreateObjectPool(function()
 
     function f:Load(t)
         f.name = t[1]
-        eb:SetText(AF.WrapTextInColor(t[1], t[2]))
+        local faction = AF.GetIconString(t[3] and ("Faction_" .. t[3]))
+        eb:SetText(faction .. AF.WrapTextInColor(t[1], t[2]))
         eb:SetCursorPosition(0)
     end
 

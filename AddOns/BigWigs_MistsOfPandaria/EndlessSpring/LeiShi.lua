@@ -143,7 +143,7 @@ end
 
 function mod:Spray(args)
 	local amount = args.amount or 1
-	if UnitIsPlayer(args.destName) and amount > (self:LFR() and 11 or 5) and amount % 2 == 0 then
+	if self:Player(args.destFlags) and amount > (self:LFR() and 11 or 5) and amount % 2 == 0 then
 		self:StackMessageOld(args.spellId, args.destName, amount, "orange", "info")
 	end
 end

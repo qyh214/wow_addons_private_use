@@ -20,7 +20,6 @@ local bossGUID = nil
 local L = mod:GetLocale()
 if L then
 	L.warmup_trigger = "Too late, friends!"
-	L.tank_bomb = "Tank Bomb"
 end
 
 --------------------------------------------------------------------------------
@@ -34,7 +33,7 @@ function mod:GetOptions()
 		{23620, "SAY", "SAY_COUNTDOWN", "ME_ONLY_EMPHASIZE"}, -- Burning Adrenaline
 	},nil,{
 		[18173] = CL.bomb, -- Burning Adrenaline (Bomb)
-		[23620] = L.tank_bomb, -- Burning Adrenaline (Tank Bomb)
+		[23620] = CL.tank_bomb, -- Burning Adrenaline (Tank Bomb)
 	}
 end
 
@@ -59,7 +58,7 @@ end
 function mod:OnEngage()
 	bossGUID = nil
 	self:Bar(18173, self:GetSeason() == 2 and 21 or 16, CL.bomb) -- Burning Adrenaline
-	self:Bar(23620, self:GetSeason() == 2 and 11 or 45, L.tank_bomb) -- Burning Adrenaline
+	self:Bar(23620, self:GetSeason() == 2 and 11 or 45, CL.tank_bomb) -- Burning Adrenaline
 end
 
 --------------------------------------------------------------------------------
@@ -96,16 +95,16 @@ function mod:BurningAdrenalineRemoved(args)
 end
 
 function mod:BurningAdrenalineTank(args)
-	self:Bar(args.spellId, 45, L.tank_bomb)
+	self:Bar(args.spellId, 45, CL.tank_bomb)
 end
 
 function mod:BurningAdrenalineTankApplied(args)
-	self:TargetMessage(args.spellId, "purple", args.destName, L.tank_bomb)
+	self:TargetMessage(args.spellId, "purple", args.destName, CL.tank_bomb)
 	if self:Me(args.destGUID) then
-		self:Say(args.spellId, L.tank_bomb, nil, "Tank Bomb")
+		self:Say(args.spellId, CL.tank_bomb, nil, "Tank Bomb")
 		self:SayCountdown(args.spellId, 20, nil, 5)
 	end
-	self:TargetBar(args.spellId, 20, args.destName, L.tank_bomb)
+	self:TargetBar(args.spellId, 20, args.destName, CL.tank_bomb)
 	self:PlaySound(args.spellId, "long")
 end
 
@@ -113,7 +112,7 @@ function mod:BurningAdrenalineTankRemoved(args)
 	if self:Me(args.destGUID) then
 		self:CancelSayCountdown(args.spellId)
 	end
-	self:StopBar(L.tank_bomb, args.destName)
+	self:StopBar(CL.tank_bomb, args.destName)
 end
 
 -- Season of Discovery
@@ -125,9 +124,9 @@ function mod:BurningAdrenalineAppliedSoD(args)
 	local unit = bossGUID and self:GetUnitIdByGUID(bossGUID)
 	local targetUnit = self:UnitTokenFromGUID(args.destGUID)
 	if unit and targetUnit and self:Tanking(unit, targetUnit) then
-		self:TargetMessage(23620, "purple", args.destName, L.tank_bomb)
+		self:TargetMessage(23620, "purple", args.destName, CL.tank_bomb)
 		if self:Me(args.destGUID) then
-			self:Say(23620, L.tank_bomb, nil, "Tank Bomb")
+			self:Say(23620, CL.tank_bomb, nil, "Tank Bomb")
 			self:PlaySound(23620, "warning", nil, args.destName)
 		else
 			self:PlaySound(23620, "long", nil, args.destName)
@@ -149,7 +148,7 @@ function mod:BurningAdrenalineAppliedDoseSoD(args)
 			local unit = bossGUID and self:GetUnitIdByGUID(bossGUID)
 			local targetUnit = self:UnitTokenFromGUID(args.destGUID)
 			if unit and targetUnit and self:Tanking(unit, targetUnit) then
-				self:StackMessage(23620, "purple", args.destName, args.amount, 30, L.tank_bomb)
+				self:StackMessage(23620, "purple", args.destName, args.amount, 30, CL.tank_bomb)
 				self:PlaySound(23620, "long", nil, args.destName)
 			end
 		end
@@ -157,16 +156,16 @@ function mod:BurningAdrenalineAppliedDoseSoD(args)
 end
 
 function mod:BurningAdrenalineTankAppliedSoD(args)
-	self:TargetMessage(23620, "purple", args.destName, L.tank_bomb)
+	self:TargetMessage(23620, "purple", args.destName, CL.tank_bomb)
 	if self:Me(args.destGUID) then
-		self:Say(23620, L.tank_bomb, nil, "Tank Bomb")
+		self:Say(23620, CL.tank_bomb, nil, "Tank Bomb")
 	end
 	self:PlaySound(23620, "long", nil, args.destName)
 end
 
 function mod:BurningAdrenalineTankAppliedDoseSoD(args)
 	if args.amount % 10 == 0 then
-		self:StackMessage(23620, "purple", args.destName, args.amount, 30, L.tank_bomb)
+		self:StackMessage(23620, "purple", args.destName, args.amount, 30, CL.tank_bomb)
 		self:PlaySound(23620, "long", nil, args.destName)
 	end
 end

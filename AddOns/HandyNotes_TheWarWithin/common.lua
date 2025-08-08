@@ -81,6 +81,12 @@ ns.groups.BOOKWORM = Group('bookworm', 4549129, {
     achievement = 40629
 })
 
+ns.groups.FIGHTER = Group('fighter', 135945, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 41999
+})
+
 ns.groups.FLAMEGARDS_HOPE = Group('flamegards_hope', 463526, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.ACHIEVEMENT,
@@ -241,9 +247,16 @@ ns.groups.CRITTER_LOVE = Group('critter_love', 3459801, {
     achievement = 40475
 })
 
-ns.groups.DRAGONRACE = Group('dragonrace', 1100022, {
+ns.groups.PURRKINS = Group('purrkins', 3742947, {
     defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.EXPANSION
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 42729
+})
+
+ns.groups.KARESH_LORE_HUNTER = Group('karesh_lore_hunter', 1723993, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 60890
 })
 -------------------------------------------------------------------------------
 ---------------------------- KHAZ ALGAR LORE HUNTER ---------------------------
@@ -348,10 +361,24 @@ local FlightMaster = Class('FlightMaster', Collectible, {
 ns.node.FlightMaster = FlightMaster
 
 -------------------------------------------------------------------------------
+-------------------- ACHIEVEMENT: FIGHTER OF THE NIGHTMAN ---------------------
+-------------------------------------------------------------------------------
+
+local SuspiciousDocument = Collectible({
+    label = L['suspicious_document_label'],
+    icon = 'peg_bl',
+    scale = 1.5,
+    note = L['suspicious_document_note'],
+    group = ns.groups.FIGHTER
+})
+
+ns.node.SuspiciousDocument = SuspiciousDocument
+
+-------------------------------------------------------------------------------
 ----------------------------- WORLDSOUL MEMORIES ------------------------------
 -------------------------------------------------------------------------------
 
-local WORLDSOUL_REWARDS = {
+local WORLDSOUL_AREA_POIS = {
     [7833] = {
         Achievement({id = 40252, criteria = 67594}), -- Descendants of Distant Waters
         Achievement({id = 40314, criteria = 68241}), -- Echoing Fragment: Hallowfall
@@ -408,28 +435,12 @@ local WorldsoulMemory = Class('WorldsoulMemory', Collectible, {
 }) -- Worldsoul Memory
 
 function WorldsoulMemory.getters:rewards()
-    return WORLDSOUL_REWARDS[self.areaPoiID]
+    return WORLDSOUL_AREA_POIS[self.areaPoiID]
 end
 
 ns.node.WorldsoulMemory = WorldsoulMemory
 
-hooksecurefunc(AreaPOIEventPinMixin, 'OnMouseEnter', function(self)
-    if not self.poiInfo then return end
-    local areaPoiID = self.poiInfo.areaPoiID
-    if not WORLDSOUL_REWARDS[areaPoiID] then return end
-    local mapID = self:GetMap().mapID
-    local group = ns.groups.WORLDSOUL_MEMORIES
-    if group:GetDisplay(mapID) then
-        local rewards = WORLDSOUL_REWARDS[areaPoiID]
-        for _, reward in pairs(rewards) do
-            if reward and reward:IsEnabled() then
-                reward:Render(GameTooltip)
-            end
-        end
-        GameTooltip:AddLine(' ')
-        GameTooltip:Show()
-    end
-end)
+ns.hooks.areapoievent.Add(ns.groups.WORLDSOUL_MEMORIES, WORLDSOUL_AREA_POIS)
 
 -------------------------------------------------------------------------------
 ------------------------------ KHAZ ALGAR SAFARI ------------------------------

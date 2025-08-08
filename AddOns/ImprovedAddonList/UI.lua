@@ -453,7 +453,9 @@ function Addon:ShowAlertDialog(alertInfo)
 end
 
 function Addon:ShowUI()
-    self:HideUIPanel(GameMenuFrame)
+    if not InCombatLockdown() then
+        HideUIPanel(GameMenuFrame)
+    end
     self:GetOrCreateUI():Show()
 end
 

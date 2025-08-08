@@ -1,11 +1,10 @@
 local L = BigWigs:NewBossLocale("The Stone Guard", "koKR")
 if not L then return end
 if L then
-	L.petrifications = "석화"
-	L.petrifications_desc = "우두머리가 언제 석화를 시작하는지 경고합니다."
-
-	L.overload = "과부화"
-	L.overload_desc = "모든 유형의 과부화를 경고합니다."
+	L[60051] = "|T134398:0|t 코발트" -- Cobalt Guardian
+	L[60047] = "|T134399:0|t 자수정" -- Amethyst Guardian
+	L[60043] = "|T134397:0|t 비취" -- Jade Guardian
+	L[59915] = "|T134396:0|t 벽옥" -- Jasper Guardian
 end
 
 L = BigWigs:NewBossLocale("Feng the Accursed", "koKR")

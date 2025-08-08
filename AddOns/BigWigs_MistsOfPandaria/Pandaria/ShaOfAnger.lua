@@ -1,4 +1,3 @@
-
 --------------------------------------------------------------------------------
 -- Module Declaration
 --
@@ -15,23 +14,29 @@ mod.worldBoss = 60491
 
 function mod:GetOptions()
 	return {
-		{119622, "FLASH", "PROXIMITY"}, 119626, 119488, {119610, "FLASH"},
+		{119622, "ME_ONLY_EMPHASIZE"}, -- Growing Anger
+		{119626, "COUNTDOWN"}, -- Aggressive Behavior
+		119488, -- Unleashed Wrath
+		119610, -- Bitter Thoughts
+	},nil,{
+		[119626] = CL.mind_control, -- Aggressive Behavior (Mind Control)
 	}
 end
 
 function mod:OnBossEnable()
-	self:Log("SPELL_CAST_START", "UnleashedWrath", 119488)
-	self:Log("SPELL_AURA_APPLIED", "GrowingAngerApplied", 119622)
-	self:Log("SPELL_AURA_REMOVED", "GrowingAngerRemoved", 119622)
-	self:Log("SPELL_AURA_APPLIED", "AggressiveBehavior", 119626)
-
-	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CheckForEngage")
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "CheckForWipe")
+	self:ScheduleTimer("CheckForEngage", 1)
 	self:Death("Win", 60491)
 end
 
 function mod:OnEngage()
-	--no CLEU for bitter thoughts? polling so it keeps beeping until you're out
+	self:CheckForWipe()
+
+	-- World bosses will wipe but keep listening to events if you fly away, so we only register OnEngage
+	self:Log("SPELL_CAST_START", "UnleashedWrath", 119488)
+	self:Log("SPELL_AURA_APPLIED", "GrowingAngerApplied", 119622)
+	self:Log("SPELL_AURA_APPLIED", "AggressiveBehavior", 119626)
+
+	-- Bitter Thoughts is hidden
 	self:ScheduleRepeatingTimer("BitterThoughts", 0.5)
 end
 
@@ -40,20 +45,20 @@ end
 --
 
 function mod:UnleashedWrath(args)
-	self:MessageOld(args.spellId, "red")
-	self:Bar(args.spellId, 25)
+	self:Message(args.spellId, "yellow", CL.on_group:format(args.spellName))
+	self:CDBar(args.spellId, 25)
 end
 
 do
 	local prev = 0
-	local bitterThoughts = mod:SpellName(119610)
 	function mod:BitterThoughts()
-		if self:UnitDebuff("player", bitterThoughts) then
+		local auraTbl = self:GetPlayerAura(119610) -- Bitter Thoughts
+		if auraTbl then
 			local t = GetTime()
 			if t-prev > 2 then -- throttle so the timer can catch it sooner
 				prev = t
-				self:MessageOld(119610, "blue", "info", CL["underyou"]:format(bitterThoughts))
-				self:Flash(119610)
+				self:PersonalMessage(119610, "underyou", auraTbl.name)
+				self:PlaySound(119610, "underyou")
 			end
 		end
 	end
@@ -62,37 +67,26 @@ end
 do
 	local prev = 0
 	function mod:GrowingAngerApplied(args)
-		if self:Me(args.destGUID) then
-			self:OpenProximity(args.spellId, 5)
-			self:Flash(args.spellId)
-			self:MessageOld(args.spellId, "blue", "alert", CL["you"]:format(args.spellName))
-			self:Bar(args.spellId, 6, CL["you"]:format(args.spellName))
-		else
-			local t = GetTime()
-			if t-prev > 6 then
-				prev = t
-				self:MessageOld(119626, "yellow", "alarm", CL["soon"]:format(self:SpellName(119626))) -- Aggressive Behavior
-			end
+		if args.time-prev > 6 then
+			prev = args.time
+			self:Bar(119626, 6, CL.mind_control)
 		end
-	end
-	function mod:GrowingAngerRemoved(args)
 		if self:Me(args.destGUID) then
-			self:CloseProximity(args.spellId)
+			self:PersonalMessage(args.spellId, nil, CL.mind_control_short)
+			self:PlaySound(args.spellId, "warning")
 		end
 	end
 end
 
 do
-	local aggressiveTargets, scheduled = mod:NewTargetList(), nil
-	local function warnAggressiveBehavior(spellId)
-		mod:TargetMessageOld(spellId, aggressiveTargets, "orange")
-		scheduled = nil
-	end
+	local playerList = {}
+	local prev = 0
 	function mod:AggressiveBehavior(args)
-		aggressiveTargets[#aggressiveTargets + 1] = args.destName
-		if not scheduled then
-			scheduled = self:ScheduleTimer(warnAggressiveBehavior, 2, args.spellId)
+		if args.time-prev > 6 then
+			prev = args.time
+			playerList = {}
 		end
+		playerList[#playerList+1] = args.destName
+		self:TargetsMessage(args.spellId, "red", playerList, nil, CL.mind_control)
 	end
 end
-

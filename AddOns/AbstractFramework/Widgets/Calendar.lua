@@ -1,12 +1,17 @@
 ---@class AbstractFramework
 local AF = _G.AbstractFramework
 
--- NOTE: override these before create calendar
-AF.FIRST_WEEKDAY = 1
-AF.WEEKDAY_NAMES = {"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"}
-if GetCVar("portal") == "US" then
+if LOCALE_zhCN then
+    AF.WEEKDAY_NAMES = {"一", "二", "三", "四", "五", "六", "日"}
+    AF.FIRST_WEEKDAY = 1
+else
+    AF.WEEKDAY_NAMES = {"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"}
+    AF.FIRST_WEEKDAY = 7
+end
+
+if AF.portal == "US" then
     AF.RAID_LOCKOUT_RESET_DAY = 2
-elseif GetCVar("portal") == "EU" then
+elseif AF.portal == "EU" then
     AF.RAID_LOCKOUT_RESET_DAY = 3
 else
     AF.RAID_LOCKOUT_RESET_DAY = 4
@@ -49,13 +54,17 @@ local function FillDays(year, month)
             b:SetEnabled(true)
             b:SetText(day)
 
+            b.accentColor = calendar.parent.accentColor
+            b:SetColor(b.accentColor .. "_hover")
+
             -- date highlights
             local str = string.format("%04d%02d%02d", calendar.date.year, calendar.date.month, day)
-            if calendar.info[str] then
-                b.tooltips = calendar.info[str].tooltips
-                b.mark:SetColor(calendar.info[str].color)
+            if calendar.marks[str] then
+                b.tooltips = calendar.marks[str].tooltips
+                b.mark:SetColor(calendar.marks[str].color)
                 b.mark:Show()
             else
+                b.tooltips = nil
                 b.mark:Hide()
             end
 
@@ -74,7 +83,8 @@ local function FillDays(year, month)
     if month == today.month and year == today.year then
         calendar.todayMark:SetParent(calendar.days[start + today.day - 1])
         AF.ClearPoints(calendar.todayMark)
-        AF.SetPoint(calendar.todayMark, "BOTTOM", 0, 3)
+        AF.SetPoint(calendar.todayMark, "BOTTOMLEFT", 1, 1)
+        AF.SetPoint(calendar.todayMark, "BOTTOMRIGHT", -1, 1)
         calendar.todayMark:Show()
     else
         calendar.todayMark:Hide()
@@ -188,6 +198,7 @@ local function CreateCalendar()
         -- highlight raid lockout reset day
         if weekday == AF.RAID_LOCKOUT_RESET_DAY then
             headers[i].text:SetColor("accent")
+            headers[0] = headers[i] -- save for re-color
         end
 
         if i == 1 then
@@ -233,7 +244,7 @@ local function CreateCalendar()
     -- "today" mark
     local todayMark = AF.CreateTexture(calendar, nil, "gray")
     calendar.todayMark = todayMark
-    AF.SetSize(todayMark, 17, 1)
+    AF.SetHeight(todayMark, 1)
 
     -- scripts
     calendar:SetScript("OnMouseWheel", function() end)
@@ -275,7 +286,7 @@ local function CreateCalendar()
     end
 end
 
-local function ShowCalendar(parent, date, info, position, onDateChanged)
+local function ShowCalendar(parent, date, marks, position, onDateChanged)
     if not calendar then CreateCalendar() end
     if calendar:IsShown() and calendar:GetParent() == parent then
         calendar:Hide()
@@ -284,7 +295,19 @@ local function ShowCalendar(parent, date, info, position, onDateChanged)
 
     calendar.parent = parent
     calendar.onDateChanged = onDateChanged
-    calendar.info = info
+    calendar.marks = marks
+
+    -- accent color system
+    calendar:SetBackdropBorderColor(AF.GetColorRGB(parent.accentColor))
+    calendar.headers[0].text:SetColor(parent.accentColor)
+    calendar.previous:SetColor(parent.accentColor .. "_hover")
+    calendar.next:SetColor(parent.accentColor .. "_hover")
+    calendar.year.button:SetColor(parent.accentColor .. "_hover")
+    calendar.year.accentColor = parent.accentColor
+    calendar.month.button:SetColor(parent.accentColor .. "_hover")
+    calendar.month.accentColor = parent.accentColor
+    calendar.year.reloadRequired = true
+    calendar.month.reloadRequired = true
 
     calendar:SetDate(date)
     calendar:SetParent(parent)
@@ -328,6 +351,7 @@ end
 ---@class AF_CalendarButton:AF_Button
 local AF_CalendarButtonMixin = {}
 
+---@param d string|number|table "YYYYMMDD", a epoch unix timestamp in seconds, or a "*t" table
 function AF_CalendarButtonMixin:SetDate(d)
     if type(d) == "string" then
         local _y, _m, _d = d:match("(%d%d%d%d)(%d%d)(%d%d)")
@@ -342,18 +366,33 @@ function AF_CalendarButtonMixin:SetDate(d)
         self.date.day = dt.day
         self.date.timestamp = time(self.date)
     elseif type(d) == "table" then
-        self.date.year = d.year
-        self.date.month = d.month
-        self.date.day = d.day
+        self.date.year = tonumber(d.year)
+        self.date.month = tonumber(d.month)
+        self.date.day = tonumber(d.day)
         self.date.timestamp = time(self.date)
     end
     self:SetText(self.date.year .. "/" .. self.date.month .. "/" .. self.date.day)
 end
 
-function AF_CalendarButtonMixin:SetMarksInfo(info)
-    self.info = info
+---@param marks table
+-- {
+--     ["YYYYMMDD"] = {
+--         ["tooltips"] = {string...},
+--         ["color"] = colorName(string|table),
+--     },
+-- }
+function AF_CalendarButtonMixin:SetMarks(marks)
+    self.marks = marks
     if calendar and calendar:IsShown() and calendar.parent == self then
-        calendar.info = self.info
+        calendar.marks = self.marks
+        FillDays(self.date.year, self.date.month)
+    end
+end
+
+function AF_CalendarButtonMixin:ClearMarks()
+    self.marks = nil
+    if calendar and calendar:IsShown() and calendar.parent == self then
+        calendar.marks = nil
         FillDays(self.date.year, self.date.month)
     end
 end
@@ -362,16 +401,20 @@ function AF_CalendarButtonMixin:SetOnDateChanged(onDateChanged)
     self.onDateChanged = onDateChanged
 end
 
----@param date? string|number|table "YYYYMMDD", a epoch unix timestamp in seconds, or a "*t" table
 ---@param width? number default is 110
 ---@param calendarPosition? string "BOTTOMLEFT", "BOTTOMRIGHT", "TOPLEFT", "TOPRIGHT".
 ---@return AF_CalendarButton
-function AF.CreateCalendarButton(parent, date, width, calendarPosition)
+function AF.CreateCalendarButton(parent, width, calendarPosition)
     local button = AF.CreateButton(parent, "", "accent", width or 110, 20)
     button:SetTexture(AF.GetIcon("Calendar"), {16, 16}, {"LEFT", 2, 0})
 
+    button.accentColor = AF.GetAddonAccentColorName()
+    if button.accentColor then
+        button:SetColor(button.accentColor)
+    end
+
     button.date = {} -- save show date info
-    button.info = { -- store dates with extra info
+    button.marks = { -- store dates with extra marks
         -- ["20240214"] = {
         --     ["tooltips"] = {strings},
         --     ["color"] = (string), -- in Color.lua
@@ -379,10 +422,11 @@ function AF.CreateCalendarButton(parent, date, width, calendarPosition)
     }
 
     Mixin(button, AF_CalendarButtonMixin)
-    button:SetDate(date or time())
+    button:SetDate(time())
 
-    button:SetScript("OnClick", function()
-        ShowCalendar(button, button.date, button.info, calendarPosition, button.onDateChanged)
+    button:SetOnClick(function()
+        ShowCalendar(button, button.date, button.marks, calendarPosition, button.onDateChanged)
+        button:SetMarks(button.marks)
     end)
 
     AF.RegisterForCloseDropdown(button)

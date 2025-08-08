@@ -19,16 +19,21 @@ if L then
 	--L.freeze_warn_frost = "%d frost attacks - %d more to go"
 end
 
+L = BigWigs:NewBossLocale("Silithid Royalty", "koKR")
+if L then
+	L[15543] = "야우즈"
+	L[15544] = "벰"
+	L[15511] = "크리"
+end
+
 L = BigWigs:NewBossLocale("Ouro", "koKR")
 if L then
-	--L.engage_message = "Ouro engaged! Possible Submerge in 90sec!"
-	--L.possible_submerge_bar = "Possible submerge"
-
 	--L.emerge_message = "Ouro has emerged"
 	--L.emerge_bar = "Emerge"
 
 	--L.submerge_message = "Ouro has submerged"
 	--L.submerge_bar = "Submerge"
+	--L.submerge_early_message = "Early Submerge - No one was in range"
 
 	--L.scarab = "Scarab Despawn"
 	--L.scarab_desc = "Warn for Scarab Despawn."

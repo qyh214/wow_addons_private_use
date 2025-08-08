@@ -8,7 +8,7 @@ if L then
 	L.deep_breath = "深呼吸"
 end
 
-local L = BigWigs:NewBossLocale("Archavon the Stone Watcher", "zhTW")
+L = BigWigs:NewBossLocale("Archavon the Stone Watcher", "zhTW")
 if L then
 	L.stomp_message = "踐踏 - 即將 衝鋒！"
 	L.stomp_warning = "約5秒後，可能踐踏！"

@@ -32,7 +32,7 @@ if L then
 	L.meteor_axes_melee = "近战分摊"
 	L.meteor_axes_ranged = "远程分摊"
 
-	-- L.skipped_cast = "Skipped %s (%d)"
+	L.skipped_cast = "传导印记 %s（%d）"
 end
 
 L = BigWigs:NewBossLocale("Sennarth, The Cold Breath", "zhCN")
@@ -121,8 +121,8 @@ if L then
 	L.electric_scales = "团队伤害"
 	L.electric_lash = "鞭笞"
 	-- Stage Two: Surging Power
-	-- L.absorb_text = "%s (%.0f%%)"
-	L.stormsurge = "吸收护盾"
+	L.absorb_text = "%s (%.0f%%)"
+	L.stormsurge = "吸收盾"
 	L.stormcharged = "正或负电荷"
 	L.positive = "正"
 	L.negative = "负"

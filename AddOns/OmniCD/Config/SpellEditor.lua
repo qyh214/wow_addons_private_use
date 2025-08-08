@@ -1,6 +1,6 @@
 local E, L = select(2, ...):unpack()
 
-local GetNumSpecializationsForClassID = GetNumSpecializationsForClassID
+local GetNumSpecializationsForClassID = C_SpecializationInfo and C_SpecializationInfo.GetNumSpecializationsForClassID
 local GetSpecializationInfoForClassID = GetSpecializationInfoForClassID
 local GetSpecializationInfoByID = GetSpecializationInfoByID
 if E.preCata then

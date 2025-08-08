@@ -1,15 +1,8 @@
 ------------------------------------------------------------------------
-r319 | funkehdude | 2025-03-22 19:22:07 +0000 (Sat, 22 Mar 2025) | 1 line
+r330 | funkehdude | 2025-07-11 17:09:46 +0000 (Fri, 11 Jul 2025) | 1 line
 Changed paths:
    M /trunk/!BugGrabber.toc
 
 Bump toc
-------------------------------------------------------------------------
-r318 | funkehdude | 2025-03-22 00:10:11 +0000 (Sat, 22 Mar 2025) | 1 line
-Changed paths:
-   M /trunk/.luacheckrc
-   M /trunk/BugGrabber.lua
-
-Fix checking if other addons are enabled
 ------------------------------------------------------------------------
 

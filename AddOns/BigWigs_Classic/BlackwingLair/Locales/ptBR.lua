@@ -11,7 +11,6 @@ end
 L = BigWigs:NewBossLocale("Vaelastrasz the Corrupt", "ptBR")
 if L then
 	L.warmup_trigger = "É tarde demais, meus amigos!"
-	L.tank_bomb = "Bomba de Tanque"
 end
 
 

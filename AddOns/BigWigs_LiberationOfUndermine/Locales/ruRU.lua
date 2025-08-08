@@ -10,7 +10,7 @@ if L then
 	L.eruption_stomp = "Топот" -- Short for Eruption Stomp
 	L.thunderdrum_salvo = "Залп" -- Short for Thunderdrum Salvo
 
-	--L.static_charge_high = "%d - You're moving too much"
+	L.static_charge_high = "%d - двигайся меньше"
 end
 
 L = BigWigs:NewBossLocale("Rik Reverb", "ruRU")
@@ -23,8 +23,6 @@ end
 
 L = BigWigs:NewBossLocale("Stix Bunkjunker", "ruRU")
 if L then
-	L.ball_size_medium = "Средний Шар!"
-	L.ball_size_large = "Большой Шапр!"
 	L.rolled_on_you = "%s прокатился по ТЕБЕ" -- PlayerX rolled over you
 	L.rolled_from_you = "Прокатился по %s" -- (you) Rolled over PlayerX
 	L.garbage_dump_message = "ТЫ ударил босса на %s"
@@ -33,7 +31,6 @@ if L then
 	L.muffled_doomsplosion = "Бомба поглощена"
 	L.short_fuse = "Взрыв краба"
 	L.incinerator = "Огонь войды"
-	L.landing = "Приземление" -- Landing down from the sky
 end
 
 L = BigWigs:NewBossLocale("Sprocketmonger Lockenstock", "ruRU")

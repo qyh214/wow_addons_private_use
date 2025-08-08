@@ -1,11 +1,10 @@
 local L = BigWigs:NewBossLocale("The Stone Guard", "zhCN")
 if not L then return end
 if L then
-	L.petrifications = "石化"
-	L.petrifications_desc = "当首领开始石化时发出警报。"
-
-	L.overload = "过载"
-	L.overload_desc = "当过载时发出警报。"
+	L[60051] = "|T134398:0|t 蓝晶" -- Cobalt Guardian
+	L[60047] = "|T134399:0|t 紫晶" -- Amethyst Guardian
+	L[60043] = "|T134397:0|t 青玉" -- Jade Guardian
+	L[59915] = "|T134396:0|t 红玉" -- Jasper Guardian
 end
 
 L = BigWigs:NewBossLocale("Feng the Accursed", "zhCN")

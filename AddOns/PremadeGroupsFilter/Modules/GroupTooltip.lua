@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2024 Bernhard Saumweber
+-- Copyright (C) 2025 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -72,7 +72,9 @@ function PGF.OnLFGListUtilSetSearchEntryTooltip(tooltip, resultID, autoAcceptOpt
     if not PremadeGroupsFilterSettings.classNamesInTooltip then return end
 
     local searchResultInfo = PGF.GetSearchResultInfo(resultID)
+    if not searchResultInfo then return end
     local activityInfo = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID)
+    if not activityInfo then return end
 
     -- do not show members where Blizzard already does that
     if activityInfo.displayType == Enum.LFGListDisplayType.ClassEnumerate then return end

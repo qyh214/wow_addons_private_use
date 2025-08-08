@@ -1,4 +1,5 @@
-local L = BigWigsAPI:NewLocale("BigWigs: Common", "itIT")
+local _, addonTbl = ...
+local L = addonTbl.API:NewLocale("BigWigs: Common", "itIT")
 if not L then return end
 
 -- Prototype.lua common words
@@ -13,8 +14,10 @@ L.buff_other = "Potenziamento su %s: %s"
 L.magic_buff_boss = "Beneficio magico sul BOSS: %s" -- Magic buff on BOSS: SPELL_NAME
 L.magic_buff_other = "Beneficio magico su %s: %s" -- Magic buff on NPC_NAME: SPELL_NAME
 L.on = "%s su %s"
-L.stack = "%dx %s su %s"
-L.stackyou = "%dx %s su DI TE"
+L.stack = "%dx %s su %s" -- "5x SPELL_NAME on PLAYER_OR_NPC" showing how many stacks of a buff/debuff are on a player or NPC
+L.stackyou = "%dx %s su DI TE" -- "5x SPELL_NAME on YOU" showing how many stacks of a buff/debuff are on you
+--L.stackboss = "%dx %s on BOSS" -- "5x SPELL_NAME on BOSS" showing how many stacks of a buff/debuff are on the boss
+--L.stack_gained = "Gained %dx" -- "Gained 5x" for situations where we show how many stacks of a buff were gained since last time a message showed
 L.cast = "<Lancio di %s>"
 L.casting = "Lancio di %s"
 L.soon = "%s tra poco"
@@ -43,10 +46,11 @@ L.dead = "Morto" -- When a player is dead
 L.general = "Generali" -- General settings, i.e. things that apply to normal, heroic and mythic mode.
 L.health = "Salute" -- The health of an NPC
 L.health_percent = "%d%% Salute" -- "10% Health" The health percentage of an NPC
+L.energy = "Energia"
+--L.energy_percent = "%d%% Energy" -- "80% Energy" The energy percentage of an NPC
 L.door_open = "Porta aperta" -- When a door is open, usually after a speech from an NPC
 L.gate_open = "Cancello aperto" -- When a gate is open, usually after a speech from an NPC
 L.threat = "Minaccia"
-L.energy = "Energia"
 
 L.remaining = "%d rimanenti" -- 5 remaining
 L.duration = "%s per %s sec" -- Spell for 10 seconds
@@ -74,6 +78,8 @@ L.flying_available = "Adesso puoi volare"
 --L.stand_still = "Stand still" -- An ability that forces you to stand still or you will take damage
 --L.safe_to_stop = "Safe to stop" -- When an ability that forces you to keep moving fades from you, allowing you to stop moving
 --L.safe_to_move = "Safe to move" -- When an ability to forces you to stand still fades from you, allowing you to move again
+--L.safe = "Safe" -- You are safe from a bad ability
+--L.unsafe = "Unsafe" -- You are unsafe (in danger) of a bad ability
 
 -- Add related
 L.add_spawned = "Add Apparso" -- singular
@@ -131,6 +137,9 @@ L.marker = "Icona bersaglio %s"
 L.marker_player_desc = "Marchia i giocatori affetti da %s con %s, necessario ruolo assistente o capo." -- Mark players affected by 'SPELL_NAME' with SKULL_ICON
 L.marker_npc_desc = "Marchia %s con %s, necessario ruolo assistente o capo." -- Mark NPC_NAME with SKULL_ICON
 L.marker_npc_aura_desc = "Marchia NPCs che hanno '%s' con %s, richiede promozione or capogruppo." -- Mark NPCs affected by 'SPELL_NAME' with SKULL_ICON
+L.disabled = "Disattivato"
+L.none = "Nessuno"
+--L.markers = "Markers" -- Plural of marker
 
 -- Ability where two players have to move close to each other
 L.link = "Vincolo"
@@ -151,10 +160,14 @@ L.seconds = "%.1fs" -- 1.1 seconds
 
 -- Directions
 L.top = "Superiore"
+L.top_right = "In alto a destra"
+L.top_left = "In alto a sinistra"
 L.up = "Sopra"
 L.middle = "Centrale"
 L.down = "Sotto"
 L.bottom = "Inferiore"
+L.bottom_right = "In basso a destra"
+L.bottom_left = "In basso a sinistra"
 L.left = "Sinistra"
 L.right = "Destra"
 L.north = "Nord"
@@ -165,6 +178,11 @@ L.south = "Sud"
 L.south_west = "Sud-Ovest"
 L.west = "Ovest"
 L.north_west = "Nord-Ovest"
+
+-- Sizes
+--L.small = "Small"
+--L.medium = "Medium"
+--L.large = "Large"
 
 -- Schools
 L.fire = "Fuoco"
@@ -177,6 +195,7 @@ L.arcane = "Arcano"
 L.autotalk = "Interazione NPC Automatica"
 L.autotalk_boss_desc = "Automaticamente selezione l'opzione di dialogo NPC che fanno iniziare l'icontro col Boss."
 L.autotalk_generic_desc = "Automaticamente selezione l'opzione di dialogo NPC che fanno iniziare la prossima fase della spedizione."
+--L.autotalk_notice = "Automatically interacting with NPC %s."
 
 -- Common ability name replacements
 L.absorb = "Assorbimento" -- Used for shield-like abilities that absorb damage or healing
@@ -230,6 +249,8 @@ L.spell_reflection = "Rifletti Incantesimo" -- Any ability that reflects spells
 L.rooted = "Immobilizzato" -- Any ability that roots you in place, preventing you from moving
 
 -- Common ability name replacements A-Z
+--L.ball = "Ball" -- A ball, like a football, basketball, etc
+--L.balls = "Balls" -- Plural of L.ball
 L.blind = "Accecamento" -- Any ability that blinds or disorientates you. Usually an ability a boss casts and you need to turn away from the boss or it will blind you.
 L.dodge = "Schiva" -- When you need to continually run around to dodge abilities, like missiles landing on the ground under you
 L.enrage = "Rabbia" -- Any enrage buff that can be removed by players using abilities like Soothe (Druid), Tranquilizing Shot (Hunter) and Shiv (Rogue)
@@ -248,6 +269,7 @@ L.soaks = "Soaks" -- Plural of L.soak
 L.spike = "Spuntone" -- Short for any ability with the name "spike" in it e.g. "Glacial Spike" or "Fel Spike" or "Volatile Spike"
 L.spikes = "Spuntoni" -- Plural of L.spike
 --L.spread = "Spread" -- An ability that forces you to spread out away from other players, or you might damage them
+--L.tank_bomb = "Tank Bomb" -- Similar to L.bomb but only applies to tanks
 L.tank_combo = "Combinazione Difensore" -- Used for tank swap mechanics where the boss casts a sequence of tank buster attacks
 --L.tank_debuff = "Tank Debuff" -- Used for debuffs that only apply to tanks, usually an indicator that you need to taunt
 --L.tank_frontal = "Tank Frontal" -- Similar to L.frontal_cone but only applies to tanks
@@ -255,3 +277,5 @@ L.tank_combo = "Combinazione Difensore" -- Used for tank swap mechanics where th
 L.tentacle = "Tentacolo" -- Used for bosses that summon tentacles
 L.tentacles = "Tentacoli" -- Plural of L.tentacle
 L.waves = "Onde" -- Multiple waves of a bad ability coming from a boss, like waves in the ocean
+L.whelp = "Draghetto" -- Short for Whelpling, a baby dragonkin (Dragon Whelp)
+L.whelps = "Draghetti" -- Plural of L.whelp

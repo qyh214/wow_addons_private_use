@@ -1,7 +1,6 @@
 -- Ara-Kara, City of Echoes
 
 local L = BigWigs:NewBossLocale("Ara-Kara, City of Echoes Trash", "frFR")
-if not L then return end
 if L then
 	L.discordant_attendant = "Auxiliaire discordant"
 	L.engorged_crawler = "Rampante rassasiée"
@@ -32,6 +31,7 @@ end
 L = BigWigs:NewBossLocale("Cinderbrew Meadery Trash", "frFR")
 if L then
 	L.venture_co_pyromaniac = "Pyromane de la KapitalRisk"
+	L.venture_co_patron = "Client de la KapitalRisk"
 	L.hired_muscle = "Mercenaire musclé"
 	L.tasting_room_attendant = "Préposé à la salle de dégustation"
 	L.chef_chewie = "Chef Mâchonne"
@@ -117,6 +117,27 @@ if L then
 	L.wriggling_darkspawn = "Ténébreux frétillant"
 end
 
+-- Eco-Dome Al'dani
+
+L = BigWigs:NewBossLocale("Eco-Dome Al'dani Trash", "frFR")
+if L then
+	--L.terrified_broker = "Terrified Broker"
+	L.arcane_siphon = "Siphon arcanique"
+	--L.overgorged_mite = "Overgorged Mite"
+	--L.voracious_gorger = "Voracious Gorger"
+	--L.ravenous_destroyer = "Ravenous Destroyer"
+	--L.overcharged_sentinel = "Overcharged Sentinel"
+	--L.wastelander_farstalker = "Wastelander Farstalker"
+	--L.tamed_ruinstalker = "Tamed Ruinstalker"
+	--L.wastelander_ritualist = "Wastelander Ritualist"
+	--L.wastelander_pactspeaker = "Wastelander Pactspeaker"
+	--L.karesh_elemental = "K'aresh Elemental"
+	--L.burrowing_creeper = "Burrowing Creeper"
+	--L.wastes_creeper = "Wastes Creeper"
+
+	--L.taahbat_and_awazj_warmup_trigger = "I have no time for this. Taah'bat! Be certain they follow no further."
+end
+
 -- Operation: Floodgate
 
 L = BigWigs:NewBossLocale("Operation: Floodgate Trash", "frFR")
@@ -197,6 +218,7 @@ end
 L = BigWigs:NewBossLocale("The Dawnbreaker Trash", "frFR")
 if L then
 	L.arathi_lamplighter = "Falotier(ère) arathi"
+	L.nightfall_curseblade = "Lame maudite tombe-nuit"
 	L.nightfall_shadowmage = "Ombremage tombe-nuit"
 	L.nightfall_ritualist = "Ritualiste tombe-nuit"
 	L.nightfall_commander = "Commandant tombe-nuit"

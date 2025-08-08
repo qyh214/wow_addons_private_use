@@ -1,3 +1,2 @@
-## 5.4.0 (2025-04-12)
-  - New Feature: Target Marker assignments for enemies in MDT only (Not auto marking enemies in the gameworld)
-  - DFC: Added candle positions
+## 5.5.0 (2025-26-07)
+  - Patch 11.2.0 + MOP Classic Update

@@ -41,6 +41,10 @@ function GI:AddGroupInfo(tooltip, resultID)
 		return
 	end
 
+	if self.db.excludeDungeon and LFGPI:IsIDDungeons(resultID) then
+		return
+	end
+
 	LFGPI:SetClassIconStyle(self.db.classIconStyle)
 	LFGPI:Update(resultID)
 

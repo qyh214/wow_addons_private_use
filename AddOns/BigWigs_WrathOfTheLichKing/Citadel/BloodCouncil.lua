@@ -4,7 +4,7 @@
 
 local mod, CL = BigWigs:NewBoss("Blood Prince Council", 631, 1632)
 if not mod then return end
-mod:RegisterEnableMob(37970, 37972, 37973) -- Prince Valanar, Prince Keleseth, Prince Taldaram
+mod:RegisterEnableMob(37970, 37972, 37973, 38004) -- Prince Valanar, Prince Keleseth, Prince Taldaram, Blood-Queen Lana'thel
 -- mod:SetEncounterID(1095)
 -- mod:SetRespawnTime(30)
 mod.toggleOptions = {{72040, "ICON", "FLASH"}, 72039, {72037, "SAY", "FLASH"}, 72999, 70981, 72052, {"iconprince", "ICON"}, "berserk", "proximity"}
@@ -20,7 +20,7 @@ mod:SetStage(1)
 -- Localization
 --
 
-local L = mod:NewLocale("enUS", true)
+local L = mod:GetLocale()
 if L then
 	L.switch_message = "Health swap: %s"
 	L.switch_bar = "Next health swap"
@@ -36,7 +36,6 @@ if L then
 
 	L.prison_message = "Shadow Prison x%d!"
 end
-L = mod:GetLocale()
 
 --------------------------------------------------------------------------------
 -- Initialization

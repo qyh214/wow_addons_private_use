@@ -1,11 +1,11 @@
-## Interface: 110100, 110105
+## Interface: 110200
 ## Title: Details! Damage Meter
 ## Notes: Essential tool to impress that chick in your raid.
 ## Notes-ruRU: Незаменимый инструмент, чтобы произвести впечатление на цыпочку в вашем рейде.
 ## SavedVariables: _detalhes_global, __details_backup, __details_debug
 ## SavedVariablesPerCharacter: _detalhes_database
 ## OptionalDeps: Ace3, LibSharedMedia-3.0, LibWindow-1.1, LibDBIcon-1.0, NickTag-1.0, LibDataBroker-1.1, LibGraph-2.0
-## Version: #Details.20250413.13519.164
+## Version: #Details.20250806.13652.165
 ## IconTexture: Interface\AddOns\Details\images\minimap
 
 ## X-Curse-Project-ID: 61284
@@ -76,6 +76,7 @@ functions\journal.lua
 functions\commentator.lua
 functions\chat_embed.lua
 functions\storage.lua
+functions\swapper\swapper.lua
 
 core\aura_scan.lua
 core\timemachine.lua
@@ -134,6 +135,7 @@ frames\window_pro_file.lua
 frames\window_nestspells.lua
 frames\window_deathrecap.lua
 frames\window_transcriptor.lua
+frames\window_arenasummary.lua
 
 classes\class_error.lua
 classes\class_spelltable.lua

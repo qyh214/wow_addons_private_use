@@ -21,7 +21,9 @@ local GetDetailedItemLevelInfo = C_Item.GetDetailedItemLevelInfo
 local UA_GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
 local IsUsableItem = C_Item.IsUsableItem
 local GetItemSpell = C_Item.GetItemSpell
-
+local GetTalentInfo = C_SpecializationInfo.GetTalentInfo
+local GetSpecialization= C_SpecializationInfo.GetSpecialization
+local GetSpecializationInfo = C_SpecializationInfo.GetSpecializationInfo
 local GetSpellCooldown = function(spellID)
     local spellCooldownInfo = C_Spell.GetSpellCooldown(spellID);
     if spellCooldownInfo then
@@ -1930,7 +1932,7 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
                 -- Aura Tracking
                 if subtype == 'SPELL_AURA_APPLIED' or subtype == 'SPELL_AURA_REFRESH' or subtype == 'SPELL_AURA_APPLIED_DOSE' then
                     ns.trackDebuff( spellID, destGUID, time, true )
-                    if ( not minion or countPets ) and countDots then ns.updateTarget( destGUID, time, amSource ) end
+                    if ( not minion or countPets ) and countDots then ns.updateTarget( destGUID, time, amSource, spellID ) end
 
                     --[[ if spellID == 48108 or spellID == 48107 then
                         Hekili:ForceUpdate( "SPELL_AURA_SUPER", true )
@@ -1970,7 +1972,7 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
                 ns.eliminateUnit( destGUID, true )
                 -- Hekili:ForceUpdate( "SPELL_DAMAGE_OVERKILL" )
             elseif not ( subtype == "SPELL_MISSED" and amount == "IMMUNE" ) then
-                ns.updateTarget( destGUID, time, amSource )
+                ns.updateTarget( destGUID, time, amSource, spellID )
             end
         end
     end
@@ -2167,6 +2169,50 @@ local function ReadKeybindings( event )
                 end
             end
 
+        -- Dominos support
+        elseif _G["Dominos"] then
+            table.wipe( slotsUsed )
+
+            for i = 1, 14 do
+                local bar = _G["DominosFrame" .. i]
+                for b = 1, 12 do
+                    local btn = bar.buttons[b]
+
+                    if btn.action then
+                        local keybind
+                        local action = btn.action
+                        if action <= 0 then
+                            keybind = "CLICK " .. btn:GetName() .. ":HOTKEY"
+                        elseif action <= 12 then
+                            keybind = "ACTIONBUTTON" .. action
+                        elseif action <= 24 then
+                            keybind = "CLICK " .. btn:GetName() .. ":HOTKEY"
+                        elseif action <= 36 then
+                            keybind = "MULTIACTIONBAR3BUTTON" .. (action - 24)
+                        elseif action <= 48 then
+                            keybind = "MULTIACTIONBAR4BUTTON" .. (action - 36)
+                        elseif action <= 60 then
+                            keybind = "MULTIACTIONBAR2BUTTON" .. (action - 48)
+                        elseif action <= 72 then
+                            keybind = "MULTIACTIONBAR1BUTTON" .. (action - 60)
+                        elseif action <= 132 then
+                            keybind = "CLICK " .. btn:GetName() .. ":HOTKEY"
+                        elseif action <= 144 then
+                            keybind = "MULTIACTIONBAR5BUTTON" .. (action - 132)
+                        elseif action <= 156 then
+                            keybind = "MULTIACTIONBAR6BUTTON" .. (action - 144)
+                        elseif action <= 168 then
+                            keybind = "MULTIACTIONBAR7BUTTON" .. (action - 156)
+                        end
+
+                        if keybind and GetBindingKey( keybind ) then
+                            StoreKeybindInfo( i, GetBindingKey( keybind ), GetActionInfo( btn.action ) )
+                            slotsUsed[ btn.action ] = true
+                        end
+                    end
+                end
+            end
+
         -- Use ElvUI's actionbars only if they are actually enabled.
         elseif _G["ElvUI"] and _G[ "ElvUI_Bar1Button1" ] then
             table.wipe( slotsUsed )
@@ -2331,6 +2377,45 @@ local function ReadOneKeybinding( event, slot )
         if GetBindingKey( keybind ) then
             StoreKeybindInfo( actionBarNumber, GetBindingKey( keybind ), GetActionInfo( slot ) )
             completed = true
+        end
+
+    -- Dominos support
+    elseif _G["Dominos"] then
+        local bar = _G["DominosFrame" .. actionBarNumber]
+        local button = bar.buttons[keyNumber]
+
+        if button.action then
+            local keybind
+            local action = button.action
+
+            if action <= 0 then
+                keybind = "CLICK " .. button:GetName() .. ":HOTKEY"
+            elseif action <= 12 then
+                keybind = "ACTIONBUTTON" .. action
+            elseif action <= 24 then
+                keybind = "CLICK " .. button:GetName() .. ":HOTKEY"
+            elseif action <= 36 then
+                keybind = "MULTIACTIONBAR3BUTTON" .. (action - 24)
+            elseif action <= 48 then
+                keybind = "MULTIACTIONBAR4BUTTON" .. (action - 36)
+            elseif action <= 60 then
+                keybind = "MULTIACTIONBAR2BUTTON" .. (action - 48)
+            elseif action <= 72 then
+                keybind = "MULTIACTIONBAR1BUTTON" .. (action - 60)
+            elseif action <= 132 then
+                keybind = "CLICK " .. button:GetName() .. ":HOTKEY"
+            elseif action <= 144 then
+                keybind = "MULTIACTIONBAR5BUTTON" .. (action - 132)
+            elseif action <= 156 then
+                keybind = "MULTIACTIONBAR6BUTTON" .. (action - 144)
+            elseif action <= 168 then
+                keybind = "MULTIACTIONBAR7BUTTON" .. (action - 156)
+            end
+
+            if keybind and GetBindingKey( keybind ) then
+                StoreKeybindInfo( actionBarNumber, GetBindingKey( keybind ), GetActionInfo( slot ) )
+                completed = true
+            end
         end
 
     elseif _G["ElvUI"] and _G["ElvUI_Bar1Button1"] then

@@ -870,7 +870,8 @@ function module.main.COMBAT_LOG_EVENT_UNFILTERED(_,event,_,sourceGUID,_,_,_,_,de
 	]]
 	elseif event == "UNIT_DIED" then
 		if destFlags2 > 0 and VMRT_MarksSimple_autoMarkEnabled and not FIX_NOT_UNIT_DEATH_ENCOUNTER then
-			local h,u = math_frexp(destFlags2)
+			local markFlag = bit.band(destFlags2, COMBATLOG_OBJECT_RAIDTARGET_MASK)
+			local h,u = math_frexp(markFlag)
 			marksUsed[u] = nil
 		end
 	end

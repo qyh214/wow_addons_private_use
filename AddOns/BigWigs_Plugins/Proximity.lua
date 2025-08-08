@@ -2,7 +2,7 @@
 -- Module Declaration
 --
 
-local plugin = BigWigs:NewPlugin("Proximity")
+local plugin, L = BigWigs:NewPlugin("Proximity")
 if not plugin then return end
 
 plugin.defaultDB = {
@@ -35,7 +35,6 @@ plugin.defaultDB = {
 
 local db = nil
 
-local L = BigWigsAPI:GetLocale("BigWigs")
 plugin.displayName = L.proximity_name
 local L_proximityTitle = L.proximityTitle
 
@@ -976,7 +975,7 @@ end
 -- Slash command
 --
 
-SlashCmdList.BigWigs_Proximity = function(input)
+local function slash(input)
 	if not plugin:IsEnabled() then BigWigs:Enable() end
 	input = input:lower()
 	local range, reverse = input:match("^(%d+)%s*(%S*)$")
@@ -997,5 +996,5 @@ SlashCmdList.BigWigs_Proximity = function(input)
 	end
 end
 
-SLASH_BigWigs_Proximity1 = "/proximity"
-SLASH_BigWigs_Proximity2 = "/range"
+BigWigsAPI.RegisterSlashCommand("/proximity", slash)
+BigWigsAPI.RegisterSlashCommand("/range", slash)

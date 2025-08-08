@@ -1,5 +1,6 @@
-## Interface: 11506
+## Interface: 11507
 ## Title: Wago App Companion
+## Group: WagoAppCompanion
 ## Author: The Wago team
 ## Version: 1.0.0
 ## DefaultState: Enabled

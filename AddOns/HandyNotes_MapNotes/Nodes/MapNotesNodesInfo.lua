@@ -3,6 +3,12 @@ local ADDON_NAME, ns = ...
 function ns.LoadMapNotesNodesInfo()
 local nodes = ns.nodes
 
+--################################
+--####### Classic MoP Nodes ######
+--################################
+
+nodes[1467] = { } -- Outland
+nodes[998] = { } -- Undercity
 
 --############################
 --####### Classic Nodes ######
@@ -69,11 +75,11 @@ nodes[1436] = { } -- Westfall
 nodes[1437] = { } -- Wettlands
 nodes[1453] = { } -- Stormwind City   
 nodes[1458] = { } -- Undercity Old Version
-nodes[1941] = { } -- Immersang Forrest
+nodes[1941] = { } -- Eversong Woods
 nodes[1942] = { } -- Ghostlands
 nodes[1943] = { } -- Azurmythosinsel
 nodes[1947] = { } -- Exodar
-nodes[1954] = { } -- Sivermoon City
+nodes[1954] = { } -- Silvermoon City
 nodes[1957] = { } -- Isle of Quel'Danas
 
 --####################
@@ -84,7 +90,7 @@ nodes[1944] = { } -- Hellfire
 nodes[1945] = { } -- Outland
 nodes[1946] = { } -- Zangarmarsh
 nodes[1948] = { } -- ShadowmoonValley
-nodes[1949] = { } -- Schergrat
+nodes[1949] = { } -- BladesEdgeMountains
 nodes[1951] = { } -- Nagrand
 nodes[1952] = { } -- TerokkarForest
 nodes[1953] = { } -- Netherstorm
@@ -134,7 +140,7 @@ nodes[85] = { } -- Orgrimmar
 nodes[86] = { } -- Ragefire -- of Shadow
 nodes[87] = { } -- Ironforge
 nodes[88] = { } -- Thunder Bluff
-nodes[89] = { } -- Teldrassil
+nodes[89] = { } -- Teldrassil / Darnassus
 nodes[97] = { } -- Azurmythosinsel
 nodes[103] = { } -- Exodar
 nodes[106] = { } -- Blutmythosinsel
@@ -142,7 +148,7 @@ nodes[199] = { } -- Southern Barrens
 nodes[327] = { } -- AhnQiraj The Fallen Kingdom 
 nodes[460] = { } -- Shadowglen
 nodes[461] = { } -- Valley of Trials
-nodes[462] = { } --Camp Narache
+nodes[462] = { } -- Camp Narache
 nodes[468] = { } -- Am'Mental
 nodes[503] = { } -- Shlae'gararena
 -- Dungeon map nodes
@@ -221,7 +227,7 @@ nodes[42] = { } -- DeadwindPass
 nodes[47] = { } -- Duskwood
 nodes[48] = { } -- Loch Modan
 nodes[49] = { } -- Redridge Mountains
-nodes[50] = { } -- StranglethornJungle
+nodes[50] = { } -- Jungle
 nodes[51] = { } -- SwampOfSorrows
 nodes[52] = { } -- Westfall    
 nodes[55] = { } -- The Deadmines Caverns
@@ -259,6 +265,7 @@ nodes[231] = { } -- Uldaman - Inside Dungeon Map
 nodes[232] = { } -- Molten Core
 nodes[242] = { } -- Blackwing Depths - Inside Dungeon Map
 nodes[243] = { } -- Blackrock Depths - Inside Dungeon Map
+nodes[1186] = { } -- Blackrock Depths - Inside Dungeon Map
 nodes[250] = { } -- Lower Blackrock Spire - Inside Dungeon Map
 nodes[251] = { } -- Lower Blackrock Spire - Inside Dungeon Map
 nodes[252] = { } -- Lower Blackrock Spire - Inside Dungeon Map
@@ -471,7 +478,8 @@ nodes[1527] = { } -- Uldum
 
 -- Azeroth/Continent map nodes
 nodes[371] = { } -- TheJadeForest
-nodes[376] = { } -- ValleyoftheFourWinds    
+nodes[376] = { } -- ValleyoftheFourWinds  
+nodes[378] = { } -- The Wandering Isle   
 nodes[379] = { } -- KunLaiSummit  
 nodes[388] = { } -- TownlongWastes    
 nodes[390] = { } -- ValeofEternalBlossoms  
@@ -616,6 +624,8 @@ nodes[680] = { } -- Suramar
 nodes[750] = { } -- Highmountain Thundertotem
 nodes[790] = { } -- Eye of Aszhara
 nodes[830] = { } -- Krokuun
+nodes[831] = { } -- Vindikaar upper deck
+nodes[832] = { } -- Vindikaar lower deck
 nodes[882] = { } -- Eredath
 nodes[885] = { } -- Antoran Wastes
 nodes[905] = { } -- Argus
@@ -632,6 +642,7 @@ nodes[749] = { } -- The Arcway
 nodes[751] = { } -- Black Rook Hold
 nodes[761] = { } -- Court of Stars
 nodes[764] = { } -- The Nighthold
+nodes[765] = { } -- The Nighthold
 nodes[777] = { } -- The Emerald Nightmare
 nodes[807] = { } -- Trial of Valor
 nodes[845] = { } -- Cathedral of Eternal Night
@@ -759,6 +770,8 @@ nodes[2367] = { } -- Chamber of Memory
 nodes[2369] = { } -- Siren Isle
 nodes[2322] = { } -- Hall of Awakening
 nodes[2346] = { } -- Undermine
+nodes[2371] = { } -- K'aresh
+nodes[2472] = { } -- Tazavesh
 -- Dungeon map nodes
 nodes[2315] = { } -- The Rookery - Inside Dungeon Map
 nodes[2335] = { } -- The Cinderbrew Meadery - Inside Dungeon Map
@@ -770,6 +783,8 @@ nodes[2357] = { } -- Ara-Kara, City of Echoes - Inside Dungeon Map
 nodes[2343] = { } -- City of Threads - Inside Dungeon Map
 nodes[2387] = { } -- Operation: Floodgate - Inside Dungeon Map
 nodes[2292] = { } -- Nerub-ar Palace - Inside Dungeon Map
+nodes[2449] = { } -- Eco-Dome Al'dani - Inside Dungeon Map
+nodes[2460] = { } -- Manaforge Omega - Inside Dungeon Map
 -- Delves map nodes
 nodes[2259] = { } -- Tak-Rethan-Abyss - Inside Dungeon Map
 nodes[2299] = { } -- The Underkeep - Inside Dungeon Map
@@ -787,4 +802,6 @@ nodes[2250] = { } -- Kriegval's Rest - Inside Dungeon Map
 nodes[2396] = { } -- Rowdy Rifts - Inside Dungeon Map
 nodes[2423] = { } -- Sidestreet Sluice - Inside Dungeon Map
 nodes[2420] = { } -- Sidestreet Sluice - The Pits - Inside Dungeon Map
+nodes[2452] = { } -- Archival Assault - Inside Dungeon Map
+nodes[2484] = { } -- Voidscar Cavern - Inside Dungeon Map
 end
