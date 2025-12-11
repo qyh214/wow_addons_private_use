@@ -1,4 +1,4 @@
-## Interface: 30403,30404
+## Interface: 30403,30404,30405
 ## Title: |cff880303[163UI]|r Info
 ## Version: r20241009
 ## Author: NetEase Inc.

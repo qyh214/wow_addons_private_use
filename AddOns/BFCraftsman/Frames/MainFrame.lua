@@ -32,7 +32,7 @@ local function InitFrameWidgets()
     slider:SetAfterValueChanged(function(value)
         BFC_DB.scale = value
         BFCMainFrame:SetScale(value)
-        AF.UpdatePixelsForAddon()
+        AF.UpdatePixelsForRegionAndChildren(BFCMainFrame)
     end)
 
     -- about

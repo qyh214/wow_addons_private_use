@@ -130,6 +130,7 @@ function Addon:ImportText(importText)
 		return;
 	end
 
+	local errorNames = {};
 	for _, entry in ipairs(loadoutEntryInfo) do
 		local result = true;
 		local errorRank = nil;
@@ -164,12 +165,19 @@ function Addon:ImportText(importText)
 					DevTools_Dump(entry);
 					break;
 				elseif errorRank and entry.ranksPurchased > 1 then
-					Addon:Print(string.format("Cannot Learn: %s (%d)", name, errorRank));
+					table.insert(errorNames, string.format("%s (%d)", name, errorRank));
 				else
-					Addon:Print(string.format("Cannot Learn: %s", name));
+					table.insert(errorNames, name);
 				end
 			end
 		end
+	end
+
+	local errorNameCount = #errorNames;
+	if errorNameCount > 1 then
+		Addon:Print(string.format("Cannot Learn: %d nodes.", errorNameCount));
+	elseif errorNameCount > 0 then
+		Addon:Print(string.format("Cannot Learn: %s.", errorNames[1]));
 	end
 
 	Addon.isLocked = false;

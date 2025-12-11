@@ -111,6 +111,8 @@ WIM.AddLocale("enUS", {
     ["Direction:"] = true,
     ["Tabs"] = true,
     ["Sort tabs by:"] = true,
+	["Window Created"] = true,
+	["Last Activity"] = true,
     ["Alphabetical"] = true,
     ["Recent Activity"] = true,
     ["Keep windows on top of your UI."] = true,
@@ -292,7 +294,7 @@ WIM.AddLocale("enUS", {
     ["Display Tutorials"] = true,
     ["Reset Tutorials"] = true,
     ["Credits"] = true,
-    ["This is a long message which contains both emoticons and urls 8)."] = true,
+    ["This is a long message which contains both emoticons and urls 8). WIM's home is www.WIMAddon.com."] = true,
     ["Message Formatting"] = true,
     ["Manipulate how WIM displays messages."] = true,
     ["Preview"] = true,
@@ -406,20 +408,19 @@ WIM.AddLocale("enUS", {
 	["Color: BNet Messages Sent"] = true,
 	["Color: BNet Messages Received"] = true,
 
-    -- TabManagement.lua --
+	-- TabManagement.lua --
     ["Tab Management"] = true,
     ["Automatically manage your open windows and place them into appropriate tab groups."] = true,
     ["Automatically group whispers."] = true,
     ["Place friends in their own group."] = true,
 	["Place guild members in their own group."] = true,
 	["Automatically group chat windows."] = true,
-    ["Does not apply to windows already opened."] = true,
+	["Does not apply to windows already opened."] = true,
 
-
-    -- Talent Specs --
-    ["Affliction"] = true,
-    ["Arcane"] = true,
-    ["Arms"] = true,
+	-- Talent Specs --
+	["Affliction"] = true,
+	["Arcane"] = true,
+	["Arms"] = true,
     ["Assassination"] = true,
     ["Balance"] = true,
     ["Beast Mastery"] = true,
@@ -492,7 +493,7 @@ WIM.AddLocale("enUS", {
     ["Have WIM monitor this channel."] = true,
     ["Never Pop"] = true,
     ["Never have this window pop-up on my screen."] = true,
-    ["Never Supress"] = true,
+    ["Never Supress"] = "Never Suppress",
     ["Never suppress messages from the default chat frame."] = true,
     ["Show unread message alert on minimap."] = true,
     ["No History"] = true,
@@ -516,4 +517,8 @@ WIM.AddLocale("enUS", {
     --Misc
     ["WIM has detected that you are playing on a private server. Some servers can not process ChatAddonMessages. Would you like to enable them anyway?"] = true,
 
+	-- Whisper Mode Warnings
+	["Set whispers to In-line"] = true,
+	["Message suppression requires whispers to be set to 'In-line'."] = true,
+	["It is recommended for whispers to be set to in-line in order to handle their behavior properly."] = true,
 });

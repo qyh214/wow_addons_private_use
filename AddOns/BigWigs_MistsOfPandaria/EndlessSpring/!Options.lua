@@ -22,7 +22,7 @@ BigWigs:AddColors("Tsulong", {
 	[-6550] = "orange",
 	[122752] = "orange",
 	[122768] = "blue",
-	[122777] = {"blue","red","yellow"},
+	[122777] = {"blue","red"},
 	[122789] = "green",
 	[122855] = "orange",
 	[123011] = "red",

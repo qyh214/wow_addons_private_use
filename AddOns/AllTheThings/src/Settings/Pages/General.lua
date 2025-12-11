@@ -121,6 +121,7 @@ local function presetStore()
 		["Thing:BattlePets"] = settings:Get("Thing:BattlePets"),
 		["Thing:Toys"] = settings:Get("Thing:Toys"),
 		["Thing:Campsites"] = settings:Get("Thing:Campsites"),
+		["Thing:Decor"] = settings:Get("Thing:Decor"),
 
 		-- General Things
 		["Thing:Achievements"] = settings:Get("Thing:Achievements"),
@@ -143,6 +144,7 @@ local function presetStore()
 		["Show:OnlyActiveEvents"] = settings:Get("Show:OnlyActiveEvents"),
 		["Show:PetBattles"] = settings:Get("Show:PetBattles"),
 		["Hide:PvP"] = settings:Get("Hide:PvP"),
+		["Hide:ChallengeMaster"] = settings:Get("Hide:ChallengeMaster"),
 		["Show:Skyriding"] = settings:Get("Show:Skyriding"),
 
 		-- Expansion Things
@@ -203,6 +205,7 @@ modeButton:SetScript("OnClick", function()
 				settings:Set("Thing:BattlePets", settings:Get("PresetRestore")["Thing:BattlePets"])
 				settings:Set("Thing:Toys", settings:Get("PresetRestore")["Thing:Toys"])
 				settings:Set("Thing:Campsites", settings:Get("PresetRestore")["Thing:Campsites"])
+				settings:Set("Thing:Decor", settings:Get("PresetRestore")["Thing:Decor"])
 
 				-- General Things
 				settings:Set("Thing:Achievements", settings:Get("PresetRestore")["Thing:Achievements"])
@@ -225,6 +228,7 @@ modeButton:SetScript("OnClick", function()
 				settings:Set("Show:OnlyActiveEvents", settings:Get("PresetRestore")["Show:OnlyActiveEvents"])
 				settings:Set("Show:PetBattles", settings:Get("PresetRestore")["Show:PetBattles"])
 				settings:Set("Hide:PvP", settings:Get("PresetRestore")["Hide:PvP"])
+				settings:Set("Hide:ChallengeMaster", settings:Get("PresetRestore")["Hide:ChallengeMaster"])
 				settings:Set("Show:Skyriding", settings:Get("PresetRestore")["Show:Skyriding"])
 
 				-- Expansion Things
@@ -283,6 +287,7 @@ modeButton:SetScript("OnClick", function()
 			settings:Set("Thing:BattlePets", false)
 			settings:Set("Thing:Toys", false)
 			settings:Set("Thing:Campsites", false)
+			settings:Set("Thing:Decor", false)
 
 			-- General Things
 			settings:Set("Thing:Achievements", false)
@@ -305,6 +310,7 @@ modeButton:SetScript("OnClick", function()
 			settings:Set("Show:OnlyActiveEvents", true)
 			settings:Set("Show:PetBattles", false)
 			settings:Set("Hide:PvP", true)
+			settings:Set("Hide:ChallengeMaster", true)
 			settings:Set("Show:Skyriding", false)
 
 			-- Expansion Things
@@ -340,6 +346,7 @@ modeButton:SetScript("OnClick", function()
 			settings:Set("Thing:BattlePets", true)
 			settings:Set("Thing:Toys", true)
 			settings:Set("Thing:Campsites", true)
+			settings:Set("Thing:Decor", true)
 
 			-- General Things
 			settings:Set("Thing:Achievements", false)
@@ -362,6 +369,7 @@ modeButton:SetScript("OnClick", function()
 			settings:Set("Show:OnlyActiveEvents", false)
 			settings:Set("Show:PetBattles", true)
 			settings:Set("Hide:PvP", false)
+			settings:Set("Hide:ChallengeMaster", true)
 			settings:Set("Show:Skyriding", true)
 
 			-- Expansion Things
@@ -397,6 +405,7 @@ modeButton:SetScript("OnClick", function()
 			settings:Set("Thing:BattlePets", true)
 			settings:Set("Thing:Toys", true)
 			settings:Set("Thing:Campsites", false)
+			settings:Set("Thing:Decor", false)
 
 			-- General Things
 			settings:Set("Thing:Achievements", true)
@@ -419,6 +428,7 @@ modeButton:SetScript("OnClick", function()
 			settings:Set("Show:OnlyActiveEvents", false)
 			settings:Set("Show:PetBattles", true)
 			settings:Set("Hide:PvP", false)
+			settings:Set("Hide:ChallengeMaster", false)
 			settings:Set("Show:Skyriding", true)
 
 			-- Expansion Things
@@ -454,6 +464,7 @@ modeButton:SetScript("OnClick", function()
 			settings:Set("Thing:BattlePets", true)
 			settings:Set("Thing:Toys", true)
 			settings:Set("Thing:Campsites", true)
+			settings:Set("Thing:Decor", true)
 
 			-- General Things
 			settings:Set("Thing:Achievements", true)
@@ -485,6 +496,7 @@ modeButton:SetScript("OnClick", function()
 			settings:Set("Show:OnlyActiveEvents", false)
 			settings:Set("Show:PetBattles", true)
 			settings:Set("Hide:PvP", false)
+			settings:Set("Hide:ChallengeMaster", false)
 			settings:Set("Show:Skyriding", true)
 
 			-- Expansion Things
@@ -879,9 +891,25 @@ child:CreateTrackingCheckbox("CAMPSITES", "Campsites", true)
 	:AlignAfter(accwideCheckboxCampsites)
 end
 
+-- Decor were added during The War Within
+local accwideCheckboxDecor;
+if app.GameBuildVersion >= 110207 then
+accwideCheckboxDecor =
+child:CreateAccountWideCheckbox("DECOR", "Decor")
+	:AlignBelow(accwideCheckboxCampsites)
+child:CreateTrackingCheckbox("DECOR", "Decor", true)
+	:AlignAfter(accwideCheckboxDecor)
+end
+
 local headerGeneralThings = child:CreateHeaderLabel(L.GENERAL_THINGS_LABEL)
 headerGeneralThings:SetPoint("LEFT", headerMode, 0, 0)
-headerGeneralThings:SetPoint("TOP", accwideCheckboxToys, "BOTTOM", 0, -30)
+if app.GameBuildVersion >= 110207 then
+	headerGeneralThings:SetPoint("TOP", accwideCheckboxDecor, "BOTTOM", 0, -10)
+elseif app.GameBuildVersion >= 110100 then
+	headerGeneralThings:SetPoint("TOP", accwideCheckboxCampsites, "BOTTOM", 0, -10)
+else
+	headerGeneralThings:SetPoint("TOP", accwideCheckboxToys, "BOTTOM", 0, -10)
+end
 headerGeneralThings.OnRefresh = function(self)
 	if app.MODE_DEBUG then
 		self:SetAlpha(0.4)
@@ -891,14 +919,14 @@ headerGeneralThings.OnRefresh = function(self)
 
 	-- Halloween Easter Egg
 	C_Calendar.OpenCalendar()
-    local date = C_DateAndTime.GetCurrentCalendarTime()
-    local numEvents = C_Calendar.GetNumDayEvents(0, date.monthDay)
-    for i=1, numEvents do
-        local event = C_Calendar.GetHolidayInfo(0, date.monthDay, i)
-        if event and (event.texture == 235461 or event.texture == 235462) then -- Non-localised way to detect specific holiday
-            self:SetText(L.STRANGER_THINGS_LABEL)
-        end
-    end
+	local date = C_DateAndTime.GetCurrentCalendarTime()
+	local numEvents = C_Calendar.GetNumDayEvents(0, date.monthDay)
+	for i=1, numEvents do
+		local event = C_Calendar.GetHolidayInfo(0, date.monthDay, i)
+		if event and (event.texture == 235461 or event.texture == 235462) then -- Non-localised way to detect specific holiday
+			self:SetText(L.STRANGER_THINGS_LABEL)
+		end
+	end
 end
 
 local accwideCheckboxAchievements =
@@ -1195,6 +1223,26 @@ end)
 checkboxShowPvP:SetATTTooltip(L.SHOW_PVP_CHECKBOX_TOOLTIP)
 checkboxShowPvP:AlignBelow(checkboxShowPetBattles)
 
+if app.GameBuildVersion > 50000 and app.GameBuildVersion <= 70000 then
+	local checkboxShowChallengeMaster = child:CreateCheckBox("|TInterface\\Icons\\achievement_challengemode_platinum:0|t " .. L.SHOW_CHALLENGE_MASTER_CHECKBOX,
+	function(self)
+		self:SetChecked(not settings:Get("Hide:ChallengeMaster"))	-- Inversed, so enabled = show
+		if app.MODE_DEBUG then
+			self:Disable()
+			self:SetAlpha(0.4)
+		else
+			self:Enable()
+			self:SetAlpha(1)
+		end
+	end,
+	function(self)
+		settings:Set("Hide:ChallengeMaster", not self:GetChecked())	-- Inversed, so enabled = show
+		settings:UpdateMode(1)
+	end)
+	checkboxShowChallengeMaster:SetATTTooltip(L.SHOW_CHALLENGE_MASTER_CHECKBOX_TOOLTIP)
+	checkboxShowChallengeMaster:AlignBelow(checkboxShowPvP)
+end
+
 if app.GameBuildVersion >= 100000 then
 	local checkboxShowSkyriding = child:CreateCheckBox("|TInterface\\Icons\\ability_dragonriding_dragonridinggliding01:0|t |c" .. app.DefaultColors.Insane .. L.SHOW_SKYRIDING_CHECKBOX,
 	function(self)
@@ -1254,7 +1302,7 @@ if app.GameBuildVersion >= 60000 then
 
 			-- Runeforge Legendaries (Shadowlands+)
 			local accwideCheckboxRunecarvingPowers =
-			child:CreateForcedAccountWideCheckbox()
+			child:CreateAccountWideCheckbox("RUNEFORGELEGENDARIES", "RuneforgeLegendaries")
 				:AlignBelow(accwideCheckboxConduits)
 			child:CreateTrackingCheckbox("RUNEFORGELEGENDARIES", "RuneforgeLegendaries", true)
 				:AlignAfter(accwideCheckboxRunecarvingPowers)
@@ -1262,7 +1310,7 @@ if app.GameBuildVersion >= 60000 then
 			if app.GameBuildVersion >= 100000 then
 				-- Mount Mods (Dragonflight+)
 				local accwideCheckboxMountMods =
-				child:CreateForcedAccountWideCheckbox()
+				child:CreateAccountWideCheckbox("MOUNTMODS", "MountMods")
 					:AlignBelow(accwideCheckboxRunecarvingPowers)
 				child:CreateTrackingCheckbox("MOUNTMODS", "MountMods", true)
 					:AlignAfter(accwideCheckboxMountMods)

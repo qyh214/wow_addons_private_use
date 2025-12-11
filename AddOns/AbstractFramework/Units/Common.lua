@@ -2,6 +2,7 @@
 local AF = _G.AbstractFramework
 
 local strfind = strfind
+local strlower = strlower
 local bitband = bit.band
 local GetNumGroupMembers = GetNumGroupMembers
 local GetRaidRosterInfo = GetRaidRosterInfo
@@ -9,16 +10,27 @@ local IsInRaid = IsInRaid
 local IsInGroup = IsInGroup
 local UnitIsUnit = UnitIsUnit
 local UnitInParty = UnitInParty
+local UnitClassBase = AF.UnitClassBase
 local UnitInPartyIsAI = UnitInPartyIsAI or AF.noop
 local UnitPlayerOrPetInParty = UnitPlayerOrPetInParty
 local UnitPlayerOrPetInRaid = UnitPlayerOrPetInRaid
+local UnitIsPlayer = UnitIsPlayer
 local UnitInPartyIsAI = UnitInPartyIsAI
-local UnitClassBase = UnitClassBase
 local UnitName = UnitName
 local GetUnitName = GetUnitName
 local GetNormalizedRealmName = GetNormalizedRealmName
 local UnitLevel = UnitLevel
+local UnitEffectiveLevel = UnitEffectiveLevel
 local IsLevelAtEffectiveMaxLevel = IsLevelAtEffectiveMaxLevel
+local UnitClassification = UnitClassification
+local UnitExists = UnitExists
+local UnitPlayerControlled = UnitPlayerControlled
+local UnitCreatureType = UnitCreatureType
+local GetUnitTooltipData = C_TooltipInfo and C_TooltipInfo.GetUnit
+local GetCVarBool = C_CVar.GetCVarBool
+local UnitIsWildBattlePet = UnitIsWildBattlePet
+local UnitIsBattlePetCompanion = UnitIsBattlePetCompanion
+local UnitBattlePetLevel = UnitBattlePetLevel
 
 ---------------------------------------------------------------------
 -- group
@@ -45,7 +57,7 @@ function AF.GetUnitsInSubGroup(group)
         -- name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML, combatRole = GetRaidRosterInfo(raidIndex)
         local name, _, subgroup = GetRaidRosterInfo(i)
         if subgroup == group then
-            tinsert(units, "raid"..i)
+            tinsert(units, "raid" .. i)
         end
     end
     return units
@@ -115,7 +127,7 @@ function AF.GetPetOwnerUnitID(petUnitID)
 end
 
 ---@return function iterator
-function AF.GroupPlayersIterator()
+function AF.IterateGroupPlayers()
     local groupType = IsInRaid() and "raid" or "party"
     local numGroupMembers = GetNumGroupMembers()
     local i
@@ -140,7 +152,7 @@ function AF.GroupPlayersIterator()
 end
 
 ---@return function iterator
-function AF.GroupPetsIterator()
+function AF.IterateGroupPets()
     local groupType = IsInRaid() and "raid" or "party"
     local numGroupMembers = GetNumGroupMembers()
     local i = groupType == "party" and 0 or 1
@@ -157,7 +169,7 @@ function AF.GroupPetsIterator()
     end
 end
 
----@return string groupType raid, party, solo
+---@return "raid"|"party"|"solo" groupType
 function AF.GetGroupType()
     if IsInRaid() then
         return "raid"
@@ -211,6 +223,7 @@ end
 ---@return string? bestUnitID
 ---@return string? unitName
 ---@return string? classFileName
+---@return string? classID
 function AF.GetTargetUnitInfo()
     if UnitIsUnit("target", "player") then
         return "player", UnitName("player"), UnitClassBase("player")
@@ -221,20 +234,20 @@ function AF.GetTargetUnitInfo()
 
     if IsInRaid() then
         for i = 1, GetNumGroupMembers() do
-            if UnitIsUnit("target", "raid"..i) then
-                return "raid"..i, UnitName("raid"..i), UnitClassBase("raid"..i)
+            if UnitIsUnit("target", "raid" .. i) then
+                return "raid" .. i, UnitName("raid" .. i), UnitClassBase("raid" .. i)
             end
-            if UnitIsUnit("target", "raidpet"..i) then
-                return "raidpet"..i, UnitName("raidpet"..i)
+            if UnitIsUnit("target", "raidpet" .. i) then
+                return "raidpet" .. i, UnitName("raidpet" .. i)
             end
         end
     elseif IsInGroup() then
-        for i = 1, GetNumGroupMembers()-1 do
-            if UnitIsUnit("target", "party"..i) then
-                return "party"..i, UnitName("party"..i), UnitClassBase("party"..i)
+        for i = 1, GetNumGroupMembers() - 1 do
+            if UnitIsUnit("target", "party" .. i) then
+                return "party" .. i, UnitName("party" .. i), UnitClassBase("party" .. i)
             end
-            if UnitIsUnit("target", "partypet"..i) then
-                return "partypet"..i, UnitName("partypet"..i)
+            if UnitIsUnit("target", "partypet" .. i) then
+                return "partypet" .. i, UnitName("partypet" .. i)
             end
         end
     end
@@ -255,11 +268,10 @@ function AF.GetPetUnit(playerUnit)
 end
 
 function AF.HasGroupPermission()
-    if isPartyMarkPermission and IsInGroup() and not IsInRaid() then return true end
     return UnitIsGroupLeader("player") or (IsInRaid() and UnitIsGroupAssistant("player"))
 end
 
-function AF.HasMarkPermission()
+function AF.HasMarkerPermission()
     if IsInRaid() then
         return UnitIsGroupLeader("player") or UnitIsGroupAssistant("player")
     else -- party / solo
@@ -326,13 +338,21 @@ end
 -- name
 ---------------------------------------------------------------------
 
+---@param unit string
+---@return string fullName
 function AF.UnitFullName(unit)
-    if not unit or not UnitIsPlayer(unit) then return end
+    if not unit then return end
 
-    local name = GetUnitName(unit, true)
+    local name
+    if not UnitIsPlayer(unit) then
+        name = UnitName(unit)
+        return name
+    end
+
+    name = GetUnitName(unit, true)
 
     --? name might be nil in some cases?
-    if name and not string.find(name, "-") then
+    if name and not name:match(".+-.+") then
         local server = GetNormalizedRealmName()
         --? server might be nil in some cases?
         if server then
@@ -357,7 +377,7 @@ function AF.ToFullName(shortName, server)
     if not string.find(fullName, "-") then
         server = server or GetNormalizedRealmName()
         if server then
-            fullName = fullName.."-"..server
+            fullName = fullName .. "-" .. server
         end
     end
     return fullName
@@ -385,10 +405,131 @@ end
 -- level
 ---------------------------------------------------------------------
 
-function AF.IsMaxLevel()
+---@param unit string default "player"
+---@return boolean isMaxLevel
+function AF.IsMaxLevel(unit)
+    unit = unit or "player"
     -- local maxLevel = GetMaxLevelForLatestExpansion() --? GetMaxPlayerLevel()
-    local playerLevel = UnitLevel("player")
-    local isMaxLevel =  IsLevelAtEffectiveMaxLevel(playerLevel)
+    local level = UnitLevel(unit)
+    local isMaxLevel = IsLevelAtEffectiveMaxLevel(level)
     -- local isTrialMaxLevel =  (IsRestrictedAccount() or IsTrialAccount() or IsVeteranTrialAccount()) and (playerLevel == 20)
     return isMaxLevel -- or isTrialMaxLevel
+end
+
+function AF.GetLevelText(unit)
+    if UnitIsWildBattlePet(unit) or UnitIsBattlePetCompanion(unit) then
+        return UnitBattlePetLevel(unit)
+    else
+        local level = UnitEffectiveLevel(unit)
+        local plus = strfind(UnitClassification(unit), "elite$") and "+" or ""
+
+        if level > 0 then
+            return level .. plus
+        else
+            return "??"
+        end
+    end
+end
+
+---------------------------------------------------------------------
+-- npc
+---------------------------------------------------------------------
+local LEVEL = _G.LEVEL
+local PVP = _G.PVP
+local FACTION_HORDE = _G.FACTION_HORDE
+local FACTION_ALLIANCE = _G.FACTION_ALLIANCE
+local CORPSE = _G.CORPSE
+
+local npc_subtitle_cache = {}
+local npc_faction_cache = {}
+
+local function UpdateNPCCache(unit)
+    if not UnitExists(unit) or UnitIsPlayer(unit) or UnitPlayerControlled(unit) then
+        return
+    end
+
+    local name = UnitName(unit)
+
+    if npc_subtitle_cache[name] ~= nil and npc_faction_cache[name] ~= nil then
+        return name
+    end
+
+    --- TODO: use a scanner tooltip to get data for classic
+    local data = GetUnitTooltipData(unit)
+    if not data then
+        return
+    end
+
+    local numLines = #data.lines
+    local text
+
+    -- subtitle
+    local line = GetCVarBool("colorblindMode") and 3 or 2
+    if not npc_subtitle_cache[name] and numLines >= line then
+        text = data.lines[line].leftText or ""
+        if strfind(text, LEVEL) then
+            npc_subtitle_cache[name] = false
+        else
+            npc_subtitle_cache[name] = text
+            line = line + 1
+        end
+    end
+
+    -- faction
+    if npc_faction_cache[name] == nil then
+        for i = line, numLines do
+            text = data.lines[i].leftText or ""
+            if strfind(text, LEVEL) then
+                text = (data.lines[i + 1] and not data.lines[i + 1].id) and data.lines[i + 1].leftText
+                if not AF.IsBlank(text)
+                    and text ~= PVP and text ~= FACTION_HORDE and text ~= FACTION_ALLIANCE and text ~= CORPSE
+                    and not AF.GetClassID(text)
+                    and text ~= UnitCreatureType(unit) then
+
+                    npc_faction_cache[name] = text
+                else
+                    npc_faction_cache[name] = false
+                end
+                break
+            end
+        end
+    end
+
+    return name
+end
+
+---@param unit string
+---@return string|nil
+function AF.GetNPCSubtitle(unit)
+    local name = UpdateNPCCache(unit)
+
+    if not name then
+        return nil
+    end
+
+    local subtitle = npc_subtitle_cache[name]
+
+    if subtitle then
+        return subtitle
+    else
+        return nil
+    end
+end
+
+---@param unit string
+---@return string|nil
+function AF.GetNPCFaction(unit)
+    local name = UpdateNPCCache(unit)
+
+    if not name then
+        return nil
+    end
+
+    local faction = npc_faction_cache[name]
+
+    if faction then
+        return faction
+    else
+        return nil
+    end
 end

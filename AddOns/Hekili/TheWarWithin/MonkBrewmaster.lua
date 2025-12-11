@@ -127,7 +127,9 @@ spec:RegisterTalents( {
     heightened_guard               = { 101711,  455081, 1 }, -- Ox Stance will now trigger when an attack is larger than $s1% of your current health
     high_tolerance                 = { 101189,  196737, 2 }, -- Stagger is $s1% more effective at delaying damage. You gain up to $s2% Haste based on your current level of Stagger
     hit_scheme                     = { 101071,  383695, 1 }, -- Dealing damage with Blackout Kick increases the damage of your next Keg Smash by $s1%, stacking up to $s2 times
+    improved_invoke_niuzao         = { 101073,  322740, 1 }, -- While active, Invoke Niuzao, the Black Ox can be recast once to cause Niuzao to stomp mightily and knock nearby enemies into the air
     improved_invoke_niuzao_the_black_ox = { 101073,  322740, 1 }, -- While active, Invoke Niuzao, the Black Ox can be recast once to cause Niuzao to stomp mightily and knock nearby enemies into the air
+    invoke_niuzao                  = { 101075,  132578, 1 }, -- Summons an effigy of Niuzao, the Black Ox for $s1 sec that attacks your primary target and Stomps when you cast Purify, damaging all nearby enemies. While active, $s2% of damage delayed by Stagger is instead Staggered by Niuzao, and Niuzao is healed for $s3% of your purified Stagger
     invoke_niuzao_the_black_ox     = { 101075,  132578, 1 }, -- Summons an effigy of Niuzao, the Black Ox for $s1 sec that attacks your primary target and Stomps when you cast Purify, damaging all nearby enemies. While active, $s2% of damage delayed by Stagger is instead Staggered by Niuzao, and Niuzao is healed for $s3% of your purified Stagger
     keg_smash                      = { 101088,  121253, 1 }, -- Smash a keg of brew on the target, dealing $s$s2 Physical damage to all enemies within $s3 yds and reducing their movement speed by $s4% for $s5 sec. Deals reduced damage beyond $s6 targets. Grants Shuffle for $s7 sec and reduces the remaining cooldown on your Brews by $s8 sec
     light_brewing                  = { 101082,  325093, 1 }, -- Reduces the cooldown of Purifying Brew and Celestial Brew by $s1%
@@ -302,6 +304,11 @@ spec:RegisterAuras( {
     },
     brewmasters_balance = {
         id = 245013,
+    },
+    call_to_arms_invoke_niuzao = {
+        id = 358520,
+        duration = 12,
+        max_stack = 1
     },
     celestial_brew = {
         id = 322507,
@@ -1229,10 +1236,8 @@ spec:RegisterAbilities( {
             gain( energy.max, "energy" )
             if talent.endless_draught.enabled then
                 if talent.celestial_brew.enabled then gainCharges( "celestial_brew", class.abilities.celestial_brew.charges ) end
-                if talent.celestial_infusion.enabled then gainCharges( "celestial_infusion", class.abilities.celestial_infusion.charges ) end
             else
                 if talent.celestial_brew.enabled then setCooldown( "celestial_brew", 0 ) end
-                if talent.celestial_infusion.enabled then setCooldown( "celestial_infusion", 0 ) end
             end
             gainCharges( "purifying_brew", class.abilities.purifying_brew.charges )
         end,
@@ -1306,7 +1311,7 @@ spec:RegisterAbilities( {
 
     -- Talent: A swig of strong brew that coalesces purified chi escaping your body into a celestial guard, absorbing 13,480 damage.
     celestial_brew = {
-        id = 322507,
+        id = function() return talent.celestial_infusion.enabled and 1241059 or 322507 end,
         cast = 0,
         charges = function() return talent.endless_draught.enabled and 2 or nil end,
         cooldown = function() return talent.light_brewing.enabled and 36 or 45 end,
@@ -1317,14 +1322,21 @@ spec:RegisterAbilities( {
         end,
         gcd = "totem",
         school = "physical",
+        texture = function() return talent.celestial_infusion.enabled and 613399 or 1360979 end,
 
-        talent = "celestial_brew",
+        talent = function() return talent.celestial_infusion.enabled and "celestial_infusion" or "celestial_brew" end,
         startsCombat = false,
         toggle = "defensives",
 
         handler = function ()
             removeBuff( "purified_chi" )
-            applyBuff( "celestial_brew" )
+
+            if talent.celestial_infusion.enabled then
+                applyBuff( "celestial_infusion" )
+            else
+                applyBuff( "celestial_brew" )
+            end
+
 
             if hero_tree.master_of_harmony then
                 if buff.aspect_of_harmony_accumulator.up then
@@ -1338,40 +1350,9 @@ spec:RegisterAbilities( {
 
             if talent.pretense_of_instability.enabled then applyBuff( "pretense_of_instability" ) end
         end,
-    },
 
-    -- A strong herbal brew that coalesces purified chi escaping your body into a celestial guard, absorbing $s1% of incoming damage, up to $s2 total. Purifying Stagger damage increases absorption by up to $s3%
-    -- https://www.wowhead.com/spell=1241059
-    celestial_infusion = {
-        id = 1241059,
-        charges = function() return talent.endless_draught.enabled and 2 or nil end,
-        cooldown = function() return talent.light_brewing.enabled and 36 or 45 end,
-        recharge = function()
-            if talent.endless_draught.enabled then
-                return talent.light_brewing.enabled and 36 or 45
-            end
-        end,
-        gcd = "totem",
-
-        talent = "celestial_infusion",
-        startsCombat = false,
-        toggle = "defensives",
-
-        texture = 613399,
-
-        handler = function ()
-            applyBuff( "celestial_infusion" )
-            if talent.pretense_of_instability.enabled then applyBuff( "pretense_of_instability" ) end
-            if hero_tree.master_of_harmony then
-                if buff.aspect_of_harmony_accumulator.up then
-                    removeBuff( "aspect_of_harmony_accumulator" )
-                    applyBuff( "aspect_of_harmony" )
-                end
-                if set_bonus.tww3 >= 4 then
-                    addStack( "potential_energy", 2 )
-                end
-            end
-        end
+        bind = "celestial_brew",
+        copy = { "celestial_infusion", 1241059, "celestial_brew", 322507 }
     },
 
     -- Talent: Hurls a torrent of Chi energy up to 40 yds forward, dealing 967 Nature damage to all enemies, and 1,775 healing to the Monk and all allies in its path. Healing reduced beyond 6 targets. Casting Chi Burst does not prevent avoiding attacks.
@@ -1656,7 +1637,7 @@ spec:RegisterAbilities( {
 
         handler = function ()
             summonPet( "niuzao_the_black_ox", 25 )
-            applyBuff( "improved_invoke_niuzao_the_black_ox" )
+            if talent.improved_niuzao_the_black_ox.enabled then applyBuff( "improved_invoke_niuzao_the_black_ox" ) end
 
             if legendary.invokers_delight.enabled then
                 if buff.invokers_delight.down then stat.haste = stat.haste + 0.33 end
@@ -2162,8 +2143,12 @@ spec:RegisterAbilities( {
         handler = function ()
             applyBuff( "weapons_of_order" )
             setCooldown( "keg_smash", 0 )
-            if talent.call_to_arms.enabled or legendary.call_to_arms.enabled then summonPet( "niuzao", 12 ) end
             if talent.chi_surge.enabled then reduceCooldown( "weapons_of_order", min( active_enemies, 5 ) * 4 ) end
+            if talent.call_to_arms.enabled then
+                applyBuff( "call_to_arms_invoke_niuzao" )
+                summonPet( "niuzao_the_black_ox", 12 )
+                if talent.improved_niuzao_the_black_ox.enabled then applyBuff( "improved_invoke_niuzao_the_black_ox" ) end
+            end
         end,
 
         copy = { 387184, 310454 }
@@ -2229,11 +2214,10 @@ spec:RegisterSetting( "purify_for_celestial", true, {
 
 spec:RegisterSetting( "purify_for_niuzao", true, {
     name = strformat( "%s: Maximize %s", Hekili:GetSpellLinkWithTexture( spec.abilities.purifying_brew.id ),
-        Hekili:GetSpellLinkWithTexture( spec.talents.improved_invoke_niuzao_the_black_ox[2] ) ),
-    desc = strformat( "If checked, %s may be recommended when %s is active if %s is talented.\n\n"
+        Hekili:GetSpellLinkWithTexture( spec.talents.invoke_niuzao_the_black_ox[2] ) ),
+    desc = strformat( "If checked, %s may be recommended when %s is active.\n\n"
         .. "This feature is used to maximize %s damage from your guardian.", Hekili:GetSpellLinkWithTexture( spec.abilities.purifying_brew.id ),
-        Hekili:GetSpellLinkWithTexture( spec.abilities.invoke_niuzao.id ), Hekili:GetSpellLinkWithTexture( spec.talents.improved_invoke_niuzao_the_black_ox[2] ),
-        Hekili:GetSpellLinkWithTexture( 227291 ) ),
+        Hekili:GetSpellLinkWithTexture( spec.abilities.invoke_niuzao.id ), Hekili:GetSpellLinkWithTexture( 227291 ) ),
     type = "toggle",
     width = "full"
 } )
@@ -2306,4 +2290,4 @@ spec:RegisterSetting( "max_damage", true, {
     width = "full",
 } )
 
-spec:RegisterPack( "Brewmaster", 20241021, [[Hekili:nJvBVTnos4FlblGAC6gfjz7MKIydCTF52IdloaxG9BwMwI2MBKe1rrL0CWq)23HuVrklkB3KDBrbkCehoZZ8cho8zP7YVUCriIJx(7EoEtCD8CTDDhF30jlxWFjfVCrkk4r0w4hjOy4))ed)CmkJJzILEjIIcfQiJMZcGL3X5PzF8MB2s47YxBhqJVjJeNhH4eAsadTHl(7GBwUyDojI)Bjlx3V9hVCbkNVJcMzbj(ZGMjHH4sXXzblxie)AxNR9C)yXQpHw)skJs3a)mcamnNxS6Z0410IVu8LArDfI(VYsXbWQcz)3iwmn5LIvOGGCjkPm4psclwjmAXQ8ub2A0HZ9x759rHMtYYJXhASvpd(DXQVs2Ibf9FrrXQ71zQW(prjG(dP5RJWx)5p1kWDLkVsGeWg4Kmsakc0uoJS5fsYwWKqciRDt3ET3hGn91DaA(dey0)aqajz5IisgptMDXBq5rC4N)UmBJtqGLdx(PLlcyeirsqqUgX2I52H415B2yhajyWy2mmkGdjIar2dsYPyeZFheF8Z4mYJ4LCiTj0zTeHKnBYZW(XOTKavtbco2OX3Hrr8D2PI0YdZkwLH5cZNz)e5jWT9tXqTvcSOvXkj(GVJci08mFPeqmsyE780wKuUvHDNmGtN8OmMAPyZuzO2FdL5hGJWqGqKaajUSyfNeJ95uW9(MFWorildqCXQTbH2W3kwTFFfcLAHGdbXiaUAHU2cmCmIKuQdx7PfRUsrxJkvxaLgfsFoXUbn(RHsaT96PVtWwvOZFdRmGi8H5sJ0gIsRlQKkueQMEsHQYseD0iqyDu6ciqHIGeMnjgou(KWz1LUYedfVgPOTMCJiUhIGIlSYwxxDg0pqCeScjJADtDBlCZpy0n3YOvjRVFl3B5ughTf6j4hKZy7sL5cNsblxOS4F(SJTZHYE3A0TYOr0FM9kz5RZW1M3DAjTE9nRVFxduZ3NNj34qo09)WsxVoF6uswUoNw26VdVRUKAwJ7nS3mR)Wa0v1zqx08LP)DN)EZ8q3H9qVt7g7Iv3ovQEsc4dcnu6K(JZKwPsy5vtxjdko2WnwVV9NIlVkllgv77YydCjmxbuYGJYWgO4uCcmpclwc3tCaJIvtDEZH7LviwbthEtuh3rc6jQJpXP5b78PB8dXi(UoZp5A(2zPP3s2Wf7LVd7t)MnKRdEu6qtKiStmOPKbVRE(QwCG)wkoQnW(bvmMsRKrdB3QkY6ikn0Fto7LUIDNMyywgMjgRORy3RkgIfGseJDXysqQjQNJQOrKT74z()zE424EK1vv2negwc0UsPnqlkjagEGbdpaZHh1v0XAUdARm8ZibpM1vYUdH2KXzKKhXCxOPreLR83In1nH3ztED2KNCtMhUbNGzBFrM9N4OMTGcfOIPPM0Z8GeVYgAY1rYhGjcv7kF(LVYRVSFcfLJlVBYES8OM65XAD8mgLcVpsOekle6OvDLYfIhwX7XeLO0Md5gz9M5Hd9mpOXpbEF7S1hecAgQ(nkoyE(KxzCyJ4uQV27xC6BbXfut(EICEDICd5MJnpPYR0nptq3B6U5XFhKTvJsvHV3GK(yx9(4vo3JWo7(AET2KWR28xNZY62YDSwhYUorxHn)s92Y(nr5Kqc)fHsILxfvx43AhgjtChBwEsjYf6(ixE2jpQYKaxqMJFkksEz4yZ9xRqygCtryZilhaUhXaYIrz7KAZCR2kTjEipdExCkkld2FM2X8HSyBn4bQqLpIdwu9C5yPCIIkqZWejIGU4EtnHUxkKW9Ec7d3XetWLLLtAD6SussIaHbmXD5nzfZ9AFLPBZnVmDSDOjHNmytI(JJ9ZiIHuLOFs3iOyq16jmfR3QeZ1ec5U8OzSXNqXJYyR6Asgp0AtatlgrLQaQT7CMEIwBI2A)osP1MGLNTtOT)efI9FMK0DcTjAZmtsEI(i2pHK))ru5WV1d00DBMBbupzKOOf6LETsJ3gi3gbH20LBa(0wCIPofto(KyVs71)PkOhCkdlkSrTK(2uB3307MFNxtbxv79dp8125V8FlEcMQxSsfF(UU2WWTpJycGcJfljQMeNcpfcUWxq3(7QiO(DfRy4)xouIbLFzub96OCongXfFaQ5t2IZSl(Y)HKalnTKgEWAYLF3Wmoc6MtpQu1Ehi9LUFBKTGL9FtcvHj8kpIsHt1sU1HLLuIhig6(orqNUHeHRdnWJXRZcVF2nLX9IV03AnHWFLSzMPiUalvBg2YbmXxUvJC4RUxno6vxOKYCHMAFR4dZmqgV1WeXRQx9(PLivYMS1GKUBDzp0T)qfj3733hTXwgPy)bx7PxvT3r73Fes1FWRwwRdjsFUGPEf3txfQUNjIYTU8IHle737gb7RNPrReUNR0gv8LF5xQRA7jtebNK8dcNnvPWRbrM7R2BARuoRuOaSNTyxE52WvfsovoBF8a0OZs2ChlfwVMp7iCQniaf869JfFx5Ox7zmi2dgToFik5p8uryjzJ)dgapF0DYHV3kiwM1M5mSpmt3hGNZ9pyu87cIUAquH0Zo3EC7uRdzzDE7JCV6s416Vx8FxjJ8JgzzK4xvl2z9owDQZzB1l7L92rQ2uNCw1vAPlvaeJKXoFILci7HawT0U(adWxAzvv7RnKOQ(vDotvxPdfPAb1Agr10KgbOAwwLVt1fedxadqg)Rc2jNvZO5rLWt3zviLuevlNa(HjodF17zFS4uzPzUJ94RAlHSmrdP1fNchm)K4exCeUe)H4mASa(GNJ(hM7o5CCxpf39ngNNbk0c6hLtp4cGZpWRXvNMNw)sc1p210QR1HofrS5IJYgJwJYMNb30o8a61uLV5jVkJH2pRekBQN3(Q98P(ziXAi1BzITmdluxIo2YmFlpCVLaZT86mFYrI1NvO(WHdmvVQvRObvzXVzoSAFSsVbT9719VhMocEF1fhjpSF)LdeZgpyAAuNREB5EQ3IkTWDxMLuxu7bpMRNlViA(eNRnZzZvQ81CcvTNToLuTS8Vc]] )
+spec:RegisterPack( "Brewmaster", 20250812, [[Hekili:nRXAVTnoYFlblGw701oYY25rpBd029dxdk2TaUhUpC4SmTeTn3OxREK0CWW)2VzOKSiLeLLZJM(LuxXHZloViNzXGfFBXCBsmDXFyOBmw)6bg91VzOHXGfZJFmGUyEaX6oYg4hEex4VFmK(GljkMgIl9OJpXgrrKFsOfS8244GO3FXfByXBtw13Y39IiMBIdjM57zfswhJ)FRlwmFvcZj(ZElwvl9hCZI5KK4T(azMZC)eGzMTnnfCAK1I596TF532s3V8FtcH)a0J5TF5CkjYh(3H7VfXxp9R7nW497x(HV(fyXh9S2Ve23GrwRwPBjaZaaMprDOrXmIZ(LF2BDsedr08KGa)W493U)2MPObhBJ6nqVNbITpsw9yqOV)A4NoGo0pjgiHV7k)ca5K9drbulyneY)jj0137X9ljwwjC1MpqkINnqhqlSFzsaQSYWG(n9mqH7t(ErjU0QeA5datcmnBdfqZxjoUf7uFms779zaUT9tw5q79PpMV81PioBzpa)uViMfQA(AsiB9JmVna5aBHO8TCvpJlFFvf0I5oSO4iUzgDnjXjg(5FWn7iwOrby7eqjHMBbP0mkoKDhygr9iadzV4JlIbddrGTzRHJgQPlzdZQeGdral(YCRqgyNYiGXdL4eVTFaQNNmD)YiACmicr9VNDpinMbuW61dwuB)YvjRxJFNyX8tIm5qaIos((jbfCs6wr6osjDJjE3XvvAc0mGRbnx7hAAvyYbq0z)YyMl1m2heVVBATLeUHgbC8(LBSS7dFB)YD7Y4qowyuBamgWxfSU0cHuxcZlfhd6pE)YZfWv3u0z577y7)Gx)dCJ5k4KvAVgY7eOvg3zUomvHGYWmorkurb52kCeIQQXTsv1jtukXqitwiNflYY8wZaOBoood0Neh4CTpZfCfVh1jYymJtAsTkITdhH4XJnbSbPcBDvM3NPf68LZmfAdzAJAJlvQn2e6NDM(0PCTwDrXKnq0atRKWWTb8Jm9uatxi1hz20JTZMoKVsPyf574)ZSuXTY1B2e(62DOvRSP90fnanpnjJVXMeOBEZoUEEYuBoSgO3UtRxdPl3KA6bXRzPzA9Qbi4REJI4G3SZVxmjCqZsOr7sSVF5vJ5ON5bYaIHuH0CyeNkzaZZGDoxPO3hsS9UIFI54snl6Ml7CDdKRowGP4khHAsiUbupOcMqxo72Y6q2VCS(lo7MN6uGNQMjQK4Wz6rIvzf7NyT10FTPnLeVTuzwduNeNt6nS1X4EJ3sn9)EF4S26oUanIZHL0bhmzOBZldRGpOFpG6uOyVuKhd8ZGrI3UseKvo((2MRtcFSmyxlbgnmIgIvFugSBebJeAr8WQZcd5mPCrQ6IG6W2SnoY8VsS34wdSsL)UMfs5mAzOKQ7L4zbfpecfpavH7ug0HsIdzdx9hYSUlQmKLRvT4ehk8e2vgNBtVpt9w6WL55b(ZH0iMdJc8eVK40RgQcfizLmzwvbRpqjbWLmWD7hAdbgYImBtRDzZSVNzAbHvgLZejEpYOo2OPThfSaddczrCRhJlvYdffkwHrYH)4O)QFuIOdZ5XC)lkqcO0Bty73t5SX1VaszZuOC9chUhhBdOtY3hOy8r)Uxn1qTKdVfy5u(TL)AV(rjPlNk(G3viZ7oA8ayRo(Xc)FCtLZUvAtgL2KbFtQZXqbh0npYJTosV6vHi8NBa59TPp2G8LGuDzW6UUhENsP8k8siGy(hYQmu9vJFMLKWxVISyk8Uj9VN4KqtRUS)qEYsXmQ54qLb5z4ZIuJ6kJl7hdrx5zmuF9UHQtu(tG0FCZ9xm9G675(m1dRXunMspuHEDlGLyo6PO5mkP5AumvFV3NPyEImDTh3hCSRCAlQLYuFVeh6QVN8ZuB050IsXFuQRtr9tzRgYQpPyC5VquJVYZWBKRjntWUd0HLQoBK6BR26a4PApIdwWi)bvjWDTOUPpyQqX4dfy5TmZvjHrXCEqQ40YglLzy13mRGHXcwX30e42OImP5uG5DV)DutpwY)J4ZXP6uBnGWc)eXvnLWEPhquTJaMy7YMyr1P1ke71ojmBwmVqkxELWvfEO4rSuYOeVuZbe3h52vQYx15O1qj)wWzEeTRURjyhvWoNuNVjYazoxhxV2mAA3rd)oWhCilPdlav2V8okaJljAlxjRoJu9SMqvzyZumdio8Q(hPoMFMzqeypAF4HdQybiZwQJzMB6d(8HGFDajcFXBzZ)MOOG)rzuiQ4RSyPZoT0edaMjX8hiaV9Qeq3WbcfV7Hlp4rDz00ulJeQepaUgjYHwH4nQpy6R(LiFE(uJvhxvDYM00GDAmmwQHFEtgedtWVzqEUIcWfmiRP5iQFjVgzZxAEu6HKAyh5o(hlSlpjzJcU60i)4f82vO0aDzGBa)YBRr9G6uFDu5GkQmo7yXaqfszxt8DiZFarCDHe3kd2KfU)iHcg2IOsI3EuctC9rBYZgMeTfX7FrSPMpW8SRPEOQWigsN(9ahFoVbrJ50TP2uESIWspk6OKYs3wP)4IyV1XKINknbKq4VYaWfiPxoTiNJC1CJvNmRvLF(tPKRoLA(dLml9Hs6j4nFqdvWZWnQs3a8PnupvfemwDoSxi6vFYZyiEsifJpsQoHf19u58TCpne9Spm8ndGk(jHi2JwmNpkhmx(4VSCnoik)A2iC8R7xgs)7eWlfo1J8XrpHKe77sIXpaHn8GBs1F)TFH5blzGtAY)YlkDsAqiWb4a0kUPbJWPN5)aFS2Nw9)(pq9qCiO3SzrC2VaXx(AH4RAfIv(mPnI7RFnW9(B)SBo(mkqeF2BGL5dzJf(g4xJ2j(Rzo0fZ)LFz)Y2oWwRC8xDbWmG5Xd8b75IpWPXxXh)eQi7liLUiZ(4ciUWD8a9PJkwFef7VfP38di)tiY5tQKlloD4SEVWOzHa)7Gb17XhLiFsUqbfx4B)5V)NCpOiWkmAleCcTvfMMgK2P6jmhhSRunsu)dojVB6fPUfcRcFRYWijUO0WhjUq6Sa9BS1tl6U1KPkMYinE4mLtyKiELlraXF2yYO140eP1PM5iAs207SBhN(Lg0fTQFmlu0Kb9hFE2E7UB3rMwOjg5WQv9fvMHJGKG4jJcrXRtAXovN)hTslin7pD16CwZt8t9cpUVAEoQmGRP6ZUPMHkpOCaxDtl7PJtLjzosDPI1EQMcNwanUFDvxMwoxZgn8MeFYYyfUrUT)Z01eAJ)SPhzibAKbXbv4TL)oxx20uPsSgEu70zr(ar0womD6j(bQapDUR1QVxkwm9uBQEZYWuzzWq)hPw8jXIdKyrHP4OuYLRgRvDSrMv8M)N3rVVX7W)CoxZ3TBQvADtYIiflTEjQow)KPAAK8YJJsxrAkpTjIRum)hiJWXuDtxYSrAcmzntuI0XEww)IVumMisF9WuHi(v5HarCLsZ8HKsnFepKWK0eDirzXb4qCH8kf)nSn0tvmVfh0u1mQgQrw9fjFax18QZAT5PJNo6PqYZowJjvItLLn)Qkjns1NUWu3yg8QkhQi4tseWHwyA(GoCuimKDif6XgYaP3eEYi9Ic8u(oeQlrTAbPtg0T56rp5Kb8vArRANP3F45fbo1uEMEwBAe7pjcXXStEtegPrbyIHU8hMny0PiUgcI7lmFEcCHKs)OVxnu2ZBIIVt79dHlgE9UDN2gm0u2t(UDRenjVJ7sYyEFVfJX1qCLurTXwRpBOibkFIiUM0TafzGABLrtBSH9LDB5M7iUIyphU()LIuVu31ezC1nNtebhEQZgZK1PD9YEc3UPnP9MmSxDwQjbGzxZYVQnEm127owhQLTslEg5dkMQnixLESXESiSPAE7yrlif97rRj0NzIvTPYkw4GAvtD3JMCJgYZfDPA2OJydEsMGvV4NQGyAN1PbVRD7ADZf7(eP)lf5ZUgwJnZnlaxJnY9nxooE2Ub6ANqxzlDHBz7rEAV6nJtLQZAYZy3ozJ4jJ72D3UZoIZgepQbhJHn6lkD6i1vtX40kByAMbqTnAt09R86coGkZEQ1PJcKFOYS(J1usFuXPEXAJlEuw(Oz8)HXZYX(tVSZSr69u3FWZf7nylIWFY4K3FWf)))]] )

@@ -386,6 +386,16 @@ local function ActivateSet(set, state)
                         end
                     end
                 end
+            else
+                local _, _, classID = UnitClass("player");
+                for _,subTreeID in ipairs(Internal.GetHeroTalentTreeIDsByClassID(classID)) do
+                    local subTreeInfo = C_Traits.GetSubTreeInfo(configID, subTreeID);
+                    if subTreeInfo and subTreeInfo.subTreeSelectionNodeIDs then
+                        for _, selectionNodeID in ipairs(subTreeInfo.subTreeSelectionNodeIDs) do
+                            set.nodes[selectionNodeID] = nil;
+                        end
+                    end
+                end
             end
 
             local done = {};
@@ -642,7 +652,7 @@ function DFTalentButtonSplitMixin:OnLoad()
     }
 end
 function DFTalentButtonSplitMixin:ApplySize(width, height)
-	TalentButtonBasicArtMixin.ApplySize(self, width, height);
+	TalentButtonArtMixin.ApplySize(self, width, height);
     self.StateBorder:SetSize(width + 18, height + 12);
     self.StateBorderHover:SetSize(width + 18, height + 12);
 end
@@ -695,7 +705,8 @@ function BtWLoadoutsDFTalentsMixin:OnLoad()
     self.temp = {}
 
 	self.talentButtonCollection = CreateFramePoolCollection();
-	self.talentDislayFramePool = CreateFramePoolCollection();
+	self.talentDisplayFramePool = CreateFramePoolCollection();
+	self.talentAnimationFramePoolCollection = CreateFramePoolCollection();
 	self.edgePool = CreateFramePoolCollection();
 	self.gatePool = CreateFramePool("FRAME", self.Scroll:GetScrollChild(), "BtWLoadoutsDFTalentFrameGateTemplate");
 	self.nodeIDToButton = {};

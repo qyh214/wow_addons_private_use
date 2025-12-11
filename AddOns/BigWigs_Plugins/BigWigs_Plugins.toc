@@ -1,4 +1,4 @@
-## Interface: 11506, 11507, 20504, 30405, 40402, 40401, 50500, 110105, 110107, 110200
+## Interface: 11508, 11507, 20505, 30405, 38000, 40402, 50503, 50502, 110205, 110207, 120000
 
 ## Title: BigWigs [|cffeda55fPlugins|r]
 ## Title-zhCN: BigWigs [|cffeda55f插件|r]
@@ -23,7 +23,7 @@
 ## Notes-esES: Plugins del núcleo de BigWigs.
 ## Notes-esMX: Plugins del núcleo de BigWigs.
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
-## Version: v392.7
+## Version: v402.1
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs, BigWigs_Core
@@ -32,5 +32,27 @@
 
 ## X-Category: Raid
 
-libs.xml
-modules.xml
+Libs\LibSink-2.0\LibSink-2.0.lua
+Libs\LibCandyBar-3.0\LibCandyBar-3.0.lua
+Libs\LibCustomGlow-1.0\LibCustomGlow-1.0.lua
+
+AltPower.lua
+AutoReply.lua
+Colors.lua
+Sound.lua
+Messages.lua
+BarStyles.lua
+Bars.lua
+Nameplates.lua
+BossBlock.lua
+InfoBox.lua
+RaidIcon.lua
+Proximity.lua
+Flash.lua
+Countdown.lua
+Pull.lua
+Break.lua
+Statistics.lua
+Victory.lua
+Wipe.lua
+BattleRes.lua

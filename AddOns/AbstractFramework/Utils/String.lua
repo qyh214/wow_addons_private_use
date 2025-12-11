@@ -3,6 +3,7 @@ local AF = _G.AbstractFramework
 
 local tonumber = tonumber
 local format, gsub, strlower, strupper, strsplit, strtrim = string.format, string.gsub, string.lower, string.upper, string.split, string.trim
+local utf8len, len, utf8sub = string.utf8len, string.len, string.utf8sub
 local tinsert, tconcat = table.insert, table.concat
 
 ---------------------------------------------------------------------
@@ -15,6 +16,11 @@ function AF.UpperFirst(str, lowerOthers)
         str = strlower(str)
     end
     return (str:gsub("^%l", strupper))
+end
+
+function AF.LowerFirst(str)
+    if AF.IsBlank(str) then return str end
+    return (str:gsub("^%u", strlower))
 end
 
 local function CapitalizeWord(space, firstChar, rest)
@@ -78,7 +84,7 @@ function AF.TableToString(t, sep, useKey, useValue)
                 str = str .. v .. sep
             end
         end
-        return str:sub(1, -2)
+        return str:sub(1, -(#sep + 1))
     else
         return tconcat(t, sep)
     end
@@ -94,10 +100,8 @@ end
 ---------------------------------------------------------------------
 -- number format
 ---------------------------------------------------------------------
-local symbol_1K, symbol_10K, symbol_1B = "", "", ""
-if LOCALE_zhCN then
-    symbol_1K, symbol_10K, symbol_1B = "千", "万", "亿"
-elseif LOCALE_zhTW then
+local symbol_1K, symbol_10K, symbol_1B = "千", "万", "亿"
+if LOCALE_zhTW then
     symbol_1K, symbol_10K, symbol_1B = "千", "萬", "億"
 elseif LOCALE_koKR then
     symbol_1K, symbol_10K, symbol_1B = "천", "만", "억"
@@ -176,4 +180,32 @@ function AF.FormatMoney(copper, style, useCommas, goldOnly)
             return format("%s%s %d%s %d%s", gold, GOLD_ICON, silver, SILVER_ICON, copper, COPPER_ICON)
         end
     end
+end
+
+---------------------------------------------------------------------
+-- truncation
+---------------------------------------------------------------------
+
+---@param s string if s contains only English characters, it will be truncated by enChars, otherwise by nonEnChars.
+---@param enChars number number of English characters
+---@param nonEnChars number number of non-English characters
+---@return string
+function AF.TruncateStringByLength(s, enChars, nonEnChars)
+    if AF.IsBlank(s) then return s end
+
+    local len1 = len(s)
+    local len2 = utf8len(s)
+    local ret = s
+
+    if len1 ~= len2 then
+        if nonEnChars and nonEnChars > 0 and len2 > nonEnChars then
+            ret = utf8sub(s, 1, nonEnChars)
+        end
+    else
+        if enChars and enChars > 0 and len1 > enChars then
+            ret =  utf8sub(s, 1, enChars)
+        end
+    end
+
+    return ret
 end

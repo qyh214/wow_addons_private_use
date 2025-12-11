@@ -101,7 +101,7 @@ ns.RegisterPoints(ns.UNDERMINE, {
 
 ns.RegisterPoints(ns.KARESH, {
     [71854851] = { -- Reshanor
-        quest=90783, -- 87352 tripped as well, account-wide
+        quest=90783, -- 87352 tripped as well, account-wide, then 87354 on next kill
         worldquest=87354,
         npc=238319,
         loot={

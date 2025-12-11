@@ -23,7 +23,6 @@ local coreEnabled = false
 
 -- Try to grab unhooked copies of critical loading funcs (hooked by some crappy addons)
 local GetBestMapForUnit = loader.GetBestMapForUnit
-local SendAddonMessage = loader.SendAddonMessage
 local GetInstanceInfo = loader.GetInstanceInfo
 local UnitGUID = loader.UnitGUID
 local UnitIsDeadOrGhost = loader.UnitIsDeadOrGhost
@@ -59,14 +58,15 @@ do
 
 	function core:RegisterEvent(event, func)
 		if type(event) ~= "string" then error((noEvent):format(self.moduleName)) end
-		if (not func and not self[event]) or (type(func) == "string" and not self[func]) then error((noFunc):format(self.moduleName or "?", event, func or event)) end
+		local functionType = type(func)
+		if (not func and not self[event]) or (functionType == "string" and not self[func]) then error((noFunc):format(self.moduleName or "?", event, func or event)) end
 		if not eventMap[event] then eventMap[event] = {} end
 
 		if eventMap[event][self] then -- Event is already registered to this specific module, just change the assigned function
 			eventMap[event][self] = func or event
 		else -- Event has not been previously registered to this specific module
 			if event == currentEvent then
-				core:Error(curEvent:format(self.moduleName or "?", event, func or event))
+				core:Error(curEvent:format(self.moduleName or "?", event, functionType == "function" and "<local func>" or func or event))
 			end
 			eventMap[event][self] = func or event
 			bwUtilityFrame:RegisterEvent(event)
@@ -132,6 +132,7 @@ local enablemobs = {}
 
 local function UpdateMouseoverUnit()
 	local guid = UnitGUID("mouseover")
+	if issecretvalue and issecretvalue(guid) then return end -- XXX 12.0 compat
 	if not guid or UnitIsCorpse("mouseover") or UnitIsDead("mouseover") then return end
 	local _, _, _, _, _, mobIdString = strsplit("-", guid)
 	local mobId = tonumber(mobIdString)
@@ -144,7 +145,7 @@ local function UpdateMouseoverUnit()
 				if module and not module:IsEnabled() and (not module.VerifyEnable or module:VerifyEnable("mouseover", mobId, GetBestMapForUnit("player"))) then
 					module:Enable()
 					if not module.worldBoss then
-						module:Sync("Enable", module.moduleName)
+						module:Sync("Enable", module.moduleName, true)
 					end
 				end
 			end
@@ -153,7 +154,7 @@ local function UpdateMouseoverUnit()
 			if module and not module:IsEnabled() and (not module.VerifyEnable or module:VerifyEnable("mouseover", mobId, GetBestMapForUnit("player"))) then
 				module:Enable()
 				if not module.worldBoss then
-					module:Sync("Enable", module.moduleName)
+					module:Sync("Enable", module.moduleName, true)
 				end
 			end
 		end
@@ -216,11 +217,20 @@ local function bossComm(_, msg, extra, sender)
 	end
 end
 
-function mod:RAID_BOSS_WHISPER(_, msg) -- Purely for Transcriptor to assist in logging purposes.
-	if msg ~= "" and IsInGroup() then
-		local result = SendAddonMessage("Transcriptor", msg, IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
-		if type(result) == "number" and result ~= 0 then
-			core:Error("Failed to send TS comm. Error code: ".. result)
+do
+	local SendAddonMessage = loader.SendAddonMessage
+	local Timer = loader.CTimerAfter
+	function mod:RAID_BOSS_WHISPER(_, msg) -- Purely for Transcriptor to assist in logging purposes.
+		if loader.isBeta then return end -- XXX 12.0 Needs fixing (not allowed in raids/dungeons atm)
+		if msg ~= "" and IsInGroup() and coreEnabled then
+			local result = SendAddonMessage("Transcriptor", msg, IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
+			if type(result) == "number" and result > 0 then
+				if result == 3 or result == 8 or result == 9 then
+					Timer(1, function() self:RAID_BOSS_WHISPER(nil, msg) end)
+				else
+					core:Error("Failed to send TS comm. Error code: ".. result)
+				end
+			end
 		end
 	end
 end
@@ -263,17 +273,21 @@ do
 			plugins[i]:Disable()
 		end
 	end
-	local function DisableCore()
+	local function DisableCore(skipDelveEvent)
 		if coreEnabled then
 			coreEnabled = false
 
 			loader.UnregisterMessage(mod, "BigWigs_BossComm")
-			core.UnregisterEvent(mod, "ZONE_CHANGED_NEW_AREA")
-			core.UnregisterEvent(mod, "PLAYER_LEAVING_WORLD")
+			loader.UnregisterMessage(mod, "BigWigs_UNIT_TARGET")
 			core.UnregisterEvent(mod, "ENCOUNTER_START")
 			core.UnregisterEvent(mod, "RAID_BOSS_WHISPER")
 			core.UnregisterEvent(mod, "UPDATE_MOUSEOVER_UNIT")
-			loader.UnregisterMessage(mod, "BigWigs_UNIT_TARGET")
+			core.UnregisterEvent(mod, "PLAYER_LEAVING_WORLD")
+			core.UnregisterEvent(mod, "ZONE_CHANGED_NEW_AREA")
+			if loader.isRetail and not skipDelveEvent then
+				core.UnregisterEvent(mod, "PLAYER_MAP_CHANGED")
+			end
+			core.UnregisterEvent(mod, "PLAYER_LOGIN")
 
 			core:SendMessage("BigWigs_StopConfigureMode")
 			if BigWigsOptions then
@@ -287,7 +301,7 @@ do
 		-- Not if you released spirit on a world boss or if the GUI is open
 		if not UnitIsDeadOrGhost("player") and (not BigWigsOptions or not BigWigsOptions:IsOpen()) then
 			local bars = plugins.Bars
-			if not bars or not bars:HasActiveBars() then -- Not if bars are showing
+			if not BigWigs3DB.breakTime and (not bars or not bars:HasActiveBars()) then -- Not if break time or bars are showing
 				DisableCore() -- Alive in a non-enable zone, disable
 			end
 		end
@@ -304,28 +318,28 @@ do
 			DisableCore() -- Leaving a Delve
 		elseif zoneList[newId] then
 			-- Joining a delve but we were already enabled from something
-			DisableCore()
-			--core:Enable() -- We rely on the 0 second delay from the loader to re-enable the core
+			DisableCore(true) -- Avoid re-registering PLAYER_MAP_CHANGED whilst it's still dispatching
+			core:Enable()
 		end
 	end
 	function core:Enable()
 		if not coreEnabled then
 			coreEnabled = true
 
+			-- Always make sure to unregister everything that's added here in DisableCore()
 			loader.RegisterMessage(mod, "BigWigs_BossComm", bossComm)
+			loader.RegisterMessage(mod, "BigWigs_UNIT_TARGET", UnitTargetChanged)
 			core.RegisterEvent(mod, "ENCOUNTER_START")
 			core.RegisterEvent(mod, "RAID_BOSS_WHISPER")
 			core.RegisterEvent(mod, "UPDATE_MOUSEOVER_UNIT", UpdateMouseoverUnit)
-			loader.RegisterMessage(mod, "BigWigs_UNIT_TARGET", UnitTargetChanged)
-			core.RegisterEvent(mod, "PLAYER_LEAVING_WORLD", DisableCore) -- Simple disable when leaving instances
-			if C_EventUtils.IsEventValid("PLAYER_MAP_CHANGED") then
-				core.RegisterEvent(mod, "PLAYER_MAP_CHANGED", CheckIfLeavingDelve)
-			end
+			core.RegisterEvent(mod, "PLAYER_LEAVING_WORLD", function() DisableCore() end) -- Simple disable when leaving instances
 			local _, instanceType = GetInstanceInfo()
 			if instanceType == "none" then -- We don't want to be disabling in instances
 				core.RegisterEvent(mod, "ZONE_CHANGED_NEW_AREA", zoneChanged) -- Special checks for disabling after world bosses
 			end
-
+			if loader.isRetail then
+				core.RegisterEvent(mod, "PLAYER_MAP_CHANGED", CheckIfLeavingDelve)
+			end
 
 			if IsLoggedIn() then
 				EnablePlugins()
@@ -334,6 +348,10 @@ do
 			end
 
 			core:SendMessage("BigWigs_CoreEnabled")
+
+			if loader.isBeta then
+				C_CVar.SetCVar("encounterTimelineEnabled", "1") -- If disabled, events wont fire atm.
+			end
 		end
 	end
 end
@@ -498,7 +516,12 @@ do
 		return BigWigsAPI:GetLocale("BigWigs: Encounter Info")[key]
 	end
 	local C = core.C -- Set from Constants.lua
-	local standardFlag = C.BAR + C.CASTBAR + C.MESSAGE + C.ICON + C.SOUND + C.SAY + C.SAY_COUNTDOWN + C.PROXIMITY + C.FLASH + C.ALTPOWER + C.VOICE + C.INFOBOX + C.NAMEPLATE
+	local standardFlag = C.BAR + C.CASTBAR + C.ICON + C.SOUND
+		+ (loader.db.profile.bossModMessagesDisabled and 0 or C.MESSAGE)
+		+ (loader.db.profile.bossModNameplatesDisabled and 0 or C.NAMEPLATE)
+		+ (loader.db.profile.bossModVoiceDisabled and 0 or C.VOICE)
+		+ C.SAY + C.SAY_COUNTDOWN + C.PROXIMITY
+		+ C.FLASH + C.ALTPOWER + C.INFOBOX
 	local defaultToggles = setmetatable({
 		berserk = C.BAR + C.MESSAGE + C.SOUND,
 		proximity = C.PROXIMITY,
@@ -538,7 +561,9 @@ do
 				if t == "table" then
 					for i = 2, #v do
 						local flagName = v[i]
-						if C[flagName] then
+						if flagName == "NAMEPLATE" and loader.db.profile.bossModNameplatesDisabled then
+							bitflags = bitflags -- Don't add the NAMEPLATE flag
+						elseif C[flagName] then
 							bitflags = bitflags + C[flagName]
 						elseif flagName == "OFF" then
 							disabled = true

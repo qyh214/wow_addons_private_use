@@ -109,6 +109,22 @@ minimap[946] = { } -- WorldMap
 minimap[947] = { } -- Azeroth
 minimap[971] = { } -- Telogros Rift
 
+-- Flightmaster Taxi map nodes
+minimap[993] = { } -- Broken Isles
+minimap[994] = { } -- Argus
+minimap[1647] = { } -- Shadowlands
+minimap[1569] = { } -- Shadowlands - Bastion
+minimap[1741] = { } -- Shadowlands - Maldraxxus
+minimap[1740] = { } -- Shadowlands - Ardenweald
+minimap[1742] = { } -- Shadowlands - Revendreth
+minimap[2046] = { } -- Shadowlands - Zereth Mortis
+minimap[2057] = { } -- Dragon Isles
+minimap[2175] = { } -- Zaralekcave
+minimap[2241] = { } -- Emerald Dream
+minimap[2276] = { } -- Khaz Algar
+minimap[2374] = { } -- Undermine
+minimap[2398] = { } -- K'aresh
+
 --############################
 --######### Kalimdor #########
 --############################
@@ -611,6 +627,20 @@ minimap[670] = { } -- Hellfire Citadel - Inside Dungeon Map
 --########## Legion ##########
 --############################
 
+-- Class Halls
+minimap[24] = { } -- Light's Hope Chapel - Paladin
+minimap[626] = { } -- Dalaran - Halls of Shadows - Rogue
+minimap[647] = { } -- Heart of Acherus - Deathknight
+minimap[648] = { } -- Acherus Halls - Deathknight
+minimap[695] = { } -- Skyhold - Warrior
+minimap[702] = { } -- Netherlight Tempel - Priest
+minimap[709] = { } -- The Wandering Isle - Monk
+minimap[717] = { } -- Dreadscar Rift - Warlock
+minimap[726] = { } -- Heart of Azeroth - Mahlstrom - Shaman
+minimap[734] = { } -- Hall of the Guardian - Druid
+minimap[735] = { } -- The Guardian's Library - Mage
+minimap[739] = { } -- Trueshot Lodge - Hunter
+minimap[747] = { } -- The Dreamgrove - Druid
 -- Azeroth/Continent map minimap
 minimap[619] = { } -- Broken Isles
 minimap[627] = { } -- Dalaran
@@ -622,7 +652,12 @@ minimap[641] = { } -- Val'sharah
 minimap[646] = { } -- Broken Shore
 minimap[650] = { } -- Highmountain
 minimap[652] = { } -- Highmountain Thundertotem Basement
+minimap[659] = { } -- Highmountain Dunkelsteingrotte
 minimap[680] = { } -- Suramar
+minimap[715] = { } -- Emerald Dreamway - Druid
+minimap[719] = { } -- Mardum Zone
+minimap[720] = { } -- Mardum Lower- DH
+minimap[721] = { } -- Mardum Upper- DH
 minimap[750] = { } -- Highmountain Thundertotem
 minimap[790] = { } -- Eye of Aszhara
 minimap[830] = { } -- Krokuun
@@ -701,6 +736,7 @@ minimap[1536] = { } -- Maldraxxus
 minimap[1543] = { } -- The Maw
 minimap[1550] = { } -- Shadowlands
 minimap[1565] = { } -- Ardenweald
+minimap[1816] = { } -- Klauenkamm
 minimap[1670] = { } -- Oribos
 minimap[1671] = { } -- Oribos Uppder Side
 minimap[1911] = { } -- Torghast
@@ -774,6 +810,8 @@ minimap[2322] = { } -- Hall of Awakening
 minimap[2346] = { } -- Undermine
 minimap[2371] = { } -- K'aresh
 minimap[2472] = { } -- Tazavesh
+minimap[2351] = { } -- Razorwind Shores (Housing)
+minimap[2352] = { } -- Founder's Point (Housing)
 -- Dungeon map nodes
 minimap[2315] = { } -- The Rookery - Inside Dungeon Map
 minimap[2335] = { } -- The Cinderbrew Meadery - Inside Dungeon Map

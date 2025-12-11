@@ -11,22 +11,20 @@ local CHAT_TYPES = {
     "CHANNEL4", "CHANNEL5", "CHANNEL6", "CHANNEL7", "CHANNEL8", "CHANNEL9", "CHANNEL10"
 }
 
-if not SetItemRefHooked then
-    local originalSetItemRef = SetItemRef
-
+do
+    local _Orig_SetItemRef = SetItemRef
     SetItemRef = function(link, text, button, chatFrame)
-        local linkType, linkValue = link:match("^(%a+):(.+)")
-        if linkType == "url" and ns.Addon.db.profile.CreateAndCopyLinks and CaCLFrame then
-            CaCLFrame:Show()
-            CaCLFrame.editBox:SetText(linkValue)
-            CaCLFrame.editBox:HighlightText()
+        local linkType, payload = tostring(link):match("^([^:]+):(.+)$")
+        if linkType == "url" and payload and payload ~= "" then
+
+            if ns and ns.Addon and ns.Addon.db and ns.Addon.db.profile.CreateAndCopyLinks and ns.ShowCopyDialog then
+                ns.ShowCopyDialog(payload, "MapNotes – Link kopieren")
+            end
+
             return
         end
-
-        return originalSetItemRef(link, text, button, chatFrame)
+        return _Orig_SetItemRef(link, text, button, chatFrame)
     end
-
-    SetItemRefHooked = true
 end
 
 local function hasPotentialLink(text)

@@ -18,8 +18,10 @@ local GetCurrentMapID = WorldMapFrame:GetMapID()
 
         if not LibStub("AceConfigDialog-3.0"):Close("MapNotes") then
             LibStub("AceConfigDialog-3.0"):Open("MapNotes")
-        end 
+        end
 
+        ns._suppressAreaMapMirror = true
+        C_Timer.After(0, function() ns._suppressAreaMapMirror = nil end)
     end
 
     if button == "MiddleButton" then

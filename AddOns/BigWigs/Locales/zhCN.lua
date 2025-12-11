@@ -2,7 +2,9 @@ local _, addonTbl = ...
 local L = addonTbl.API:NewLocale("BigWigs", "zhCN")
 if not L then return end
 
-L.tempNew = "新：现在输入 |cFFFFFFFF/key|r 可以查看队伍的史诗钥石信息。"
+-- API.lua
+L.showAddonBar = "插件 '|cFF436EEE%s|r' 创建了 '%s' 计时条。"
+L.requestAddonProfile = "插件 '|cFF436EEE%s|r' 刚刚复制了您的配置文件导出字符串。"
 
 -- Core.lua
 L.berserk = "狂暴"
@@ -61,6 +63,8 @@ L.outOfDateContentPopup = "警告！\n你更新了 |cFF436EEE%s|r 但你还需�
 L.outOfDateContentRaidWarning = "|cFF436EEE%s|r 需要安装 %d 版本的 |cFF436EEEBigWigs|r 主插件才能正常运行，但你使用了 %d 版本。"
 L.addOnLoadFailedWithReason = "BigWigs 未能加载 |cFF436EEE%s|r 插件，原因： %q。请通知 BigWigs 的开发者！"
 L.addOnLoadFailedUnknownError = "BigWigs 在加载 |cFF436EEE%s|r 插件时遇到了错误。请通知 BigWigs 的开发者！"
+L.newFeatures = "BigWigs 新功能："
+L.parentheses = "%s（%s）"
 
 L.expansionNames = {
 	"经典旧世", -- Classic
@@ -74,11 +78,45 @@ L.expansionNames = {
 	"暗影国度", -- Shadowlands
 	"巨龙时代", -- Dragonflight
 	"地心之战", -- The War Within
+	"至暗之夜", -- Midnight
 }
 L.littleWigsExtras = {
 	["LittleWigs_Delves"] = "地下堡",
 	["LittleWigs_CurrentSeason"] = "当前赛季",
 }
+L.dayNamesShort = {
+	"星期日", -- Sunday
+	"星期一", -- Monday
+	"星期二", -- Tuesday
+	"星期三", -- Wednesday
+	"星期四", -- Thursday
+	"星期五", -- Friday
+	"星期六", -- Saturday
+}
+L.dayNames = {
+	"星期日",
+	"星期一",
+	"星期二",
+	"星期三",
+	"星期四",
+	"星期五",
+	"星期六",
+}
+L.monthNames = {
+	"1月",
+	"2月",
+	"3月",
+	"4月",
+	"5月",
+	"6月",
+	"7月",
+	"8月",
+	"9月",
+	"10月",
+	"11月",
+	"12月",
+}
+L.dateFormat = "%1$s，%4$d年%3$d%2$s日" -- Date format: "Monday 1 January 2025" 中文格式1：2025年1月1日，周一 /格式2:周一，2025年1月1日
 
 -- Media.lua (These are the names of the sounds in the dropdown list in the "sounds" section)
 L.Beware = "当心（奥尔加隆）"
@@ -140,7 +178,7 @@ L.BAR_desc = "当遇到某些技能时计时条将会适当显示。如果这个
 L.FLASH_desc = "有些技能可能比其他的更重要。如果想这些重要技能施放时屏幕进行闪烁，选中此选项。"
 L.ICON_desc = "BigWigs 可以根据技能用图标标记人物。这将使他们更容易被辨认。"
 L.SAY_desc = "聊天泡泡容易辨认。BigWigs 将使用说的信息方式通知给附近的人告诉他们你中了什么技能。"
-L.EMPHASIZE_desc = "启用这些将醒目具有这种能力相关的任何信息。使它们更大和更可见。可以在主选项的“信息”设置醒目信息的大小和的字体。"
+L.EMPHASIZE_desc = "启用这些将醒目具有这种能力相关的任何信息。使它们更大和更可见。可以在主选项的“信息”设置醒目信息的字体和尺寸。"
 L.PROXIMITY = "近距离显示"
 L.PROXIMITY_desc = "有些技能有时会要求团队散开。近距离显示为这些技能独立的设置一个窗口告诉你谁离你过近是并且是不安全的。"
 L.ALTPOWER = "交替能量显示"
@@ -204,12 +242,12 @@ L.position_import_countdown_desc = "导入 倒数 的位置（锚点）。"
 L.position_export_bars_desc = "导出 计时条 的位置（锚点）。"
 L.position_export_messages_desc = "导出 信息 的位置（锚点）。"
 L.position_export_countdown_desc = "导出 倒数 的位置（锚点）。"
-L.settings_import_bars_desc = "导入常规 计时条 设置，例如大小、字体等。"
-L.settings_import_messages_desc = "导入常规 信息 设置，例如大小、字体等。"
-L.settings_import_countdown_desc = "导入常规 倒数 设置，例如语音、大小、字体等。"
-L.settings_export_bars_desc = "导出常规 计时条 设置，例如大小、字体等。"
-L.settings_export_messages_desc = "导出常规 信息 设置，例如大小、字体等。"
-L.settings_export_countdown_desc = "导出常规 倒数 设置，例如语音、大小、字体等。"
+L.settings_import_bars_desc = "导入常规 计时条 设置，例如尺寸、字体等。"
+L.settings_import_messages_desc = "导入常规 信息 设置，例如尺寸、字体等。"
+L.settings_import_countdown_desc = "导入常规 倒数 设置，例如语音、尺寸、字体等。"
+L.settings_export_bars_desc = "导出常规 计时条 设置，例如尺寸、字体等。"
+L.settings_export_messages_desc = "导出常规 信息 设置，例如尺寸、字体等。"
+L.settings_export_countdown_desc = "导出常规 倒数 设置，例如语音、尺寸、字体等。"
 L.colors_import_bars_desc = "导入 计时条 的颜色。"
 L.colors_import_messages_desc = "导入 信息 的颜色。"
 L.color_import_countdown_desc = "导入 倒数 的颜色"
@@ -233,6 +271,12 @@ L.imported_countdown_position = "倒数位置"
 L.imported_countdown_settings = "倒数设置"
 L.imported_countdown_color = "倒数颜色"
 L.imported_nameplate_settings = "姓名板设置"
+L.imported_mythicplus_settings = "史诗钥石设置"
+L.mythicplus_settings_import_desc = "导入所有史诗钥石设置。"
+L.mythicplus_settings_export_desc = "导出所有史诗钥石设置。"
+L.imported_battleres_settings = "战复设置"
+L.battleres_settings_import_desc = "导入所有战复设置。"
+L.battleres_settings_export_desc = "导入所有战复设置。"
 
 -- Statistics
 L.statistics = "统计"
@@ -251,7 +295,13 @@ L.LFR = "随机团队"
 L.normal = "普通"
 L.heroic = "英雄"
 L.mythic = "史诗"
+L.LFR_timerun = "|A:timerunning-glues-icon:14:14|a随机团队"
+L.normal_timerun = "|A:timerunning-glues-icon:14:14|a普通"
+L.heroic_timerun = "|A:timerunning-glues-icon:14:14|a英雄"
+L.mythic_timerun = "|A:timerunning-glues-icon:14:14|a史诗"
 L.timewalk = "时空漫游"
+L.solotier8 = "单人难度 8"
+L.solotier11 = "单人难度 11"
 L.story = "剧情"
 L.mplus = "史诗+ %d"
 L.SOD = "探索赛季"
@@ -269,7 +319,7 @@ L.H25 = "25人英雄"
 -----------------------------------------------------------------------
 
 L.tools = "工具"
-L.toolsDesc = "BigWigs 提供多种工具和\"便利功能\"用于简化和加速首领战斗流程。点击 |cFF33FF99+|r 图标展开菜单可查看所有功能。"
+L.toolsDesc = "BigWigs 提供多种工具和\"便利功能\"，让你可以轻松的简化首领战斗流程。"
 
 -----------------------------------------------------------------------
 -- AutoRole.lua
@@ -277,6 +327,27 @@ L.toolsDesc = "BigWigs 提供多种工具和\"便利功能\"用于简化和加�
 
 L.autoRoleTitle = "自动分配职责"
 L.autoRoleExplainer = "当你加入一个队伍，或者在队伍中切换你的天赋专精时，BigWigs 将自动调整你在队伍中的职责（坦克、治疗者、伤害输出者）。\n\n"
+
+-----------------------------------------------------------------------
+-- BattleRes.lua
+--
+
+L.battleResTitle = "战复"
+L.battleResDesc = "新建一个图标，显示可用战复次数及下次获得额外次数所需时间。"
+L.battleResDesc2 = "\n你的 |cFF33FF99战复|r 使用记录可以通过将鼠标悬停在图标上时查看。\n\n"
+L.battleResHistory = "战复："
+L.battleResResetAll = "将所有战复设置重置为默认。"
+L.battleResDurationText = "时间文本"
+L.battleResChargesText = "次数文本"
+L.battleResNoCharges = "无可用次数"
+L.battleResHasCharges = "有可用次数"
+L.battleResPlaySound = "获得新可用次数时播放音效"
+L.iconTextureSpellID = "|T%d:0:0:0:0:64:64:4:60:4:60|t 技能图标（Spell ID）"
+L.iconTextureSpellIDError = "你必须输入一个有效的法术ID来作为显示的图标。"
+L.battleResModeIcon = "显示模式：图标"
+L.battleResModeText = "显示模式：仅文字"
+L.battleResModeTextTooltip = "显示临时背景以便调整战复功能的位置，并查看鼠标悬停提示位置。"
+L.battleResNoteTooltip = "注意：此提示仅在脱离战斗后显示。"
 
 -----------------------------------------------------------------------
 -- Keystones.lua
@@ -302,14 +373,14 @@ L.keystoneTeleportInCombat = "你不能在战斗中传送。"
 L.keystoneTabHistory = "历史记录"
 L.keystoneHeaderThisWeek = "本周"
 L.keystoneHeaderOlder = "更早"
-L.keystoneScoreTooltip = "史诗钥石评分：|cFFFFFFFF%d|r"
-L.keystoneScoreGainedTooltip = "获得评分：|cFFFFFFFF+%d|r"
-L.keystoneCompletedTooltip = "限时完成"
-L.keystoneFailedTooltip = "未能在限时内完成"
+L.keystoneScoreGainedTooltip = "获得评分：|cFFFFFFFF+%d|r\n史诗钥石评分：|cFFFFFFFF%d|r"
+L.keystoneCompletedTooltip = "限时完成: |cFFFFFFFF%d分%d秒|r\n时限：|cFFFFFFFF%d分%d秒|r"
+L.keystoneFailedTooltip = "超时: |cFFFFFFFF%d分%d秒|r\n时限：|cFFFFFFFF%d分%d秒|r"
 L.keystoneExplainer = "一个包含多种工具的集合，旨在提升史诗钥石地下城的游戏体验。"
 L.keystoneAutoSlot = "自动插入史诗钥石"
-L.keystoneAutoSlotDesc = "打开钥石界面时，自动将你的史诗钥石插入。"
-L.keystoneAutoSlotMessage = "已将 %s 自动插入钥石界面。"
+L.keystoneAutoSlotDesc = "打开能量之泉时，自动将你的史诗钥石插入。"
+L.keystoneAutoSlotMessage = "已将 %s 自动插入能量之泉。"
+L.keystoneAutoSlotFrame = "|TInterface\\AddOns\\BigWigs\\Media\\Icons\\minimap_raid:14:14|t 史诗钥石已自动插入"
 L.keystoneModuleName = "史诗钥石地下城"
 L.keystoneStartBar = "%s +%d" -- Format is SHORT_DUNGEON_NAME +KEYSTONE_LEVEL e.g. "ROOK +12"
 L.keystoneStartMessage = "%s +%d 挑战开始！" -- Format is LONG_DUNGEON_NAME +KEYSTONE_LEVEL e.g. "The Rookery +12 begins now!"
@@ -317,58 +388,113 @@ L.keystoneCountdownExplainer = "当你开始一个史诗钥石地下城时，将
 L.keystoneCountdownBeginsDesc = "史诗钥石地下城的倒数计时器还剩多少时，开始播放倒数语音。"
 L.keystoneCountdownBeginsSound = "史诗钥石地下城倒数计时器开始时播放的音效"
 L.keystoneCountdownEndsSound = "史诗钥石地下城倒数计时器结束时播放的音效"
-L.keystoneViewerTitle = "钥石查看器"
+L.keystoneViewerTitle = "钥石信息"
 L.keystoneHideGuildTitle = "向公会成员隐藏我的钥石信息"
 L.keystoneHideGuildDesc = "|cffff4411不推荐。|r 此功能将阻止公会成员看到你拥有的钥石信息。你队伍中的其他成员仍然可以看到它。"
 L.keystoneHideGuildWarning = "禁用公会成员查看你钥石信息的功能是 |cffff4411不推荐|r 的。\n\n你确定要这样做吗？"
-L.keystoneAutoShowZoneIn = "进入地下城时显示"
-L.keystoneAutoShowZoneInDesc = "进入史诗地下城时自动显示钥石查看器。\n\n|cFF33FF99这可以帮助你记住你们要打的钥石属于哪位玩家。|r"
 L.keystoneAutoShowEndOfRun = "史诗钥石地下城结束时显示"
-L.keystoneAutoShowEndOfRunDesc = "当史诗钥石地下城结束时自动显示钥石查看器。\n\n|cFF33FF99这可以帮助你查看队伍成员获得了哪些新钥石。|r"
-L.keystoneViewerExplainer = "你可以使用|cFF33FF99/key|r 命令或点击下方按钮打开钥石查看器。\n\n"
-L.keystoneViewerOpen = "打开钥石查看器"
+L.keystoneAutoShowEndOfRunDesc = "当史诗钥石地下城结束时自动显示钥石信息。\n\n|cFF33FF99这可以帮助你查看队伍成员获得了哪些新钥石。|r"
+L.keystoneViewerExplainer = "你可以使用|cFF33FF99/key|r 命令或点击下方按钮打开钥石信息。\n\n"
+L.keystoneViewerOpen = "打开钥石信息"
+L.keystoneViewerKeybindingExplainer = "\n\n您也可以设置一个快捷键来打开钥石信息：\n\n"
+L.keystoneViewerKeybindingDesc = "选择打开的快捷键。"
+L.keystoneClickToWhisper = "点击开启密语窗口"
+L.keystoneClickToTeleportNow = "\n点击传送至此"
+L.keystoneClickToTeleportCooldown = "\n无法传送，法术尚未冷却"
+L.keystoneClickToTeleportNotLearned = "\n无法传送，尚未学会该法术"
+L.keystoneHistoryRuns = "总计 %d"
+L.keystoneHistoryRunsThisWeekTooltip = "本周地下城总计：|cFFFFFFFF%d|r"
+L.keystoneHistoryRunsOlderTooltip = "本周之前地下城总计：|cFFFFFFFF%d|r"
+L.keystoneHistoryScore = "分数 +%d"
+L.keystoneHistoryScoreThisWeekTooltip = "本周获得的分数：|cFFFFFFFF+%d|r"
+L.keystoneHistoryScoreOlderTooltip = "本周之前获得的总分数：|cFFFFFFFF+%d|r"
+L.keystoneTimeUnder = "|cFF33FF99-%02d:%02d|r"
+L.keystoneTimeOver = "|cFFFF4411+%02d:%02d|r"
+L.keystoneTeleportTip = "点击下方地下城名称可直接|cFF33FF99传送|r至地下城入口。"
+L.keystoneTimerunner = "|A:timerunning-glues-icon:14:14|a时空奔行者角色。" -- Note: Timerunning is a mode like "Legion Remix", it is NOT the same as Timewalking
 
 -- It doesn't really matter what you call it as long as it's recognizable and limited to ~6 characters
-L.keystoneShortName_TheRookery = "驭雷"
-L.keystoneShortName_DarkflameCleft = "暗焰"
-L.keystoneShortName_PrioryOfTheSacredFlame = "隐修院"
-L.keystoneShortName_CinderbrewMeadery = "燧酿"
-L.keystoneShortName_OperationFloodgate = "水闸"
-L.keystoneShortName_TheaterOfPain = "伤势"
-L.keystoneShortName_TheMotherlode = "暴富"
-L.keystoneShortName_OperationMechagonWorkshop = "车间"
+L.keystoneShortName_TheRookery = "驭雷栖巢"
+L.keystoneShortName_DarkflameCleft = "暗焰裂口"
+L.keystoneShortName_PrioryOfTheSacredFlame = "圣焰隐修院"
+L.keystoneShortName_CinderbrewMeadery = "燧酿酒庄"
+L.keystoneShortName_OperationFloodgate = "水闸行动"
+L.keystoneShortName_TheaterOfPain = "伤势剧场"
+L.keystoneShortName_TheMotherlode = "暴富矿区"
+L.keystoneShortName_OperationMechagonWorkshop = "麦卡贡-车间"
 L.keystoneShortName_EcoDomeAldani = "生态圆顶"
-L.keystoneShortName_HallsOfAtonement = "赎罪"
-L.keystoneShortName_AraKaraCityOfEchoes = "回响"
-L.keystoneShortName_TazaveshSoleahsGambit = "宏图"
-L.keystoneShortName_TazaveshStreetsOfWonder = "天街"
-L.keystoneShortName_TheDawnbreaker = "破晨"
+L.keystoneShortName_HallsOfAtonement = "赎罪大厅"
+L.keystoneShortName_AraKaraCityOfEchoes = "回响之城"
+L.keystoneShortName_TazaveshSoleahsGambit = "索·莉亚宏图"
+L.keystoneShortName_TazaveshStreetsOfWonder = "琳彩天街"
+L.keystoneShortName_TheDawnbreaker = "破晨号"
+L.keystoneShortName_BlackRookHold = "黑鸦堡垒"
+L.keystoneShortName_CourtOfStars = "群星庭院"
+L.keystoneShortName_DarkheartThicket = "黑心林地"
+L.keystoneShortName_EyeOfAzshara = "艾萨拉之眼"
+L.keystoneShortName_HallsOfValor = "英灵殿"
+L.keystoneShortName_MawOfSouls = "噬魂之喉"
+L.keystoneShortName_NeltharionsLair = "奈萨里奥巢穴"
+L.keystoneShortName_TheArcway = "魔法回廊"
+L.keystoneShortName_VaultOfTheWardens = "守望者地窟"
+L.keystoneShortName_ReturnToKarazhanLower = "卡拉赞下层"
+L.keystoneShortName_ReturnToKarazhanUpper = "卡拉赞上层"
+L.keystoneShortName_CathedralOfEternalNight = "永夜大教堂"
+L.keystoneShortName_SeatOfTheTriumvirate = "执政团之座"
 
 -- These short names are for the bar that shows during the Mythic+ countdown
 -- Use the real dungeon names but make them shorter to fit on the bar better
 L.keystoneShortName_TheRookery_Bar = "驭雷栖巢"
 L.keystoneShortName_DarkflameCleft_Bar = "暗焰裂口"
-L.keystoneShortName_PrioryOfTheSacredFlame_Bar = "隐修院"
+L.keystoneShortName_PrioryOfTheSacredFlame_Bar = "圣焰隐修院"
 L.keystoneShortName_CinderbrewMeadery_Bar = "燧酿酒庄"
 L.keystoneShortName_OperationFloodgate_Bar = "水闸行动"
 L.keystoneShortName_TheaterOfPain_Bar = "伤逝剧场"
 L.keystoneShortName_TheMotherlode_Bar = "暴富矿区"
-L.keystoneShortName_OperationMechagonWorkshop_Bar = "车间"
+L.keystoneShortName_OperationMechagonWorkshop_Bar = "麦卡贡-车间"
 L.keystoneShortName_EcoDomeAldani_Bar = "生态圆顶"
 L.keystoneShortName_HallsOfAtonement_Bar = "赎罪大厅"
 L.keystoneShortName_AraKaraCityOfEchoes_Bar = "回响之城"
 L.keystoneShortName_TazaveshSoleahsGambit_Bar = "索·莉亚宏图"
 L.keystoneShortName_TazaveshStreetsOfWonder_Bar = "琳彩天街"
 L.keystoneShortName_TheDawnbreaker_Bar = "破晨号"
+L.keystoneShortName_BlackRookHold_Bar = "黑鸦堡垒"
+L.keystoneShortName_CourtOfStars_Bar = "群星庭院"
+L.keystoneShortName_DarkheartThicket_Bar = "黑心林地"
+L.keystoneShortName_EyeOfAzshara_Bar = "艾萨拉之眼"
+L.keystoneShortName_HallsOfValor_Bar = "英灵殿"
+L.keystoneShortName_MawOfSouls_Bar = "噬魂之喉"
+L.keystoneShortName_NeltharionsLair_Bar = "奈萨里奥的巢穴"
+L.keystoneShortName_TheArcway_Bar = "魔法回廊"
+L.keystoneShortName_VaultOfTheWardens_Bar = "守望者地窟"
+L.keystoneShortName_ReturnToKarazhanLower_Bar = "卡拉赞下层"
+L.keystoneShortName_ReturnToKarazhanUpper_Bar = "卡拉赞上层"
+L.keystoneShortName_CathedralOfEternalNight_Bar = "永夜大教堂"
+L.keystoneShortName_SeatOfTheTriumvirate_Bar = "执政团之座"
+
+-- Instance Keys "Who has a key?"
+L.instanceKeysTitle = "谁拥有钥石？"
+L.instanceKeysDesc = "当你进入一个史诗钥石地下城时，拥有该地下城钥石的玩家将会以列表形式显示。\n\n"
+L.instanceKeysTest8 = "|cFF00FF98武僧：|r +8"
+L.instanceKeysTest10 = "|cFFFF7C0A德鲁伊：|r +10"
+L.instanceKeysDisplay = "|c%s%s：|r+%d" -- "PLAYER_NAME: +DUNGEON_LEVEL"
+L.instanceKeysDisplayWithDungeon = "|c%s%s：|r+%d（%s）" -- "PLAYER_NAME: +DUNGEON_LEVEL (DUNGEON_NAME)"
+L.instanceKeysShowAll = "始终显示所有玩家"
+L.instanceKeysShowAllDesc = "启用此选项将显示列表中的所有玩家，即使他们的钥石不属于当前地下城。"
+L.instanceKeysOtherDungeonColor = "其他地下城颜色"
+L.instanceKeysOtherDungeonColorDesc = "为持有非当前地下城钥石选择字体颜色。"
+L.instanceKeysEndOfRunDesc = "默认情况下，列表仅在你进入史诗钥石地下城时显示。启用此选项后，还将在史诗钥石结束后继续显示列表。"
+L.instanceKeysHideTitle = "隐藏标题"
+L.instanceKeysHideTitleDesc = "隐藏 \"谁拥有钥石？\" 标题。"
 
 -----------------------------------------------------------------------
 -- LFGTimer.lua
 --
 
-L.lfgTimerTitle = "寻找组队计时器"
-L.lfgTimerExplainer = "每当寻找组队队列确认窗口出现时，BigWigs 会创建一个计时条，告诉你还有多长时间必须接受队列。\n\n"
+L.lfgTimerTitle = "队列就绪计时"
+L.lfgTimerExplainer = "每当队列确认窗口出现时，BigWigs 会创建一个计时条，告诉你还有多长时间必须接受队列邀请。\n\n"
 L.lfgUseMaster = "在'主'声道播放寻找组队就绪提示音"
-L.lfgUseMasterDesc = "启用此选项后，寻找组队就绪提示音将通过'主'声道播放。如果禁用此选项，则会通过'%s'声道播放。"
+L.lfgUseMasterDesc = "启用此选项后，队列就绪提示音将通过'主'声道播放。如果禁用此选项，则会通过'%s'声道播放。"
 
 -----------------------------------------------------------------------
 -- PLUGINS
@@ -377,18 +503,28 @@ L.lfgUseMasterDesc = "启用此选项后，寻找组队就绪提示音将通过'
 L.general = "一般"
 L.advanced = "高级"
 L.comma = "，"
+L.reset = "重置"
+L.resetDesc = "将上述设置重置为默认。"
+L.resetAll = "重置所有"
+L.startTest = "开始测试"
+L.stopTest = "停止测试"
+L.always = "总是" -- ALWAYS
+L.never = "从不" -- NEVER
 
-L.positionX = "水平位置"
-L.positionY = "垂直位置"
+L.positionX = "横向位置"
+L.positionY = "纵向位置"
 L.positionExact = "精确位置"
 L.positionDesc = "在框中输入数值或移动滑条精准定位锚点位置。"
 L.width = "宽度"
 L.height = "高度"
+L.size = "尺寸"
 L.sizeDesc = "通常情况下，您可以通过移动滑条来设置尺寸。如果需要精确的尺寸，可以使用该滑条下面的数字框中输入数值（需有效数值）。"
 L.fontSizeDesc = "使用滑条或在框内输入数值可调整字体尺寸，最大数值为200。"
 L.disabled = "禁用"
 L.disableDesc = "将禁用“%s”功能，但|cffff4411不建议|r这么做。\n\n你确定要这么做吗？"
 L.keybinding = "按键设置"
+L.dragToResize = "拖动调整尺寸"
+L.cannotMoveInCombat = "你在战斗中时无法移动此框体。"
 
 -- Anchor Points
 L.UP = "向上"
@@ -405,6 +541,9 @@ L.CENTER = "中"
 L.customAnchorPoint = "高级：自定义锚点"
 L.sourcePoint = "源点"
 L.destinationPoint = "相对锚点"
+L.drawStrata = "层级"
+L.medium = "中"
+L.low = "低"
 
 -----------------------------------------------------------------------
 -- AltPower.lua
@@ -506,7 +645,7 @@ L.sendCustomBar = "正在发送自定义计时条“%s”到 BigWigs 和 DBM 玩
 L.requiresLeadOrAssist = "此功能需要团队领袖或助理权限。"
 L.encounterRestricted = "此功能在战斗中不能使用。"
 L.wrongCustomBarFormat = "错误格式。正确用法：/raidbar 20 文本"
-L.wrongTime = "指定了无效的时间。 <时间>可以是一个以秒为单位，一个分:秒一对，或分秒。例如，1:20或2M。"
+L.wrongTime = "指定的时间无效。  <time> 可以是秒数、M:S格式或分钟数。例如：5、1:20 或 2分钟"
 
 L.wrongBreakFormat = "必须位于1至60分钟之间。正确用法：/break 5"
 L.sendBreak = "发送休息时间计时器到 BigWigs 和 DBM 用户。"
@@ -566,7 +705,8 @@ L.redirectPopupsColor = "横幅信息的颜色"
 L.blockDungeonPopups = "屏蔽地下城弹出式横幅"
 L.blockDungeonPopupsDesc = "进入地下城时弹出的横幅有时会包含很长的文字。启用此功能将完全屏蔽它们。"
 L.itemLevel = "物品等级%d"
-L.newRespawnPoint = "新复活位置"
+L.newRespawnPoint = "新的复活位置"
+L.playerLevel = "等级 %d"
 
 L.userNotifySfx = "首领屏蔽禁用了声音效果，强制它重新启用。"
 L.userNotifyMusic = "首领屏蔽禁用了音乐，强制它重新启用。"
@@ -588,10 +728,8 @@ L.textShadow = "文本阴影"
 L.expiring_normal = "普通"
 L.emphasized = "醒目"
 
-L.reset = "重置"
-L.resetDesc = "重置以上颜色为默认。"
-L.resetAll = "重置所有"
-L.resetAllDesc = "如果为首领战斗自定义了颜色设置，这个按钮将重置替换“所有”颜色为默认。"
+L.resetColorsDesc = "重置以上颜色为默认。"
+L.resetAllColorsDesc = "如果为首领战斗自定义了颜色设置，这个按钮将重置替换“所有”颜色为默认。"
 
 L.red = "红色"
 L.redDesc = "一般战斗警报。"
@@ -670,6 +808,11 @@ L.displayTimeDesc = "以秒计信息显示时间。"
 L.fadeTime = "消退时间"
 L.fadeTimeDesc = "以秒计信息消退时间。"
 
+L.messagesOptInHeaderOff = "消息'手动选择'模式：启用此选项将关闭所有模块的消息。\n\n您需要逐个进入每个模块的设置，手动开启您想要的消息提示。\n\n"
+L.messagesOptInHeaderOn = "消息'手动选择'模式已|cFF33FF99启用|r。要查看消息，请进入特定技能的设置并开启'|cFF33FF99消息|r'选项。\n\n"
+L.messagesOptInTitle = "消息'手动选择'模式"
+L.messagesOptInWarning = "|cffff4411警告！|r\n\n启用'手动选择'模式将关闭所有模块的消息。您需要逐个进入每个模块的设置，手动开启您想要的消息提示。\n\n界面即将重新加载，是否继续？"
+
 -----------------------------------------------------------------------
 -- Nameplates.lua
 --
@@ -690,7 +833,7 @@ L.growDirectionDesc = "图标从起始位置开始增长的方向。"
 L.iconSpacingDesc = "更改图标之间的间距"
 L.nameplateIconSettings = "图标设置"
 L.keepAspectRatio = "保持宽高比"
-L.keepAspectRatioDesc = "保持图标的宽高比为1:1，而不是将其拉伸以适应姓名板框体大小。"
+L.keepAspectRatioDesc = "保持图标的宽高比为1:1，而不是将其拉伸以适应姓名板框体尺寸。"
 L.iconColor = "图标颜色"
 L.iconColorDesc = "更改图标纹理的颜色"
 L.desaturate = "饱和度"
@@ -701,9 +844,12 @@ L.showBorder = "显示边框"
 L.showBorderDesc = "显示图标的边框"
 L.borderColor = "边框颜色"
 L.borderSize = "边框厚度"
+L.borderOffset = "边框偏移"
+L.borderName = "边框名"
 L.showNumbers = "显示数字"
 L.showNumbersDesc = "在图标上显示数字。"
 L.cooldown = "冷却"
+L.cooldownEmphasizeHeader = "默认情况下，醒目效果为关闭状态（0秒）。设置为1秒或更高时将会启用醒目效果。此功能可让您为这些数字设置不同的字体颜色和字体尺寸。"
 L.showCooldownSwipe = "填充显示"
 L.showCooldownSwipeDesc = "当冷却激活时，在图标上显示转动动画。"
 L.showCooldownEdge = "时针显示"
@@ -722,8 +868,12 @@ L.fixate_test = "测试文本" -- Text that displays to test on the frame
 L.resetNameplateTextDesc = "重置与姓名板文本相关的所有选项。"
 L.glowAt = "开始高亮（秒）"
 L.glowAt_desc = "选择在冷却计时剩余多少秒时开始高亮。"
-L.headerIconSizeTarget = "当前目标的图标大小"
-L.headerIconSizeOthers = "其他所有目标的图标大小"
+L.offsetX = "横向偏移"
+L.offsetY = "纵向偏移"
+L.headerIconSizeTarget = "当前目标的图标尺寸"
+L.headerIconSizeOthers = "其他目标的图标尺寸"
+L.headerIconPositionTarget = "当前目标的图标位置"
+L.headerIconPositionOthers = "其他目标的图标位置"
 
 -- Glow types as part of LibCustomGlow
 L.pixelGlow = "像素发光"
@@ -733,7 +883,7 @@ L.procGlow = "脉冲发光"
 L.speed = "速度"
 L.animation_speed_desc = "发光动画效果的播放速度。"
 L.lines = "线条"
-L.lines_glow_desc = "设置发光动画效果中几条线条"
+L.lines_glow_desc = "设置发光动画效果中有几条线条"
 L.intensity = "强度"
 L.intensity_glow_desc = "设置发光动画的强度，强度越高，闪光点越多。"
 L.length = "长度"
@@ -741,9 +891,14 @@ L.length_glow_desc = "设置发光动画效果中线条的长度。"
 L.thickness = "粗细"
 L.thickness_glow_desc = "设置发光动画效果中线条的粗细。"
 L.scale = "缩放"
-L.scale_glow_desc = "调整发光动画中闪光点的大小。"
+L.scale_glow_desc = "调整发光动画中闪光点的尺寸。"
 L.startAnimation = "起始动画"
 L.startAnimation_glow_desc = "您选择的发光效果有起始动画特效，通常是一个闪烁。这个选项可以选择启用/禁用起始动画。"
+
+L.nameplateOptInHeaderOff = "\n\n\n\n姓名板'手动选择'模式：启用此选项将关闭所有模块的姓名板效果。\n\n您需要逐个进入每个模块的设置，手动开启您想要的姓名板效果。\n\n"
+L.nameplateOptInHeaderOn = "\n\n\n\n姓名板'手动选择'模式已|cFF33FF99启用|r。需要单独启用姓名板，请进入特定技能的设置并开启'|cFF33FF99姓名板|r'选项。\n\n"
+L.nameplateOptInTitle = "姓名板'手动选择'模式"
+L.nameplateOptInWarning = "|cffff4411警告！|r\n\n启用'手动选择'模式将关闭所有模块的姓名板效果。您需要逐个进入每个模块的设置，手动开启您想要的姓名板效果。\n\n界面即将重新加载，是否继续？"
 
 -----------------------------------------------------------------------
 -- Proximity.lua
@@ -788,6 +943,7 @@ L.combatLogDesc = "当开怪倒数计时器开始到战斗结束时自动开始�
 L.pull = "开怪"
 L.engageSoundTitle = "当首领战斗开始时播放音效"
 L.pullStartedSoundTitle = "当开怪倒数计时器开始时播放音效"
+L.pullStartedMessageTitle = "当开怪倒数计时器开始时显示消息"
 L.pullFinishedSoundTitle = "当开怪倒数计时器结束时播放音效"
 L.pullStartedBy = "%s 发起开怪倒数计时。"
 L.pullStopped = "%s 取消了开怪倒数计时。"

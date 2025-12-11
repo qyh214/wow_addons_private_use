@@ -88,6 +88,7 @@ local GeneralSettingsBase = {
 		["Show:Skyriding"] = true,
 		["Show:UnavailablePersonalLoot"] = true,
 		["Hide:PvP"] = false,
+		["Hide:ChallengeMaster"] = app.GameBuildVersion < 50000 or app.GameBuildVersion > 70000,
 		["Dynamic:Style"] = 1,
 		["CC:SL_COV_KYR"] = false,
 		["CC:SL_COV_VEN"] = false,
@@ -614,7 +615,7 @@ ATTSettingsPanelMixin = {
 		-- Create the header label
 		local headerLabel = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 		Mixin(headerLabel, ATTSettingsObjectMixin);
-		--self:RegisterObject(headerLabel);
+		-- self:RegisterObject(headerLabel);
 		headerLabel:SetJustifyH("LEFT")
 		headerLabel:SetText(text)
 		headerLabel:SetWordWrap(false)
@@ -1209,6 +1210,11 @@ settings.UpdateMode = function(self, doRefresh)
 		filterSet.PvP(true)
 	else
 		filterSet.PvP()
+	end
+	if self:Get("Hide:ChallengeMaster") then
+		filterSet.ChallengeMaster(true)
+	else
+		filterSet.ChallengeMaster()
 	end
 	if self:Get("Show:PetBattles") then
 		filterSet.PetBattles()

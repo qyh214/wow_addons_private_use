@@ -1,0 +1,30 @@
+----- AUTO GENERATED - DO NOT EDIT
+
+if GetLocale() ~= "koKR" then
+    return
+end
+
+local L = BtWQuests.L
+L["ESTABLISHING_AXEFALL_THE_ANTIDOTE"] = "도끼 야영지 건설: 해독제"
+L["ESTABLISHING_AXEFALL_VEIL_ZEKK"] = "도끼 야영지 건설: 장막의 제크"
+L["HEARTHFIRE_TAVERN_BUILT"] = "난롯불 선술집 건설"
+L["HIGHPASS_LOGGING_CAMP_BUILT"] = "오름길 벌목지 건설"
+L["HIGHPASS_SPARRING_RING_BUILT"] = "오름길 대련장 건설"
+L["IN_THE_LAND_OF_GIANTS_HIGHPASS_LOGGING_CAMP"] = "거인의 땅에서: 오름길 벌목지"
+L["IN_THE_LAND_OF_GIANTS_HIGHPASS_SPARRING_RING"] = "거인의 땅에서: 오름길 대련장"
+L["IN_THE_LAND_OF_GIANTS_LOWLANDS_LUMBER_YARD"] = "거인의 땅에서: 저지대 벌목장"
+L["IN_THE_LAND_OF_GIANTS_SAVAGE_FIGHT_CLUB"] = "거인의 땅에서: 야생의 싸움터"
+L["LOWLANDS_LUMBER_YARD_BUILT"] = "저지대 벌목장 건설"
+L["SAVAGE_FIGHT_CLUB_BUILT"] = "야생의 싸움터 건설"
+L["SECURING_SOUTHPORT_THE_ANTIDOTE"] = "남쪽항구 확보: 해독제"
+L["SECURING_SOUTHPORT_VEIL_ZEKK"] = "남쪽항구 확보: 장막의 제크"
+L["SMUGGLERS_DEN_BUILT"] = "밀수업자의 소굴 건설"
+L["STOKTRON_BREWERY_BUILT"] = "스톡트론 양조장 건설"
+L["SUPPORTING_YOUR_GARRISON_HIGHPASS_LOGGING_CAMP"] = "주둔지 지원: 오름길 벌목지"
+L["SUPPORTING_YOUR_GARRISON_HIGHPASS_SPARRING_RING"] = "주둔지 지원: 오름길 대련장"
+L["SUPPORTING_YOUR_GARRISON_LOWLANDS_LUMBER_YARD"] = "주둔지 지원: 저지대 벌목장"
+L["SUPPORTING_YOUR_GARRISON_SAVAGE_FIGHT_CLUB"] = "주둔지 지원: 야생의 싸움터"
+L["THE_IRON_APPROACH_HIGHPASS_LOGGING_CAMP"] = "강철 진입로: 오름길 벌목지"
+L["THE_IRON_APPROACH_HIGHPASS_SPARRING_RING"] = "강철 진입로: 오름길 대련장"
+L["THE_IRON_APPROACH_LOWLANDS_LUMBER_YARD"] = "강철 진입로: 저지대 벌목장"
+L["THE_IRON_APPROACH_SAVAGE_FIGHT_CLUB"] = "강철 진입로: 야생의 싸움터"

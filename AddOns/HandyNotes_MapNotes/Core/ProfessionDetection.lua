@@ -1,6 +1,5 @@
 local ADDON_NAME, ns = ...
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes", true)
-local AceTimer = LibStub("AceTimer-3.0")
 
 local ProfessionDetection = CreateFrame("Frame")
 function OnEvent(self, event, ...)
@@ -610,6 +609,6 @@ end
 
 
 local function ProfessionDetectionHook()
-    AceTimer:ScheduleTimer(ns.AutomaticProfessionDetection, 0.2)
- end
+    C_Timer.After(0.2, ns.AutomaticProfessionDetection)
+end
 hooksecurefunc("AbandonSkill", ProfessionDetectionHook)

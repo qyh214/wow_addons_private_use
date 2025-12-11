@@ -220,6 +220,24 @@ if gameLocale == "koKR" or gameLocale == "zhCN" or gameLocale == "zhTW" then
     end
     return tostring(value);
   end
+elseif WeakAuras.IsClassicOrWrathOrCataOrMists() then
+  local NUMBER_ABBREVIATION_DATA_FIXED = {
+        -- Work around another bug in NUMBER_ABBREVIATION_DATA, https://github.com/WeakAuras/WeakAuras2/issues/6061
+        { breakpoint = 10000000,        abbreviation = SECOND_NUMBER_CAP_NO_SPACE,      significandDivisor = 1000000,   fractionDivisor = 1 },
+        { breakpoint = 1000000,         abbreviation = SECOND_NUMBER_CAP_NO_SPACE,      significandDivisor = 100000,            fractionDivisor = 10 },
+        { breakpoint = 10000,           abbreviation = FIRST_NUMBER_CAP_NO_SPACE,       significandDivisor = 1000,              fractionDivisor = 1 },
+        { breakpoint = 1000,            abbreviation = FIRST_NUMBER_CAP_NO_SPACE,       significandDivisor = 100,               fractionDivisor = 10 }
+  }
+
+  AbbreviateNumbers = function(value)
+    for i, data in ipairs(NUMBER_ABBREVIATION_DATA_FIXED) do
+      if value >= data.breakpoint then
+              local finalValue = math.floor(value / data.significandDivisor) / data.fractionDivisor;
+              return finalValue .. data.abbreviation;
+      end
+    end
+    return tostring(value);
+  end
 end
 
 local simpleFormatters = {
@@ -1137,16 +1155,16 @@ Private.format_types = {
 
         if cast then
           local _, _, _, _, endTime = WeakAuras.UnitCastingInfo("player")
-          local castExpirationTIme = endTime and endTime > 0 and (endTime / 1000) or 0
-          if castExpirationTIme > 0 then
-            result = min(result, now + value - castExpirationTIme)
+          local castExpirationTime = endTime and endTime > 0 and (endTime / 1000) or 0
+          if castExpirationTime > 0 then
+            result = min(result, now + value - castExpirationTime)
           end
         end
         if channel then
           local _, _, _, _, endTime = WeakAuras.UnitChannelInfo("player")
-          local castExpirationTIme = endTime and endTime > 0 and (endTime / 1000) or 0
-          if castExpirationTIme > 0 then
-            result = min(result, now + value - castExpirationTIme)
+          local castExpirationTime = endTime and endTime > 0 and (endTime / 1000) or 0
+          if castExpirationTime > 0 then
+            result = min(result, now + value - castExpirationTime)
           end
         end
 
@@ -1352,7 +1370,7 @@ do
     [6] = true,
     [7] = true,
     [8] = true,
-    [9] = not WeakAuras.IsClassicEra() and true or nil, -- Goblin
+    [9] = not WeakAuras.IsClassicOrWrath() and true or nil, -- Goblin
     [10] = true,
     [11] = true,
     [22] = true,
@@ -1795,7 +1813,7 @@ if WeakAuras.IsRetail() then
   Private.GetCurrencyIDFromLink = C_CurrencyInfo.GetCurrencyIDFromLink
   Private.ExpandCurrencyList = C_CurrencyInfo.ExpandCurrencyList
   Private.GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo
-elseif WeakAuras.IsCataOrMists() then
+elseif WeakAuras.IsWrathOrCataOrMists() then
   Private.GetCurrencyListSize = GetCurrencyListSize
   ---@type fun(currencyLink: string): number?
   Private.GetCurrencyIDFromLink = function(currencyLink)
@@ -2559,6 +2577,29 @@ if WeakAuras.IsClassicEra() then -- Classic
       runes[tostring(v)] = nil
     end
   end
+elseif WeakAuras.IsWrathClassic() then
+  Private.texture_types["Blizzard Alerts"] = nil
+  do
+    local beams = Private.texture_types["Beams"]
+    local beams_ids = {186193, 186194, 241098, 241099, 369749, 369750}
+    for _, v in ipairs(beams_ids) do
+      beams[tostring(v)] = nil
+    end
+  end
+  do
+    local icons = Private.texture_types["Icons"]
+    local icons_ids = {165605, 240925, 240961, 240972, 241049}
+    for _, v in ipairs(icons_ids) do
+      icons[tostring(v)] = nil
+    end
+  end
+  do
+    local runes = Private.texture_types["Runes"]
+    local runes_ids = {165922, 241003, 241004, 241005}
+    for _, v in ipairs(runes_ids) do
+      runes[tostring(v)] = nil
+    end
+  end
 elseif WeakAuras.IsCataClassic() then
   Private.texture_types["Blizzard Alerts"] = nil
   do
@@ -2850,11 +2891,11 @@ Private.swing_types = {
   ["off"] = SECONDARYHANDSLOT
 }
 
-if WeakAuras.IsClassicEra() then
+if WeakAuras.IsClassicOrWrath() then
   Private.swing_types["ranged"] = RANGEDSLOT
 end
 
-if WeakAuras.IsCataOrMists() then
+if WeakAuras.IsWrathOrCataOrMists() then
   ---@type string[]
   Private.rune_specific_types = {
     [1] = L["Blood Rune #1"],
@@ -3162,12 +3203,17 @@ if not WeakAuras.IsClassicEra() then
     [205] = L["Follower Dungeon"],
     [208] = L["Delve"],
     [216] = L["Quest Party"],
-    [220] = L["Story Raid"]
+    [220] = L["Story Raid"],
+    [230] = unused, -- heroic party
+    [231] = unused, -- normal raid dungeon
+    [232] = unused, -- event party
+    [236] = L["Lorewalking"],
+    [237] = WeakAuras.IsMists() and L["Dungeon (Celestial)"] or unused,
   }
 
   Private.instance_difficulty_types[0] =L["None"]
 
-  for i = 1, 220 do
+  for i = 1, 240 do
     local name, type = GetDifficultyInfo(i)
     if name then
       if instance_difficulty_names[i] then
@@ -3234,7 +3280,7 @@ elseif WeakAuras.IsMists() then
 end
 
 ---@type table<string, string>
-if WeakAuras.IsClassicOrCataOrMists() then
+if WeakAuras.IsClassicOrWrathOrCataOrMists() then
   Private.raid_role_types = {
     MAINTANK = "|TInterface\\GroupFrame\\UI-Group-maintankIcon:16:16|t "..MAINTANK,
     MAINASSIST = "|TInterface\\GroupFrame\\UI-Group-mainassistIcon:16:16|t "..MAINASSIST,
@@ -3267,7 +3313,7 @@ Private.classification_types = {
   minus = L["Minus (Small Nameplate)"]
 }
 
-if WeakAuras.IsMistsOrRetail() then
+if WeakAuras.IsWrathOrMistsOrRetail() then
   ---@type table<number, string>
   Private.creature_type_types = {}
   for _, creatureID in ipairs(C_CreatureInfo.GetCreatureTypeIDs()) do
@@ -3276,7 +3322,9 @@ if WeakAuras.IsMistsOrRetail() then
       Private.creature_type_types[creatureID] = creatureInfo.name
     end
   end
+end
 
+if WeakAuras.IsMistsOrRetail() then
   ---@type table<number, string>
   Private.creature_family_types = {}
   for _, familyID in ipairs(C_CreatureInfo.GetCreatureFamilyIDs()) do
@@ -3386,21 +3434,6 @@ Private.send_chat_message_types = {
 
 Private.send_chat_message_types.TTS = L["Text-to-speech"]
 
----@type table
-Private.tts_voices = {}
-
-local function updateTts()
-  wipe(Private.tts_voices)
-  for i, voiceInfo in pairs(C_VoiceChat.GetTtsVoices()) do
-    Private.tts_voices[voiceInfo.voiceID] = voiceInfo.name
-  end
-end
-
-updateTts()
-
-local TtsUpdateFrame = CreateFrame("FRAME")
-TtsUpdateFrame:RegisterEvent("VOICE_CHAT_TTS_VOICES_UPDATE")
-TtsUpdateFrame:SetScript("OnEvent", updateTts)
 
 ---@type table<string, string>
 Private.group_aura_name_info_types = {
@@ -3648,7 +3681,7 @@ Private.pet_behavior_types = {
   assist = PET_MODE_ASSIST
 }
 
-if WeakAuras.IsClassicEra() then
+if WeakAuras.IsClassicOrWrath() then
   Private.pet_behavior_types.aggressive = PET_MODE_AGGRESSIVE
   Private.pet_behavior_types.assist = nil
 end
@@ -4351,7 +4384,7 @@ for i = 1, 4 do
   Private.multiUnitUnits.party["partypet"..i] = true
 end
 
-if WeakAuras.IsCataOrMistsOrRetail() then
+if WeakAuras.IsWrathOrCataOrMistsOrRetail() then
   for i = 1, 10 do
     Private.baseUnitId["boss"..i] = true
     Private.multiUnitUnits.boss["boss"..i] = true
@@ -4382,6 +4415,12 @@ Private.dbm_types = {
   [5] = L["Role"],
   [6] = L["Phase"],
   [7] = L["Important"]
+}
+
+Private.bossmods_timerTypes = {
+  PULL = L["Pull"],
+  BREAK = L["Break"],
+  TIMER = L["Timer"],
 }
 
 ---@type table<string, string>
@@ -4416,6 +4455,7 @@ Private.reset_ranged_swing_spells = {
   [5019] = true, -- Shoot Wands
   [75] = true, -- Auto Shot
   [5384] = true, -- Feign Death
+  [467718] = true, -- Bleak Arrows
 }
 
 Private.noreset_swing_spells = {
@@ -4464,7 +4504,7 @@ skippedWeaponTypes[11] = true -- Bear Claws
 skippedWeaponTypes[12] = true -- Cat Claws
 skippedWeaponTypes[14] = true -- Misc
 skippedWeaponTypes[17] = true -- Spears
-if WeakAuras.IsClassicOrCataOrMists() then
+if WeakAuras.IsClassicOrWrathOrCataOrMists() then
   skippedWeaponTypes[9] = true -- Glaives
 else
   skippedWeaponTypes[16] = true -- Thrown
@@ -4497,7 +4537,6 @@ WeakAuras.StopMotion.animation_types = {
   once = L["Forward"],
   progress = L["Progress"]
 }
-
 
 if WeakAuras.IsClassicEra() then
   Private.baseUnitId.focus = nil
@@ -4533,11 +4572,47 @@ if WeakAuras.IsClassicEra() then
   end
 end
 
-if WeakAuras.IsCataClassic() then
-  Private.item_slot_types[18] = RELICSLOT
+if WeakAuras.IsWrathOrCata() then
   for slot = 20, 28 do
     Private.item_slot_types[slot] = nil
   end
   Private.talent_extra_option_types[0] = nil
   Private.talent_extra_option_types[2] = nil
+
+  if WeakAuras.IsWrathClassic() then
+    Private.faction_group.Neutral = nil
+    Private.item_slot_types[0] = AMMOSLOT
+    Private.item_slot_types[18] = RANGEDSLOT
+
+    local reset_swing_spell_list = {
+      1464, 8820, 11604, 11605, 25241, 25242, -- Slam
+      78, 284, 285, 1608, 11564, 11565, 11566, 11567, 25286, 29707, 30324, -- Heroic Strike
+      845, 7369, 11608, 11609, 20569, 25231, -- Cleave
+      2973, 14260, 14261, 14262, 14263, 14264, 14265, 14266, 27014, -- Raptor Strike
+      6807, 6808, 6809, 8972, 9745, 9880, 9881, 26996, -- Maul
+      20549, -- War Stomp
+      2764, 3018, -- Shoots,
+      19434, 20900, 20901, 20902, 20903, 20904, 27065, -- Aimed Shot
+      20066, -- Repentance
+      11350, -- Fire Shield (Oil of Immolation)
+      50986, -- Sulfuron Slammer
+      439, 440, 441, 2024, 4042, 17534, 28495, -- Minor/Lesser/Greater/Superior/Major/Super Healing Potion
+      41619, 41620, -- Cenarion Healing Salve/Bottled Nethergon Vapor
+      5384, -- Feign Death
+    }
+    for _, spellid in ipairs(reset_swing_spell_list) do
+      Private.reset_swing_spells[spellid] = true
+    end
+
+    local reset_ranged_swing_spell_list = {
+      2764, 3018, -- Shoots
+      19434, 20900, 20901, 20902, 20903, 20904, 27065 -- Aimed Shot
+    }
+
+    for _, spellid in ipairs(reset_ranged_swing_spell_list) do
+      Private.reset_ranged_swing_spells[spellid] = true
+    end
+  else -- Cata
+    Private.item_slot_types[18] = RELICSLOT
+  end
 end

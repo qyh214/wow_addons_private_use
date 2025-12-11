@@ -146,16 +146,16 @@ end;
 local mapKeyUncachers = {
 	["mapID"] = uncacheMap,
 	["maps"] = function(group, maps)
-		for _,mapID in ipairs(maps) do
-			uncacheMap(group, mapID);
+		for i=1,#maps do
+			uncacheMap(group, maps[i]);
 		end
 	end,
 	["coord"] = function(group, coord)
 		uncacheMap(group, coord[3]);
 	end,
 	["coords"] = function(group, coords)
-		for i,coord in ipairs(coords) do
-			uncacheMap(group, coord[3]);
+		for i=1,#coords do
+			uncacheMap(group, coords[i][3]);
 		end
 	end,
 };
@@ -178,8 +178,8 @@ local function assignZoneAreaIDs(originalMapID, mapID, ids)
 			areaIDs = {};
 			remap.areaIDs = areaIDs;
 		end
-		for j,areaID in ipairs(ids) do
-			areaIDs[areaID] = mapID;
+		for i=1,#ids do
+			areaIDs[ids[i]] = mapID;
 		end
 	end
 end
@@ -218,15 +218,15 @@ local function zoneArtIDRunner(group, value)
 			artIDs = {};
 			remap.artIDs = artIDs;
 		end
-		for j,artID in ipairs(value) do
-			artIDs[artID] = mapID;
+		for i=1,#value do
+			artIDs[value[i]] = mapID;
 		end
 
 		-- Uncache the original mapID
 		local mapIDCache = currentCache.mapID;
 		mapIDCache = mapIDCache[originalMapID];
-		for i,o in ipairs(mapIDCache) do
-			if o == group then
+		for i=#mapIDCache,1,-1 do
+			if mapIDCache[i] == group then
 				tremove(mapIDCache, i)
 				break;
 			end
@@ -258,9 +258,10 @@ local function zoneTextAreasRunner(group, value)
 
 	-- Remap the original mapID to the new mapID when it encounters any of these artIDs.
 	local mapIDs, parentMapID, info = {}, nil, nil;
-	if group.coords then
-		for index,coord in ipairs(group.coords) do
-			parentMapID = coord[3];
+	local coords = group.coords
+	if coords then
+		for i=1,#coords do
+			parentMapID = coords[i][3];
 			if parentMapID and not mapIDs[parentMapID] then
 				mapIDs[parentMapID] = 1;
 				info = C_Map_GetMapInfo(parentMapID);
@@ -279,8 +280,11 @@ local function zoneTextAreasRunner(group, value)
 			end
 		end
 	end
-	if group.maps then
-		for i,parentMapID in ipairs(group.maps) do
+	local maps = group.maps
+	if maps then
+		local parentMapID
+		for i=1,#maps do
+			parentMapID = maps[i]
 			if not mapIDs[parentMapID] then
 				mapIDs[parentMapID] = 1;
 				info = C_Map_GetMapInfo(parentMapID);
@@ -336,8 +340,8 @@ local function zoneTextNamesRunner(group, value)
 			names = {};
 			remap.names = names;
 		end
-		for j,name in ipairs(value) do
-			names[name] = mapID;
+		for i=1,#value do
+			names[value[i]] = mapID;
 		end
 
 		--local info = C_Map_GetMapInfo(originalMapID);
@@ -376,6 +380,9 @@ local fieldConverters = {
 	end,
 	["currencyID"] = function(group, value)
 		CacheField(group, "currencyID", value);
+	end,
+	["decorID"] = function(group, value)
+		CacheField(group, "decorID", value);
 	end,
 	["encounterID"] = function(group, value)
 		CacheField(group, "encounterID", value);
@@ -500,8 +507,8 @@ local fieldConverters = {
 		-- don't cache mapID from coord for anything which is itself an actual instance or a map
 		-- if currentInstance ~= group and not rawget(group, "mapID") and not rawget(group, "difficultyID") then
 		if not (group.instanceID or group.mapID or group.objectiveID or group.difficultyID or (group.headerID and group.parent and group.parent.instanceID)) then
-			for i,coord in ipairs(coords) do
-				cacheMapID(group, coord[3]);
+			for i=1,#coords do
+				cacheMapID(group, coords[i][3]);
 			end
 			return true;
 		end
@@ -528,6 +535,13 @@ local fieldConverters = {
 	["nextQuests"] = function(group, value)
 		for i=1,#value do
 			CacheField(group, "nextQuests", value[i])
+		end
+	end,
+	["lc"] = function(group, value)
+		for i=2,#value,2 do
+			if value[i] == "questID" then
+				CacheField(group, "nextQuests", value[i + 1])
+			end
 		end
 	end,
 	["sourceQuests"] = function(group, value)
@@ -644,8 +658,8 @@ if app.IsRetail then
 			end
 		end
 		if hasG then
-			for _,subgroup in ipairs(hasG) do
-				_CacheFields(subgroup);
+			for i=1,#hasG do
+				_CacheFields(hasG[i]);
 			end
 		end
 		if mapKeys then
@@ -691,8 +705,8 @@ if app.IsRetail then
 		-- don't cache mapID from coord for anything which is itself an actual instance or a map
 		if rawget(group, "instanceID") or rawget(group, "mapID") or rawget(group, "difficultyID") or (group.headerID and group.parent and group.parent.instanceID) then return end
 		local any
-		for i,coord in ipairs(coords) do
-			any = cacheMapID(group, coord[3]) or any
+		for i=1,#coords do
+			any = cacheMapID(group, coords[i][3]) or any
 		end
 		return any;
 	end
@@ -715,9 +729,18 @@ else
 	end
 end
 
-CacheFields = function(group, skipMapCaching)
+CacheFields = function(group, skipMapCaching, cacheName)
+	-- app.PrintDebug("CacheFields",app:SearchLink(group),skipMapCaching,cacheName)
 	allowMapCaching = not skipMapCaching
-	_CacheFields(group);
+	if cacheName then
+		local cache = cacheName and AllCaches[cacheName]
+		if not cache then
+			cache = CreateDataCache(cacheName, skipMapCaching)
+		end
+		cache.CacheFields(group)
+	else
+		_CacheFields(group)
+	end
 	for i=1,#runners do
 		runners[i]()
 	end
@@ -728,9 +751,32 @@ CacheFields = function(group, skipMapCaching)
 	return group;
 end
 
--- This data type requires additional processing.
-fieldConverters.otherQuestData = function(group, value)
-	_CacheFields(value);
+do
+	-- we need special handling since the data in the 'otherQuestData' needs to cache against the 'group' not the other data itself
+	local IgnoredOtherFactionFields = {
+		coords = 1,
+		coord = 1,
+		maps = 1,
+		g = 1,
+	}
+	-- otherwise this leads to raw data tables being cached against costs and providers etc.
+	local function CacheOtherFactionData(group, otherFactionData)
+		-- if the other faction data was actually made into a Type, then cache it against itself
+		if otherFactionData.__type then
+			_CacheFields(otherFactionData)
+		else
+			for key,value in pairs(otherFactionData) do
+				_converter = not IgnoredOtherFactionFields[key] and fieldConverters[key]
+				if _converter then
+					_converter(group, value)
+				end
+			end
+		end
+	end
+	-- This data type requires additional processing.
+	fieldConverters.otherQuestData = function(group, value)
+		CacheOtherFactionData(group, value)
+	end
 end
 
 -- Performance Tracking for Caching
@@ -798,12 +844,15 @@ end
 -- end
 local function SearchForRelativeItems(group, listing)
 	-- Search a group for all items relative to the given group. (excluding the group passed in)
-	if group and group.g then
-		for i,subgroup in ipairs(group.g) do
-			SearchForRelativeItems(subgroup, listing);
-			if subgroup.itemID then
-				listing[#listing + 1] = subgroup
-			end
+	local g = group and group.g
+	if not g then return end
+
+	local subgroup
+	for i=1,#g do
+		subgroup = g[i]
+		SearchForRelativeItems(subgroup, listing);
+		if subgroup.itemID then
+			listing[#listing + 1] = subgroup
 		end
 	end
 end
@@ -874,7 +923,7 @@ local function SearchForObject(field, id, require, allowMultiple)
 	fcache = fcache or GetRawField(field, id)
 	count = fcache and #fcache or 0;
 	if count == 0 then
-		-- app.PrintDebug("SFO",field,id,require,"0~")
+		-- app.PrintDebug("SFO:",field,id,require,"0~")
 		return allowMultiple and app.EmptyTable or nil
 	end
 	local fcacheObj;
@@ -886,11 +935,11 @@ local function SearchForObject(field, id, require, allowMultiple)
 			(require == 1 and fcacheObj[field] == id) or
 			(require == 2 and fcacheObj.key == field and fcacheObj[field] == id)
 		then
-			-- app.PrintDebug("SFO",field,id,require,"1=",fcacheObj.hash)
+			-- app.PrintDebug("SFO:",field,id,require,"1=",fcacheObj.hash)
 			return allowMultiple and {fcacheObj} or fcacheObj
 		end
 		-- one result, but doesn't meet the 'require'
-		-- app.PrintDebug("SFO",field,id,require,"1~",fcacheObj.hash)
+		-- app.PrintDebug("SFO:",field,id,require,"1~",fcacheObj.hash)
 		return allowMultiple and app.EmptyTable or nil
 	end
 
@@ -925,7 +974,7 @@ local function SearchForObject(field, id, require, allowMultiple)
 		-- No require
 		results = fcache
 	end
-	-- app.PrintDebug("SFO",field,id,require,"?>",#results)
+	-- app.PrintDebug("SFO:",field,id,require,"?>",#results)
 	-- if only 1 or no result, no point to try filtering
 	if #results <= 1 then return allowMultiple and results or results[1] end
 	-- try out accessibility sort on multiple results instead of filtering
@@ -949,8 +998,8 @@ local function SearchForManyInAllCaches(field, ids)
 	local fieldCache;
 	for _,cache in pairs(AllCaches) do
 		fieldCache = cache[field];
-		for _,id in ipairs(ids) do
-			ArrayAppend(groups, fieldCache[id]);
+		for i=1,#ids do
+			ArrayAppend(groups, fieldCache[ids[i]]);
 		end
 	end
 	return groups;
@@ -958,14 +1007,16 @@ end
 
 -- Hash-Based Searching
 local function SearchForSourcePath(g, hashes, level, count)
-	if g then
-		local hash = hashes[level];
-		if hash then
-			for i,o in ipairs(g) do
-				if (o.hash or o.name or o.text) == hash then
-					if level == count then return o; end
-					return SearchForSourcePath(o.g, hashes, level + 1, count);
-				end
+	if not g then return end
+
+	local hash = hashes[level];
+	if hash then
+		local o
+		for i=1,#g do
+			o = g[i]
+			if (o.hash or o.name or o.text) == hash then
+				if level == count then return o; end
+				return SearchForSourcePath(o.g, hashes, level + 1, count);
 			end
 		end
 	end
@@ -978,8 +1029,8 @@ local function SearchForSpecificGroups(t, group, hashes)
 		end
 		local g = group.g;
 		if g then
-			for _,o in ipairs(g) do
-				SearchForSpecificGroups(t, o, hashes);
+			for i=1,#g do
+				SearchForSpecificGroups(t, g[i], hashes);
 			end
 		end
 	end

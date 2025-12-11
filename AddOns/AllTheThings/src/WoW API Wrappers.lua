@@ -31,17 +31,17 @@ app.WOWAPI = lib;
 ---@param name string
 ---@param ... function|nil
 local function AssignAPIWrapper(name, ...)
-    for i = 1, select("#", ...) do
-        local api = select(i, ...)  -- Get API Function
-        if api then
-            if rawget(lib, name) then
-                print("Warning: existing ATT.WOWAPI replaced!", name)
-            end
-            lib[name] = api
-            return  -- Return immediately after successful assignment.
-        end
-    end
-    print("No valid function for", name)  -- If no valid function is found, print an error message.
+	for i = 1, select("#", ...) do
+		local api = select(i, ...)  -- Get API Function
+		if api then
+			if rawget(lib, name) then
+				print("Warning: existing ATT.WOWAPI replaced!", name)
+			end
+			lib[name] = api
+			return  -- Return immediately after successful assignment.
+		end
+	end
+	print("No valid function for", name)  -- If no valid function is found, print an error message.
 end
 
 -- ChatInfo APIs
@@ -97,6 +97,7 @@ AssignAPIWrapper("GetFriendshipReputation", C_GossipInfo and C_GossipInfo.GetFri
 
 -- Item APIs
 local C_Item = C_Item;
+local C_ItemSocketInfo = C_ItemSocketInfo;
 ---@diagnostic disable: deprecated
 AssignAPIWrapper("GetItemCount", C_Item and C_Item.GetItemCount, GetItemCount)
 AssignAPIWrapper("GetItemClassInfo", C_Item and C_Item.GetItemClassInfo, GetItemClassInfo)
@@ -105,6 +106,9 @@ AssignAPIWrapper("GetItemInfoInstant", C_Item and C_Item.GetItemInfoInstant, Get
 AssignAPIWrapper("GetItemID", C_Item and C_Item.GetItemIDForItemInfo, GetItemInfoInstant)
 AssignAPIWrapper("GetItemInfo", C_Item and C_Item.GetItemInfo, GetItemInfo)
 AssignAPIWrapper("GetItemSpecInfo", C_Item and C_Item.GetItemSpecInfo, GetItemSpecInfo)
+if app.GameBuildVersion >= 70000 then
+	AssignAPIWrapper("IsArtifactRelicItem", C_ItemSocketInfo and C_ItemSocketInfo.IsArtifactRelicItem, IsArtifactRelicItem)
+end
 ---@diagnostic enable: deprecated
 
 -- Quest APIs

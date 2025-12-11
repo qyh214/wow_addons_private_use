@@ -1,9 +1,8 @@
 --- @type BlizzMoveAPI
-local BlizzMoveAPI = _G.BlizzMoveAPI
+local BlizzMoveAPI = _G.BlizzMoveAPI ---@diagnostic disable-line: undefined-field
 if not BlizzMoveAPI then return; end
 
-BlizzMoveAPI:RegisterFrames(
-{
+BlizzMoveAPI:RegisterFrames({
     ["AddonList"] =
     {
         MinVersion = 0,
@@ -118,7 +117,7 @@ BlizzMoveAPI:RegisterFrames(
     ["ContainerFrame1"] =
     {
         MinVersion = 100000,
-         -- while it does indeed exist in classic, blizzard does not make other bags follow its position automatically like in retail
+        -- while it does indeed exist in classic, blizzard does not make other bags follow its position automatically like in retail
         SilenceCompatabilityWarnings = true,
         SubFrames =
         {
@@ -151,6 +150,12 @@ BlizzMoveAPI:RegisterFrames(
             ["DressUpFrame.OutfitDetailsPanel"] =
             {
                 MinVersion = 90105,
+                MaxVersion = 120000, -- renamed to CustomSetDetailsPanel
+                Detachable = true,
+            },
+            ["DressUpFrame.CustomSetDetailsPanel"] =
+            {
+                MinVersion = 120000, -- renamed from OutfitDetailsPanel
                 Detachable = true,
             },
         },
@@ -202,17 +207,6 @@ BlizzMoveAPI:RegisterFrames(
             {
                 MinVersion = 60000, -- Added when?
                 MaxVersion = 100000,
-            },
-            ["WhoListScrollFrame"] =
-            {
-                MinVersion = 40000, -- check comment below
-                MaxVersion = 100000,
-                SilenceCompatabilityWarnings = true,
-                -- Classic: Not required, but does not break anything.
-                -- TBC: Not required, but breaks clicking on results other then the first.
-                -- Wrath: Not required, but breaks clicking on results other then the first.
-                -- Shadowlands: Required.
-                -- Dragonflight: Not required, and renamed
             },
             ["GuildFrame"] =
             {
@@ -548,8 +542,14 @@ BlizzMoveAPI:RegisterFrames(
     },
 });
 
-BlizzMoveAPI:RegisterAddOnFrames(
-{
+BlizzMoveAPI:RegisterAddOnFrames({
+    ["Blizzard_AccountStore"] =
+    {
+        ["AccountStoreFrame"] =
+        {
+            MinVersion = 110205,
+        },
+    },
     ["Blizzard_AchievementUI"] =
     {
         ["AchievementFrame"] =
@@ -904,6 +904,13 @@ BlizzMoveAPI:RegisterAddOnFrames(
             MinVersion = 40000,
         },
     },
+    ["Blizzard_CooldownViewer"] =
+    {
+        ["CooldownViewerSettings"] =
+        {
+            MinVersion = 110205,
+        },
+    },
     ["Blizzard_CovenantPreviewUI"] =
     {
         ["CovenantPreviewFrame"] =
@@ -1195,12 +1202,122 @@ BlizzMoveAPI:RegisterAddOnFrames(
             },
         },
     },
+    ["Blizzard_GuildRename"] =
+    {
+        ["GuildRenameFrame"] =
+        {
+            MinVersion = 110205,
+        },
+    },
     ["Blizzard_GuildUI"] =
     {
         ["GuildFrame"] =
         {
             MinVersion = 60000, -- Moved from FrameXML when?
             MaxVersion = 110000, -- Removed when?
+        },
+    },
+    ["Blizzard_HouseList"] =
+    {
+        ["HouseListFrame"] =
+        {
+            MinVersion = 110207,
+        },
+    },
+    ["Blizzard_HousingBulletinBoard"] =
+    {
+        ["HousingBulletinBoardFrame"] =
+        {
+            MinVersion = 110207,
+        },
+        ["HousingInviteResidentFrame"] =
+        {
+            MinVersion = 110207,
+        },
+        ["NeighborhoodChangeNameDialog"] =
+        {
+            MinVersion = 110207,
+        },
+    },
+    ["Blizzard_HousingCharter"] =
+    {
+        ["HousingCharterRequestSignatureDialog"] =
+        {
+            MinVersion = 110207,
+        },
+    },
+    ["Blizzard_HousingCornerstone"] =
+    {
+        ["HousingCornerstoneFrame"] =
+        {
+            MinVersion = 110207,
+        },
+        ["HousingCornerstoneHouseInfoFrame"] =
+        {
+            MinVersion = 110207,
+        },
+        ["HousingCornerstonePurchaseFrame"] =
+        {
+            MinVersion = 110207,
+        },
+        ["HousingCornerstoneVisitorFrame"] =
+        {
+            MinVersion = 110207,
+        },
+        ["ImportHouseConfirmationDialog"] =
+        {
+            MinVersion = 110207,
+        },
+        ["MoveHouseConfirmationDialog"] =
+        {
+            MinVersion = 110207,
+        },
+    },
+    ["Blizzard_HousingCreateNeighborhood"] =
+    {
+        ["HousingCreateCharterNeighborhoodConfirmationFrame"] =
+        {
+            MinVersion = 110207,
+        },
+        ["HousingCreateNeighborhoodCharterFrame"] =
+        {
+            MinVersion = 110207,
+        },
+    },
+    ["Blizzard_HousingDashboard"] =
+    {
+        ["HousingDashboardFrame"] =
+        {
+            MinVersion = 110207,
+            SubFrames =
+            {
+                ["HousingDashboardFrame.HouseInfoContent.DashboardNoHousesFrame"] = {},
+            }
+        },
+    },
+    ["Blizzard_HousingHouseFinder"] =
+    {
+        ["HouseFinderFrame"] =
+        {
+            MinVersion = 110207,
+        },
+    },
+    ["Blizzard_HousingHouseSettings"] =
+    {
+        ["AbandonHouseConfirmationDialog"] =
+        {
+            MinVersion = 110207,
+        },
+        ["HousingHouseSettingsFrame"] =
+        {
+            MinVersion = 110207,
+        },
+    },
+    ["Blizzard_HousingModelPreview"] =
+    {
+        ["HousingModelPreviewFrame"] =
+        {
+            MinVersion = 110207,
         },
     },
     ["Blizzard_InspectUI"] =
@@ -1298,6 +1415,13 @@ BlizzMoveAPI:RegisterAddOnFrames(
             MinVersion = 50000,
         },
     },
+    ["Blizzard_Kiosk"] =
+    {
+        ["GameKioskSessionStartedDialog"] =
+        {
+            MinVersion = 110207,
+        },
+    },
     ["Blizzard_LookingForGroupUI"] =
     {
         ["LFGParentFrame"] =
@@ -1329,6 +1453,7 @@ BlizzMoveAPI:RegisterAddOnFrames(
         ["MajorFactionRenownFrame"] =
         {
             MinVersion = 100000,
+            MaxVersion = 120000,
         },
     },
     ["Blizzard_MatchCelebrationPartyPoseUI"] =
@@ -1450,6 +1575,17 @@ BlizzMoveAPI:RegisterAddOnFrames(
             },
         },
     },
+    ["Blizzard_RemixArtifactUI"] =
+    {
+        ["RemixArtifactFrame"] =
+        {
+            MinVersion = 110205,
+            SubFrames =
+            {
+                ["RemixArtifactFrame.ButtonsParent"] = {},
+            },
+        },
+    },
     ["Blizzard_RuneforgeUI"] =
     {
         ["RuneforgeFrame"] =
@@ -1555,6 +1691,13 @@ BlizzMoveAPI:RegisterAddOnFrames(
         ["ClassTrainerFrame"] =
         {
             MinVersion = 0,
+        },
+    },
+    ["Blizzard_Transmog"] =
+    {
+        ["TransmogFrame"] =
+        {
+            MinVersion = 110207,
         },
     },
     ["Blizzard_UIWidgets"] =

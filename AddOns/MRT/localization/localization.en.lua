@@ -133,6 +133,8 @@ L.NoteUndo = "Undo"
 L.NoteUndoTip = "Undo recent updates"
 L.NoteBossAutoLoadPersonal = "Use autoload for personal note"
 L.NoteFontTextAlign = "Text align"
+L.NoteHelp12 = "All text inside this code (\"...\" in current example) will be removed for displaying."
+L.NoteTimersOnlyMyEnableAllNames = "Hide other names in shown line"
 
 L.setminimap1 = "Hide minimap icon"
 L.setauthor = "Author"

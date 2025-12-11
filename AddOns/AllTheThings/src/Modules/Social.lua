@@ -64,6 +64,7 @@ local VersionCache = setmetatable({
 	end
 });
 local CurrentVersion = VersionCache[app.Version];
+local MaxReportedVersion = CurrentVersion
 
 app.events.CHAT_MSG_ADDON = function(prefix, text, channel, sender, target, ...)
 	if not target then target = sender; end
@@ -187,9 +188,15 @@ app.events.CHAT_MSG_ADDON = function(prefix, text, channel, sender, target, ...)
 			elseif cmd == "A" then -- Version Command
 				local guid = args[6];
 				if guid then PlayerProgressCacheByGUID[guid] = { tonumber(args[3]), tonumber(args[4]), args[5] }; end
-				if a ~= "[Git]" and not rawget(VersionCache, a) and CurrentVersion < VersionCache[a] then
-					local flavors = app.L.NEW_VERSION_FLAVORS;
-					print(app.L.NEW_VERSION_AVAILABLE:format(app.L.TITLE.." ("..a..")", flavors[math.random(#flavors)]));
+				if a ~= "[Git]" and not rawget(VersionCache, a) then
+					local baseVersion = VersionCache[a]
+					-- don't report the same or lower new versions more than once
+					-- this doesn't account for alpha versions which are newer for someone using the same alpha version
+					if CurrentVersion < baseVersion and baseVersion < MaxReportedVersion then
+						MaxReportedVersion = baseVersion
+						local flavors = app.L.NEW_VERSION_FLAVORS;
+						print(app.L.NEW_VERSION_AVAILABLE:format(app.L.TITLE.." ("..a..")", flavors[math.random(#flavors)]));
+					end
 				end
 			end
 		end

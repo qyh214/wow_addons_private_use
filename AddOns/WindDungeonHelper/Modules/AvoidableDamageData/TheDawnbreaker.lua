@@ -10,7 +10,7 @@ local mistakes = {
 	{
 		-- 恐嚇猛擊 (堅不可摧的伊絲奎特, 阿努比卡杰)
 		type = AD.MISTAKE.AURA,
-		spell = 427007,
+		aura = 427007,
 		playerIsNotTank = true,
 	},
 	{
@@ -96,7 +96,7 @@ local mistakes = {
 	{
 		-- 恐嚇猛擊 (堅不可摧的伊絲奎特, 阿努比卡杰)
 		type = AD.MISTAKE.AURA,
-		spell = 451115,
+		aura = 451115,
 		playerIsNotTank = true,
 	},
 	{

@@ -151,6 +151,7 @@ GameCooltipFrame2 = {}
 ---@field RoleTypes roleinfo[]
 ---@field Language df_language
 ---@field Ejc df_ejc
+---@field FrameStrataLevels framestrata[] all available frame strata levels
 ---@field KeybindMixin df_keybindmixin
 ---@field ScriptHookMixin df_scripthookmixin
 ---@field EditorMixin df_editormixin
@@ -162,6 +163,7 @@ GameCooltipFrame2 = {}
 ---@field Math df_math
 ---@field FontOutlineFlags table<outline, boolean>
 ---@field table df_table_functions
+---@field string df_strings
 ---@field AnchorPoints string[] localized point names
 ---@field AnchorPointsByIndex string[] api point names
 ---@field AnchorPointsToInside table<anchorid, anchorid>
@@ -189,6 +191,7 @@ GameCooltipFrame2 = {}
 ---@field TalentExporter table
 ---@field FormatNumber fun(number:number) : string abbreviate a number, e.g. 1000 -> 1k 1000 -> 1천, depending on the client language
 ---@field UnitGroupRolesAssigned fun(unitId: unit, bUseSupport:boolean?, specId: specializationid?) : string there's no self here
+---@field GetPlayerRole fun(self:detailsframework) : string only get the role of the player
 ---@field ConvertRole fun(self:table, value:string|number, valueType:string?) : string|number if passed a role name return a number, if passed a number return the role name, if value type is passed it forces the return to be a number or a string
 ---@field IsDragonflight fun():boolean
 ---@field IsDragonflightAndBeyond fun():boolean
@@ -206,6 +209,10 @@ GameCooltipFrame2 = {}
 ---@field IsDragonflightWow fun():boolean
 ---@field IsWarWow fun():boolean
 ---@field IsTWWWow fun():boolean
+---@field IsMidnightWow fun():boolean
+---@field IsNotMidnightWow fun():boolean
+---@field IsWarWowOrBelow fun():boolean
+---@field IsAddonApocalypseWow fun():boolean
 ---@field CreateFullBorder fun(self:table, name:string, parent:frame) : border_frame
 ---@field CreateButton fun(self:table, parent:frame, func:function, width:number, height:number, text:any, param1:any, param2:any, texture:atlasname|texturepath|textureid|nil, member:string?, name:string?, shortMethod:any, buttonTemplate:table?, textTemplate:table?) : df_button callback function(blizzButton, clickType, param1, param2) end
 ---@field CreateCloseButton fun(self:table, parent:frame, frameName:string?) : df_closebutton
@@ -217,6 +224,10 @@ GameCooltipFrame2 = {}
 ---@field CreateLabel fun(self:table, parent:frame, text:any, size:any?, color:any?, font:string?, member:string?, name:string?, layer:drawlayer?) : df_label
 ---@field CreateDropDown fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown
 ---@field CreateDropDownWithText fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown_text
+---@field CreateStatusbarTextureDropDown fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown
+---@field CreateStatusbarTextureListGenerator fun(self:table, callback:function) : function return a function which when called returns a table filled with all statusbar textures available and ready to be used on dropdowns
+---@field CreateFrameStrataDropDown fun(self:table, parent:frame, callback:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown
+---@field CreateFrameStrataListGenerator fun(self:table, callback:function) : function return a function which when called returns a table filled with all frame strata levels available and ready to be used on dropdowns
 ---@field CreateFontDropDown fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?, bIncludeDefault:boolean?) : df_dropdown
 ---@field CreateColorDropDown fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown
 ---@field CreateOutlineDropDown fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown
@@ -280,6 +291,7 @@ GameCooltipFrame2 = {}
 ---@field CreateTitleBar fun(self:table, parent:frame, titleText:string) : df_titlebar
 ---@field CreateElapsedTimeFrame fun(self:table, parent:frame, name:string?, options:df_elapsedtime_options?) : df_elapsedtime
 ---@field CreateIconRow fun(self:table, parent:frame, name:string?, options:table?) : df_iconrow
+---@field CreateRightClickToClose fun(self:table, parent:uiobject, xOffset:number?, yOffset:number?, color:any?, fontSize:number?) : df_label create a label at the top-right corner of the parent frame with the text "Right Click to Close", when clicked with right mouse button it'll hide the parent frame
 ---@field ConvertAnchorPointToInside fun(self:table, anchorPoint:anchorid) : anchorid
 ---@field ExpansionHasAugEvoker fun():boolean
 ---@field ExpansionHasEvoker fun():boolean
@@ -295,6 +307,7 @@ GameCooltipFrame2 = {}
 ---@field GetTextWidth fun(self:table, text:string, fontSize:number?) : number return the width of a text string
 ---@field GetCursorPosition fun(self:table) : number, number return the mouse position scaled by UIScale, use :SetPoint("bottomleft", UIParent, "bottomleft", DetailsFramework:GetMousePosition()) to anchor a frame to where the mouse is
 ---@field GetClassIdByFileName fun(self:table, fileName:string) : number return the classId of a class by its file name
+---@field GetDurability fun(self:table) : number, number return the current gear durability and the lowest gear durability percentage
 ---@field IsValidSpecId fun(self:table, specId:number):boolean check if the passed specId is valid for the player class, also return false for tutorial specs
 ---@field GetDragonlightTalentString fun(self:table):string return the talent config string
 ---@field GetClassList fun(self:table):{ID:number, Name:string, FileString:string, Texture:string, TexCoord:number[]}[]
@@ -321,6 +334,7 @@ GameCooltipFrame2 = {}
 ---@field RemoveOwnerName fun(self:table, name:string) : string, number removes the owner name from a name string, the owner name must be between < and >
 ---@field CleanUpName fun(self:table, name:string) : string removes the realm name and owner name from a name string
 ---@field IntegerToTimer fun(self:table, time:number) : string convert a number to a timer string, e.g. 150 -> 2:30
+---@field IntegerToCooldownTime fun(self:table, time:number) : string convert a number to a cooldown time string, e.g. 3610 seconds -> "1h"
 ---@field GroupIterator fun(self:table, callback:function, ...) iterate over the group, calling the callback function for each group member
 ---@field CommaValue fun(self:table, value:number) : string convert a number to a string with commas, e.g. 1000000 -> 1,000,000
 ---@field SplitTextInLines fun(self:table, text:string) : string[] split a text into lines
@@ -360,6 +374,7 @@ GameCooltipFrame2 = {}
 ---@field SortOrder3R fun(t1:table, t2:table) : boolean
 ---@field Trim fun(self:table, string:string) : string
 ---@field trim fun(self:table, string:string) : string
+---@field Acronym fun(self:table, phrase:string) : string
 ---@field TruncateTextBinarySearch fun(self:table, fontString:fontstring, maxWidth:number) : nil
 ---@field TruncateTextSafeBinarySearch fun(self:table, fontString:fontstring, maxWidth:number) : nil
 ---@field TruncateTextSafe fun(self:table, fontString:fontstring, maxWidth:number) : nil
@@ -377,7 +392,9 @@ GameCooltipFrame2 = {}
 ---@field SetTemplate fun(self:table, frame:uiobject, template:string)
 ---@field ParseTemplate fun(self:table, templateCategory:string, template:string|table) : table
 ---@field GetParentName fun(self:table, frame:uiobject) : string
+---@field SetTexture fun(self:table, object:texture, texture:any)
 ---@field IsLatinLanguage fun(self:table, languageId:string) : boolean
+---@field SetAsOptionsPanel fun(self:table, frame:frame) add the BuildMenu() members and methods to a frame, calling BuildMenu() on a frame will call this function
 ---@field PrintVersion fun(self:table) : nil print to chat the version of the framework
 ---@field GetParentKeyPath fun(self:table, object:uiobject) : string
 ---@field GetParentNamePath fun(self:table, object:uiobject) : string

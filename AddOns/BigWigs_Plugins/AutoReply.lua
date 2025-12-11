@@ -1,3 +1,5 @@
+if BigWigsLoader.isBeta then return end -- XXX needs updating for 12.0
+
 -------------------------------------------------------------------------------
 -- Module Declaration
 --
@@ -69,7 +71,7 @@ do
 		desc = L.autoReplyDesc,
 		type = "group",
 		childGroups = "tab",
-		order = 9,
+		order = 12,
 		get = function(info)
 			return plugin.db.profile[info[#info]]
 		end,
@@ -271,7 +273,9 @@ end
 do
 	local units = {"boss1", "boss2", "boss3", "boss4", "boss5"}
 
-	local UnitHealth, UnitHealthMax, IsEncounterInProgress = UnitHealth, UnitHealthMax, IsEncounterInProgress
+	local UnitHealth, UnitHealthMax = UnitHealth, UnitHealthMax
+	local IsEncounterInProgress = C_InstanceEncounter and C_InstanceEncounter.IsEncounterInProgress or IsEncounterInProgress -- XXX 12.0 compat
+
 	local function StoreHealth()
 		if IsEncounterInProgress() then
 			for i = 1, 5 do
@@ -344,9 +348,8 @@ do
 			end
 			if not throttle[sender] or (GetTime() - throttle[sender]) > 30 then
 				throttle[sender] = GetTime()
-				local isBnetFriend = C_BattleNet.GetGameAccountInfoByGUID(guid)
 				local msg
-				if isBnetFriend or IsGuildMember(guid) or C_FriendList.IsFriend(guid) then
+				if C_BattleNet.GetGameAccountInfoByGUID(guid) or IsGuildMember(guid) or C_FriendList.IsFriend(guid) then
 					friendlies[sender] = true
 					msg = CreateResponse(self.db.profile.mode)
 					if not timer and self.db.profile.exitCombat == 4 then
@@ -374,7 +377,7 @@ do
 					local player = gameAccountInfo.characterName
 					local realmName = gameAccountInfo.realmName -- Short name "ServerOne"
 					local realmDisplayName = gameAccountInfo.realmDisplayName -- Full name "Server One"
-					if gameAccountInfo.clientProgram == "WoW" and gameAccountInfo.wowProjectID == 1 and realmName and realmDisplayName and player then
+					if gameAccountInfo.clientProgram == "WoW" and realmName and realmDisplayName and player then
 						if realmDisplayName ~= GetRealmName() then
 							player = player .. "-" .. realmName
 						end

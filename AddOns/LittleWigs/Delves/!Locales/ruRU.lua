@@ -49,6 +49,11 @@ end
 
 -- Excavation Site 9
 
+L = BigWigs:NewBossLocale("Beste Glatisant", "ruRU")
+if L then
+	L.beste_glatisant = "Зверь Глатисант"
+end
+
 L = BigWigs:NewBossLocale("Craggle Fritzbrains", "ruRU")
 if L then
 	--L.craggle_fritzbrains = "Craggle Fritzbrains"
@@ -78,6 +83,11 @@ if L then
 end
 
 -- Kriegval's Rest
+
+L = BigWigs:NewBossLocale("Faceless One Kriegval's Rest", "ruRU")
+if L then
+	L.faceless_one = "Безликий"
+end
 
 L = BigWigs:NewBossLocale("Tomb-Raider Drywhisker", "ruRU")
 if L then
@@ -230,14 +240,9 @@ end
 
 -- Voidrazor Sanctuary
 
-L = BigWigs:NewBossLocale("Nexus-Princess Ky'veza (Tier 8)", "ruRU")
-if L then
-	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza (Tier 8)"
-end
-
 L = BigWigs:NewBossLocale("Nexus-Princess Ky'veza (Tier 11)", "ruRU")
 if L then
-	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza (Tier 11)"
+	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza"
 end
 
 -- Zekvir's Lair
@@ -266,6 +271,7 @@ if L then
 	--L.shadowguard_soulbreaker = "Shadowguard Soulbreaker"
 	--L.shadowguard_steelsoul = "Shadowguard Steelsoul"
 	--L.siphoned_drake = "Siphoned Drake"
+	L.steelsoul_arcanoward = "Стальной дух – чаростраж"
 end
 
 L = BigWigs:NewBossLocale("Fungarian Delve Trash", "ruRU")
@@ -294,6 +300,7 @@ if L then
 	L.punchy_thug = "Напористый лиходей"
 	L.flinging_flicker = "Мелькающий метатель"
 	L.bomb_bot = "Бомбот"
+	--L.rad_rat = "Rad Rat"
 end
 
 L = BigWigs:NewBossLocale("Kobold Delve Trash", "ruRU")
@@ -322,15 +329,19 @@ L = BigWigs:NewBossLocale("Ky'veza Rares", "ruRU")
 if L then
 	--L.rares = "Ky'veza Rares"
 
+	--L.treasure_wraith = "Treasure Wraith"
+	--L.invasive_phasecrawler = "Invasive Phasecrawler"
+	--L.drude = "D'rude"
+	--L.great_devourer = "Great Devourer"
+	L.mercenary_acquisitionist = "Наемный добытчик"
 	--L.pactsworn_fraycaller = "Pactsworn Fraycaller"
 	--L.pactsworn_dustblade = "Pactsworn Dustblade"
 	--L.pactsworn_sandreaver = "Pactsworn Sandreaver"
 	--L.pactsworn_arcanist = "Pactsworn Arcanist"
 	--L.pactsworn_wildcaller = "Pactsworn Wildcaller"
-	--L.invasive_phasecrawler = "Invasive Phasecrawler"
-	--L.drude = "D'rude"
-	--L.great_devourer = "Great Devourer"
 	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza (Random Spawn)"
+	L.zekvir = "Зеквир"
+	L.the_underpin = "Бур-босс"
 end
 
 L = BigWigs:NewBossLocale("Nerubian Delve Trash", "ruRU")
@@ -374,22 +385,4 @@ if L then
 	--L.deepwalker_guardian = "Deepwalker Guardian"
 	--L.crazed_abomination = "Crazed Abomination"
 	--L.web_marauder = "Web Marauder"
-end
-
-L = BigWigs:NewBossLocale("Underpin Rares", "ruRU")
-if L then
-	--L.rares = "Underpin Rares"
-
-	--L.treasure_wraith = "Treasure Wraith"
-	--L.treasure_crab = "Treasure Crab"
-	--L.hovering_menace = "Hovering Menace"
-	--L.malfunctioning_pummeler = "Malfunctioning Pummeler"
-	--L.underpins_adoring_fan = "Underpin's Adoring Fan"
-	--L.underpins_well_connected_friend = "Underpin's Well-Connected Friend"
-	--L.underpins_explosive_ally = "Underpin's Explosive Ally"
-	--L.underpins_bodyguards_intern = "Underpin's Bodyguard's Intern"
-	--L.aggressively_lost_hobgoblin = "Aggressively Lost Hobgoblin"
-	--L.the_underpin = "The Underpin (Random Spawn)"
-
-	--L.underpin_retreat_trigger = "People always messin' around on my perfectly legal, deeded land!"
 end

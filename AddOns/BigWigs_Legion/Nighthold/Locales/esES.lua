@@ -1,88 +1,88 @@
 local L = BigWigs:NewBossLocale("Skorpyron", "esES") or BigWigs:NewBossLocale("Skorpyron", "esMX")
 if not L then return end
 if L then
-	--L.blue = "Blue"
-	--L.red = "Red"
-	--L.green = "Green"
-	--L.mode = "%s Mode"
+	L.blue = "Azul"
+	L.red = "Rojo"
+	L.green = "Verde"
+	L.mode = "%s Modo"
 end
 
 L = BigWigs:NewBossLocale("Chronomatic Anomaly", "esES") or BigWigs:NewBossLocale("Chronomatic Anomaly", "esMX")
 if L then
-	--L.timeLeft = "%.1fs" -- s = seconds
+	L.timeLeft = "%.1fs" -- s = seconds
 end
 
 L = BigWigs:NewBossLocale("Trilliax", "esES") or BigWigs:NewBossLocale("Trilliax", "esMX")
 if L then
-	--L.yourLink = "You are linked with %s"
-	--L.yourLinkShort = "Linked with %s"
-	--L.imprint = "Imprint"
+	L.yourLink = "Estás vinculado con %s"
+	L.yourLinkShort = "Vinculado con %s"
+	L.imprint = "Huella"
 end
 
 L = BigWigs:NewBossLocale("Tichondrius", "esES") or BigWigs:NewBossLocale("Tichondrius", "esMX")
 if L then
-	--L.addsKilled = "Adds killed"
-	--L.gotEssence = "Got Essence"
+	L.addsKilled = "Esbirros muertos"
+	L.gotEssence = "Esencia recogida"
 
-	--L.adds_desc = "Timers and warnings for the add spawns."
-	--L.adds_yell1 = "Underlings! Get in here!"
-	--L.adds_yell2 = "Show these pretenders how to fight!"
+	L.adds_desc = "Temporizadores y avisos para cuando aparezcan esbirros."
+	L.adds_yell1 = "¡Esbirros! ¡Adelante!"
+	L.adds_yell2 = "¡Mostrad a estos farsantes cómo se lucha!"
 end
 
 L = BigWigs:NewBossLocale("Krosus", "esES") or BigWigs:NewBossLocale("Krosus", "esMX")
 if L then
-	--L.leftBeam = "Left Beam"
-	--L.rightBeam = "Right Beam"
+	L.leftBeam = "Láser izquierdo"
+	L.rightBeam = "Láser derecho"
 
-	--L.goRight = "> GO RIGHT >"
-	--L.goLeft = "< GO LEFT <"
+	L.goRight = "> A LA DERECHA >"
+	L.goLeft = "< A LA IZQUIERDA <"
 
-	--L.smashingBridge = "Smashing Bridge"
-	--L.smashingBridge_desc = "Slams which break the bridge. You can use this option to emphasize or enable countdown."
+	L.smashingBridge = "Rotura del puente"
+	L.smashingBridge_desc = "Embates que rompen el puente. Puedes utilizar esta opción para enfatizar o activar una cuenta atrás."
 
-	--L.removedFromYou = "%s removed from you" -- "Searing Brand removed from YOU!"
+	L.removedFromYou = "%s eliminada de ti" -- "Searing Brand removed from YOU!"
 end
 
 L = BigWigs:NewBossLocale("Star Augur Etraeus", "esES") or BigWigs:NewBossLocale("Star Augur Etraeus", "esMX")
 if L then
-	--L.yourSign = "Your sign"
-	--L.with = "with"
-	--L[205429] = "|T1391538:15:15:0:0:64:64:4:60:4:60|t|cFFFFDD00Crab|r"
-	--L[205445] = "|T1391537:15:15:0:0:64:64:4:60:4:60|t|cFFFF0000Wolf|r"
-	--L[216345] = "|T1391536:15:15:0:0:64:64:4:60:4:60|t|cFF00FF00Hunter|r"
-	--L[216344] = "|T1391535:15:15:0:0:64:64:4:60:4:60|t|cFF00DDFFDragon|r"
+	L.yourSign = "Tu signo"
+	L.with = "con"
+	L[205429] = "|T1391538:15:15:0:0:64:64:4:60:4:60|t|cFFFFDD00Cangrejo|r"
+	L[205445] = "|T1391537:15:15:0:0:64:64:4:60:4:60|t|cFFFF0000Lobo|r"
+	L[216345] = "|T1391536:15:15:0:0:64:64:4:60:4:60|t|cFF00FF00Cazador|r"
+	L[216344] = "|T1391535:15:15:0:0:64:64:4:60:4:60|t|cFF00DDFFDragón|r"
 end
 
 L = BigWigs:NewBossLocale("Grand Magistrix Elisande", "esES") or BigWigs:NewBossLocale("Grand Magistrix Elisande", "esMX")
 if L then
-	--L.elisande = "Elisande"
+	L.elisande = "Elisande"
 
-	--L.ring_yell = "Let the waves of time crash over you!"
-	--L.orb_yell = "You'll find time can be quite volatile."
+	L.ring_yell = "¡Que las mareas del tiempo os ahoguen!"
+	L.orb_yell = "Veréis que el tiempo puede ser muy volátil."
 
-	--L.slowTimeZone = "Slow Time Zone"
-	--L.fastTimeZone = "Fast Time Zone"
+	L.slowTimeZone = "Zona de tiempo ralentizado"
+	L.fastTimeZone = "Zona de tiempo acelerado"
 
-	--L.boss_active = "Elisande Active"
-	--L.boss_active_desc = "Time until Elisande is active after clearing the trash event."
-	--L.elisande_trigger = "I foresaw your coming, of course. The threads of fate that led you to this place. Your desperate attempt to stop the Legion."
+	L.boss_active = "Elisande activada"
+	L.boss_active_desc = "Tiempo hasta que Elisande se active después de limpiar la zona de esbirros."
+	L.elisande_trigger = "Vaticiné vuestra llegada, por supuesto. Los hilos del destino que os trajeron a este lugar; vuestros desesperados intentos por detener la Legión..."
 end
 
 L = BigWigs:NewBossLocale("Gul'dan", "esES") or BigWigs:NewBossLocale("Gul'dan", "esMX")
 if L then
-	--L.warmup_trigger = "Have you forgotten" -- Have you forgotten your humiliation on the Broken Shore? How your precious high king was bent and broken before me? Will you beg for your lives as he did, whimpering like some worthless dog?
+	L.warmup_trigger = "¿Habéis olvidado" -- ¿Habéis olvidado cómo os humillé en la Costa Abrupta? ¿Cómo vuestro querido Rey yacía derrotado a mis pies? ¿Suplicaréis por vuestra vida como lo hizo él, gimiendo como un perro indigno?
 
-	--L.empowered = "(E) %s" -- (E) Eye of Gul'dan
-	--L.gains = "Gul'dan gains %s"
-	--L.p2_start = "You failed, heroes! The ritual is upon us! But first, I'll indulge myself a bit... and finish you!"
-	--L.p4_mythic_start_yell = "Time to return the demon hunter's soul to his body... and deny the Legion's master a host!"
+	L.empowered = "(O) %s" -- (O) Ojo de Gul'dan
+	L.gains = "Gul'dan obtiene %s"
+	L.p2_start = "¡Habéis fracasado, héroes! ¡El ritual tendrá lugar! Pero primero, me daré un capricho... ¡y os mataré!"
+	L.p4_mythic_start_yell = "Es hora de devolver el alma del cazador de demonios a su cuerpo... ¡y evitar que caiga en manos de la Legión!"
 
-	--L.nightorb_desc = "Summons a Nightorb, killing it will spawn a Time Zone."
-	--L.timeStopZone = "Time Stop Zone"
+	L.nightorb_desc = "Invoca un Orbe nocturno, al matarlo aparecerá un Campo de tiempo detenido."
+	L.timeStopZone = "Campo de tiempo detenido"
 
-	--L.manifest_desc = "Summons a Soul Fragment of Azzinoth, killing it will spawn a Demonic Essence."
+	L.manifest_desc = "Invoca un Trozo de alma de Azzinoth, al matarlo aparecerá una Esencia demoníaca."
 
-	--L.winds_desc = "Gul'dan summons Violent Winds to push the players off the platform."
+	L.winds_desc = "Gul'dan invoca Vientos violentos para empujar a los jugadores de la plataforma."
 end
 
 L = BigWigs:NewBossLocale("Nighthold Trash", "esES") or BigWigs:NewBossLocale("Nighthold Trash", "esMX")

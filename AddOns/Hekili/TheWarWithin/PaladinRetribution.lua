@@ -2,6 +2,9 @@
 -- August 2025
 -- Patch 11.2
 
+-- TODO: If blessing of dawn is ever added to the APL, use combatlogs to build a tracker for the hidden counter
+-- TODO: There are probably more edge cases you can add for Hammer of Light free predictions
+
 if UnitClassBase( "player" ) ~= "PALADIN" then return end
 
 local addon, ns = ...
@@ -21,20 +24,20 @@ local abs, ceil, floor, max, sqrt = math.abs, math.ceil, math.floor, math.max, m
 -- local GetSpellCastCount = C_Spell.GetSpellCastCount
 -- local GetSpellInfo = C_Spell.GetSpellInfo
 -- local GetSpellInfo = ns.GetUnpackedSpellInfo
--- local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
+local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
 -- local FindUnitBuffByID, FindUnitDebuffByID = ns.FindUnitBuffByID, ns.FindUnitDebuffByID
 -- local IsSpellOverlayed = C_SpellActivationOverlay.IsSpellOverlayed
 local IsSpellKnownOrOverridesKnown = C_SpellBook.IsSpellInSpellBook
 -- local IsActiveSpell = ns.IsActiveSpell
 
 -- Specialization-specific local functions (if any)
+local GetSpellCooldown = C_Spell.GetSpellCooldown
 
 spec:RegisterResource( Enum.PowerType.HolyPower )
 spec:RegisterResource( Enum.PowerType.Mana )
 
 -- Talents
 spec:RegisterTalents( {
-
     -- Paladin
     a_just_reward                  = { 103858,  469411, 1 }, -- After Cleanse Toxins successfully removes an effect from an ally, they are healed for $s1
     afterimage                     = {  93189,  385414, 1 }, -- After you spend $s1 Holy Power, your next Word of Glory echoes onto a nearby ally at $s2% effectiveness
@@ -201,7 +204,7 @@ spec:RegisterPvpTalents( {
 -- Auras
 spec:RegisterAuras( {
     -- Damage taken reduced by $w1%.  The next attack that would otherwise kill you will instead bring you to $w2% of your maximum health.
-    -- https://wowhead.com/beta/spell=31850
+    -- https://www.wowhead.com/spell=31850
     ardent_defender = {
         id = 31850,
         duration = 8,
@@ -209,7 +212,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Silenced.
-    -- https://wowhead.com/beta/spell=31935
+    -- https://www.wowhead.com/spell=31935
     avengers_shield = {
         id = 31935,
         duration = 3,
@@ -217,14 +220,14 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Crusader Strike and Judgment cool down $w2% faster.$?a384376[    Judgment, Crusader Strike, and auto-attack damage increased by $s1%.][]    $w6 nearby allies will be healed for $w5% of the damage done.
-    -- https://wowhead.com/beta/spell=216331
+    -- https://www.wowhead.com/spell=216331
     avenging_crusader = {
         id = 216331,
-        duration = 20,
+        duration = 15,
         max_stack = 1
     },
     -- Talent: $?$w2>0&$w4>0[Damage, healing and critical strike chance increased by $w2%.]?$w4==0&$w2>0[Damage and healing increased by $w2%.]?$w2==0&$w4>0[Critical strike chance increased by $w4%.][]$?a53376[ ][]$?a53376&a137029[Holy Shock's cooldown reduced by $w6%.]?a53376&a137028[Judgment generates $53376s3 additional Holy Power.]?a53376[Each Holy Power spent deals $326731s1 Holy damage to nearby enemies.][]
-    -- https://wowhead.com/beta/spell=31884
+    -- https://www.wowhead.com/spell=31884
     avenging_wrath = {
         id = function() return talent.radiant_glory.enabled and 454351 or 31884 end,
         duration = function()
@@ -235,7 +238,7 @@ spec:RegisterAuras( {
         copy = { 31884, 454351 }
     },
     -- Will be healed for $w1 upon expiration.
-    -- https://wowhead.com/beta/spell=223306
+    -- https://www.wowhead.com/spell=223306
     bestow_faith = {
         id = 223306,
         duration = 5,
@@ -254,7 +257,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Damage and healing increased by $w1%$?s385129[, and Holy Power-spending abilities dealing $w4% additional increased damage and healing.][.]
-    -- https://wowhead.com/beta/spell=385127
+    -- https://www.wowhead.com/spell=385127
     blessing_of_dawn = {
         id = 385127,
         duration = 20,
@@ -268,7 +271,7 @@ spec:RegisterAuras( {
         copy = 337757
     },
     -- Talent: Immune to movement impairing effects. $?s199325[Movement speed increased by $199325m1%][]
-    -- https://wowhead.com/beta/spell=1044
+    -- https://www.wowhead.com/spell=1044
     blessing_of_freedom = {
         id = 1044,
         duration = 8,
@@ -276,7 +279,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Talent: Immune to Physical damage and harmful effects.
-    -- https://wowhead.com/beta/spell=1022
+    -- https://www.wowhead.com/spell=1022
     blessing_of_protection = {
         id = 1022,
         duration = 10,
@@ -285,7 +288,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Talent: $?$w1>0[$w1% of damage taken is redirected to $@auracaster.][Taking ${$s1*$e1}% of damage taken by target ally.]
-    -- https://wowhead.com/beta/spell=6940
+    -- https://www.wowhead.com/spell=6940
     blessing_of_sacrifice = {
         id = 6940,
         duration = 12,
@@ -299,7 +302,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Immune to magical damage and harmful effects.
-    -- https://wowhead.com/beta/spell=204018
+    -- https://www.wowhead.com/spell=204018
     blessing_of_spellwarding = {
         id = 204018,
         duration = 10,
@@ -308,7 +311,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Attack speed reduced by $w3%.  Movement speed reduced by $w4%.
-    -- https://wowhead.com/beta/spell=388012
+    -- https://www.wowhead.com/spell=388012
     blessing_of_winter = {
         id = 388012,
         duration = 6,
@@ -317,7 +320,7 @@ spec:RegisterAuras( {
         copy = 328506
     },
     -- Talent:
-    -- https://wowhead.com/beta/spell=115750
+    -- https://www.wowhead.com/spell=115750
     blinding_light = {
         id = 115750,
         duration = 6,
@@ -325,7 +328,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Interrupt and Silence effects reduced by $w1%. $?s339124[Fear effects are reduced by $w4%.][]
-    -- https://wowhead.com/beta/spell=317920
+    -- https://www.wowhead.com/spell=317920
     concentration_aura = {
         id = 317920,
         duration = 3600,
@@ -337,7 +340,7 @@ spec:RegisterAuras( {
         max_stack = 1,
     },
     -- Damage every $t1 sec.
-    -- https://wowhead.com/beta/spell=26573
+    -- https://www.wowhead.com/spell=26573
     consecration = {
         id = 26573,
         duration = 12,
@@ -381,7 +384,7 @@ spec:RegisterAuras( {
         copy = { 231895, 454373 }
     },
     -- Mounted speed increased by $w1%.$?$w5>0[  Incoming fear duration reduced by $w5%.][]
-    -- https://wowhead.com/beta/spell=32223
+    -- https://www.wowhead.com/spell=32223
     crusader_aura = {
         id = 32223,
         duration = 3600,
@@ -404,7 +407,7 @@ spec:RegisterAuras( {
         -- suns_avatar[431425] #0: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'target': TARGET_UNIT_CASTER, 'modifies': BUFF_DURATION, }
     },
     -- Damage taken reduced by $w1%.
-    -- https://wowhead.com/beta/spell=465
+    -- https://www.wowhead.com/spell=465
     devotion_aura = {
         id = 465,
         duration = 3600,
@@ -420,7 +423,7 @@ spec:RegisterAuras( {
     },
     divine_hammer = {
         id = 198034,
-        duration = 8,
+        duration = 10,
         tick_time = 2,
         max_stack = 1
     },
@@ -431,7 +434,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Damage taken reduced by $w1%.
-    -- https://wowhead.com/beta/spell=403876
+    -- https://www.wowhead.com/spell=403876
     divine_protection = {
         id = 498,
         duration = 8,
@@ -450,7 +453,7 @@ spec:RegisterAuras( {
         copy = { 355455, 384029, 386730 }
     },
     -- Immune to all attacks and harmful effects.
-    -- https://wowhead.com/beta/spell=642
+    -- https://www.wowhead.com/spell=642
     divine_shield = {
         id = 642,
         duration = 8,
@@ -459,7 +462,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Talent: Increases ground speed by $s4%$?$w1<0[, and reduces damage taken by $w1%][].
-    -- https://wowhead.com/beta/spell=221883
+    -- https://www.wowhead.com/spell=221883
     divine_steed = {
         id = 221883,
         duration = function () return ( 4 + ( level > 40 and 2 or 0 ) + ( 2 * talent.unrelenting_charger.rank ) + pvptalent.steed_of_glory.rank ) * ( 1 + ( conduit.lights_barding.mod * 0.01 ) ) * ( talent.divine_spurs.enabled and 0.6 or 1 ) end,
@@ -497,7 +500,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Talent: Your next Divine Storm is free and deals $w1% additional damage.
-    -- https://wowhead.com/beta/spell=326733
+    -- https://www.wowhead.com/spell=326733
     empyrean_power = {
         id = 326733,
         duration = 15,
@@ -505,7 +508,7 @@ spec:RegisterAuras( {
     },
     endless_wrath = {
         id = 452244,
-        dutaion = 12,
+        duration = 15,
         max_stack = 1
     },
     -- Healing $w1 health every $t1 sec.
@@ -516,7 +519,7 @@ spec:RegisterAuras( {
         max_stack = 1,
     },
     -- Talent: Sentenced to suffer $w1 Holy damage.
-    -- https://wowhead.com/beta/spell=343527
+    -- https://www.wowhead.com/spell=343527
     execution_sentence = {
         id = 343527,
         duration = function() return talent.executioners_will.enabled and 12 or 8 end,
@@ -524,7 +527,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Talent: Suffering $s1 damage every $t1 sec
-    -- https://wowhead.com/beta/spell=383208
+    -- https://www.wowhead.com/spell=383208
     exorcism = {
         id = 383208,
         duration = 12,
@@ -538,17 +541,17 @@ spec:RegisterAuras( {
         max_stack = 1,
     },
     -- Talent: Deals $w1 damage over $d1.
-    -- https://wowhead.com/beta/spell=273481
+    -- https://www.wowhead.com/spell=273481
     expurgation = {
         id = 383346,
         duration = function () return set_bonus.tier31_2pc > 0 and 9 or 6 end,
-        tick_time = 2,
+        tick_time = 3,
         type = "Magic",
         max_stack = 1,
         copy = 344067
     },
     -- Talent: Counterattacking all melee attacks.
-    -- https://wowhead.com/beta/spell=205191
+    -- https://www.wowhead.com/spell=205191
     eye_for_an_eye = {
         id = 205191,
         duration = 10,
@@ -573,7 +576,7 @@ spec:RegisterAuras( {
         copy = 337228
     },
     -- Talent: Your next Holy Power spender costs $s2 less Holy Power.
-    -- https://wowhead.com/beta/spell=209785
+    -- https://www.wowhead.com/spell=209785
     fires_of_justice = {
         id = 209785,
         duration = 15,
@@ -584,7 +587,7 @@ spec:RegisterAuras( {
     for_whom_the_bell_tolls = {
         id = 433618,
         duration = 20.0,
-        max_stack = 1,
+        max_stack = 3,
     },
     forbearance = {
         id = 25771,
@@ -598,7 +601,7 @@ spec:RegisterAuras( {
         max_stack = 1,
     },
     -- Damaged or healed whenever the Paladin casts Holy Shock.
-    -- https://wowhead.com/beta/spell=287280
+    -- https://www.wowhead.com/spell=287280
     glimmer_of_light = {
         id = 287280,
         duration = 30,
@@ -606,7 +609,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Stunned.
-    -- https://wowhead.com/beta/spell=853
+    -- https://www.wowhead.com/spell=853
     hammer_of_justice = {
         id = 853,
         duration = 6,
@@ -615,12 +618,12 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     hammer_of_light_ready = {
-        id = 427453,
-        duration = 12,
+        id = 427441,
+        duration = 20,
         max_stack = function() return 1 + set_bonus.tww3 >=4 and 1 or 0 end
     },
     -- Talent: Movement speed reduced by $w1%.
-    -- https://wowhead.com/beta/spell=183218
+    -- https://www.wowhead.com/spell=183218
     hand_of_hindrance = {
         id = 183218,
         duration = 10,
@@ -629,17 +632,12 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Taunted.
-    -- https://wowhead.com/beta/spell=62124
+    -- https://www.wowhead.com/spell=62124
     hand_of_reckoning = {
         id = 62124,
         duration = 3,
         mechanic = "taunt",
         max_stack = 1
-    },
-    inquisition = {
-        id = 84963,
-        duration = 45,
-        max_stack = 1,
     },
     inquisitors_ire = {
         id = 403976,
@@ -654,7 +652,7 @@ spec:RegisterAuras( {
         max_stack = 1,
     },
     -- Taking $w1% increased damage from $@auracaster's next Holy Power ability.
-    -- https://wowhead.com/beta/spell=197277
+    -- https://www.wowhead.com/spell=197277
     judgment = {
         id = 197277,
         duration = 15,
@@ -672,30 +670,22 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Talent: Attackers are healed for $183811s1.
-    -- https://wowhead.com/beta/spell=196941
+    -- https://www.wowhead.com/spell=196941
     judgment_of_light = {
         id = 196941,
         duration = 30,
         max_stack = 5
     },
-    -- Healing for $w1 every $t1 sec.
-    -- https://wowhead.com/beta/spell=378412
-    light_of_the_titans = {
-        id = 378412,
-        duration = 15,
-        type = "Magic",
-        max_stack = 1
-    },
     lights_deliverance = {
         id = 433674,
         duration = 3600,
-        max_stack = 60
+        max_stack = 50
     },
     -- The damage and healing of your next Dawnlight is increased by $w1%.
     morning_star = {
         id = 431539,
         duration = 15.0,
-        max_stack = 1,
+        max_stack = 10,
     },
     -- $s1% of all effective healing done will be added onto your next Holy Shock.
     power_of_the_silver_hand = {
@@ -704,7 +694,7 @@ spec:RegisterAuras( {
         max_stack = 1,
     },
     -- Talent: Movement speed reduced by $s2%.
-    -- https://wowhead.com/beta/spell=383469
+    -- https://www.wowhead.com/spell=383469
     radiant_decree = {
         id = 383469,
         duration = 5,
@@ -712,7 +702,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Burning with holy fire for $w1 Holy damage every $t1 sec.
-    -- https://wowhead.com/beta/spell=278145
+    -- https://www.wowhead.com/spell=278145
     radiant_incandescence = {
         id = 278145,
         duration = 3,
@@ -727,7 +717,7 @@ spec:RegisterAuras( {
         max_stack = 1,
     },
     -- Talent: Haste increased by $w1%.
-    -- https://wowhead.com/beta/spell=383389
+    -- https://www.wowhead.com/spell=383389
     relentless_inquisitor = {
         id = 383389,
         duration = 12,
@@ -735,7 +725,7 @@ spec:RegisterAuras( {
         copy = 337315
     },
     -- Talent: Incapacitated.
-    -- https://wowhead.com/beta/spell=20066
+    -- https://www.wowhead.com/spell=20066
     repentance = {
         id = 20066,
         duration = 60,
@@ -744,7 +734,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- When any party or raid member within $a1 yards dies, you gain Avenging Wrath for $w1 sec.    When any party or raid member within $a1 yards takes more than $s3% of their health in damage, you gain Seraphim for $s4 sec. This cannot occur more than once every 30 sec.
-    -- https://wowhead.com/beta/spell=183435
+    -- https://www.wowhead.com/spell=183435
     retribution_aura = {
         id = 183435,
         duration = 3600,
@@ -764,7 +754,7 @@ spec:RegisterAuras( {
     sanctification = {
         id = 433671,
         duration = 10.0,
-        max_stack = 1,
+        max_stack = 20,
     },
     sanctified_ground = {
         id = 387480,
@@ -773,7 +763,7 @@ spec:RegisterAuras( {
     },
     sanctify = {
         id = 382538,
-        duration = 8,
+        duration = 12,
         max_stack = 1,
     },
     sealed_verdict = {
@@ -782,7 +772,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Talent: Flash of Light cast time reduced by $w1%.  Flash of Light heals for $w2% more.
-    -- https://wowhead.com/beta/spell=114250
+    -- https://www.wowhead.com/spell=114250
     selfless_healer = {
         id = 114250,
         duration = 15,
@@ -795,10 +785,10 @@ spec:RegisterAuras( {
         max_stack = 1,
     },
     -- Talent: Absorbs $w1 damage and deals damage when the barrier fades or is fully consumed.
-    -- https://wowhead.com/beta/spell=184662
+    -- https://www.wowhead.com/spell=184662
     shield_of_vengeance = {
         id = 184662,
-        duration = 15,
+        duration = 10,
         mechanic = "shield",
         type = "Magic",
         max_stack = 1
@@ -807,10 +797,10 @@ spec:RegisterAuras( {
     solar_grace = {
         id = 439841,
         duration = 12.0,
-        max_stack = 1,
+        max_stack = 10,
     },
     -- $?$w2>1[Absorbs the next ${$w2-1} damage.][Absorption exhausted.]  Refreshed to $w1 absorption every $t1 sec.
-    -- https://wowhead.com/beta/spell=337824
+    -- https://www.wowhead.com/spell=337824
     shock_barrier = {
         id = 337824,
         duration = 18,
@@ -828,13 +818,13 @@ spec:RegisterAuras( {
     truths_wake = {
         id = 403695,
         duration = 9.0,
-        tick_time = 3.0,
+        tick_time = function() return 3 * haste end,
         pandemic = true,
         max_stack = 1,
         copy = { 339376, 383351 }
     },
     -- Talent: Disoriented.
-    -- https://wowhead.com/beta/spell=10326
+    -- https://www.wowhead.com/spell=10326
     turn_evil = {
         id = 10326,
         duration = 40,
@@ -843,13 +833,14 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- Haste increased by $w1%
+    -- Note: Ret version is 8s (Prot version is 6s)
     undisputed_ruling = {
         id = 432629,
         duration = 8,
         max_stack = 1,
     },
     -- Talent: Holy Damage increased by $w1%.
-    -- https://wowhead.com/beta/spell=383311
+    -- https://www.wowhead.com/spell=383311
     vanguards_momentum = {
         id = 383311,
         duration = 10,
@@ -863,7 +854,7 @@ spec:RegisterAuras( {
         copy = 339664
     },
     -- Talent: Movement speed reduced by $s2%.
-    -- https://wowhead.com/beta/spell=255937
+    -- https://www.wowhead.com/spell=255937
     wake_of_ashes = {
         id = 255937,
         duration = 5,
@@ -881,13 +872,6 @@ spec:RegisterAuras( {
         duration = 5.0,
         max_stack = 1,
     },
-    -- Talent: Auto attack speed increased and deals additional Holy damage.
-    -- https://wowhead.com/beta/spell=269571
-    zeal = {
-        id = 269571,
-        duration = 20,
-        max_stack = 1
-    },
 
     paladin_aura = {
         alias = { "concentration_aura", "crusader_aura", "devotion_aura", "retribution_aura" },
@@ -898,7 +882,7 @@ spec:RegisterAuras( {
 
     empyreal_ward = {
         id = 387792,
-        duration = 60,
+        duration = 8,
         max_stack = 1,
         copy = 287731
     },
@@ -957,12 +941,6 @@ spec:RegisterGear({
     tww3 = {
         items = { 237619, 237617, 237622, 237620, 237618 },
         auras = {
-            -- Templar
-            hammer_of_light = {
-                id = 427441,
-                duration = 20,
-                max_stack = 2
-            },
             -- Herald of the Sun
             solar_wrath= {
                 id = 1236972,
@@ -1029,13 +1007,7 @@ spec:RegisterHook( "spend", function( amt, resource )
             reduceCooldown( "blessing_of_sacrifice", 1 )
             reduceCooldown( "blessing_of_spellwarding", 1 )
         end
-        if buff.divine_hammer.up then buff.divine_hammer.expires = buff.divine_hammer.expires + ( amt * 0.5 ) end
-    end
-end )
-
-spec:RegisterHook( "gain", function( amt, resource, overcap )
-    if amt > 0 and resource == "holy_power" and buff.blessing_of_dusk.up and talent.fading_light.enabled then
-        applyBuff( "fading_light" )
+        if buff.divine_hammer.up then buff.divine_hammer.expires = buff.divine_hammer.expires + ( amt * 0.3 ) end
     end
 end )
 
@@ -1058,6 +1030,32 @@ local current_crusading_strikes = 1
 -- Strike 2 = The non-producing Holy Power swing has landed.
 -- Strike 3 = Should never actually reach due to SPELL_ENERGIZE reset, but this would be the next productive swing.
 local last_crusading_strike = 0
+local freeHOLApplied = 0
+local willBeFree = false
+local holProcGcdSafe = false
+
+
+spec:RegisterStateExpr( "hol_is_free", function ()
+    return ( query_time - freeHOLApplied ) < 12
+end )
+
+spec:RegisterStateExpr( "hol_will_be_free", function ()
+    return willBeFree
+end )
+
+spec:RegisterStateExpr( "hol_proc_before_gcd", function ()
+    return holProcGcdSafe
+end )
+
+local empyreanHammerCallers = {
+    [198034]    = true,     -- Divine Hammer Initial Cast
+    [53385]     = true,     -- Divine Storm
+    [383328]    = true,     -- TV
+    [336872]    = true,     -- TV variations
+    [85256]     = true,     -- TV variations
+    [427453]    = true,     -- Hammer of Light
+    [198137]    = true,     -- Divine Hammer Tick
+}
 
 spec:RegisterCombatLogEvent( function( _, subtype, _,  sourceGUID, sourceName, _, _, destGUID, destName, destFlags, _, spellID, spellName )
     if sourceGUID == state.GUID then
@@ -1067,11 +1065,49 @@ spec:RegisterCombatLogEvent( function( _, subtype, _,  sourceGUID, sourceName, _
             local now = GetTime()
             if now - last_crusading_strike > 0.5 then -- Crusader Strikes: Swing Damage
                 current_crusading_strikes = current_crusading_strikes + 1
-                last_crusading_strike = GetTime()
+                last_crusading_strike = now
                 if current_crusading_strikes < 2 then
                     Hekili:ForceUpdate( "CRUSADING_STRIKES", true )
                 end
             end
+        -- Hammer of Light stuff
+        ----
+        elseif spellID == 433732 then
+            -- This is the event where you actually gain the free cast for 12 seconds, separate from the 20 second cast window
+            freeHOLApplied = ( subtype == "SPELL_AURA_APPLIED" ) and GetTime() or 0
+            willBeFree = false
+            Hekili:ForceUpdate( "HAMMER_OF_LIGHT_FREE_CAST_APPLIED", true )
+        elseif subtype == "SPELL_CAST_SUCCESS" and state.talent.lights_deliverance.enabled and empyreanHammerCallers[ spellID ] and state.talent.hammerfall.enabled then
+            -- An empyrean hammer (or 2) is on the way, hasn't hit yet
+            local wake = GetSpellCooldown( 255937 )
+            local ld = GetPlayerAuraBySpellID( 433674 )
+            local sth = GetPlayerAuraBySpellID( 431536 )
+            local stacks = 1 + ( sth and 1 or 0 )
+            local ld_count = ld and ld.applications or 0
+            willBeFree = wake.activeCategory == 2285 and ( ld_count + stacks ) >= 50
+            if willBeFree then Hekili:ForceUpdate( "HAMMER_OF_LIGHT_50_LD_STACK_SOON", true ) end
+        elseif spellID == 433674 and ( subtype == "SPELL_AURA_APPLIED_DOSE" or subtype == "SPELL_AURA_APPLIED" ) then
+            -- Calculate GCD remains when LD hits 50 stacks
+            local ld = GetPlayerAuraBySpellID( 433674 )
+            -- Quick exits
+            if not ld or ld.applications ~= 50 then
+                return
+            elseif state.prev_gcd[1].hammer_of_light then
+                holProcGcdSafe = true
+                return
+            end
+
+            local rawGCD = GetSpellCooldown( 61304 )
+            local gcdRemains = rawGCD.startTime > 0 and ( rawGCD.startTime + rawGCD.duration ) - GetTime() or 0
+            -- if GCD remains is more than 600ms, we are safe to recommend HoL NOW.
+            -- If 600ms or less, we are running a high risk of the user being recommended an uncastable spell
+            holProcGcdSafe = gcdRemains >= 0.6
+            Hekili:ForceUpdate( "HAMMER_OF_LIGHT_50_LD_STACK_NOW", true )
+        end
+        -- Gets its own block because it's also in empyreanHammerCallers
+        if spellID == 427453 and freeHOLApplied > 0 then
+            freeHOLApplied = 0
+            Hekili:ForceUpdate( "HAMMER_OF_LIGHT_CAST", true )
         end
     end
 end )
@@ -1118,11 +1154,6 @@ end )
 
 spec:RegisterStateExpr( "consecration", function () return buff.consecration end )
 
-local tempDebug = { 387174, 255937, 427453, 429826, 427441 }
-
-local ld_stacks = 0
-local free_hol_triggered = 0
-
 spec:RegisterHook( "reset_precast", function ()
     if buff.divine_resonance.up then
         state:QueueAuraEvent( "divine_toll", class.abilities.judgment.handler, buff.divine_resonance.expires, "AURA_PERIODIC" )
@@ -1135,42 +1166,10 @@ spec:RegisterHook( "reset_precast", function ()
     if now - last_ts < 3 and action.templar_slash.lastCast < last_ts then
         applyBuff( "templar_strikes" )
     end
-
-    if IsSpellKnownOrOverridesKnown( 427453 ) then
-        if talent.lights_deliverance.enabled then
-            -- We need to track when it ticks over from 59/60 stacks.
-            local stacks = buff.lights_deliverance.stack
-
-            if stacks < ld_stacks then
-                free_hol_triggered = now
-            end
-            ld_stacks = stacks
-
-            if free_hol_triggered + 12 < now then free_hol_triggered = 0 end -- Reset.
-
-            if free_hol_triggered > 0 and action.hammer_of_light.lastCast > action.wake_of_ashes.lastCast then
-                local hol_remains = free_hol_triggered + 12 - query_time
-                hol_remains = hol_remains > 0 and hol_remains or ( 2 * gcd.max )
-
-                applyBuff( "hammer_of_light_free", max( 2 * gcd.max, hol_remains ) )
-                if Hekili.ActiveDebug then Hekili:Debug( "Hammer of Light active; applied hammer_of_light_free: %.2f : %.2f : %.2f : %d", buff.hammer_of_light_free.remains, free_hol_triggered, query_time, ld_stacks ) end
-            else
-                if Hekili.ActiveDebug then Hekili:Debug( "Hammer of Light active; hammer_of_light_free ruled out: %.2f : %.2f : %d", free_hol_triggered, query_time, ld_stacks ) end
-            end
-        end
-
-        if not buff.hammer_of_light_free.up then
-            local hol_remains = action.wake_of_ashes.lastCast + 12 - query_time
-            hol_remains = hol_remains > 0 and hol_remains or ( 2 * gcd.max )
-            applyBuff( "hammer_of_light_ready", hol_remains )
-            if Hekili.ActiveDebug then Hekili:Debug( "Hammer of Light not active; applied hammer_of_light_ready: %.2f", buff.hammer_of_light_ready.remains ) end
-        end
-
-        if buff.hammer_of_light_ready.down and buff.hammer_of_light_free.down then
-            if Hekili.ActiveDebug then Hekili:Debug( "Hammer of Light appears active [ %.2f ] but I don't know why; applying hammer_of_light_ready." ) end
-            applyBuff( "hammer_of_light_ready", 2 * gcd.max )
-        end
-    end
+    -- reset to force refresh with real combatlog data
+    hol_is_free = nil
+    hol_will_be_free = nil
+    hol_proc_before_gcd = nil
 
     if time > 0 and talent.crusading_strikes.enabled then
         if not action.rebuke.in_range then
@@ -1209,9 +1208,62 @@ spec:RegisterHook( "reset_precast", function ()
             if spendType == "holy_power" then gain( spend, "holy_power" ) end
         end
     end
+
+    if hol_will_be_free and buff.hammer_of_light.down then
+        if hol_proc_before_gcd then
+            hol_is_free = true
+        end
+    end
+    if hol_is_free and buff.hammer_of_light_ready.down then
+        -- This is the case where we've already seen it in combatlogs
+        addStack( "hammer_of_light_ready" )
+    end
+
+    -- Debug snapshot for hammer_of_light
+    if Hekili.ActiveDebug then
+        Hekili:Debug( "Hammer of Light - freeHOLApplied: %.2f, willBeFree: %s, hol_is_free: %s, hol_will_be_free: %s, buff.hammer_of_light_ready.stack: %d, set_bonus.tww3: %d, buff.lights_deliverance.stack: %d, action.wake_of_ashes.time_since: %.2f",
+            freeHOLApplied or 0,
+            willBeFree and "TRUE" or "FALSE",
+            hol_is_free and "TRUE" or "FALSE",
+            hol_will_be_free and "TRUE" or "FALSE",
+            buff.hammer_of_light_ready.stack or 0,
+            set_bonus.tww3 or 0,
+            buff.lights_deliverance.stack or 0,
+            action.wake_of_ashes.time_since or 0
+        )
+    end
+
 end )
 
+local DeliverLight = setfenv( function ( incomingStacks )
+
+    if  buff.lights_deliverance.at_max_stacks then return end
+
+    if incomingStacks and incomingStacks > 0 then
+        addStack( "lights_deliverance", nil, incomingStacks )
+    end
+
+    if buff.lights_deliverance.at_max_stacks and buff.hammer_of_light.down and cooldown.wake_of_ashes.remains > 0 then
+        hol_is_free = true
+        addStack( "hammer_of_light_ready" )
+        removeBuff( "lights_deliverance" )
+    end
+
+end, state )
+
 spec:RegisterHook( "runHandler_startCombat", csStartCombat )
+
+spec:RegisterHook( "runHandler", function( a )
+    if talent.lights_deliverance.enabled then
+        -- This handles the case where we don't think HoL proc will arrive before the GCD is over, so we apply it in the next slot.
+        if hol_will_be_free and not hol_proc_before_gcd then
+            addStack( "hammer_of_light_ready" )
+            hol_is_free = true
+            hol_will_be_free = false
+            hol_proc_before_gcd = false
+        end
+    end
+end )
 
 spec:RegisterStateFunction( "apply_aura", function( name )
     removeBuff( "concentration_aura" )
@@ -1233,7 +1285,7 @@ spec:RegisterAbilities( {
     avenging_wrath = {
         id = 31884,
         cast = 0,
-        cooldown = 60,
+        cooldown = 120,
         gcd = "off",
         school = "holy",
 
@@ -1534,12 +1586,12 @@ spec:RegisterAbilities( {
     divine_hammer = {
         id = 198034,
         cast = 0,
-        cooldown = 60,
+        cooldown = 120,
         gcd = "spell",
 
         spend = function ()
             if buff.divine_purpose.up then return 0 end
-            return ( talent.vanguard_of_justice.enabled and 4 or 3 )
+            return 3
         end,
         spendType = "holy_power",
 
@@ -1549,6 +1601,9 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyBuff( "divine_hammer" )
+            if talent.lights_deliverance.enabled and talent.hammerfall.enabled then
+                DeliverLight( 1 + ( buff.shake_the_heavens.up and 1 or 0 ) )
+            end
         end,
     },
 
@@ -1624,7 +1679,7 @@ spec:RegisterAbilities( {
         spend = function ()
             if buff.divine_purpose.up then return 0 end
             if buff.empyrean_power.up then return 0 end
-            return ( talent.vanguard_of_justice.enabled and 4 or 3 )
+            return 3
         end,
         spendType = "holy_power",
 
@@ -1656,7 +1711,9 @@ spec:RegisterAbilities( {
             end
 
             -- Hero Talents
-            if talent.lights_deliverance.enabled and talent.hammerfall.enabled then addStack( "lights_deliverance", nil, 1 + ( buff.shake_the_heavens.up and 1 or 0 ) ) end
+            if talent.lights_deliverance.enabled and talent.hammerfall.enabled then
+                DeliverLight( 1 + ( buff.shake_the_heavens.up and 1 or 0 ) )
+            end
             -- Legacy
             removeBuff( "echoes_of_wrath" )
         end,
@@ -1698,6 +1755,9 @@ spec:RegisterAbilities( {
             end
 
             if talent.rising_sunlight.enabled then addStack( "rising_sunlight", nil, 2 ) end
+            if talent.for_whom_the_bell_tolls.enabled and state.spec.retribution then 
+                addStack( "for_whom_the_bell_tolls", nil, 3 ) 
+            end
         end,
 
         copy = { 375576, 304971 }
@@ -1844,35 +1904,30 @@ spec:RegisterAbilities( {
         gcd = "spell",
 
         spend = function()
-            if buff.divine_purpose.up or buff.hammer_of_light_free.up then return 0 end
+            if buff.divine_purpose.up or hol_is_free then return 0 end
             return 5
         end,
         spendType = "holy_power",
 
         startsCombat = true,
-        buff = function() return buff.hammer_of_light_free.up and "hammer_of_light_free" or "hammer_of_light_ready" end,
+        buff = "hammer_of_light_ready",
 
         handler = function ()
-            removeBuff( "divine_purpose" )
+
+            if hol_is_free then
+                hol_is_free = false
+            else
+                removeBuff( "divine_purpose" ) -- Confirmed it does not consume Divine Purpose when its already free
+            end
 
             if talent.undisputed_ruling.enabled then
                 applyDebuff( "target", "judgment" )
                 applyBuff( "undisputed_ruling" )
             end
 
+            removeStack( "hammer_of_light_ready" ) -- do this first or else that function misbehaves
             if talent.lights_deliverance.enabled then
-                addStack( "lights_deliverance", nil, 3 + ( 2 * talent.zealous_vindication.rank ) )
-            end
-
-            if buff.hammer_of_light_free.up then
-                removeBuff( "hammer_of_light_free" )
-            else
-                removeStack( "hammer_of_light_ready" )
-
-                if buff.lights_deliverance.stack_pct == 100 then
-                    removeBuff( "lights_deliverance" )
-                    applyBuff( "hammer_of_light_free" )
-                end
+                DeliverLight( 3 + ( 2 * talent.zealous_vindication.rank ) )
             end
         end,
 
@@ -1912,7 +1967,7 @@ spec:RegisterAbilities( {
         gcd = "spell",
         school = "holy",
 
-        spend = function() return talent.vanguards_momentum.enabled and -2 or -1 end,
+        spend = function() return ( talent.vanguards_momentum.enabled and target.health_pct < 20 and -2 ) or -1 end,
         spendType = "holy_power",
 
         talent = "hammer_of_wrath",
@@ -2001,7 +2056,7 @@ spec:RegisterAbilities( {
         id = 20271,
         cast = 0,
         charges = function() if talent.improved_judgment.enabled then return 2 end end,
-        cooldown = function() return ( ( talent.swift_justice.enabled and 10 or 12 ) - 0.5 * talent.seal_of_alacrity.rank ) * haste end,
+        cooldown = function() return ( talent.swift_justice.enabled and 10 or 12 ) * haste end,
         recharge = function() if talent.improved_judgment.enabled then return ( talent.swift_justice.enabled and 10 or 12 ) * haste end end,
         hasteCD = true,
         gcd = "spell",
@@ -2030,7 +2085,7 @@ spec:RegisterAbilities( {
             end
             if talent.judgment_of_light.enabled then applyDebuff( "target", "judgment_of_light", nil, 5 ) end
             if talent.virtuous_command.enabled or conduit.virtuous_command.enabled then applyBuff( "virtuous_command" ) end
-            if talent.zeal.enabled then applyBuff( "zeal", 20, 2 ) end
+            removeStack( "for_whom_the_bell_tolls" )
         end,
 
         impact = function()
@@ -2050,7 +2105,7 @@ spec:RegisterAbilities( {
 
         spend = function ()
             if buff.divine_purpose.up then return 0 end
-            return ( talent.vanguard_of_justice.enabled and 4 or 3 )
+            return 3
         end,
         spendType = "holy_power",
 
@@ -2059,10 +2114,6 @@ spec:RegisterAbilities( {
 
         handler = function ()
             removeBuff( "empyrean_legacy" )
-            if buff.blessing_of_dawn.up then
-                removeBuff( "blessing_of_dawn" )
-                applyBuff( "blessing_of_dusk" )
-            end
             if buff.dawnlight.up then
                 applyBuff( "dawnlight_dot" )
                 removeStack( "dawnlight" )
@@ -2109,7 +2160,7 @@ spec:RegisterAbilities( {
         gcd = "spell",
         school = "holyfire",
 
-        spend = function() return talent.vanguard_of_justice.enabled and 4 or 3 end,
+        spend = function() return 3 end,
         spendType = "holy_power",
 
         talent = "radiant_decree",
@@ -2170,7 +2221,7 @@ spec:RegisterAbilities( {
 
         spend = function ()
             if buff.divine_purpose.up then return 0 end
-            return ( talent.vanguard_of_justice.enabled and 4 or 3 )
+            return 3
         end,
         spendType = "holy_power",
 
@@ -2305,7 +2356,9 @@ spec:RegisterAbilities( {
             removeBuff( "divine_purpose" )
 
             -- Hero Talents
-            if talent.lights_deliverance.enabled and talent.hammerfall.enabled then addStack( "lights_deliverance", nil, 1 + ( buff.shake_the_heavens.up and 1 or 0 ) ) end
+            if talent.lights_deliverance.enabled and talent.hammerfall.enabled then
+                DeliverLight( 1 + ( buff.shake_the_heavens.up and 1 or 0 ) )
+            end
 
             -- Legacy
             removeBuff( "echoes_of_wrath" )
@@ -2347,7 +2400,7 @@ spec:RegisterAbilities( {
         spendType = "holy_power",
 
         talent = "wake_of_ashes",
-        nobuff = function() return buff.hammer_of_light_free.up and "hammer_of_light_free" or "hammer_of_light_ready" end,
+        nobuff = "hammer_of_light_ready",
         startsCombat = true,
 
         usable = function ()
@@ -2437,4 +2490,4 @@ spec:RegisterSetting( "sov_damage", 20, {
     step = 1,
 } )
 
-spec:RegisterPack( "Retribution", 20250310, [[Hekili:T3rAVTnY1FlglIIvwhfrAPyNTwQaDrx0nyr(q1wKVjXrIuwCnfPkjLpae4V9(MHxZm8ndjLOCdqcqqIdNhF3xZf9CJ5)58z2KyN5FXCO54HxBmCGXOXJngnFw8l7CMpBhz1dK7HFWNSf(7)TtCO7Y9XUb(0XEXlGytXruW(WvW4ZNTCVRx8V7pFjoInay35SA(xUz48zBCTTDsb1jA18zuqF)WRFVXWFjXAM72FnX6)SJILKpN850bnFV5TWG)5x)kaHdjkWpXYmXAppyJae8EZpbG9pxV2DLRJ)QxsScwNy9BU(UrBCcJsSUCT7Zo29lELHFkfZPKnfF)TeR)vWFKybG(35b0y4vjw0xWu6fkb62uS9BUpNHdIVDbuwRdd2M9M8VXOI3GSDRtykp)hU3VjUeSBEV51ufWganFLaW8v34nUuRryWAxpWgqwrnprd2f6Sky7ss8pp5drBCD8SxeSEXJo(37q8xb8kgGpscDjl9CUIAVNagB)hCIxySy5(1RJU6rI3(INoWyWgseBKbrXHaEJ3C4aYGBjrXoHVGo2JGXGe765gJp(g67IoYQq342idMOYGPozWuJmywJmyQugmpEzWyr0l(RUky3KiNy31zYIr6)UWXlYzYWbJVAvGVTlfNtYrZajlzVll1ORcc8SdEYFG9(qc9TEZBkE0QW9reBNIHMm8WbLd(M3ObP03Sz0KqDrD9VFXtWqBWjTcyQHd63gDT5jRRnL11MNdDncs5116PzNORr5GwPR3f6gaHcViRTn512gC66lu6yRYkC4GA7Jwdu5yqg2vdi(VSWExuX49F3Lgdg)ZAYNaqGqAQZv)(tVuBGy5ynH2i5JXOTrgTP1uYmrGHj0z5(hC4FYkIN3I0)7cp3O4utwotgvpO3747amAauUTKufsj992fqF2vURNW4AjpT97oCilnzQZp9b2oSh58SZkwBilIC8JHk8PJUmikQ3AAfZfHoBjU(r3D9WKp)t)euagH(U(pg8a4E9mKB3N4X0DP8(UGNCcx46VEFuxYH4QbpkdhT4V2BF)wawk1GMKavAmj8EN4ObsamDI5HdxesCTx4amu8aITDeqqqZd(5Yp31F6nJR(yvmZAxWvWliWUfcDpH)Fum004eJHhJQyFKZc3yNTxf5feNNFWGYkxEjoZ0tvIQmhGPJg2q(TFVlIjEufuiX2L4hV4EVawnFKN27YCGRkDLS0teW9c66IaDDgLZrtQrZ0Vpf5cjuYriAE9m0IKHlpV6eJ(8vFrtMmDIqCtpAOulSrMFhBJmuyJmALnYSpV1TRSrSSzlDIIb4bZv03BMPw4cZsZOUZcSUekmRvFTI(oUqwJvPPUC1R5WCOBVPXCyBevtCrTshRyEWk1q)FxurMLlvofIzMAmwN)gWvA9N6LY02Up667SydBE6klMvffSOVMRLmglfVvwATgL0Ddhql6xNQKsaSqsi72MaVxwWAdA6Kr9ID36Cham)tVM90PWtfag6njfAajz4otDr2)mmlzIQ8a0CQL9alOHZ53C9HS(hmBIKkDeghqBHAaLJwehSW21z6T9Qy)HzWV4jxppkJvbEdZ(1Kg6U7xzJ7ciQ3zM)2Oyf0R9uOn50AioTCzklaBTlTBxyAzpe4dmxjmSYAv7uexTOkmmZzLkS88)yTYQQMrfyuv6VBrX5KBLvGNG)OQaiSjPNxEUsKow08uA5svfgv1)Dg0ziQbENOgwvZyGsbKzrmAi)CgPorPlMALP1BdndraHJ(G0jYFP48zY0)rWCd3YsyKMXD7UxcHS2P2lHO6u)GhDcTDxfNhhaf12bn2qL34nolytsAjus6EAG)fIO0Z5EYQxOjBV4s(miKWLqXXWIgzKECQfYCuFCXonldLbyeVygtsphCGj2VOonLYKA1Kn0yioBjanRsFnfTqEzMTH(Ufv75SQzAxvIzDPXBDs8le93vhYnfC1F31nPj17OrUOr94QL)Ap0c9kcuNqO3Ixxw71vVJRiOrDEP6bw043NAbXeEzJyNT(Lf7XWEh(eMLRhwdrWAIxKJI3hFj3kyXRIGMZxfpXqQK5eHYVq9tEDrOtuGpPyT0y1EaQ46Z68vFrgfSzM3YIipa6I8JfpfyYhelu9otfyAPh4AqjBAKil67c7aAtC72hEpB(Xq)jREakaKxHGjPR9antupzNI4apVAyEbbvWppBb5UFVRnHnRb0g1KGQbTt8rnroFuzR66MotdAnC6iS(7U7220Ya0EanETANe9vOB5ScInkEhTpToGU1RSngRrBRAMrhoiU8Y3QsaBtaA5uQZte0vHt9024vlc10INCh(Ix8XQ7YSafkZDxoVi1u4oZYKZGskkYXEXkaf7ae3pndg7XutmnC1h0Gc93GRdzAlfaLVu7nudD(fZ6egQdHkpXux7AKyjEvbuKWvewyByiWMZNr37BaQSJ5HP5TZN9ejKoxTO5Zyhsb3T7ccJtSwheMy92I9c8TjwHo)39UHGVUvuWwasY(4GTKy6daXgCGIgK85)aupjw0dAXVg4duJn8B1SLxaIJd4ajghMlnEUFhIE6QSrH7iWC2rlqhFxcs3I8tGR5o0d64CrW6EICcsa7yzOJ3ZbOlr8jWV0dlIo2nB8oeTQy2RvGvKn)UcMXHPJr)jW4QcyqbPBr(jW16cuucw3tKtqcWdAqaOlr8jWVOHnvhVdrRkMDKYy8YP8KT)HiX5yWCwr)zdX)GV)UGVd25Kcre0BPpGL63Wwm8F6h8omSYFY7QHQDYrVdNh6NRGpsvZrQzojftDYCJ0l1Pwk8PgRmtC9oR4Wiel01O)SH4FW3FxW31NZSYj)ad)DqoZAoTY1q1tj3qn8G6CMnt1CKAMtsXuNm3i9sDQLcFQp2XoRsXcDn6BaIrpJDiixfCnK)BkzOUzlAp6B6KI1oN7th9QMEIkmFS9fEMrFdqCZSNQHRH8FtjZr5208v28OCBAo6BOBtLkyNPBacAEwvXOs3)cPaHgEVpq7gwL5vMIg1sX8B7rU6)vuV9HxD92hod6nWJKTpgRd88cEckGs3OIqc4h(Kti8Caj2P(KXuWs31Kel6w(LyTCFCoC(bSnbzVVa022uGTjXKLKiNFj5ZjwVpXk9EbMryXnqjxMJEBR2aLkZohzRnlIqrgBGJpv9ylhM(kJ3QBITeYr2L7MsHmFdXlCHIIDCd3qKw4RMT5S66HPeKZiYRfTnVcuJk0D6KrBHUktLQJCeFLXBh6GRAYLg6DWRmCdrAT(GOGCgrETOT5DM3ih8tNmTRtUoYr8vgVDOd(nDA(WZkYlq7TDQlUep3TiVaTF6SBjzFWpohoHQqS8faqc3Yd3w0FU570ZQdotNDGwBjIRCtyuzlZhxjbmoVA8k7H6Rc6pDd6RnIZwPrjuMV(Jvqg6CnkoSIVTvZ1qHhGWD4qIVegtPOIJxnxdejQObsv0SYbOPJIdvm)MZfEBP3GwCDYUSkA99O4Xx52Zpz7JIUIokz)vUZTtq2rZUuEUsBx6ffULCN1FjMJBKwAULoa)s4vA0VHW9j7cC(ND65Y5vrZQvpz6siVkaTTfQLshz7keqCyLOxH)9jJ(Kp)7S4pkshlUqL0GR5Zy)e7lcOZAYEVy4h)c7leykOZNL(ncA(Smup)FmpE(xmPqu(KcGLV)dP4Fr63rWIvXKIHRpgmuM9aqrm9ZFx2blVcxJ8vbOgriyh8woXLOiF1HP)K3E4FuSqYjwhoaMLx1bzCxMsjdK8L0ht52czZuht8QmiMSzwkBJWLn314sxvTeDj(b)Sq6D91LucT8EJKy1dcJembv27HeR3a1QYFQ8g9NynjXAyQWQbO3uhnkXsZ5ff78pklPe2gYz9ZCJyFY2MpB4GXf(vgut24tZKzwVjZuHjdzdQ6Ctgknqmz1YlDUjtdNvNj7JNMjl)7BeVr7IelTHAQnQujVotETw9piaGWQUcQJeR3XWHXaOk5pRjXvbKk2UsgeWFMwHRqdG(GaanMRKlvOMRm44krBUrHf3mTAkx118YPTQgc7MlZ7nKFVgXk3w6xaCD5fbL5Foo1Kl90rmtnvEXU6YPVcB0IRVmtQ7Xf1GEjMbXkMERmPICZAdPyjsWQ1wkymMrX10mX6UeR7xzpyl5zMTZSK2cxVpSsEcXukUn0mbx9CHe1li3o6s2r(ApILrxWAErbHvmHMQM3PtyFrN7v)B2ppGxvQWcfmeb(rfjYrGr30n4OAPSPEwpsev9DWMr)r50x(UyZCrUvK243q6umu9wsZWVXq8HzHhLwzHqdSkaLMyEd3DfgUZdd2gRTX4gyUZbsV9McHWv(UWyuQX4cAO6RB0fK(O8v9(et6CBhK0buSQVwYzHKAsk9jLSqTyLpqx9uW1NbYyOUuq6yH7yCa1cFbhxGpr6CpqMwDjY1nVKjLUk1mEuykPIgfPzJAyYdA(frxgOR5bQIwrcy1vn6wfKEvWyuvaZjsIF)ipKsxFDzyVHhwzYkb7T8WkFv25bnMpi7O6aQgfBMZFrJkv(2xjR1r3He(ONgS5g5UWxit0IVow5dFPy3vLFLSQ04LWxklwAvZrz9xM37h3hok9T)XWRQpRpYke0LCMtJkoE(7l3NJ4NgOSIqy(tmMrFtExOGYvQtKoI(25kktWP9emEQ1tsLjviP1OOQvrJ0hK0(v0GsW8T9Enhpv(LHQ0Ht4Rdfl1uE7c10Wwf9plgSf9U(nQC9TL7aFjRkFQ003f5pu2hVYw(ZXgw)N1xTI(PktX01J5xTEKsHsPVR8XQuHbH(qTFE4tFn6h4AQsTAh4xZLMo93Ja6lUO9lQVqb5JBUl3mw1Cxk5tjQ2G1mOPQtf(3tk9V1PSl5WIV()yvNk85sxqjdPy48Mgq45EnBABJgEuIxrWz9ZKtpeTzI91Uys8lwREp9(svtfxWXCQKjaiRSPqELkl7x(cWMQUyKsarvwRrAOGu8wV0qrikYliMZbaPgQKtI5pCsoVojg6CsQESoBItIzvNKkltEJDsmXQ9xmX1YFXe8d)KUZpj)xxF8QxK(c0LpVUTO5YgKkcdhc7KZf4whTD7zou8DpEheZ0n)QAkn5LutxknTYypLB7tT6jJVT1tM6x3pPmdzl2ABIiYy9A9156kx98UXoci1UWHhJspFjLRPxSA16q)T0Fbo0qOB8AzxuarEdxs3qn6ooWOnYUUrH6AoOMwafc6YAKMhFfKwCMnvor2numQUBaQxqhEBYXoHRsUV6EZmLTDa9q9SLpU85IhkwmmtA02uYV49Lo5vJrkx4zv(4DPFG2nXtT5wYmQBlYqo8dk(nzrXzBir7EMLB)vzpgkmvBXWVYLQhv5kRngFuA2kRcE5A)FKM0BBaHNOemZZDuSUuCQolo8nGQiVTQCYtlB6REgUN2Us5E)klHvRIOR1Rv3IrKZjkwKIrIE0srpSv7HUmr7J3eeoFg9xqXSNm))9]] )
+spec:RegisterPack( "Retribution", 20250818, [[Hekili:T31EVTnYr8plghIIvoBzrAjhLulvCnTf9cccouDf3FuujUsCLeVqrQsszhdiWp7D2Lp3LZUKsI29asWDiXMC4mZ(BEUpiZmJz)6SP2Ki6SpB23Cy)rgVRx)r9VB4DZMg90o6SP7il)czn8dEKTWF(pPrbol2h547XU3tU(eBgpc93hSeU)SPl274g9ZEZwGX4Bhya0UJUC2NFB)zt34yBttiLgUC20RVo26x3qJT(nsa8horBC8ITMsjH(WFFB8hz866(JU2y07JT(PF5tWnFYBz8hJ)O(h1m7rV9AJ(WJo1z7hIT(x7yAy2TmV2KX1F93(TYpN1(cIgap81MVdi6VTALZshQ3YNIT8xfB93D8Cc3qdcJTUCLZxP2DtFG(VlHRjcmHx)PyR)HpO6aH)5cYm6FvSfJCtjYZizucN(7oFn95jE250yTkWFB6Zvq)GC6jB3sds01p5SEtugrV9AZBFFvKdSTb(RCCbl6p8dXwBII2f((BUznCZ9l6T0F7nHoB37sy(bldiRIy)(YBw46V4MOn0hjbpY5Zn)0sgj)sGJFGt0tFYjmk8gB6kYE3OB2rCj2oEZdk8P6Xyt8hzYCAUa(ataXwFWF7wNOeloOY2lUJE7Ybje)xbmaUwH7bZLGDJ)90NcCw9FITa3Ja6kAayZOGvkYp2c8dDDNhrcwtJc7z78GJhDEyKFWwgT7CjlPaaZgiawdJJhOZPE0ToWZdCNWhzH92fqb8ybj6hhFt4ghQR9C)vZFG6TMsazHt4dKahYcx6vSOQXWW37l0O5gZxSF1QWREG4Up)Q9m6THeYVtVWiq)xhT5WbKBULegrdEc9EpaUMaw6c2a07VH9SO3zjy3oMXGj6yWu3yWuZyWSMXGPYXG5PpgmMhc(yx5VBCinYzv6yXi5VNtDdPJ73B4vl99SDy8CCgB6jzj7CzbIU03312)rVE27d4U1V6v5xAzW(qInn)wJ7F4GYB(QxPHPSNSzYKWCrD8wp)r4wBWfTcAQrd6EmyT5zJ1MYyT5ZbwJW0YyTEz2kynQgCuy9U00WYOTzz02OewFHshBvwHdhuBF0AGkUhu5zzpI3tZT3fMF)UV5sJEd)rn5takqenZ5QB3jxQnqS4Enr2i5JXKTrQSlvRammb0f7)cT8vwsGIqj)6CxO(yIjltjdRN01qrjqr9deklLZa4525ZU2voRgZ1AjpT97oCinnzIZp7c2u(LOFLUKxyEEi1lIv7mHC)WWoRy9rafV3sC8cV)2(jfCXKVJ3d(FbCV(kKB3J4YXUeDFN)J0G5oER2h2MAiom4Yu4W5)(E71BbAzstSfajcMm28WHlcio2ZPGcf1JyBhccK1eZHdYx3XBYBhw9YQuMvoGRGRVV9rmO7i87HrqR5Jn6FkqX(q6CNi62RcD9JYYpyWuLlVexz6OkrvQdWKb9BO(2TZfrexgafaT)r8IMV21NxZh5QDUmJ4QJUcv6rc4EbDDrGEWdZ0OX1GmD7YyUqcLmgIMxpLTiz4YYRo2OB5QVOjtMmwiUPdlu6iSrMFdBJmuyJmokBKz3Yw32YgXZMTGggb0dMRWV1mthHlmpnJ6olW6si3Sw9XY774czeRstDzWRz)mQpEtJz)JzOAIpuR0XkMhSse6)7dvKz5YgNcXmtmgQZFd0kT(tDsu605KVHV6fklMvLf8OVMJsgdLI3kkTwdiDF)ESI(1bLmbGfscz3247(0CEBqtgpOtKZw69aXLV6T8RobUQaXqVjjudmjL3PWfz)xHzjtuLhGLtTOhybeotFZWdz8hmBIIk5oCnG1cvpMgnpYFUTdDYOovS)Wm4N)OJRltXQqVHz3AsdD)6L24UaI4o38FmaRaU2rbAwc1qCAlLPmNSvoSUDHPL9fFpq5kOHxwRANI4WIQWWuNv2GTS(pu7yvvZOckQk8Bekphpsgapd)rvbqytspR8CLiDSO5jSYLQkmQQ)7uQtzud8ornSQMXatciZIyq)2paT8mdxLTw1vwNaBO7kcGwSlKSYaxkUUNGn)Wb5lLhWav)2bDaXaMOn058ztTaQDTMgu0NY(Wnmc43mDqap2tbqzKehiHrrIJ5d0aBNLrnqozfoYzPlDnz5tSS)xCzzeJeSaQwhK3zL0LtCzmh0fh2sq18Xr(u4KUoerrSFsTzrPrSgRVrFC1sGAERh1uff5H5R)n7zZB)OKxrwOM6XjUbTwh6J0DUO1I0qt1zhMarLV52M0p99SKmOjOWbSFFp0T)scustOnOxwvRJEdslJ74ablE0nbh4XPFBIcIPstVJD6sTMVDi7PLtfxS0DnKbRiUHufpp(QdMRIxfcZJyz0ydPQ7Jf6uak1xglcOH(EK8L9JxMeKIJhpOwF9qfQzQ3Y8qxG68mN5xfuYViwt9nMk40cxW1Gj2KirE03f2(S(n3TpynFQ8qRul)cuAiR2bFKUYfqMWoYofr(UU1O8cdub)801oC9EhBcFcoO9ukrvd685onro3PCwf6M5vd6IDYaSwrVFujol1Yy9D9ozWX0Be0helAVAltDvyzkzdf7i(EwdPTGCR3uzmuJTs1uapCqCD0hPAa2SW75cl4qEseP5imOXPBvKyuUhWbTvWENkDxEeb)k7mnN4hQUT8cCTOcsXejf569MfLfaiomKApFj8y7aM1nbf5xM5EWsu4b4Vqpx44dhjuqu2(r0qK4S8FglT6CzEqpp4vDOcZRr1WjXvTgOts)uqfjyjHN7iiauZztzN0aGQ8JU0OztFKeWsMfoBk)OY4SDNFquS1k)GyRxNVZRVMDWr(V7DcyhCKq)TaLK9r(BjrSladBW7lSx8h)eeofBXoOpFW3dKg)2VwZgm(6KtSsojr40CPXx72ISNTMMm6oboNEqo0P3fK0Um)m06shXeDAUizTVqoJra)qWOt3ZiOnz8zOVSJMJo1n9(TiBvPS3QGRih1GkCgNMwM9NHIRkGbLK2L5NHwRlqrjzTVqoJraEqdcbTjJpd9fnSP69Br2QszhOmgVywBP7wlsCognpRS)zJXFxV)MqV93rtOie6T0d4s9Bpog)p)J5igxlFohRrQTYbDexh6MbWNi0CIiZzbm1nMBeUuhSK7tnuzM46DwXPriwOTz)ZgJ)UE)nHExFoZkNZgm(3c5mR5SHxJupNCd1OdQZz2mO5erMZcyQBm3iCPoyj3N6Uw2zvkwOTzFdym6jAeH5QORH6FtfdZnB(XZ(MoPyTZ5(8zVQPNOIZNAFHpZSVbmUz2t101q9VPI5KCBA(kBEsUnnN9n0TPsfSNP33g08SQIrLEBxKceA4BzdA3WQmVYs0OwjM9U1Kb)VG42nV442npd4g4rY3hJv(UU(pcfqzBurab8dFKgaxhyIDIpzeJSKDnj2ITVrXwl2hLrNNpFtq27jqTTnJyBsezbjK((4pYF9BtElmtfS4gOKnMdF9rTbkQMDU4lZHIu7LUDJMYF1JJUUk2fK8mY8AzBZZ32O06NVy0Mwx1ehm0BoRC7gY0ArCusEgzETST5DD1iZ55lgTMZ32Q(6pRmpNTJAvdQKo3UmVhlx6pZtJY42qXS0SKKZMc5o34hmBk7ZcXSP8RZ)GFK8bya(XpZ)aGK8GZMM8YPoBk1Jv1WE2Fzw0SpBYOO4k5elFEcs4)8Kpti5j0zC42tHdfBqpWIi23JI09yVIwJ86OuZqWFh8u0OcwKvOK9tU7H)srn1yRdhatZl6n5AxkOKssw3nyG7rm2m1PeVi3eBSzwm2gGp2CwHp6QIsSUDa)Sa2z62HuqTCBIXwDGyvbtqL2WITEf0bs2vLxZJyRXXw9tgSAi6v1jJcU0CDrXIGGQskPTHAw3u3i(3kGzt73ByUFLbZKn88mzM1BYmvyYq6vV1nzOYaXKvRU06MmnAwDMS7optw2lwBzJ2fXwAd1uBuzJ86m51A1VrGaHMua4i26nCEaZDk26h1K4kNsfZCJtb8)tQOvObq3iqqJ1k5sfQ1kJsALOn3i3IBMunTu11SYPhvne(5qVS3q25eeRCBHFbO1fhdvU)5WetU0vhWn1SXl2brp5r43n)WOZh1Dkf1GEK0HHve7uoYgYnRnK8ZhjwT2IbgxzuCSwJTUp2A9s7EBjFLB7mlKTWjDeRKNqmLIZ2oFGx98T3lLnI4cYzDVqDKpkPyz0fSMxKlyPt2EHWLnVtgZ)SQ1P(NSBwaVQuH5amebENIe5i0GDmSrKAXyd5GYlm8YfQ6tupx(dYKV8jRN7Imcv2YNMECbR4m3Nj1Y8f)KWNWVQNgEohm6JFBEyxH3JqihwLLcxNYoe3N7q88OGhJxKXWg4gLrKE)igfchT)CJCbIvkyKHxVTr41KX5Es80ofhI)ISMchKFUGZGOYjvlEJa53s8GBNkiD5jZFLdeR4NxlqzI0rTqI0o4kSUKRVtPyr5u5KuvFdcYS06ZEA0xx6tzXEpxQmBXfLKS4HMxotfhXwG8khuOysNcEUEjmfAraxA2ZgMLjn7LrqMOBltufKqIyTv5q8JoRQ2gARGDMMa9G8DOGm3DucrEBzkLE3gKPDuzALfReTVRmTYVNdLjnQmQDs9eIaMSWOBvNCrictZB1TqNmfMLGYVl5IjE5bfvEnKLTRcVD5cc5y0PUzQLOqZFZZZU9LIjFlEd0R0SRWBHoVKJ5G0E6Z63U0lLT(wU58v1lgRmGiwxOkIIx3qU3sXxU20c0yESCLrFJ1xOqYvQHMCh9TqNNzPe6vQXJgavQ8RQ2KHcSOgOSwtbshIz16X7meRbMYtg52tUtIAAJUIfI)Lf4iMrXFqhxcr7Q9wEHChkxyUYNJa99G)DW(0bB5p5byDVxFft2NdaflIsu59qbPCSuc(kF7Auyqyxu7xlYKhJ99UJbQvN)YTLsKN8zfvF5hTFGnZ7cif(pHz(92H43UCfcjP2GvYPPWPc)7Xf(36a7cnm)Jbkw9RCFUKL5ZqkgoRTceDUtZM07G(N0WRRC7yQNhSEkoMLBPtDlXx5LqxVNExPQPIldCMushaiR3SqELklgB2YINaxCrjWOkRamluqkERtsOief56hvYbaPgQKtI53DsEEDsm05KuD36BItIzvNKkBErJDsmXQ9Np98IVtPF3pP98tY(3iLYWlsFb6YNFrnBC2Lnivegpe2FTlWToA72ZSV4ZE6oiMjBjz1uAYlkOUuAAhJDuUzC1Itg)XgNm1VkMszgsxQ6JjIiv1R1xVux5QNzo2bZP2Le9ua9SfKVMEXQf1H(BzFpxBi1nENaYlGGSk(Wny7dex2i7fA6cOLt1KCQqyxAJ0L5xUOfNzt(xKZJjZA3Jyzok0tuFKChTgUyhy7y2e(MP0b1Zo77mR8WdLlgMXnAZJlV9dfo5vJrkwEDv(4TPFG2TwvT5wYmQBJlroskk3UX0tCsS2DCmZ(RYE0xyQ2IHFfBibk4kJgdpjKTYkXxSdhNOjDude8yLKz(ChfRlfNQtiv5gqvK3wvo5jfn9vVc3rBxPLE(klH1rfrxRxRUfJittuSifd6)YN6S8IlieSYxCPK)B2)l]] )

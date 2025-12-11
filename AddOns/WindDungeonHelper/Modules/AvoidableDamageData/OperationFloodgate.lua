@@ -10,7 +10,7 @@ local mistakes = {
 	{
 		-- 電能水池
 		type = AD.MISTAKE.AURA,
-		spell = 1215089,
+		aura = 1215089,
 	},
 	{
 		-- 高速衝鋒 (布隆特)

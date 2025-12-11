@@ -38,7 +38,7 @@ plugin.pluginOptions = {
 			end
 		end
 	end,
-	order = 7,
+	order = 9,
 	args = {
 		heading = {
 			type = "description",
@@ -96,9 +96,14 @@ plugin.pluginOptions = {
 --
 
 do
+	local shouldRestoreBanner = false
 	local function updateProfile()
-		local db = plugin.db.profile
+		if shouldRestoreBanner then
+			shouldRestoreBanner = false
+			BossBanner:RegisterEvent("BOSS_KILL")
+		end
 
+		local db = plugin.db.profile
 		for k, v in next, db do
 			local defaultType = type(plugin.defaultDB[k])
 			if defaultType == "nil" then
@@ -107,17 +112,34 @@ do
 				db[k] = plugin.defaultDB[k]
 			end
 		end
+
+		if not db.blizzVictory and type(BossBanner) == "table" and BossBanner:IsEventRegistered("BOSS_KILL") then
+			shouldRestoreBanner = true
+			BossBanner:UnregisterEvent("BOSS_KILL")
+		end
+	end
+
+	function plugin:OnRegister()
+		updateProfile()
+		if self.db.profile.soundName ~= "None" then
+			self:SimpleTimer(function() local played, id = self:PlaySoundFile(media:Fetch(SOUND, self.db.profile.soundName)) if played then StopSound(id) end end, 0)
+		end
 	end
 
 	function plugin:OnPluginEnable()
-		if not self.db.profile.blizzVictory and BossBanner then
-			BossBanner:UnregisterEvent("BOSS_KILL")
-		end
+		updateProfile()
+
 		self:RegisterMessage("BigWigs_OnBossWin")
 		self:RegisterMessage("BigWigs_VictorySound")
 
 		self:RegisterMessage("BigWigs_ProfileUpdate", updateProfile)
-		updateProfile()
+	end
+
+	function plugin:OnPluginDisable()
+		if shouldRestoreBanner then
+			shouldRestoreBanner = false
+			BossBanner:RegisterEvent("BOSS_KILL")
+		end
 	end
 end
 

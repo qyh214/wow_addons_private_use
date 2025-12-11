@@ -236,28 +236,46 @@ function(cmd)
 end)
 
 local function ParseCommand(msg)
-    local itemLinks = {}
-    local function StoreLinks(link)
-        itemLinks[#itemLinks + 1] = link
-        return "\x1F" .. #itemLinks
-    end
+	local itemLinks = {}
+	local function StoreLinks(link)
+		itemLinks[#itemLinks + 1] = link
+		return "\x1F" .. #itemLinks
+	end
 
-    -- Step 1: Replace links with tokens
-    msg = msg:gsub("|c[%xnIQ:]+|H[a-z]+:%d+:.-|h%[.-%]|h|r", StoreLinks)
+	-- Step 1: Replace links with tokens
+	msg = msg:gsub("|c[%xnIQ:]+|H[a-z]+:%d+:.-|h%[.-%]|h|r", StoreLinks)
 	-- app.PrintDebug("tokenized",msg)
-    -- Step 2: Split by spaces
-    local args = { (" "):split(msg) }
+	-- Step 2: Split by spaces
+	local args = { (" "):split(msg) }
 
-    -- Step 3: Replace tokens with original item links
+	-- Step 3: Replace tokens with original item links
 	local index
-    for i, v in ipairs(args) do
+	for i, v in ipairs(args) do
 		index = tonumber(v:match("\x1F(%d+)"))
-        if index then
-            args[i] = itemLinks[index]
-        end
-    end
+		if index then
+			args[i] = itemLinks[index]
+		end
+	end
 
-    return args
+	return args
+end
+
+-- Performs a search for ATT content, then opens the single result in a new popout window
+app.CreatePopoutForSearch = function(search)
+	app.SetSkipLevel(2)
+	local group = app.GetCachedSearchResults(app.SearchForLink, search, nil, {SkipFill=true,IgnoreCache=true})
+	app.SetSkipLevel(0)
+	-- make sure it's 'something' returned from the search before throwing it into a window
+	if group then
+		if group.criteriaID and not group.achievementID then
+			app.print("Unsourced Criteria",group.criteriaID,"Use /att criteriaID:achievementID to view unsourced Criteria info")
+			return true
+		end
+		if group.link or group.name or group.text or group.key then
+			app:CreateMiniListForGroup(group)
+			return true
+		end
+	end
 end
 
 -- Default /att support
@@ -359,19 +377,8 @@ function(cmd)
 		end
 
 		-- Search for the Link in the database
-		app.SetSkipLevel(2);
-		local group = app.GetCachedSearchResults(app.SearchForLink, cmd, nil, {SkipFill=true,IgnoreCache=true});
-		app.SetSkipLevel(0);
-		-- make sure it's 'something' returned from the search before throwing it into a window
-		if group then
-			if group.criteriaID and not group.achievementID then
-				app.print("Unsourced Criteria",group.criteriaID,"Use /att criteriaID:achievementID to view unsourced Criteria info")
-				return true
-			end
-			if group.link or group.name or group.text or group.key then
-				app:CreateMiniListForGroup(group);
-				return true;
-			end
+		if app.CreatePopoutForSearch(cmd) then
+			return true
 		end
 		app.print("Unknown Command: ", cmd);
 	else
@@ -379,3 +386,16 @@ function(cmd)
 		app.ToggleMainList();
 	end
 end)
+
+-- Add a simple way for other addons to pull a standalone ATT group derived from a link
+app.GetLinkReference = function(link)
+	-- don't try searching for an invalid link
+	if app.Modules.RetrievingData.IsRetrieving(link) then
+		return
+	end
+	-- Search for the Link in the database
+	app.SetSkipLevel(2)
+	local group = app.GetCachedSearchResults(app.SearchForLink, link, nil, {ShortCache=true})
+	app.SetSkipLevel(0)
+	return group
+end

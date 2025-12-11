@@ -1,37 +1,51 @@
-# [5.20.1](https://github.com/WeakAuras/WeakAuras2/tree/5.20.1) (2025-08-05)
+# [5.20.7](https://github.com/WeakAuras/WeakAuras2/tree/5.20.7) (2025-11-27)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.20.0...5.20.1)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.20.6...5.20.7)
 
 ## Highlights
 
-new game patch, new weakauras version
-
-- load status indicator (the little power icon) now changes shape depending on load status in addition to color
-- item count trigger no longer claims to check the reagent bank, since that doesn't exist anymore
-- custom code meant to run on every frame now has a builtin throttle option, so no more need for if GetTime() > (aura_env.last + 1) boilerplate :)
+- Basic support for Wrath Titan (thanks WoW CN community)
+- Support for new Masque version
+- Various bug fixes
 
 ## Commits
 
-InfusOnWoW (2):
+Copilot (1):
 
-- Tweak loaded/standby/unloaded icons
-- Bufftrigger: Fix Unit Caste condition
+- Fix allstates:Get to return false instead of nil
 
-Stanzilla (2):
+InfusOnWoW (6):
+
+- Masque Support: Support new masque version
+- Profiling: Add an inherit font
+- BT Multi Target mode: add warnings on it, and if it's missing a filter
+- Update Discord List
+- Fix regression in Abbreviate numbers on retail
+- Update Discord List
+
+NoM0Re (6):
+
+- Titan: Replace encounter data with phase 1 raids & bosses
+- Titan: remove neutral faction group
+- Titan: fix repair dialog text assignment
+- Glyph Load: Only show in Mists of Pandaria
+- Remove atlas file from Wrath Titan Reforge
+- Add Wrath Titan Reforged support
+
+Stanzilla (4):
 
 - Update WeakAurasModelPaths from wago.tools
 - Update WeakAurasModelPaths from wago.tools
+- Update WeakAurasModelPaths from wago.tools
+- Update WeakAurasModelPaths from wago.tools
 
-emptyrivers (4):
+dependabot[bot] (2):
 
-- drop reagent bank option
-- toc bump
-- lazily get rid of STATICPOPUPS_NUMDIALOGS
-- protect weakauras against unaligned ai
+- Bump actions/checkout from 5 to 6
+- Bump actions/upload-artifact from 4 to 5
 
-mrbuds (3):
+mrbuds (2):
 
-- Add throttle option for everyframe custom triggers
-- Add throttle option for everyframe custom text
-- Make profiling of BuffTrigger2 more granular
+- Remove atlas files
+- Model's Icon set to sword guy on classic, fixes #6075
 

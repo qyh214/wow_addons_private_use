@@ -986,9 +986,9 @@ table.insert(Private.LoginFnQueue, function()
     Private.Realms[4535] = { name = "比格沃斯", slug = "比格沃斯", region = "CN", database = "5083" }
     Private.Realms[4647] = { name = "Grobbulus", slug = "grobbulus", region = "US", database = "US" }
     Private.Realms[4648] = { name = "BloodsailBuccaneers", slug = "bloodsail-buccaneers", region = "US", database = "US" }
-    Private.Realms[4667] = { name = "Remulos", slug = "remulos", region = "US", database = "US" }
-    Private.Realms[4669] = { name = "arugal", slug = "arugal", region = "US", database = "US" }
-    Private.Realms[4670] = { name = "Yojamba", slug = "yojamba", region = "US", database = "US" }
+    Private.Realms[4667] = { name = "remulos(au)", slug = "remulos-au", region = "US", database = "US" }
+    Private.Realms[4669] = { name = "arugal(au)", slug = "arugal-au", region = "US", database = "US" }
+    Private.Realms[4670] = { name = "yojamba(au)", slug = "yojamba-au", region = "US", database = "US" }
     Private.Realms[4675] = { name = "辛迪加", slug = "辛迪加", region = "CN", database = "5043" }
     Private.Realms[4676] = { name = "ZandalarTribe", slug = "zandalar-tribe", region = "EU", database = "EU" }
     Private.Realms[4678] = { name = "HydraxianWaterlords", slug = "hydraxian-waterlords", region = "EU", database = "EU" }
@@ -1102,6 +1102,16 @@ table.insert(Private.LoginFnQueue, function()
     Private.Realms[5742] = { name = "古雷曼格", slug = "古雷曼格", region = "TW", database = "TW" }
     Private.Realms[5743] = { name = "逐風者", slug = "逐風者", region = "TW", database = "TW" }
     Private.Realms[5744] = { name = "木喉要塞", slug = "木喉要塞", region = "TW", database = "TW" }
+    Private.Realms[6359] = { name = "Nazgrim", slug = "nazgrim", region = "US", database = "US" }
+    Private.Realms[6360] = { name = "Galakras", slug = "galakras", region = "US", database = "US" }
+    Private.Realms[6361] = { name = "Raden", slug = "raden", region = "US", database = "US" }
+    Private.Realms[6362] = { name = "LeiShen", slug = "lei-shen", region = "US", database = "US" }
+    Private.Realms[6363] = { name = "Immerseus", slug = "immerseus", region = "US", database = "US" }
+    Private.Realms[6364] = { name = "Shek'zeer", slug = "shekzeer", region = "EU", database = "EU" }
+    Private.Realms[6365] = { name = "Garalon", slug = "garalon", region = "EU", database = "EU" }
+    Private.Realms[6366] = { name = "Norushen", slug = "norushen", region = "EU", database = "EU" }
+    Private.Realms[6367] = { name = "Hoptallus", slug = "hoptallus", region = "EU", database = "EU" }
+    Private.Realms[6368] = { name = "OokOok", slug = "ook-ook", region = "EU", database = "EU" }
     Private.Realms[5813] = { name = "WildGrowth", slug = "wild-growth", region = "US", database = "US_10222" }
     Private.Realms[5814] = { name = "LoneWolf", slug = "lone-wolf", region = "US", database = "US_10221" }
     Private.Realms[5815] = { name = "LivingFlame", slug = "living-flame", region = "US", database = "US_10220" }
@@ -1124,6 +1134,9 @@ table.insert(Private.LoginFnQueue, function()
     Private.Realms[5843] = { name = "孤狼", slug = "孤狼", region = "TW", database = "TW_10236" }
     Private.Realms[5844] = { name = "生命烈焰", slug = "生命烈焰", region = "TW", database = "TW_10235" }
     Private.Realms[5845] = { name = "十字軍聖擊", slug = "十字軍聖擊", region = "TW", database = "TW_10234" }
+    Private.Realms[0] = { name = "无情", slug = "无情", region = "CN", database = "5211" }
+    Private.Realms[0] = { name = "铁血II", slug = "铁血II", region = "CN", database = "5222" }
+    Private.Realms[0] = { name = "铁血", slug = "铁血", region = "CN", database = "5210" }
     Private.Realms[6103] = { name = "Dreamscythe", slug = "dreamscythe", region = "US", database = "US_5212" }
     Private.Realms[6104] = { name = "Nightslayer", slug = "nightslayer", region = "US", database = "US_5213" }
     Private.Realms[6107] = { name = "몰다르의투지", slug = "몰다르의-투지", region = "KR", database = "KR_5218" }

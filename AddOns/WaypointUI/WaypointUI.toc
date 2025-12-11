@@ -1,33 +1,43 @@
-## Interface: 110107, 110200
+## Interface: 110207, 120000
 ## Title: Waypoint UI
 ## Notes: This is the way.
-## Author: Adaptivex
-## IconTexture: Interface/AddOns/WaypointUI/Art/Icons/logo-colored-glow.png
-## Version: 0.0.3
+## Author: AdaptiveX
+## IconTexture: Interface/AddOns/WaypointUI/Art/Icon/IconAltLight.png
+## Version: 1.2.3
 ## SavedVariables: WaypointDB_Global, WaypointDB_Global_Persistent
 ## SavedVariablesPerCharacter: WaypointDB_Local, WaypointDB_Local_Persistent
-## AddonCompartmentFunc: WaypointUI_OpenConfig
+## AddonCompartmentFunc: WaypointUIAPI_OpenSettingUI
 
-# --------------------------------
-# COMMON
-# --------------------------------
+# ------------------------
+# WPM
+# ------------------------
 
-Code/Common/Load.xml
+wpm_modules/packages.xml
 
-# --------------------------------
-# Priority
-# --------------------------------
+# ------------------------
+# Initalize
+# ------------------------
 
-Code/Priority/Load.xml
+Preload.lua
+Locales/Locales.xml
 
-# --------------------------------
-# Modules
-# --------------------------------
+# ------------------------
+# Main
+# ------------------------
 
-Code/Main/Load.xml
+Code/LocalUtil.lua
+Code/SharedUI.lua
 
-# -------------------------------
-# Supported Addons
-# -------------------------------
+Code/MapPin/MapPin.xml
+Code/Waypoint/Waypoint.xml
 
-Code/SupportedAddons/Load.xml
+Code/Setting/Setting.xml
+Code/Support/Support.xml
+
+Code/ExtraFeature/ExtraFeature.xml
+
+# ------------------------
+# API
+# ------------------------
+
+API.lua

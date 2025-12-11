@@ -5,6 +5,7 @@ local select, abs, max, ceil = select, abs, max, ceil
 local Round = AF.Round
 local ApproxZero = AF.ApproxZero
 local GetCursorPosition = GetCursorPosition
+local IsShiftKeyDown = IsShiftKeyDown
 
 local MIN_SCROLL_THUMB_HEIGHT = 20
 
@@ -19,6 +20,22 @@ local function ScorllThumb_OnLeave(self)
     self:SetBackdropColor(self.r, self.g, self.b, 0.7)
 end
 
+local function UpdateSlotFrameAnchor(self)
+    if self.disableSlotFrameReanchor or not self:CanScroll() then
+        AF.SetPoint(self.slotFrame, "BOTTOMRIGHT", -self.horizontalMargin, self.verticalMargin)
+    else
+        AF.SetPoint(self.slotFrame, "BOTTOMRIGHT", self.scrollBar, "BOTTOMLEFT", -self.horizontalMargin, 0)
+    end
+end
+
+local function UpdateScrollFrameAnchor(self)
+    if self.disableScrollFrameReanchor or not self:CanScroll() then
+        AF.SetPoint(self.scrollFrame, "BOTTOMRIGHT")
+    else
+        AF.SetPoint(self.scrollFrame, "BOTTOMRIGHT", -7, 0)
+    end
+end
+
 ---------------------------------------------------------------------
 -- scroll frame
 ---------------------------------------------------------------------
@@ -27,7 +44,7 @@ local AF_ScrollFrameMixin = {}
 
 -- reset scrollContent height (reset scroll range)
 function AF_ScrollFrameMixin:ResetHeight()
-    AF.SetHeight(self.scrollContent, 5)
+    AF.SetHeight(self.scrollContent, 1)
 end
 
 -- reset scroll to top
@@ -39,6 +56,10 @@ end
 function AF_ScrollFrameMixin:GetVerticalScrollRange()
     local range = self.scrollContent:GetHeight() - self.scrollFrame:GetHeight()
     return range > 0 and range or 0
+end
+
+function AF_ScrollFrameMixin:CanScroll()
+    return self:GetVerticalScrollRange() > 0
 end
 
 -- for mouse wheel
@@ -57,35 +78,55 @@ function AF_ScrollFrameMixin:ScrollToBottom()
     self.scrollFrame:SetVerticalScroll(self:GetVerticalScrollRange())
 end
 
-function AF_ScrollFrameMixin:SetContentHeight(height, num, spacing, topPadding, bottomPadding)
-    self:ResetScroll()
-    if num and spacing then
-        AF.SetListHeight(self.scrollContent, num, height, spacing, topPadding, bottomPadding)
+---@param height number
+---@param useRawValue? boolean if true, set height directly, otherwise use AF.SetHeight
+function AF_ScrollFrameMixin:SetContentHeight(height, useRawValue, skipScrollReset)
+    if useRawValue then
+        self.scrollContent:SetHeight(height)
     else
         AF.SetHeight(self.scrollContent, height)
     end
-end
-
-function AF_ScrollFrameMixin:SetScrollStep(step)
-    self.step = step
-end
-
-function AF_ScrollFrameMixin:ClearContent()
-    for _, c in pairs({self.scrollContent:GetChildren()}) do
-        c:SetParent(nil)
-        c:ClearAllPoints()
-        c:Hide()
+    if not skipScrollReset then
+        self:ResetScroll()
     end
-    self:ResetHeight()
+end
+
+---@param heights table heights of each item
+---@param spacing number spacing between items
+function AF_ScrollFrameMixin:SetContentHeights(heights, spacing)
+    AF.SetScrollContentHeight(self.scrollContent, heights, spacing)
+    self:ResetScroll()
+end
+
+---@param step number default is 25
+function AF_ScrollFrameMixin:SetScrollStep(step)
+    self.step = step or 25
+end
+
+function AF_ScrollFrameMixin:GetScrollStep()
+    return self.step
+end
+
+function AF_ScrollFrameMixin:SetScroll(offset)
+    self.scrollFrame:SetVerticalScroll(AF.Clamp(offset, 0, self:GetVerticalScrollRange()))
+end
+
+function AF_ScrollFrameMixin:GetScroll()
+    return self.scrollFrame:GetVerticalScroll()
 end
 
 function AF_ScrollFrameMixin:Reset()
+    local children = self.contentChildren or {self.scrollContent:GetChildren()}
+    for _, c in pairs(children) do
+        AF.ClearPoints(c)
+        c:Hide()
+    end
+    self:ResetHeight()
     self:ResetScroll()
-    self:ClearContent()
 end
 
 function AF_ScrollFrameMixin:UpdatePixels()
-    -- scrollBar / scrollThumb / children already AddToPixelUpdater
+    -- scrollBar / scrollThumb / children already AddToPixelUpdater_OnShow
     --! scrollParent's UpdatePixels is Overrided here
     AF.ReSize(self)
     AF.RePoint(self)
@@ -101,6 +142,121 @@ function AF_ScrollFrameMixin:UpdatePixels()
     self:ResetScroll()
 end
 
+function AF_ScrollFrameMixin:DisableScrollFrameReanchor(disabled)
+    self.disableScrollFrameReanchor = disabled
+    UpdateScrollFrameAnchor(self)
+end
+
+local function ScrollFrame_OnSizeChanged(scrollFrame)
+    -- update scrollContent width
+    scrollFrame:GetScrollChild():SetWidth(scrollFrame:GetWidth())
+end
+
+local function ScrollFrame_OnVerticalScroll(scrollFrame, offset)
+    local scrollParent = scrollFrame:GetParent()
+    local scrollBar = scrollParent.scrollBar
+    local scrollThumb = scrollParent.scrollThumb
+
+    if scrollParent:GetVerticalScrollRange() ~= 0 then
+        local scrollP = scrollFrame:GetVerticalScroll() / scrollParent:GetVerticalScrollRange()
+        local offsetY = -((scrollBar:GetHeight() - scrollThumb:GetHeight()) * scrollP)
+        scrollThumb:SetPoint("TOP", 0, offsetY)
+    else
+        scrollThumb:SetPoint("TOP")
+    end
+end
+
+local function ScrollContent_OnSizeChanged(scrollContent)
+    -- check if it can scroll
+    -- DO NOT USE OnScrollRangeChanged to check whether it can scroll.
+    -- "invisible" widgets should be hidden, then the scroll range is NOT accurate!
+    -- scrollFrame:SetScript("OnScrollRangeChanged", function(self, xOffset, yOffset) end)
+
+    local scrollFrame = scrollContent:GetParent()
+    local scrollParent = scrollFrame:GetParent()
+    local scrollBar = scrollParent.scrollBar
+    local scrollThumb = scrollParent.scrollThumb
+
+    -- set thumb height (%)
+    local p = scrollFrame:GetHeight() / scrollContent:GetHeight()
+    p = tonumber(string.format("%.3f", p))
+    if p < 1 then -- can scroll
+        local height = max(scrollBar:GetHeight() * p, MIN_SCROLL_THUMB_HEIGHT)
+
+        -- NOTE: prevent a visual issue
+        if height > scrollBar:GetHeight() - abs(select(5, scrollThumb:GetPoint())) then
+            scrollThumb:SetPoint("TOP", 0, -(scrollBar:GetHeight() - height))
+        end
+
+        scrollThumb:SetHeight(height)
+
+        -- space for scrollBar
+        -- AF.SetPoint(scrollFrame, "BOTTOMRIGHT", -7, 0)
+        scrollBar:Show()
+    else
+        -- AF.SetPoint(scrollFrame, "BOTTOMRIGHT")
+        scrollBar:Hide()
+        scrollFrame:SetVerticalScroll(0)
+    end
+
+    UpdateScrollFrameAnchor(scrollParent)
+end
+
+local function ScrollThumb_OnMouseDown(scrollThumb, button)
+    if button ~= "LeftButton" then return end
+
+    local scrollParent = scrollThumb:GetParent():GetParent()
+    local scrollFrame = scrollParent.scrollFrame
+    local scrollBar = scrollParent.scrollBar
+
+    -- scrollFrame:SetScript("OnVerticalScroll", nil) -- disable OnVerticalScroll
+
+    local offsetY = select(5, scrollThumb:GetPoint(1))
+    local mouseY = select(2, GetCursorPosition()) -- https://warcraft.wiki.gg/wiki/API_GetCursorPosition
+    local scale = scrollThumb:GetEffectiveScale()
+    -- local currentScroll = scrollFrame:GetVerticalScroll()
+    local maxOffsetY = scrollBar:GetHeight() - scrollThumb:GetHeight()
+
+    scrollThumb:SetScript("OnUpdate", function(self)
+        local newMouseY = select(2, GetCursorPosition())
+        ------------------ y offset before dragging + mouse offset
+        local newOffsetY = offsetY + (newMouseY - mouseY) / scale
+
+        if newOffsetY >= 0 then -- top
+            -- AF.SetPoint(self, "TOP")
+            newOffsetY = 0
+        elseif -newOffsetY >= maxOffsetY then -- bottom
+            -- AF.SetPoint(self, "TOP", 0, -maxOffsetY)
+            newOffsetY = -maxOffsetY
+        else
+            -- AF.SetPoint(self, "TOP", 0, newOffsetY)
+        end
+
+        local vs = (-newOffsetY / maxOffsetY) * scrollParent:GetVerticalScrollRange()
+        scrollFrame:SetVerticalScroll(vs)
+    end)
+end
+
+local function ScrollThumb_OnMouseUp(scrollThumb)
+    -- local scrollFrame = scrollThumb:GetParent():GetParent().scrollFrame
+    -- scrollFrame:SetScript("OnVerticalScroll", ScrollFrame_OnVerticalScroll) -- enable OnVerticalScroll
+    scrollThumb:SetScript("OnUpdate", nil)
+end
+
+local function ScrollParent_OnMouseWheel(self, delta)
+    if delta == 1 then -- scroll up
+        self:VerticalScroll(AF.ConvertPixelsForRegion(-self.step, self))
+    elseif delta == -1 then -- scroll down
+        self:VerticalScroll(AF.ConvertPixelsForRegion(self.step, self))
+    end
+end
+
+---@param parent Frame
+---@param name? string
+---@param width? number
+---@param height? number
+---@param color? string|table
+---@param borderColor? string|table
 ---@return AF_ScrollFrame scrollParent
 function AF.CreateScrollFrame(parent, name, width, height, color, borderColor)
     local scrollParent = AF.CreateBorderedFrame(parent, name, width, height, color, borderColor)
@@ -114,11 +270,16 @@ function AF.CreateScrollFrame(parent, name, width, height, color, borderColor)
     AF.SetPoint(scrollFrame, "BOTTOMRIGHT")
 
     -- scrollContent
-    local scrollContent = CreateFrame("Frame", nil, scrollFrame, "BackdropTemplate")
+    local scrollContent = CreateFrame("Frame", nil, scrollFrame)
     scrollParent.scrollContent = scrollContent
-    AF.SetSize(scrollContent, width, 5)
+    scrollContent:SetHeight(1)
+    scrollContent:SetWidth(scrollFrame:GetWidth())
     scrollFrame:SetScrollChild(scrollContent)
-    -- AF.SetPoint(scrollContent, "RIGHT") -- update width with scrollFrame
+
+    -- for debugging
+    -- local tex = scrollContent:CreateTexture(nil, "ARTWORK")
+    -- tex:SetAllPoints(scrollContent)
+    -- tex:SetColorTexture(0, 1, 0, 0.5)
 
     -- scrollBar
     local scrollBar = AF.CreateBorderedFrame(scrollParent, nil, 5, nil, color, borderColor)
@@ -141,91 +302,23 @@ function AF.CreateScrollFrame(parent, name, width, height, color, borderColor)
 
     Mixin(scrollParent, AF_ScrollFrameMixin)
 
-    -- on width changed (scrollBar show/hide)
-    scrollFrame:SetScript("OnSizeChanged", function()
-        -- update scrollContent width
-        scrollContent:SetWidth(scrollFrame:GetWidth())
-    end)
-
-    -- check if it can scroll
-    -- DO NOT USE OnScrollRangeChanged to check whether it can scroll.
-    -- "invisible" widgets should be hidden, then the scroll range is NOT accurate!
-    -- scrollFrame:SetScript("OnScrollRangeChanged", function(self, xOffset, yOffset) end)
-    scrollContent:SetScript("OnSizeChanged", function()
-        -- set thumb height (%)
-        local p = scrollFrame:GetHeight() / scrollContent:GetHeight()
-        p = tonumber(string.format("%.3f", p))
-        if p < 1 then -- can scroll
-            scrollThumb:SetHeight(max(scrollBar:GetHeight() * p, MIN_SCROLL_THUMB_HEIGHT))
-            -- space for scrollBar
-            AF.SetPoint(scrollFrame, "BOTTOMRIGHT", -7, 0)
-            scrollBar:Show()
-        else
-            AF.SetPoint(scrollFrame, "BOTTOMRIGHT")
-            scrollBar:Hide()
-            scrollFrame:SetVerticalScroll(0)
-        end
-    end)
-
-    local function OnVerticalScroll(self, offset)
-        if scrollParent:GetVerticalScrollRange() ~= 0 then
-            local scrollP = scrollFrame:GetVerticalScroll() / scrollParent:GetVerticalScrollRange()
-            local yoffset = -((scrollBar:GetHeight() - scrollThumb:GetHeight()) * scrollP)
-            scrollThumb:SetPoint("TOP", 0, yoffset)
-        end
-    end
-    scrollFrame:SetScript("OnVerticalScroll", OnVerticalScroll)
+    scrollFrame:SetScript("OnSizeChanged", ScrollFrame_OnSizeChanged)
+    scrollFrame:SetScript("OnVerticalScroll", ScrollFrame_OnVerticalScroll)
+    scrollContent:SetScript("OnSizeChanged", ScrollContent_OnSizeChanged)
 
     -- dragging and scrolling
-    scrollThumb:SetScript("OnMouseDown", function(self, button)
-        if button ~= "LeftButton" then return end
-        scrollFrame:SetScript("OnVerticalScroll", nil) -- disable OnVerticalScroll
-
-        local offsetY = select(5, scrollThumb:GetPoint(1))
-        local mouseY = select(2, GetCursorPosition()) -- https://warcraft.wiki.gg/wiki/API_GetCursorPosition
-        local scale = scrollThumb:GetEffectiveScale()
-        local currentScroll = scrollFrame:GetVerticalScroll()
-        self:SetScript("OnUpdate", function(self)
-            local newMouseY = select(2, GetCursorPosition())
-            ------------------ y offset before dragging + mouse offset
-            local newOffsetY = offsetY + (newMouseY - mouseY) / scale
-
-            -- even scrollThumb:SetPoint is already done in OnVerticalScroll, but it's useful in some cases.
-            if newOffsetY >= 0 then -- top
-                AF.SetPoint(scrollThumb, "TOP")
-                newOffsetY = 0
-            elseif (-newOffsetY) + scrollThumb:GetHeight() >= scrollBar:GetHeight() then -- bottom
-                AF.SetPoint(scrollThumb, "TOP", 0, -(scrollBar:GetHeight() - scrollThumb:GetHeight()))
-                newOffsetY = -(scrollBar:GetHeight() - scrollThumb:GetHeight())
-            else
-                AF.SetPoint(scrollThumb, "TOP", 0, newOffsetY)
-            end
-            local vs = (-newOffsetY / (scrollBar:GetHeight()-scrollThumb:GetHeight())) * scrollParent:GetVerticalScrollRange()
-            scrollFrame:SetVerticalScroll(vs)
-        end)
-    end)
-
-    scrollThumb:SetScript("OnMouseUp", function(self)
-        scrollFrame:SetScript("OnVerticalScroll", OnVerticalScroll) -- enable OnVerticalScroll
-        self:SetScript("OnUpdate", nil)
-    end)
+    scrollThumb:SetScript("OnMouseDown", ScrollThumb_OnMouseDown)
+    scrollThumb:SetScript("OnMouseUp", ScrollThumb_OnMouseUp)
 
     -- enable mouse wheel scroll
     scrollParent:SetScrollStep(25)
     scrollParent:EnableMouseWheel(true)
-    scrollParent:SetScript("OnMouseWheel", function(self, delta)
-        if delta == 1 then -- scroll up
-            scrollParent:VerticalScroll(AF.ConvertPixelsForRegion(-scrollParent.step, scrollFrame))
-        elseif delta == -1 then -- scroll down
-            scrollParent:VerticalScroll(AF.ConvertPixelsForRegion(scrollParent.step, scrollFrame))
-        end
-    end)
+    scrollParent:SetScript("OnMouseWheel", ScrollParent_OnMouseWheel)
 
-    AF.AddToPixelUpdater(scrollParent)
+    AF.AddToPixelUpdater_OnShow(scrollParent)
 
     return scrollParent
 end
-
 
 ---------------------------------------------------------------------
 -- ScrollListGrid shared
@@ -289,12 +382,24 @@ end
 local AF_ScrollListMixin = {}
 
 ---@private
+function AF_ScrollListMixin:UpdateSlotSize()
+    for i = 1, self.slotNum do
+        if self.slotHeight then
+            AF.SetHeight(self.slots[i], self.slotHeight)
+        else
+            local spacing = AF.ConvertPixelsForRegion(self.slotSpacing, self) * (self.slotNum - 1)
+            self.slots[i]:SetHeight((self.slotFrame:GetHeight() - spacing) / self.slotNum)
+        end
+    end
+end
+
+---@private
 function AF_ScrollListMixin:UpdateSlots()
     for i = 1, self.slotNum do
         if not self.slots[i] then
             self.slots[i] = AF.CreateFrame(self.slotFrame)
             AF.RemoveFromPixelUpdater(self.slots[i])
-            AF.SetHeight(self.slots[i], self.slotHeight)
+
             AF.SetPoint(self.slots[i], "RIGHT")
             if i == 1 then
                 AF.SetPoint(self.slots[i], "TOPLEFT")
@@ -312,6 +417,19 @@ function AF_ScrollListMixin:UpdateSlots()
             end
         end
     end
+
+    if self.slotHeight then
+        if self.slotNum == 0 then
+            AF.SetHeight(self, 5)
+        else
+            AF.SetListHeight(self, self.slotNum, self.slotHeight, self.slotSpacing, self.verticalMargin, self.verticalMargin)
+        end
+    else
+        RunNextFrame(function()
+            self:UpdateSlotSize()
+        end)
+    end
+
     -- hide unused slots
     for i = self.slotNum + 1, #self.slots do
         self.slots[i]:Hide()
@@ -323,55 +441,125 @@ end
 
 function AF_ScrollListMixin:SetSlotNum(newSlotNum)
     self.slotNum = newSlotNum
-    if self.slotNum == 0 then
-        AF.SetHeight(self, 5)
-    else
-        AF.SetListHeight(self, self.slotNum, self.slotHeight, self.slotSpacing, self.verticalMargin, self.verticalMargin)
-    end
     self:UpdateSlots()
 end
 
 function AF_ScrollListMixin:SetSlotHeight(newHeight)
     self.slotHeight = newHeight
-    self:SetSlotNum(self.slotNum)
+    self:UpdateSlots()
 end
 
-function AF_ScrollListMixin:SetWidgets(widgets)
-    self:Reset()
-    self.widgets = widgets
-    self.widgetNum = #widgets
-    self:SetScroll(1)
+function AF_ScrollListMixin:DisableSlotFrameReanchor(disabled)
+    self.disableSlotFrameReanchor = disabled
+    UpdateSlotFrameAnchor(self)
+end
 
-    -- call UpdatePixels on show
-    for _, w in ipairs(self.widgets) do
-        AF.RemoveFromPixelUpdater(w)
-    end
-
-    if self.widgetNum > self.slotNum then -- can scroll
+local function ScrollList_UpdateScrollBar(self)
+    if self:CanScroll() then
         self.scrollBar:Show()
         local p = self.slotNum / self.widgetNum
         self.scrollThumb:SetHeight(max(self.scrollBar:GetHeight() * p, MIN_SCROLL_THUMB_HEIGHT))
-        AF.SetPoint(self.slotFrame, "BOTTOMRIGHT", self.scrollBar, "BOTTOMLEFT", -self.horizontalMargin, 0)
     else
         self.scrollBar:Hide()
-        AF.SetPoint(self.slotFrame, "BOTTOMRIGHT", -self.horizontalMargin, self.verticalMargin)
     end
+    UpdateSlotFrameAnchor(self)
+end
+
+--- this method cannot be used together with SetWidgetPool/SetupButtonGroup
+--- load and scroll to the first item
+---@param widgets table
+---@param scrollTo number|nil index to scroll to, default is 1
+function AF_ScrollListMixin:SetWidgets(widgets, scrollTo)
+    self.mode = "pre_created"
+
+    self:Reset()
+    self.widgets = widgets
+    self.widgetNum = #widgets
+
+    for _, w in next, self.widgets do
+        AF.RemoveFromPixelUpdater(w)
+    end
+
+    self:UpdateSlotSize()
+    ScrollList_UpdateScrollBar(self)
+    self:SetScroll(scrollTo or 1)
+end
+
+--- this method cannot be used together with SetWidgets/SetupButtonGroup
+---@param pool ObjectPool list will use widget:Load(value) to update widget
+function AF_ScrollListMixin:SetWidgetPool(pool)
+    self.mode = "pool_based"
+    self.pool = pool
+end
+
+-- for button_group
+local function IdToIndexProcessor(k, v)
+    return v.id or v.text, k
+end
+
+--- this method is only for SetWidgetPool/SetupButtonGroup
+--- load and scroll to the first item
+---@param data table Keys must be consecutive integers starting from 1; each value will be used for widget:Load(value)
+---@param scrollTo number|nil index to scroll to, default is 1
+function AF_ScrollListMixin:SetData(data, scrollTo)
+    assert(self.pool, "AF_ScrollList:SetData requires a widget pool. Call SetWidgetPool/SetupButtonGroup first.")
+
+    self:Reset()
+    self.data = data
+    self.widgetNum = #data
+    self.lastClickedIndex = nil
+
+    if self.mode == "button_group" then
+        self.idToIndex = AF.ConvertTable(data, IdToIndexProcessor)
+    end
+
+    if self.selected then
+        wipe(self.selected)
+    end
+
+    self:UpdateSlotSize()
+    ScrollList_UpdateScrollBar(self)
+    self:SetScroll(scrollTo or 1)
 end
 
 -- reset
 function AF_ScrollListMixin:Reset()
     self.widgets = {}
     self.widgetNum = 0
+
+    if not self.mode then return end
+
     -- hide slot widgets
-    for _, s in ipairs(self.slots) do
-        if s.widget then
-            s.widget:Hide()
+    if self.mode == "pre_created" then
+        for _, s in next, self.slots do
+            if s.widget then
+                s.widget:Hide()
+            end
+            s.widget = nil
+            s.widgetIndex = nil
         end
-        s.widget = nil
-        s.widgetIndex = nil
+    else -- pool_based or button_group
+        for w in self.pool:EnumerateActive() do
+            w:Hide()
+            w._slotIndex = nil
+        end
+        -- self:Select(nil) -- button_group
+        self.pool:ReleaseAll()
+        for _, s in next, self.slots do
+            s.widget = nil
+            s.widgetIndex = nil
+        end
+
+        if self.mode == "button_group" then
+            wipe(self.selected)
+            self.data = nil
+            self.idToIndex = nil
+            self.lastClickedIndex = nil
+        end
     end
+
     -- resize / repoint
-    AF.SetPoint(self.slotFrame, "BOTTOMRIGHT", 0, self.verticalMargin)
+    AF.SetPoint(self.slotFrame, "BOTTOMRIGHT", -self.horizontalMargin, self.verticalMargin)
     self.scrollBar:Hide()
 end
 
@@ -399,25 +587,58 @@ function AF_ScrollListMixin:SetScroll(startIndex)
     end
 
     -- fill
+    local slot
     local slotIndex = 1
-    for i, w in ipairs(self.widgets) do
-        w:ClearAllPoints()
-        if i < from or i > to then
+
+    if self.mode == "pre_created" then
+        for i, w in next, self.widgets do
+            slot = self.slots[slotIndex]
+            w:ClearAllPoints()
+            w:SetParent(self.slotFrame)
+
+            if i < from or i > to then
+                w:Hide()
+            else
+                w:SetAllPoints(slot)
+                w:Show()
+
+                if w.UpdatePixels then w:UpdatePixels() end
+                if w.Update then w:Update() end
+
+                w._slotIndex = slotIndex
+                slot.widget = w
+                slot.widgetIndex = i
+                slotIndex = slotIndex + 1
+            end
+        end
+    else -- pool_based or button_group
+        for w in self.pool:EnumerateActive() do
             w:Hide()
-        else
+            w._slotIndex = nil
+        end
+        self.pool:ReleaseAll()
+
+        for i = from, to do
+            slot = self.slots[slotIndex]
+
+            local w = self.pool:Acquire()
+            w:SetParent(self.slotFrame)
+            w:SetAllPoints(slot)
             w:Show()
-            w:SetAllPoints(self.slots[slotIndex])
-            if w.UpdatePixels then
-                w:UpdatePixels()
-            end
+
+            if w.UpdatePixels then w:UpdatePixels() end
+            if w.Update then w:Update() end
+            if w.Load then w:Load(self.data[i]) end
+
             w._slotIndex = slotIndex
-            if w.Update then
-                -- NOTE: fix some widget issues, define them manually
-                w:Update()
-            end
-            self.slots[slotIndex].widget = w
-            self.slots[slotIndex].widgetIndex = i
+            slot.widget = w
+            slot.widgetIndex = i
             slotIndex = slotIndex + 1
+        end
+
+
+        if self.mode == "button_group" then
+            self:Select() -- reselect
         end
     end
 
@@ -434,6 +655,26 @@ function AF_ScrollListMixin:SetScroll(startIndex)
     end
 end
 
+-- make target index widget visible
+function AF_ScrollListMixin:ScrollTo(index)
+    if type(index) ~= "number" then return end
+    if index <= 0 then
+        self:SetScroll(1)
+    elseif index >= self.widgetNum then
+        self:ScrollToBottom()
+    else
+        self:SetScroll(index - self.slotNum + 1)
+    end
+end
+
+function AF_ScrollListMixin:ScrollToID(id)
+    assert(self.mode == "button_group", "AF_ScrollList:ScrollToID requires button group mode")
+    local index = id and self.idToIndex[id]
+    if index then
+        self:ScrollTo(index)
+    end
+end
+
 function AF_ScrollListMixin:ScrollToBottom()
     self:SetScroll(self.widgetNum - self.slotNum + 1)
 end
@@ -445,9 +686,18 @@ function AF_ScrollListMixin:GetScroll()
     return self.slots[1].widgetIndex
 end
 
+---@param index number index of the slot
 function AF_ScrollListMixin:GetWidgetAt(index)
     if index and index > 0 and index <= self.slotNum then
         return self.slots[index].widget
+    end
+end
+
+function AF_ScrollListMixin:GetWidgets()
+    if self.mode == "pre_created" then
+        return self.widgets
+    else -- pool_based or button_group
+        return self.pool:GetAllActives()
     end
 end
 
@@ -464,6 +714,227 @@ function AF_ScrollListMixin:SetScrollStep(step)
     self.step = step
 end
 
+local function ButtonGroup_Select(self, b, skipCallback)
+    if b._hoverColor then b:SetBackdropColor(AF.UnpackColor(b._hoverColor)) end
+    if b._hoverBorderColor then b:SetBackdropBorderColor(AF.UnpackColor(b._hoverBorderColor)) end
+
+    if not skipCallback and self.onSelect then self.onSelect(b, b.id) end
+    -- self.selected[b.id] = true
+
+    if self.multiSelect then
+        b:SetTextColor("white")
+    end
+end
+
+local function ButtonGroup_Deselect(self, b, skipCallback)
+    if b._color then b:SetBackdropColor(AF.UnpackColor(b._color)) end
+    if b._borderColor then b:SetBackdropBorderColor(AF.UnpackColor(b._borderColor)) end
+
+    if not skipCallback and self.onDeselect then self.onDeselect(b, b.id) end
+    -- self.selected[b.id] = nil
+
+    if self.multiSelect then
+        b:SetTextColor("gray")
+    end
+end
+
+--- only works with SetupButtonGroup
+function AF_ScrollListMixin:Select(id, skipCallback)
+    assert(self.mode == "button_group", "AF_ScrollList:Select requires button group mode")
+
+    if not id then
+        for b in self.pool:EnumerateActive() do
+            if self.selected[b.id] then
+                ButtonGroup_Select(self, b, true)
+            else
+                ButtonGroup_Deselect(self, b, true)
+            end
+        end
+    elseif self.multiSelect then
+        if IsShiftKeyDown() and self.lastClickedIndex then
+            local from = self.lastClickedIndex
+            local to = self.idToIndex[id]
+            if from > to then
+                from, to = to, from
+            end
+
+            for b in self.pool:EnumerateActive() do
+                if self.idToIndex[b.id] >= from and self.idToIndex[b.id] <= to then
+                    ButtonGroup_Select(self, b, true)
+                else
+                    ButtonGroup_Deselect(self, b, true)
+                end
+            end
+
+            for _id, index in next, self.idToIndex do
+                if index >= from and index <= to then
+                    self.selected[_id] = index
+                else
+                    self.selected[_id] = nil
+                end
+            end
+        else
+            for b in self.pool:EnumerateActive() do
+                if id == b.id then
+                    if self.selected[b.id] then
+                        ButtonGroup_Deselect(self, b, true)
+                        self.selected[b.id] = nil
+                    else
+                        ButtonGroup_Select(self, b, true)
+                        self.selected[b.id] = self.idToIndex[b.id]
+                    end
+                end
+            end
+        end
+
+        if not skipCallback and self.onSelect then
+            self.onSelect(self.selected)
+        end
+    else
+        for b in self.pool:EnumerateActive() do
+            if id == b.id then
+                ButtonGroup_Select(self, b, skipCallback or self.selected[b.id])
+            else
+                ButtonGroup_Deselect(self, b, skipCallback or not self.selected[b.id])
+            end
+        end
+
+        for _id, index in next, self.idToIndex do
+            if id == _id then
+                self.selected[_id] = index
+            else
+                self.selected[_id] = nil
+            end
+        end
+    end
+end
+
+function AF_ScrollListMixin:InvertSelect()
+    assert(self.mode == "button_group", "AF_ScrollList:InvertSelect requires button group mode")
+
+    for id in next, self.idToIndex do
+        if self.selected[id] then
+            self.selected[id] = nil
+        else
+            self.selected[id] = true
+        end
+    end
+    self:Select()
+end
+
+function AF_ScrollListMixin:SelectAll()
+    assert(self.mode == "button_group", "AF_ScrollList:SelectAll requires button group mode")
+
+    self.lastClickedIndex = nil
+    for id in next, self.idToIndex do
+        self.selected[id] = true
+    end
+    self:Select()
+end
+
+---@return table
+function AF_ScrollListMixin:GetSelected()
+    assert(self.mode == "button_group", "AF_ScrollList:GetSelected requires button group mode")
+    return self.selected
+end
+
+---@param enabled boolean
+---@param checkGrayOut boolean normally no need, unless you want to gray out unselected buttons immediately AFTER SetData WITHOUT scrolling
+function AF_ScrollListMixin:SetMultiSelect(enabled, checkGrayOut)
+    assert(self.mode == "button_group", "AF_ScrollList:SetMultiSelect requires button group mode")
+
+    self.lastClickedIndex = nil
+    self.multiSelect = enabled
+
+    if checkGrayOut then
+        self:Select() -- reselect to gray out unselected buttons
+    end
+end
+
+function AF_ScrollListMixin:ClearSelected()
+    assert(self.mode == "button_group", "AF_ScrollList:ClearSelected requires button group mode")
+
+    self.lastClickedIndex = nil
+    for b in self.pool:EnumerateActive() do
+        if self.selected[b.id] then
+            ButtonGroup_Deselect(self, b, true)
+        end
+    end
+    wipe(self.selected)
+end
+
+---@private
+function AF_ScrollListMixin:InitButtonScripts(b)
+    if b._scriptInited then return end
+    b._scriptInited = true
+
+    b.id = b.id or b:GetText() or b:GetName() or tostring(b)
+
+    b:SetScript("OnClick", function()
+        if not IsShiftKeyDown() then
+            self.lastClickedIndex = self.idToIndex[b.id]
+        end
+        self:Select(b.id)
+    end)
+
+    b:SetScript("OnEnter", function()
+        if not self.selected[b.id] and b._hoverColor then
+            b:SetBackdropColor(AF.UnpackColor(b._hoverColor))
+        end
+        if self.onEnter then self.onEnter(b, b.id) end
+    end)
+
+    b:SetScript("OnLeave", function()
+        if not self.selected[b.id] and b._color then
+            b:SetBackdropColor(AF.UnpackColor(b._color))
+        end
+        if self.onLeave then self.onLeave(b, b.id) end
+    end)
+end
+
+--- this method cannot be used together with SetWidgets/SetWidgetPool
+--- use SetData to set each button's text and id, so each entry in data should be {text = (string), id = (string/number)}
+--- any other keys in data will be stored as button[k] = v
+---@param color string|table
+---@param onSelect fun(button:AF_Button, id:any) will pass "selected" table under multi-select mode
+---@param onDeselect fun(button:AF_Button, id:any) do not work under multi selection mode
+---@param onEnter fun(button:AF_Button, id:any)
+---@param onLeave fun(button:AF_Button, id:any)
+---@param onLoad fun(button:AF_Button, data:table)
+function AF_ScrollListMixin:SetupButtonGroup(color, onSelect, onDeselect, onEnter, onLeave, onLoad)
+    self.mode = "button_group"
+    self.selected = {}
+
+    self.onSelect = onSelect
+    self.onDeselect = onDeselect
+    self.onEnter = onEnter
+    self.onLeave = onLeave
+
+    self.pool = AF.CreateObjectPool(function()
+        local b = AF.CreateButton(self.slotFrame, nil, color, nil, nil, nil, "none", "")
+        b:SetTextJustifyH("LEFT")
+        b:EnablePushEffect(false)
+        self:InitButtonScripts(b)
+
+        function b:Load(data)
+            b:SetText(data.text)
+            b.id = data.id or data.text
+
+            for k, v in next, data do
+                if k ~= "text" and k ~= "id" then
+                    b[k] = v
+                end
+            end
+
+            if onLoad then
+                onLoad(b, data)
+            end
+        end
+
+        return b
+    end)
+end
+
 function AF_ScrollListMixin:UpdatePixels()
     AF.ReSize(self)
     AF.RePoint(self)
@@ -472,7 +943,7 @@ function AF_ScrollListMixin:UpdatePixels()
     self.scrollBar:UpdatePixels()
 
     -- update slots and widgets
-    for _, s in ipairs(self.slots) do
+    for _, s in next, self.slots do
         s:UpdatePixels()
         if s.widget and s.widget.UpdatePixels then
             s.widget:UpdatePixels()
@@ -486,13 +957,19 @@ function AF_ScrollListMixin:UpdatePixels()
     end
 end
 
+---@param parent Frame
+---@param name? string
 ---@param verticalMargin number top/bottom margin
 ---@param horizontalMargin number left/right margin
+---@param slotNum number number of slots
+---@param slotHeight number|nil height of each slot, if not provided, you should manually set the height of the list
 ---@param slotSpacing number spacing between widgets next to each other
+---@param color? string|table background color
+---@param borderColor? string|table border color
 ---@return AF_ScrollList scrollList
 function AF.CreateScrollList(parent, name, verticalMargin, horizontalMargin, slotNum, slotHeight, slotSpacing, color, borderColor)
     local scrollList = AF.CreateBorderedFrame(parent, name, nil, nil, color, borderColor)
-    AF.SetListHeight(scrollList, slotNum, slotHeight, slotSpacing, verticalMargin, verticalMargin)
+    -- AF.SetListHeight(scrollList, slotNum, slotHeight, slotSpacing, verticalMargin, verticalMargin)
 
     scrollList.slotNum = slotNum
     scrollList.slotHeight = slotHeight
@@ -551,11 +1028,10 @@ function AF.CreateScrollList(parent, name, verticalMargin, horizontalMargin, slo
     scrollThumb:SetScript("OnMouseUp", ScrollRoot_OnMouseUp)
     -----------------------------------------------------------------
 
-    AF.AddToPixelUpdater(scrollList)
+    AF.AddToPixelUpdater_OnShow(scrollList)
 
     return scrollList
 end
-
 
 ---------------------------------------------------------------------
 -- scrol grid
@@ -568,7 +1044,7 @@ function AF_ScrollGridMixin:UpdateSlotPoint()
     for i = 1, self.slotNum do
         if i == 1 then
             AF.SetPoint(self.slots[i], "TOPLEFT")
-        elseif i % self.slotColumn == 1 then
+        elseif self.slotColumn == 1 or i % self.slotColumn == 1 then
             AF.SetPoint(self.slots[i], "TOPLEFT", self.slots[i - self.slotColumn], "BOTTOMLEFT", 0, -self.slotSpacing)
         else
             AF.SetPoint(self.slots[i], "TOPLEFT", self.slots[i - 1], "TOPRIGHT", self.slotSpacing, 0)
@@ -640,6 +1116,11 @@ function AF_ScrollGridMixin:SetSlotSize(newWidth, newHeight)
     self:SetSlotRowsAndColumns(self.slotRow, self.slotColumn)
 end
 
+function AF_ScrollGridMixin:DisableSlotFrameReanchor(disabled)
+    self.disableSlotFrameReanchor = disabled
+    UpdateSlotFrameAnchor(self)
+end
+
 function AF_ScrollGridMixin:SetWidgets(widgets)
     self:Reset()
     self.widgets = widgets
@@ -647,7 +1128,7 @@ function AF_ScrollGridMixin:SetWidgets(widgets)
     self:SetScroll(1)
 
     -- call UpdatePixels on show
-    for _, w in ipairs(self.widgets) do
+    for _, w in next, self.widgets do
         AF.RemoveFromPixelUpdater(w)
     end
 
@@ -655,11 +1136,10 @@ function AF_ScrollGridMixin:SetWidgets(widgets)
         self.scrollBar:Show()
         local p = self.slotRow / ceil(self.widgetNum / self.slotColumn)
         self.scrollThumb:SetHeight(max(self.scrollBar:GetHeight() * p, MIN_SCROLL_THUMB_HEIGHT))
-        AF.SetPoint(self.slotFrame, "BOTTOMRIGHT", self.scrollBar, "BOTTOMLEFT", -self.horizontalMargin, 0)
     else
         self.scrollBar:Hide()
-        AF.SetPoint(self.slotFrame, "BOTTOMRIGHT", -self.horizontalMargin, self.verticalMargin)
     end
+    UpdateSlotFrameAnchor(self)
 
     -- update slot size
     self:UpdateSlotSize()
@@ -671,7 +1151,7 @@ function AF_ScrollGridMixin:Reset()
     self.widgetNum = 0
 
     -- hide slot widgets
-    for _, s in ipairs(self.slots) do
+    for _, s in next, self.slots do
         if s.widget then
             s.widget:Hide()
         end
@@ -713,11 +1193,12 @@ function AF_ScrollGridMixin:SetScroll(startRow)
 
     -- fill
     local slotIndex = 1
-    for i, w in ipairs(self.widgets) do
+    for i, w in next, self.widgets do
         w:ClearAllPoints()
         if i < from or i > to then
             w:Hide()
         else
+            w:SetParent(self.slotFrame)
             w:Show()
             w:SetAllPoints(self.slots[slotIndex])
             if w.UpdatePixels then
@@ -758,10 +1239,15 @@ function AF_ScrollGridMixin:GetScroll()
     return ceil(self.slots[1].widgetIndex / self.slotColumn)
 end
 
+---@param index number index of the slot
 function AF_ScrollGridMixin:GetWidgetAt(index)
     if index and index > 0 and index <= self.slotNum then
         return self.slots[index].widget
     end
+end
+
+function AF_ScrollGridMixin:GetWidgets()
+    return self.widgets
 end
 
 function AF_ScrollGridMixin:GetScrollRange()
@@ -785,7 +1271,7 @@ function AF_ScrollGridMixin:UpdatePixels()
     self.scrollBar:UpdatePixels()
 
     -- update slots and widgets
-    for _, s in ipairs(self.slots) do
+    for _, s in next, self.slots do
         s:UpdatePixels()
         if s.widget and s.widget.UpdatePixels then
             s.widget:UpdatePixels()
@@ -870,7 +1356,7 @@ function AF.CreateScrollGrid(parent, name, verticalMargin, horizontalMargin, slo
     scrollThumb:SetScript("OnMouseUp", ScrollRoot_OnMouseUp)
     -----------------------------------------------------------------
 
-    AF.AddToPixelUpdater(scrollGrid)
+    AF.AddToPixelUpdater_OnShow(scrollGrid)
 
     return scrollGrid
 end

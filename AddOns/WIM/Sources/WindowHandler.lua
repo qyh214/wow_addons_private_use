@@ -212,6 +212,10 @@ end
 
 
 function applyStringModifiers(str, chatDisplay)
+	if (IsSecretValue(str)) then
+		return str;
+	end
+
 	for i=1, #StringModifiers do
 		str = StringModifiers[i](str, chatDisplay);
 	end
@@ -923,6 +927,9 @@ local function instantiateWindow(obj)
 
     -- Addmessage functions
     obj.AddMessage = function(self, msg, ...)
+		-- check that msg exists
+		if not msg then return end
+
 		msg = applyStringModifiers(msg, self.widgets.chat_display);
 		self.widgets.chat_display:AddMessage(msg, ...);
         updateScrollBars(self);
@@ -2022,15 +2029,27 @@ RegisterWidgetTrigger("chat_display", "whisper,chat,w2w,demo", "OnMouseUp", func
                 end
 	end);
 
+
+--ItemRef Definitions
+local registeredItemRef = {};
+function RegisterItemRefHandler(cmd, fun)
+    registeredItemRef[cmd] = fun;
+end
+
 local myself = _G.UnitName("player")
 RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkClick", function(self, link, text, button)
 	local t,n,i = string.split(":", link)
+
 	if n == myself then
 		return
     end
 
 	if t == 'player' then
-		_G.ChatFrame_OnHyperlinkShow(_G.DEFAULT_CHAT_FRAME, link, text, button);
+		if (_G.ChatFrameMixin and _G.ChatFrameMixin.OnHyperlinkClick) then
+			_G.ChatFrameMixin.OnHyperlinkClick(_G.DEFAULT_CHAT_FRAME, link, text, button);
+		else
+			_G.ChatFrame_OnHyperlinkShow(_G.DEFAULT_CHAT_FRAME, link, text, button);
+		end
 		return;
 	end
 
@@ -2075,12 +2094,19 @@ RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkClick", fu
 		return;
 	end
 
-	_G.ChatFrame_OnHyperlinkShow(self, link, text, button);
-	-- if link == "garrmission:weakauras" then
-	-- 		_G.SetItemRef(link, text, button, self);
-	-- else
-	-- 		_G.SetItemRef(link, text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""), button, self);
-	-- end
+	-- registered ItemRef handlers
+	for cmd, fun in pairs(registeredItemRef) do
+		if(string.match(link, "^"..cmd..":")) then
+			fun(link);
+			return;
+		end
+	end
+
+	if (_G.ChatFrameMixin and _G.ChatFrameMixin.OnHyperlinkClick) then
+		_G.ChatFrameMixin.OnHyperlinkClick(self, link, text, button);
+	else
+		_G.ChatFrame_OnHyperlinkShow(self, link, text, button);
+	end
 end);
 --RegisterWidgetTrigger("chat_display", "whisper,chat,w2w","OnMessageScrollChanged", function(self) updateScrollBars(self:GetParent()); end);
 
@@ -2116,7 +2142,11 @@ RegisterWidgetTrigger("msg_box", "whisper,chat,w2w,demo", "OnEnterPressed", func
 		if(strsub(self:GetText(), 1, 1) == "/") then
 			EditBoxInFocus = nil;
 			_G.ChatFrame1EditBox:SetText(self:GetText());
-			_G.ChatEdit_SendText(_G.ChatFrame1EditBox, 1);
+			if (_G.ChatFrameEditBoxBaseMixin and _G.ChatFrameEditBoxBaseMixin.SendText) then
+				_G.ChatFrameEditBoxBaseMixin.SendText(_G.ChatFrame1EditBox, 1);
+			else
+				_G.ChatEdit_SendText(_G.ChatFrame1EditBox, 1);
+			end
 			self:SetText("");
 			EditBoxInFocus = self;
 		else
@@ -2178,7 +2208,7 @@ RegisterWidgetTrigger("msg_box", "whisper,w2w", "OnTabPressed", function(self)
                 		local whisperTarget = win.isBN and win.toonName or win.theUser
                 		local chatType = win.isBN and "BN_WHISPER" or "WHISPER"
                 		-- Lookup the next whisper target
-                		local nextWhisperTarget = _G.ChatEdit_GetNextTellTarget(whisperTarget,chatType)
+                		local nextWhisperTarget = (_G.ChatFrameUtil and _G.ChatFrameUtil.GetNextTellTarget or _G.ChatEdit_GetNextTellTarget)(whisperTarget,chatType)
 
                 		if nextWhisperTarget ~= "" then
                 			win = GetWhisperWindowByUser(nextWhisperTarget);
@@ -2186,7 +2216,7 @@ RegisterWidgetTrigger("msg_box", "whisper,w2w", "OnTabPressed", function(self)
                 			win:Hide();
                 			win:Pop(true); -- force popup
                 			win.widgets.msg_box:SetFocus();
-                			_G.ChatEdit_SetLastTellTarget(nextWhisperTarget,chatType);
+                			(_G.ChatFrameUtil and _G.ChatFrameUtil.SetLastTellTarget or _G.ChatEdit_SetLastTellTarget)(nextWhisperTarget,chatType);
                 		end
                 end
 	end);

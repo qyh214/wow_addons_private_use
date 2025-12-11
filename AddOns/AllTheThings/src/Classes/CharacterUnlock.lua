@@ -31,7 +31,7 @@ end
 -- e.g. Garrison Shipyard Blueprints
 -- https://discord.com/channels/242423099184775169/1233743089630314558
 local function CollectedAsQuest(t)
-	return app.TypicalCharacterCollected(CACHE_QUESTS, t[KEY_QUEST])
+	return app.TypicalCharacterCollected(CACHE_QUESTS, t[KEY_QUEST], SETTING)
 end
 local function CollectedAsSpell(t)
 	return app.TypicalCharacterCollected(CACHE_SPELLS, t[KEY_SPELL], SETTING)

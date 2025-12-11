@@ -371,6 +371,7 @@ BigWigs:AddColors("Nighthold Trash", {
 	[224568] = "yellow",
 	[224572] = "blue",
 	[224632] = {"blue","orange"},
+	[224944] = {"blue","red"},
 	[224982] = {"blue","red"},
 	[225105] = {"blue","yellow"},
 	[225390] = "blue",
@@ -386,7 +387,6 @@ BigWigs:AddColors("Nighthold Trash", {
 	[230994] = {"blue","yellow"},
 	[231005] = "red",
 	[231086] = {"blue","orange"},
-	["fear"] = {"blue","red"},
 })
 
 BigWigs:AddSounds("Nighthold Trash", {
@@ -399,6 +399,7 @@ BigWigs:AddSounds("Nighthold Trash", {
 	[224568] = "long",
 	[224572] = "alert",
 	[224632] = "warning",
+	[224944] = "long",
 	[224982] = "warning",
 	[225105] = "alert",
 	[225390] = "alert",
@@ -414,5 +415,4 @@ BigWigs:AddSounds("Nighthold Trash", {
 	[230994] = "warning",
 	[231005] = "long",
 	[231086] = "long",
-	["fear"] = "long",
 })

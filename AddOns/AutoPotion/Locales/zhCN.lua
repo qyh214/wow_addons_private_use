@@ -8,9 +8,11 @@ L["Cavedweller's Delight"] = "洞穴住民的挚爱"
 L["Class/Racial Spells"] = "职业/种族技能"
 L["Configure the behavior of the addon. IE: if you want to include class spells"] = "您可以在此设置技能。例：是否启用已添加的职业专属回血技能"
 L["Current Priority"] = "当前优先"
+L["Bandage Priority"] = "绷带优先"
 L["Heartseeking Health Injector (tinker)"] = "觅心生命注射器（匠械）"
 L["Include /stopcasting in the macro"] = "添加停止施法（/stopcasting）到宏内（重载界面生效）"
-L["Includes the shortest Cooldown in the reset Condition of Castsequence. !!USE CAREFULLY!!"] = "包括了队列施法（Castsequence）重置条件中最短的冷却时间|cffff0000!!小心使用!!|r"
+L["Includes the shortest Cooldown in the reset Condition of Castsequence. !!USE CAREFULLY!!"] =
+"包括了队列施法（Castsequence）重置条件中最短的冷却时间|cffff0000!!小心使用!!|r"
 L["Invalid option: "] = "无效选项："
 L["Items"] = "药水"
 L["Low Priority Healthstones"] = "低优先使用治疗石"
@@ -24,3 +26,4 @@ L["Useful for casters."] = "对于施法职业有用。"
 
 -- code
 L["AutoPotion"] = "治疗"
+

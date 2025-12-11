@@ -181,8 +181,7 @@ elseif locale == 'ptBR' then
 --[[ L["Use short text for Explosive Orbs."] = "Use short text for Explosive Orbs."--]] 
 
 elseif locale == 'ruRU' then
---[[Translation missing --]]
---[[ L["Dynamic Overall Explosive Orbs"] = "Dynamic Overall Explosive Orbs"--]] 
+L["Dynamic Overall Explosive Orbs"] = "Dynamic Overall Explosive Orbs"
 L["Explosive Orbs"] = "Взрывоопасные сферы"
 L["Hit: "] = "Урон:"
 L["Only Show Hit"] = "Показать только урон"

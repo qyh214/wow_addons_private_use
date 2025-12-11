@@ -1,7 +1,7 @@
-## Interface: 50500
+## Interface: 50501
 ## Title: WeakAuras Options
 ## Author: The WeakAuras Team
-## Version: 5.20.1
+## Version: 5.20.7
 ## Notes: Options for WeakAuras
 ## Notes-esES: Opciones para WeakAuras
 ## Notes-esMX: Opciones para WeakAuras

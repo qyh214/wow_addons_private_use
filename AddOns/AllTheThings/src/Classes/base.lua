@@ -3,8 +3,8 @@
 local appName, app = ...;
 
 -- Global locals
-local type,ipairs,pairs,setmetatable,rawget,tinsert,unpack,rawset,select
-	= type,ipairs,pairs,setmetatable,rawget,tinsert,unpack,rawset,select
+local type,pairs,setmetatable,rawget,unpack,rawset,select
+	= type,pairs,setmetatable,rawget,unpack,rawset,select
 
 -- App locals
 local GetRelativeValue = app.GetRelativeValue;
@@ -169,10 +169,20 @@ local DefaultFields = {
 	["repeatable"] = function(t)
 		return t.isDaily or t.isWeekly or t.isMonthly or t.isYearly;
 	end,
-    ["costTotal"] = returnZero,
-    ["upgradeTotal"] = returnZero,
+	["costTotal"] = returnZero,
+	["upgradeTotal"] = returnZero,
 	["progress"] = returnZero,
-    ["total"] = returnZero,
+	["total"] = returnZero,
+	["isContainer"] = function(t)
+		local total = t.total
+		return total and (total > 1 or (total > 0 and not t.collectible))
+	end,
+	-- some calculated properties can let fall-through to the merge source of a group instead of needing to re-calculate in every copy
+	isCost = function(t)
+		local merge = t.__merge
+		if not merge then return end
+		return merge.isCost
+	end,
 	["nmc"] = function(t)
 		local c = t.c;
 		local nmc = c and not containsValue(c, app.ClassIndex) or false;
@@ -393,11 +403,11 @@ local function CreateClassInstance(key, id, t)
 	return t;
 end
 local function CloneClassInstance(object, ignoreChildren)
-	local clone = {};
+	local clone = {}
 	if object[1] then
 		-- Create an Array of Clones
-		for i,o in ipairs(object) do
-			tinsert(clone, CloneClassInstance(o, ignoreChildren));
+		for i=1,#object do
+			clone[#clone + 1] = CloneClassInstance(object[i], ignoreChildren)
 		end
 		return clone;
 	else
@@ -405,15 +415,18 @@ local function CloneClassInstance(object, ignoreChildren)
 		for key,value in pairs(object) do
 			clone[key] = value;
 		end
-		if object.g then
+		local g = object.g
+		if g then
 			if ignoreChildren then
 				clone.g = nil;
 			else
-				clone.g = {};
-				for i,o in ipairs(object.g) do
-					o = CloneClassInstance(o);
+				local cg = {}
+				clone.g = cg;
+				local o
+				for i=1,#g do
+					o = CloneClassInstance(g[i]);
 					o.parent = clone;
-					tinsert(clone.g, o);
+					cg[#cg + 1] = o
 				end
 			end
 		end
@@ -435,12 +448,13 @@ local function CloneObject(object, ignoreChildren)
 	for key,value in pairs(object) do
 		clone[key] = value;
 	end
-	if object.g and not ignoreChildren then
+	local og = object.g
+	if og and not ignoreChildren then
 		local g = {};
-		for i,object in ipairs(object.g) do
-			local child = CloneObject(object);
+		for i=1,#og do
+			local child = CloneObject(og[i]);
 			child.parent = clone;
-			tinsert(g, child);
+			g[#g + 1] = child
 		end
 		clone.g = g;
 	end
@@ -450,11 +464,11 @@ end
 local function ImportClassFunctions(baseClassName, copyClassName, ...)
 	-- make sure the base class exists
 	local baseClass = type(baseClassName) == "table" and baseClassName or classDefinitions[baseClassName]
-	if not baseClass then error("ImportClassFunctions - base Class does not exist"..(baseClassName or "")) end
+	if not baseClass then error("ImportClassFunctions - base Class does not exist: "..(baseClassName or "")) end
 
 	-- make sure the copy class exists
 	local copyClass = type(copyClassName) == "table" and copyClassName or classDefinitions[copyClassName]
-	if not copyClass then error("ImportClassFunctions - copy Class does not exist"..(copyClassName or "")) end
+	if not copyClass then error("ImportClassFunctions - copy Class does not exist: "..(copyClassName or "")) end
 
 	local funcName, func
 	local count = select("#", ...)
@@ -497,7 +511,10 @@ GlobalVariants.Combine = function(...)
 	local combine, conditions, name = {}, {}, ""
 	local condition, variantName
 	-- combine tables, check unique fields
-	for _,variant in ipairs({...}) do
+	local variantParams = {...}
+	local variant
+	for i=1,#variantParams do
+		variant = variantParams[i]
 		variantName = variant.__name
 		if not variantName or type(variantName) ~= "string" then
 			ClassError("Cannot combine variants due to variant",variantName or _,"missing valid '__name' string!")
@@ -525,8 +542,8 @@ GlobalVariants.Combine = function(...)
 	combine.__name = name
 	-- create a new __condition based on the running of all other conditions
 	combine.__condition = function(t)
-		for _,condition in ipairs(conditions) do
-			if not condition(t) then return end
+		for i=1,#conditions do
+			if not conditions[i](t) then return end
 		end
 		return true
 	end
@@ -540,8 +557,9 @@ local function GenerateVariantClasses(class)
 	if not variants or #variants == 0 then return end
 	local subbase = function(t, key) return class.__index; end
 	local classname = fields.__type()
-	local variantClone, variantName
-	for i,variant in ipairs(variants) do
+	local variantClone, variantName, variant
+	for i=1,#variants do
+		variant = variants[i]
 		if not variant.__name then
 			ClassError("Missing Class Variant __name!",i,classname)
 		end
@@ -563,7 +581,9 @@ local function AppendVariantConditionals(conditionals, class)
 			conditionals[#conditionals + 1] = function(t)
 				if subcassCondition(t) then
 					-- check any variants for this subclass
-					for i,variant in ipairs(variants) do
+					local variant
+					for i=1,#variants do
+						variant = variants[i]
 						if variant.__class.__condition(t) then
 							setmetatable(t, variant);
 							-- app.PrintDebug("Create Variant",t.hash,class.__class.__type()..variant.__name)
@@ -585,7 +605,9 @@ local function AppendVariantConditionals(conditionals, class)
 	elseif variants then
 		conditionals[#conditionals + 1] = function(t)
 			-- check any variants for this class
-			for i,variant in ipairs(variants) do
+			local variant
+			for i=1,#variants do
+				variant = variants[i]
 				if variant.__class.__condition(t) then
 					setmetatable(t, variant);
 					-- app.PrintDebug("Create Variant",t.hash,class.__class.__type()..variant.__name)
@@ -823,6 +845,13 @@ app.AddSimpleCollectibleSwap = function(classname, setting)
 	app.AddEventHandler("OnStartup", AssignCollectibleFunction);
 end
 
+local OverrideBaseClassFields = {
+	total = true,
+	progress = true,
+	isContainer = true,
+	costTotal = true,
+	upgradeTotal = true,
+}
 -- Allows wrapping one Type Object with another Type Object. This allows for fall-through field logic
 -- without requiring a full copied definition of identical field functions and raw Object content
 app.WrapObject = function(object, baseObject)
@@ -835,7 +864,21 @@ app.WrapObject = function(object, baseObject)
 		error("Tried to WrapObject which has no metatable! (Wrapping not necessary)")
 	end
 	-- save the set of originally-defined meta-fields of this object's class
-	object.__class = objectMeta.__class
+	local __class = objectMeta.__wrapclass
+	if not __class then
+		__class = objectMeta.__class
+		-- clean out the BaseClass __class fields from the wrapping object since those should inherit from the baseObject
+		-- e.g. hash on the wrapped object might be a different value than hash on the baseObject
+		local BaseClass__class = app.BaseClass.__class
+		for key,_ in pairs(BaseClass__class) do
+			if not OverrideBaseClassFields[key] then
+				__class[key] = nil
+			end
+		end
+		-- cache this in the metatable of this object
+		objectMeta.__wrapclass = __class
+	end
+	object.__class = __class
 	local objectMetaIndex = objectMeta.__index
 	if not objectMetaIndex then
 		error("Tried to WrapObject which has no index!")

@@ -146,7 +146,7 @@ local function GetOptionsTable()
                 addon.RefreshOpenScoreBoard()
             end,
             min = 1,
-            max = 300,
+            max = 1000,
             step = 1,
             name = L["OPTIONS_HISTORY_RUNS_TO_KEEP_LABEL"],
             desc = function ()

@@ -28,6 +28,11 @@ end
 
 -- Halls of Atonement
 
+L = BigWigs:NewBossLocale("High Adjudicator Aleez", "ptBR")
+if L then
+	L.empty_anima_vessel = "Receptáculo de Ânima Vazio"
+end
+
 L = BigWigs:NewBossLocale("Halls of Atonement Trash", "ptBR")
 if L then
 	L.depraved_houndmaster = "Mestre de Matilha Depravado"
@@ -162,7 +167,8 @@ end
 
 L = BigWigs:NewBossLocale("Myza's Oasis", "ptBR")
 if L then
-	L.add_wave_killed = "Onda de adds derrotada (%d/%d)"
+	--L.notes = "Notes"
+	--L.notes_desc = "Show a message when the notes are available. Hit the notes with your instrument's ability to gain 'Jazzy'.\n\n|T237554:16|tJazzy\n{348567}"
 end
 
 L = BigWigs:NewBossLocale("So'leah", "ptBR")
@@ -174,9 +180,20 @@ L = BigWigs:NewBossLocale("Tazavesh Trash", "ptBR")
 if L then
 	L.zophex_warmup_trigger = "Entregue... todo... o contrabando..."
 	--L.menagerie_warmup_trigger = "Now for the item you have all been awaiting! The allegedly demon-cursed Edge of Oblivion!"
+	--L.menagerie_warmup_trigger2 = "Cartel Xy has a profitable venture. Hopefully this inclines them to aid our own."
+	--L.mailroom_door_trigger = "A friend here may be of help in acquiring Zo's signature."
+	--L.vendor_active_trigger = "Myza's Oasis. The most intoxicating establishment in Tazavesh. Gaining the owner's favor will secure Cartel Au's signature."
 	L.soazmi_warmup_trigger = "Lamento a intrusão, So'leah. Espero que o momento seja bem inoportuno."
 	L.portal_authority = "Autoridade do Portal de Tazavesh"
 	--L.custom_on_portal_autotalk_desc = "Instantly open portals back to the entrance when talking to Broker NPCs."
+	--L.mailroom_door_desc = "Show a bar indicating when the door to the mailroom will open."
+	--L.vendor_active = "Vendor active"
+	--L.vendor_active_desc = "Show a bar indicating when the vendor for the Trading Game will be active."
+	--L.vendor_autopurchase = "Auto-purchase trading game item"
+	--L.vendor_autopurchase_desc = "Automatically purchase the initial trading game item from the vendor."
+	--L.vendor_autopurchase_message = "Purchased %s"
+	--L.tradeable_goods = "Tradeable Goods"
+	--L.tradeable_goods_desc = "Show a message indicating when tradeable goods have been picked up."
 	--L.trading_game = "Trading Game"
 	--L.trading_game_desc = "Alerts with the right password during the Trading Game."
 	--L.custom_on_trading_game_autotalk_desc = "Instantly select the right password after the Trading Game has been completed."
@@ -201,6 +218,7 @@ if L then
 	L.tracker_zokorss = "Rastreador Zo'korss"
 	L.ancient_core_hound = "Cão-magma Ancião"
 	L.enraged_direhorn = "Escornante Enfurecido"
+	L.frenzied_nightclaw = "Noctigarra Enfurecido"
 	--L.cartel_skulker = "Cartel Skulker"
 	--L.cartel_wiseguy = "Cartel Wiseguy"
 	L.cartel_muscle = "Jagunço do Cartel"
@@ -208,13 +226,16 @@ if L then
 	L.defective_sorter = "Separador Defeituoso"
 	--L.overloaded_mailemental = "Overloaded Mailemental"
 	--L.post_worker = "P.O.S.T. Worker"
+	L.smuggled_creature = "Criatura Contrabandeada"
 	--L.bazaar_overseer = "Bazaar Overseer"
 	L.market_peacekeeper = "Pacificador do Mercado"
 	L.veteran_sparkcaster = "Lançafagulha Veterano"
 	L.commerce_enforcer = "Impositor do Comércio"
 	L.commander_zofar = "Comandante Zo'far"
 
-	L.tazavesh_soleahs_gambit = "Tazavesh: Gambito de So'leah"
+	--L.hylbrande_warmup_trigger = "See how your wisdom fares against the might of the titans."
+	--L.portal_open = "Portal opens"
+	--L.portal_open_desc = "Show a bar indicating when the portal to the next area will open."
 	L.murkbrine_scalebinder = "Torce-escamas Lodorrento"
 	L.murkbrine_fishmancer = "Peixomante Lodorrento"
 	L.murkbrine_shellcrusher = "Parte-cascos Lodorrento"

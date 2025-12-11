@@ -104,6 +104,6 @@ local mistakes = {
 	},
 }
 
-local mapIds = { 1993, 1995, 1996, 1997 }
+local mapIds = { 1989, 1990, 1991, 1992, 1995, 1997, 1996, 1993 }
 
 AD:AddData("Tazavesh: So'leah's Gambit", mistakes, mapIds)

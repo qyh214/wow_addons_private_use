@@ -11,6 +11,7 @@ local Things = {
 	"CharacterUnlocks",
 	"Conduits",
 	"DeathTracker",
+	"Decor",
 	"MountMods",
 	"Exploration",
 	"FlightPaths",
@@ -63,6 +64,7 @@ local GeneralSettingsBase = {
 		["Thing:Campsites"] = app.GameBuildVersion >= 110100,
 		["Thing:CharacterUnlocks"] = app.IsRetail,	-- CRIEVE NOTE: This class might be up to the chopping block with a thing I have on my todo list. I'll leave it for now.
 		["Thing:Conduits"] = app.GameBuildVersion >= 100000,
+		["Thing:Decor"] = app.GameBuildVersion >= 110207,
 		["Thing:MountMods"] = app.GameBuildVersion >= 100000,
 		["Thing:Exploration"] = app.IsClassic,	-- CRIEVE NOTE: For now, until Blizzard fixes their broken Retail version of the exploration API.
 		["Thing:FlightPaths"] = true,
@@ -101,6 +103,19 @@ local GeneralSettingsBase = {
 		["Window:BorderColor"] = { r = 1, g = 1, b = 1, a = 1 },
 		["Window:UseClassForBorder"] = false,
 		["PresetRestore"] = {},
+		-- Expansion Filters (disabled by default)
+		["ExpansionFilter:Enabled"] = false,
+		["ExpansionFilter:Classic"] = true,
+		["ExpansionFilter:TBC"] = app.GameBuildVersion >= 20000,
+		["ExpansionFilter:Wrath"] = app.GameBuildVersion >= 30000,
+		["ExpansionFilter:Cata"] = app.GameBuildVersion >= 40000,
+		["ExpansionFilter:MoP"] = app.GameBuildVersion >= 50000,
+		["ExpansionFilter:WoD"] = app.GameBuildVersion >= 60000,
+		["ExpansionFilter:Legion"] = app.GameBuildVersion >= 70000,
+		["ExpansionFilter:BfA"] = app.GameBuildVersion >= 80000,
+		["ExpansionFilter:SL"] = app.GameBuildVersion >= 90000,
+		["ExpansionFilter:DF"] = app.GameBuildVersion >= 100000,
+		["ExpansionFilter:TWW"] = app.GameBuildVersion >= 110000,
 	},
 };
 local FilterSettingsBase = {
@@ -309,6 +324,9 @@ settings.Initialize = function(self)
 		settings.AccountWide[thing] = true
 	end
 
+	-- Remove obsolete Settings keys
+	settings:Set("ExpansionFilter:Enabled", nil)
+
 	app._SettingsRefresh = GetTimePreciseSec()
 	settings._Initialize = true
 	-- app.PrintDebug("settings.Initialize:Done")
@@ -401,41 +419,36 @@ settings.SetProfile = function(self, key)
 end
 -- Applies the profile for the current character as the base settings table
 settings.ApplyProfile = function()
-	if AllTheThingsProfiles then
-		local key = settings:GetProfile()
-		RawSettings = AllTheThingsProfiles.Profiles[key] or settings:NewProfile(key)
-		if RawSettings then
-			SetupRawSettings()
+	if not AllTheThingsProfiles then return end
 
-			-- apply window positions when applying a Profile
-			if RawSettings.Windows then
-				for suffix,_ in pairs(RawSettings.Windows) do
-					settings.SetWindowFromProfile(suffix)
-				end
+	local key = settings:GetProfile()
+	RawSettings = AllTheThingsProfiles.Profiles[key] or settings:NewProfile(key)
+	if RawSettings then
+		SetupRawSettings()
+
+		-- apply window positions when applying a Profile
+		if RawSettings.Windows then
+			for suffix,_ in pairs(RawSettings.Windows) do
+				settings.SetWindowFromProfile(suffix)
 			end
-
-			-- when applying a profile, clean out any 'false' Unobtainable keys for cleaner settings storage
-			-- for non-defaulted fields
-			local unobCopy = app.CloneDictionary(RawSettings.Unobtainable)
-			-- this key is no longer used
-			unobCopy.DoFiltering = false
-			for unobID,set in pairs(unobCopy) do
-				if not set and not UnobtainableSettingsBase.__index[unobID] then
-					RawSettings.Unobtainable[unobID] = nil
-				end
-			end
-
-			-- 'Seasonal' set of filters is no longer used
-			RawSettings.Seasonal = nil
-
-			if app.IsReady and settings:Get("Profile:ShowProfileLoadedMessage") then
-				app.print(L.PROFILE..":",settings:GetProfile(true))
-			end
-			return true
-		else
-			return false
 		end
+
+		-- when applying a profile, clean out any 'false' Unobtainable keys for cleaner settings storage
+		-- for non-defaulted fields
+		local unobCopy = app.CloneDictionary(RawSettings.Unobtainable)
+		-- this key is no longer used
+		unobCopy.DoFiltering = false
+		for unobID,set in pairs(unobCopy) do
+			if not set and not UnobtainableSettingsBase.__index[unobID] then
+				RawSettings.Unobtainable[unobID] = nil
+			end
+		end
+
+		-- 'Seasonal' set of filters is no longer used
+		RawSettings.Seasonal = nil
 	end
+	app.HandleEvent("Settings.OnApplyProfile", key)
+	return RawSettings and true or nil
 end
 -- Allows moving an ATT window based on the position stored in the current Profile
 -- This would be used when creating a Window initially during a game session
@@ -454,9 +467,13 @@ settings.SetWindowFromProfile = function(suffix)
 		if points then
 			-- only allow setting positions for Windows which are inherently movable
 			if window:IsMovable() then
-				window:ClearAllPoints()
+				local hasClearedPoints = false
 				for _,point in ipairs(points) do
 					if point.Point then
+						if not hasClearedPoints then
+							window:ClearAllPoints()
+							hasClearedPoints = true
+						end
 						window:SetPoint(point.Point, UIParent, point.PointRef, point.X, point.Y)
 						-- print("SetPoint",suffix,point.Point, point.PointRef, point.X, point.Y)
 					end
@@ -479,6 +496,23 @@ settings.SetWindowFromProfile = function(suffix)
 		settings.ApplyWindowColors(window)
 	end
 end
+app.ChatCommands.Add("reset-window", function(args)
+	local windowSuffix = args[2]
+	if not windowSuffix then
+		app.print("Usage: /att reset-window <WindowSuffix>");
+		return
+	end
+	if RawSettings and RawSettings.Windows and RawSettings.Windows[windowSuffix] then
+		RawSettings.Windows[windowSuffix] = nil
+		app.print("Reset window position for",windowSuffix)
+		app.print("Please reload your UI when ready. (/rl)")
+		return
+	end
+	app.print("Window position for",windowSuffix,"has not been stored in current Profile!")
+end, {
+	"Usage : /att reset-window <WindowSuffix>",
+	"Allows resetting the position of a specific ATT window stored in your current Profile.",
+});
 settings.Get = function(self, setting, container)
 	return RawSettings.General[setting]
 end
@@ -581,13 +615,16 @@ settings.GetModeString = function(self)
 		local totalThingCount, thingCount, things = 0, 0, {};
 		for key,_ in pairs(GeneralSettingsBase.__index) do
 			keyPrefix, thingName = (":"):split(key)
-			if keyPrefix == "Thing" then
+			if keyPrefix == "Thing" or keyPrefix == "ExpansionFilter" then
 				totalThingCount = totalThingCount + 1
 				thingActive = settings:Get(key);
 				if thingActive then
 					-- Heirloom Upgrades only count when Heirlooms are enabled
 					-- This prevents the heirloom uprades and quests locked from being displayed as a mode.
-					if key ~= "Thing:HeirloomUpgrades" or settings:Get("Thing:Heirlooms") then
+					-- Only 'Things' in General settings count towards the mode string
+					if (key ~= "Thing:HeirloomUpgrades" or settings:Get("Thing:Heirlooms"))
+						and keyPrefix == "Thing"
+					then
 						thingCount = thingCount + 1
 						table.insert(things, thingName)
 					end
@@ -678,7 +715,7 @@ settings.GetShortModeString = function(self)
 		local solo = not app.MODE_DEBUG_OR_ACCOUNT
 		for key,_ in pairs(GeneralSettingsBase.__index) do
 			keyPrefix, thingName = (":"):split(key)
-			if keyPrefix == "Thing" then
+			if keyPrefix == "Thing" or keyPrefix == "ExpansionFilter" then
 				totalThingCount = totalThingCount + 1
 				thingActive = settings:Get(key);
 				if thingActive then
@@ -1581,4 +1618,11 @@ app.AddEventHandler("OnRecalculateDone", function()
 		LastSettingsChangeUpdate = app._SettingsRefresh
 		app.HandleEvent("OnRecalculate_NewSettings")
 	end
+end)
+app.AddEventHandler("OnReady", function()
+	app.AddEventHandler("Settings.OnApplyProfile", function()
+		if settings:Get("Profile:ShowProfileLoadedMessage") then
+			app.print(L.PROFILE..":",settings:GetProfile(true))
+		end
+	end)
 end)

@@ -38,6 +38,8 @@ if L then
 	L.stoneborn_reaver = "Stoneborn Reaver"
 	L.stoneborn_eviscerator = "Stoneborn Eviscerator"
 	L.inquisitor_sigar = "Inquisitor Sigar"
+
+	L["329299_icon"] = "ability_rogue_feint"
 end
 
 --------------------------------------------------------------------------------
@@ -48,6 +50,7 @@ function mod:GetOptions()
 	return {
 		-- Depraved Houndmaster
 		{326450, "DISPEL", "NAMEPLATE"}, -- Loyal Beasts
+		{329299, "NAMEPLATE", "OFF"}, -- Disengage
 		-- Vicious Gargon
 		1237602, -- Gushing Wound
 		-- Depraved Darkblade
@@ -74,6 +77,22 @@ function mod:GetOptions()
 		326847, -- Disperse Sin
 		326891, -- Anguish
 	}, {
+		{
+			tabName = self:BossName(2406), -- Halkias, the Sin-Stained Goliath
+			{326450, 329299, 1237602, 1235060, 325876, 325701, 326997, 1235326, 1237071, 326409, 326441},
+		},
+		{
+			tabName = self:BossName(2387), -- Echelon
+			{1235762, 1235766, 326638, 1235060, 325876, 326997, 1235326, 1237071},
+		},
+		{
+			tabName = self:BossName(2411), -- High Adjudicator Aleez
+			{1235762, 1235766, 326638, 1235060, 325876, 325701, 326997, 1235326, 1237071},
+		},
+		{
+			tabName = self:BossName(2413), -- Lord Chamberlain
+			{326794, 1236614, 326847, 326891},
+		},
 		[326450] = L.depraved_houndmaster,
 		[1237602] = L.vicious_gargon,
 		[1235060] = L.depraved_darkblade,
@@ -94,6 +113,7 @@ function mod:OnBossEnable()
 	self:Log("SPELL_INTERRUPT", "LoyalBeastsInterrupt", 326450)
 	self:Log("SPELL_CAST_SUCCESS", "LoyalBeastsSuccess", 326450)
 	self:Log("SPELL_AURA_APPLIED", "LoyalBeastsApplied", 326450)
+	self:Log("SPELL_CAST_SUCCESS", "Disengage", 329299)
 	self:Death("DepravedHoundmasterDeath", 164562)
 
 	-- Vicious Gargon
@@ -160,6 +180,7 @@ end
 
 function mod:DepravedHoundmasterEngaged(guid)
 	self:Nameplate(326450, 15.1, guid) -- Loyal Beasts
+	self:Nameplate(329299, 9.4, guid, 132294) -- Disengage, fileID for L["329299_icon"]
 end
 
 function mod:LoyalBeasts(args)
@@ -185,6 +206,10 @@ do
 			self:PlaySound(args.spellId, "warning")
 		end
 	end
+end
+
+function mod:Disengage(args)
+	self:Nameplate(args.spellId, 15.9, args.sourceGUID, 132294) -- fileID for L["329299_icon"]
 end
 
 function mod:DepravedHoundmasterDeath(args)
@@ -258,7 +283,7 @@ end
 -- Depraved Collector
 
 function mod:DepravedCollectorEngaged(guid)
-	self:Nameplate(325701, 3.1, guid) -- Siphon Life
+	self:Nameplate(325701, 3.0, guid) -- Siphon Life
 end
 
 function mod:SiphonLife(args)
@@ -307,8 +332,8 @@ end
 -- Shard of Halkias
 
 function mod:ShardOfHalkiasEngaged(guid)
-	self:Nameplate(326409, 8.1, guid) -- Thrash
-	self:Nameplate(326441, 20.6, guid) -- Sin Quake
+	self:Nameplate(326409, 7.9, guid) -- Thrash
+	self:Nameplate(326441, 20.3, guid) -- Sin Quake
 end
 
 function mod:Thrash(args)

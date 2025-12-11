@@ -12,16 +12,20 @@ local Treasure = ns.node.Treasure
 local SkyridingGlyph = ns.node.SkyridingGlyph
 
 local Achievement = ns.reward.Achievement
--- local Item = ns.reward.Item
+local Item = ns.reward.Item
 local Mount = ns.reward.Mount
 local Pet = ns.reward.Pet
 local Toy = ns.reward.Toy
 local Transmog = ns.reward.Transmog
 local Reputation = ns.reward.Reputation
+local Section = ns.reward.Section
+local Spacer = ns.reward.Spacer
 
 local Entrance = ns.poi.Entrance
 local Path = ns.poi.Path
 local POI = ns.poi.POI
+
+-- local ItemStatus = ns.tooltip.ItemStatus
 
 -------------------------------------------------------------------------------
 ------------------------------------ MAPS -------------------------------------
@@ -31,17 +35,46 @@ local taz = Map({id = 2472, settings = true})
 local map = Map({id = 2371, settings = true})
 
 -------------------------------------------------------------------------------
+--------------------------------- Reshii Wraps --------------------------------
+-------------------------------------------------------------------------------
+
+local ReshiiWraps = Class('ReshiiWraps', ns.requirement.Requirement)
+
+function ReshiiWraps:Initialize(definitionID, nodeID)
+    local definitionInfo = C_Traits.GetDefinitionInfo(definitionID)
+    self.text = definitionInfo and definitionInfo.overrideName or UNKNOWN
+    self.type = '{item:235499}' -- Reshii Wraps
+    self.nodeID = nodeID
+end
+
+function ReshiiWraps:IsMet()
+    local configID = C_Traits.GetConfigIDByTreeID(1115)
+    if not configID then return false end
+    local nInfo = C_Traits.GetNodeInfo(configID, self.nodeID)
+    return nInfo and nInfo.ranksPurchased and nInfo.ranksPurchased > 0
+end
+
+-------------------------------------------------------------------------------
 ------------------------------------ RARES ------------------------------------
 -------------------------------------------------------------------------------
 
 taz.nodes[72948327] = Rare({
     id = 232098,
-    parent = map.id,
-    pois = {Path({81987555, 80167580, 75177783, 73188013, 72388259, 72838465})},
     quest = 90587,
+    parent = {
+        id = map.id,
+        pois = {
+            Path({73658421, 73258427, 72158471, 71718522, 71538576, 71638622})
+        }
+    },
+    pois = {Path({81987555, 80167580, 75177783, 73188013, 72388259, 72838465})},
     rewards = {
         Achievement({id = 42761, criteria = 106331}),
-        Reputation({id = 2658, gain = 15, quest = 90676}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90676}), -- The K'aresh Trust
+        Transmog({item = 239477, slot = L['plate']}), -- Reshii Brute's Epaulettes
+        Transmog({item = 239460, slot = L['leather']}), -- Reshii Scout's Breeches
+        Transmog({item = 239455, slot = L['cloth']}), -- Reshii Magi's Bands
+        Toy({item = 242323}) -- Chowdar's Favorite Ribbon
     }
 }) -- "Chowdar" <Escaped Auction Parcel #8675308>
 
@@ -51,7 +84,8 @@ map.nodes[75233098] = Rare({
     quest = 91276,
     rewards = {
         Achievement({id = 42761, criteria = 106334}),
-        Reputation({id = 2658, gain = 15, quest = 91422}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 91422}), -- The K'aresh Trust
+        Pet({item = 245272, id = 4846}) -- Heka'Tarnos, Bringer of Discord
         -- item - [Reshii Magi's Pendant]
     }
     --[[ pois = {
@@ -83,14 +117,17 @@ map.nodes[63824363] = Rare({
     }
 }) -- Ixthar the Unblinking
 
-map.nodes[64244320] = Rare({
+map.nodes[66314258] = Rare({
     id = 232077,
     requires = ns.requirement.Spell(1214374), -- Phase Diving
-    pois = {Path({64144309, 64984381})},
+    pois = {Path({67963990, 65604364})},
     quest = 90586,
     rewards = {
         Achievement({id = 42761, criteria = 106335}),
-        Reputation({id = 2658, gain = 15, quest = 90675}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90675}), -- The K'aresh Trust
+        Transmog({item = 239475, slot = L['plate']}), -- Reshii Brute's Helmet
+        Transmog({item = 239462, slot = L['leather']}), -- Reshii Scout's Belt
+        Transmog({item = 239448, slot = L['cloth']}) -- Reshii Magi's Vestments
     }
 }) -- Korgorath the Ravager
 
@@ -99,7 +136,8 @@ map.nodes[54055884] = Rare({
     quest = 91275,
     rewards = {
         Achievement({id = 42761, criteria = 106336}),
-        Reputation({id = 2658, gain = 15, quest = 91421}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 91421}), -- The K'aresh Trust
+        Pet({item = 245214, id = 4838}) -- Palek'ti, the Mouth of Nothingness
     }
 }) -- Malek'ta <The Jaws of Oblivion> (inspect nearby Juvenile Dustback corspe then head NE and jump on spawn point)
 
@@ -113,13 +151,17 @@ map.nodes[54455445] = Rare({
     }
 }) -- Maw of the Sands
 
-map.nodes[56045357] = Rare({
+map.nodes[56205058] = Rare({
     id = 232108,
     quest = 90588,
     requires = ns.requirement.Spell(1214374), -- Phase Diving
     rewards = {
         Achievement({id = 42761, criteria = 106338}),
-        Reputation({id = 2658, gain = 15, quest = 90677}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90677}), -- The K'aresh Trust
+        Transmog({item = 239472, slot = L['plate']}), -- Reshii Brute's Breastplate
+        Transmog({item = 239457, slot = L['leather']}), -- Reshii Scout's Soles
+        Transmog({item = 239450, slot = L['cloth']}), -- Reshii Magi's Gloves
+        Pet({item = 244915, id = 4834}) -- Jimmy
     }
 }) -- Morgil the Netherspawn - patrols
 
@@ -135,10 +177,14 @@ map.nodes[52782081] = Rare({
 
 map.nodes[45782425] = Rare({
     id = 232182,
+    requires = ns.requirement.Spell(1214374), -- Phase Diving
     quest = 90590,
     rewards = {
         Achievement({id = 42761, criteria = 106341}),
-        Reputation({id = 2658, gain = 15, quest = 90679}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90679}), -- The K'aresh Trust
+        Transmog({item = 239478, slot = L['plate']}), -- Reshii Brute's Greatbelt
+        Transmog({item = 239464, slot = L['mail']}), -- Reshii Skirmisher's Brigandine
+        Transmog({item = 239449, slot = L['cloth']}) -- Reshii Magi's Slippers
     }
 }) -- Prototype Mk-V (46262459-45832393) patrol path
 
@@ -148,7 +194,10 @@ map.nodes[50536469] = Rare({
     quest = 90591,
     rewards = {
         Achievement({id = 42761, criteria = 106342}),
-        Reputation({id = 2658, gain = 15, quest = 90680}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90680}), -- The K'aresh Trust
+        Transmog({item = 239476, slot = L['plate']}), -- Reshii Brute's Greaves
+        Transmog({item = 239471, slot = L['mail']}), -- Reshii Skirmisher's Armguards
+        Transmog({item = 239459, slot = L['leather']}) -- Reshii Scout's Hood
     }
 }) -- Revenant of the Wasteland
 
@@ -158,7 +207,10 @@ map.nodes[72205557] = Rare({
     quest = 90585,
     rewards = {
         Achievement({id = 42761, criteria = 106343}),
-        Reputation({id = 2658, gain = 15, quest = 90673}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90673}), -- The K'aresh Trust
+        Transmog({item = 239465, slot = L['mail']}), -- Reshii Skirmisher's Boots
+        Transmog({item = 239458, slot = L['leather']}), -- Reshii Scout's Grips
+        Transmog({item = 239453, slot = L['cloth']}) -- Reshii Magi's Spines
     }
 }) -- Sha'ryth the Cursed (patrols needs path)
 
@@ -168,7 +220,10 @@ map.nodes[54174911] = Rare({
     requires = ns.requirement.Spell(1214374), -- Phase Diving
     rewards = {
         Achievement({id = 42761, criteria = 106344}),
-        Reputation({id = 2658, gain = 15, quest = 90674}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90674}), -- The K'aresh Trust
+        Transmog({item = 239474, slot = L['plate']}), -- Reshii Brute's Handguards
+        Transmog({item = 239469, slot = L['mail']}), -- Reshii Skirmisher's Pauldrons
+        Transmog({item = 239452, slot = L['cloth']}) -- Reshii Magi's Leggings
     }
 }) -- Shadowhowl
 
@@ -178,7 +233,9 @@ map.nodes[76754219] = Rare({
     requires = ns.requirement.Spell(1214374), -- Phase Diving
     rewards = {
         Achievement({id = 42761, criteria = 106345}),
-        Reputation({id = 2658, gain = 15, quest = 90681}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90681}), -- The K'aresh Trust
+        Transmog({item = 239466, slot = L['mail']}), -- Reshii Skirmisher's Gauntlets
+        Transmog({item = 239461, slot = L['leather']}) -- Reshii Scout's Shoulderpads
     }
 }) -- Stalker of the Wastes
 
@@ -201,7 +258,11 @@ map.nodes[52705660] = Rare({
     quest = 90589,
     rewards = {
         Achievement({id = 42761, criteria = 106347}),
-        Reputation({id = 2658, gain = 15, quest = 90678}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90678}), -- The K'aresh Trust
+        Transmog({item = 239479, slot = L['plate']}), -- Reshii Brute's Vambraces
+        Transmog({item = 239467, slot = L['mail']}), -- Reshii Skirmisher's Cowl
+        Transmog({item = 239454, slot = L['cloth']}), -- Reshii Magi's Cord
+        Pet({item = 245254, id = 4842}) -- Duskthief
     }
 }) -- The Nightreaver (flys about need path?)
 
@@ -212,6 +273,9 @@ map.nodes[70144983] = Rare({
     rewards = {
         Achievement({id = 42761, criteria = 106348}),
         Reputation({id = 2658, gain = 15, quest = 90682}), -- The K'aresh Trust
+        Transmog({item = 239473, slot = L['plate']}), -- Reshii Brute's Sollerets
+        Transmog({item = 239470, slot = L['mail']}), -- Reshii Skirmisher's Sash
+        Transmog({item = 239456, slot = L['leather']}), -- Reshii Scout's Jerkin
         Mount({item = 246067, id = 2601}) -- Pearlescent Krolusk
     }
 }) -- Urmag <The Terror Below>
@@ -222,9 +286,105 @@ map.nodes[65144998] = Rare({
     quest = 90584,
     rewards = {
         Achievement({id = 42761, criteria = 106349}),
-        Reputation({id = 2658, gain = 15, quest = 90672}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90672}), -- The K'aresh Trust
+        Transmog({item = 239468, slot = L['mail']}), -- Reshii Skirmisher's Legguards
+        Transmog({item = 239463, slot = L['leather']}), -- Reshii Scout's Bracers
+        Transmog({item = 239451, slot = L['cloth']}) -- Reshii Magi's Crown
     }
 }) -- Xarran the Binder
+
+-------------------------------------------------------------------------------
+------------------------- MOUNT: TRANSLOCATED GORGER --------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[71402760] = Rare({
+    id = 231229,
+    note = L['translocated_gorger_note'],
+    quest = 84993,
+    rewards = {
+        Item({item = 246240, weekly = 91309}), -- Devoured Energy-Pod
+        Mount({item = 246159, id = 2602}), -- Translocated Gorger
+        Spacer(), Section(L['shared_drops']),
+        Transmog({item = 240111, slot = L['1h_axe']}), -- Reshii Skirmisher's Axe
+        Transmog({item = 240112, slot = L['dagger']}), -- Reshii Scout's Blade
+        Transmog({item = 240113, slot = L['dagger']}), -- Reshii Magi's Dagger
+        Transmog({item = 240114, slot = L['1h_mace']}), -- Reshii Skirmisher's Morningstar
+        Transmog({item = 240115, slot = L['1h_mace']}), -- Reshii Brute's Warmace
+        Transmog({item = 240116, slot = L['1h_sword']}), -- Reshii Brute's Longsword
+        Transmog({item = 240117, slot = L['wand']}), -- Reshii Magi's Wand
+        Transmog({item = 240118, slot = L['polearm']}), -- Reshii Brute's Spear
+        Transmog({item = 240119, slot = L['staff']}), -- Reshii Skirmisher's Staff
+        Transmog({item = 240120, slot = L['offhand']}), -- Reshii Magi's Lantern
+        Transmog({item = 240121, slot = L['shield']}) -- Reshii Brute's Barrier
+    }
+}) -- Korgoth the Hungerer
+
+map.nodes[50605410] = Rare({
+    id = 234970,
+    note = L['translocated_gorger_note'],
+    quest = 86447,
+    rewards = {
+        Item({item = 246240, weekly = 91310}), -- Devoured Energy-Pod
+        Mount({item = 246159, id = 2602}), -- Translocated Gorger
+        Spacer(), Section(L['shared_drops']),
+        Transmog({item = 240111, slot = L['1h_axe']}), -- Reshii Skirmisher's Axe
+        Transmog({item = 240112, slot = L['dagger']}), -- Reshii Scout's Blade
+        Transmog({item = 240113, slot = L['dagger']}), -- Reshii Magi's Dagger
+        Transmog({item = 240114, slot = L['1h_mace']}), -- Reshii Skirmisher's Morningstar
+        Transmog({item = 240115, slot = L['1h_mace']}), -- Reshii Brute's Warmace
+        Transmog({item = 240116, slot = L['1h_sword']}), -- Reshii Brute's Longsword
+        Transmog({item = 240117, slot = L['wand']}), -- Reshii Magi's Wand
+        Transmog({item = 240118, slot = L['polearm']}), -- Reshii Brute's Spear
+        Transmog({item = 240119, slot = L['staff']}), -- Reshii Skirmisher's Staff
+        Transmog({item = 240120, slot = L['offhand']}), -- Reshii Magi's Lantern
+        Transmog({item = 240121, slot = L['shield']}) -- Reshii Brute's Barrier
+    }
+}) -- Miasmawrath
+
+map.nodes[49506420] = Rare({
+    id = 235087,
+    note = L['translocated_gorger_note'],
+    quest = 86464,
+    rewards = {
+        Item({item = 246240, weekly = 91311}), -- Devoured Energy-Pod
+        Mount({item = 246159, id = 2602}), -- Translocated Gorger
+        Spacer(), Section(L['shared_drops']),
+        Transmog({item = 240111, slot = L['1h_axe']}), -- Reshii Skirmisher's Axe
+        Transmog({item = 240112, slot = L['dagger']}), -- Reshii Scout's Blade
+        Transmog({item = 240113, slot = L['dagger']}), -- Reshii Magi's Dagger
+        Transmog({item = 240114, slot = L['1h_mace']}), -- Reshii Skirmisher's Morningstar
+        Transmog({item = 240115, slot = L['1h_mace']}), -- Reshii Brute's Warmace
+        Transmog({item = 240116, slot = L['1h_sword']}), -- Reshii Brute's Longsword
+        Transmog({item = 240117, slot = L['wand']}), -- Reshii Magi's Wand
+        Transmog({item = 240118, slot = L['polearm']}), -- Reshii Brute's Spear
+        Transmog({item = 240119, slot = L['staff']}), -- Reshii Skirmisher's Staff
+        Transmog({item = 240120, slot = L['offhand']}), -- Reshii Magi's Lantern
+        Transmog({item = 240121, slot = L['shield']}) -- Reshii Brute's Barrier
+    }
+}) -- The Harvester
+
+taz.nodes[27507230] = Rare({
+    id = 235104,
+    note = L['translocated_gorger_note'],
+    parent = map.id,
+    quest = 86465,
+    rewards = {
+        Item({item = 246240, weekly = 91312}), -- Devoured Energy-Pod
+        Mount({item = 246159, id = 2602}), -- Translocated Gorger
+        Spacer(), Section(L['shared_drops']),
+        Transmog({item = 240111, slot = L['1h_axe']}), -- Reshii Skirmisher's Axe
+        Transmog({item = 240112, slot = L['dagger']}), -- Reshii Scout's Blade
+        Transmog({item = 240113, slot = L['dagger']}), -- Reshii Magi's Dagger
+        Transmog({item = 240114, slot = L['1h_mace']}), -- Reshii Skirmisher's Morningstar
+        Transmog({item = 240115, slot = L['1h_mace']}), -- Reshii Brute's Warmace
+        Transmog({item = 240116, slot = L['1h_sword']}), -- Reshii Brute's Longsword
+        Transmog({item = 240117, slot = L['wand']}), -- Reshii Magi's Wand
+        Transmog({item = 240118, slot = L['polearm']}), -- Reshii Brute's Spear
+        Transmog({item = 240119, slot = L['staff']}), -- Reshii Skirmisher's Staff
+        Transmog({item = 240120, slot = L['offhand']}), -- Reshii Magi's Lantern
+        Transmog({item = 240121, slot = L['shield']}) -- Reshii Brute's Barrier
+    }
+}) -- The Wallbreaker
 
 -------------------------------------------------------------------------------
 -------------------------------- WARRANT RARES --------------------------------
@@ -238,7 +398,12 @@ taz.nodes[71135712] = Rare({
     rewards = {
         Achievement({id = 42761, criteria = 106333}),
         Achievement({id = 41980, criteria = 104425}),
-        Reputation({id = 2658, gain = 15, quest = 90699}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90699}), -- The K'aresh Trust
+        Transmog({item = 239478, slot = L['plate']}), -- Reshii Brute's Greatbelt
+        Transmog({item = 239465, slot = L['mail']}), -- Reshii Skirmisher's Boots
+        Transmog({item = 239469, slot = L['mail']}), -- Reshii Skirmisher's Pauldrons
+        Transmog({item = 239463, slot = L['leather']}), -- Reshii Scout's Bracers
+        Transmog({item = 239454, slot = L['cloth']}) -- Reshii Magi's Cord
     }
 }) -- Grubber
 
@@ -253,16 +418,17 @@ map.nodes[49152824] = Rare({
     }
 }) -- Shatterpulse
 
-map.nodes[33333333] = Rare({
+taz.nodes[35053647] = Rare({
     id = 241956,
+    parent = map.id,
     quest = 90696,
     requires = ns.requirement.Item(239314), -- [Arcane Lure] from warrants
     rewards = {
         Achievement({id = 42761, criteria = 106332}),
         Achievement({id = 41980, criteria = 104424}),
-        Reputation({id = 2658, gain = 15, quest = 00000}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90697}) -- The K'aresh Trust
     }
-}) -- Arcana-Monger So'zer (Review)
+}) -- Arcana-Monger So'zer
 
 map.nodes[48441696] = Rare({
     id = 238536,
@@ -282,7 +448,12 @@ map.nodes[42505755] = Rare({
     rewards = {
         -- Achievement({id = 42761, criteria = 106349}),
         Achievement({id = 41980, criteria = 104426}),
-        Reputation({id = 2658, gain = 15, quest = 90693}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90693}), -- The K'aresh Trust
+        Transmog({item = 239472, slot = L['plate']}), -- Reshii Brute's Breastplate
+        Transmog({item = 239466, slot = L['mail']}), -- Reshii Skirmisher's Gauntlets
+        Transmog({item = 239460, slot = L['leather']}), -- Reshii Scout's Breeches
+        Transmog({item = 239459, slot = L['leather']}), -- Reshii Scout's Hood
+        Transmog({item = 239448, slot = L['cloth']}) -- Reshii Magi's Vestments
     }
 }) -- Purple Peat
 
@@ -294,27 +465,18 @@ taz.nodes[31155818] = Rare({
     rewards = {
         -- Achievement({id = 42761, criteria = 106349}),
         Achievement({id = 41980, criteria = 104429}),
-        Reputation({id = 2658, gain = 15, quest = 90695}) -- The K'aresh Trust
+        Reputation({id = 2658, gain = 15, quest = 90695}), -- The K'aresh Trust
+        Transmog({item = 239479, slot = L['plate']}), -- Reshii Brute's Vambraces
+        Transmog({item = 239470, slot = L['mail']}), -- Reshii Skirmisher's Sash
+        Transmog({item = 239457, slot = L['leather']}), -- Reshii Scout's Soles
+        Transmog({item = 239461, slot = L['leather']}), -- Reshii Scout's Shoulderpads
+        Transmog({item = 239455, slot = L['cloth']}) -- Reshii Magi's Bands
     }
 }) -- Xy'vox The Twisted
 
 -------------------------------------------------------------------------------
 ---------------------------------- TREASURES ----------------------------------
 -------------------------------------------------------------------------------
-
-local WhatLiesBeyond = Class('WhatLiesBeyond', ns.requirement.Requirement)
-
-function WhatLiesBeyond:Initialize()
-    local definitionInfo = C_Traits.GetDefinitionInfo(135401) -- What Lies Beyond
-    local name = C_Item.GetItemInfo(235499) -- Reshii Wraps
-    self.text = definitionInfo and definitionInfo.overrideName or UNKNOWN
-    self.type = name
-end
-
-function WhatLiesBeyond:IsMet()
-    local nInfo = C_Traits.GetNodeInfo(57801712, 105870) -- What Lies Beyond
-    return nInfo and nInfo.ranksPurchased and nInfo.ranksPurchased > 0
-end
 
 map.nodes[76114526] = Treasure({
     note = L['gift_of_the_brothers_note'],
@@ -422,8 +584,11 @@ map.nodes[77782787] = Treasure({
 }) -- Skeletal Tail Bones
 
 map.nodes[58653434] = Treasure({
-    quest = 86323, -- review
-    rewards = {Achievement({id = 42741, criteria = 106278})}
+    quest = 86323,
+    rewards = {
+        Achievement({id = 42741, criteria = 106278}),
+        Transmog({item = 246295, type = L['1h_mace']}) -- Tazavesh Lookout's Mace
+    }
 }) -- Crudely Stitched Sack
 
 local AbandonedLockbox = Class('AbandonedLockbox', Treasure, {
@@ -440,20 +605,18 @@ map.nodes[53985926] = AbandonedLockbox()
 map.nodes[60106090] = AbandonedLockbox()
 map.nodes[53955496] = AbandonedLockbox()
 map.nodes[59755372] = AbandonedLockbox()
+map.nodes[58643431] = AbandonedLockbox()
 
-map.nodes[53706405] = Treasure({
+local LightlyDentedLuggage = Class('LightlyDentedLuggage', Treasure, {
     note = L['multiple_spawns'],
     quest = 91352,
     fgroup = 'lightly_dented_luggage',
     rewards = {Achievement({id = 42741, criteria = 106279})}
 }) -- Lightly-Dented Luggage
 
-map.nodes[54956245] = Treasure({
-    note = L['multiple_spawns'],
-    quest = 91352,
-    fgroup = 'lightly_dented_luggage',
-    rewards = {Achievement({id = 42741, criteria = 106279})}
-}) -- Lightly-Dented Luggage
+map.nodes[53706405] = LightlyDentedLuggage()
+map.nodes[54956245] = LightlyDentedLuggage()
+map.nodes[55696415] = LightlyDentedLuggage()
 
 map.nodes[54462444] = Treasure({
     quest = 85840,
@@ -467,7 +630,7 @@ map.nodes[52096833] = Treasure({
     quest = 89378,
     requires = {
         ns.requirement.Spell(1214374), -- Phase Diving & treasure one
-        WhatLiesBeyond()
+        ReshiiWraps(135401, 105870) -- What Lies Beyond
     },
     rewards = {
         Achievement({id = 42741, criteria = 106224}),
@@ -481,7 +644,7 @@ map.nodes[52504677] = Treasure({
     quest = 90511,
     requires = {
         ns.requirement.Spell(1214374), -- Phase Diving & treasure one
-        WhatLiesBeyond()
+        ReshiiWraps(135401, 105870) -- What Lies Beyond
     },
     rewards = {
         Achievement({id = 42741, criteria = 106281}),
@@ -495,7 +658,7 @@ taz.nodes[23694682] = Treasure({
     quest = 90512,
     requires = {
         ns.requirement.Spell(1214374), -- Phase Diving & treasure one
-        WhatLiesBeyond()
+        ReshiiWraps(135401, 105870) -- What Lies Beyond
     },
     rewards = {
         Achievement({id = 42741, criteria = 106296}),
@@ -507,7 +670,7 @@ map.nodes[77994894] = Treasure({
     quest = 90514,
     requires = {
         ns.requirement.Spell(1214374), -- Phase Diving & treasure one
-        WhatLiesBeyond()
+        ReshiiWraps(135401, 105870) -- What Lies Beyond
     },
     rewards = {
         Achievement({id = 42741, criteria = 106283}),
@@ -519,7 +682,7 @@ map.nodes[51056509] = Treasure({
     quest = 90522,
     requires = {
         ns.requirement.Spell(1214374), -- Phase Diving & treasure one
-        WhatLiesBeyond()
+        ReshiiWraps(135401, 105870) -- What Lies Beyond
     },
     rewards = {
         Achievement({id = 42741, criteria = 106284}),
@@ -532,7 +695,7 @@ map.nodes[78346154] = Treasure({
     quest = 90515,
     requires = {
         ns.requirement.Spell(1214374), -- Phase Diving & treasure one
-        WhatLiesBeyond()
+        ReshiiWraps(135401, 105870) -- What Lies Beyond
     },
     rewards = {
         Achievement({id = 42741, criteria = 106285}),
@@ -544,7 +707,7 @@ map.nodes[49201805] = Treasure({
     quest = 90527,
     requires = {
         ns.requirement.Spell(1214374), -- Phase Diving & treasure one
-        WhatLiesBeyond()
+        ReshiiWraps(135401, 105870) -- What Lies Beyond
     },
     rewards = {
         Achievement({id = 42741, criteria = 106286}),
@@ -556,7 +719,7 @@ map.nodes[80725267] = Treasure({
     quest = 90521,
     requires = {
         ns.requirement.Spell(1214374), -- Phase Diving & treasure one
-        WhatLiesBeyond()
+        ReshiiWraps(135401, 105870) -- What Lies Beyond
     },
     rewards = {
         Achievement({id = 42741, criteria = 106287}),
@@ -568,7 +731,7 @@ map.nodes[64434269] = Treasure({
     quest = 90532,
     requires = {
         ns.requirement.Spell(1214374), -- Phase Diving & treasure one
-        WhatLiesBeyond()
+        ReshiiWraps(135401, 105870) -- What Lies Beyond
     },
     rewards = {Achievement({id = 42741, criteria = 106288})}
 }) -- Korgorath's Talon
@@ -578,7 +741,7 @@ map.nodes[58432259] = Treasure({
     quest = 91055,
     requires = {
         ns.requirement.Spell(1214374), -- Phase Diving & treasure one
-        WhatLiesBeyond()
+        ReshiiWraps(135401, 105870) -- What Lies Beyond
     },
     rewards = {
         Achievement({id = 42741, criteria = 106289}),
@@ -591,7 +754,7 @@ taz.nodes[47476998] = Treasure({
     quest = 91056,
     requires = {
         ns.requirement.Spell(1214374), -- Phase Diving & treasure one
-        WhatLiesBeyond()
+        ReshiiWraps(135401, 105870) -- What Lies Beyond
     },
     rewards = {
         Achievement({id = 42741, criteria = 106290}),
@@ -603,7 +766,7 @@ map.nodes[50823534] = Treasure({
     quest = 91057,
     requires = {
         ns.requirement.Spell(1214374), -- Phase Diving & treasure one
-        WhatLiesBeyond()
+        ReshiiWraps(135401, 105870) -- What Lies Beyond
     },
     rewards = {
         Achievement({id = 42741, criteria = 106291}),
@@ -617,7 +780,7 @@ taz.nodes[65161472] = Treasure({
     quest = 91058,
     requires = {
         ns.requirement.Spell(1214374), -- Phase Diving & treasure one
-        WhatLiesBeyond()
+        ReshiiWraps(135401, 105870) -- What Lies Beyond
     },
     rewards = {
         Achievement({id = 42741, criteria = 106292}),
@@ -806,3 +969,136 @@ map.nodes[47613738] = Purrkins({
     rewards = {Achievement({id = 42729, criteria = 106223})}
 }) -- The King in Silver
 
+-------------------------------------------------------------------------------
+---------------------------- PHASE-LOST-AND-FOUND -----------------------------
+-------------------------------------------------------------------------------
+
+local PhaseOrb = Class('phaseorb', Collectible, {
+    group = ns.groups.PHASE_LOST_AND_FOUND,
+    icon = 'peg_bl',
+    scale = 1.25,
+    label = L['phaseorb_label'],
+    note = L['phaseorb_note'],
+    requires = {
+        ns.requirement.Spell(1214374), -- Phase Diving
+        ReshiiWraps(135403, 105872) -- Secrets of the Depths
+    },
+    rewards = {
+        Achievement({
+            id = 61017,
+            criteria = {
+                107806, 107807, 107808, 107809, 107810, 107811, 107812, 107813,
+                107814, 107815, 107816, 107817, 107818, 107819, 107820, 107821,
+                107822, 107823, 107824, 107825, 107826, 107827, -- 107827 is MISSING in the achievement, but required
+                107828, 107829, 107830, 107831, 107832, 107833
+            }
+        }) -- Phase-Lost-and-Found
+    }
+})
+
+map.nodes[43142148] = PhaseOrb()
+map.nodes[43072156] = PhaseOrb()
+map.nodes[44231681] = PhaseOrb() -- review
+map.nodes[45745153] = PhaseOrb()
+map.nodes[47171579] = PhaseOrb() -- review
+map.nodes[47181578] = PhaseOrb()
+map.nodes[47733728] = PhaseOrb()
+map.nodes[47806085] = PhaseOrb()
+map.nodes[48603845] = PhaseOrb()
+map.nodes[48892670] = PhaseOrb() -- review
+map.nodes[48985746] = PhaseOrb() -- review
+map.nodes[49341897] = PhaseOrb()
+map.nodes[50113620] = PhaseOrb()
+map.nodes[50495412] = PhaseOrb()
+map.nodes[50573510] = PhaseOrb()
+map.nodes[50953671] = PhaseOrb()
+map.nodes[51026912] = PhaseOrb()
+map.nodes[51176774] = PhaseOrb()
+map.nodes[52176488] = PhaseOrb()
+map.nodes[53362057] = PhaseOrb()
+map.nodes[53734838] = PhaseOrb()
+map.nodes[54326317] = PhaseOrb()
+map.nodes[54505016] = PhaseOrb()
+map.nodes[54916381] = PhaseOrb()
+map.nodes[55285545] = PhaseOrb() -- review
+map.nodes[56002153] = PhaseOrb() -- review
+map.nodes[56552093] = PhaseOrb()
+map.nodes[57902393] = PhaseOrb()
+map.nodes[58742099] = PhaseOrb()
+map.nodes[58935751] = PhaseOrb() -- review
+map.nodes[59416044] = PhaseOrb()
+map.nodes[59842272] = PhaseOrb()
+map.nodes[60352841] = PhaseOrb()
+map.nodes[60514201] = PhaseOrb()
+map.nodes[60525549] = PhaseOrb() -- review
+map.nodes[60602968] = PhaseOrb()
+map.nodes[61082734] = PhaseOrb()
+map.nodes[61162324] = PhaseOrb()
+map.nodes[61203920] = PhaseOrb()
+map.nodes[62594165] = PhaseOrb()
+map.nodes[62582407] = PhaseOrb()
+map.nodes[63003911] = PhaseOrb()
+map.nodes[63984597] = PhaseOrb()
+map.nodes[64865224] = PhaseOrb() -- review
+map.nodes[64905495] = PhaseOrb() -- review
+map.nodes[66054880] = PhaseOrb()
+map.nodes[68824791] = PhaseOrb()
+map.nodes[69755531] = PhaseOrb() -- review
+map.nodes[70206061] = PhaseOrb() -- review
+map.nodes[70263197] = PhaseOrb() -- review
+map.nodes[72711232] = PhaseOrb() -- review
+map.nodes[72791006] = PhaseOrb() -- review
+map.nodes[73985749] = PhaseOrb() -- review
+map.nodes[75713442] = PhaseOrb()
+map.nodes[75963255] = PhaseOrb()
+map.nodes[76035820] = PhaseOrb() -- review
+map.nodes[77243801] = PhaseOrb()
+map.nodes[78374889] = PhaseOrb()
+map.nodes[78762917] = PhaseOrb()
+map.nodes[80405123] = PhaseOrb()
+taz.nodes[34935795] = PhaseOrb({parent = map.id})
+taz.nodes[39613240] = PhaseOrb({parent = map.id})
+taz.nodes[40126818] = PhaseOrb({parent = map.id})
+taz.nodes[42835032] = PhaseOrb({parent = map.id})
+taz.nodes[44322686] = PhaseOrb({parent = map.id}) -- review
+taz.nodes[44323460] = PhaseOrb({parent = map.id})
+taz.nodes[44383470] = PhaseOrb({parent = map.id}) -- review
+taz.nodes[53226055] = PhaseOrb({parent = map.id})
+taz.nodes[55813363] = PhaseOrb({parent = map.id})
+taz.nodes[56468678] = PhaseOrb({parent = map.id})
+taz.nodes[60415720] = PhaseOrb({parent = map.id})
+taz.nodes[61128910] = PhaseOrb({parent = map.id})
+taz.nodes[62132931] = PhaseOrb({parent = map.id})
+
+--[[
+-------------------------------------------------------------------------------
+------------------------- MOUNT: TRANSLOCATED GORGER --------------------------
+-------------------------------------------------------------------------------
+
+local TranslocatedGorger = Class('TranslocatedGorger', Collectible, {
+    icon = 3767410,
+    rewards = {
+        Mount({item = 246159, id = 2602}) -- Translocated Gorger
+    }
+}) -- Translocated Gorger
+
+function TranslocatedGorger.getters:note()
+    local note = L['translocated_gorger_note']
+    return note .. ItemStatus(246240, 20, '{item:246240}')
+end
+
+taz.nodes[29607260] = TranslocatedGorger({
+    label = '{npc:235104}',
+    quest = 86465,
+    parent = map.id
+}) -- The Wallbreaker (Tazavesh Invasion)
+
+map.nodes[49606460] =
+    TranslocatedGorger({label = '{npc:235087}', quest = 86464}) -- The Harvester (The Atrium Invasion)
+
+map.nodes[50605460] =
+    TranslocatedGorger({label = '{npc:234970}', quest = 86447}) -- Miasmawrath (Eco-Dome Primus Invasion)
+
+map.nodes[71402760] =
+    TranslocatedGorger({label = '{npc:231229}', quest = 84993}) -- Korogoth the Hungerer (The Oasis Invasion)
+]]

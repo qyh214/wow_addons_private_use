@@ -1,13 +1,13 @@
-## Interface: 110200
+## Interface: 120000, 110207
 ## Title: Talent Loadout Ex
 ## Author: Morizo
 ## Notes: Multiple talent settings will be saved without limitation.
-## Version: 3.10.7
+## Version: 3.12.1
 ## IconTexture: Interface\AddOns\TalentLoadoutsEx\icon.blp
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariables: TalentLoadoutEx
-## OptionalDeps: LargerMacroIconSelectionData, PeaversTalentsData
+## OptionalDeps: LargerMacroIconSelectionData, PeaversTalentsData, MurlokExport
 ## X-Curse-Project-ID: 730873
 ## X-Wago-ID: Qb6mxnNP
 

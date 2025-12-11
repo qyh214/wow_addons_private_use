@@ -3,7 +3,7 @@ local AF = _G.AbstractFramework
 
 AF.REGISTERED_ADDONS = {}
 
-local PATTERN = AF.isRetail and "\n%[Interface/AddOns/([^/]+)/" or "@Interface/AddOns/([^/]+)/"
+local PATTERN = (AF.isRetail or AF.isMists) and "\n%[Interface/AddOns/([^/]+)/" or "@Interface/AddOns/([^/]+)/"
 local strmatch = string.gmatch
 local debugstack, print, type = debugstack, print, type
 local tinsert, tconcat = table.insert, table.concat
@@ -56,7 +56,10 @@ local function GetPrefix()
 end
 
 function AF.Debug(arg, ...)
-    if AFConfig and AFConfig.debugMode then
+    if not AFConfig then return end
+
+    local addon = AF.GetAddon()
+    if (addon and AFConfig.debug[addon]) or (not addon and AFConfig.debug.AF) then
         if type(arg) == "string" or type(arg) == "number" or type(arg) == "boolean" then
             print(AF.WrapTextInColor("[DEBUG]", "red") .. GetPrefix(), arg, ...)
         elseif type(arg) == "table" then
@@ -93,4 +96,21 @@ end
 function AF.RegisterAddon(addonFolderName, alias)
     AF.REGISTERED_ADDONS[addonFolderName] = alias or true
     AF.SetAddonAccentColor(addonFolderName, "accent") -- setup with default accent color
+end
+
+---require AF version to meet the specified requirement, otherwise show an error dialog
+---@param versionNum number target version number
+function AF.RequireVersion(versionNum)
+    if AF.versionNum >= versionNum then return end
+    local addon = AF.GetAddon()
+    if addon then
+        AF.ShowGlobalDialog(
+            AF.L["AF_VERSION_REQUIRED"]:format(
+                AF.WrapTextInColor(addon, addon),
+                AF.WrapTextInColor("r" .. versionNum, "softlime"),
+                AF.WrapTextInColor(AF.version, "firebrick")
+            ),
+            nil, nil, true
+        )
+    end
 end

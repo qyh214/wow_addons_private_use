@@ -396,9 +396,7 @@ end
 local function ActivateSet(set, state)
     -- Let the DF talents handle hero talents
     if state.dfTalents then
-        if not IsSetActive(set) then
-            state.heroTalents = set
-        end
+        state.heroTalents = set
         return true
     else
         local complete = true;
@@ -638,7 +636,7 @@ function HeroTalentButtonSplitMixin:OnLoad()
     }
 end
 function HeroTalentButtonSplitMixin:ApplySize(width, height)
-	TalentButtonBasicArtMixin.ApplySize(self, width, height);
+	TalentButtonArtMixin.ApplySize(self, width, height);
     self.StateBorder:SetSize(width + 18, height + 12);
     self.StateBorderHover:SetSize(width + 18, height + 12);
 end
@@ -680,7 +678,8 @@ function BtWLoadoutsHeroTalentsMixin:OnLoad()
     self.temp = {}
 
 	self.talentButtonCollection = CreateFramePoolCollection();
-	self.talentDislayFramePool = CreateFramePoolCollection();
+	self.talentDisplayFramePool = CreateFramePoolCollection();
+	self.talentAnimationFramePoolCollection = CreateFramePoolCollection();
 	self.edgePool = CreateFramePoolCollection();
 	self.gatePool = CreateFramePool("FRAME", self.Scroll:GetScrollChild(), "BtWLoadoutsHeroTalentFrameGateTemplate");
 	self.nodeIDToButton = {};

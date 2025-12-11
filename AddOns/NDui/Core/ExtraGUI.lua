@@ -134,12 +134,11 @@ function G:SetupRaidDebuffs(parent)
 	--AddNewDungeon(dungeons, 1182) -- 通灵战潮
 	--AddNewDungeon(dungeons, 1184) -- 塞兹仙林的迷雾
 
-	-- isNewPatch, remove in future
-	AddNewDungeon(dungeons, 1298) -- 水闸行动
-	AddNewDungeon(dungeons, 1187) -- 伤逝剧场
-	AddNewDungeon(dungeons, 1178) -- 麦卡贡行动
-	AddNewDungeon(dungeons, 1012) -- 暴富矿区！！
+	--AddNewDungeon(dungeons, 1187) -- 伤逝剧场
+	--AddNewDungeon(dungeons, 1178) -- 麦卡贡行动
+	--AddNewDungeon(dungeons, 1012) -- 暴富矿区！！
 
+	AddNewDungeon(dungeons, 1298) -- 水闸行动
 	AddNewDungeon(dungeons, 1303) -- 奥尔达尼生态圆顶
 	AddNewDungeon(dungeons, 1185) -- 赎罪大厅
 	AddNewDungeon(dungeons, 1194) -- 集市
@@ -1513,6 +1512,7 @@ function G:SetupBagFilter(parent)
 		[12] = "FilterStone",
 		[13] = "FilterAOE",
 		[14] = "FilterLower",
+		[15] = "FilterLegacy",
 	}
 
 	local BAG = B:GetModule("Bags")
@@ -1787,7 +1787,7 @@ function G:SetupMicroMenu(parent)
 	local parent, offset = scroll.child, -10
 	createOptionTitle(parent, L["Menubar"], offset)
 	createOptionSlider(parent, L["ButtonSize"], 20, 40, 22, offset-60, "MBSize", Bar.MicroMenu_Setup, "Actionbar")
-	createOptionSlider(parent, L["ButtonsPerRow"], 1, 12, 12, offset-130, "MBPerRow", Bar.MicroMenu_Setup, "Actionbar")
+	createOptionSlider(parent, L["ButtonsPerRow"], 1, 13, 12, offset-130, "MBPerRow", Bar.MicroMenu_Setup, "Actionbar")
 	createOptionSlider(parent, L["Spacing"], -10, 10, 5, offset-200, "MBSpacing", Bar.MicroMenu_Setup, "Actionbar")
 end
 
@@ -1958,8 +1958,8 @@ function G:SetupActionbarStyle(parent)
 		text = L["Export"],
 		button1 = OKAY,
 		OnShow = function(self)
-			self.editBox:SetText(Bar:ExportActionbarStyle())
-			self.editBox:HighlightText()
+			self.EditBox:SetText(Bar:ExportActionbarStyle())
+			self.EditBox:HighlightText()
 		end,
 		EditBoxOnEscapePressed = function(self)
 			self:GetParent():Hide()
@@ -1977,7 +1977,7 @@ function G:SetupActionbarStyle(parent)
 			self.button1:Disable()
 		end,
 		OnAccept = function(self)
-			Bar:ImportActionbarStyle(self.editBox:GetText())
+			Bar:ImportActionbarStyle(self.EditBox:GetText())
 		end,
 		EditBoxOnTextChanged = function(self)
 			local button1 = self:GetParent().button1
@@ -2502,7 +2502,7 @@ function G:SetupAvada()
 		profileButtons[i] = bu
 	end
 
-	local close = B.CreateButton(panel, 30, 30, true, "Interface\\RAIDFRAME\\ReadyCheck-NotReady")
+	local close = B.CreateButton(panel, 30, 30, true, "Atlas:common-icon-redx")
 	close:SetPoint("TOPRIGHT", -5, -5)
 	close:SetScript("OnClick", function()
 		panel:Hide()
@@ -2525,7 +2525,7 @@ function G:SetupAvada()
 		updateProfileButtons()
 	end)
 
-	local save = B.CreateButton(panel, 30, 30, true, "Interface\\RAIDFRAME\\ReadyCheck-Ready")
+	local save = B.CreateButton(panel, 30, 30, true, "Atlas:common-icon-checkmark")
 	save:SetPoint("LEFT", load, "RIGHT", 5, 0)
 	save.title = L["SaveProfile"]
 	B.AddTooltip(save, "ANCHOR_RIGHT", L["SaveProfileTip"], "info")
@@ -2575,8 +2575,8 @@ function G:SetupAvada()
 			else
 				text = NDuiADB["AvadaProfile"][currentSpecID] and NDuiADB["AvadaProfile"][currentSpecID][currentID] or ""
 			end
-			self.editBox:SetText(text or "")
-			self.editBox:HighlightText()
+			self.EditBox:SetText(text or "")
+			self.EditBox:HighlightText()
 		end,
 		EditBoxOnEscapePressed = function(self)
 			self:GetParent():Hide()
@@ -2605,7 +2605,7 @@ function G:SetupAvada()
 				UIErrorsFrame:AddMessage(DB.InfoColor..L["Profile1Warning"])
 				return
 			end
-			local text = self.editBox:GetText()
+			local text = self.EditBox:GetText()
 			if strTestFailed(text) then
 				UIErrorsFrame:AddMessage(DB.InfoColor..L["Data Exception"])
 				return

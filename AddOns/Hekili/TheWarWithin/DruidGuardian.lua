@@ -151,7 +151,7 @@ spec:RegisterTalents( {
     brambles                       = {  82161,  203953, 1 }, -- Sharp brambles protect you, absorbing and reflecting up to $s2 damage from each attack. While Barkskin is active, the brambles also deal $s$s3 Nature damage to all nearby enemies every $s4 sec
     bristling_fur                  = {  82161,  155835, 1 }, -- Bristle your fur, causing you to generate Rage based on damage taken for $s1 sec
     circle_of_life_and_death       = {  82137,  391969, 1 }, -- Your damage over time effects deal their damage in $s1% less time, and your healing over time effects in $s2% less time
-    convoke_the_spirits            = {  82136,  391528, 1 }, -- Call upon the spirits for an eruption of energy, channeling a rapid flurry of $s1 Druid spells and abilities over $s2 sec. You will cast Mangle, Ironfur, Moonfire, Wrath, Regrowth, Rejuvenation, Rake, and Thrash on appropriate nearby targets, favoring your current shapeshift form
+    convoke_the_spirits            = {  82136,  391528, 1 }, -- Call upon the spirits for an eruption of energy, channeling a rapid flurry of $s1 Druid spells and abilities over $s2 sec. You will cast Wild Growth, Swiftmend, Moonfire, Wrath, Regrowth, Rejuvenation, Rake, and Thrash on appropriate nearby targets, favoring your current shapeshift form
     dream_of_cenarius              = {  92227,  372119, 1 }, -- When you take non-periodic damage, you have a chance equal to your critical strike to cause your next Regrowth to heal for an additional $s1%, and to be instant, free, and castable in all forms for $s2 sec. This effect cannot occur more than once every $s3 sec
     earthwarden                    = {  82156,  203974, 1 }, -- When you deal direct damage with Thrash, you gain a charge of Earthwarden, reducing the damage of the next auto attack you take by $s1%. Earthwarden may have up to $s2 charges
     elunes_favored                 = {  82134,  370586, 1 }, -- While in Bear Form, you deal $s1% increased Arcane damage, and are healed for $s2% of all Arcane damage done
@@ -162,6 +162,7 @@ spec:RegisterTalents( {
     gory_fur                       = {  82132,  200854, 1 }, -- Mangle has a $s1% chance to reduce the Rage cost of your next Ironfur by $s2%
     guardian_of_elune              = {  82140,  155578, 1 }, -- Mangle increases the duration of your next Ironfur by $s1 sec, or the healing of your next Frenzied Regeneration by $s2%
     improved_survival_instincts    = {  82128,  328767, 1 }, -- Survival Instincts now has $s1 charges
+    incarnation                    = {  82136,  102558, 1 }, -- An improved Bear Form that grants the benefits of Berserk, causes Mangle to hit up to $s1 targets, and increases maximum health by $s2%. Lasts $s3 sec. You may freely shapeshift in and out of this improved Bear Form for its duration
     incarnation_guardian_of_ursoc  = {  82136,  102558, 1 }, -- An improved Bear Form that grants the benefits of Berserk, causes Mangle to hit up to $s1 targets, and increases maximum health by $s2%. Lasts $s3 sec. You may freely shapeshift in and out of this improved Bear Form for its duration
     infected_wounds                = {  82162,  345208, 1 }, -- Mangle and Maul cause an Infected Wound in the target, reducing their movement speed by $s1% for $s2 sec
     innate_resolve                 = {  82160,  377811, 1 }, -- Frenzied Regeneration's healing is increased by up to $s1% based on your missing health. Frenzied Regeneration has $s2 additional charge
@@ -199,7 +200,7 @@ spec:RegisterTalents( {
     fount_of_strength              = {  94618,  441675, 1 }, -- Your maximum Energy and Rage are increased by $s1. Frenzied Regeneration also increases your maximum health by $s2%
     killing_strikes                = {  94619,  441824, 1 }, -- Ravage increases your Agility by $s1% and the armor granted by Ironfur by $s2% for $s3 sec. Your first Mangle after entering combat makes your next Maul become Ravage
     packs_endurance                = {  94615,  441844, 1 }, -- Stampeding Roar's duration is increased by $s1%
-    ravage                         = {  94609,  441583, 1 }, -- Your auto-attacks have a chance to make your next Maul become Ravage. Ravage Slash through your target in a wide arc, dealing $s3 million Physical damage to your target and $s4 to all other enemies in front of you
+    ravage                         = {  94609,  441583, 1 }, -- Your auto-attacks have a chance to make your next Maul become Ravage. Ravage Slash through your target in a wide arc, dealing $s$s4 Physical damage to your target and $s5 to all other enemies in front of you
     ruthless_aggression            = {  94619,  441814, 1 }, -- Ravage increases your auto-attack speed by $s1% for $s2 sec
     strike_for_the_heart           = {  94614,  441845, 1 }, -- Shred, Swipe, and Mangle's critical strike chance and critical strike damage are increased by $s1%. Mangle heals you for $s2% of maximum health
     tear_down_the_mighty           = {  94614,  441846, 1 }, -- The cooldown of Pulverize is reduced by $s1 sec
@@ -227,17 +228,17 @@ spec:RegisterTalents( {
 -- PvP Talents
 spec:RegisterPvpTalents( {
     alpha_challenge                =  842, -- (207017) You focus the assault on this target, increasing their damage taken by $s1% for $s2 sec. Each unique player that attacks the target increases the damage taken by an additional $s3%, stacking up to $s4 times. Your melee attacks refresh the duration of Focused Assault
-    charging_bash                  =  194, -- (228431)
+    charging_bash                  =  194, -- (228431) Increases the range of your Skull Bash by $s1 yards
     demoralizing_roar              =   52, -- (201664) Demoralizes all enemies within $s1 yards, reducing the damage they do by $s2% for $s3 sec
-    den_mother                     =   51, -- (236180)
+    den_mother                     =   51, -- (236180) You bolster nearby allies within $s1 yards, increasing their maximum health by $s2%. The duration of all stun effects on you is reduced by $s3%
     emerald_slumber                =  197, -- (329042) Embrace the Emerald Dream, causing you to enter a deep slumber for $s2 sec. While sleeping, all other cooldowns recover $s3% faster, and allies within $s4 yds are healed for $s5 every $s6 sec$s$s7 Direct damage taken may awaken you
-    entangling_claws               =  195, -- (202226)
-    freedom_of_the_herd            = 3750, -- (213200)
+    entangling_claws               =  195, -- (202226) Entangling Roots is now an instant cast spell with a $s1 second cooldown but with a $s2 yard range. It can also be cast while in shapeshift forms
+    freedom_of_the_herd            = 3750, -- (213200) Your Stampeding Roar clears all roots and snares from yourself and allies
     grove_protection               = 5410, -- (354654) Summon a grove to protect allies in the area for $s1 sec, reducing damage taken by $s2% from enemies outside the grove
-    malornes_swiftness             = 1237, -- (236147)
-    master_shapeshifter            =   49, -- (236144)
+    malornes_swiftness             = 1237, -- (236147) Your Travel Form movement speed while within a Battleground or Arena is increased by $s1% and you always move at $s2% movement speed while in Travel Form
+    master_shapeshifter            =   49, -- (236144) Your abilities are amplified based on your current shapeshift form, granting an additional effect.  Caster Form Rejuvenation heals for $s3% more and causes you to instantly generate $s4 Rage after entering Bear Form.  Moonkin Form Wrath, Starfire, and Starsurge deal $s7% additional damage and cause you to instantly generate $s8 Rage after entering Bear Form.  Cat Form Rip, Ferocious Bite, and Maim deal $s11% additional damage and cause you to instantly generate $s12 Rage after entering Bear Form when cast with $s13 combo points
     overrun                        =  196, -- (202246) Charge to an enemy, stunning them for $s1 sec and knocking back their allies within $s2 yards
-    tireless_pursuit               = 5648, -- (377801)
+    tireless_pursuit               = 5648, -- (377801) For $s1 sec after leaving Cat Form or Travel Form, you retain up to $s2% movement speed
 } )
 
 local mod_circle_hot = setfenv( function( x )
@@ -1207,14 +1208,6 @@ spec:RegisterAbilities( {
         toggle = "defensives",
         defensive = true,
 
-        usable = function ()
-            if role.tank then
-                if not tanking then return false, "player is not tanking right now"
-                elseif incoming_damage_3s == 0 then return false, "player has taken no damage in 3s" end
-            end
-            return true
-        end,
-
         handler = function ()
             applyBuff( "barkskin" )
 
@@ -1280,10 +1273,6 @@ spec:RegisterAbilities( {
         talent = "bristling_fur",
         startsCombat = false,
 
-        usable = function ()
-            if incoming_damage_3s < health.max * 0.1 then return false, "player has not taken 10% health in dmg in 3s" end
-            return true
-        end,
         handler = function ()
             applyBuff( "bristling_fur" )
         end,
@@ -1638,7 +1627,7 @@ spec:RegisterAbilities( {
     mangle = {
         id = 33917,
         cast = 0,
-        cooldown = function () return ( buff.berserk_bear.up and talent.berserk_ravage.enabled and 0 or 6 ) * haste end,
+        cooldown = function () return 6 * ( buff.berserk_bear.up and talent.berserk_ravage.enabled and 0.5 or 1 ) * haste end,
         gcd = "spell",
         school = "physical",
 
@@ -2152,12 +2141,6 @@ spec:RegisterAbilities( {
         toggle = "defensives",
         defensive = true,
 
-        usable = function ()
-            if not tanking then return false, "player is not tanking right now"
-            elseif incoming_damage_3s == 0 then return false, "player has taken no damage in 3s" end
-            return true
-        end,
-
         handler = function ()
             applyBuff( "survival_instincts" )
             if talent.matted_fur.enabled then applyBuff( "matted_fur" ) end
@@ -2440,4 +2423,4 @@ spec:RegisterStateExpr( "max_ironfur", function()
     return settings.max_ironfur or 1
 end )
 
-spec:RegisterPack( "Guardian", 20250314, [[Hekili:vZ1EVnUns8plcfqWUBIJEyhNDHDaUEa9WU4UEho3d9)STSmTTqKLm0JKMad9z)gskrrjskrNnB2TafBJnjhoZW5XpoCGxAV83xUyRxgA5V5y5mXY1E8ihxNjotxUi75tOLlo55)G3E4pI8oc)7)i3lzBGxeEGNdJ92IjqACEIpm4HSStPF6MB2hKDiFZi)4J3KgCmp0llioYpXBxg(Z(3SCXM8GWSphTCJ0D3E5cV8SdXjlxSi44FhiCW2Ti6SrP(lxGN91wUxBp(tfRXtb(3NJ8l(sXxGHgFTT1122Wq)AWFwS(ZjXr7YtkwN5f9qq0(I1(hq(pWMS1hV2bp5)l6rus2n7G1WnK9eyOFb5bR)xJtowSook85I1b7kwhfxSEh57cslw75Nf8iQEP3DTZ4RkwJ))tyCz(jS4wpPPx74cd(7hqfR)d8E8hGQla0UHbPzPyD7XGSG9efi8PFJCEHI82eI2U8xwUWpjidLe4bNwvcNzXAJI1p6bFlmRrb7wHv2BjdeebNjWSwT17iCOUAcW33dFnvdv9TzhsqPhIlxZM8D7gvoJrjOJEbrWQMvS2Ty9pxS(GxkiqctmndSBitBcCy6t4)fLdUmdoVvkihqEHzhgDYpJS8B5wFcAFs8tzhWeW91rGi0tEH41pwlnzh0AhqSxcqBxbCfq2e6zeq5jVgkpDsxhqwJSPkB6Io69N18XgVKhsbYI36BvU1KdN08KhdE0lCfCeMbBvw6OTXpfvF6vrR6VUTcWQB20zIs(uCZboodIJKGaITXlJzFxTIJa3SkEhypIw9eycZlAsmHIpbBckRE9v(aK)Afn(vL7qZJLquu2iCaNOu8gITthvszI8woJ8K0y)0vOOT5jEr(OQ5G3GWC0kuykSfwLFC5c7UnulPkOSsY4LZgBTbB3tcovVHvYOWI7X2o4i4SohoQkwF(mp13fMhSDfoCM4MSb2eYq0tSTODE5HINxPpKhgUAJx6bzNuSzfhd8ARz0wjvVZyBL0WyWAPT1myd5LerC7wTVmTewtqoLgLFIkHu7AuskcmMWccmsvYmEQlrTvXezXhrychgS)qw6QTOhJPdiWqqyaiCqAqyacBEuVtQiHKWfSDnji6bugKleZGCFwIFER140Ano41mvPrXa5Ajo9x)Q6H1mXjMODNc203dStOFyforhnDxPhkxcpGeFubjsYJusbm)tTuj)vNPnjIxI3JqumICywLih8Yrhdq0aB28bLYd7ob2aMp1RWZg0Ku9UwKGW97qHbrOvGAhwqaeG1popc4LQCWG3(TsfmCo8EIKOYV8ymKjpibjOkzHkQ0MdQ(pS4g4ZY)L5LShbbDHasRYIxTnar10omnaSMe0omue82RXIgQskNYhehaG8mwmbZ58eKGE)hb(DCl7dLSmO(F2peOnzFsXg6Dg(Vb)vYZBJXP(sGO2uhFoKBnuBHWmWP89d9EkfCzIOMwoucPMkJ1Hk29rf32QKMeIxLWcgwti9HL5hd4EbWpaRThv5nKgIqNqCOFHZW74ssLaXEcXmtj42EGHX7Jihh3u(eMH5rW8HfDSvsZ2HxLfcc7iFk(jiVeG)Apsm6HVxwd)vPHuOH4BdzqbT5IZhh9y8diQo8uaWEPSy61z4Rt60s(ST4NixoO2ZtD4DM3SgPXyyEz2aDpFERbmU4HQaCqjm1BhBwrwXyRQWJ1kuj6lzXN0qw6c9ZBjRO5SBVBCEPs8ZiNPDMF9TeUsjza3xY(QgUUgqfGavoIqfSvhqUswYWGIx5fTLepRkU39SaJYMeVdBRH4VMoqHpuSEV)w81XQonKuEG5nG5K49cIW7QdBkNgmBP3z5IrThd8dIZtxrZmIpd4ac52Y2RuivhWwam48w5fPrNXiAbliXqGTscz3gfol6wzPr42AWzClQdfKrRsUu(1mhTjwL8zD2TUoYQiNSeFvExmA)rRUPxzIIFC4F5iLSvNcTMC8o80KjTJCQWB6Yau4YBvjBYSaQksdCzb9D(UX66zezxDOwb4dFPgmDtZsqr7ZoOGO229tv9i57HkUtpon1PdBetJRgR2TV88BV1THES47L68VMSJYdqhREboOp8Dt5faO6G)vPmmOxzdx)IgxTKtC2HsIPjK3a8orQ6eU(BRuz0HGz0HS1cS9Bg)8Q0YQuTGANOpvdvU3qp9bwQLrmjyHagNkyuo9GDEFCsxiNTTVii8QogAx(RzvL)s3BTE0lAFivGudCxbsejkf1aO1l)6mmIth9Lxw5(muy8w5069aAu7cwP02vJxji9qcIu0qh1WP)ojYFnIfwprKk1fqx6EQbP5S0udeTlF4ML3497YwkQCj7Ur8XmErvnw)HGNBJj8hD(vlD8qjpxHASG9CpEfsUkplD4p(uR6r2EpMKiYUDIE6YzCZoU)zTqDzCUg0u380xQajrHPgyM0YGOSkhU9x8U2yGuiaJfSxKSWsHlnopSkLceVfLM1qpRq)0WfNcUh8fV7oLoGuGkkwMBpltpUDOSueUQrxjC60OuETpCu9m3NYdFeO3li51kXDcF145jAZQX72ZRFS3leteFgSUgXhfE)Ws11giJ)2quA6k8tpsEgDjgYvVkjMnuNU(IbHWoFlVrSs4egTkliqiEoLxGeXfqgf3jr7FMCeoLUzCq0ebL4Qg3WFTKY(QENaitx1j06e1lCvv(N1vMqkCdRXQZKiJM42zkgqRgeLrDghRXwjEp5XD1SF0yiGhQ4Z6XohD4UocBQekRtZlO(Svs4M6409ACGN0fVfnFyL0NcoHyb0gRoW4RuASRIIlessASgsRMaHotXdG7K1X2w2qa4NGevGnr6YfF(4P4Km8goMUHXrfRjT45OIVaYZjKp(5ohJFf4u02)DuJgTnjExa25)N(PI162ITBcJ3Cd4eb8WtKwk9M)gzB)pjbXG655)jEZVzBc29KfigVYIVG3M)h40KfdUm4UvDnMc0oy9tfR)xEj(WNUdBFHB3VRbdE)nt9N(rCBTsfU0rSU67dZVPDF8jFwv4GUc3epZRadDfPv6MBFvDh2n36QGDZlpxL30EMLJQQH9KZbcDad3(OSpCmnQWwX1epsjpZoIq2aqiToF2qDGYATjS46ERRX3s6Lo(VjpfTcS(ps1ICn4gEt1QYkNplTwuk3dfT2g3(j0vCsjgMlNx1KB9odh(zCITJdKX7LsuFc(qEs2Uf1OYADVPXp3w9IwLQ3lH3Ha)zIVqEit1WQ(UzZGq3BlSoP2MdEngNdpFU3LPrvxMFBlMEMROWwgJ8Qg4jbN5kfaFOvZbdgyuMg1uSXPU32b48bCOHumPHT5RPvrdK3gvyQ(nANhZ0)k2AbnghSASsIBpboqA3rnBct8e7TQ5oNplFvJ7Av2QwLBTajT)RefOg9gfnEk55Cn1bE693jsVYUKsQjKWSRBDkHHK0Yk8UukQsSzBSLYDvWrtQJTRQhSeKnUWwcdYf9symjQqISmyGgb(WhcMxwlpD)TwdLLMatHHMyU5(XwMdQK)o6oiSJLg8OQSsx(MPXSQOPeJzwRc92LR5IsmmZrYz)lOAUrw5jV3UKPek1MzhLKCM9h27dkdHYtnxm5ufpiox4G5BcFvUsvLfBUBVHwBLXDolmQ0g6r0DK(kTYYSzOQRxmnO2gS(DHAPnXYSkOOmfOrh3l(8zcf(OLSvcbGE)4eLkiScPLn9GbvETsmU0lXGRjRIMkFyDjHw6lqIZ3Cws95LDDUvv9Ls5YTTLV((x(BLcPddbn0cdfDoF1wlg9VDVDI9pABMefzZYivNyqhilca6nVezXqsNGiYFWe(QzkdPCLHu2IbW4vUxxGcOB5wzkYsVj1PY4Se47)cjiiWpvaddrz3w0wMST1eIIoxcC2TMxig3oGkimxsTEXtwN4VZMpXrhwgU3QHGbHHSgIq0AOJA1iiMpGEx48VcESL9cpvVeIqHTkZUU6(hV1G)eUNnaER2h5LM3S)DHdQt((9z)vQbuFpdPy1LYTIwzDOV1IakuxQz2b6XaYqTIzkD2DfRTVyZ6Xyx8Lr6Wzvwkjb2ySSlwZ5zR(1NfLiIzmo(1S7UtWWZ2MByxjd3)oEPxvt8(NSxUU91X6IYIQ4QQvYYGk5LQnlZ9Zv3YsbSJxO(Rp9ar)cqGfc3B04wRTEFl1XXnrKxG9(Pw8WwEdYa)nKrVORFwIZurM(6hST)IylIOUnj4FV37h3pfzVflTEOu3J2pLlvt6ibve7Xp5RxPC1AlpNXCfLu6cypnGoKtsXO4DHUioZEOOJf)RNu)WlnVSyv5kmeIEBgi8BuY9Q(DUHU3T(nUzM7pt(TTP5GL1CxbNv9dudM1Q)Ltz2TQNp53JgDNU0FYz4vd6qe(kOlzDtNitZznY(NR)rDrbLf)fEH5cQ4xEMYdD(F1zAidwY5fNjCmd553x()p]] )
+spec:RegisterPack( "Guardian", 20250829, [[Hekili:DZ1EVTTUv8plgxap7(Wrs2oXTW2aB9cS1IHUlG3(RHzjAjABTilzirLSuyOp77qs9GsKusonT3GlqrrSe5H)oVpK8aT1C7)C7gpebV9RwgwZnwy9HjMgZTMnF7gYtNXB3Cg5Ep6a8hHOtW))xtrXE(Oq6lEkic5rjqsuASl8YJeY5KpEZnh8jht3nXn60nj(Nsdqe)Oq3y0Ec93U3SDZUu)aYNd3Ut9QVDdkLCmkE7Mn(N(eqyFppmF04e3TBOJ(9glEV1IpM5qhc8)pf6M9LSVWF103BoR2R2UjWpHKqr7jFI)bgKGF9vMeahI2fG92(x2UXn2NGJ9ra)JcV3p8qMZWmNbzopGGNcJAI)EBk89yVWpe4syu2EOtGyYEEsMZA4XXrH7tJlEk5ymo5yu(C2LUF)K8rmjgFc5hcZAzMZ0mN3K5CeLqWYdmHaAc2WaDdYLH)n5VClbKGAzKJyua54KZUe20Vvy(X4dXrpsosjW0NhbcXpIcOZFwVKKTqR9aX(Mp2Zgqfq2yUocO88NdLVBEBkiJjMCHnFsNq)VkCSdfFFcqw6sFR2LMPCssJFW)buGnOcjWsrsM4f9yyL2RGwvpUPaWODyAnxloLxCaXeazyuC7M2mOfJEawPjPNzaGs0hW2GC)KpMV4Mvl1juAq7gzX49uBC6BYCUCjZzuMJxezcy6JsoAtXKOjmBnjOaCizY(ayeuE3na9ycGRqyqRYCS4espvM1hQy2fvMw4HRMq5CBMZ4kXHaHA3Zr0(0nccaawba0afC0EiQa2ojaJpJfcdaY9fcMIXquRakyY9Y17KXn3aezVpk(eOwvBqZ8LkErqAimEysNejARM9JkLtpcXaph9io2gmebdPsbvHTVlIuGLQhUhdSd2(CebOHpkG9YXCD0GUODfYDJcFi6EmxgE2hGh14)R3jYD7WXj4475QP683cXXbUoO4qE0M6d7dTjg4)JhJUIc2hYZqs1WPXjrUvU(LwaTpErBbA4HCPtUcUINYj8ygTPgvSzmJhqzKO4uH0sWUU0FTh8cvBPgm56XxiO0Zr3C1e8rv4LrvPMgTPtvZwLmC3YMXsMFGZlBD)UIgdHPSKJgBQpCCbVqIIihTrHESOzfr9wxgwu1GeDxB8kXQvak82mNdUE0Sscu7bFx)O0eB3NCdW2uSwSSRybBRPJ(gMXi6JGkLxAvJSh8yyUOaAys5afncvB2maAZkPewAWO1d3IaAqJk0YFCPb5CJCCwLdqrrKa)yuJCQspuyfws7py0o9YdN(6b)GGLzpqqq8CiynuDcvDOV0UkYj6yWd62mcJAyzEnYmZMvbeLgsOSrcbkl9au7vzCNAe10SBQ2psQia81fU1QBK0QbwfsvncXWUJvUdet9vnOvz(JKJvdY76mMz)RB57GhgWljn2)8KALoliA3JJJ4Hs3bqKb(fVGGxmoS)zg51xVdJmhIIBldLP5vLQuh4SDP(jyXs0Vv04SZAdpHcpeWKxw6t23VQXxsZ2y1FSUQaRd0Ooku7O7X117cHjcs994tsI1sogd)KYz6lN43joRhONY1mWRVULNlPf056RLOTiJ1lO)NxztJv7nvwLZaHGYFdRQu5xlyUz6Ux74TxY4Xkode97bVTYJ0Z56IO2h8jw4q)iBNQjvSS(Y0g9CaU2C2gIm11H8EqtMuQRTN8m0ekey6lfs5gA0UFfRUlxPzLhAyGzTTt)grAtIsdkYCaXBXjKAYznYNAU48A0aFXfl06aYlzqZ0M2X06hAhRmfH(YOuM)zuTY1i(U89dX2hqTA3yJ2n60UiirQFijx9QXQs(OhXNyf2G9SbsEgOR)EIYD1MxWMvhfS1KrKybz4wCQQVKOvUq2P6lmtBY(Qi)INYzbM6FrNJAO1k2QCrzzLchTMFnfe8JGas(4F4yDpf61yC4jMy9oJRt8jeYQPA87csTlFLb8vkU6n)jxw4u910kf0S227AEC8nlVSyCNtdEaO33WQpmIPtfpvyrIw)uHN22nD9624D91yPuUrcEKZAvyvwB13PkVTR27hSOuwM996A9haV9Edyf7jDAhxw6buaDoULQKALZlPmZXXoyFOEb4Ke7trrHbICOqUD4v79J52u6lzQOGbWVx(oRkl9WYqG5kgkJYTE8lDQlu4mwvuwNkt6GU6LO(9gK8O)zCvyYwVDRREP4BCBSAfQAn1SwVlMNdc6T8uNqzM(CqDcPRH3j0wzzpSBbY2IBQVeq3NgeyVds(0iVJvTrr3ShUzMP2Daphh9yqnevehw3TISdt7SGKGiijztQ1DqwDNbArZejsDICBEuMjo6e7CSy((j2E4hI4Vqcqq4mBi3OFGpo0flSs6ibr(QUlx1y)W7XeOmdkaf(nj)AM1phRgZXIoNUp62xO7D8CjR10bVye0llZM)dBABrXBokBUOsO9OikUU0slN0qTKi3zcE45ymD)fizR8tiGtZ30g9eDvzRlSSrGQmbtQMFXE9z)v(6wSTFfH8PDtwycDbP3fGQuKmzzcenXlngrTEkJu8akifcZeKalHr(p3UXSDhoI)jCJlJtBUyr)T84gmXhWUq9Qj03u0GCl2U5rWuasedoKFgsrhtOSXmE0WOWmhwFUnj7luHF0EFQe6x(LmN)1z6ToHo9XmN(2ME7cI2DdOFGf8ryO(H38NzRXVf7hb85t)D6kDtEySB8IPSvzQDkfY(cDL3us7prPDMZNIobgz8(YdGd(dUUt9UJp4FfrWFKMcoVb)UJ2tFCwlzsP10BxDtt7h1JQWk5DudKvf2hVJPcxz(Ukn7kJ35VFvRgld7WqHZaQqXrqRsebRWAj9UYLBq(iOByVCjur(sJggzb7UvgxUmqFLFmC(V)B47H4K)hqK7NK7maqibmA3HDrP0)WN8NccYC(VPjG2c2Oe1eo8EitljckF2hprplxueRaNwJp0npwkQRDs1eakfBLcoy0v5xR9uw(uXNqZnsjyTuNIdaKr2G7(jUXLqYSYz1vC7lxug4x7AOjnMW6jLbujXOOCvrcTohHL4ioxUIJuH9CoQlgFSijBMoIZRv5H0BWMgs8dUjnKU9GmNpN5aX4GaihGT4N5agezor73)EcRva)1FBtD7vrRTb5n5WWw85OMe1t6vO4rXIrPO)MfGknOuXuEV3dPJQQO11M1TQZNRYagJEormgF5sNtJHW2V)Vv32a4lNkXWchycfUchtXLlJu2(LlNpSmkLuZBUY6Yf1ZAwBZYu3SMoCG6PviPKyOAnFjpMe3iPp3W66fY0lVnmlTkQTL3MJUQ3mLELIUIt0arZfKpS5PlOwXt9oRsFORjpL4nHWasVuiAG07uicz8YOr9iqcvjm866QY13AmwvyxkfgpKIM1ZmgoQG)BPbebY0hmQlk)1Vy9yuf0uHXCz3i(Yf7(Qc1T0sHU)B4k0O6(GxBMdkP72COQhNRJxA(2dUE5Zu399TAQmJ0iewJy1RkdxPSNdLn75DD07QDwZqvN08n6AmVHd46GYwYJRrNBmSi4J0LCUYiFsQ7RRlxyu4dgQMj4O)ZdjAfqubsdBNrJk8oKxfZ2yjZQW86A3U8PBAQE(DpDj3(UCYTuVsTiRklerFN4nw2(Tnb6ldMLwY63TxL3CFYZCvGAGI2Ltwcad46WGQOz0B7OmEwEtV1mAMPzpdx2NYRwE7WRmFl7q3PySp1ISC1CR(adOkVbscUbQ6xTHTS7sPG88Tr9dhO9hsn0WpxIWt6PYXUO6Lx6uAJBAfcPKkl6xOHuOvl8ZbbvXl)9z91kb0xLIQ0wQrRSxFlY7EranIl9GDu)aGQCXuq1NvxZCz8J(IN6PK5QlXQfNvvzlKGXmvLLl4zRVzHK5iMzmnC1YflKm8mnfE9ufVU7vuB6lPWsJg0O1DGAyesdouSjEwlRCQ27BxxdD3P3LWwdKvhlZE5GsrIeTHOhMx4q1MQlQHTRu0JQDyfdA2zask3kMq5vboKFV6RVZOVmBU7MOy9kxs9sLkW0jB2t0ELo1Yfnw2ion3BuBu(vSbX6U0oAALMLqgTNTqVSeWFa8Ftg(ATgFL6a0tWiNdk)I7R2uGIwzrH0oF5APfwK1QfnCIGMvQFvy7qBPLH8SlBMbXdeuTaRHj8mHt9t5ekpj5(qofN2JOq8QqM5yzr7pvo)5ZkkrEf5QUJJ6BEV4ewgivA2qFPpueR19XgHV2n(qJSC6ByFGrQ)Y8JJxdYk(kHqHw1NVIL3QF8Spki9D4k)UFikg6drepCDfZ7U5QKCgtmFt1xwdnuw(ZSrzyanF(pYv6IF6pQXdgQXI183i(z(yhkb79pcf)M7KCg7s7jJzSMdy7)p]] )

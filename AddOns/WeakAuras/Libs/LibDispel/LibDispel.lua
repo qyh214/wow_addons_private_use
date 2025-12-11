@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "LibDispel-1.0", 15
+local MAJOR, MINOR = "LibDispel-1.0", 21
 assert(LibStub, MAJOR.." requires LibStub")
 
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
@@ -13,8 +13,8 @@ local SetCVar = C_CVar.SetCVar
 
 local CopyTable = CopyTable
 local CreateFrame = CreateFrame
-local IsPlayerSpell = IsPlayerSpell
-local IsSpellKnownOrOverridesKnown = IsSpellKnownOrOverridesKnown
+local IsSpellInSpellBook = C_SpellBook.IsSpellInSpellBook or IsSpellKnownOrOverridesKnown
+local IsSpellKnown = C_SpellBook.IsSpellKnown or IsPlayerSpell
 
 local Retail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local Classic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
@@ -259,7 +259,7 @@ if Retail then
 	BleedList[79444] = "Impale"
 	BleedList[79828] = "Mangle"
 	BleedList[79829] = "Rip"
-	BleedList[80028] = "Rock Bore"
+	BleedList[80028] = "Bleeding Edge"
 	BleedList[80051] = "Grievous Wound"
 	BleedList[81043] = "Razor Slice"
 	BleedList[81087] = "Puncture Wound"
@@ -607,7 +607,6 @@ if Retail then
 	BleedList[258798] = "Razorsharp Teeth"
 	BleedList[258825] = "Vampiric Bite"
 	BleedList[259220] = "Barbed Net"
-	BleedList[259277] = "Kill Command"
 	BleedList[259328] = "Gory Whirl"
 	BleedList[259382] = "Shell Slash"
 	BleedList[259739] = "Stone Claws"
@@ -758,7 +757,6 @@ if Retail then
 	BleedList[311122] = "Jagged Wound"
 	BleedList[311744] = "Deep Wound"
 	BleedList[311748] = "Lacerating Swipe"
-	BleedList[313469] = "Rend"
 	BleedList[313674] = "Jagged Wound"
 	BleedList[313734] = "Ravaging Leap"
 	BleedList[313747] = "Rend"
@@ -872,10 +870,12 @@ if Retail then
 	BleedList[346823] = "Furious Cleave"
 	BleedList[347227] = "Weighted Blade"
 	BleedList[347716] = "Letter Opener"
+	BleedList[347744] = "Quickblade"
 	BleedList[347807] = "Barbed Arrow"
 	BleedList[348074] = "Assailing Lance"
 	BleedList[348385] = "Bloody Cleave"
 	BleedList[348726] = "Lethal Shot"
+	BleedList[350101] = "Chains of Damnation"
 	BleedList[351119] = "Shuriken Blitz"
 	BleedList[351976] = "Shredder"
 	BleedList[353068] = "Razor Trap"
@@ -1202,6 +1202,7 @@ if Retail then
 	BleedList[470903] = "Phantom Strikes"
 	BleedList[471076] = "Chomp"
 	BleedList[471442] = "Rabid Charge"
+	BleedList[471999] = "Rend Flesh"
 	BleedList[472196] = "Rending Maul"
 	BleedList[472855] = "Shred"
 	BleedList[474201] = "Gore"
@@ -1219,8 +1220,21 @@ if Retail then
 	BleedList[1217677] = "Flesh Wound"
 	BleedList[1218140] = "Junksaws"
 	BleedList[1218302] = "Punctured"
+	BleedList[1219535] = "Rift Claws"
 	BleedList[1221386] = "Spearhead"
+	BleedList[1221475] = "Phantom Step"
+	BleedList[1224343] = "Shattered Shards"
+	BleedList[1226903] = "Harvesting Slice"
 	BleedList[1227293] = "Gushing Wound"
+	BleedList[1227962] = "Chomp"
+	BleedList[1231311] = "Gore"
+	BleedList[1232354] = "Talon Rake"
+	BleedList[1235245] = "Ankle Bite"
+	BleedList[1237602] = "Gushing Wound"
+	BleedList[1239906] = "Phantom Strikes"
+	BleedList[1248211] = "Phase Slash"
+	BleedList[1253240] = "Corruption of the Engorged"
+	BleedList[1255245] = "Twilight Slash"
 end
 
 function lib:GetDebuffTypeColor()
@@ -1253,9 +1267,7 @@ do
 		[89808] = "Singe"
 	}
 
-	if Retail then
-		WarlockPetSpells[132411] = "Singe Magic" -- Grimoire of Sacrifice
-	else
+	if Classic then
 		WarlockPetSpells[19505] = "Devour Magic Rank 1"
 		WarlockPetSpells[19731] = "Devour Magic Rank 2"
 		WarlockPetSpells[19734] = "Devour Magic Rank 3"
@@ -1263,15 +1275,17 @@ do
 		WarlockPetSpells[27276] = "Devour Magic Rank 5"
 		WarlockPetSpells[27277] = "Devour Magic Rank 6"
 		WarlockPetSpells[48011] = "Devour Magic Rank 7"
+	else
+		WarlockPetSpells[132411] = "Singe Magic" -- Grimoire of Sacrifice
 	end
 
 	local function CheckSpell(spellID, pet)
-		return IsSpellKnownOrOverridesKnown(spellID, pet) and true or nil
+		return IsSpellInSpellBook(spellID, pet, true) and true or nil
 	end
 
 	local function CheckPetSpells()
 		for spellID in next, WarlockPetSpells do
-			if CheckSpell(spellID, true) then
+			if CheckSpell(spellID, 1) then
 				return true
 			end
 		end
@@ -1299,7 +1313,7 @@ do
 			DispelList.Magic = greater
 		elseif myClass == 'MONK' then
 			local mwDetox = CheckSpell(115450) -- Detox (Mistweaver)
-			local detox = (not Retail and mwDetox) or (Retail and CheckSpell(218164)) -- Detox (Brewmaster or Windwalker)
+			local detox = (not Retail and mwDetox) or (Retail and (CheckSpell(218164) or IsSpellKnown(388874))) -- Detox (Brewmaster or Windwalker) or Improved Detox (Mistweaver)
 			DispelList.Magic = mwDetox and (not Mists or CheckSpell(115451))
 			DispelList.Disease = detox
 			DispelList.Poison = detox
@@ -1313,7 +1327,7 @@ do
 		elseif myClass == 'PRIEST' then
 			local dispel = CheckSpell(527) -- Dispel Magic
 			DispelList.Magic = dispel or CheckSpell(32375)
-			DispelList.Disease = Retail and (IsPlayerSpell(390632) or CheckSpell(213634)) or not Retail and (CheckSpell(552) or CheckSpell(528)) -- Purify Disease / Abolish Disease / Cure Disease
+			DispelList.Disease = Retail and (IsSpellKnown(390632) or CheckSpell(213634)) or not Retail and (CheckSpell(552) or CheckSpell(528)) -- Purify Disease / Abolish Disease / Cure Disease
 		elseif myClass == 'SHAMAN' then
 			local purify = CheckSpell(77130) -- Purify Spirit
 			local cleanse = purify or CheckSpell(51886) -- Cleanse Spirit (Retail/Mists)
@@ -1356,7 +1370,7 @@ do
 	frame:RegisterEvent('LEARNED_SPELL_IN_TAB')
 	frame:RegisterEvent('SPELLS_CHANGED')
 
-	if Retail or Mists then
+	if not Classic then
 		frame:RegisterEvent('PLAYER_TALENT_UPDATE')
 	end
 

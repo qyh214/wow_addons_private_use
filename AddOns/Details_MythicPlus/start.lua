@@ -23,13 +23,14 @@ local defaultSettings = {
     show_time_sections = true,
     saved_runs_compressed = {},
     saved_runs_compressed_headers = {},
-    saved_runs_limit = 10,
+    saved_runs_limit = 500,
     saved_runs_selected_index = 1,
     scoreboard_scale = 1.0,
     translit = GetLocale() ~= "ruRU",
     keep_information_for_debugging = false,
     developer_mode = false,
     migrations_done = {},
+    migrations_data = {}, --used to store data for migrations
     logs = {},
     has_last_run = false,
     is_run_ongoing = false,
@@ -38,6 +39,8 @@ local defaultSettings = {
         hide = false,
     },
     visible_scoreboard_columns = {},
+
+    likes_given = {},
 
     font = {
         row_size = 12,
@@ -57,6 +60,14 @@ local defaultSettings = {
 
 private.addon = detailsFramework:CreateNewAddOn(tocFileName, "Details_MythicPlusDB", defaultSettings)
 local addon = private.addon
+
+
+addon.eventCallbacks = {
+    ["RunFinished"] = {}, --triggers right after the CreateRunInfo() and addon.OpenScoreBoardAtEnd(). Args: runId: number
+    ["PlayerLiked"] = {}, --triggers right after a player is liked by someone. Args: runId: number, playerName: string
+}
+
+--[[GLOBAL]] DetailsMythicPlus = {}
 
 ---@diagnostic disable-next-line: missing-fields
 addon.activityTimeline = {}
@@ -90,7 +101,8 @@ function addon.OnInit(self, profile) --PLAYER_LOGIN
     end
 
     addon.data = {}
-
+    addon.recentLikes = {}
+    addon.LikesAmountFontString = {}
     addon.temporaryTimers = {}
 
     local detailsEventListener = Details:CreateEventListener()
@@ -165,6 +177,10 @@ function addon.OnInit(self, profile) --PLAYER_LOGIN
         end
     end
 
+    for migrationIndex, migration in pairs(addon.MigrationsPerCharacter) do
+        migration(migrationIndex)
+    end
+
     private.log("addon loaded")
 end
 
@@ -222,6 +238,19 @@ function addon:RegisterMinimap()
         end
 
         self.dataBroker = dataBroker
+    end
+end
+
+function addon.FireEvent(eventName, ...)
+    if (not addon.eventCallbacks[eventName]) then
+        return
+    end
+
+    for _, callback in ipairs(addon.eventCallbacks[eventName]) do
+        local success, errorText = pcall(callback, ...)
+        if (not success) then
+            print("Error firing event '" .. eventName .. "': " .. errorText)
+        end
     end
 end
 

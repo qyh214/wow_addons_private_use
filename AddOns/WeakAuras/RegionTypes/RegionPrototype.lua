@@ -240,7 +240,7 @@ local function SendChat(self, options)
   if (not options or WeakAuras.IsOptionsOpen()) then
     return
   end
-  Private.HandleChatAction(options.message_type, options.message, options.message_dest, options.message_dest_isunit, options.message_channel, options.r, options.g, options.b, self, options.message_custom, nil, options.message_formaters, options.message_voice);
+  Private.HandleChatAction(options.message_type, options.message, options.message_dest, options.message_dest_isunit, options.message_channel, options.r, options.g, options.b, self, {customFunc = options.message_custom}, nil, options.message_formaters);
 end
 
 local function RunCode(self, func)
@@ -1175,12 +1175,6 @@ function Private.SetTextureOrAtlas(texture, path, wrapModeH, wrapModeV)
   if texture.IsAtlas then
     return texture:SetAtlas(path);
   else
-    if (texture.wrapModeH and texture.wrapModeH ~= wrapModeH) or (texture.wrapModeV and texture.wrapModeV ~= wrapModeV) then
-      -- WORKAROUND https://github.com/Stanzilla/WoWUIBugs/issues/250
-      texture:SetTexture(nil)
-    end
-    texture.wrapModeH = wrapModeH
-    texture.wrapModeV = wrapModeV
     return texture:SetTexture(path, wrapModeH, wrapModeV);
   end
 end

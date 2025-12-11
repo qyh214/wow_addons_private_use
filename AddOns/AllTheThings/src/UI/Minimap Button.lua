@@ -34,7 +34,7 @@ function AllTheThings_MinimapButtonOnEnter(self, button)
 	local reference = app:GetDataCache();
 	if reference then
 		GameTooltip:SetATTReferenceForTexture(reference);
-		
+
 		local left, right = DESCRIPTION_SEPARATOR:split(reference.title);
 		GameTooltip:AddDoubleLine(reference.text, reference.progressText, 1, 1, 1);
 		GameTooltip:AddDoubleLine(left, right, 1, 1, 1);
@@ -155,7 +155,12 @@ end
 
 -- Register with the Data Broker
 app.AddEventHandler("OnStartup", function()
-	LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject(L["TITLE"], {
+	if not LibStub then return end
+
+	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
+	if not LDB then return end
+
+	LDB:NewDataObject(L["TITLE"], {
 		type = "launcher",
 		icon = app.asset("logo_32x32"),
 		OnClick = AllTheThings_MinimapButtonOnClick,

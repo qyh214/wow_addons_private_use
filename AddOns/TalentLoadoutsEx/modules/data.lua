@@ -8,7 +8,7 @@ Addon.classColor = RAID_CLASS_COLORS[englishClass];
 
 function Addon:GetSpecTable(class, spec)
 	class = class or englishClass;
-	spec = spec or GetSpecialization();
+	spec = spec or C_SpecializationInfo.GetSpecialization();
 	TalentLoadoutEx[class] = TalentLoadoutEx[class] or {};
 	TalentLoadoutEx[class][spec] = TalentLoadoutEx[class][spec] or {};
 	return TalentLoadoutEx[class][spec];
@@ -398,27 +398,35 @@ function Addon:UpdateData()
 		TalentLoadoutEx.Option.IsEnabledPvp = true;
 	end
 
-	-- Add Preset Data Addons Option
-	TalentLoadoutEx.Option.PresetDataSourceAddonIndex = TalentLoadoutEx.Option.PresetDataSourceAddonIndex or 0;
-	TalentLoadoutEx.Option.PeaversTalentsData = TalentLoadoutEx.Option.PeaversTalentsData or {};
-	TalentLoadoutEx.Option.PeaversTalentsData.mode = TalentLoadoutEx.Option.PeaversTalentsData.mode or "Archon";
-	TalentLoadoutEx.Option.PeaversTalentsData.isCombineGroups = TalentLoadoutEx.Option.PeaversTalentsData.isCombineGroups or false;
+	-- Update Preset Options
+	TalentLoadoutEx.Option.Preset = TalentLoadoutEx.Option.Preset or {};
+	TalentLoadoutEx.Option.Preset.isCombineGroups = TalentLoadoutEx.Option.isCombinePresetGroups or false;
+	TalentLoadoutEx.Option.Preset.PeaversTalentsData = TalentLoadoutEx.Option.Preset.PeaversTalentsData or { mythic = true, heroic_raid = true, mythic_raid = true };
+	TalentLoadoutEx.Option.Preset.MurlokExport = TalentLoadoutEx.Option.Preset.MurlokExport or { ["mm+"] = true, solo = true };
+
+	-- Delete Old Preset Options
+	TalentLoadoutEx.Option.PresetDataSourceAddonIndex = nil;
+	TalentLoadoutEx.Option.PeaversTalentsData = nil;
 
 	-- Remove nil data
 	-- Fix PvP Talent ID
 	-- Remove unused parameter
+	-- Remove unused tables
 	for className, classTable in pairs(TalentLoadoutEx) do
 		if className ~= "Option" then
+			classTable[5] = nil;
 			for specIndex, specTable in ipairs(classTable) do
 				local fixedTable = {};
 
 				-- Don't use ipairs because of a bug that can cause nil data to be mixed in.
-				for _, data in pairs(specTable) do
-					data.pvp1 = tonumber(data.pvp1);
-					data.pvp2 = tonumber(data.pvp2);
-					data.pvp3 = tonumber(data.pvp3);
-					data.isInGroup = nil;
-					table.insert(fixedTable, data);
+				if type(specTable) == "table" then
+					for _, data in pairs(specTable) do
+						data.pvp1 = tonumber(data.pvp1);
+						data.pvp2 = tonumber(data.pvp2);
+						data.pvp3 = tonumber(data.pvp3);
+						data.isInGroup = nil;
+						table.insert(fixedTable, data);
+					end
 				end
 
 				classTable[specIndex] = fixedTable;

@@ -32,7 +32,7 @@ local function CreateBrowseFrame()
     end)
 
     -- profession
-    local professionDropdown = AF.CreateDropdown(browseFrame, 120, 9, nil, true, nil, "LEFT")
+    local professionDropdown = AF.CreateDropdown(browseFrame, 120, 9, "vertical", nil, nil, "LEFT")
     AF.SetPoint(professionDropdown, "TOPLEFT")
     for _, p in pairs(BFC.GetProfessionList()) do
         professionDropdown:AddItem({
@@ -143,7 +143,7 @@ end
 local function Pane_OnEnter(pane)
     pane:SetBackdropColor(AF.GetColorRGB("sheet_highlight"))
     if not BFC_DB.blacklist[pane.id] then
-        AF.ShowTooltips(pane, "BOTTOMLEFT", 0, -1, {
+        AF.ShowTooltip(pane, "BOTTOMLEFT", 0, -1, {
             AF.WrapTextInColor(pane.t.name, pane.t.class),
             pane.t.inInstance and AF.WrapTextInColor(L["In Instance..."], "firebrick"),
             L["Crafting Fee: %s"]:format(AF.WrapTextInColor(pane.t.craftingFee or BFC.UNKNOWN_CRAFTING_FEE, "gold")) .. AF.EscapeAtlas("Coin-Gold"),
@@ -155,7 +155,7 @@ end
 
 local function Pane_OnLeave(pane)
     pane:SetBackdropColor(AF.GetColorRGB("sheet_normal2"))
-    AF.HideTooltips()
+    AF.HideTooltip()
 end
 
 local function CreatePane()

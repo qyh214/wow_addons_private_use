@@ -21,8 +21,6 @@ local RUMOR = {
 [] = {quest=82648, vignette=6307,},
 [] = {quest=82581, vignette=6542,},
 [] = {quest=82646, vignette=6543,},
-[] = {quest=82640, vignette=6544,},
-[] = {quest=82644, vignette=6545,},
 [] = {quest=82642, vignette=6547,},
 [] = {quest=82640, vignette=6548,},
 [] = {quest=82581, vignette=6549,},
@@ -31,48 +29,33 @@ local RUMOR = {
 [] = {quest=82581, vignette=6555,},
 [] = {quest=82640, vignette=6556,},
 [] = {quest=82642, vignette=6557,},
-[] = {quest=82581, vignette=6558,},
 [] = {quest=82648, vignette=6559,},
-[] = {quest=82648, vignette=6560,},
 [] = {quest=82648, vignette=6561,},
 [] = {quest=82644, vignette=6562,},
 --]]
 
 ns.RegisterPoints(ns.AZJKAHET, {
     [33274910] = {quest=82642, vignette=6300,}, -- Eirzay 224162, gave 81487
-    [61432414] = {quest=82646, vignette=6308,}, -- Eirzay 224176, gave 81494
-    [64217526] = { -- Ru'murh 224200
-        quest=82648,
-        vignette=6541,
-        -- gave 81503 terror made manifest
-    },
     [54476362] = {quest=82646, vignette=6305,}, -- Eirzay 224172, gave 81492
+    [61432414] = {quest=82646, vignette=6308,}, -- Eirzay 224176, gave 81494
+    [64217526] = {quest=82648, vignette=6541,}, -- Ru'murh 224200, gave 81503 terror made manifest
+    [61117442] = {quest=82648, vignette=6560,}, -- Ghos'opp 224181, gave 81497
 }, RUMOR)
 ns.RegisterPoints(ns.CITYOFTHREADS, {
-    [30892302] = { -- Ghos'opp 224189
-        quest=82642,
-        vignette=6553,
-        -- gave
-    },
-    [77855369] = { -- Ru'murh 224196
-        quest=82581,
-        vignette=6546,
-        -- gave
-    },
     [43004715] = {quest=82642, vignette=6299,}, -- Eirzay 224161, gave 81475
+    [61253619] = {quest=82644, vignette=6304,}, -- Eirzay 224171, gave 81491
+    [54833454] = {quest=82640, vignette=6544,}, -- Ru'murh 224198, gave 81499
+    [55704782] = {quest=82644, vignette=6545,}, -- Ru'murh 224197, gave 81472
     [68655107] = {quest=82581, vignette=6551,}, -- Ru'murh 224191, gave 81484
     [41482241] = {quest=82640, vignette=6552,}, -- Ru'murh 224190, gave 81555
-    [52021664] = {quest=82640, vignette=6564,}, -- Ghos'opp 224177, gave 81479
+    [77855369] = {quest=82581, vignette=6546,}, -- Ru'murh 224196
+    [30892302] = {quest=82642, vignette=6553,}, -- Ghos'opp 224189
+    [64498727] = {quest=82581, vignette=6558,}, -- Ghos'opp 224183, gave 81481
     [64162119] = {quest=82640, vignette=6563,}, -- Ghos'opp 224178, gave 81495
-    [61253619] = {quest=82644, vignette=6304,}, -- Eirzay 224171, gave 81491
+    [52021664] = {quest=82640, vignette=6564,}, -- Ghos'opp 224177, gave 81479
 }, RUMOR)
 ns.RegisterPoints(ns.CITYOFTHREADSLOWER, {
-    [49664432] = { -- Eirzay 224168
-        quest=82644,
-        vignette=6302,
-        -- gave 81490 bounty balaxir the bully
-        levels=true,
-    },
+    [49664432] = {quest=82644, vignette=6302,}, -- Eirzay 224168, gave 81490 bounty balaxir the bully
 }, RUMOR)
 
 -- Weave-Rat caches
@@ -81,15 +64,12 @@ local CACHE = {
     label="Weave-Rat Cache", -- Thimble
     atlas="notoriety-32x32",
     loot={},
-    -- TODO: detect pact for the week
-    -- 80544 for chosing the Weaver?
-    hide_before={ns.conditions.QuestComplete(80544)},
+    hide_before={ns.conditions.QuestComplete(80544)}, -- Weaver
     group="rumor",
     levels=true,
 }
 
 --[[
-[] = {quest=80559, vignette=6338,},
 [] = {quest=80580, vignette=6340,},
 [] = {quest=82855, vignette=6342,},
 [] = {quest=82856, vignette=6343,},
@@ -109,27 +89,16 @@ local CACHE = {
 --]]
 
 ns.RegisterPoints(ns.AZJKAHET, {
-    [43752660] = { -- from map 83781
-        quest=82854,
-        vignette=6341,
-    },
-    [65938810] = {
-        quest=82857,
-        vignette=6344,
-    },
-    [60441058] = {
-        quest=82861,
-        vignette=6348,
-    },
+    [55106876] = {quest=80559, vignette=6338,},
+    [43752660] = {quest=82854, vignette=6341,}, -- from map 83781
+    [65938810] = {quest=82857, vignette=6344,},
+    [60441058] = {quest=82861, vignette=6348,},
 }, CACHE)
 ns.RegisterPoints(ns.CITYOFTHREADS, {
-    [55873247] = { -- Thimble 224885
-        quest=80579,
-        vignette=6339,
-    },
+    [55873247] = {quest=80579, vignette=6339,}, -- Thimble 224885
     [69898274] = {quest=82858, vignette=6345,}, -- Thumble 224891
-    [75194831] = {quest=82862, vignette=6349,}, -- Thimble 224895
     [26255113] = {quest=82859, vignette=6346,}, -- Thimble 224892
+    [75194831] = {quest=82862, vignette=6349,}, -- Thimble 224895
 }, CACHE)
 
 -- Forgotten Memorial

@@ -306,6 +306,7 @@ local VisualHeaderFields = {
 	text = BaseClass__class.text,
 	total = BaseClass__class.total,
 	progress = BaseClass__class.progress,
+	isContainer = BaseClass__class.isContainer,
 	costTotal = BaseClass__class.costTotal,
 	upgradeTotal = BaseClass__class.upgradeTotal,
 }

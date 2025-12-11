@@ -259,7 +259,7 @@ if C_PetJournal_GetPetStats then
 						local petID, s, owned, customName, level, health, maxHealth, power, speed, rarity;
 						for i=1,ownedPets do
 							petID, s, owned, customName, level = C_PetJournal_GetPetInfoByIndex(i);
-							if petID and speciesID == s then
+							if petID and owned and speciesID == s then
 								index = index + 1;
 								if index == 1 then
 									tinsert(tooltipInfo, { left = " " });

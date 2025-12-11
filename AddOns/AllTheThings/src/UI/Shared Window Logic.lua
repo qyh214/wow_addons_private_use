@@ -2,15 +2,20 @@
 local appName, app = ...;
 local L = app.L
 
-local tinsert,ipairs,type
-	= tinsert,ipairs,type
+local type
+	= type
 
 -- Some common UI functions (TBD)
 app.UI = {
 	OnClick = {
 		IgnoreRightClick = function(row, button)
-			return button == "RightButton";
-		end
+			return button == "RightButton"
+		end,
+		OnlySortingRightClick = function(row, button)
+			if button == "LeftButton" then return end
+
+			return button == "RightButton" and not IsShiftKeyDown()
+		end,
 	}
 }
 
@@ -21,12 +26,13 @@ do
 		-- app.PrintDebug("SearchForMissingItemsRecursively",app:SearchLink(group))
 		if group.visible then
 			if group.itemID and (group.collectible or (group.total and group.total > 0)) and not FilterBind(group) then
-				tinsert(listing, group);
+				listing[#listing + 1] = group
 			end
-			if group.g and group.expanded then
+			local g = group.g
+			if g and group.expanded then
 				-- Go through the sub groups and determine if any of them have a response.
-				for i, subgroup in ipairs(group.g) do
-					SearchForMissingItemsRecursively(subgroup, listing)
+				for i=1,#g do
+					SearchForMissingItemsRecursively(g[i], listing)
 				end
 			end
 		end

@@ -76,19 +76,127 @@
 	local registredPlugins = {}
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	--snipers
+	if (C_ChatInfo) then
+		local cooldownDMPE = 0
+		local prefixesToSnipe = {
+			["DMPE"] = function(commEventFrame, event, prefix, text, channel, sender, target, zoneChannelId, localId, name, instanceId) --details main extension
+				---@diagnostic disable-next-line: undefined-global
+				if (DetailsMythicPlus) then
+					return --addon installed, do not process
+				end
+
+				sender = Ambiguate(sender, "none")
+				--decode the data
+				if (C_EncodingUtil) then
+					text = C_EncodingUtil.DecodeBase64(text)
+					if (text) then
+						---@diagnostic disable-next-line: undefined-global
+						text = C_EncodingUtil.DecompressString(text, Enum.CompressionMethod.Deflate)
+						if (text) then
+							local dataPrefix = text:match("^(.-),")
+							if (dataPrefix == "L") then --ProcessLikePlayer function in DMP
+								text = text:sub(#dataPrefix + 2) --remove the prefix from the text
+								local data = C_EncodingUtil.DeserializeCBOR(text)
+								if (data) then
+									local playerLiked = data.playerLiked
+									if (playerLiked) then
+										if (UnitIsUnit("player", playerLiked)) then
+											if (cooldownDMPE + 300 > GetTime()) then
+												return --on cooldown
+											end
+											Details:Msg("Someone gave you a 'GG, Well Played!' on Details! Mythic Plus addon (get from CurseForge or Wago).")
+											cooldownDMPE = GetTime()
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end,
+		}
+
+        ---@diagnostic disable-next-line: undefined-field
+	    for i = 1, #prefixesToSnipe do
+			local prefix = prefixesToSnipe[i]
+			C_ChatInfo.RegisterAddonMessagePrefix(prefix)
+	    end
+
+	    local onReceiveComm = function(self, event, prefix, text, channel, sender, target, zoneChannelId, localId, name, instanceId)
+		    local callbackFunc = prefixesToSnipe[prefix]
+		    if (callbackFunc) then
+			    xpcall(callbackFunc, geterrorhandler(), self, event, prefix, text, channel, sender, target, zoneChannelId, localId, name, instanceId)
+		    end
+	    end
+
+	    local commEventFrame = CreateFrame("frame")
+		commEventFrame:RegisterEvent("CHAT_MSG_ADDON")
+		commEventFrame:SetScript("OnEvent", onReceiveComm)
+	end
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --comm functions
+
+---@class talenttierinfo : table
+---@field isExceptional boolean
+---@field talentID number
+---@field known boolean
+---@field maxRank number
+---@field hasGoldBorder boolean
+---@field tier number
+---@field selected boolean
+---@field icon number
+---@field grantedByAura boolean
+---@field meetsPreviewPrereq boolean
+---@field previewRank number
+---@field meetsPrereq boolean
+---@field name string
+---@field isPVPTalentUnlocked boolean
+---@field column number
+---@field rank number
+---@field available boolean
+---@field spellID number
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --item level
 
 	local getHorizontalTalentsAsString = function()
 		local talents = ""
-		for i = 1, 7 do
-			for o = 1, 3 do
-				local talentID, name, texture, selected, available = GetTalentInfo(i, o, 1)
-				if (selected) then
-					talents = "" .. talentID .. ","
-					break
+		local talentGroup = C_SpecializationInfo.GetActiveSpecGroup()
+
+		if (DetailsFramework.IsPandaWow()) then
+			for tier = 1, MAX_NUM_TALENT_TIERS do
+				local tierAvailable, selectedTalent, tierUnlockLevel = GetTalentTierInfo(tier, 1, false)
+
+				if (selectedTalent) then
+					local talentInfoQuery = {}
+					talentInfoQuery.tier = tier
+					talentInfoQuery.column = selectedTalent
+					talentInfoQuery.groupIndex = talentGroup
+					talentInfoQuery.isInspect = false
+					talentInfoQuery.target = "player"
+
+					---@type talenttierinfo
+					local talentInfo = C_SpecializationInfo.GetTalentInfo(talentInfoQuery)
+					if (talentInfo) then
+						local talentId = talentInfo.talentID
+						talents = talents .. "" .. talentId .. ","
+					end
+				end
+			end
+		else
+			for i = 1, 7 do
+				for o = 1, 3 do
+					local talentID, name, texture, selected, available = GetTalentInfo(i, o, 1)
+					--print("talentID:", talentID, "name:", name, "texture:", texture, "selected:", selected, "available:", available)
+					if (talentID) then
+						if (selected) then
+							talents = "" .. talentID .. ","
+							break
+						end
+					end
 				end
 			end
 		end
@@ -110,7 +218,7 @@
 			return
 		end
 
-		if (DetailsFramework.IsTimewalkWoW()) then
+		if (DetailsFramework.IsTimewalkWoW() and not DetailsFramework.IsPandaWow()) then
 			return
 		end
 

@@ -1,4 +1,4 @@
-## Interface: 110105, 110107, 110200
+## Interface: 110205, 110107, 110200
 
 ## Title: BigWigs [|cffeda55fLegion|r]
 ## Title-zhCN: BigWigs [|cffeda55f军团再临|r]
@@ -25,7 +25,7 @@
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
-## Version: v11.1.1
+## Version: v11.2.3
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_legacy.tga
 
 ## X-Category: Raid

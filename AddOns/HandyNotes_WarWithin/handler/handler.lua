@@ -11,6 +11,7 @@ local HBD = LibStub("HereBeDragons-2.0")
 ns.DEBUG = C_AddOns.GetAddOnMetadata(myname, "Version") == '@'..'project-version@'
 
 ns.CLASSIC = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
+ns.CLASSICERA = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC -- forever vanilla
 ns.WARBANDS_AVAILABLE = LE_EXPANSION_LEVEL_CURRENT >= (LE_EXPANSION_WAR_WITHIN or math.huge)
 
 local ATLAS_CHECK, ATLAS_CROSS = "common-icon-checkmark", "common-icon-redx"
@@ -106,7 +107,9 @@ do
         end
         upgrade.quest = item.quest
         upgrade.questComplete = item.questComplete
+        upgrade.warband = item.warband
         upgrade.spell = item.spell
+        upgrade.note = item.note
         if item.class then
             table.insert(available, ns.conditions.Class(item.class))
         end
@@ -262,6 +265,17 @@ function ns.RegisterPoints(zone, points, defaults)
             local x, y = HandyNotes:getXY(coord)
             for tzone in pairs(translateTo) do
                 local tx, ty = HBD:TranslateZoneCoordinates(x, y, zone, tzone)
+                if not tx then
+                    -- try a fallback
+                    local minX, maxX, minY, maxY = C_Map.GetMapRectOnMap(zone, tzone)
+                    if minX and minX ~= 0 then
+                        tx = Lerp(minX, maxX, x)
+                        ty = Lerp(minY, maxY, y)
+                    end
+                    if ns.DEBUG then
+                        print(myname, "fell back", zone, coord, tzone, tx, ty)
+                    end
+                end
                 if tx and ty then
                     if not ns.points[tzone] then
                         ns.points[tzone] = {}
@@ -550,6 +564,28 @@ local function render_string(s, context)
             if info then
                 if subvariant == "plain" then return info.name end
                 return quick_texture_markup(info.icon) .. " " .. (info.researched and completeColor or incompleteColor):WrapTextInColorCode(info.name)
+            end
+        elseif variant == "trait" then
+            local treeID, nodeID = mainid, subid
+            local configID = C_Traits.GetConfigIDByTreeID(treeID)
+            local nodeInfo = configID and C_Traits.GetNodeInfo(configID, nodeID)
+            if nodeInfo and nodeInfo.ID ~= 0 then
+                local known = nodeInfo.ranksPurchased > 0
+                local entryID = nodeInfo.activeEntry and nodeInfo.activeEntry.entryID
+                local entryInfo = entryID and C_Traits.GetEntryInfo(configID, entryID)
+                if entryInfo and entryInfo.definitionID then
+                    local definitionInfo = C_Traits.GetDefinitionInfo(entryInfo.definitionID)
+                    local name = TalentUtil.GetTalentNameFromInfo(definitionInfo)
+                    if name and name ~= "" then
+                        if subvariant == "plain" then return name end
+                        name = (known and completeColor or incompleteColor):WrapTextInColorCode(name)
+                        local texture = TalentButtonUtil.CalculateIconTextureFromInfo(definitionInfo)
+                        if texture then
+                            return quick_texture_markup(texture) .. " " .. name
+                        end
+                        return name
+                    end
+                end
             end
         elseif variant == "profession" then
             local info = C_TradeSkillUI.GetProfessionInfoBySkillLineID(id)
@@ -1266,7 +1302,7 @@ do
         local px, py = HBD:GetPlayerZonePosition()
         return getDistance(px, py, HandyNotes:getXY(lhs)) > getDistance(px, py, HandyNotes:getXY(rhs))
     end
-    function createWaypointForAll(button, uiMapID, coord)
+    function createWaypointForAll(uiMapID, coord)
         if not TomTom then return end
         local point = ns.points[uiMapID] and ns.points[uiMapID][coord]
         if not point then return end

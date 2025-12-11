@@ -1,0 +1,11 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="0_Trash.lua"/>
+	<Script file="1_Ulgrax.lua"/>
+	<Script file="2_TheBloodboundHorror.lua"/>
+	<Script file="3_Sikran.lua"/>
+	<Script file="4_Rashanan.lua"/>
+	<Script file="5_Ovinax.lua"/>
+	<Script file="6_Kyveza.lua"/>
+	<Script file="7_TheSilkenCourt.lua"/>
+	<Script file="8_Ansurek.lua"/>
+</Ui>

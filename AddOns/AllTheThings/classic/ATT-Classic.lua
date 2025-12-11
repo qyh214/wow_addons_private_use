@@ -490,7 +490,7 @@ ResolveSymbolicLink = function(o)
 						local results = ResolveSymbolicLink(setmetatable({sym=commands}, {__index=o}));
 						if results then
 							for k,result in ipairs(results) do
-								tinsert(searchResults, result);
+								tinsert(finalized, result);
 							end
 						end
 					end
@@ -562,8 +562,8 @@ ResolveSymbolicLink = function(o)
 					end
 				end
 			elseif cmd == "meta_achievement" then
-                -- Instruction to search the full database for multiple achievementID's
-                local cache;
+				-- Instruction to search the full database for multiple achievementID's
+				local cache;
 				for i=2,#sym do
 					local cache = SearchForField("achievementID", sym[i]);
 					if #cache > 0 then
@@ -584,14 +584,14 @@ ResolveSymbolicLink = function(o)
 						print("Failed to select achievementID", sym[i]);
 					end
 				end
-                -- Remove any Criteria groups associated with those achievements
-                for k=#searchResults,1,-1 do
-                    local result = searchResults[k];
-                    if result.criteriaID then tremove(searchResults, k); end
-                end
+				-- Remove any Criteria groups associated with those achievements
+				for k=#searchResults,1,-1 do
+					local result = searchResults[k];
+					if result.criteriaID then tremove(searchResults, k); end
+				end
 			elseif cmd == "partial_achievement" then
-                -- Instruction to search the full database for an achievementID and persist the associated Criteria
-                -- Do nothing, this is done in the mini list instead. We don't want to build a useless list of criteria.
+				-- Instruction to search the full database for an achievementID and persist the associated Criteria
+				-- Do nothing, this is done in the mini list instead. We don't want to build a useless list of criteria.
 			end
 		end
 
@@ -1117,6 +1117,7 @@ local function GetSearchResults(method, paramA, paramB, ...)
 
 	if mostAccessibleSource then
 		group.parent = mostAccessibleSource.parent;
+		group.description = mostAccessibleSource.description;
 		group.awp = mostAccessibleSource.awp;
 		group.rwp = mostAccessibleSource.rwp;
 		group.e = mostAccessibleSource.e;
@@ -1211,7 +1212,7 @@ local function GetSearchResults(method, paramA, paramB, ...)
 						local mapID = app.GetBestMapForGroup(entry, currentMapID);
 						if mapID and mapID ~= currentMapID then left = left .. " (" .. app.GetMapName(mapID) .. ")"; end
 						if entry.icon then item.prefix = item.prefix .. "|T" .. entry.icon .. ":0|t "; end
-						
+
 						-- If this entry has specialization requirements, let's attempt to show the specialization icons.
 						right = item.right;
 						local specs = entry.specs;
@@ -1223,7 +1224,7 @@ local function GetSearchResults(method, paramA, paramB, ...)
 								right = app.GetClassesString(c, false, false) .. right;
 							end
 						end
-						
+
 						tinsert(tooltipInfo, { left = item.prefix .. left, right = right });
 					end
 				else
@@ -1530,7 +1531,7 @@ function app:GetDataCache()
 			end
 		});
 		local g = rootData.g;
-		
+
 		-----------------------------------------
 		-- P R I M A R Y   C A T E G O R I E S --
 		-----------------------------------------
@@ -1554,14 +1555,10 @@ function app:GetDataCache()
 		end
 
 		-- World Drops
-		if app.Categories.WorldDrops then
-			tinsert(g, {
-				text = TRANSMOG_SOURCE_4,
-				icon = app.asset("Category_WorldDrops"),
-				g = app.Categories.WorldDrops,
-				isWorldDropCategory = true
-			});
-		end
+		tinsert(g, app.CreateCustomHeader(app.HeaderConstants.WORLD_DROPS, {
+			g = app.Categories.WorldDrops or {},
+			isWorldDropCategory = true
+		}));
 
 		-- Crafted Items
 		if app.Categories.Craftables then
@@ -1610,7 +1607,7 @@ function app:GetDataCache()
 				g = app.Categories.ExpansionFeatures
 			});
 		end
-		
+
 		-----------------------------------------
 		-- L I M I T E D   C A T E G O R I E S --
 		-----------------------------------------
@@ -1669,13 +1666,13 @@ function app:GetDataCache()
 				isEventCategory = true,
 			});
 		end
-		
+
 		---------------------------------------
 		-- M A R K E T   C A T E G O R I E S --
 		---------------------------------------
 		-- Black Market
 		if app.Categories.BlackMarket then tinsert(g, app.Categories.BlackMarket[1]); end
-		
+
 		-- In-Game Store
 		if app.Categories.InGameShop then
 			tinsert(g, app.CreateCustomHeader(app.HeaderConstants.IN_GAME_SHOP, {
@@ -1683,7 +1680,7 @@ function app:GetDataCache()
 				expanded = false
 			}));
 		end
-		
+
 		-----------------------------------------
 		-- D Y N A M I C   C A T E G O R I E S --
 		-----------------------------------------
@@ -2249,12 +2246,96 @@ local ADDON_LOADED_HANDLERS = {
 		if not accountWideData.Deaths then accountWideData.Deaths = 0; end
 		if not accountWideData.Exploration then accountWideData.Exploration = {}; end
 		if not accountWideData.Factions then accountWideData.Factions = {}; end
+		if not accountWideData.FactionBonus then accountWideData.FactionBonus = {}; end
 		if not accountWideData.FlightPaths then accountWideData.FlightPaths = {}; end
 		if not accountWideData.Quests then accountWideData.Quests = {}; end
 		if not accountWideData.Spells then accountWideData.Spells = {}; end
 		if not accountWideData.Titles then accountWideData.Titles = {}; end
 		if not accountWideData.Transmog then accountWideData.Transmog = {}; end
 		if not accountWideData.OneTimeQuests then accountWideData.OneTimeQuests = {}; end
+		
+		-- Clean up other matching Characters with identical Name-Realm but differing GUID
+		app.CallbackHandlers.Callback(function()
+			local myGUID = app.GUID;
+			local myName, myRealm = currentCharacter.name, currentCharacter.realm;
+			local myRegex = "%|cff[A-z0-9][A-z0-9][A-z0-9][A-z0-9][A-z0-9][A-z0-9]"..myName.."%-"..myRealm.."%|r";
+			local otherName, otherRealm, otherText;
+			local toClean;
+			for guid,character in pairs(characterData) do
+				-- simple check on name/realm first
+				otherName = character.name;
+				otherRealm = character.realm;
+				otherText = character.text;
+				if guid ~= myGUID then
+					if otherName == myName and otherRealm == myRealm then
+						if toClean then tinsert(toClean, guid)
+						else toClean = { guid }; end
+					elseif otherText and otherText:match(myRegex) then
+						if toClean then tinsert(toClean, guid)
+						else toClean = { guid }; end
+					end
+				end
+			end
+			if toClean then
+				local copyTables = { "Buildings","GarrisonBuildings","Factions","FlightPaths" };
+				local cleanCharacterFunc = function(guid)
+					-- copy the set of QuestIDs from the duplicate character (to persist repeatable Quests collection)
+					local character = characterData[guid];
+					for _,tableName in ipairs(copyTables) do
+						local copyTable = character[tableName];
+						if copyTable then
+							-- app.PrintDebug("Copying Dupe",tableName)
+							local currentTable = currentCharacter[tableName];
+							if not currentTable then
+								-- old/restored character missing copied data
+								currentTable = {}
+								currentCharacter[tableName] = currentTable
+							end
+							for ID,complete in pairs(copyTable) do
+								-- app.PrintDebug("Check",ID,complete,"?",currentTable[ID])
+								if complete and not currentTable[ID] then
+									-- app.PrintDebug("Copied Completed",ID)
+									currentTable[ID] = complete;
+								end
+							end
+						end
+					end
+					-- Remove the actual dupe data afterwards
+					-- move to a backup table temporarily in case anyone reports weird issues, we could potentially resolve them?
+					local backups = accountWideData._CharacterBackups;
+					if not backups then
+						backups = {};
+						accountWideData._CharacterBackups = backups;
+					end
+					backups[guid] = character;
+					characterData[guid] = nil;
+					local count = 0
+					for guid,char in pairs(backups) do
+						count = count + 1
+					end
+					app.print("Removed & Backed up Duplicate Data of Current Character:",character.text,guid,"[You have",count,"total character backups]")
+					app.print("Use '/att remove-deleted-character-backups help' for more info")
+				end
+				for _,guid in ipairs(toClean) do
+					app.FunctionRunner.Run(cleanCharacterFunc, guid);
+				end
+			end
+
+			-- Allows removing the character backups that ATT automatically creates for duplicated characters which are replaced by new ones
+			app.ChatCommands.Add("remove-deleted-character-backups", function(args)
+				local backups = 0
+				for guid,char in pairs(accountWideData._CharacterBackups) do
+					backups = backups + 1
+				end
+				accountWideData._CharacterBackups = nil
+				app.print("Cleaned up",backups,"character backups!")
+				return true
+			end, {
+				"Usage : /att remove-deleted-character-backups",
+				"Allows permanently removing all deleted character backup data",
+				"-- ATT removes and cleans out character-specific cached data which is stored by a character with the same Name-Realm as the logged-in character but a different character GUID. If you find yourself creating and deleting a lot of repeated characters, this will clean up those characters' data backups",
+			})
+		end);
 
 		-- Account Wide Settings
 		local accountWideSettings = app.Settings.AccountWide;

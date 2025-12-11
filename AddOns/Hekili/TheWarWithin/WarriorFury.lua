@@ -302,7 +302,7 @@ spec:RegisterAuras( {
     },
     bladestorm = {
         id = 46924,
-        duration = function () return ( buff.dance_of_death.up and 9 or 6 ) * haste end,
+        duration = function () return 4 * haste end,
         max_stack = 1,
         onCancel = function()
             setCooldown( "global_cooldown", 0 )
@@ -537,11 +537,7 @@ spec:RegisterAuras( {
     meat_cleaver = {
         id = 85739,
         duration = 20,
-        max_stack = function ()
-            if talent.meat_cleaver.enabled then return 4
-            elseif talent.improved_whirlwind.enabled or talent.titanic_rage.enabled then return 2
-            else return 0 end
-        end,
+        max_stack = function () return talent.meat_cleaver.enabled and 4 or 2 end,
         copy = "whirlwind"
     },
 } )
@@ -683,17 +679,23 @@ spec:RegisterGear({
     soul_of_the_battlelord = { items = { 151650 } }
 } )
 
-local whirlwind_consumers = {
-    crushing_blow = 1,
-    bloodbath = 1,
-    bloodthirst = 1,
-    execute = 1,
-    impending_victory = 1,
-    raging_blow = 1,
-    rampage = 1,
-    onslaught = 1,
-    victory_rush = 1
+local whirlwindConsumers = {
+    [335097] = true,    -- Crushing Blow
+    [335096] = true,    -- Bloodbath
+    [23881]  = true,    -- Bloodthirst
+    [5308]   = true,    -- Execute
+    [280735] = true,    -- Execute (Massacre)
+    [202168] = true,    -- Impending Victory
+    [85288]  = true,    -- Raging Blow
+    [184367] = true,    -- Rampage
+    [315720] = true,    -- Onslaught
+    [34428]  = true,    -- Victory Rush
+    [1464]   = true,    -- Slam
+    [1715]   = true,    -- Hamstring
 }
+
+local trueWWStacks = 0
+local BSUP = false
 
 local rageSpent = 0
 local gloryRage = 0
@@ -706,14 +708,15 @@ local RemoveFrenzy = setfenv( function()
     removeBuff( "frenzy" )
 end, state )
 
-local ExpireBladestorm = setfenv( function()
-    applyBuff( "merciless_bonegrinder" )
-end, state )
-
 spec:RegisterCombatLogEvent( function(  _, subtype, _, sourceGUID, sourceName, sourceFlags, _, destGUID, destName, destFlags, _, spellID, spellName, school, amount, interrupt, a, b, c, d, critical )
     if sourceGUID ~= state.GUID then return end
 
     if subtype == "SPELL_CAST_SUCCESS" then
+        if whirlwindConsumers[ spellID ] and not BSUP then
+            trueWWStacks = trueWWStacks - 1
+        elseif spellID == 190411 and state.talent.improved_whirlwind.enabled then
+            trueWWStacks = state.talent.meat_cleaver.enabled and 4 or 2
+        end
         local ability = class.abilities[ spellID ]
 
         if not ability then return end
@@ -730,6 +733,9 @@ spec:RegisterCombatLogEvent( function(  _, subtype, _, sourceGUID, sourceName, s
             fresh_meat_actual[ destGUID ] = true
         end
     elseif ( subtype == "SPELL_AURA_APPLIED" or subtype == "SPELL_AURA_REMOVED" or subtype == "SPELL_AURA_REFRESH" or subtype == "SPELL_AURA_APPLIED_DOSE" or subtype == "SPELL_AURA_REMOVED_DOSE" ) then
+        if spellID == 446035 then
+            BSUP = ( subtype ~= "SPELL_AURA_REMOVED" ) and true or false
+        end
         if state.talent.thunder_blast.enabled and spellID == 435615 then Hekili:ForceUpdate( "THUNDERBLAST_CHANGED", true ) end
         if state.talent.burst_of_power.enabled and spellID == 437121 then Hekili:ForceUpdate( "BURSTOFPOWER_CHANGED", true ) end
     end
@@ -805,6 +811,21 @@ spec:RegisterHook( "reset_precast", function ()
     rage_spent = nil
     glory_rage = nil
 
+    if buff.whirlwind.up then
+        if trueWWStacks > 0 then
+            applyBuff( "whirlwind", buff.whirlwind.remains, trueWWStacks )
+        else
+            removeBuff( "whirlwind" )
+        end
+    else
+        if trueWWStacks > 0 then
+            applyBuff( "whirlwind", nil, trueWWStacks )
+        elseif action.whirlwind.time_since < gcd.max then
+            local stacks = spec.auras.whirlwind.max_stack
+            applyBuff( "whirlwind", nil, stacks )
+        end
+    end
+
     if legendary.will_of_the_berserker.enabled and buff.recklessness.up then
         state:QueueAuraExpiration( "recklessness", WillOfTheBerserker, buff.recklessness.expires )
     end
@@ -819,10 +840,9 @@ spec:RegisterHook( "reset_precast", function ()
         end
     end
 
-    -- Will need to revisit this if `cancel_buff` is added to the APL.
     if buff.bladestorm.up then
         -- channelSpell( "bladestorm", buff.bladestorm.expires - class.auras.bladestorm.duration, class.auras.bladestorm.duration, class.abilities.bladestorm.id )
-        setCooldown( "bladestorm", buff.bladestorm.remains )
+        setCooldown( "global_cooldown", buff.bladestorm.remains )
     end
 end )
 
@@ -976,6 +996,8 @@ spec:RegisterAbilities( {
         texture = 236303,
         range = 8,
         charges = function () if talent.storm_of_steel.enabled then return 2 end end,
+        -- Will need to revisit this if `cancel_buff` is added to the APL.
+        nobuff = "bladestorm",
 
         spend = -20,
         spendType = "rage",
@@ -986,9 +1008,6 @@ spec:RegisterAbilities( {
             applyBuff( "bladestorm" )
             setCooldown( "global_cooldown", class.auras.bladestorm.duration )
             if talent.blademasters_torment.enabled then applyBuff( "avatar", 4 ) end
-            if talent.merciless_bonegrinder.enabled then
-                state:QueueAuraExpiration( "bladestorm_merciless_bonegrinder", ExpireBladestorm, buff.bladestorm.expires )
-            end
             if talent.overwhelming_blades.enabled then applyDebuff( "target", "overwhelmed", nil, 10 ) end
 
             if talent.brutal_finish.enabled then applyBuff( "brutal_finish" ) end
@@ -1007,14 +1026,7 @@ spec:RegisterAbilities( {
         cooldown = function () return buff.burst_of_power.up and 0 or ( 4.5 ) * haste end,
         gcd = "spell",
 
-        spend = function()
-            return -8
-            + ( -2 * buff.merciless_assault.stack )
-            + ( talent.cold_steel_hot_blood.enabled and action.bloodthirst.crit_pct_current >= 100 and -4 or 0 )
-            + ( buff.burst_of_power.up and -2 or 0 )
-            + ( -1 * talent.swift_strikes.rank )
-            + ( buff.double_down_rb.up and -2 or 0 )
-        end,
+        spend = function() return spec.abilities.bloodthirst.spend end,
         spendType = "rage",
 
         cycle = function () return talent.fresh_meat.enabled and "hit_by_fresh_meat" or nil end,
@@ -1030,46 +1042,12 @@ spec:RegisterAbilities( {
             + ( 15 * buff.bloodcraze.stack )
             + ( 12 * buff.merciless_assault.stack )
             + ( 20 * buff.recklessness.stack )
-            + ( talent.crushing_force.enabled and talent.crushing_force.rank * 2 or 0 )
         end,
 
         handler = function()
-            removeStack( "whirlwind" )
-            if buff.enrage.up and talent.deft_experience.enabled then
-                buff.enrage.remains = buff.enrage.remains + ( 0.5 * talent.deft_experience.rank )
-            end
-
-            if talent.cold_steel_hot_blood.enabled and action.bloodthirst.crit_pct_current >= 100 then
-                applyDebuff( "target", "gushing_wound" )
-                gain( 4, "rage" )
-            end
-
-            if set_bonus.tier31_4pc > 0 and action.bloodthirst.crit_pct_current >= 100 then
-                reduceCooldown( "odyns_fury", 2.5 )
-            end
-
-            removeBuff( "merciless_assault" )
-            if talent.bloodcraze.enabled then
-                if action.bloodthirst.crit_pct_current >= 100 then removeBuff( "bloodcraze" )
-                else addStack( "bloodcraze" ) end
-            end
-
+            spec.abilities.bloodthirst.handler()
             -- Always extends by 6 seconds or applies a 6 second one
             applyDebuff( "target", "bloodbath_dot", debuff.bloodbath_dot.remains + 6 )
-
-            gain( health.max * ( buff.enraged_regeneration.up and 0.23 or 0.03 ) , "health" )
-
-            if talent.fresh_meat.enabled and debuff.hit_by_fresh_meat.down then
-                applyBuff( "enrage" )
-                applyDebuff( "target", "hit_by_fresh_meat" )
-            end
-
-            if legendary.cadence_of_fujieda.enabled then
-                if buff.cadence_of_fujieda.stack < 5 then stat.haste = stat.haste + 0.01 end
-                addStack( "cadence_of_fujieda" )
-            end
-
-            removeBuff( "double_down_bt" )
         end,
     },
 
@@ -1091,7 +1069,6 @@ spec:RegisterAbilities( {
             applyBuff ( "bloodrage" )
         end,
     },
-
 
     bloodthirst = {
         id = 23881,
@@ -1121,7 +1098,6 @@ spec:RegisterAbilities( {
             + ( 15 * buff.bloodcraze.stack )
             + ( 12 * buff.merciless_assault.stack )
             + ( 20 * buff.recklessness.stack )
-            + ( talent.crushing_force.enabled and talent.crushing_force.rank * 2 or 0 )
         end,
         handler = function()
             removeStack( "whirlwind" )
@@ -1131,6 +1107,7 @@ spec:RegisterAbilities( {
 
             if talent.cold_steel_hot_blood.enabled and action.bloodthirst.crit_pct_current >= 100 then
                 applyDebuff( "target", "gushing_wound" )
+                gain( 4, "rage" )
             end
 
             if talent.bloodcraze.enabled and action.bloodthirst.crit_pct_current >= 100 then removeBuff( "bloodcraze" ) end
@@ -1143,7 +1120,8 @@ spec:RegisterAbilities( {
             end
 
             -- Legacy
-            if set_bonus.tier30_4pc > 0 then removeBuff( "merciless_assault" ) end
+            removeBuff( "double_down_bt" )
+            removeBuff( "merciless_assault" )
             if set_bonus.tier31_4pc > 0 and action.bloodthirst.crit_pct_current >= 100 then
                 reduceCooldown( "odyns_fury", 2.5 )
             end
@@ -1151,7 +1129,6 @@ spec:RegisterAbilities( {
                 if buff.cadence_of_fujieda.stack < 5 then stat.haste = stat.haste + 0.01 end
                 addStack( "cadence_of_fujieda" )
             end
-            removeBuff( "double_down_bt" )
         end,
 
         auras = {
@@ -1398,6 +1375,7 @@ spec:RegisterAbilities( {
         handler = function ()
             applyDebuff ( "target", "hamstring" )
             setCooldown( "global_cooldown", 0.75 )
+            removeStack( "whirlwind" )
         end,
     },
 
@@ -1783,8 +1761,8 @@ spec:RegisterAbilities( {
     storm_bolt = {
         id = 107570,
         cast = 0,
-        cooldown = function() return 30 + ( talent.storm_bolts.enabled and 10 or 0 ) - ( talent.honed_reflexes.enabled and 30*0.05 or 0 ) end,
-        gcd = "spell",
+        cooldown = function() return ( 30 + ( talent.storm_bolts.enabled and 10 or 0 ) ) * ( 1 - ( 0.05 * talent.honed_reflexes.rank ) ) end,
+        gcd = function() return buff.bladestorm.up and talent.unrelenting_onslaught.enabled and "off" or "spell" end,
 
         startsCombat = true,
         texture = 613535,
@@ -1821,6 +1799,7 @@ spec:RegisterAbilities( {
 
     thunder_blast = {
         id = 435222,
+        known = 6343,
         flash = 6343,
         cast = 0,
         cooldown = 6,
@@ -1836,13 +1815,7 @@ spec:RegisterAbilities( {
         texture = 460957,
 
         handler = function ()
-            if ( talent.crashing_thunder.enabled ) then
-                if ( talent.improved_whirlwind.enabled ) then
-                    applyBuff ( "whirlwind", nil, talent.meat_cleaver.enabled and 4 or 2 )
-                end
-            end
-            applyDebuff( "target", "thunder_clap" )
-            active_dot.thunder_clap = max( active_dot.thunder_clap, active_enemies )
+            class.abilities.thunder_clap.handler()
             removeStack( "thunder_blast" )
             if set_bonus.tww3 >= 4 then removeBuff( "severe_thunder" ) end
         end,
@@ -1938,13 +1911,6 @@ spec:RegisterAbilities( {
 
         usable = function ()
             if settings.check_ww_range and target.distance > 8 then return false, "target is outside of whirlwind range" end
-        end,
-
-        -- Modify Syrif's solution; in multi-target using WW while Meat Cleaver is up is fine; the restriction was only intended for single-target.
-        -- Checking both active_enemies and true_active_enemies lets WW slip through with Meat Cleaver up when single-target mode is active but there are actually more targets.
-        nobuff = function()
-            if max( active_enemies, true_active_enemies ) > 1 then return end
-            return "meat_cleaver"
         end,
 
         handler = function ()
@@ -2055,4 +2021,4 @@ spec:RegisterOptions( {
     package = "Fury",
 } )
 
-spec:RegisterPack( "Fury", 20250806, [[Hekili:nZtBVnUnt(BjOOEJFAQJLY6Dt7Toa96Dhqxu07bW9U7dhollBXyRUYs(rVKDtrG)TFZqQxiPgsr7nj95dB2eXHZmCEFOO4sVL)(YfrHLSL)M)u)ztVD67Mm1B67V5Tlxu(4b2Yfhc38PWTWVKgUh(5)rv(J4dFmjlmcNCrwv(gyGDLLhk(XRVEBC5UQ1t2KT)6I49vjHLXzPBYdVVe)7nxVojB91L7yFom)ZaOXPx)tBqq(75Xz5XLp(RXfLfxhXUpSkP8Aak85b3dKDco)LlwxfNu(lPlxtY4ElxewvUllF5IfX7)zGVIJIycOzfW0)(V)4QFFh74Q)NWC4hCw44QfSWIm4)V54hr099tV97N(UF84QFjnUmom54QF6V)Rh)4XpAF2(nZ(gabWSx8y6MJRWLj87a30mS)37Jd)trrX4shXpF4vB2fMULvib37iqdi)ZZUpobK6FZ3CC1RKK)4hrITOfZ)mI5JR(5S97JlfmjWRERxFB0S7fa)Vb6h4zDsuuegYjAXKd5mGvxhw(DZVg(zzclOyxwvPbiy5fS8pXYdkkdt3WUQmB72e2CqStc)dH5XHRtyxHMTZlZJt)eRmWlG9LnjvrSREimPQ95t8MexmPmNfUzhlpRQiOmpmTawxLS8tb)(gWVVv8dsQ)DeEqAvCCv4Xv1td(JnzzjrzFo9QJRIIFioIfDC16hbGEiSeTaZW)f9ykakxrbwS3FCvC5BGhWzbW8ie(90SJRYz7dJtJakc)AzvoyW6b4LLuW6EY0jZMCkRyVGcqXFv2H5fSY47Rx3EI)paX9CaLxTjlvyRljYbglOQGfSU6(7hDz3ZBwZtIQY5wAF732(iX6UDK5tF6j3MixijmM7M84tzL6FURuFdRu)ZDLAFIF9RupoJw0ZhrEz80txQoa4wwojm9XGOdfJUObXt655DsCIpjN4BIt8DHt8plo5qDqsD9VVS(3ts7tjc4lMreCeFGNEY0iJU0Qrt3yqEHnnl92Xh)3U0BYSVtviH4DsbeskDB5oaccsJM7JhF3LwDn7gZfA75gT9QP9POG8c2hMwfMqfzpmzlRCxyEWHQ)8pH8mRZ(YPGAFAu7)vHAYCbbTZiytyrzJngngrhG4s2ERyKEQWV(Pewrrk8VRIVF(fS)rv8HdSOj3)yEiKFFxauOqqeGZ9GAkYeEQtd9rroSVW2uvIzOypWYHKuLX7HmlLy5sWKXuvXf8uxXjC1DloNdLSLfa1aa1A2(qa9q5q5BzidIO6dy81NEAF2dS9S0YjrXIsbUBM8Cqrq8MGew4bCI9H2xb8dz4VHqUoRaC0UpE7UYarQYI7Uzke2LpGYZ)WnZgXnILLJtQoqcR)SXYe800AihwTFplHlH)DHLxHO6QgfsT9icBuwGjlRYWIozR8CuzOnvqDwrqm0Su4XrzjOOrpPuZsZZbewL(ymljkoDBqk4PWYHiPf7TH153otD1kQ4UMcnfcZnR2bsAwb8m4hX7d5gFCFMRqWsG6Qxdqbme887JZridtHF)qyCo(mbQ(jb9TVyksYkBC99q23y8DQi)IaiJU8cUzt9cU6WiPqRG)EaAMFhyYDb5ZhpsB2urTRtUjHdra)gPnzze1IEImqn59M7nwUulYG93nxXY3D5PpP803O80Fq5PVb5P)jkp9iKNEgKNENK80FSSMWn553ikVpln5r8Nm8hCZBjVdatyFcIgjW13vnqGomzOhOyATm7Xv)NyOzaXPSyX4dJT1zONJkECwFZ9FmxG0LKw)J001M9sS6aomvP8lOSb5tBSsHWNd7(0tgcecMEhyBGyA35lx)(qcxFAHRpXY0jU1FiHRVfHBpQs5KyuNmwP2(ZHDF2eU4Kc2bjpCRCPrDGSgZnLIiPWI5NTWiJTizTfoFG1fp9Se3XRZcl4QCck9cGsYIIz355pD0LgKI3HJzt1AH5mQA4i1y0wdP1gJHt7X8FyoY91pFhlmPC3KdBkX63mr8BNrIiprnj)31QbPKBnAMIEf5dMHhscttHAFQRKhNZdqZIPS9XSI5EJUmpmokaQxgQqnmkQysC6DEahCH(ZzFb3DUXUqwe(6CgKK9U5(G8LMap9e9ZhP)4gX1mNyjMO1GGdGkRzVXUSmmbr3(WIIWn5SjSuCcrKQRoTR0J9N6cTZsd2UjkipCtCysZwj0V6D0wqPEa(dYd3Y(WTtfduuHBLCqedC4fdFrRv06Kqinj0KZEaTHrpcs42XQx9IbKd3Piwu6sibt8xe8hvrBXUxuQpsDbjpR1HBdYUhk7pEZNkCDoInwfTrXMGi6Qrb6KSSi(Mlj)uO0AgFe5hInBbn5hMaTYMKO0YcmAC6dzFcmj)c0BskadV2cU(6q2NH2vItVVQOPZmjTsJDN3m12SUBU3nZKQ3sr0ospBHAhAZvBjmVknq8xbjGTFTVCs4JS8RkqzB5Crbm1gWCDf6KhGJ(jwXGiResKWuWLzu1zIlybTU3jgUPP8Edult6ePf7aZ5)OA7wuhuvILatpqRKcmICaXkokT9bpYGHpbcl3vHzrXEyZZcZreRfdZJywB2fU)a(OGIdmXSm4GY5izxuvRlWhvkDLKZq746guu(n1TxWsXGiY(rDCCht1k7AbFutaYg0geUgQ)il1yQR5(VfdtYNe(EKYXcZaKHrqgzDbbEpZgDP(IYiDUvER5AxmFExCEYNJfLi1pLtt4EgU5wjSWhGQK4uu(jtkW9aA(uc0d)rsyf4Fi5VuYl2k(pR9WxNxbdeCFCACXoAjEoyIeULPlUBmspd7Bbh7pSYwclrmXkpm)tmiCAwEGyqycc8DN3W4RBJ(P8pQvNTiO1YOmUmmnEta(Ck14M8QIDyiiiI(NBWmWxa8npDIyJ5kM7xB5Rl4bxR6LyNp5Em2gNrmo0idJ0y4bAhkoMN6znOlAvq8NSjp8pz1IZ5EyRecbq1bmMYOOSYjTZma)RgJG3oTXyvmEwEkBC9kTZ90DZhjjxhhQlXegwclCWKUlfGyf8HzVUYuj)eCfENN3m7M0gY8AZsxtiAicjObk3H7DNu)jQLYxRSEiEtmMXytwk0EZHs6ycAKC0M8yOm9nqeOQCO3Tsi6guhHE4R3nKJInZshnjYoCilVSc4ZYNFzr)L57PcYQXx2C9p1q02PMztWbJ85qCUtnM(qI)HlzHk)iM5fxVL7YjxWTjqjgJxKqW6SKsPGCTv0G8B3K4Lx(DMQtSzu9YeBNfmWwgXaouuMr)5gCquIMM)yT2tlCLrUbkCq8IEmwkbzHh6(3(MjaiMlknZOYOLsyswUHyRmUSnltJICKLYv5fFpYCoGX9PUKnEtzHAv2Fs173GwRvT2KKnfdnYiNDVWIeslEsN5qwNrMQcMtxTsUhkl6DZVHWMKooEZWogutz5jhKMoEmvWBxeitNALKeS)ZAvIDmgrKBnU2bxQlCYjYyOv61OdRiNcmDHRHIQDZ6pGPi(uXWiMDt6GLlaXcUzi1N1XBME7YfFomh3OGILl4VD049yXdhxDp(A2Ft9H47n4566FujExNfz4BJhFt71VO06dB4KJF8xJX3LK3pEC1)vArfVmeeabdbOt61Z)MjyMgcs2ESaonIEZpIhHWuybYh(nDB7R5tmhqHYmjylha4l9(Y4wc(wde02r0RhbhayfcoZ4ku(umrSM0g2rK27i6qGzkyErr)lgI)lIVZoWequaUbPMvBDVCek072P9BGzsFC)gWCAa(6SzRH4Qw557m6fA1PO3WkAFZiDyTpnmVOO)fdX)fX3MDkmDcyPqVJofNZzGDaZPb4RZMTgIRALNV)LitHDKkFwznGynquq(TVeUX2rQvoMeefK)dpZodVWO3betE0HiqUj4CK)DLmOgn40rFVZfSbDRompZO3KnPjmFUfw8cJEhqSB6tZW5i)7kzolZgIJtUHGyNLzJ7O3rZMEziFH(ibitdzYhv7i6R5i44Ngaz1GMuV6u0Bqk28bb0i(FfLBx)Ql3U(fqU1Ar6n1wd3eFndew8gbuX23ZZwN2UqjlawtjYDIOE(yQ)tyJi6T7hnNtUU9b5)fML(XJ))7F54kwAj(5oefxWpatTO03jusFa5THxZ7zs7rFKklH0ykkQxj0PEE9mK)vAyhrAR7t9EwBRSQoqEbr(GO19KIoL79RNmwZ9AE)YmBD4B264vcDE2n26nSJiDq7bsqEbr(GO19c3DYy7RNmwn2SS)DNtOOxj0DEXjErr(GO9zweCMOZYwtDordELq355Q(II8br7ZSi4mrN5nJ6Cw0VOiFq0EEoMoYZNhYBrRPTq78efA88ZlYheTNNOWrE(8q(GO9RQ8d77)PrKAQa6JF8x230aY7668apn6y3plxW)n(9aK4Tgd)6VXVxGQ)Gmw(VkU7CYJpGtD5It(d9E5cbv53npnVj5LLl)nFnYGNsng0d7Yfcu(H58BKKJRE6PJR69PCFC1DqgPoKloAAiEVXiEPrIVewK(aYru9wJOc)wVpUAeiOXpUy5puteL3mDQGTBbtdMpaWmJpaFhM0)OlgAU(WCh3X1IVJDKHNPXWI7TjdVS6oeycaaJVdXylH4Fo6YuaG49gfsg(cu6WN2x6cITBpFSP8fWG46hmR(iK6siQ9ZIbXI3uzrq3hbJMyWZtgS2VkgDO8LHs9ZKrhuZgYxaoCg(OrA(sQwUq8jMGUZT0t7dsr4(himseN2qoHnB2)Stv(5DzjQ5x0EisAJb1Py7UHO0esCXP46GA5cUivvh2ENrPnpDzBgO(lyLDZVXAd)TKkUtuBaCZN)d(8AwAIj09zKtfr5eORTZDcfD9LPREGHA6gFVI2vnhvZMl2eNJktEtZChx9TsFn4AVL0JRWq5IOAUJeI3yAdIgRNu6FMUbTOTbW9I1OwMFdcTCbm7w1UxBWxATgfM6BbiOkHg23UgMyVWpDn8GiXUg2QKrpPZj4hPBCJ8SQ1T(7rMlEUanj6Tf71Uy1mCF1o)TmqLx7eyyDDLod3)fFBKH9hGH97yy9KNNOTxZDDHwAltV7gohB6T0iwYMhvy8oO971kaOSxuG444Q)ghhEyjNFxpXBN4VfsdVJhoeJ51bEPdXnVwbaN5kDRyZCLNexP6v51AR53vOZ5zJA6fdr7viUZi6QA68OPPxreTHTen178yyA6RItxU)UilH7RVEClfNbUxdE3uivvMu1VCeptPYuE8D1IMk7emfu9joSyehO7eOZJ1714(2)YqG7c5v3a4f9HqC7e0VAG27PbzLM09XavZNNoVF3C8oFTM5TWDiZBASr9hsUnYzArPLUChoVAyVSTVb9lEboV077sOTr1X1P2jbWFQmtQ8jaEEL82V7mmMzx7Ysxsd1YWTmoNC70oG6DHn0KuSngS(12GKYSfgLRVHwlX2ySQFl7QAlT2u5(pnLM2Z9zTSJSEvwYT(7PzS3CrP1eBP3lPUN1UJKcmVVDwdwPFp1ugHDHW48Lh2yzwP8Ft0rpvXa0fliIIlPPKniWDozKA(2MnJM7pnTvbAdKX9m0QXlDk)2cQ0rT6EYzU24wrozron1r1eSCCV2O0kzaJlPSJrgmyETUz9OcbOzK4B1OWFaJc)tZOWFyJccqojJcpZgfE2mk6Vd5Uyu433OOx1TegfkUL(u7rWP4kpuP9xA3NBePAZzNvhJv4mhAY7K28RghJPAL8zDLIqziGD7vAMylTj2JK)j(YdKARoSfIWQAOVQ88ubgdc4ymiN5qtE9wnyjm2EMxPNQXw)4j67rtJkfXb)607uBEPzbrD965KB(GrBh7KcCWm5TIJULkXwa1Tv1TRc19Ax)IOt0qK)0gM0yXB1Afhn0SVuSAjOrQHY0zR8OX6DzOSWXYrBw5MBtzKDg92zwia2Qzt5UYAeED71VCe9xmHsp0eVycBDtB59ukCy7FbDjvdIHpAFHGcA7aAW7lD0VUnfQsX0Ok1T3LOjVEX(uB0JIw6fu0rREntZBSPnMV638nv6bLah0D0vZ7J61tNULrTLPKTF)ljlbuurs73SkoIu9ITFn6DlqTp4CQGLA6LURvJgVA6BgbL(5n7lGLn(2gNbY7mmAerlAq05nRHZOesw5KBB2BY2aITQrQWMwSIA3sgIRwaLfeNh7FHHiE7dDms3xHpXgI37TI2EXq0Nu6xerDKO9gMGChyPTcK9l75RxFbmqU5Q2C27ea(wTDL8V7TrQD4FWl5mHpVZuYCWsQqjkMIsUos27Y3ieD6ljJWUxo1aB7Qycu3tsnsZ2We9UJ66Ioz8QDrmDldpY4OY5(QTtuwIkx(jD7bSzdg9RwTAx)UArLVK1u8cmEHRXnIF7uzV2UlEnjfJKuunwOZogTKNVsnNqXSMs40y8cMHt2z)fRtLmd5RtZ5ve7Ak6U4nJo8HdNfhTnaTJVnCPV5SdVTOTwk)ZWvUZWrKjymrQVC17oT6uw1vssLb6DAMCIlNhEnHkNKivVpTQhvp)lTwUAqzo(lFLOEPYz0gX3CW1VAznT479tnlJo)aTMxGMdRzk1THe0(khhozYOPzEVkCcFknym7EDI5TmL0YFGdaN21EhPJ4n9p9B1klTUzuSy1RGxdwLMJuVOK0b9gfq7UvKuHAGUAuUT86qx39Q3sXBNHFy0E(BYRZoGF76PbIDdEYsBmfaLOXPbYORgSJ(sVQVzgr)ldKp1uT2ovTovuw)ERA(nPfYkNuRuwODFkWV7Yqs4MRB3gFCPuXnTMIkXjT1cRup9CGTxAXyYK5d29sVTuOxkZZFthCSVgvvsZTiyF1HA)HEoLR0sVk1fcnNxjKmhyT5AoJ3RVFxQseP0n0vCDJRfim8z011uAwQ53Le8MQqWycElvElPiMoLwa9E3YgzP0vJbvFE7x8hCSqHPouOG524V4CdG577E6Al1hEIcmJfQy9qn9vKvYx5qn1ersB59oNRgrTSoL8oAaERdLTi2z5dSnqklF(FT8))d]] )
+spec:RegisterPack( "Fury", 20250905, [[Hekili:nZt)VnUTs(3sqr9g)AQJLs8UzlwBG(6DpGUOO3dW9UF5WzzzlAB9ISKF6JKnfb(V9Bgs9bj1qkzNKDlA3DtehoC489qjolCw8hlMh4NZw87UJDNm(JJNmYX15dUVFX88NoWwm)G)6793c)qS)E4V)hfPpHp8POe)aCYzjfPRHb2LNFi7NU(6TH57kwnADY(RZc3xe5NhMeVo1Fto(7RVEvuYQRZ3XE0p9ra0W4R)51ii)Z0WK0W8N(TWS8SRdyB8lIYVgGcFU3gyzhHZFX8vfHr5)A8IvKe(4jlM7xKVljDX85H7)fGWcdcycWzzW8rW)XX39JJN8thx(pc)YXLz5jP7pUCvsu(XLbfPHXBpU8Vh5dWZh5ZIP8XFC8nWu(5)5VDC58NIxx9CavVhE(VghMh6hXba4qPjBcJa(Y39Dhx(FFilpL5VhG6ReB64NX1DEnM)feZhx(lj73hMliFGyU7JUV)9b3ka()ayMWZQ3Rto(5JF2NVOzJoKYasDLF(pm9A4VZJyEz7skYnablnJLEpl1ll3pEn7Q8KTBJyttIPH)b)0q)vrSRqDSP5Ga4EwUNJh7lRJkcyx9GFur9Zh5mkmBeYpxVJLMuK5LN6hNb7RCw6PGFxd431k(bo1)jcpWTYoU0)4YYPb)Y6KKOGKhJVc0IcFimGfakvpba9GFUF6XLj4FcEkgaLlOaDMnhxgM)o4bCsaup8HFoo54Yu2E)W4ayfHFmVin(4shaVSOmwZtgpAYOtzh74Lbc(RsomnJLhUPCF7i(xpe3tbuE16K4GqeNsSCGW8kYyERk2SzWLnpVAppcSB4AAF)3x)iX(UEKPJF(5(nrotsOm3m5HNYo19C3PUg2PUN7o1(eF57uhoHM1YgrEB88ZxQoaywMpYp(jVGdzdUOcXJAz5DsuIljL4AIsC7dL4EwuYHsNK6YFxz5VJK0NIfW3mdiOi(ap)SPrgCPvLMMXGqeRR261Jp8VDPZOj)GktcX7imes828DaeelnQUpC4SlTAA2mwFwBN(T2oLR9PiGC827hx4hr5z3pAllFNFQ3HI)8pH4mRs(YPGAxAu7(IqnzSaV6z4T2plVshJgJObqyoBVvmspv4hVpILLfd)5QWntVG9VlcpCGfmAZtP(q89DEqIcEbyggGykWeEeoPuXW6cisDayfMed0xqseg0hdX9f26ICmag7bwkedlpCpe4bwhiC26CmswygpYwyexBOEjHfAnWI3YWfcN1NqpTp)8(Khy7zX5JccfjfmBI8CqMr4AViM)bCITH2vb8dj4pHqUjC7UCpr4YSz3mgC9Q8OpbpAqosq5J2X8JY3n6W68pDZKbCnBzM7OIdp)8QKSSbQyqDPpnjjsRf73ZI4S1)qOnMjY4QbKGeptkz5(z3BE5Bj)qwIEyP69Hz8ue)uilkaY81lgmryPGl0S92q207MOULw(hOYrP92XLywRLkm7aUjKknOlLbke(C1kUXYviyrqkZRaOaccE(MWues)y4Np4hMIptGQFwS(K7HSOK8ktDhKQn6pNYtVWHXGlVGRruUplomqYvkyF7HkZZa1RliF(WbAZMYlDzWmjCiCWxXKjtBOKJteXPko3uNHYPwr6CFMQLsNSrxs2ORr2OBNSrxdSr3tKn6qWgDmWgDoj2O7qzbq)yJFNil(K4ONW)MH)fxzwYwaWewoGOEbC)DvfeO5rcAVjMwnXEC5)f6IfqCmlumE3yBvcANOINUeZCRfZP)CjPU(anrSzBcRMBDVQuwbuQE8Pnujn3ZHCF(zdE7anUdS1GJRzUszNB10XizQS76fr62fp11cpT1QszsyuumujH9ZHCFP8uewVDq8G(L6ZGgqwHHBIrKKzrzZMVIHwyO2CvtVD4bALikEcsIetqELxEIxqiBMJ74bxAGNndhZMG0cnzuqWrQrpPgIuneDv2I4)0uK6jZ2Y0IF3ese5iYU4)PK7ReVsn7Cqv7qKFCmK7szk4iKpav5fZ2hYYM6m4Yu)WapitwiHs)GGSrHXZCG19c9NZ(cESAdnVyiuL((jxSztDbEjnAF(z6Npq)XvSMjwieMibDVdGqP6aSUm3pcrYE)Sm)1PSrSyCcbKcKg5N0JDhBEftI92UoWl1FDOFuvv(TZHgLXkXW5pi1Fl7t3nwmqwbEISEbmW(vm8f1AhRQp2vaT(bpbCZ6Xk3ZIbKDAPWmuyAryW6mV)vrWwSCcLCAu3qYZAL)wVKnqA4HRVpRVZrCMNOwimbQAluGokjjGFUpYpfs(LXhr(Hy1pq93(rqvMrr6voeg)qY9G63xGAfIby45dWLxhsEekFimEtrwzPsYsLkDmNjQf7mBQZntKYrsH1oq3NVADstvlukTi2t8BErGEEP1AK)tS0RYqEB(ur2hLQTCzfAg7HJEVQnpjYGA5Jzk4YmQAQjwqcAfwtmC5X22EGsEsdlnBhOo)Vk2UfLbf5yAR0duZPaLOEGyfdL6Q4gyqXNaH57kWGIynLPjIA)18x5iOuwmAHkRK2GeOC(9hWh5LDGvEac02RCcu2IvvzdmzLIkjzBupUU(fLz0WUP4MtvLChxQKKhM7hhU2dXJaN7z4z5eX8FGLokl3F99thtG(M9CTKQMAgu5eUIQ98xbjVKeBma4u3BrxX8j5hdAkyYCaYq)vdSYVaB1jdUuNNzCDUt(m6Q3mpUlmn6Xqr(vTdMvfsrIZCs8k4xI8laRrjRZCEMAH)zjxFvAbmG3MW4WSD0c0uqd0FltNDxzsCgwtck2TBDjjSeWe7C)07zGZ7KupXGWee4RpwtDOBEbHYjLnzAr2o0)geU4XkebKbaE1thjogUSPUL2r68zWqTCh1yHVhDCYvJmo0adJuPNbcdk9mECTvaRVwEWFY6u))KvY9M6GvBi2)fhqhwdcsYhvptp83QK53oUs3umEsAmBy5oTXAS)AlsCUgkuNJj0Jek0GgCt8fXo4tt(6YtLmlWD4mhNj21Gnew3MITgte(vvD2PoMe257WZYtQkh1cckLEpeUoeJpTojgks6qoTpbDAyDAiK2)AWdurku4xo4DBslcd0MUidQyBvsCr2O8hF8gVBpSwdSz3sXzvSVSPn3tnPKdhssZlGDtoTBHxchRnZ4duUI1OlBEmovh52xnZAUD6FuvSxhNSdVJw983f7V70OOIIIXNX9B(UuYnCDywrc8)VZFknCZ)3XL)i)S7GQn2GfwGVvL43Ld)tm)R34xUcpHVCXlBjMX4FsbBW3(I4nXeeGN2xEc(HdeheX0(wwGffFwt(k4x2sBAJpKhofjFZ1P1vC4kjken3Bqbpb8FWuM0vJQNiD9SGb2Yig4LK2AfoiYAvZhsPUKMpxJudKSJ4Dtzm9hYKL0iCzBl9fay6z5Mjuz0sXmjtrsCioxwhQSsSoWsg88Ytgyoq2W2RUKfxvQSA1(CsvevHwRzAxLPqm6OMro7woPj4w8iNtHqNdmL5oFD1QcPRubMn9gcDs6Okvd3txSkBp5qg0rhOcL0hgY4XwxscY3EMTx2dF5eAwKXr0O6EysDrVmIm6ONEp2JDuVCmDrFDfvAM1EatXFO8Hrm7QGtlMdSf84Ik)QkVZ5dlM)OFkEukzlMZFdVH7Xuzkdd9UYVaX3HFuA)7cX7Rnlb)wbaR7KYx2lSVal0Srh)8VfIVHS7(j8trmgwl(WVJ4TX8oryT6HYvh7sNVm8Rn6upa8wyS1W9eP6hupbIja5ne5DIwdVHzcESj4uO(pAM6nk(Cnl((kHoh7AdTgUNiTtbgjiVHiVt0A4fLtWJ7L2GZ4xxR5VA478m2EBXE3491MlCU4Z511Q9Rg(opJQ3wS3nEFT5cNl(CFv33VTyVB8EE2O9LQppS3G3BEv5g6u9Rl27gVNh3OVu95H9UX7lkPblu7zLy6XptKpF9hm87oPm6nVHnFxAi2(wbwHzCRrEXjSGDaSYcoXQiT6(nyqKknCprATYLLSRPG5nf9Vzi(BeDNCGjGitCIRMeBnFZvuOVF3dOoMj9fbQd1PoORZMS6IQQ5NV3QhjJgfTgwr6BgPDl9PH5nf9Vzi(BeDB2OW0DJJc990OW(m7PrXjrxNnz1fvvZp)WBrKc7iv(w0zaXAG0ZZp6fygBhPwPysq61zCCUgdVXOVhi(v9qumVm70VsFgy(6W8kJEtkn94SRoPi)VXOVhiUFY1x4rLsCvnn4g4SKR9h99uU2kgZB0fWL0rExgtAxdwnn2EE9BjZRQlXT(k705kxD5BRehFf5Jx)nJpE9BiFSPABZNWj9njMWIWiG99u165kzbW6A9)vEz(i(VT67h)4s8tPglIFX8SdS1l(9p4Uyo)zyNDP(OaGF535nkgX0wmxUdGSyE5TmyXFFr(IF3fHt0UpwmhHTEoA9eeT5DdoVMNmp5aqtS8M5xjYWFkQa(hv(SHQ45ZZt06AAK1L3FqCDV98xxBNEa166kVUtOx3WnlMJFoxmyrv2IYkWhxoaeShxAZg54YVx6AaQLR7XLtpUC8XLp)8PGeI8ERq0qrZ1jn8GGP9xQoKcToaAVBukZ7qelMdZUwS7GsT3BwQrHP2AaIvLqc7Axct4)90LWDIe7syRCMpC(2r6k3inRQDRxnaN9CbQs0YnEPjwjb3wSZJSHe8DNpbRlR0j42LVyKGD7GGDBi4p(Y09QUKZYAF0Sq(kYPytzgi2YMhvO82P(71kaqgjhylhx(344cIOFC5p0In3igQH0qEfCiG)FwlQJ0131kaCYuNUwTzQZrI6uTYCQ19CrnaNXNVoRPKrOTsexNy(A6C(RPP0sOv0Lwt3tEnDvXzF6xl8vspTdRiOz9nbaIs9mkum368(l3SgYFWHCeRNYanIB1rqAWOigXcCNpV872Qo1oj8wbU4RbxpY(P2yyuI2XH9tt5XLforA1Ox42NtQtLKC)spj3jn0Uu7KHk7YguP2nhq0CZ4Y4MAd9PYHaNBT(KkfJoHpiVmz9R(jhHyRLHdsBmlt7IEBdvYPVCTZjYPXlAmnAjIRNIJI0VQzVurkekBnSw9Ctu2VsQzTWbr6evat3NA63QcQD3nPIYnGiIedA4Q89o4tgV9(Y)EZIBnAkD0wHBVQyMxuQ)uFF(e6BsbQQ(wk46QLAQxyhKHn6LQ4LowzDgj6Ow9fjBo5YAwozwcvjIWZS0HtDA1Hyiw7SPAwoguo)A1jIOskttzX1QYHBhkhUNMYHB3kheGCskhoMvoCSPC0(t8OpkhUTvomMMiHYHIzkDcuNITDxjlFPDJWbKYVEB92tNh9McnzUsRhwIJHufN9QUtrOm4bVUFXic2tCQd)fUpmrMkTnNfwLdTLLNNmWO7GE6nQ3uOj7FRASeABVY70tvBJWJIEsQvYuej82w0Pwaq1oIQng1ld9oD8oSxsWodUxZpA2Quvu1C(V1BdLscA16F4mCh3XvuPXe6kLl9uvZ(EXQUG2s1vupBPmnSjKgXghtrTANBTgdBe6DtSSaa(RtbwwIqv4A3vDJd0ChVQsOtWLA3YLec2j1mj6UHuB3619ak5A8ZA66tKfhF6e)mrgh1YytKhs9MgBq7HKfnt0oLpPUjfFty44LTSjqnF6M(uhkrQAHAa4owMkv6vaC680pS32fflSh0s9S(H8Rohsk3nUbOw9nQkFL1Md6DpkjXznmkDrQ2HHuBPoQYl1U)eNvOxTir6(AZQMjP1BQ4OtVEItaDknTk(5NONTBdYOoJczx1vTYkoAuF1F1nUkTZnW1vgS6ozLou3idLARTshuRhKMPg9uL6p6HaBlu4XB1CKAQnrkX76SYHc)2WZxyZh02R(QYVbMItKRKa0FxRkhdOghsHxkoCpvimFUxcRU2nUkjtsdxvBrykqfeC58LM1V0UH6yR0wvQUALWTtRCpvD9qTwMLvT8VxfCIte13AxP0WvV8VuhgMIkiTxNYTtB)o6HQlD8iLms7o8KakQKBPpLXHw3GA38yQZzRhSpIl5Ssmh(Q3U9iiErInetZ7AK6q30uzA6ZdvP7rFv9vieZjjHr6VTkaizJ3Igr0IieDotQOmkHLvk5UQ38tJl2k1jQtyYIeQobgI76(5iIAUw4uNDslVI1TQG2RLE78rsnOQNhqwHmTAGSpJw(HkBjaKfNzZrudhW1QrKKVNw160G)oBvy9WFK8kz2LQr70lSAQAYq0YBzsmbQggufBR2XuRw6wJ)qJDveX0Tm8aJJkNJDPcHIfLsF3GmtBnnd9wtwPrEZbsi3KYuu3n2WY4AR3ow2(SPXL1GIHsCrvVE92cOE5jZvxFNsjPewhg7Tj8LDY3yzQKAyhjIlQLaTlCMq7NOhzDRvwqdDBOPPryzZFKU5kQwrAYBj7DRhnGH2at3(KnrX46k3DXkJAnX42P2kb0mA3(1iN2m(xL4qnDyrJMPDniQMZ2kdPXuGQmeZwfQTRnJkDwkr5flJOz7FySzE057528g0SFstb9neA39dkf1iTmAsM7uHtyKQbJz7vD9xPu8oLOG30rPZAnuosd4BAx3CPWsRgnfnw9Iq0GvP8z1M(JoO3QaAth(rfkDLMQj00t4icok1B4wmxQ5WHLUYRLvuw7RFPSn6f8ohNgiNrssMY9IOwqZMxeonPBOtTv7ikjRJutmL2EVs8VfFq16xUlrHKsh5oqULPw72RaVVCHlr)k8R5W1Vuk7PA1qf)M2Qkx6KlQYr2sYjdjZwWSZhdD(U2HEp)JwXsvyMfjvDiV2Id1snDA7XIi2PLQQkZ0AkpvlzkWAD6CcV1rz0N0qXv6g6u6UPVjmyP0QtmeNLsN6taFtzmymGVLIyKeeJhtZG(q)IozjVAJovVSDEKDehwXwtRG0p2Zehg3JehmF(cxCUoWCpHW3DL2z)zyM4w96qZpNOsUkF5GvEK02EVV3zNOMoOsChnaVRhPXu9Fl())]] )

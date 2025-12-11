@@ -443,7 +443,7 @@ function module.options:Load()
 		end
 
 		if text then
-			module.options.search = {strsplit(";",text)}
+			module.options.search = {strsplit(",",text)}
 			for i=#module.options.search,1,-1 do
 				if module.options.search[i] == "" then
 					tremove(module.options.search,i)

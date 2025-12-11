@@ -33,6 +33,7 @@ end
 --
 
 local buffList = {}
+local vulnerabilityThrottle = {}
 local arcaneBombMarker
 local naturesFuryMarker
 
@@ -119,6 +120,7 @@ function mod:OnRegister()
 end
 
 function mod:OnBossEnable()
+	vulnerabilityThrottle = {}
 	self:Log("SPELL_AURA_APPLIED", "BroodPowerBronzeApplied", 22291)
 	self:Log("SPELL_AURA_REFRESH", "BroodPowerBronzeApplied", 22291)
 	self:Log("SPELL_AURA_REMOVED", "BroodPowerBronzeRemoved", 22291)
@@ -197,13 +199,14 @@ do
 		if guid ~= prevGUID then
 			local npcId = self:MobId(guid)
 			if npcId == 12460 or npcId == 12461 then -- Death Talon Wyrmguard, Death Talon Overseer
-				if self:Vanilla() and not self:UnitDebuff("target", 2855) then
+				if self:Vanilla() and not self:GetPlayerAura(2855, "target") then
 					if not printed then
 						printed = true
 						BigWigs:Print(L.detect_magic_warning)
 					end
-					if GetTime() - prevMsg > 40 and self:GetHealth("target") > 5 then
-						prevMsg = GetTime()
+					local t = GetTime()
+					if t - prevMsg > 40 and self:GetHealth("target") > 5 then
+						prevMsg = t
 						local icon = self:GetIconTexture(self:GetIcon("target"))
 						if icon then
 							self:Message("target_vulnerability", "red", icon.. L.detect_magic_missing_message, 2855)
@@ -214,13 +217,19 @@ do
 					return
 				end
 				for buffId, message in next, buffList do
-					if self:UnitBuff("target", buffId) then
+					if self:GetPlayerAura(buffId, "target") then
 						prevGUID = guid
 						local icon = self:GetIconTexture(self:GetIcon("target"))
+						local msg
 						if icon then
-							self:Message("target_vulnerability", "yellow", icon.. message, 22277)
+							msg = icon.. message
 						else
-							self:Message("target_vulnerability", "yellow", message, 22277)
+							msg = message
+						end
+						local t = GetTime()
+						if not vulnerabilityThrottle[guid] or msg ~= vulnerabilityThrottle[guid][1] or (t - vulnerabilityThrottle[guid][2]) > 4 then
+							vulnerabilityThrottle[guid] = {msg, t}
+							self:Message("target_vulnerability", "yellow", msg, 22277)
 						end
 						return
 					end

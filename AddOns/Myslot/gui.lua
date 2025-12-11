@@ -711,20 +711,20 @@ RegEvent("ADDON_LOADED", function()
 
         StaticPopupDialogs["MYSLOT_EXPORT_TITLE"].OnShow = function(self)
             local c = popctx.current
-
+            local editBox = self.GetEditBox and self:GetEditBox() or self.editBox
             if c and exports[c] then
-                self.editBox:SetText(exports[c].name or "")
+                editBox:SetText(exports[c].name or "")
             end
-            self.editBox:SetFocus()
+            editBox:SetFocus()
         end
 
 
         StaticPopupDialogs["MYSLOT_EXPORT_TITLE"].OnAccept = function(self)
             local c = popctx.current
-
+            local editBox = self.GetEditBox and self:GetEditBox() or self.editBox
             -- if c then rename
             if c and exports[c] then
-                local n = self.editBox:GetText()
+                local n = editBox:GetText()
                 if n ~= "" then
                     exports[c].name = n
                     UIDropDownMenu_SetText(t, n)
@@ -732,7 +732,7 @@ RegEvent("ADDON_LOADED", function()
                 return
             end
 
-            if create(self.editBox:GetText()) then
+            if create(editBox:GetText()) then
                 onclick({value = #exports})
             end
         end

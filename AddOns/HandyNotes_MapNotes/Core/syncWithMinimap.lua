@@ -19,6 +19,9 @@ local db = ns.Addon.db.profile
         --Classes Scale/Alpha
         db.MinimapCapitalsClassesScale = db.CapitalsClassesScale
         db.MinimapCapitalsClassesAlpha = db.CapitalsClassesAlpha
+        --Class Hall Scale/Alpha
+        db.MinimapCapitalsClassHallScale = db.CapitalsClassHallScale
+        db.MinimapCapitalsClassHallAlpha = db.CapitalsClassHallAlpha
     end
 
     if db.activate.SyncZoneAndMinimap then
@@ -62,6 +65,7 @@ local db = ns.Addon.db.profile
         db.activate.MinimapCapitalsProfessions = db.activate.CapitalsProfessions
         db.activate.MinimapCapitalsGeneral = db.activate.CapitalsGeneral
         db.activate.MinimapCapitalsClasses = db.activate.CapitalsClasses
+        db.activate.MinimapCapitalsClassHall = db.activate.CapitalsClassHall
         -- Capitals Capitals
         self.db.profile.showMinimapCapitalsOrgrimmar = self.db.profile.showCapitalsOrgrimmar
         self.db.profile.showMinimapCapitalsThunderBluff = self.db.profile.showCapitalsThunderBluff
@@ -78,6 +82,7 @@ local db = ns.Addon.db.profile
         self.db.profile.showMinimapCapitalsSot7S = self.db.profile.showCapitalsSot7S
         self.db.profile.showMinimapCapitalsStormshield = self.db.profile.showCapitalsStormshield
         self.db.profile.showMinimapCapitalsWarspear = self.db.profile.showCapitalsWarspear
+        self.db.profile.showMinimapCapitalsHousing = self.db.profile.showCapitalsHousing
         self.db.profile.showMinimapCapitalsDazarAlor = self.db.profile.showCapitalsDazarAlor
         self.db.profile.showMinimapCapitalsBoralus = self.db.profile.showCapitalsBoralus
         self.db.profile.showMinimapCapitalsOribos = self.db.profile.showCapitalsOribos
@@ -128,6 +133,7 @@ local db = ns.Addon.db.profile
         self.db.profile.showMinimapCapitalsMailbox = self.db.profile.showCapitalsMailbox
         self.db.profile.showMinimapCapitalsPvPVendor = self.db.profile.showCapitalsPvPVendor
         self.db.profile.showMinimapCapitalsPvEVendor = self.db.profile.showCapitalsPvEVendor
+        self.db.profile.showMinimapCapitalsRenownQuartermaster = self.db.profile.showCapitalsRenownQuartermaster
         self.db.profile.showMinimapCapitalsItemUpgrade = self.db.profile.showCapitalsItemUpgrade
         self.db.profile.showMinimapCapitalsDragonFlyTransmog = self.db.profile.showCapitalsDragonFlyTransmog
         self.db.profile.showMinimapCapitalsCatalyst = self.db.profile.showCapitalsCatalyst
@@ -146,6 +152,20 @@ local db = ns.Addon.db.profile
         self.db.profile.showMinimapCapitalsClassShaman = self.db.profile.showCapitalsClassShaman
         self.db.profile.showMinimapCapitalsClassWarlock = self.db.profile.showCapitalsClassWarlock
         self.db.profile.showMinimapCapitalsClassWarrior = self.db.profile.showCapitalsClassWarrior
+        -- Capitals Class Hall
+        self.db.profile.showMinimapCapitalsClassHallEntrance = self.db.profile.showCapitalsClassHallEntrance
+        self.db.profile.showMinimapCapitalsClassHallPaths = self.db.profile.showCapitalsClassHallPaths
+        self.db.profile.showMinimapCapitalsClassHallPortals = self.db.profile.showCapitalsClassHallPortals
+        self.db.profile.showMinimapCapitalsClassHallScoutingMap = self.db.profile.showCapitalsClassHallScoutingMap
+        self.db.profile.showMinimapCapitalsClassHallArchivar = self.db.profile.showCapitalsClassHallArchivar
+        self.db.profile.showMinimapCapitalsClassHallMountMerchent = self.db.profile.showCapitalsClassHallMountMerchent
+        self.db.profile.showMinimapCapitalsClassHallMailbox = self.db.profile.showCapitalsClassHallMailbox
+        self.db.profile.showMinimapCapitalsClassHallFP = self.db.profile.showCapitalsClassHallFP
+        self.db.profile.showMinimapCapitalsClassHallArtifactForge = self.db.profile.showCapitalsClassHallArtifactForge
+        self.db.profile.showMinimapCapitalsClassHallRecruit = self.db.profile.showCapitalsClassHallRecruit
+        self.db.profile.showMinimapCapitalsClassHallVendor = self.db.profile.showCapitalsClassHallVendor
+        self.db.profile.showMinimapCapitalsClassHallUpgrade = self.db.profile.showCapitalsClassHallUpgrade
+        self.db.profile.showMinimapCapitalsClassHallStablemaster = self.db.profile.showCapitalsClassHallStablemaster
     end
 
     if db.activate.SyncZoneAndMinimap then
@@ -190,7 +210,8 @@ local db = ns.Addon.db.profile
         self.db.profile.showMiniMapMailbox = self.db.profile.showZoneMailbox
         self.db.profile.showMiniMapPvPVendor = self.db.profile.showZonePvPVendor
         self.db.profile.showMiniMapPvEVendor = self.db.profile.showZonePvEVendor
-        self.db.profile.showMiniMapTransmogger = self.db.profile.showZoneTransmogger
+        self.db.profile.showMiniMapRenownQuartermaster = self.db.profile.showZoneRenownQuartermaster
+        self.db.profile.showMiniMapTransmogger = self.db.profile.ZoneAlphaRenownQuartermaster
         self.db.profile.showMiniMapItemUpgrade = self.db.profile.showZoneItemUpgrade
         self.db.profile.showMiniMapCatalyst = self.db.profile.showZoneCatalyst
         self.db.profile.showMiniMapZidormi = self.db.profile.showZoneZidormi

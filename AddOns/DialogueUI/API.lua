@@ -30,6 +30,20 @@ local function AlwaysZero(arg)
     return 0
 end
 
+local issecurevalue = issecurevalue or AlwaysFalse;
+local canaccessvalue = canaccessvalue or AlwaysTrue;
+API.issecurevalue = issecurevalue;
+API.canaccessvalue = canaccessvalue;
+
+function API.DoesValueExist(v)
+    if canaccessvalue(v) then
+        if v then
+            return true
+        end
+    end
+    return false
+end
+
 local function CopyEnum(name)
     local tbl = {};
     if Enum and Enum[name] then
@@ -554,6 +568,18 @@ do  -- NPC Interaction
     API.GetInteractTexture = GetInteractTexture;
 
 
+    function API.IsQuestNPCPlayer()
+        if UnitExists("npc") then
+            local bool = UnitIsUnit("npc", "player");
+            if canaccessvalue(bool) then
+                return not bool
+            else
+                return false
+            end
+        end
+    end
+
+
     local IsInteractingWithNpcOfType = C_PlayerInteractionManager.IsInteractingWithNpcOfType;
     local TYPE_GOSSIP = Enum.PlayerInteractionType and Enum.PlayerInteractionType.Gossip or 3;
     local TYPE_QUEST_GIVER = Enum.PlayerInteractionType and Enum.PlayerInteractionType.QuestGiver or 4;
@@ -782,7 +808,7 @@ do  -- NPC Interaction
 		local hideWeapon = true;
         local useNativeForm = not inAlternateForm;
         PlayerActor:SetScale(1);
-        
+
         local result = PlayerActor:SetModelByUnit("player", sheatheWeapon, autodress, hideWeapon, useNativeForm);
         if result then
             local creatureDisplayID, _, _, isSelfMount, _, modelSceneID, animID, spellVisualKitID, disablePlayerMountPreview = C_MountJournal.GetMountInfoExtraByID(mountID);
@@ -804,6 +830,8 @@ do  -- NPC Interaction
 
     local function GetCreatureIDFromGUID(guid)
         --Including Creature, Vehicle, GameObject
+        if not canaccessvalue(guid) then return end;
+
         local id = guid and match(guid, "^%a+%-0%-%d*%-%d*%-%d*%-(%d*)");
         if id then
             return tonumber(id)
@@ -824,6 +852,7 @@ do  -- NPC Interaction
     local function GetUnitTypeAndID(unit)
         unit = unit or "npc";
         local guid = UnitGUID("npc");
+        if not canaccessvalue(guid) then return end;
         if guid then
             local unitType, id = match(guid, "^(%a+)%-0%-%d*%-%d*%-%d*%-(%d*)");
             if unitType and id then
@@ -936,7 +965,6 @@ do  -- Quest
     local QuestHasQuestSessionBonus = C_QuestLog.QuestHasQuestSessionBonus or AlwaysFalse;
     local GetQuestItemInfoLootType = GetQuestItemInfoLootType or AlwaysZero;
     local GetTitleForQuestID = C_QuestLog.GetTitleForQuestID or C_QuestLog.GetQuestInfo or AlwaysFalse;
-    local GetQuestObjectives = C_QuestLog.GetQuestObjectives;
     local GetQuestTimeLeftSeconds = C_TaskQuest and C_TaskQuest.GetQuestTimeLeftSeconds or AlwaysNil;
     local IsQuestFlaggedCompletedOnAccount = C_QuestLog.IsQuestFlaggedCompletedOnAccount or AlwaysFalse;
     local GetLogIndexForQuestID = C_QuestLog.GetLogIndexForQuestID or GetQuestLogIndexByID or AlwaysNil;
@@ -946,6 +974,7 @@ do  -- Quest
     local IsAccountQuest = C_QuestLog.IsAccountQuest or AlwaysFalse;
 
     API.IsQuestFlaggedCompletedOnAccount = IsQuestFlaggedCompletedOnAccount;
+    API.ReadyForTurnIn = ReadyForTurnIn;
 
     local function IsPlayerOnQuest(questID)
         if questID then
@@ -1044,6 +1073,7 @@ do  -- Quest
     API.GetQuestItemInfoLootType = GetQuestItemInfoLootType;
     API.GetTitleForQuestID = GetTitleForQuestID;
     API.IsAccountQuest = IsAccountQuest;
+    API.GetLogIndexForQuestID = GetLogIndexForQuestID;
 
     if GetAvailableQuestInfo then
         API.GetAvailableQuestInfo = GetAvailableQuestInfo;
@@ -1263,12 +1293,16 @@ do  -- Quest
         ["QuestBG-1027"] = "TWW-Azeroth.png",
         ["QuestBG-Rocket"] = "TWW-Rocket.png",
         ["QuestBG-Fist"] = "TWW-Fist.png",
+
+        ["QuestBG-Sky"] = "MID-DarkHeart.png",
     };
 
     local function GetQuestBackgroundDecor(questID)
         local theme = GetQuestDetailsTheme(questID);
-        --print(theme.background)
-        --theme = {background = "QuestBG-Web"};    --debug
+        if theme then
+            --print(theme.background);
+        end
+        --theme = {background = "QuestBG-Test"};    --debug
         if theme and theme.background and BackgroundDecors[theme.background] then
             return DECOR_PATH..BackgroundDecors[theme.background]
         end
@@ -1533,6 +1567,17 @@ do  -- Quest
         function API.GetQuestLineInfo(questID)
 
         end
+    end
+
+
+    --Open Quest Log
+    function API.ViewQuestInQuestLog(questID)
+        if not (InCombatLockdown() and GetLogIndexForQuestID(questID) and QuestMapFrame_ShowQuestDetails) then return end;
+        if C_Map.OpenWorldMap then
+            C_Map.OpenWorldMap();
+        end
+        QuestMapFrame_ShowQuestDetails(questID);
+        return true
     end
 end
 
@@ -2077,6 +2122,41 @@ do  -- Model
         model:SetLight(enabled, lightValues);
     end
     API.SetModelLight = SetModelLight;
+
+
+    do  --UnitPortraitSetter
+        local UnitPortraitSetter = CreateFrame("Frame");
+        UnitPortraitSetter.queue = {};
+
+        function UnitPortraitSetter:SetPortraitTexture(textureObject, unit)
+            if IsUnitModelReadyForUI(unit) then
+                self.queue[textureObject] = nil;
+                SetPortraitTexture(textureObject, unit);
+            else
+                self.queue[textureObject] = unit;
+                self.t = 0;
+                self:SetScript("OnUpdate", self.OnUpdate);
+            end
+        end
+
+        function UnitPortraitSetter:OnUpdate(elapsed)
+            self.t = self.t + elapsed;
+            if self.t >= 1.0 then
+                self.t = 0;
+                self:SetScript("OnUpdate", nil);
+                for textureObject, unit in pairs(self.queue) do
+                    if textureObject:IsVisible() then
+                        SetPortraitTexture(textureObject, unit);
+                    end
+                end
+                self.queue = {};
+            end
+        end
+
+        API.SetPortraitTexture = function(textureObject, unit)
+            UnitPortraitSetter:SetPortraitTexture(textureObject, unit);
+        end
+    end
 end
 
 do  -- Faction -- Reputation
@@ -2103,7 +2183,12 @@ do  -- Faction -- Reputation
             factionName = p1;
         end
 
-        local isParagon = C_Reputation.IsFactionParagon and C_Reputation.IsFactionParagon(factionID);
+        local isParagon;
+        if C_Reputation.IsFactionParagonForCurrentPlayer then
+            isParagon = C_Reputation.IsFactionParagonForCurrentPlayer(factionID);
+        elseif C_Reputation.IsFactionParagon then
+            isParagon = C_Reputation.IsFactionParagon(factionID);
+        end
         local isMajorFaction = C_Reputation.IsMajorFaction and C_Reputation.IsMajorFaction(factionID);
         local repInfo = C_GossipInfo.GetFriendshipReputation(factionID);
 
@@ -2841,6 +2926,7 @@ do  -- Items
     API.GetTransmogItemInfo = GetTransmogItemInfo;
     API.GetItemInfo = GetItemInfo;
     API.IsDressableItem = IsDressableItem;
+    API.IsDecorItem = C_Item.IsDecorItem or AlwaysFalse;
 
     local function _GetItemLevel(item)
         if item then

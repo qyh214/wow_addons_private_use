@@ -381,8 +381,8 @@ WeakAuras.normalWidth = 1.3
 WeakAuras.halfWidth = WeakAuras.normalWidth / 2
 WeakAuras.doubleWidth = WeakAuras.normalWidth * 2
 local versionStringFromToc = C_AddOns.GetAddOnMetadata("WeakAuras", "Version")
-local versionString = "5.20.1"
-local buildTime = "20250805203921"
+local versionString = "5.20.7"
+local buildTime = "20251128202625"
 
 local flavorFromToc = C_AddOns.GetAddOnMetadata("WeakAuras", "X-Flavor")
 local flavorFromTocToNumber = {
@@ -410,7 +410,7 @@ WeakAuras.buildType = "pr"
 --@end-experimental@]=====]
 
 --[==[@debug@
-if versionStringFromToc == "5.20.1" then
+if versionStringFromToc == "5.20.7" then
   versionStringFromToc = "Dev"
   buildTime = "Dev"
   WeakAuras.buildType = "dev"
@@ -428,6 +428,11 @@ function WeakAuras.IsClassicEra()
 end
 -- save compatibility with old auras
 WeakAuras.IsClassic = WeakAuras.IsClassicEra
+
+---@return boolean result
+function WeakAuras.IsWrathClassic()
+  return flavor == 3
+end
 
 ---@return boolean result
 function WeakAuras.IsCataClassic()
@@ -474,8 +479,57 @@ function WeakAuras.IsCataOrRetail()
 end
 
 ---@return boolean result
+function WeakAuras.IsClassicOrWrath()
+  return WeakAuras.IsClassicEra() or WeakAuras.IsWrathClassic()
+end
+
+---@return boolean result
+function WeakAuras.IsWrathOrCata()
+  return WeakAuras.IsWrathClassic() or WeakAuras.IsCataClassic()
+end
+
+---@return boolean result
+function WeakAuras.IsWrathOrCataOrMists()
+  return WeakAuras.IsWrathClassic() or WeakAuras.IsCataClassic() or WeakAuras.IsMists()
+end
+
+---@return boolean result
+function WeakAuras.IsWrathOrCataOrMistsOrRetail()
+  return WeakAuras.IsWrathClassic() or WeakAuras.IsCataClassic() or WeakAuras.IsMists() or WeakAuras.IsRetail()
+end
+
+---@return boolean result
+function WeakAuras.IsClassicOrWrathOrCata()
+  return WeakAuras.IsClassicEra() or WeakAuras.IsWrathClassic() or WeakAuras.IsCataClassic()
+end
+
+---@return boolean result
+function WeakAuras.IsClassicOrWrathOrCataOrMists()
+  return WeakAuras.IsClassicEra() or WeakAuras.IsWrathClassic() or WeakAuras.IsCataClassic() or WeakAuras.IsMists()
+end
+
+---@return boolean result
+function WeakAuras.IsWrathOrMistsOrRetail()
+  return WeakAuras.IsWrathClassic() or WeakAuras.IsMists() or WeakAuras.IsRetail()
+end
+
+---@return boolean result
+function WeakAuras.IsWrathOrMists()
+  return WeakAuras.IsWrathClassic() or WeakAuras.IsMists()
+end
+
+---@return boolean result
+function WeakAuras.IsWrathOrRetail()
+  return WeakAuras.IsWrathClassic() or WeakAuras.IsRetail()
+end
+
+---@return boolean result
 function WeakAuras.IsTWW()
   return WeakAuras.BuildInfo >= 110000
+end
+
+function WeakAuras.IsMidnight()
+  return WeakAuras.BuildInfo >= 120000
 end
 
 ---@param ... string
@@ -566,6 +620,17 @@ if not libsAreOk then
   C_Timer.After(1, function()
     WeakAuras.prettyPrint("WeakAuras is missing necessary libraries. Please reinstall a proper package.")
   end)
+end
+
+if WeakAuras.IsWrathClassic() then
+  C_Timer.After(1, function()
+    WeakAuras.prettyPrint("This version of WeakAuras is provided as is. We are unable to test it ourselves on CN Servers.")
+  end)
+elseif WeakAuras.IsMidnight() then
+  C_Timer.After(1, function()
+    WeakAuras.prettyPrint("WeakAuras does not support Midnight due to Blizzard restricting addons. Read more at https://patreon.com/WeakAuras")
+  end)
+  libsAreOk = false
 end
 
 -- These function stubs are defined here to reduce the number of errors that occur if WeakAuras.lua fails to compile

@@ -15,6 +15,8 @@ L["Are you sure you want to reset permanently stored scales? This will reload th
 L["BlizzMove: The frame you just moved (%s) is probably in a broken state, possibly because of other addons."] = "BlizzMove: El marco que acabas de mover (%s) probablemente no funcione, posiblemente a causa de otros addons."
 L["Clear"] = "Borrar"
 L["Clear the search filter."] = "Borrar el filtro de búsqueda."
+--[[Translation missing --]]
+L["Click to copy PayPal link."] = "Click to copy PayPal link."
 L["Copy the text from the popup window, and report it to the addon author."] = "Copie el texto de la ventana emergente, y repórtela al autor del addon."
 L["Copy the text from this popup window, and report it to the addon author."] = "Copie el texto de esta ventana emergente, y repórtela al autor del addon."
 L["Could not find frame"] = "No se puede encontrar el marco"
@@ -40,6 +42,8 @@ L["Global Config"] = "Configuración Global"
 L["How should frame positions be remembered?"] = "¿Cómo deberían recordarse las posiciones de los marcos?"
 L["How should frame scales be remembered?"] = "¿Cómo deberían recordarse las escalas de los marcos?"
 L["If enabled BlizzMove requires to hold SHIFT to move frames."] = "Si BlizzMove está habilitado requiere mantener pulsado SHIFT para mover los marcos."
+--[[Translation missing --]]
+L["If you like this addon and want to support its development, consider donating:"] = "If you like this addon and want to support its development, consider donating:"
 L["In Session"] = "En sesión"
 L["In Session, until you reload"] = "En sesión, hasta que recargues la UI"
 L["Info"] = "Información"

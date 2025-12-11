@@ -190,7 +190,6 @@ Off Screen]=] ] = [=[Индикация за
 	L["Aura: '%s'"] = "Индикация: %s"
 	L["Auto-Clone (Show All Matches)"] = "Показать все совпадения (Автоклонирование)"
 	L["Automatic length"] = "Автоматическая длина"
-	L["Available Voices are system specific"] = "Доступность голоса зависит от вашей системы"
 	L["Backdrop Color"] = "Цвет фона"
 	L["Backdrop in Front"] = "Фон спереди"
 	L["Backdrop Style"] = "Стиль фона"
@@ -231,6 +230,8 @@ Off Screen]=] ] = [=[Индикация за
 	L["Circular Texture %s"] = "Круглая текстура %s"
 	L["Clear Debug Logs"] = "Очистить записи"
 	L["Clear Saved Data"] = "Очистить данные"
+	--[[Translation missing --]]
+	L["Click to replace the name with %s."] = "Click to replace the name with %s."
 	L["Clip Overlays"] = "Обрезать наложения"
 	--[[Translation missing --]]
 	L["Clipped by Foreground"] = "Clipped by Foreground"
@@ -463,6 +464,8 @@ Bleed classification via LibDispel]=] ] = "Фильтровать только �
 	L["Group Settings"] = "Настройки группы"
 	L["Hawk"] = "Ястреб"
 	L["Help"] = "Справка"
+	--[[Translation missing --]]
+	L["Hide After"] = "Hide After"
 	L["Hide Background"] = "Скрыть задний план"
 	L["Hide Glows applied by this aura"] = "Скрыть свечения, применённые этой индикацией"
 	L["Hide on"] = "Скрыть на"
@@ -554,6 +557,8 @@ Bleed classification via LibDispel]=] ] = "Фильтровать только �
 	L["Magnetically Align"] = "Привязка к направляющим"
 	L["Main"] = "Основная"
 	L["Manual with %i/%i"] = "Вручную с %i/%i"
+	--[[Translation missing --]]
+	L["Matches %s spells"] = "Matches %s spells"
 	L["Matches the height setting of a horizontal bar or width for a vertical bar."] = "Совпадает с высотой горизонтальной полосы или с шириной вертикальной полосы"
 	L["Max"] = "Макс. значение"
 	L["Max Length"] = "Максимальная длина"
@@ -652,6 +657,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = "Время �
 	L["Paste Trigger Settings"] = "Вставить настройки триггера"
 	L["Places a tick on the bar"] = "Размещает такт (деление) на полосе"
 	L["Play Sound"] = "Воспроизвести звук"
+	--[[Translation missing --]]
+	L["Player Spells found:"] = "Player Spells found:"
 	L["Portrait Zoom"] = "Увеличить портрет"
 	L["Position and Size Settings"] = "Настройки положения и размера"
 	L["Preferred Match"] = "Предпочтительный результат"
@@ -793,6 +800,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = "Время �
 	L["Spark Texture"] = "Текстура искры"
 	L["Specific Currency ID"] = "ID валюты"
 	L["Spell Selection Filters"] = "Фильтры выбора заклинания"
+	--[[Translation missing --]]
+	L["Spells found:"] = "Spells found:"
 	L["Stack Info"] = "Информация о стаках"
 	L["Stacks - The number of stacks of an aura (usually)"] = "Стаки - количество стаков ауры (обычно)"
 	L["Standby"] = "Ожидает"
@@ -805,6 +814,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = "Время �
 	L["Stop Motion %s"] = "Стоп-кадр %s"
 	L["Stop Motion Settings"] = "Настройки анимации Stop motion"
 	L["Stop Sound"] = "Остановить вопроизведение звука"
+	--[[Translation missing --]]
+	L["Stretched by Foreground"] = "Stretched by Foreground"
 	L["Sub Elements"] = "Внутренние элементы"
 	L["Sub Option %i"] = "Внутренний параметр %i"
 	L["Subevent"] = "Подсобытие"
@@ -829,6 +840,10 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = "Время �
 	L["The duration of the animation in seconds. The finish animation does not start playing until after the display would normally be hidden."] = [=[Длительность анимации в секундах.
 Конечная анимация не начнет отображаться, пока индикация не будет нормально скрыта  (должен сработать детриггер).]=]
 	L["The group and all direct children will share the same base frame level."] = "Группа и все её прямые дочерние элементы будут иметь один и тот же базовый уровень фрейма."
+	--[[Translation missing --]]
+	L["The Multi Target mode is less reliable and not recommended."] = "The Multi Target mode is less reliable and not recommended."
+	--[[Translation missing --]]
+	L["The Multi Target mode requires a name or spell id filter"] = "The Multi Target mode requires a name or spell id filter"
 	L["The trigger number is optional. When no trigger number is specified, the trigger selected via dynamic information will be used."] = "Номер триггера является необязательным. Если номер триггера не указан, будет использоваться триггер, выбранный через динамическую информацию."
 	L["The type of trigger"] = "Тип триггера"
 	L["The WeakAuras Options Addon version %s doesn't match the WeakAuras version %s. If you updated the addon while the game was running, try restarting World of Warcraft. Otherwise try reinstalling WeakAuras"] = "Версия %s дополнения WeakAuras Options не соответствует версии %s WeakAuras. Если вы обновили дополнение во время игры, попробуйте перезапустить World of Warcraft. В противном случае попробуйте переустановить WeakAuras"
@@ -923,9 +938,12 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["Vertical Bar"] = "Вертикальная полоса"
 	L["View"] = "Вид"
 	L["View custom code"] = "Просмотреть код"
-	L["Voice"] = "Голос"
+	--[[Translation missing --]]
+	L["Voice Settings"] = "Voice Settings"
 	L["We thank"] = "Мы благодарим"
 	L["WeakAuras %s on WoW %s"] = "WeakAuras: %s. Интерфейс: %s"
+	--[[Translation missing --]]
+	L["WeakAuras recommends using spell ids instead of names. Spell ids are automatically localized."] = "WeakAuras recommends using spell ids instead of names. Spell ids are automatically localized."
 	L["What do you want to do?"] = "Что вы хотите сделать?"
 	L["Whole Area"] = "Вся область"
 	L["wrapping"] = "Перенос слов при переполнении"
@@ -943,6 +961,16 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 |cFFFF0000Это действие необратимо!|r Продолжить?]=]
 	L["You are about to delete a trigger. |cFFFF0000This cannot be undone!|r Would you like to continue?"] = [=[Вы собираетесь удалить триггер.
 |cFFFF0000Это действие необратимо!|r Продолжить?]=]
+	--[[Translation missing --]]
+	L[ [=[You are about to Import an Aura with custom Lua code on a Hardcore server.
+
+|cFFFF0000There is a risk the custom code could be used to kill your hardcore character!|r
+
+Would you like to continue?]=] ] = [=[You are about to Import an Aura with custom Lua code on a Hardcore server.
+
+|cFFFF0000There is a risk the custom code could be used to kill your hardcore character!|r
+
+Would you like to continue?]=]
 	L[ [=[You can add a comma-separated list of state values here that (when changed) WeakAuras should also run the Anchor Code on.
 
 WeakAuras will always run custom anchor code if you include 'changed' in this list, or when a region is added, removed, or re-ordered.]=] ] = "Вы можете добавить сюда список значений состояния, разделенных запятыми, при изменении которых WeakAuras также выполнит код привязки. WeakAuras всегда выполнит пользовательский код привязки, если вы включите 'изменен' в этот список, или когда регион будет добавлен, удален или переупорядочен."

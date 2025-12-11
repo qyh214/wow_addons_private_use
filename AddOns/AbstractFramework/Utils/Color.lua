@@ -48,7 +48,7 @@ end
 ---@param g number
 ---@param b number
 ---@param a? number
----@return string hex
+---@return string hex rrggbb or aarrggbb
 function AF.ConvertRGB256ToHEX(r, g, b, a)
     local result = ""
 
@@ -80,7 +80,7 @@ end
 ---@param g number
 ---@param b number
 ---@param a? number
----@return string hex
+---@return string hex rrggbb or aarrggbb
 function AF.ConvertRGBToHEX(r, g, b, a)
     return AF.ConvertRGB256ToHEX(AF.ConvertToRGB256(r, g, b, a))
 end
@@ -145,9 +145,9 @@ end
 ---@param r number [0, 1]
 ---@param g number [0, 1]
 ---@param b number [0, 1]
----@return number h [0, 360]
----@return number s [0, 1]
----@return number b [0, 1]
+---@return number h [0, 360] hue
+---@return number s [0, 1] saturation
+---@return number b [0, 1] brightness
 function AF.ConvertRGBToHSB(r, g, b)
     local colorMax = max(r, g, b)
     local colorMin = min(r, g, b)
@@ -191,9 +191,9 @@ function AF.ConvertRGBToHSB(r, g, b)
 end
 
 -- From ColorPickerAdvanced by Feyawen-Llane
----@param h number [0, 360]
----@param s number [0, 1]
----@param b number [0, 1]
+---@param h number [0, 360] hue
+---@param s number [0, 1] saturation
+---@param b number [0, 1] brightness
 ---@return number r [0, 1]
 ---@return number g [0, 1]
 ---@return number b [0, 1]
@@ -225,6 +225,90 @@ function AF.ConvertHSBToRGB(h, s, b)
     B = tonumber(format("%.3f", B + M))
 
     return R, G, B
+end
+
+---@param r number [0, 1]
+---@param g number [0, 1]
+---@param b number [0, 1]
+---@param factor number [0, 1]
+---@return number r [0, 1]
+---@return number g [0, 1]
+---@return number b [0, 1]
+function AF.ScaleColor(r, g, b, factor)
+    factor = factor or 1
+    r = AF.Clamp(r * factor, 0, 1)
+    g = AF.Clamp(g * factor, 0, 1)
+    b = AF.Clamp(b * factor, 0, 1)
+    return r, g, b
+end
+
+---@param color string hex color
+---@param factor number [0, 1]
+---@param alpha number|nil [0, 1]
+---@return string hexColor aarrggbb
+function AF.ScaleColorHex(color, factor, alpha)
+    local r, g, b, a = AF.ConvertHEXToRGB(color)
+    factor = factor or 1
+    alpha = alpha or a or 1
+    return AF.ConvertRGBToHEX(r * factor, g * factor, b * factor, alpha)
+end
+
+---@param r number [0, 1]
+---@param g number [0, 1]
+---@param b number [0, 1]
+---@param a? number [0, 1]
+---@return number r [0, 1]
+---@return number g [0, 1]
+---@return number b [0, 1]
+---@return number? a [0, 1]
+function AF.InvertColor(r, g, b, a)
+    return 1 - r, 1 - g, 1 - b, a
+end
+
+---@param hex string hex color
+---@return string hexColor inverted color
+function AF.InvertColorHex(hex)
+    local r, g, b, a = AF.ConvertHEXToRGB(hex)
+    local invR, invG, invB = AF.InvertColor(r, g, b)
+    return AF.ConvertRGBToHEX(invR, invG, invB, a)
+end
+
+---@param r number [0, 1]
+---@param g number [0, 1]
+---@param b number [0, 1]
+---@param a? number [0, 1]
+---@return number r [0, 1]
+---@return number g [0, 1]
+---@return number b [0, 1]
+---@return number? a [0, 1]
+function AF.GetComplementColor(r, g, b, a)
+    local h, s, v = AF.ConvertRGBToHSB(r, g, b)
+    h = (h + 180) % 360
+    local cr, cg, cb = AF.ConvertHSBToRGB(h, s, v)
+    return cr, cg, cb, a
+end
+
+---@param hex string
+---@return string hexColor
+function AF.GetComplementColorHex(hex)
+    local r, g, b, a = AF.ConvertHEXToRGB(hex)
+    local cr, cg, cb, ca = AF.GetComplementColor(r, g, b, a)
+    return AF.ConvertRGBToHEX(cr, cg, cb, ca)
+end
+
+---@param r number [0, 1]
+---@param g number [0, 1]
+---@param b number [0, 1]
+---@param saturation number [0, 1]
+---@param brightness number [0, 1]
+---@return number r [0, 1]
+---@return number g [0, 1]
+---@return number b [0, 1]
+function AF.AdjustColorSaturationBrightness(r, g, b, saturation, brightness)
+    local _h, _s, _b = AF.ConvertRGBToHSB(r, g, b)
+    _s = AF.Clamp(_s * saturation, 0, 1)
+    _b = AF.Clamp(_b * brightness, 0, 1)
+    return AF.ConvertHSBToRGB(_h, _s, _b)
 end
 
 function AF.ConvertToGrayscale(r, g, b, a)

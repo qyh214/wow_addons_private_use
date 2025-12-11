@@ -4,11 +4,12 @@ local cataWowID = 14
 local mistsWowID = 19
 if wowID ~= 1 and wowID ~= cataWowID and wowID ~= mistsWowID then return end -- Retail, Cata, Mists
 
-local LS, oldminor = LibStub:NewLibrary("LibSpecialization", 22)
+local LS, oldminor = LibStub:NewLibrary("LibSpecialization", 23)
 if not LS then return end -- No upgrade needed
 
-LS.callbackMapGroup = LS.callbackMapGroup or LS.callbackMap or {} -- LS.callbackMap is v19 and below
+LS.callbackMapGroup = LS.callbackMapGroup or {}
 LS.callbackMapGuild = LS.callbackMapGuild or {}
+LS.callbackMapPlayerSpecChange = LS.callbackMapPlayerSpecChange or {}
 LS.frame = LS.frame or CreateFrame("Frame")
 
 -- Positions of roles
@@ -234,26 +235,6 @@ do
 	end
 end
 
--- XXX DEPRECATED
-function LS:Register(addon, func)
-	geterrorhandler()(format("LibSpecialization: Register is deprecated, use RegisterGroup instead."))
-
-	local t = type(func)
-	if t == "string" then
-		callbackMapGroup[addon] = function(...) addon[func](addon, ...) end
-	elseif t == "function" then
-		callbackMapGroup[addon] = func
-	else
-		error("LibSpecialization: Incorrect function type for :Register.")
-	end
-end
-
-function LS:Unregister(addon)
-	geterrorhandler()(format("LibSpecialization: Unregister is deprecated, use UnregisterGroup instead."))
-	callbackMapGroup[addon] = nil
-end
--- XXX END DEPRECATED
-
 -- Handle groups (comms are automatic)
 function LS.RegisterGroup(addon, func)
 	if type(addon) ~= "table" or addon == LS then
@@ -296,6 +277,26 @@ function LS.UnregisterGuild(addon)
 	callbackMapGuild[addon] = nil
 end
 
+function LS.RegisterPlayerSpecChange(addon, func)
+	if type(addon) ~= "table" or addon == LS then
+		error("LibSpecialization: The function lib.RegisterPlayerSpecChange expects your own addon object as the first arg.")
+	end
+
+	local t = type(func)
+	if t == "function" then
+		LS.callbackMapPlayerSpecChange[addon] = func
+	else
+		error("LibSpecialization: The function lib.RegisterPlayerSpecChange expects your own function as the second arg.")
+	end
+end
+
+function LS.UnregisterPlayerSpecChange(addon)
+	if type(addon) ~= "table" or addon == LS then
+		error("LibSpecialization: The function lib.UnregisterPlayerSpecChange expects your own addon object.")
+	end
+	LS.callbackMapPlayerSpecChange[addon] = nil
+end
+
 local GetInfo
 if wowID == cataWowID then
 	function GetInfo()
@@ -306,7 +307,7 @@ if wowID == cataWowID then
 				local position = positionTable[specId]
 				local role = roleTable[specId]
 				if position and role then
-					if specId == 750 and not IsPlayerSpell(57880) then -- Cataclysm Feral Druids, if you don't have 2 points in 'Natural Reaction' we assume you're a cat
+					if specId == 750 and not C_SpellBook.IsSpellKnownOrInSpellBook(57880) then -- Cataclysm Feral Druids, if you don't have 2 points in 'Natural Reaction' we assume you're a cat
 						return specId, "DAMAGER", position
 					end
 					return specId, role, position
@@ -364,8 +365,7 @@ elseif wowID == mistsWowID then
 else
 	local C_Traits_GenerateImportString = C_Traits.GenerateImportString
 	local C_ClassTalents_GetActiveConfigID = C_ClassTalents.GetActiveConfigID
-	-- XXX compat code for 11.2
-	local GetSpecialization, GetSpecializationInfo = C_SpecializationInfo.GetSpecialization or GetSpecialization, C_SpecializationInfo.GetSpecializationInfo or GetSpecializationInfo
+	local GetSpecialization, GetSpecializationInfo = C_SpecializationInfo.GetSpecialization, C_SpecializationInfo.GetSpecializationInfo
 	function GetInfo()
 		local spec = GetSpecialization()
 		if type(spec) == "number" and spec > 0 then
@@ -555,6 +555,9 @@ do
 		elseif event == "GROUP_FORMED" then -- Join new group
 			LS.RequestGroupSpecialization()
 		elseif event == "PLAYER_TALENT_UPDATE" or event == "PLAYER_SPECIALIZATION_CHANGED" or ((event == "ACTIVE_COMBAT_CONFIG_CHANGED" or event == "TRAIT_CONFIG_UPDATED") and prefix == C_ClassTalents_GetActiveConfigID()) then
+			for _,func in next, LS.callbackMapPlayerSpecChange do
+				securecallfunction(func) -- Notify when the player has changed their spec
+			end
 			if IsInGroup() then
 				if IsInGroup(2) then -- Instance group
 					PrepareForInstance()
@@ -586,42 +589,6 @@ do
 	end
 	LS.frame:RegisterEvent("PLAYER_LOGIN")
 end
-
--- XXX DEPRECATED
-do
-	local prev = 0
-	local timer = nil
-	function LS:RequestSpecialization()
-		geterrorhandler()(format("LibSpecialization: RequestSpecialization is deprecated, use RequestGroupSpecialization instead."))
-
-		local specId, role, position, talentString = GetInfo()
-		if specId then
-			for _,func in next, callbackMapGroup do
-				securecallfunction(func, specId, role, position, pName, talentString) -- This allows us to show our own spec info when not grouped
-			end
-		end
-
-		if IsInGroup() then
-			local t = GetTime()
-			if t-prev > throttleTimer then
-				if timer then
-					timer:Cancel()
-					timer = nil
-				end
-				prev = t
-				if IsInGroup(2) then
-					SendAddonMessage("LibSpec", "R", "INSTANCE_CHAT")
-				end
-				if IsInGroup(1) then
-					SendAddonMessage("LibSpec", "R", "RAID")
-				end
-			elseif not timer then
-				timer = CTimerNewTimer((throttleTimer+0.1)-(t-prev), LS.RequestSpecialization)
-			end
-		end
-	end
-end
--- XXX END DEPRECATED
 
 do
 	local prev = 0

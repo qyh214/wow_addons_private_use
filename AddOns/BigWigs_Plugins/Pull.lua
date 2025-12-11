@@ -13,9 +13,9 @@ local GetInstanceInfo = BigWigsLoader.GetInstanceInfo
 local DoCountdown = BigWigsLoader.DoCountdown
 local zoneTable = BigWigsLoader.zoneTbl
 local isLogging = false
-local IsEncounterInProgress = IsEncounterInProgress
-local media = LibStub("LibSharedMedia-3.0")
-local SOUND = media.MediaType and media.MediaType.SOUND or "sound"
+local IsEncounterInProgress = C_InstanceEncounter and C_InstanceEncounter.IsEncounterInProgress or IsEncounterInProgress -- XXX 12.0 compat
+local LibSharedMedia = LibStub("LibSharedMedia-3.0")
+local SOUND = LibSharedMedia.MediaType and LibSharedMedia.MediaType.SOUND or "sound"
 
 local BWPull = CreateFrame("Button", "BWPull")
 BWPull:SetSize(1, 1)
@@ -54,6 +54,7 @@ do
 		combatLog = false,
 		engageSound = "None",
 		startPullSound = "BigWigs: Long",
+		startPullMessage = true,
 		endPullSound = "BigWigs: Alarm",
 		voice = voiceMap[GetLocale()] or "English: Amy",
 		keybind = "",
@@ -62,14 +63,14 @@ end
 
 do
 	local function soundGet(info)
-		for i, v in next, media:List(SOUND) do
+		for i, v in next, LibSharedMedia:List(SOUND) do
 			if v == plugin.db.profile[info[#info]] then
 				return i
 			end
 		end
 	end
 	local function soundSet(info, value)
-		plugin.db.profile[info[#info]] = media:List(SOUND)[value]
+		plugin.db.profile[info[#info]] = LibSharedMedia:List(SOUND)[value]
 	end
 
 	local function voiceSorting()
@@ -92,7 +93,7 @@ do
 		childGroups = "tab",
 		get = function(i) return plugin.db.profile[i[#i]] end,
 		set = function(i, value) plugin.db.profile[i[#i]] = value end,
-		order = 6,
+		order = 8,
 		args = {
 			countType = {
 				type = "select",
@@ -122,7 +123,7 @@ do
 				order = 4,
 				get = soundGet,
 				set = soundSet,
-				values = media:List(SOUND),
+				values = LibSharedMedia:List(SOUND),
 				width = 2.5,
 				itemControl = "DDI-Sound",
 			},
@@ -138,17 +139,23 @@ do
 				order = 6,
 				get = soundGet,
 				set = soundSet,
-				values = media:List(SOUND),
+				values = LibSharedMedia:List(SOUND),
 				width = 2.5,
 				itemControl = "DDI-Sound",
+			},
+			startPullMessage = {
+				type = "toggle",
+				name = L.pullStartedMessageTitle,
+				order = 7,
+				width = "full",
 			},
 			endPullSound = {
 				type = "select",
 				name = L.pullFinishedSoundTitle,
-				order = 7,
+				order = 8,
 				get = soundGet,
 				set = soundSet,
-				values = media:List(SOUND),
+				values = LibSharedMedia:List(SOUND),
 				width = 2.5,
 				itemControl = "DDI-Sound",
 			},
@@ -157,26 +164,26 @@ do
 				type = "select",
 				values = BigWigsAPI.GetCountdownList,
 				sorting = voiceSorting,
-				order = 8,
+				order = 9,
 				width = 2.5,
 			},
 			spacer3 = {
 				type = "description",
 				name = "\n",
-				order = 9,
+				order = 10,
 				width = "full",
 			},
 			combatLog = {
 				type = "toggle",
 				name = L.combatLog,
 				desc = L.combatLogDesc,
-				order = 10,
+				order = 11,
 				width = "full",
 			},
 			explainer = {
 				type = "description",
 				name = L.pullExplainer,
-				order = 11,
+				order = 12,
 				width = "full",
 				fontSize = "medium",
 			},
@@ -184,7 +191,7 @@ do
 				type = "keybinding",
 				name = L.keybinding,
 				desc = L.pullKeybindingDesc,
-				order = 12,
+				order = 13,
 				set = function(a, key)
 					plugin.db.profile.keybind = key
 					if not InCombatLockdown() then
@@ -196,6 +203,29 @@ do
 						BWPull:RegisterEvent("PLAYER_REGEN_ENABLED")
 					end
 				end,
+			},
+			spacer = {
+				type = "description",
+				name = "\n\n",
+				order = 14,
+				width = "full",
+				fontSize = "medium",
+			},
+			resetHeader = {
+				type = "header",
+				name = "",
+				order = 15,
+			},
+			reset = {
+				type = "execute",
+				name = L.reset,
+				desc = L.resetDesc,
+				func = function()
+					for k, v in next, plugin.defaultDB do
+						plugin.db.profile[k] = v
+					end
+				end,
+				order = 16,
 			},
 		},
 	}
@@ -224,11 +254,28 @@ do
 		if db.countBegin < 5 or db.countBegin > 10 then
 			db.countBegin = plugin.defaultDB.countBegin
 		end
+		local checkCount = math.floor(db.countBegin+0.5)
+		if checkCount ~= db.countBegin then
+			db.countBegin = checkCount
+		end
+
+		if not BigWigsAPI:HasCountdown(db.voice) then
+			db.voice = plugin.defaultDB.voice
+		end
+		if not LibSharedMedia:IsValid(SOUND, db.engageSound) then
+			db.engageSound = plugin.defaultDB.engageSound
+		end
+		if not LibSharedMedia:IsValid(SOUND, db.startPullSound) then
+			db.startPullSound = plugin.defaultDB.startPullSound
+		end
+		if not LibSharedMedia:IsValid(SOUND, db.endPullSound) then
+			db.endPullSound = plugin.defaultDB.endPullSound
+		end
 
 		if not InCombatLockdown() then
 			ClearOverrideBindings(BWPull)
-			if plugin.db.profile.keybind ~= "" then
-				SetOverrideBindingClick(BWPull, true, plugin.db.profile.keybind, "BWPull")
+			if db.keybind ~= "" then
+				SetOverrideBindingClick(BWPull, true, db.keybind, "BWPull")
 			end
 		else
 			BWPull:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -246,6 +293,10 @@ do
 
 		self:RegisterMessage("Blizz_StartCountdown")
 		self:RegisterMessage("Blizz_StopCountdown")
+
+		if BigWigsLoader.isRetail then
+			self:RegisterEvent("CHALLENGE_MODE_START")
+		end
 	end
 end
 
@@ -272,7 +323,7 @@ do
 			end
 			local soundName = plugin.db.profile.endPullSound
 			if soundName ~= "None" then
-				local sound = media:Fetch(SOUND, soundName, true)
+				local sound = LibSharedMedia:Fetch(SOUND, soundName, true)
 				if sound then
 					plugin:PlaySoundFile(sound)
 				end
@@ -319,12 +370,14 @@ do
 			LoggingCombat(isLogging)
 		end
 		self:SendMessage("BigWigs_StartCountdown", self, nil, "pulling time", timeLeft, nil, self.db.profile.voice, self.db.profile.countBegin, self.db.profile.countType ~= "emphasized")
-		self:SendMessage("BigWigs_Message", self, nil, L.pullIn:format(timeLeft), "yellow")
+		if self.db.profile.startPullMessage then
+			self:SendMessage("BigWigs_Message", self, nil, L.pullIn:format(timeLeft), "yellow")
+		end
 		self:SendMessage("BigWigs_StartBar", self, nil, L.pull, timeSeconds, 132337) -- 132337 = "Interface\\Icons\\ability_warrior_charge"
-		self:SendMessage("BigWigs_StartPull", self, timeSeconds, name)
+		self:SendMessage("BigWigs_StartPull", self, timeSeconds, name, L.pull, 132337)
 		local soundName = self.db.profile.startPullSound
 		if soundName ~= "None" then
-			local sound = media:Fetch(SOUND, soundName, true)
+			local sound = LibSharedMedia:Fetch(SOUND, soundName, true)
 			if sound then
 				self:PlaySoundFile(sound)
 			end
@@ -362,6 +415,9 @@ do
 			self:SendMessage("BigWigs_StopCountdown", self, "pulling time")
 		end
 	end
+	function plugin:CHALLENGE_MODE_START()
+		self:Blizz_StopCountdown() -- Stop any active pull timers when a Mythic+ countdown is started
+	end
 end
 
 function plugin:BigWigs_OnBossWin()
@@ -375,7 +431,7 @@ function plugin:BigWigs_OnBossEngage(_, module)
 	if module and (module:GetJournalID() or module:GetAllowWin()) then
 		local soundName = self.db.profile.engageSound
 		if soundName ~= "None" then
-			local sound = media:Fetch(SOUND, soundName, true)
+			local sound = LibSharedMedia:Fetch(SOUND, soundName, true)
 			if sound then
 				self:PlaySoundFile(sound)
 			end

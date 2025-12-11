@@ -1,10 +1,13 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
     <Script file="Code\CallbackRegistry.lua"/>
     <Script file="API.lua"/>
+    <Script file="Code\QuestAreaTrigger.lua"/>
 
     <Actor name="DUIUtilityActorTemplate" mixin="DUIUtilityActorMixin" virtual="true">
         <Scripts>
             <OnModelLoaded method="OnModelLoaded"/>
         </Scripts>
     </Actor>
+
+    <Frame name="DUISetPropagateKeyboardInputTemplate" propagateKeyboardInput="true" virtual="true"/>
 </Ui>

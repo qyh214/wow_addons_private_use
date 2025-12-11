@@ -8,6 +8,7 @@ if not L then return end
 --L["Class/Racial Spells"] = "Klassen/Rassen Zauber"
 --L["Configure the behavior of the addon. IE: if you want to include class spells"] = "Configure the behavior of the addon. IE: if you want to include class spells"
 --L["Current Priority"] = "Aktuelle Piorität"
+--L["Bandage Priority"] = "Bandagen Piorität"
 --L["Heartseeking Health Injector (tinker)"] = "Heartseeking Health Injector (tinker)"
 --L["Include /stopcasting in the macro"] = "Include /stopcasting in the macro"
 --L["Includes the shortest Cooldown in the reset Condition of Castsequence. !!USE CAREFULLY!!"] = "Includes the shortest Cooldown in the reset Condition of Castsequence. !!USE CAREFULLY!!"

@@ -2,8 +2,6 @@ local addonName, private = ...
 ---@type detailsmythicplus
 local addon = private.addon
 
-local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
-
 addon.Migrations = {
     function ()
         -- from a time before compressed runs
@@ -60,6 +58,8 @@ addon.Migrations = {
         if (not addon.profile.saved_runs) then
             return
         end
+
+        local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
 
         -- Sundering is not a CC in 99.99% of the PvE scenarios, especially in M+. For now we remove the data from
         -- existing runs
@@ -160,4 +160,86 @@ addon.Migrations = {
         -- permanently delete old runs
         addon.profile.saved_runs = nil
     end,
+    function ()
+        -- update the default setting for those who set it to a very low value as it doesn't take up much space anymore
+        if (addon.profile.saved_runs_limit < 500) then
+            addon.profile.saved_runs_limit = 500
+        end
+    end,
+}
+
+addon.MigrationsPerCharacter = {
+    function (migrationIndex)
+        if (not addon.profile.migrations_data[migrationIndex]) then
+            addon.profile.migrations_data[migrationIndex] = {}
+        end
+
+        --get all stored runs
+        local allRuns = addon.Compress.GetSavedRuns()
+        if (not allRuns) then
+            return
+        end
+
+        --reset for development
+        if (not addon.profile.migrations_data.repeat_index_one) then
+            addon.profile.migrations_data.repeat_index_one = true
+            table.wipe(addon.profile.migrations_data[migrationIndex])
+
+            for headerIndex = 1, #allRuns do
+                local thisRun = addon.Compress.UncompressedRun(headerIndex)
+                local thisHeader = addon.Compress.GetRunHeader(headerIndex)
+                if (thisRun and thisHeader) then
+                    if (thisHeader.likesGiven) then
+                        table.wipe(thisHeader.likesGiven) --clear the likes given table
+                    end
+                end
+            end
+        end
+
+        --if this migration was already done for this character, skip
+        local migrationsRan = addon.profile.migrations_data[migrationIndex][UnitName("player")]
+        if (migrationsRan and migrationsRan > 0) then
+            return
+        end
+
+        --iterate among all run infos and all to the runHeader the players who liked them
+        --iterate among all run infos and add to addon.profile.likes_given all the players whose the Player Himself liked
+        local playersWhosePlayerHimSelfLiked = addon.profile.likes_given
+        --local playerName = "Neverious" or UnitName("player") --development debug
+        local playerName = UnitName("player")
+
+        for headerIndex = 1, #allRuns do
+            local thisRun = addon.Compress.UncompressedRun(headerIndex)
+            local thisHeader = addon.Compress.GetRunHeader(headerIndex)
+            if (thisRun and thisHeader) then
+                local groupMembersOfThisRun = thisRun.combatData.groupMembers
+                for playerNameWhoReceveidLikes, playerInfo in pairs(groupMembersOfThisRun) do
+                    local likedBy = playerInfo.likedBy --who liked this player
+                    if (likedBy) then
+                        for playerNameOfWhoLiked in pairs(likedBy) do
+                            if (not thisHeader.likesGiven) then
+                                thisHeader.likesGiven = {}
+                            end
+                            thisHeader.likesGiven[playerNameOfWhoLiked] = thisHeader.likesGiven[playerNameOfWhoLiked] or {}
+                            thisHeader.likesGiven[playerNameOfWhoLiked][playerNameWhoReceveidLikes] = true
+
+                            --this need to run once for each character the player logins
+                            --this add the like the player himself gave into the main profile, will work cross all characters the player has
+                            if (playerNameOfWhoLiked == playerName) then
+                                playersWhosePlayerHimSelfLiked[playerNameWhoReceveidLikes] = playersWhosePlayerHimSelfLiked[playerNameWhoReceveidLikes] or {}
+                                table.insert(playersWhosePlayerHimSelfLiked[playerNameWhoReceveidLikes], thisHeader.runId) --add the runId where the like was given
+                                private.log("Migration: added playerHimselfLike to player " .. playerNameWhoReceveidLikes .. " for runId " .. thisHeader.runId)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+        if (not migrationsRan) then
+            migrationsRan = 0
+        end
+        addon.profile.migrations_data[migrationIndex][UnitName("player")] = migrationsRan + 1
+    end,
+
 }

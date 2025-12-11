@@ -1,0 +1,18 @@
+## Interface: 110207, 120000
+## Title: AdvancedDecorationTools
+## Notes: Housing – Hover name and duplicate (Ctrl+D default). 仅住宅：悬停显示名称与按键复制（默认 Ctrl+D）。
+## Notes-zhCN: 住宅功能：悬停显示装饰名称与库存，并支持按键复制（默认 Ctrl+D）。
+## Author: 瑟瑟
+## Version: 251211.130
+## SavedVariables: ADT_DB
+## Bindings: Bindings.xml
+
+# 2025 目录：src/* 为代码主体，bindings/ 为按键定义
+# 加载顺序：核心 → UI → 本地化 → 指挥坞（设置）→ 功能模块（住宅）
+src/core/init.lua
+src/core/scroll.lua
+src/core/ui.lua
+bindings/Bindings.lua
+src/i18n/Localization.xml
+src/dock/Dock.xml
+src/features/housing/index.xml

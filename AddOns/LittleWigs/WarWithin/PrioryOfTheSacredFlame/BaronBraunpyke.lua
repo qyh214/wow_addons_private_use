@@ -13,8 +13,7 @@ mod:SetRespawnTime(30)
 --
 
 local vindictiveWrathActive = false
-local unleashedPyreCharges = 0
-local nextUnleashedPyre = 0
+local sacrificialPyreActive = false
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -64,10 +63,9 @@ end
 
 function mod:OnEngage()
 	vindictiveWrathActive = false
+	sacrificialPyreActive = false
 	self:StopBar(CL.active)
 	if self:Mythic() then
-		unleashedPyreCharges = 0
-		nextUnleashedPyre = 0
 		self:CDBar(423062, 7.0) -- Hammer of Purity
 		self:CDBar(446368, 15.0) -- Sacrificial Pyre
 		self:CDBar(423015, 22.8) -- Castigator's Shield
@@ -147,35 +145,105 @@ end
 
 -- Mythic
 
-function mod:SacrificialPyre(args)
-	unleashedPyreCharges = vindictiveWrathActive and 5 or 3
-	nextUnleashedPyre = args.time + 30
-	self:Message(args.spellId, "cyan", CL.extra:format(args.spellName, L.charges:format(unleashedPyreCharges)))
-	self:Bar(446525, 30, CL.count:format(self:SpellName(446525), unleashedPyreCharges)) -- Unleashed Pyre
-	self:CDBar(args.spellId, 33.6)
-	self:PlaySound(args.spellId, "info")
-end
+do
+	local sacrificialPyreCharges = 0
+	local nextUnleashedPyre = 0
+	local sacrificialPyrePlayersHit = {}
+	local sacrificialPyreDamageCount = 0
+	local sacrificialFlameDebuffCount = 0
 
-function mod:SacrificialFlameApplied(args)
-	self:StopBar(CL.count:format(self:SpellName(446525), unleashedPyreCharges)) -- Unleashed Pyre
-	self:StackMessage(args.spellId, "yellow", args.destName, args.amount, 1)
-	unleashedPyreCharges = unleashedPyreCharges - 1
-	if unleashedPyreCharges > 0 then
-		local unleashedPyreTimeLeft = nextUnleashedPyre - args.time
-		self:Bar(446525, {unleashedPyreTimeLeft, 30}, CL.count:format(self:SpellName(446525), unleashedPyreCharges)) -- Unleashed Pyre
-	elseif unleashedPyreCharges == 0 then
-		self:Message(446368, "green", CL.over:format(self:SpellName(446368))) -- Sacrificial Pyre
+	function mod:SacrificialPyre(args)
+		-- 5 charges must be soaked when Vindictive Wrath is active, 3 charges otherwise
+		sacrificialPyreCharges = vindictiveWrathActive and 5 or 3
+		nextUnleashedPyre = args.time + 30
+		sacrificialPyrePlayersHit = {}
+		sacrificialPyreDamageCount = 0
+		sacrificialFlameDebuffCount = 0
+		-- don't register the damage events again if the previous charges were never fully soaked
+		if not sacrificialPyreActive then
+			sacrificialPyreActive = true
+			-- count group damage events from soaking as sometimes SPELL_MISSED doesn't log for Sacrificial Flame
+			self:Log("SPELL_DAMAGE", "SacrificialPyreDamage", 1218149)
+			self:Log("SPELL_MISSED", "SacrificialPyreMissed", 1218149)
+		end
+		self:Message(args.spellId, "cyan", CL.extra:format(args.spellName, L.charges:format(sacrificialPyreCharges)))
+		self:Bar(446525, 30, CL.count:format(self:SpellName(446525), sacrificialPyreCharges)) -- Unleashed Pyre
+		self:CDBar(args.spellId, 33.6)
+		self:PlaySound(args.spellId, "info")
 	end
-	self:PlaySound(args.spellId, "info", nil, args.destName)
-end
 
-function mod:SacrificialFlameMissed(args)
-	self:StopBar(CL.count:format(self:SpellName(446525), unleashedPyreCharges)) -- Unleashed Pyre
-	unleashedPyreCharges = unleashedPyreCharges - 1
-	if unleashedPyreCharges > 0 then
-		local unleashedPyreTimeLeft = nextUnleashedPyre - args.time
-		self:Bar(446525, {unleashedPyreTimeLeft, 30}, CL.count:format(self:SpellName(446525), unleashedPyreCharges)) -- Unleashed Pyre
-	elseif unleashedPyreCharges == 0 then
-		self:Message(446368, "green", CL.over:format(self:SpellName(446368))) -- Sacrificial Pyre
+	-- quirks list:
+	-- - sometimes when 2 stacks are soaked nearly simultaneously by the same player there is only 1 damage event per player
+	-- - sometimes when using an immunity to soak, the SPELL_MISSED on Sacrificial Flame doesn't log
+	-- the order of events is always:
+	-- 1. SPELL_MISSED on Sacrificial Pyre
+	-- 2. SPELL_AURA_APPLIED or SPELL_MISSED on Sacrificial Flame
+	-- 3. SPELL_DAMAGE on Sacrificial Pyre
+
+	local function updateUnleashedPyre(self, time)
+		local chargesRemaining = sacrificialPyreCharges - sacrificialPyreDamageCount
+		self:StopBar(CL.count:format(self:SpellName(446525), chargesRemaining + 1)) -- Unleashed Pyre
+		if chargesRemaining > 0 then
+			-- update the count in the bar if there are still charges remaining
+			self:Bar(446525, {nextUnleashedPyre - time, 30}, CL.count:format(self:SpellName(446525), chargesRemaining)) -- Unleashed Pyre
+		else
+			-- all charges have been soaked
+			sacrificialPyreActive = false
+			self:RemoveLog("SPELL_DAMAGE", 1218149)
+			self:RemoveLog("SPELL_MISSED", 1218149)
+			self:Message(446368, "green", CL.over:format(self:SpellName(446368))) -- Sacrificial Pyre
+		end
+	end
+
+	function mod:SacrificialFlameApplied(args)
+		self:StackMessage(args.spellId, "yellow", args.destName, args.amount, 1)
+		sacrificialFlameDebuffCount = sacrificialFlameDebuffCount + 1
+		if sacrificialFlameDebuffCount > sacrificialPyreDamageCount then
+			sacrificialPyreDamageCount = sacrificialFlameDebuffCount
+			updateUnleashedPyre(self, args.time)
+		end
+		self:PlaySound(args.spellId, "info", nil, args.destName)
+	end
+
+	function mod:SacrificialFlameMissed(args)
+		-- this doesn't always log, but we can still use if it does log
+		sacrificialFlameDebuffCount = sacrificialFlameDebuffCount + 1
+		if sacrificialFlameDebuffCount > sacrificialPyreDamageCount then
+			sacrificialPyreDamageCount = sacrificialFlameDebuffCount
+			updateUnleashedPyre(self, args.time)
+		end
+	end
+
+	function mod:SacrificialPyreDamage(args)
+		-- this doesn't always log in the case where 2 charges are soaked nearly simultaneously by the same player.
+		-- we use this event as a backup to detect soaks because sometimes Sacrificial Flame immunities don't log either.
+		local playerHitCount = sacrificialPyrePlayersHit[args.destGUID] or 0
+		if playerHitCount == sacrificialPyreDamageCount then
+			-- this is the first player affected by a damage event we haven't processed yet.
+			-- this only ever happens if the Sacrificial Flame debuff application didn't log.
+			sacrificialPyreDamageCount = sacrificialPyreDamageCount + 1
+			sacrificialFlameDebuffCount = sacrificialPyreDamageCount
+			sacrificialPyrePlayersHit[args.destGUID] = sacrificialPyreDamageCount
+			updateUnleashedPyre(self, args.time)
+		elseif playerHitCount < sacrificialPyreDamageCount then
+			-- just update the count for this player, we've already processed this charge
+			sacrificialPyrePlayersHit[args.destGUID] = sacrificialPyreDamageCount
+		end
+	end
+
+	function mod:SacrificialPyreMissed(args)
+		-- this doesn't always log in the case where 2 charges are soaked nearly simultaneously by the same player.
+		-- we use this event as a backup to detect soaks because sometimes Sacrificial Flame immunities don't log either.
+		local playerHitCount = sacrificialPyrePlayersHit[args.destGUID] or 0
+		if playerHitCount == sacrificialPyreDamageCount then
+			-- this is the first player affected by a damage event we haven't processed yet. as a difference from
+			-- SacrificialPyreDamage, this can happen before Sacrificial Flame, so we don't increment sacrificialFlameDebuffCount.
+			sacrificialPyreDamageCount = sacrificialPyreDamageCount + 1
+			sacrificialPyrePlayersHit[args.destGUID] = sacrificialPyreDamageCount
+			updateUnleashedPyre(self, args.time)
+		elseif playerHitCount < sacrificialPyreDamageCount then
+			-- just update the count for this player, we've already processed this charge
+			sacrificialPyrePlayersHit[args.destGUID] = sacrificialPyreDamageCount
+		end
 	end
 end

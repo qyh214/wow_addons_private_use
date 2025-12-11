@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "LibGetFrame-1.0"
-local MINOR_VERSION = 68
+local MINOR_VERSION = 69
 if not LibStub then
   error(MAJOR_VERSION .. " requires LibStub.")
 end
@@ -116,7 +116,8 @@ local defaultTargettargetFrames = {
   "^oUF_ToT$",
   "^UUF_TargetTarget$",
   "^TargetTargetFrame$",
-  "^XPerl_TargetTarget$"
+  "^XPerl_TargetTarget$",
+  "^TargetFrameToT$"
 }
 local getDefaultTargettargetFrames = function()
   return CopyTable(defaultTargettargetFrames)

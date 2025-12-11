@@ -1,0 +1,46 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="lib\LibStub\LibStub.lua"/>
+	<Script file="lib\CallbackHandler-1.0\CallbackHandler-1.0.lua"/>	
+	<Script file="lib\LibGetFrame-1.0\LibGetFrame-1.0.lua"/>
+	<Include file="lib\LibCustomGlow-1.0\LibCustomGlow-1.0.xml"/>
+	<Include file="lib\LibSpecialization\LibSpecialization.lua"/>	
+	<Script file="lib\LibRangeCheck-3.0\LibRangeCheck-3.0.lua"/>
+	<Include file="lib\LibOpenRaid\lib.xml"/>
+	
+	<Script file="core\init.lua"/>
+	<Script file="core\icon_color.lua"/>
+	
+	<Script file="local\enUS.lua"/>	
+	<Script file="local\zhCN.lua"/>
+	<Script file="local\ruRU.lua"/>
+	
+	<Script file="updatelogs\enUS.lua"/>	
+	<Script file="updatelogs\zhCN.lua"/>
+	
+	<Script file="core\PopupDialogs.lua"/>
+	<Script file="core\callback.lua"/>
+	<Script file="core\widget_api.lua"/>
+	<Script file="core\option_api.lua"/>
+	<Script file="core\api.lua"/>
+	<Script file="core\db.lua"/>
+	<Script file="core\options.lua"/>
+	<Script file="core\gui.lua"/>
+	<Script file="core\moving.lua"/>
+	<Script file="core\core.lua"/>
+	<Script file="core\group.lua"/>
+	<Script file="core\public.lua"/>
+	
+	<Script file="elements\arrow.lua"/>
+	<Script file="elements\iconline.lua"/>
+	
+	<Script file="mods\icon.lua"/>
+	<Script file="mods\raidmark.lua"/>
+	<Script file="mods\askspell.lua"/>
+	<Script file="mods\privateaura.lua"/>
+	<Script file="mods\hpwatch.lua"/>
+	<Script file="mods\defensive_spell.lua"/>
+	<Script file="mods\group_cc.lua"/>
+	<Script file="mods\templates.lua"/>
+	<Script file="mods\phase.lua"/>
+	<Script file="mods\timeline.lua"/>
+</Ui>

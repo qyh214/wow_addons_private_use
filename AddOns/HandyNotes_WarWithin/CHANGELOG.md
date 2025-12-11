@@ -1,5 +1,45 @@
 # Changelog
 
+## Changed in v97
+
+* Updated for 11.2.7
+
+## Changed in v96
+
+* K'aresh: adjustments to a few coordinates
+* Fix an issue where trait-gated points weren't correctly displaying on first login
+
+## Changed in v95
+
+* Fix an issue with points displaying across zones in Azj-Kahet
+
+## Changed in v94
+
+* K'aresh: adjustments to a few coordinates
+* Fix creating waypoints for all related points from the right-click menu. Thanks to Taurenkey for this!
+
+## Changed in v93
+
+* K'aresh: add the Phase-Lost-and-Found achievement, hidden by default
+* Fixed a typo
+
+## Changed in v92
+
+* All that and I forgot to update the TOC interface number for 11.2.0 :-P
+* K'aresh: added missing questID for the Wallbreaker
+* Fixed some bugs with showing nodes on parent maps, and with trait checks not using a cached config ID
+
+## Changed in v91
+
+* K'aresh: add loot to lots of rares now that data is out there for it
+
+## Changed in v90
+
+* K'aresh:
+    * Note that the phased treasures require What Lies Beyond
+    * Hide the individual brothers when you find them for Gift of the Brothers
+* Azj-kahet: add a few more rumors to the map
+
 ## Changed in v89
 
 * K'aresh:

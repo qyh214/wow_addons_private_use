@@ -112,6 +112,8 @@ WIM.AddLocale("frFR", {
     ["Direction:"] = "Direction :",
     ["Tabs"] = "Onglets",
     ["Sort tabs by:"] = "Trier les onglets par :",
+	["Window Created"] = "Fenêtre créée",
+	["Last Activity"] = "Dernière activité",
     ["Alphabetical"] = "Alphabétique",
     ["Recent Activity"] = "Activité récente",
     ["Keep windows on top of your UI."] = "Gardez les fenêtres en haut de votre interface d'utilisateur.",
@@ -216,9 +218,9 @@ WIM.AddLocale("frFR", {
     ["Unknown"] = "Inconnu",
     ["Click to update..."] = "Cliquez pour mettre à jour...",
     ["Coordinates"] = "Coordonnées",
-    ["Invite to Party"] = "Inviter pour groupage",
+    ["Invite to Party"] = "Inv. groupe",
     ["Add Friend"] = "Ajouter un ami",
-    ["Ignore User"] = "Ignorer cet utilisateur",
+    ["Ignore User"] = "Ignorer le joueur",
     ["Are you sure you want to\nignore %s?"] = "Êtes-vous sûr de vouloir ignorer %s?",
     ["Right-Click for profile links..."] = "Clic droit pour les liens de profil...",
     ["Profile Links"] = "Liens de profil",
@@ -291,7 +293,7 @@ WIM.AddLocale("frFR", {
     ["Display Tutorials"] = "Afficher le tutorial",
     ["Reset Tutorials"] = "Réinitialiser le tutorial",
     ["Credits"] = "Crédits",
-    ["This is a long message which contains both emoticons and urls 8). WIM's home is www.WIMAddon.com."] = "Il s'agit d'un long message qui contient à la fois des émoticônes et des URL 8). WIM's l'adresse www.WIMAddon.com.",
+    ["This is a long message which contains both emoticons and urls 8). WIM's home is www.WIMAddon.com."] = "Il s'agit d'un long message qui contient à la fois des émoticônes et des URL 8). La page d’accueil de WIM est www.WIMAddon.com.",
     ["Message Formatting"] = "Format d'un message",
     ["Manipulate how WIM displays messages."] = "Manipulez la façon dont WIM affiche les messages.",
     ["Preview"] = "Aperçu",
@@ -413,8 +415,6 @@ WIM.AddLocale("frFR", {
     ["Place friends in their own group."] = "Placer les amis dans le groupe",
     ["Place guild members in their own group."] = "Placer les membres de la guilde dans leur propre groupe",
     ["Does not apply to windows already opened."] = "Ne s'applique pas à la fenêtre déjà ouverte",
-	["Last Activity"] = "Dernière activité",
-	["Window Created"] = "Fenêtre créée",
 
     -- Talent Specs --
     ["Affliction"] = "Affliction",
@@ -502,4 +502,16 @@ WIM.AddLocale("frFR", {
 	["Sensitivity"] = "Sensibilité",
 	["Enable WorldFrame Click Detection."] = "Activer la détection des clics WorldFrame",
 	["The UI must be reloaded in order to disable this module fully. Reload UI now?"] = "L'interface utilisateur doit être rechargée afin de désactiver complètement ce module. Recharger l'interface utilisateur maintenant ?",
+
+	--OffScreenTracker.lua
+	["WIM Window Off Screen"] = "Fenêtre WIM hors écran",
+	["Click to reposition."] = "Cliquez pour repositionner.",
+
+	--Misc
+	["WIM has detected that you are playing on a private server. Some servers can not process ChatAddonMessages. Would you like to enable them anyway?"] = "WIM a détecté que vous jouez sur un serveur privé. Certains serveurs ne peuvent pas traiter les ChatAddonMessages. Voulez-vous les activer quand même ?",
+
+	-- Whisper Mode Warnings
+	["Set whispers to In-line"] = "Régler les chuchotements sur En ligne",
+	["Message suppression requires whispers to be set to 'In-line'."] = "La suppression des messages nécessite que les chuchotements soient réglés sur 'En ligne'.",
+	["It is recommended for whispers to be set to in-line in order to handle their behavior properly."] = "Il est recommandé de régler les chuchotements sur En ligne afin de gérer correctement leur comportement.",
 });

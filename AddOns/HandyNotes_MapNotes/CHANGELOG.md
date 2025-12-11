@@ -18,4 +18,4 @@ If you like this addon, please feel free to support me via Paypal ,Patreon or Ko
 
 • All versions are translated for the following languages: enUS, deDE, esMX, ptBR, itIT, zhCN, zhTW, ruRU ,koKR, frFR, esES
 
-• more infos at >> https://legacy.curseforge.com/wow/addons/mapnotes <<
+• more informations here >> https://legacy.curseforge.com/wow/addons/mapnotes <<

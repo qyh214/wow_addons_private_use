@@ -12,16 +12,16 @@ local strfind = string.find
 -- Generate our version variables
 --
 
-local BIGWIGS_VERSION = 392
+local BIGWIGS_VERSION = 402
 local CONTENT_PACK_VERSIONS = {
-	["LittleWigs"] = {11, 1, 67},
-	["BigWigs_Classic"] = {11, 1, 52},
-	["BigWigs_BurningCrusade"] = {11, 1, 4},
-	["BigWigs_WrathOfTheLichKing"] = {11, 1, 7},
+	["LittleWigs"] = {11, 2, 41},
+	["BigWigs_Classic"] = {11, 2, 4},
+	["BigWigs_BurningCrusade"] = {11, 2, 0},
+	["BigWigs_WrathOfTheLichKing"] = {11, 2, 0},
 	["BigWigs_Cataclysm"] = {11, 1, 7},
-	["BigWigs_MistsOfPandaria"] = {11, 1, 7},
+	["BigWigs_MistsOfPandaria"] = {11, 2, 1},
 	["BigWigs_WarlordsOfDraenor"] = {11, 1, 1},
-	["BigWigs_Legion"] = {11, 1, 1},
+	["BigWigs_Legion"] = {11, 2, 3},
 	["BigWigs_BattleForAzeroth"] = {11, 1, 1},
 	["BigWigs_Shadowlands"] = {11, 1, 1},
 	["BigWigs_Dragonflight"] = {11, 1, 2},
@@ -56,7 +56,7 @@ do
 	local ALPHA = "ALPHA"
 
 	local releaseType
-	local myGitHash = "3a15012" -- The ZIP packager will replace this with the Git hash.
+	local myGitHash = "a1897c9" -- The ZIP packager will replace this with the Git hash.
 	local releaseString
 	--[=[@alpha@
 	-- The following code will only be present in alpha ZIPs.
@@ -106,7 +106,7 @@ end
 
 local next, tonumber, type, strsplit = next, tonumber, type, strsplit
 local SendAddonMessage, RegisterAddonMessagePrefix, CTimerAfter, CTimerNewTimer = C_ChatInfo.SendAddonMessage, C_ChatInfo.RegisterAddonMessagePrefix, C_Timer.After, C_Timer.NewTimer
-local GetInstanceInfo, GetBestMapForUnit, GetMapInfo = GetInstanceInfo, C_Map.GetBestMapForUnit, C_Map.GetMapInfo
+local GetBestMapForUnit, GetMapInfo = C_Map.GetBestMapForUnit, C_Map.GetMapInfo
 local Ambiguate, UnitNameUnmodified, UnitGUID = Ambiguate, UnitNameUnmodified, UnitGUID
 local debugstack, print = debugstack, print
 local myLocale = GetLocale()
@@ -114,6 +114,22 @@ local myName = UnitNameUnmodified("player")
 local myGUID = UnitGUID("player")
 local function sysprint(msg)
 	print("|cFF33FF99BigWigs|r: "..msg)
+end
+local GetInstanceInfoModified, ModifyInstanceInfo
+do
+	local instanceID, instanceType, difficultyID, maxPlayers
+	local GetInstanceInfo = GetInstanceInfo
+	GetInstanceInfoModified = function()
+		if instanceID then
+			return nil, instanceType, difficultyID, nil, maxPlayers, nil, nil, instanceID
+		else
+			return GetInstanceInfo()
+		end
+
+	end
+	ModifyInstanceInfo = function(newID, newType, newDifficulty, newMaxPlayers)
+		instanceID, instanceType, difficultyID, maxPlayers = newID, newType, newDifficulty, newMaxPlayers
+	end
 end
 
 -- Try to grab unhooked copies of critical funcs (hooked by some crappy addons)
@@ -124,23 +140,24 @@ public.CTimerNewTicker = C_Timer.NewTicker
 public.CTimerNewTimer = CTimerNewTimer
 public.DoCountdown = C_PartyInfo.DoCountdown
 public.GetBestMapForUnit = GetBestMapForUnit
-public.GetInstanceInfo = GetInstanceInfo
+public.GetInstanceInfo = GetInstanceInfoModified
 public.GetMapInfo = GetMapInfo
 public.GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
-public.GetSpellCooldown = C_Spell.GetSpellCooldown or GetSpellCooldown -- XXX [Mainline:✓ MoP:✓ Wrath:✓ Vanilla:✗]
+public.GetUnitAuraBySpellID = C_UnitAuras.GetUnitAuraBySpellID -- XXX [Mainline:✓ MoP:✗ Wrath:✗ Vanilla:✓]
+public.GetSpellCooldown = C_Spell.GetSpellCooldown
 public.GetSpellDescription = C_Spell.GetSpellDescription
 public.GetSpellLink = C_Spell.GetSpellLink
 public.GetSpellName = C_Spell.GetSpellName
 public.GetSpellTexture = C_Spell.GetSpellTexture
 public.IsItemInRange = C_Item.IsItemInRange
-public.IsSpellKnownOrInSpellBook = C_SpellBook.IsSpellKnownOrInSpellBook -- XXX [Mainline:✓ MoP:✗ Wrath:✗ Vanilla:✗]
-public.IsPlayerSpell = public.IsSpellKnownOrInSpellBook or IsPlayerSpell
-public.IsSpellKnown = public.IsSpellKnownOrInSpellBook or IsSpellKnown
+public.IsSpellKnownOrInSpellBook = C_SpellBook.IsSpellKnownOrInSpellBook -- XXX [Mainline:✓ MoP:✓ Wrath:✗ Vanilla:✓]
+public.IsPlayerSpell = IsPlayerSpell or public.IsSpellKnownOrInSpellBook
+public.IsSpellKnown = IsSpellKnown or public.IsSpellKnownOrInSpellBook
 public.PlaySoundFile = PlaySoundFile
 public.RegisterAddonMessagePrefix = RegisterAddonMessagePrefix
 public.SendAddonMessage = SendAddonMessage
 public.SetRaidTarget = SetRaidTarget
-public.SendChatMessage = C_ChatInfo and C_ChatInfo.SendChatMessage or SendChatMessage -- XXX [Mainline:✓ MoP:✗ Wrath:✗ Vanilla:✗]
+public.SendChatMessage = C_ChatInfo and C_ChatInfo.SendChatMessage or SendChatMessage -- XXX [Mainline:✓ MoP:✓ Wrath:✗ Vanilla:✓]
 public.UnitCanAttack = UnitCanAttack
 public.UnitDetailedThreatSituation = UnitDetailedThreatSituation
 public.UnitThreatSituation = UnitThreatSituation
@@ -154,11 +171,11 @@ public.UnitName = UnitNameUnmodified
 public.UnitSex = UnitSex
 public.UnitTokenFromGUID = UnitTokenFromGUID
 public.Print = sysprint
-public.isTestBuild = IsPublicTestClient and IsPublicTestClient() -- PTR/beta XXX [Mainline:✓ MoP:✓ Wrath:✓ Vanilla:✗]
+public.isTestBuild = IsPublicTestClient() -- PTR/beta
 do
 	local _, _, _, build = GetBuildInfo()
 	public.isBeta = build >= 120000
-	public.isNext = build >= 110200
+	public.isNext = build >= 110207
 end
 
 -- Version
@@ -172,12 +189,11 @@ local highestFoundGuildVersion = BIGWIGS_GUILD_VERSION
 local dbmPrefix = public.dbmPrefix
 
 -- Loading
---local isMouseDown = false
 local loadOnCoreEnabled = {} -- BigWigs modulepacks that should load when a hostile zone is entered or the core is manually enabled, this would be the default plugins Bars, Messages etc
 local loadOnZone = {} -- BigWigs modulepack that should load on a specific zone
 local menus = {} -- contains the menus for BigWigs, once the core is loaded they will get injected
 local enableZones = {} -- contains the zones in which BigWigs will enable
-local disabledZones -- contains the zones in which BigWigs will enable, but the user has disabled the addon
+local disabledZones = {} -- contains the zones in which BigWigs will enable, but the user has disabled the addon
 local worldBosses = {} -- contains the list of world bosses per zone that should enable the core
 local fakeZones = { -- Fake zones used as GUI menus
 	[-101]=true, -- Outland
@@ -203,6 +219,7 @@ do
 	local s = "BigWigs_Shadowlands"
 	local df = "BigWigs_Dragonflight"
 	local tww = "BigWigs_TheWarWithin"
+	local mn = "BigWigs_Midnight"
 	local lw_c = "LittleWigs_Classic"
 	local lw_bc = "LittleWigs_BurningCrusade"
 	local lw_wotlk = "LittleWigs_WrathOfTheLichKing"
@@ -214,9 +231,9 @@ do
 	local lw_s = "LittleWigs_Shadowlands"
 	local lw_df = "LittleWigs_Dragonflight"
 	local lw_tww = "LittleWigs_TheWarWithin"
+	local lw_mn = "LittleWigs_Midnight"
 	local lw_delves = "LittleWigs_Delves"
 	local lw_cs = "LittleWigs_CurrentSeason"
-	local cap = "Capping"
 
 	if public.isVanilla then
 		public.currentExpansion = {
@@ -224,6 +241,7 @@ do
 			bigWigsBundled = {},
 			littlewigsDefault = lw_c,
 			littleWigsBundled = {},
+			currentSeason = {},
 			zones = {},
 		}
 	elseif public.isTBC then
@@ -232,6 +250,7 @@ do
 			bigWigsBundled = {},
 			littlewigsDefault = lw_bc,
 			littleWigsBundled = {},
+			currentSeason = {},
 			zones = {},
 		}
 	elseif public.isWrath then
@@ -240,6 +259,7 @@ do
 			bigWigsBundled = {},
 			littlewigsDefault = lw_wotlk,
 			littleWigsBundled = {},
+			currentSeason = {},
 			zones = {},
 		}
 	elseif public.isCata then
@@ -248,6 +268,7 @@ do
 			bigWigsBundled = {},
 			littlewigsDefault = lw_cata,
 			littleWigsBundled = {},
+			currentSeason = {},
 			zones = {},
 		}
 	elseif public.isMists then
@@ -256,30 +277,45 @@ do
 			bigWigsBundled = {},
 			littlewigsDefault = lw_mists,
 			littleWigsBundled = {},
+			currentSeason = {},
 			zones = {},
 		}
-	--elseif public.isBeta and public.isTestBuild then -- Retail Beta
-	--	public.currentExpansion = { -- Change on new expansion releases
-	--		name = tww,
-	--		bigWigsBundled = {
-	--			[df] = true,
-	--			[tww] = true,
-	--		},
-	--		littlewigsDefault = lw_cs,
-	--		littleWigsBundled = {
-	--			[lw_df] = true,
-	--			[lw_tww] = true,
-	--			[lw_delves] = true,
-	--			[lw_cs] = true,
-	--		},
-	--		littleWigsExtras = {
-	--			lw_delves,
-	--			lw_cs,
-	--		},
-	--		zones = {
-	--			[2657] = "BigWigs_NerubarPalace",
-	--		}
-	--	}
+	elseif public.isBeta then -- Retail Beta
+		EncounterTimeline:Hide() -- XXX temp
+		EncounterTimeline:SetScript("OnShow", function(f) f:Hide() end)
+		C_CVar.SetCVar("encounterTimelineEnabled", "1") -- If disabled, events wont fire atm.
+		public.currentExpansion = { -- Change on new expansion releases
+			name = mn,
+			bigWigsBundled = {
+				[mn] = true,
+			},
+			littlewigsDefault = lw_cs,
+			littleWigsBundled = {
+				[lw_mn] = true,
+				[lw_tww] = true,
+				[lw_delves] = true,
+				[lw_cs] = true,
+			},
+			littleWigsExtras = {
+				lw_delves,
+				lw_cs,
+			},
+			currentSeason = {
+				[2805] = lw_cs, -- Windrunner Spire
+				[2811] = lw_cs, -- Magisters' Terrace
+				[2874] = lw_cs, -- Maisara Caverns
+				[2915] = lw_cs, -- Nexus-Point Xenas
+				[2526] = lw_cs, -- Algeth'ar Academy
+				[1753] = lw_cs, -- Seat of the Triumvirate
+				[1209] = lw_cs, -- Skyreach
+				[658] = lw_cs, -- Pit of Saron
+			},
+			zones = {
+				[2912] = "BigWigs_MarchOnQuelDanas", -- XXX
+				[2913] = "BigWigs_MarchOnQuelDanas",
+				[2939] = "BigWigs_MarchOnQuelDanas", -- XXX
+			}
+		}
 	else -- Retail
 		public.currentExpansion = { -- Change on new expansion releases
 			name = tww,
@@ -296,10 +332,23 @@ do
 				lw_delves,
 				lw_cs,
 			},
+			currentSeason = {
+				[2212] = lw_cs, -- Horrific Vision of Orgrimmar
+				[2213] = lw_cs, -- Horrific Vision of Stormwind
+				[2287] = lw_cs, -- Halls of Atonement
+				[2441] = lw_cs, -- Tazavesh, the Veiled Market
+				[2649] = lw_cs, -- Priory of the Sacred Flame
+				[2660] = lw_cs, -- Ara-Kara, City of Echoes
+				[2662] = lw_cs, -- The Dawnbreaker
+				[2773] = lw_cs, -- Operation: Floodgate
+				[2830] = lw_cs, -- Eco-Dome Al'dani
+				[369] = (public.isNext and UnitFactionGroup("player") == "Alliance") and lw_cs or nil, -- Deeprun Tram
+				[1043] = (public.isNext and UnitFactionGroup("player") == "Horde") and lw_cs or nil, -- Brawl'gar Arena
+			},
 			zones = {
 				[2657] = "BigWigs_NerubarPalace",
 				[2769] = "BigWigs_LiberationOfUndermine",
-				[2810] = public.isNext and "BigWigs_ManaforgeOmega" or nil,
+				[2810] = "BigWigs_ManaforgeOmega"
 			}
 		}
 	end
@@ -391,6 +440,11 @@ do
 		[2657] = tww, -- Nerub'ar Palace
 		[2769] = tww, -- Liberation of Undermine
 		[2810] = tww, -- Manaforge Omega
+		--[[ BigWigs: Midnight ]]--
+		[2912] = public.isBeta and mn or nil, -- The Voidspire
+		[2913] = public.isBeta and mn or nil, -- March on Quel'Danas
+		[2939] = public.isBeta and mn or nil, -- The Dreamrift
+
 
 		--[[ LittleWigs: Classic ]]--
 		[33] = not (public.isVanilla or public.isTBC or public.isWrath) and lw_cata or nil, -- Shadowfang Keep
@@ -502,25 +556,25 @@ do
 		[1864] = lw_bfa, -- Shrine of the Storm
 		[1822] = lw_bfa, -- Siege of Boralus
 		[1877] = lw_bfa, -- Temple of Sethraliss
-		[1594] = (public.isRetail and not public.isNext) and {lw_bfa, lw_cs} or lw_bfa, -- The MOTHERLODE!!
+		[1594] = lw_bfa, -- The MOTHERLODE!!
 		[1771] = lw_bfa, -- Tol Dagor
 		[1841] = lw_bfa, -- The Underrot
 		[1862] = lw_bfa, -- Waycrest Manor
-		[2097] = (public.isRetail and not public.isNext) and {lw_bfa, lw_cs} or lw_bfa, -- Operation: Mechagon
-		[2212] = (public.isRetail and not public.isNext) and {lw_bfa, lw_cs} or lw_bfa, -- Horrific Vision of Orgrimmar
-		[2213] = (public.isRetail and not public.isNext) and {lw_bfa, lw_cs} or lw_bfa, -- Horrific Vision of Stormwind
+		[2097] = lw_bfa, -- Operation: Mechagon
+		[2212] = lw_bfa, -- Horrific Vision of Orgrimmar
+		[2213] = lw_bfa, -- Horrific Vision of Stormwind
 		[2827] = lw_bfa, -- Horrific Vision of Stormwind (Revisited)
 		[2828] = lw_bfa, -- Horrific Vision of Orgrimmar (Revisited)
 		--[[ LittleWigs: Shadowlands ]]--
 		[2284] = lw_s, -- Sanguine Depths
 		[2285] = lw_s, -- Spires of Ascension
 		[2286] = lw_s, -- The Necrotic Wake
-		[2287] = (public.isRetail and public.isNext) and {lw_s, lw_cs} or lw_s, -- Halls of Atonement
+		[2287] = lw_s, -- Halls of Atonement
 		[2289] = lw_s, -- Plaguefall
 		[2290] = lw_s, -- Mists of Tirna Scithe
 		[2291] = lw_s, -- De Other Side
-		[2293] = (public.isRetail and not public.isNext) and {lw_s, lw_cs} or lw_s, -- Theater of Pain
-		[2441] = (public.isRetail and public.isNext) and {lw_s, lw_cs} or lw_s, -- Tazavesh, the Veiled Market
+		[2293] = lw_s, -- Theater of Pain
+		[2441] = lw_s, -- Tazavesh, the Veiled Market
 		--[[ LittleWigs: Dragonflight ]]--
 		[2451] = lw_df, -- Uldaman: Legacy of Tyr
 		[2515] = lw_df, -- The Azure Vault
@@ -532,18 +586,20 @@ do
 		[2527] = lw_df, -- Halls of Infusion
 		[2579] = lw_df, -- Dawn of the Infinite
 		--[[ LittleWigs: The War Within ]]--
-		[2648] = (public.isRetail and not public.isNext) and {lw_tww, lw_cs} or lw_tww, -- The Rookery
-		[2649] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- Priory of the Sacred Flame
-		[2651] = (public.isRetail and not public.isNext) and {lw_tww, lw_cs} or lw_tww, -- Darkflame Cleft
+		[2648] = lw_tww, -- The Rookery
+		[2649] = lw_tww, -- Priory of the Sacred Flame
+		[2651] = lw_tww, -- Darkflame Cleft
 		[2652] = lw_tww, -- The Stonevault
-		[2660] = (public.isRetail and public.isNext) and {lw_tww, lw_cs} or lw_tww, -- Ara-Kara, City of Echoes
-		[2661] = (public.isRetail and not public.isNext) and {lw_tww, lw_cs} or lw_tww, -- Cinderbrew Meadery
-		[2662] = (public.isRetail and public.isNext) and {lw_tww, lw_cs} or lw_tww, -- The Dawnbreaker
+		[2660] = lw_tww, -- Ara-Kara, City of Echoes
+		[2661] = lw_tww, -- Cinderbrew Meadery
+		[2662] = lw_tww, -- The Dawnbreaker
 		[2669] = lw_tww, -- City of Threads
 		[2710] = lw_tww, -- Awakening the Machine
-		[2773] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- Operation: Floodgate
-		[2830] = (public.isRetail and public.isNext) and {lw_tww, lw_cs} or nil, -- Eco-Dome Al'dani
-		--[2849] = public.isRetail and lw_cs or nil, -- Dastardly Dome
+		[2773] = lw_tww, -- Operation: Floodgate
+		[2830] = lw_tww, -- Eco-Dome Al'dani
+		--[2849] = lw_tww, -- Dastardly Dome
+		[369] = (public.isNext and UnitFactionGroup("player") == "Alliance") and lw_tww or nil, -- Deeprun Tram
+		[1043] = (public.isNext and UnitFactionGroup("player") == "Horde") and lw_tww or nil, -- Brawl'gar Arena
 		--[[ LittleWigs: Delves ]]--
 		[2664] = lw_delves, -- Fungal Folly
 		[2679] = lw_delves, -- Mycomancer Cavern
@@ -563,24 +619,15 @@ do
 		[2826] = lw_delves, -- Sidestreet Sluice
 		[2831] = lw_delves, -- Demolition Dome
 		[2951] = lw_delves, -- Voidrazor Sanctuary
-
-		--[[ Capping ]]--
-		[30] = cap, -- Alterac Valley
-		[2197] = cap, -- Alterac Valley (Korrak's Revenge)
-		[2107] = cap, -- Arathi Basin
-		[1681] = cap, -- Arathi Basin (Snowy PvP Brawl)
-		[2177] = cap, -- Arathi Basin (Players vs AI Brawl)
-		[529] = cap, -- Arathi Basin (Classic)
-		[1191] = cap, -- Ashran
-		[2245] = cap, -- Deepwind Gorge
-		[566] = cap, -- Eye of the Storm
-		[968] = cap, -- Eye of the Storm (Rated BG)
-		[761] = cap, -- Gilneas
-		[628] = cap, -- Isle of Conquest
-		[726] = cap, -- Twin Peaks
-		[2106] = cap, -- Warsong Gulch
-		[489] = cap, -- Warsong Gulch (Classic)
-		[2118] = cap, -- Wintergrasp
+		--[[ LittleWigs: Midnight ]]--
+		[2805] = public.isBeta and lw_mn or nil, -- Windrunner Spire
+		[2811] = public.isBeta and lw_mn or nil, -- Magisters' Terrace
+		[2813] = public.isBeta and lw_mn or nil, -- Murder Row
+		[2825] = public.isBeta and lw_mn or nil, -- Den of Nalorakk
+		[2859] = public.isBeta and lw_mn or nil, -- The Blinding Vale
+		[2874] = public.isBeta and lw_mn or nil, -- Maisara Caverns
+		[2915] = public.isBeta and lw_mn or nil, -- Nexus-Point Xenas
+		[2923] = public.isBeta and lw_mn or nil, -- Voidscar Arena
 	}
 	public.remappedZones = {
 		[2827] = 2213, -- Horrific Vision of Stormwind (Revisited) -> Horrific Vision of Stormwind
@@ -600,7 +647,7 @@ do
 		[-942] = -947, -- Azeroth/BfA
 		[-1536] = -1647, [-1565] = -1647, [-1525] = -1647, [-1533] = -1647, -- Shadowlands
 		[-2022] = -1978, [-2023] = -1978, [-2024] = -1978, [-2085] = -1978, [-2133] = -1978, [-2200] = -1978, -- Dragon Isles
-		[-2214] = -2274, [-2215] = -2274, [-2213] = -2274, [-2248] = -2274, [-2346] = -2274, -- Khaz Algar
+		[-2214] = -2274, [-2215] = -2274, [-2213] = -2274, [-2248] = -2274, [-2346] = -2274, [-2371] = -2274, -- Khaz Algar
 	}
 end
 
@@ -627,6 +674,14 @@ local reqFuncAddons = {
 	BigWigs_Options = true,
 	BigWigs_Plugins = true,
 }
+
+local RaidWarningMessage
+do
+	local RaidNotice_AddMessage = RaidNotice_AddMessage
+	function RaidWarningMessage(msg, duration)
+		RaidNotice_AddMessage(RaidWarningFrame, msg, {r=1,g=1,b=1}, duration)
+	end
+end
 
 local Popup = public.isRetail and function(msg, focus)
 	local frame = CreateFrame("Frame", nil, UIParent, focus and "PortraitFrameTexturedBaseTemplate" or "PortraitFrameFlatBaseTemplate")
@@ -658,11 +713,11 @@ local Popup = public.isRetail and function(msg, focus)
 	text:SetText(msg)
 	frame:Show()
 end or function(msg, focus)
-	local frame = CreateFrame("Frame")
+	local frame = CreateFrame("Frame", nil, UIParent)
 	frame:SetFrameStrata("DIALOG")
 	frame:SetToplevel(true)
 	frame:SetSize(400, 150)
-	frame:SetPoint("CENTER", "UIParent", "CENTER")
+	frame:SetPoint("CENTER")
 	local text = frame:CreateFontString(nil, "ARTWORK", "GameFontRedLarge")
 	text:SetSize(380, 0)
 	text:SetJustifyH("CENTER")
@@ -678,11 +733,11 @@ end or function(msg, focus)
 		self:GetParent():Hide()
 	end)
 	button:SetText(L.okay)
-	button:SetNormalFontObject("DialogButtonNormalText")
-	button:SetHighlightFontObject("DialogButtonHighlightText")
 
 	text:SetText(msg)
+	frame:Show()
 end
+public.Popup = Popup -- XXX temp
 
 local function load(index)
 	if IsAddOnLoaded(index) then return true end
@@ -746,6 +801,7 @@ end
 do
 	local _, tbl = ...
 	tbl.LoadCoreAndOptions = loadCoreAndOptions
+	tbl.LoadAndEnableCore = loadAndEnableCore
 end
 
 local function loadCoreAndOpenOptions()
@@ -771,15 +827,7 @@ local dataBroker = ldb:NewDataObject("BigWigs",
 function dataBroker.OnClick(self, button)
 	-- If you are a dev and need the BigWigs options loaded to do something, please come talk to us on Discord about your use case
 	if button == "RightButton" then
-		--if isMouseDown then
-			loadCoreAndOpenOptions()
-		--else
-		--	local trace = debugstack(2)
-		--	public.mstack = trace
-		--	sysprint("|cFFff0000WARNING!|r")
-		--	sysprint("One of your addons was prevented from force loading the BigWigs options.")
-		--	sysprint("Contact us on the BigWigs Discord about this, it should not be happening.")
-		--end
+		loadCoreAndOpenOptions()
 	end
 end
 
@@ -865,7 +913,7 @@ do
 					Popup(L.outOfDateContentPopup:format(name), true)
 					local msg = L.outOfDateContentRaidWarning:format(name, version, BIGWIGS_VERSION)
 					sysprint(msg)
-					RaidNotice_AddMessage(RaidWarningFrame, msg, {r=1,g=1,b=1}, 90)
+					RaidWarningMessage(msg, 90)
 				end
 			end
 			meta = GetAddOnMetadata(i, "X-BigWigs-LoadOn-Slash")
@@ -885,12 +933,12 @@ do
 		else
 			local meta = GetAddOnMetadata(i, "X-BigWigs-LoadOn-InstanceId")
 			if meta then -- Disabled content
-				for j = 1, select("#", strsplit(",", meta)) do
-					local rawId = select(j, strsplit(",", meta))
-					local id = tonumber(rawId:trim())
-					if id and id > 0 and public.zoneTbl[id] then
-						if not disabledZones then disabledZones = {} end
-						disabledZones[id] = name
+				local instanceIDsTable = {strsplit(",", meta)}
+				for numInTable = 1, #instanceIDsTable do
+					local instanceIDRaw = instanceIDsTable[numInTable]:trim()
+					local instanceID = tonumber(instanceIDRaw)
+					if instanceID and instanceID > 0 and public.zoneTbl[instanceID] then
+						disabledZones[instanceID] = name
 					end
 				end
 			end
@@ -1050,7 +1098,7 @@ do
 	end
 end
 
-if C_EventUtils.IsEventValid("PLAYER_MAP_CHANGED") then
+if public.isRetail then
 	bwFrame:RegisterEvent("PLAYER_MAP_CHANGED")
 end
 bwFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -1075,25 +1123,32 @@ do
 	if num < 90 then
 		C_CVar.SetCVar("Sound_NumChannels", "90") -- 64 is the default, enforce a little higher as a minimum to prevent sound clipping issues with addons
 	end
-	local cache = tonumber(C_CVar.GetCVar("Sound_MaxCacheSizeInBytes")) or 0
-	if cache < 134217728 then
+	local maxCache = tonumber(C_CVar.GetCVar("Sound_MaxCacheSizeInBytes")) or 0
+	if maxCache < 134217728 then
 		C_CVar.SetCVar("Sound_MaxCacheSizeInBytes", "134217728") -- "Large (128MB)" is the default, enforce it as a minimum
+	end
+	local maxSize = tonumber(C_CVar.GetCVar("Sound_MaxCacheableSizeInBytes")) or 0
+	if maxSize < 174762 then
+		C_CVar.SetCVar("Sound_MaxCacheableSizeInBytes", "174762") -- "174762" (170KB) is the default, enforce it as a minimum
 	end
 end
 
-if not public.isVanilla then -- XXX Support for LoadSavedVariablesFirst [Mainline:✓ MoP:✓ Wrath:✓ Vanilla:✗]
-	-- LibDBIcon setup
-	if type(BigWigsIconDB) ~= "table" then
-		BigWigsIconDB = {}
-	end
-	ldbi:Register("BigWigs", dataBroker, BigWigsIconDB)
+-- LibDBIcon setup
+if type(BigWigsIconDB) ~= "table" then
+	BigWigsIconDB = {}
+end
+ldbi:Register("BigWigs", dataBroker, BigWigsIconDB)
 
+do
 	-- Core DB setup
 	local defaults = {
 		profile = {
 			showZoneMessages = true,
 			fakeDBMVersion = false,
 			englishSayMessages = false,
+			bossModMessagesDisabled = false,
+			bossModNameplatesDisabled = false,
+			bossModVoiceDisabled = false,
 		},
 		global = {
 			watchedMovies = {},
@@ -1114,94 +1169,27 @@ if not public.isVanilla then -- XXX Support for LoadSavedVariablesFirst [Mainlin
 	db.RegisterCallback(mod, "OnProfileReset", profileUpdate)
 	public.db = db
 
-	local _, _, _, _, addonState = GetAddOnInfo("QuaziiUI")
-	if type(BigWigs3DB.namespaces) == "table" and addonState ~= "MISSING" then
-		for k,v in next, BigWigs3DB.namespaces do
-			if strfind(k, " Trash", nil, true) or strfind(k, " Rares", nil, true) then
-				BigWigs3DB.namespaces[k] = nil
-			end
+	for k, v in next, db.profile do
+		local defaultType = type(defaults.profile[k])
+		if defaultType == "nil" then
+			db.profile[k] = nil
+		elseif type(v) ~= defaultType then
+			db.profile[k] = defaults.profile[k]
 		end
 	end
-else
-	bwFrame:RegisterEvent("ADDON_LOADED")
-	local _, addonTbl = ...
-	function mod:ADDON_LOADED(addon)
-		if addon ~= "BigWigs" then
-			-- If you are a dev and need the BigWigs options loaded to do something, please come talk to us on Discord about your use case
-			--if reqFuncAddons[addon] then
-			--	local trace = debugstack(2)
-			--	public.lstack = trace
-			--	sysprint("|cFFff0000WARNING!|r")
-			--	sysprint("One of your addons is force loading the BigWigs options.")
-			--	sysprint("Contact us on the BigWigs Discord about this, it should not be happening.")
-			--	reqFuncAddons = {}
-			--end
-			return
-		end
-		--bwFrame:RegisterEvent("GLOBAL_MOUSE_DOWN")
-		--bwFrame:RegisterEvent("GLOBAL_MOUSE_UP")
 
-		-- LibDBIcon setup
-		if type(BigWigsIconDB) ~= "table" then
-			BigWigsIconDB = {}
-		end
-		ldbi:Register("BigWigs", dataBroker, BigWigsIconDB)
-
-		-- Core DB setup
-		local defaults = {
-			profile = {
-				showZoneMessages = true,
-				fakeDBMVersion = false,
-				englishSayMessages = false,
-			},
-			global = {
-				watchedMovies = {},
-			},
-		}
-		local db = LibStub("AceDB-3.0"):New("BigWigs3DB", defaults, true)
-		local lds = LibStub("LibDualSpec-1.0", true)
-		if lds then
-			lds:EnhanceDatabase(db, "BigWigs3DB")
-		end
-
-		local function profileUpdate()
-			public:SendMessage("BigWigs_ProfileUpdate")
-		end
-
-		db.RegisterCallback(mod, "OnProfileChanged", profileUpdate)
-		db.RegisterCallback(mod, "OnProfileCopied", profileUpdate)
-		db.RegisterCallback(mod, "OnProfileReset", profileUpdate)
-		public.db = db
-
+	if type(BigWigs3DB.namespaces) == "table" then
+		BigWigs3DB.namespaces.BattleRes = nil -- XXX temp cleanup 11.2.5
 		local _, _, _, _, addonState = GetAddOnInfo("QuaziiUI")
-		if type(BigWigs3DB.namespaces) == "table" and addonState ~= "MISSING" then
+		if addonState ~= "MISSING" then
 			for k,v in next, BigWigs3DB.namespaces do
 				if strfind(k, " Trash", nil, true) or strfind(k, " Rares", nil, true) then
 					BigWigs3DB.namespaces[k] = nil
 				end
 			end
 		end
-
-		if addonTbl.initToolDBForClassicTemp then
-			addonTbl.initToolDBForClassicTemp()
-			addonTbl.initToolDBForClassicTemp = nil
-		end
-		bwFrame:UnregisterEvent("ADDON_LOADED")
-		self.ADDON_LOADED = nil
 	end
 end
-
---function mod:GLOBAL_MOUSE_DOWN(button)
---	if button == "RightButton" then
---		isMouseDown = true
---	end
---end
-
---function mod:GLOBAL_MOUSE_UP(button)
---	if button == "RightButton" then
---		isMouseDown = false
---	end
---end
 
 function mod:START_PLAYER_COUNTDOWN(...)
 	loadAndEnableCore()
@@ -1347,6 +1335,7 @@ do
 		BigWigs_NerubarPalace = true,
 		BigWigs_LiberationOfUndermine = true,
 		BigWigs_ManaforgeOmega = true,
+		BigWigs_MarchOnQuelDanas = true,
 	}
 	-- Try to teach people not to force load our modules.
 	for i = 1, GetNumAddOns() do
@@ -1376,8 +1365,6 @@ do
 					local msg = L.removeAddOn:format(name, old[name])
 					delayedMessages[#delayedMessages+1] = msg
 					Popup(msg, true)
-				else
-					EnableAddOn(i) -- XXX temp as we were accidentally disabling the Shadowlands addon for a while
 				end
 			else
 				DisableAddOn(i)
@@ -1456,7 +1443,7 @@ do
 		--[1384] = locales.esES, [1385] = locales.esES, [1386] = locales.esES, [1387] = locales.esES, [1395] = locales.esES, -- esES
 	}
 	local criticalList = {
-		--[locales.esMX] = true,
+		--[locales.itIT] = true,
 	}
 
 	local language = locales[myLocale]
@@ -1468,7 +1455,7 @@ do
 		delayedMessages[#delayedMessages+1] = msg1
 		delayedMessages[#delayedMessages+1] = msg2
 		delayedMessages[#delayedMessages+1] = msg3
-		if criticalList[language or realmLanguage] then
+		if myLocale == "enUS" and criticalList[realmLanguage] then
 			Popup(msg1.. "\n" ..msg2.. "\n" ..msg3, true)
 		end
 	end
@@ -1482,7 +1469,7 @@ do
 						sysprint(delayedMessages[i])
 					end
 					if printMissingExpansionAddon then
-						RaidNotice_AddMessage(RaidWarningFrame, L.missingAddOnRaidWarning:format(public.currentExpansion.name), {r=1,g=1,b=1}, 120)
+						RaidWarningMessage(L.missingAddOnRaidWarning:format(public.currentExpansion.name), 120)
 					end
 					delayedMessages = nil
 				end)
@@ -1490,11 +1477,6 @@ do
 			self.LOADING_SCREEN_DISABLED = nil
 		end
 		bwFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
-	end
-
-	if public.isRetail and not BigWigsTempKeystones then -- XXX temp
-		BigWigsTempKeystones = true
-		Popup(L.tempNew, true)
 	end
 end
 
@@ -1577,22 +1559,23 @@ end
 --
 
 do
-	local DBMdotRevision = "20250805133414" -- The changing version of the local client, changes with every new zip using the project-date-integer packager replacement.
-	local DBMdotDisplayVersion = "11.2.5" -- "N.N.N" for a release and "N.N.N alpha" for the alpha duration.
-	local DBMdotReleaseRevision = "20250805000000" -- Hardcoded time, manually changed every release, they use it to track the highest release version, a new DBM release is the only time it will change.
+	local DBMdotRevision = "20251119075614" -- The changing version of the local client, changes with every new zip using the project-date-integer packager replacement.
+	local DBMdotDisplayVersion = "12.0.6" -- "N.N.N" for a release and "N.N.N alpha" for the alpha duration.
+	local DBMdotReleaseRevision = "20251118000000" -- Hardcoded time, manually changed every release, they use it to track the highest release version, a new DBM release is the only time it will change.
 	local protocol = 3
 	local versionPrefix = "V"
 	local PForceDisable = 19
 
 	local timer = nil
 	local function sendDBMMsg()
+		if public.isBeta then return end -- XXX 12.0 Needs fixing (not allowed in raids/dungeons atm)
 		if IsInGroup() then
 			local realm = GetRealmName()
 			local normalizedPlayerRealm = realm:gsub("[%s-]+", "") -- Has to mimic DBM code
 			local msg = myName.. "-" ..normalizedPlayerRealm.."\t"..protocol.."\t".. versionPrefix .."\t".. DBMdotRevision.."\t"..DBMdotReleaseRevision.."\t"..DBMdotDisplayVersion.."\t"..myLocale.."\ttrue\t"..PForceDisable.."\t0\t0"
 			local result = SendAddonMessage(dbmPrefix, msg, IsInGroup(2) and "INSTANCE_CHAT" or "RAID") -- LE_PARTY_CATEGORY_INSTANCE = 2
 			if type(result) == "number" and result ~= 0 then
-				if result == 9 then
+				if result == 3 or result == 8 or result == 9 then
 					timer = CTimerNewTimer(3, sendDBMMsg)
 					return
 				else
@@ -1668,10 +1651,11 @@ local ResetVersionWarning
 do
 	local timer = nil
 	local function sendMsg()
+		if public.isBeta then return end -- XXX 12.0 Needs fixing (not allowed in raids/dungeons atm)
 		if IsInGroup() then
 			local result = SendAddonMessage("BigWigs", versionResponseString, IsInGroup(2) and "INSTANCE_CHAT" or "RAID") -- LE_PARTY_CATEGORY_INSTANCE = 2
 			if type(result) == "number" and result ~= 0 then
-				if result == 9 then
+				if result == 3 or result == 8 or result == 9 then
 					timer = CTimerNewTimer(3, sendMsg)
 					return
 				else
@@ -1720,7 +1704,7 @@ do
 					local msg = L.warnSeveralReleases:format(diff)
 					sysprint(msg)
 					Popup(msg)
-					RaidNotice_AddMessage(RaidWarningFrame, msg, {r=1,g=1,b=1}, 40 + (diff * 10))
+					RaidWarningMessage(msg, 40 + (diff * 10))
 				else
 					sysprint(L.warnOldBase:format(BIGWIGS_GUILD_VERSION, BIGWIGS_VERSION, diff))
 				end
@@ -1731,7 +1715,7 @@ do
 				hasWarned = 2
 				verTimer = nil
 				sysprint(L.warnTwoReleases)
-				RaidNotice_AddMessage(RaidWarningFrame, L.warnTwoReleases, {r=1,g=1,b=1}, 20)
+				RaidWarningMessage(L.warnTwoReleases, 20)
 			end)
 		elseif warnedOutOfDate > 1 and hasWarned < 1 and not customGuildName then
 			if verTimer then verTimer:Cancel() end
@@ -1806,6 +1790,7 @@ do
 		}
 		local UnitIsPlayer = UnitIsPlayer
 		local function UNIT_TARGET(frame, event, unit)
+			if public.isBeta then return end -- XXX needs updating for 12.0
 			local unitTarget = unit.."target"
 			local guid = UnitGUID(unitTarget)
 			if guid and not UnitIsPlayer(unitTarget) then
@@ -1848,30 +1833,53 @@ do
 		end
 	end
 
+	local cap = "Capping"
+	local additionalPrintZones = {
+		[30] = cap, -- Alterac Valley
+		[2197] = cap, -- Alterac Valley (Korrak's Revenge)
+		[2107] = cap, -- Arathi Basin
+		[1681] = cap, -- Arathi Basin (Snowy PvP Brawl)
+		[2177] = cap, -- Arathi Basin (Players vs AI Brawl)
+		[529] = cap, -- Arathi Basin (Classic)
+		[1191] = cap, -- Ashran
+		[2245] = cap, -- Deepwind Gorge
+		[566] = cap, -- Eye of the Storm
+		[968] = cap, -- Eye of the Storm (Rated BG)
+		[761] = cap, -- Gilneas
+		[628] = cap, -- Isle of Conquest
+		[726] = cap, -- Twin Peaks
+		[2106] = cap, -- Warsong Gulch
+		[489] = cap, -- Warsong Gulch (Classic)
+		[2118] = cap, -- Wintergrasp
+	}
+
 	local warnedThisZone = {}
 	function mod:PLAYER_ENTERING_WORLD() -- Raid bosses
-		-- Zone checking
-		local _, instanceType, _, _, _, _, _, id = GetInstanceInfo()
+		local _, instanceType, _, _, _, _, _, instanceID = GetInstanceInfoModified()
+
+		-- Core loading
+		local isInCoreZone = public.zoneTbl[instanceID]
+		if isInCoreZone or (BigWigs3DB and BigWigs3DB.breakTime) then -- A zone the core should always load on, or break timer restoration
+			loadAndEnableCore()
+		end
 
 		-- Module loading
-		if enableZones[id] then
-			if loadAndEnableCore() then
-				loadZone(id)
+		if enableZones[instanceID] then -- A zone a content addon has told us to load in
+			if not isInCoreZone then
+				loadAndEnableCore()
 			end
+			loadZone(instanceID)
 			RegisterUnitTargetEvents()
 			bwFrame:UnregisterEvent("ZONE_CHANGED")
 		else
-			if BigWigs3DB and BigWigs3DB.breakTime then -- Break timer restoration
-				loadAndEnableCore()
-			end
-			if disabledZones and disabledZones[id] then -- We have content for the zone but it is disabled in the addons menu
-				local msg = L.disabledAddOn:format(disabledZones[id])
+			if disabledZones[instanceID] then -- We have a content addon for the this zone but it is disabled in the addons menu
+				local msg = L.disabledAddOn:format(disabledZones[instanceID])
 				sysprint(msg)
 				Popup(msg)
-				RaidNotice_AddMessage(RaidWarningFrame, msg, {r=1,g=1,b=1}, 15)
+				RaidWarningMessage(msg, 15)
 				-- Only print once
-				warnedThisZone[id] = true
-				disabledZones[id] = nil
+				warnedThisZone[instanceID] = true
+				disabledZones[instanceID] = nil
 			end
 			if instanceType == "none" then
 				bwFrame:RegisterEvent("ZONE_CHANGED")
@@ -1884,33 +1892,31 @@ do
 
 		-- Lacking zone modules
 		if not public.db.profile.showZoneMessages then return end
-		local zoneAddon = public.zoneTbl[id]
-		if type(zoneAddon) == "table" then
-			-- default to the expansion addon for current season modules
-			zoneAddon = zoneAddon[1]
-		end
-		if zoneAddon and id > 0 and not fakeZones[id] and not warnedThisZone[id] then
+		local zoneAddon = isInCoreZone or additionalPrintZones[instanceID]
+		if zoneAddon and instanceID > 0 and not fakeZones[instanceID] and not warnedThisZone[instanceID] then
 			if public.usingBigWigsRepo and public.currentExpansion.bigWigsBundled[zoneAddon] then return end -- If we are a BW Git user, then bundled content can't be missing, so return
 			if strfind(zoneAddon, "LittleWigs", nil, true) and public.usingLittleWigsRepo then return end -- If we are a LW Git user, then nothing can be missing, so return
-			if public.currentExpansion.zones[id] then
+			if public.currentExpansion.zones[instanceID] then
 				if guildDisableContentWarnings then return end
-				zoneAddon = public.currentExpansion.zones[id] -- Current BigWigs content has individual zone specific addons
+				zoneAddon = public.currentExpansion.zones[instanceID] -- Current BigWigs content has individual zone specific addons
 			elseif public.currentExpansion.littleWigsBundled[zoneAddon] then
 				zoneAddon = "LittleWigs" -- Bundled LittleWigs content is stored in the main addon
 			end
 			if public:GetAddOnState(zoneAddon) == "MISSING" then
-				warnedThisZone[id] = true
+				warnedThisZone[instanceID] = true
 				Popup(L.missingAddOnPopup:format(zoneAddon))
 				local msg = L.missingAddOnRaidWarning:format(zoneAddon)
 				sysprint(msg)
-				RaidNotice_AddMessage(RaidWarningFrame, msg, {r=1,g=1,b=1}, 20)
+				RaidWarningMessage(msg, 20)
 			end
 		end
 	end
 	function mod:PLAYER_MAP_CHANGED(oldId, newId)
 		if oldId ~= -1 then -- Skip non-delve events
-			if enableZones[newId] then
-				CTimerAfter(0, mod.PLAYER_ENTERING_WORLD) -- Unfortunately, GetInstanceInfo() is not accurate until 1 frame later
+			if public.zoneTbl[newId] then
+				ModifyInstanceInfo(newId, "scenario", 208, 5) -- Unfortunately, GetInstanceInfo() is not accurate until 1 frame later, so we mod it
+				self:PLAYER_ENTERING_WORLD()
+				CTimerAfter(1, ModifyInstanceInfo) -- Reset back to defaults
 			end
 		end
 	end
@@ -1935,6 +1941,7 @@ end
 do
 	local grouped = nil
 	function mod:GROUP_FORMED()
+		if public.isBeta then return end -- XXX 12.0 Needs fixing (not allowed in raids/dungeons atm)
 		local groupType = (IsInGroup(2) and 3) or (IsInRaid() and 2) or (IsInGroup() and 1) -- LE_PARTY_CATEGORY_INSTANCE = 2
 		if (not grouped and groupType) or (grouped and groupType and grouped ~= groupType) then
 			grouped = groupType
@@ -1995,12 +2002,8 @@ end
 public.RegisterMessage(mod, "BigWigs_BossModuleRegistered")
 
 function mod:BigWigs_CoreEnabled()
-	local _, _, _, _, _, _, _, id = GetInstanceInfo()
-	local zoneAddon = public.zoneTbl[id]
-	if type(zoneAddon) == "table" then
-		-- default to the expansion addon for current season modules
-		zoneAddon = zoneAddon[1]
-	end
+	local _, _, _, _, _, _, _, instanceID = GetInstanceInfoModified()
+	local zoneAddon = public.zoneTbl[instanceID]
 	if zoneAddon and zoneAddon:find("LittleWigs", nil, true) then
 		dataBroker.icon = "Interface\\AddOns\\BigWigs\\Media\\Icons\\minimap_party.tga"
 	elseif zoneAddon and zoneAddon:find("BigWigs", nil, true) and zoneAddon ~= public.currentExpansion.name then

@@ -68,51 +68,6 @@ function Addon:InitTextPopupFrame()
 	Addon.frame.TextPopupFrame.Main.CloseButton:SetEnabled(true);
 end
 
-local function GetPresetDataAddonOptionFrame(index)
-	return Addon.frame.PresetPopupFrame.Main["AddonConfigFrame"..index];
-end
-
-local function InitPeaversTalentsDataOptionFrame()
-	local addonIndex = 1;
-	local option = TalentLoadoutEx.Option.PeaversTalentsData;
-	local modes = Addon.PresetDataAddons[addonIndex].Modes;
-
-	local addonSelectedIndex = 1;
-	if option.mode then
-		for index, mode in ipairs(modes) do
-			if option.mode == mode then
-				addonSelectedIndex = index;
-			end
-		end
-	end
-
-	local addonDropDownMenuFunc_IsSelected = function(index) return index == addonSelectedIndex; end;
-	local addonDropDownMenuFunc_SetSelected = function(index)
-		addonSelectedIndex = index;
-		option.mode = modes[index];
-		Addon:UpdateScrollBox();
-	end;
-
-	local optionFrame = GetPresetDataAddonOptionFrame(addonIndex);
-	optionFrame.ModeOptionFrame.DropDownMenu:SetupMenu(
-		function(_, rootDescription)
-			for index, mode in ipairs(modes) do
-				rootDescription:CreateRadio(mode, addonDropDownMenuFunc_IsSelected, addonDropDownMenuFunc_SetSelected, index);
-			end
-		end
-	);
-
-	local combineCheckButton = optionFrame.CombineOptionFrame.CheckButton;
-	combineCheckButton:SetChecked(option.isCombineGroups);
-	combineCheckButton:SetScript(
-		"OnClick",
-		function(self)
-			option.isCombineGroups = self:GetChecked();
-			Addon:UpdateScrollBox();
-		end
-	);
-end
-
 function Addon:InitPresetPopupFrame()
 	Addon.frame.PresetPopupFrame:SetScript(
 		"OnHide",
@@ -122,42 +77,33 @@ function Addon:InitPresetPopupFrame()
 		end
 	);
 
+	local option = TalentLoadoutEx.Option.Preset;
 	local mainFrame = Addon.frame.PresetPopupFrame.Main;
 
-	function mainFrame:UpdateOptionFrame(newIndex)
-		-- AddonConfigFrame0 is message of not loaded.
-		for index = 0, #Addon.PresetDataAddons do
-			GetPresetDataAddonOptionFrame(index):Hide();
-		end
-
-		if newIndex == 0 then
-			-- Hide All
-		elseif Addon:IsAddOnLoaded(Addon.PresetDataAddons[newIndex].name) then
-			GetPresetDataAddonOptionFrame(newIndex):Show();
-		else
-			GetPresetDataAddonOptionFrame(0):Show();
-		end
-	end
-
-	local addonDropDownMenuFunc_IsSelected = function(index) return index == TalentLoadoutEx.Option.PresetDataSourceAddonIndex; end;
-	local addonDropDownMenuFunc_SetSelected = function(index)
-		TalentLoadoutEx.Option.PresetDataSourceAddonIndex = index;
-		mainFrame:UpdateOptionFrame(index);
-		Addon:UpdateScrollBox();
-	end;
-
-	mainFrame.AddonDropDownMenu:SetupMenu(
-		function(_, rootDescription)
-			rootDescription:CreateRadio("None", addonDropDownMenuFunc_IsSelected, addonDropDownMenuFunc_SetSelected, 0);
-			for index, data in ipairs(Addon.PresetDataAddons) do
-				rootDescription:CreateRadio(data.name, addonDropDownMenuFunc_IsSelected, addonDropDownMenuFunc_SetSelected, index);
-			end
+	local combineCheckButton = mainFrame.CombineCheckButton;
+	combineCheckButton:SetChecked(option.isCombineGroups);
+	combineCheckButton:SetScript(
+		"OnClick",
+		function(button)
+			option.isCombineGroups = button:GetChecked();
+			Addon:UpdateScrollBox();
 		end
 	);
 
-	InitPeaversTalentsDataOptionFrame();
-
-	mainFrame:UpdateOptionFrame(TalentLoadoutEx.Option.PresetDataSourceAddonIndex);
+	for _, presetFrame in ipairs(mainFrame.PresetAddons) do
+		local presetAddonOptions = option[presetFrame.addonName];
+		for _, checkButton in ipairs(presetFrame.CategoryCheckButtons) do
+			local category = checkButton.category;
+			checkButton:SetChecked(presetAddonOptions[category]);
+			checkButton:SetScript(
+				"OnClick",
+				function(button)
+					presetAddonOptions[category] = button:GetChecked();
+					Addon:UpdateScrollBox();
+				end
+			);
+		end
+	end
 end
 
 function Addon:UpdatePanelButton()

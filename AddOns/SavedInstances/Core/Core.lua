@@ -385,6 +385,7 @@ SI.defaultDB = {
     Currency3056 = true, -- Kej
     Currency3008 = true, -- Valorstones
     Currency3149 = true, -- Displaced Corrupted Mementos
+    Currency3278 = true, -- Ethereal Strands
     Currency3303 = true, -- Untethered Coin
     Currency3356 = true, -- Untainted Mana-Crystals
     Currency3269 = true, -- Ethereal Voidsplinter
@@ -2512,7 +2513,7 @@ end
 function SI:OnInitialize()
   local versionString = C_AddOns.GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "11.2.0" then
+  if versionString == "11.2.1" then
     versionString = "Dev"
   end
   --@end-debug@]==]

@@ -660,16 +660,23 @@ L['george_the_big_pinch_note'] = 'Быстро щелкните по всем 5 
 L['options_icons_karesh_lore_hunter'] = '{achievement:60890}'
 L['options_icons_karesh_lore_hunter_desc'] = 'Отображение местоположений предметов для достижения {achievement:60890}.'
 
+L['options_icons_phase_lost_and_found'] = '{achievement:61017}'
+L['options_icons_phase_lost_and_found_desc'] = 'Отобразить местоположения сфер при фазовых переходах для достижения {achievement:61017}.'
+L['phaseorb_label'] = 'Сфера при фазовом переходе'
+L['phaseorb_note'] = 'Пройдите через сферу при фазовом переходе, чтобы получить шанс получить один из обликов.'
+
 L['options_icons_purrkins'] = '{achievement:42729}'
-L['options_icons_purrkins_desc'] = nil
-L['purrkins_note'] = nil
-L['kareshire_sublabel'] = nil
+L['options_icons_purrkins_desc'] = 'Показать мурмявов для {achievement:42729}.'
+L['purrkins_note'] = '{emote:/гладить} мурмявов.'
+L['kareshire_sublabel'] = 'Появляется и исчезает.'
 L['in_a_tree'] = 'На дереве.'
-L['little_ms_phaser_sublabel'] = nil
+L['little_ms_phaser_sublabel'] = 'Появляется и исчезает.'
 
-L['mailroom_distribution_note'] = nil
-L['gift_of_the_brothers_note'] = nil
-L['ancient_coffer_note'] = nil
+L['mailroom_distribution_note'] = 'Взаимодействуйте с тележкой снаружи, затем откройте дверь почтового отделения. Встаньте на круги и нажмите кнопку дополнительного действия. Сокровище появится рядом с дверью.'
+L['gift_of_the_brothers_note'] = 'Взаимодействуйте с {object:Мерцающим фонарем} и поговорите с {npc:233881}, затем найдите {npc:234112} ({dot:Red}), {npc:234113} ({dot:Yellow}) и {npc:234075} ({dot:Green}), затем вернитесь к {npc:233881} у {object:Мерцающего фонаря}.'
+L['ancient_coffer_note'] = 'Соберите {item:233794}({dot:Red}) и {item:233799}({dot:Yellow}), затем вернитесь к {object:Древнему ларцу}, чтобы получить {item:245269}.'
 
-L['sthaarbs_note'] = nil
-L['heka_tamos_note'] = nil
+L['sthaarbs_note'] = 'Используйте телепорт возле {object:Фазового проводника}, чтобы добраться до {npc:234845}.'
+L['heka_tamos_note'] = 'Получите баффы от следующих объектов {object:Конденсатор росы}, {object:Призрачный фонарь}, {object:Землистый суккулент} и {object:Ловец ветра}, которые появляются поблизости, а затем взаимодействуйте с {object:Жаровней гармонии стихий}, чтобы призвать редкого монстра.'
+
+L['translocated_gorger_note'] = 'Собирайте по 1 {item:246240} на босса в неделю на отряд с редкого монстра во время {object:Нападение пожирателей} и объединяйте их, чтобы создать средство передвижения.'

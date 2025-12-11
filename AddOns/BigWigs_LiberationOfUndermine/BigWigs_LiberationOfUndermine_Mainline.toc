@@ -1,4 +1,4 @@
-## Interface: 110105, 110107, 110200
+## Interface: 110205, 110207, 120000
 
 ## Title: BigWigs [|cffeda55fLiberation of Undermine|r]
 ## Title-deDE: BigWigs [|cffeda55fBefreiung von Lorenhall|r]
@@ -23,7 +23,7 @@
 ## Notes-zhCN: BigWigs 解放安德麦模块
 ## Notes-zhTW: BigWigs 解放幽坑城模組
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
-## Version: v392.7
+## Version: v402.1
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs

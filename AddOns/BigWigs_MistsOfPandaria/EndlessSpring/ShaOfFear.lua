@@ -379,7 +379,7 @@ do
 			if swingCounter > 0 then -- normal swing
 				self:MessageOld("swing", "green", nil, CL["count"]:format(L["swing"], swingCounter), 5547) -- ability_thunderbolt / Swing / icon 132325
 			elseif swingCounter == 0 then -- last extra swing
-				self:MessageOld("swing", "green", nil, CL["other"]:format(CL["count"]:format(L["swing"], thrashSwing), self:SpellName(131996)), 158176) -- "Swing (4): Thrash" / ability_ghoulfrenzy / Thrash / icon 132152
+				self:MessageOld("swing", "green", nil, CL["other"]:format(CL["count"]:format(L["swing"], thrashSwing), self:SpellName(131996)), "ability_ghoulfrenzy") -- "Swing (4): Thrash" / ability_ghoulfrenzy / Thrash / icon 132152
 			end
 		end
 	end

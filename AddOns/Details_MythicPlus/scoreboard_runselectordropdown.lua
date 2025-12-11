@@ -32,6 +32,7 @@ function addon.CreateRunSelectorDropdown(readyFrame)
             end
 
             local labelContent = table.concat(addon.Compress.GetDropdownRunDescription(thisHeader), "@")
+            local runId = thisHeader
 
             ---@type dropdownoption
             local option = {
@@ -45,6 +46,7 @@ function addon.CreateRunSelectorDropdown(readyFrame)
                 texcoord = {0, 1, 0, 1},
                 iconcolor = {1, 1, 1, 0.7},
                 color = isPlayerCharacterInThisRun and "white" or "gray",
+                runId = runId,
             }
 
             if (i == selectedRunIndex) then
@@ -90,6 +92,22 @@ function addon.CreateRunSelectorDropdown(readyFrame)
             optionFrame.label4:SetTextColor(optionFrame.label:GetTextColor())
             optionFrame.label5:SetTextColor(optionFrame.label:GetTextColor())
             optionFrame.label6:SetTextColor(optionFrame.label:GetTextColor())
+
+            optionFrame.ExportButton = CreateFrame("Button", nil, optionFrame)
+            optionFrame.ExportButton:SetSize(60, 18)
+            optionFrame.ExportButton:SetNormalTexture([[Interface\AddOns\Details\images\export]])
+            optionFrame.ExportButton:SetPoint("right", optionFrame, "right", -5, 0)
+            optionFrame.ExportButton:SetText("export")
+
+            --make the export function pass the onenter event to the frame below it
+            optionFrame.ExportButton:SetScript("OnEnter", function()
+                optionFrame:GetScript("OnEnter")(optionFrame)
+            end)
+            optionFrame.ExportButton.label = optionFrame.ExportButton:CreateFontString(nil, "overlay", "GameFontNormal")
+            optionFrame.ExportButton.label:SetPoint("left", optionFrame.ExportButton, "left", 0, 0)
+            optionFrame.ExportButton.label:SetText("export")
+            optionFrame.ExportButton.label:SetTextColor(1, 1, 1, 0.3)
+            detailsFramework:SetFontSize(optionFrame.ExportButton.label, 10)
         end
     end
 
@@ -113,6 +131,13 @@ function addon.CreateRunSelectorDropdown(readyFrame)
         optionFrame.label5:SetText(timeString)
 
         optionFrame.label6:SetText(altName ~= "0" and altName or "") --when no altName is found, it returns "0"
+
+        local headerIndex = optionTable.value
+
+        optionFrame.ExportButton:SetScript("OnClick", function()
+            local jsonString = addon.ExportToJson(headerIndex)
+            addon.ShowExportFrame(jsonString)
+        end)
     end
 
     hooksecurefunc(runInfoDropdown, "Selected", function(self, thisOption)

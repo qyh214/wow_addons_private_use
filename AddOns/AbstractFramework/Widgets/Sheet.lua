@@ -377,7 +377,7 @@ function AF.CreateSheet(parent, name, config, onSizeChanged)
 
     -- update pixels
     AF.RemoveFromPixelUpdater(content)
-    AF.AddToPixelUpdater(sheet, UpdatePixels)
+    AF.AddToPixelUpdater_OnShow(sheet, nil, UpdatePixels)
 
     return sheet
 end

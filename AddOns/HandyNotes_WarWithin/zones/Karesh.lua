@@ -2,6 +2,8 @@ local myname, ns = ...
 
 local PHASEDIVING = ns.conditions.AuraActive(1214374) -- Phase Diving
 -- Under Her Power (spell:1219699) also counts
+local TRAIT_WHATLIESBEYOND = ns.conditions.Trait(1115, 105870)
+local TRAIT_SECRETSOFTHEDEPTHS = ns.conditions.Trait(1115, 105872)
 
 --[[
 notes:
@@ -23,9 +25,10 @@ ns.RegisterPoints(ns.KARESH, {
 			248200, -- The Brothers' Not-So-Final Present
 		},
 		related={
-			[75453979] = {label="{npc:234075:Sahra}", minimap=true,}, -- 86065?
-			[68304530] = {label="{npc:234112:Naji}", minimap=true,}, -- 86066?
-			[69806050] = {label="{npc:234113:M'alim}", minimap=true,}, -- 86067
+			[75453979] = {label="{npc:234075:Sahra}", minimap=true, requires=ns.conditions.AuraActive(471549), quest=86065},
+			[68304530] = {label="{npc:234112:Naji}", minimap=true, requires=ns.conditions.AuraActive(471549), quest=86066},
+			[69806050] = {label="{npc:234113:M'alim}", minimap=true, requires=ns.conditions.AuraActive(471549), quest=86067},
+			color={r=0.6,g=0.6,b=1},
 		},
 		note="Get {spell:471549:Flickering Lantern} and find the three brothers",
 		vignette=6682, -- Flickering Lantern, then 6681 Gift of the Brothers
@@ -266,7 +269,7 @@ ns.RegisterPoints(ns.KARESH, {
 }, {
 	achievement=42741, -- Treasures of K'aresh
 	requires=ns.conditions.QuestComplete(84967), -- The Shadowguard Shattered
-	hide_before=PHASEDIVING,
+	hide_before={PHASEDIVING, TRAIT_WHATLIESBEYOND},
 })
 ns.RegisterPoints(ns.KARESH_TAZAVESH, {
 	[23704680] = { -- Spear of Fallen Memories
@@ -291,7 +294,7 @@ ns.RegisterPoints(ns.KARESH_TAZAVESH, {
 	achievement=42741, -- Treasures of K'aresh
 	parent=true,
 	requires=ns.conditions.QuestComplete(84967), -- The Shadowguard Shattered
-	hide_before=PHASEDIVING,
+	hide_before={PHASEDIVING, TRAIT_WHATLIESBEYOND},
 })
 
 -- Dangerous Prowlers of K'aresh (42729)
@@ -321,17 +324,101 @@ local secrets = ns.nodeMaker{
 ns.RegisterPoints(ns.KARESH, {
 	[42292093] = {criteria=107308, quest=91646, vignette=7122, hide_before=PHASEDIVING}, -- From Vengeance to Void
 	[48925715] = {criteria=107313, quest=91686, vignette=7127}, -- Geologist Field Journal
-	[72102940] = {criteria=107309, quest=91647, vignette=nil, hide_before=PHASEDIVING}, -- The Facets of K'aresh
-	[49602670] = {criteria=107307, quest=91643, vignette=nil, hide_before=PHASEDIVING}, -- Multiversal Energy Dynamics and the Murmuration Paradox
+	[72122941] = {criteria=107309, quest=91647, vignette=7123, hide_before=PHASEDIVING}, -- The Facets of K'aresh
+	[49632676] = {criteria=107307, quest=91643, vignette=7120, hide_before=PHASEDIVING}, -- Multiversal Energy Dynamics and the Murmuration Paradox
 }, secrets{})
 ns.RegisterPoints(ns.KARESH_TAZAVESH, {
-	[36605810] = {criteria=107306, quest=91649, vignette=nil, hide_before=PHASEDIVING}, -- I Have Become Void!
-	[38204560] = {criteria=107310, quest=91687, vignette=nil, hide_before=PHASEDIVING}, -- Checklist of Minor Pleasures
+	[36795807] = {criteria=107306, quest=91649, vignette=7125, hide_before=PHASEDIVING}, -- I Have Become Void!
+	[38234562] = {criteria=107310, quest=91687, vignette=7128, hide_before=PHASEDIVING}, -- Checklist of Minor Pleasures
 	[46321858] = {criteria=107311, quest=91645, vignette=7121}, -- Ba'key's Aromatic Broker Cookies Recipes
 	[37302570] = {criteria=107312, quest=91640, vignette=nil, minimap=true, loot={246584}}, -- A Dog-eared Book (no vignette)
 	[58459150] = {criteria=107315, quest=91642, vignette=7119}, -- Mysterious Notebook
 	[41683982] = {criteria=107314, quest=91648, vignette=7124}, -- Coins: An Oath We Exchange
 }, secrets{parent=true})
+
+-- Phase-Lost-and-Found (61017)
+local phaseorb = ns.nodeMaker{
+	achievement=61017, criteria=true,
+	atlas="Vehicle-TempleofKotmogu-PurpleBall", minimap=true,
+	hide_before=TRAIT_SECRETSOFTHEDEPTHS,
+}
+ns.RegisterPoints(ns.KARESH, {
+	[43162164] = {},
+	[43762556] = {},
+	[44231681] = {},
+	[45745153] = {},
+	[47171579] = {},
+	[47181578] = {},
+	[47733728] = {},
+	[47806085] = {},
+	[48603845] = {},
+	[48892670] = {},
+	[48985746] = {},
+	[49341897] = {},
+	[50113620] = {},
+	[50495412] = {},
+	[50573510] = {},
+	[50953671] = {},
+	[51026912] = {},
+	[51176774] = {},
+	[52176488] = {},
+	[53382057] = {},
+	[53392050] = {},
+	[53734838] = {},
+	[54326317] = {},
+	[54505016] = {},
+	[54916381] = {},
+	[55285545] = {},
+	[55942154] = {},
+	[56552093] = {},
+	[57902393] = {},
+	[58742099] = {},
+	[58935751] = {},
+	[59416044] = {},
+	[59842272] = {},
+	[60352841] = {},
+	[60514201] = {},
+	[60525549] = {},
+	[61082734] = {},
+	[61162324] = {},
+	[61203920] = {},
+	[62594165] = {},
+	[63003911] = {},
+	[63984597] = {},
+	[64865224] = {},
+	[64905495] = {},
+	[66054880] = {},
+	[68834777] = {},
+	[69755531] = {},
+	[70206061] = {},
+	[70263197] = {},
+	[72711232] = {},
+	[72791006] = {},
+	[73985749] = {},
+	[75713442] = {},
+	[75963255] = {},
+	[76035820] = {},
+	[78224889] = {},
+	[78762917] = {},
+	[80405123] = {},
+}, phaseorb{})
+ns.RegisterPoints(ns.KARESH_TAZAVESH, {
+	[35235775] = {},
+	[39613240] = {},
+	[40156823] = {},
+	[42835032] = {},
+	[44322686] = {},
+	[44323460] = {},
+	[44383470] = {},
+	[53226055] = {},
+	[53859605] = {},
+	[55813380] = {},
+	[56468671] = {},
+	[60485724] = {},
+	[61128910] = {},
+	[62132931] = {},
+	[66898969] = {},
+}, phaseorb{parent=true})
 
 -- Phase Conduits
 
@@ -367,16 +454,24 @@ ns.RegisterPoints(ns.KARESH, {
 		criteria=106334,
 		quest=91276, -- 91422
 		npc=245998,
-		loot={{245272, pet=true}}, -- Heka'Tarnos, Bringer of Discord
+		loot={
+			{245272,pet=true,}, -- Heka'Tarnos, Bringer of Discord
+			246064, -- Reshii Magi's Pendant
+			246065, -- Reshii Magi's Band
+		},
 		vignette=6981,
 		note="Gather {spell:1240235}, {spell:1240217}, {spell:1240233}, {spell:1240237} nearby",
-		nearby={76983175, 72023077, 72713330, 71783464, 72582845, 72713472, color={r=0,g=1,b=0}, worldmap=false},
+		nearby={75553340, 72853131, 76983175, 72023077, 72713330, 71783464, 72582845, 72713472, color={r=0,g=1,b=0}, worldmap=false},
 	},
 	[54055884] = { -- Malek'ta
 		criteria=106336,
 		quest=91275,
 		npc=245997,
-		loot={{245214, pet=true}}, -- Palek'ti, the Mouth of Nothingness
+		loot={
+			240168, -- Reshii Magi's Seal
+			240169, -- Reshii Magi's Amulet
+			{245214,pet=true,}, -- Palek'ti, the Mouth of Nothingness
+		},
 		vignette=6980,
 		note="Jump repeatedly",
 	},
@@ -386,32 +481,59 @@ ns.RegisterPoints(ns.KARESH, {
 ns.RegisterPoints(ns.KARESH, {
 	[74043254] = { -- Sthaarbs
 		criteria=106346,
-		quest=91293,
+		quest=91293, -- 91431
 		npc=234845, -- 234848
+		loot={
+			240171, -- Observer's Soul Fetters
+			240172, -- Depleted K'areshi Battery
+			240213, -- Veiling Mana Shroud
+			240214, -- Miniature Reshii Sandgarden
+			{246160,mount=true,}, -- Sthaarbs's Last Lunch
+		},
 		vignette=6725,
 	},
 	[63824363] = { -- Ixthar the Unblinking
 		criteria=106245,
 		quest=90596,
 		npc=232128,
+		loot={
+			240171, -- Observer's Soul Fetters
+			240213, -- Veiling Mana Shroud
+			240214, -- Miniature Reshii Sandgarden
+		},
 		vignette=6636,
 	},
 	[54455445] = { -- Maw of the Sands
 		criteria=106337,
-		quest=90594,
+		quest=90594, -- 90683
 		npc=231981,
+		loot={
+			240172, -- Depleted K'areshi Battery
+			240213, -- Veiling Mana Shroud
+			240214, -- Miniature Reshii Sandgarden
+		},
 		vignette=6630,
 	},
 	[52782081] = { -- Orith the Dreadful
 		criteria=106339,
 		quest=90595,
 		npc=232127,
+		loot={
+			240172, -- Depleted K'areshi Battery
+			240213, -- Veiling Mana Shroud
+			240214, -- Miniature Reshii Sandgarden
+		},
 		vignette=6635,
 	},
 	[45782425] = { -- Prototype Mk-V
 		criteria=106341,
 		quest=90590,
 		npc=232182,
+		loot={
+			239449, -- Reshii Magi's Slippers
+			239464, -- Reshii Skirmisher's Brigandine
+			239478, -- Reshii Brute's Greatbelt
+		},
 		vignette=6638,
 	},
 	-- not yet vignette-coords:
@@ -419,54 +541,102 @@ ns.RegisterPoints(ns.KARESH, {
 		criteria=106348,
 		quest=90593,
 		npc=232195,
+		loot={
+			239456, -- Reshii Scout's Jerkin
+			239470, -- Reshii Skirmisher's Sash
+			239473, -- Reshii Brute's Sollerets
+			{246067,mount=true,}, -- Pearlescent Krolusk
+		},
 		vignette=6641,
 	},
-	[76724212] = { -- Stalker of the Wastes
+	[76794208] = { -- Stalker of the Wastes
 		criteria=106345,
-		quest=90592,
+		quest=90592, -- 90681
 		npc=232193,
+		loot={
+			239461, -- Reshii Scout's Shoulderpads
+			239466, -- Reshii Skirmisher's Gauntlets
+			246063, -- Void-Polished Warpstalker Stone
+		},
 		vignette=6640,
 	},
-	[51965772] = { -- The Nightreaver
+	[51915767] = { -- The Nightreaver
 		criteria=106347,
-		quest=90589,
+		quest=90589, -- 90678
 		npc=232111,
+		loot={
+			239454, -- Reshii Magi's Cord
+			239467, -- Reshii Skirmisher's Cowl
+			239479, -- Reshii Brute's Vambraces
+			{245254,pet=true,}, -- Duskthief
+		},
 		vignette=6634,
 	},
 	[73605531] = { -- Sha'ryth the Cursed
 		criteria=106343,
 		quest=90585,
 		npc=232006,
+		loot={
+			239453, -- Reshii Magi's Spines
+			239458, -- Reshii Scout's Grips
+			239465, -- Reshii Skirmisher's Boots
+		},
 		vignette=6629,
 	},
 	[50536476] = { -- Revenant of the Wasteland
 		criteria=106342,
 		quest=90591, -- 90680
 		npc=232189,
+		loot={
+			239459, -- Reshii Scout's Hood
+			239471, -- Reshii Skirmisher's Armguards
+			239476, -- Reshii Brute's Greaves
+		},
 		vignette=6639,
 	},
 	[65204985] = { -- Xarran the Binder
 		criteria=106349,
 		quest=90584,
 		npc=232199,
+		loot={
+			239451, -- Reshii Magi's Crown
+			239463, -- Reshii Scout's Bracers
+			239468, -- Reshii Skirmisher's Legguards
+		},
 		vignette=6642,
 	},
-	[55925105] = { -- Morgil the Netherspawn
+	[56085040] = { -- Morgil the Netherspawn
 		criteria=106338,
-		quest=90588,
+		quest=90588, -- 90677
 		npc=232108,
+		loot={
+			239450, -- Reshii Magi's Gloves
+			239457, -- Reshii Scout's Soles
+			239472, -- Reshii Brute's Breastplate
+			{244915,pet=true,}, -- Jimmy
+		},
 		vignette=6633,
 	},
-	[54074928] = { -- Shadowhowl
+	[54114923] = { -- Shadowhowl
 		criteria=106344,
-		quest=90583,
+		quest=90583, -- 90674
 		npc=232129,
+		loot={
+			239452, -- Reshii Magi's Leggings
+			239469, -- Reshii Skirmisher's Pauldrons
+			239474, -- Reshii Brute's Handguards
+		},
 		vignette=6637,
 	},
 	[65524418] = { -- Korgorath the Ravager
 		criteria=106335,
 		quest=90586,
 		npc=232077,
+		loot={
+			239448, -- Reshii Magi's Vestments
+			239462, -- Reshii Scout's Belt
+			239475, -- Reshii Brute's Helmet
+		},
 		vignette=6631,
 	},
 }, {
@@ -479,7 +649,10 @@ ns.RegisterPoints(ns.KARESH_TAZAVESH, {
 		quest=90587, -- 90676
 		npc=232098,
 		loot={
-			{242323, toy=true}, -- Chowdar's Favorite Ribbon
+			239455, -- Reshii Magi's Bands
+			239460, -- Reshii Scout's Breeches
+			239477, -- Reshii Brute's Epaulettes
+			{242323,toy=true,}, -- Chowdar's Favorite Ribbon
 		},
 		vignette=6632,
 		note="Wanders northeast",
@@ -496,6 +669,14 @@ ns.RegisterPoints(ns.KARESH_TAZAVESH, {
 		criteria=106333,
 		quest=90698, -- 90699
 		npc=238540,
+		loot={
+			239454, -- Reshii Magi's Cord
+			239463, -- Reshii Scout's Bracers
+			239465, -- Reshii Skirmisher's Boots
+			239469, -- Reshii Skirmisher's Pauldrons
+			239478, -- Reshii Brute's Greatbelt
+			246064, -- Reshii Magi's Pendant
+		},
 		vignette=6914, -- also 6774?
 		note="Complete {quest:87405:Warrant Grubber} to summon",
 	},
@@ -509,8 +690,19 @@ ns.RegisterPoints(ns.KARESH, {
 		quest=86447, -- 91287, 91310, 91434
 		npc=234970,
 		loot={
-			246240, -- Devoured Energy-Pod
-			{238663, quest=89061}, -- Crystallized Anima
+			{246240, mount=2602, note="needs 20"}, -- Devoured Energy-Pod
+			{238663, quest=89061,}, -- Crystallized Anima
+			240111, -- Reshii Skirmisher's Axe
+			240112, -- Reshii Scout's Blade
+			240113, -- Reshii Magi's Dagger
+			240114, -- Reshii Skirmisher's Morningstar
+			240115, -- Reshii Brute's Warmace
+			240116, -- Reshii Brute's Longsword
+			240117, -- Reshii Magi's Wand
+			240118, -- Reshii Brute's Spear
+			240119, -- Reshii Skirmisher's Staff
+			240120, -- Reshii Magi's Lantern
+			240121, -- Reshii Brute's Barrier
 		},
 		vignette=6705, -- Devourer Attack: Eco-Dome Primus (not sure if multiples spawn?)
 	},
@@ -518,34 +710,53 @@ ns.RegisterPoints(ns.KARESH, {
 		quest=86464, -- 91289, 91311, 91435
 		npc=235087, -- 246366
 		loot={
-			246240, -- Devoured Energy-Pod
-			{238664, quest=89062}, -- Crystallized Anima
+			{246240, mount=2602, note="needs 20"}, -- Devoured Energy-Pod
+			{238664, quest=89062,}, -- Crystallized Anima
+			240113, -- Reshii Magi's Dagger
+			240115, -- Reshii Brute's Warmace
+			240116, -- Reshii Brute's Longsword
+			240117, -- Reshii Magi's Wand
+			240118, -- Reshii Brute's Spear
+			240119, -- Reshii Skirmisher's Staff
+			240120, -- Reshii Magi's Lantern
+			240121, -- Reshii Brute's Barrier
 		},
 		vignette=6707, -- Devourer Attack: The Atrium
 	},
 	[42505755] = { -- Purple Peat
 		quest=90692, -- 90693 (90578 is on the vignette, but didn't trigger...)
 		npc=241920, -- 241919
+		loot={
+			239448, -- Reshii Magi's Vestments
+			239459, -- Reshii Scout's Hood
+			239460, -- Reshii Scout's Breeches
+			239466, -- Reshii Skirmisher's Gauntlets
+			239472, -- Reshii Brute's Breastplate
+			240168, -- Reshii Magi's Seal
+		},
 		vignette=6917, -- also 6891?
 		note="Complete {quest:87546:Warrant Purple Peat} to summon",
 	},
 	[71792823] = { -- Korgoth the Hungerer
-		quest=84993, -- 91286, 91309, 91433
+		quest=84993, -- 91286; these didn't trip after the Energy-Pod: 91309, 91433
 		npc=231229,
 		loot={
-			246240, -- Devoured Energy-Pod
-			{232467, quest=85722}, -- Crystalized Anima
+			{246240, mount=2602, note="needs 20"}, -- Devoured Energy-Pod
+			{232467, quest=85722,}, -- Crystallized Anima
+			240111, -- Reshii Skirmisher's Axe
+			240112, -- Reshii Scout's Blade
+			240113, -- Reshii Magi's Dagger
+			240114, -- Reshii Skirmisher's Morningstar
+			240115, -- Reshii Brute's Warmace
+			240116, -- Reshii Brute's Longsword
+			240119, -- Reshii Skirmisher's Staff
+			240120, -- Reshii Magi's Lantern
+			240121, -- Reshii Brute's Barrier
 		},
 		vignette=6608, -- Devourer Attack: The Oasis
 	},
 	-- not yet vignette-coords:
 	--[[
-	[0] = { -- Xy'vox the Twisted
-		quest=90580,
-		npc=238384,
-		vignette=6772, -- also 6770?
-		note="Complete {quest:87345:Warrant Xy'vox the Twisted} to summon",
-	},
 	[0] = { -- Hollowbane
 		quest=90582,
 		npc=238536,
@@ -574,11 +785,6 @@ ns.RegisterPoints(ns.KARESH, {
 	[0] = { -- Phase Hunter Om'nun
 		quest=nil,
 		npc=235423,
-		--vignette=,
-	},
-	[0] = { -- The Wallbreaker
-		quest=nil,
-		npc=235104,
 		--vignette=,
 	},
 	[0] = { -- Invasive Phasecrawler
@@ -612,4 +818,38 @@ ns.RegisterPoints(ns.KARESH, {
 		--vignette=,
 	},
 	--]]
+})
+ns.RegisterPoints(ns.KARESH_TAZAVESH, {
+	[31225813] = { -- Xy'vox the Twisted
+		quest=90694, -- 90695 (90580 on vignette but didn't flip)
+		npc=238384,
+		loot={
+			239455, -- Reshii Magi's Bands
+			239457, -- Reshii Scout's Soles
+			239461, -- Reshii Scout's Shoulderpads
+			239470, -- Reshii Skirmisher's Sash
+			239479, -- Reshii Brute's Vambraces
+			246065, -- Reshii Magi's Band
+		},
+		vignette=6772, -- also 6770?
+		note="Complete {quest:87345:Warrant Xy'vox the Twisted} to summon",
+	},
+	[27557044] = { -- The Wallbreaker
+		quest=86465, -- 91436, 91312, 91290
+		npc=235104,
+		loot={
+			{246240, mount=2602, note="needs 20"}, -- Devoured Energy-Pod
+			{238665, quest=89063,}, -- Crystallized Anima
+			240111, -- Reshii Skirmisher's Axe
+			240112, -- Reshii Scout's Blade
+			240113, -- Reshii Magi's Dagger
+			240114, -- Reshii Skirmisher's Morningstar
+			240116, -- Reshii Brute's Longsword
+			240117, -- Reshii Magi's Wand
+			240121, -- Reshii Brute's Barrier
+		},
+		vignette=6708, -- Devourer Attack: Tazavesh
+	},
+}, {
+	parent=true,
 })

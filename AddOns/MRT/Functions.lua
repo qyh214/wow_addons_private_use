@@ -11,6 +11,7 @@ local GetRaidRosterInfo = GetRaidRosterInfo
 local GetItemInfo, GetItemInfoInstant  = C_Item and C_Item.GetItemInfo or GetItemInfo,  C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant
 local GetSpecialization = GetSpecialization
 local GetSpecializationInfo = C_SpecializationInfo and C_SpecializationInfo.GetSpecializationInfo or GetSpecializationInfo
+local SendChatMessage = C_ChatInfo and C_ChatInfo.SendChatMessage or SendChatMessage
 
 if not GetSpecialization and ExRT.isClassic then
 	GetSpecialization = function()
@@ -741,7 +742,7 @@ end
 
 function ExRT.F.GetItemBonuses(link)
 	if link then 
-		local _,itemID,enchant,gem1,gem2,gem3,gem4,suffixID,uniqueID,level,specializationID,upgradeType,instanceDifficultyID,numBonusIDs,restLink = strsplit(":",link,15)
+		local _,itemID,enchant,gem1,gem2,gem3,gem4,suffixID,uniqueID,level,specializationID,upgradeType,instanceDifficultyID,numBonusIDs,restLink = strsplit(":",link:match("|H.-|h") or link,15)
 		numBonusIDs = tonumber(numBonusIDs or "?") or 0
 		local bonusStr = ""
 		for i=1,numBonusIDs do
@@ -760,9 +761,8 @@ end
 function ExRT.F.IsPlayerRLorOfficer(unitName)
 	local shortName = ExRT.F.delUnitNameServer(unitName)
 	for i=1,GetNumGroupMembers() do
-		--if name and (name == unitName or ExRT.F.delUnitNameServer(name) == shortName) then
+		local name,rank = GetRaidRosterInfo(i)
 		if UnitIsUnit(unitName,"raid"..i) or UnitIsUnit(shortName,"raid"..i) then
-			local name,rank = GetRaidRosterInfo(i)
 			if rank > 0 then
 				return rank
 			else
@@ -777,10 +777,22 @@ function ExRT.F.IsPlayerRLorOfficer(unitName)
 	-- 2: rl
 end
 
+if ExRT.isMN then
+	function ExRT.F.IsPlayerRLorOfficer(unitName)
+		if UnitIsGroupLeader(unitName) then
+			return 2
+		elseif UnitIsGroupAssistant(unitName) then
+			return 1
+		else
+			return false
+		end
+	end
+end
+
 function ExRT.F.GetPlayerParty(unitName)
 	for i=1,GetNumGroupMembers() do
 		local name,_,subgroup = GetRaidRosterInfo(i)
-		if name and UnitIsUnit(name,unitName) then
+		if (not canaccessvalue or canaccessvalue(name)) and name and UnitIsUnit(name,unitName) then
 			return subgroup
 		end
 	end
@@ -790,12 +802,25 @@ end
 function ExRT.F.GetOwnPartyNum()
 	for i=1,GetNumGroupMembers() do
 		local name,_,subgroup = GetRaidRosterInfo(i)
-		if name and UnitIsUnit(name,'player') then
+		if (not canaccessvalue or canaccessvalue(name)) and name and UnitIsUnit(name,'player') then
 			return subgroup
 		end
 	end
 	return 1
 end
+if ExRT.isMN then
+	function ExRT.F.GetOwnPartyNum()
+		local shortName = UnitName'player'
+		for i=1,GetNumGroupMembers() do
+			local name,_,subgroup = GetRaidRosterInfo(i)
+			if (not canaccessvalue or canaccessvalue(name)) and name and shortName == ExRT.F.delUnitNameServer(name) then
+				return subgroup
+			end
+		end
+		return 1
+	end
+end
+
 
 function ExRT.F.CreateAddonMsg(...)
 	local result = ""
@@ -2544,7 +2569,7 @@ ExRT.GDB.EncountersList = {
 	{2359,2837,2838,2839},	--The Dawnbreaker:Dung
 	{2343,2907,2908,2905,2909},	--City of Threads:Dung
 	{2387,3020,3019,3053,3054},	--Operation: Floodgate:Dung
-	{"11.2",2449,3107,3108,3109},	--Eco-Dome Al'dani:Dung
+	{2449,3107,3108,3109},	--Eco-Dome Al'dani:Dung
 
 	{232,663,664,665,666,667,668,669,670,671,672},
 	{287,610,611,612,613,614,615,616,617},
@@ -2598,7 +2623,7 @@ ExRT.GDB.EncountersList = {
 
 	{2292,2902,2917,2898,2918,2919,2920,2921,2922},	--Nerub-ar Palace:Raid
 	{2406,3009,3010,3011,3012,3013,3014,3015,3016},	--Liberation of Undermine:Raid
-	{"11.2",2460,3129,3131,3130,3132,3122,3133,3134,3135},	--Manaforge Omega
+	{2460,3129,3131,3130,3132,3122,3133,3134,3135},	--Manaforge Omega
 }
 
 function ExRT.F.EJ_AutoScan()

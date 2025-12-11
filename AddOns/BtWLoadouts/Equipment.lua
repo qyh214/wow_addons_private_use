@@ -104,7 +104,11 @@ local function SetItemLocationFromLocation(itemLocation, location)
 	elseif player then
 		itemLocation:SetEquipmentSlot(slot)
 	elseif bank then
-		itemLocation:SetBagAndSlot(BANK_CONTAINER, slot - 51)
+		if BANK_CONTAINER then
+			itemLocation:SetBagAndSlot(BANK_CONTAINER, slot - 51)
+		else
+			itemLocation:Clear()
+		end
 	else
 		error("@TODO")
 	end
@@ -275,7 +279,7 @@ local function EncodeItemData(itemLink, azerite)
 end
 Internal.EncodeItemData = EncodeItemData
 local function GetEncodedItemDataForItemLocation(itemLocation)
-	if itemLocation:IsValid() then
+	if itemLocation:HasAnyLocation() and itemLocation:IsValid() then
 		local itemLink = C_Item.GetItemLink(itemLocation)
 		if itemLink then -- Some items in inventory dont have item links, keystones, battlepets
 			local itemString = GetItemString(itemLink)
@@ -2232,7 +2236,7 @@ do
 		local function UpdateLocation(newLocation)
 			SetItemLocationFromLocation(itemLocation, newLocation)
 
-			if not newLocationItems[newLocation] and itemLocation:IsValid() then
+			if not newLocationItems[newLocation] and itemLocation:HasAnyLocation() and itemLocation:IsValid() then
 				local itemData = GetEncodedItemDataForItemLocation(itemLocation)
 				if missingItemDatas[itemData] then
 					local oldLocation = missingItemDatas[itemData]
@@ -2433,13 +2437,15 @@ do
 			end
 
 			if not skipBank and next(missingItemDatas) ~= nil then
-				for slotId=1,GetContainerNumSlots(BANK_CONTAINER) do
-					if next(missingItemDatas) == nil then
-						break
-					end
+				if BANK_CONTAINER then
+					for slotId=1,GetContainerNumSlots(BANK_CONTAINER) do
+						if next(missingItemDatas) == nil then
+							break
+						end
 
-					local newLocation = PackLocation(BANK_CONTAINER, slotId)
-					UpdateLocation(newLocation)
+						local newLocation = PackLocation(BANK_CONTAINER, slotId)
+						UpdateLocation(newLocation)
+					end
 				end
 				
 				for bagId=FIRST_BANK_BAG_SLOT,LAST_BANK_BAG_SLOT do

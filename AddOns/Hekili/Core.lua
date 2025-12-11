@@ -553,6 +553,8 @@ function Hekili:CheckChannel( ability, prio )
 
         -- We are concerned with chain and early_chain_if.
 
+        -- FIXME
+        -- Why are some conditions not correctly making it to/through here? Example: "!talent.entropic_rift" on shadowpriest void_torrent cancel
         if modifiers.interrupt_if and modifiers.interrupt_if() then
             local timing = last_tick or ( state.query_time - state.buff.casting.applied ) % tick_time < 0.25
             local imm = modifiers.interrupt_immediate and modifiers.interrupt_immediate()
@@ -769,6 +771,8 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
 
                 state.this_action = action
                 state.this_list = listName
+                state.this_id = scriptID
+
                 state.delay = nil
 
                 local ability = class.abilities[ action ]
@@ -897,8 +901,8 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
                             if debug then self:Debug( "The conditions for this entry contain an error.  Skipping." ) end
                         elseif wait_time > state.delayMax then
                             if debug then self:Debug( "The action is not ready ( %.2f ) before our maximum delay window ( %.2f ) for this query.", wait_time, state.delayMax ) end
-                        elseif ( rWait - state.ClashOffset( rAction ) ) - ( wait_time - clash ) <= 0.05 then
-                            if debug then self:Debug( "The action is not ready in time ( %.2f vs. %.2f ) [ Clash: %.2f vs. %.2f ] - padded by 0.05s.", wait_time, rWait, clash, state.ClashOffset( rAction ) ) end
+                        elseif rAction and ( rWait - state.ClashOffset( rAction ) ) - ( wait_time - clash ) <= 0.05 then
+                            if debug then self:Debug( "The action is not ready in time ( %.2f vs. %.2f [%s] ) [ Clash: %.2f vs. %.2f ] - padded by 0.05s.", wait_time, rWait, rAction or "NONE", clash, state.ClashOffset( rAction ) ) end
                         else
                             -- APL checks.
                             if precombatFilter and not ability.essential then
@@ -1259,7 +1263,6 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
 
                                                             if debug then
                                                                 self:Debug( "Action chosen:  %s at %.2f!", rAction, state.delay )
-                                                                self:Debug( "Texture shown:  %s", slot.texture )
                                                             end
                                                         end
 

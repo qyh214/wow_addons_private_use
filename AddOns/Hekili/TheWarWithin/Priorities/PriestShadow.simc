@@ -1,6 +1,6 @@
-## https://github.com/simulationcraft/simc/blob/thewarwithin/ActionPriorityLists/default/priest_shadow.simc
-## SimulationCraft Commit Sync: bd9a80c
-## Date: 2025-08-05
+## Upstream: https://github.com/simulationcraft/simc/blob/thewarwithin/ActionPriorityLists/default/priest_shadow.simc
+## SimulationCraft Commit Sync: df4f2e8
+## Date: 2025-08-23
 
 actions.precombat+=/power_word_fortitude
 actions.precombat+=/shadowform,if=!buff.shadowform.up
@@ -14,9 +14,10 @@ actions.precombat+=/variable,name=pooling_mindblasts,default=0,op=reset
 ## actions.precombat+=/use_item,name=ingenious_mana_battery
 actions.precombat+=/arcane_torrent
 ## actions.precombat+=/use_item,name=aberrant_spellforge
-actions.precombat+=/halo,if=boss&active_enemies<=4&(fight_remains>=120|active_enemies<=2)&!talent.power_surge
-actions.precombat+=/shadow_crash,if=active_enemies<=12
-actions.precombat+=/vampiric_touch,if=(!talent.whispering_shadows|!action.shadow_crash.in_flight)&(!talent.shadow_crash.enabled|active_enemies>12|!boss)
+actions.precombat+=/halo,if=active_enemies<=4&(fight_remains>=120|active_enemies<=2)&!talent.power_surge
+## [Syrif] - Even with startsCombat = true, this spell doesnt like to start combat. time_since prevents double-cast
+actions.precombat+=/shadow_crash,line_cd=5,if=active_enemies<=12
+actions.precombat+=/vampiric_touch,if=!talent.shadow_crash.enabled|active_enemies>8
 
 actions+=/silence
 actions+=/variable,name=holding_crash,op=set,value=false
@@ -49,11 +50,13 @@ actions.cds+=/ancestral_call,if=buff.power_infusion.up&(buff.voidform.up|buff.da
 ## actions.cds+=/cancel_buff,name=power_infusion,if=cooldown.power_infusion.up&cooldown.power_infusion.duration>0&set_bonus.tww2_4pc&buff.power_infusion.remains<=2
 ## ## actions.cds+=/invoke_external_buff,name=power_infusion,if=(buff.voidform.up|buff.dark_ascension.up|set_bonus.tww2_4pc)&!buff.power_infusion.up
 ## actions.cds+=/invoke_external_buff,name=bloodlust,if=buff.power_infusion.up&boss&fight_remains<120|boss&fight_remains<=40
+# Use Flash Heal to proc Nexus-King's Command trinket
+actions.cds+=/flash_heal,if=equipped.nexuskings_command&buff.oathbound.up&(!buff.boon_of_the_oathsworn.up|buff.boon_of_the_oathsworn.remains<3)&((talent.void_eruption&(buff.voidform.up|cooldown.void_eruption.up))|(talent.dark_ascension&cooldown.dark_ascension.up)|(talent.power_surge&cooldown.halo.up)|(talent.entropic_rift&cooldown.void_torrent.up))
 # Sync Power Infusion with Voidform or Dark Ascension
 actions.cds+=/power_infusion,if=(buff.voidform.up|buff.dark_ascension.up&(fight_remains<=80|fight_remains>=140))&(!buff.power_infusion.up|set_bonus.tww2_4pc&buff.power_infusion.remains<=15)
 # Make sure Mindbender is active before popping Dark Ascension unless you have insignificant talent points or too many targets
 actions.cds+=/halo,if=talent.power_surge&(pet.fiend.active&cooldown.fiend.remains>=4&talent.mindbender|!talent.mindbender&!cooldown.fiend.up|active_enemies>2&!talent.inescapable_torment|!talent.dark_ascension)&(cooldown.mind_blast.charges=0|!cooldown.void_torrent.up|!talent.void_eruption|cooldown.void_eruption.remains>=gcd.max*4|buff.mind_devourer.up&talent.mind_devourer)
-# Make sure Mindbender is active before popping Void Eruption and dump charges of Mind Blast before casting
+# Make sure Mindbender is active before popping Void Eruption and dump charges of Mind Blast if Mind Devourer is not active and you are not Archon
 actions.cds+=/void_eruption,if=(pet.fiend.active&cooldown.fiend.remains>=4|!talent.mindbender&!cooldown.fiend.up|active_enemies>2&!talent.inescapable_torment)&(cooldown.mind_blast.charges=0|time>15|buff.mind_devourer.up&talent.mind_devourer|buff.power_surge.up)
 # Use Dark Ascension when you have enough Insanity to cast Devouring Plague.
 actions.cds+=/dark_ascension,if=(pet.fiend.active&cooldown.fiend.remains>=4|!talent.mindbender&!cooldown.fiend.up|active_enemies>2&!talent.inescapable_torment)&(active_dot.devouring_plague>=1|insanity>=(20-(5*talent.minds_eye)+(5*talent.distorted_reality)-(pet.fiend.active*2)))
@@ -62,7 +65,7 @@ actions.cds+=/call_action_list,name=trinkets
 actions.cds+=/desperate_prayer,if=health.pct<=75
 
 # Use Halo to acquire Twist of Fate if an ally can be healed for it and it is not currently up.
-actions.heal_for_tof=halo
+actions.heal_for_tof+=/halo
 # Use Divine Star to acquire Twist of Fate if an ally can be healed for it and it is not currently up.
 actions.heal_for_tof+=/divine_star
 # Use Holy Nova when Rhapsody is fully stacked to acquire Twist of Fate if an ally can be healed for it and it is not currently up.
@@ -83,7 +86,7 @@ actions.main+=/void_bolt,cycle_targets=1,if=insanity.deficit>16&cooldown.void_bo
 # Do not overcap on insanity
 actions.main+=/devouring_plague,cycle_targets=1,if=active_dot.devouring_plague<=1&dot.devouring_plague.remains<=gcd.max&(!talent.void_eruption|cooldown.void_eruption.remains>=gcd.max*3)|insanity.deficit<=35|buff.mind_devourer.up|buff.entropic_rift.up|buff.power_surge.up&buff.tww3_archon_4pc_helper.stack<4&buff.ascension.up
 # Use Void Torrent if it will get near full Mastery Value
-actions.main+=/void_torrent,cycle_targets=1,if=!variable.holding_crash&(dot.devouring_plague.remains>=2.5&(cooldown.dark_ascension.remains>=12|!talent.dark_ascension|!talent.void_blast)|cooldown.void_eruption.remains<=3&talent.void_eruption),interrupt_if=!talent.entropic_rift,interrupt_immediate=1
+actions.main+=/void_torrent,cycle_targets=1,if=!variable.holding_crash&(dot.devouring_plague.remains>=2.5&(cooldown.dark_ascension.remains>=12|!talent.dark_ascension|!talent.void_blast)|cooldown.void_eruption.remains<=3&talent.void_eruption),interrupt_if=talent.entropic_rift.disabled,interrupt_immediate=1
 # Use Void Volley if it would expire soon
 actions.main+=/void_volley,if=buff.void_volley.remains<=5|buff.entropic_rift.up&action.void_blast.usable_in>buff.entropic_rift.remains|target.time_to_die<=5
 # MFI is a good button

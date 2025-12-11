@@ -30,6 +30,7 @@ local IsActiveSpell = ns.IsActiveSpell
 
 -- Specialization-specific local functions (if any)
 local min = ns.safeMin
+local GetSpellCooldown = C_Spell.GetSpellCooldown
 
 spec:RegisterResource( Enum.PowerType.Insanity, {
     mind_flay = {
@@ -146,6 +147,37 @@ spec:RegisterResource( Enum.PowerType.Insanity, {
 
         interval = function () return 1.5 * state.haste * ( state.conduit.rabid_shadows.enabled and 0.85 or 1 ) end,
         value = 2
+    },
+
+    -- Gain 10 insanity every new halo ring via power surge (5s)
+    halo_power_surge = {
+        aura = "power_surge",
+
+        last = function ()
+            local app = state.buff.power_surge.applied
+            local t = state.query_time
+
+            return app + floor( t - app )
+        end,
+
+        interval = 5,
+        value = 10,
+    },
+
+    -- Gain 10 insanity over 5s
+    halo_power_surge_tww3_2pc = {
+        aura = "power_surge",
+        set_bonus = "tww3_2pc",
+
+        last = function ()
+            local app = state.buff.power_surge.applied
+            local t = state.query_time
+
+            return app + floor( t - app )
+        end,
+
+        interval = 1,
+        value = 2,
     }
 } )
 spec:RegisterResource( Enum.PowerType.Mana )
@@ -187,7 +219,7 @@ spec:RegisterTalents( {
     phantasm                       = {  82556,  108942, 1 }, -- Activating Fade removes all snare effects
     phantom_reach                  = {  82673,  459559, 1 }, -- Increases the range of most spells by $s1%
     power_infusion                 = {  82694,   10060, 1 }, -- Infuses the target with power for $s1 sec, increasing haste by $s2%. Can only be cast on players
-    power_word_life                = {  82676,  373481, 1 }, -- A word of holy power that heals the target for $s1 million. Only usable if the target is below $s2% health
+    power_word_life                = {  82676,  373481, 1 }, -- A word of holy power that heals the target for $s1. Only usable if the target is below $s2% health
     prayer_of_mending              = {  82718,   33076, 1 }, -- Places a ward on an ally that heals them for $s1 the next time they take damage, and then jumps to another ally within $s2 yds. Jumps up to $s3 times and lasts $s4 sec after each jump
     protective_light               = {  82707,  193063, 1 }, -- Casting Flash Heal on yourself reduces all damage you take by $s1% for $s2 sec
     psychic_voice                  = {  82695,  196704, 1 }, -- Reduces the cooldown of Psychic Scream by $s1 sec
@@ -228,7 +260,7 @@ spec:RegisterTalents( {
     distorted_reality              = {  82647,  409044, 1 }, -- Increases the damage of Devouring Plague by $s1% and causes it to deal its damage over $s2 sec, but increases its Insanity cost by $s3
     idol_of_cthun                  = {  82643,  377349, 1 }, -- Mind Flay has a chance to spawn a Void Tendril that channels Mind Flay or Void Lasher that channels Mind Sear at your target. Casting Void Torrent or Void Volley always spawns one.  Mind Flay Assaults the target's mind with Shadow energy, causing $s$s5 Shadow damage over $s6 sec and slowing their movement speed by $s7%. Generates $s8 Insanity over the duration.  Mind Sear Corrosive shadow energy radiates from the target, dealing $s$s11 Shadow damage over $s12 sec to all enemies within $s13 yards of the target. Damage reduced beyond $s14 targets. Generates $s15 Insanity over the duration
     idol_of_nzoth                  = {  82552,  373280, 1 }, -- You create Horrific Visions when casting harmful spells on enemies. At $s3 stacks of Horrific Visions, your target sees a nightmare, dealing $s$s4 Shadow damage and granting you $s5 Insanity over $s6 sec. At $s7 stacks, your target witnesses a vision of N'Zoth, dealing $s$s8 Shadow damage and granting you $s9 Insanity over $s10 sec
-    idol_of_yoggsaron              = {  82555,  373273, 1 }, -- After conjuring Shadowy Apparitions, gain a stack of Idol of Yogg-Saron. At $s1 stacks, you summon a Thing from Beyond that casts Void Spike at nearby enemies for $s2 sec.  Void Spike
+    idol_of_yoggsaron              = {  82555,  373273, 1 }, -- After conjuring Shadowy Apparitions, gain a stack of Idol of Yogg-Saron. At $s3 stacks, you summon a Thing from Beyond that casts Void Spike at nearby enemies for $s4 sec.  Void Spike Hurls a bolt of dark magic, dealing $s$s7 Shadow damage and $s$s8 Shadow damage to all enemies within $s9 yards of the target. Damage reduced beyond $s10 targets
     idol_of_yshaarj                = {  82553,  373310, 1 }, -- Your damaging spells have a chance to grant Call of the Void, increasing your haste by $s1% for $s2 sec. When Call of the Void ends you are afflicted with Overburdened Mind, reducing your haste by $s3% for $s4 sec
     inescapable_torment            = {  82644,  373427, 1 }, -- Mind Blast and Shadow Word: Death cause your Mindbender or Shadowfiend to teleport behind your target, slashing up to $s2 nearby enemies for $s$s3 Shadow damage and extending its duration by $s4 sec
     insidious_ire                  = {  82560,  373212, 2 }, -- While you have Shadow Word: Pain, Devouring Plague, and Vampiric Touch active on the same target, your Mind Blast, Void Torrent, and Void Volley deal $s1% more damage
@@ -249,8 +281,8 @@ spec:RegisterTalents( {
     psychic_horror                 = {  82652,   64044, 1 }, -- Terrifies the target in place, stunning them for $s1 sec
     psychic_link                   = {  82670,  199484, 1 }, -- Your direct damage spells inflict $s1% of their damage on all other targets afflicted by your Vampiric Touch within $s2 yards. Does not apply to damage from Shadowy Apparitions, Shadow Word: Pain, and Vampiric Touch
     screams_of_the_void            = {  82649,  375767, 2 }, -- Devouring Plague causes your Shadow Word: Pain and Vampiric Touch to deal damage $s1% faster on all targets for $s2 sec
-    shadow_crash_ground            = { 108007,  205385, 1 }, -- Aim a bolt of slow-moving Shadow energy at the destination, dealing 10,237 Shadow damage to all enemies within 8 yds. Generates 6 Insanity. This spell is cast at a selected location.
-    shadow_crash_targeted          = { 108007,  457042, 1 }, -- Hurl a bolt of slow-moving Shadow energy at your target, dealing 10,237 Shadow damage to all enemies within 8 yds. Generates 6 Insanity. This spell is cast at your target.
+    shadow_crash_ground            = { 108007,  205385, 1 }, -- Aim a bolt of slow-moving Shadow energy at the destination, dealing $s$s2 Shadow damage to all enemies within $s3 yds and applying Vampiric Touch to up to $s4 of them. Generates $s5 Insanity. This spell is cast at a selected location
+    shadow_crash_targeted          = { 108007,  457042, 1 }, -- Hurl a bolt of slow-moving Shadow energy at your target, dealing $s$s2 Shadow damage to all enemies within $s3 yds and applying Vampiric Touch to up to $s4 of them. Generates $s5 Insanity. This spell is cast at your target
     shadowy_apparitions            = {  82666,  341491, 1 }, -- Mind Blast, Devouring Plague, and Void Bolt conjure Shadowy Apparitions that float towards all targets afflicted by your Vampiric Touch for $s$s2 Shadow damage
     shadowy_insight                = {  82669,  375888, 1 }, -- Shadow Word: Pain periodic damage has a chance to reset the remaining cooldown on Mind Blast and cause your next Mind Blast to be instant
     shattered_psyche               = {  82658,  391090, 1 }, -- Mind Flay damage increases the critical strike chance of Mind Blast by $s1%, stacking up to $s2 times. Lasts $s3 sec
@@ -260,8 +292,8 @@ spec:RegisterTalents( {
     thought_harvester              = {  82653,  406788, 1 }, -- Mind Blast gains an additional charge
     tormented_spirits              = {  93170,  391284, 1 }, -- Your Shadow Word: Pain damage has a chance to create Shadowy Apparitions that float towards all targets afflicted by your Vampiric Touch. Critical strikes increase the chance by $s1%
     void_eruption                  = {  82657,  228260, 1 }, -- Releases an explosive blast of pure void energy, activating Voidform and causing $s$s2 Shadow damage to all enemies within $s3 yds of your target. During Voidform, this ability is replaced by Void Bolt. Casting Devouring Plague increases the duration of Voidform by $s4 sec
-    void_torrent                   = {  82654,  263165, 1 }, -- Channel a torrent of void energy into the target, dealing $s1 million Shadow damage over $s2 sec. Generates $s3 Insanity over the duration
-    void_volley                    = {  82655, 1240401, 1 }, -- Void Torrent is replaced with Void Volley for $s1 sec after it is cast.  Void Volley
+    void_torrent                   = {  82654,  263165, 1 }, -- Channel a torrent of void energy into the target, dealing $s$s2 Shadow damage over $s3 sec. Generates $s4 Insanity over the duration
+    void_volley                    = {  82655, 1240401, 1 }, -- Void Torrent is replaced with Void Volley for $s2 sec after it is cast.  Void Volley Releases a volley of pure void energy, firing $s5 bolts at your target and $s6 bolt at all enemies within $s7 yards of your target for $s$s8 Shadow damage. Generates $s9 Insanity
     voidtouched                    = { 108147,  407430, 1 }, -- Increases your Devouring Plague damage by $s1% and increases your maximum Insanity by $s2
 
     -- Archon
@@ -306,7 +338,7 @@ spec:RegisterPvpTalents( {
     driven_to_madness              =  106, -- (199259) While Voidform or Dark Ascension is not active, being attacked will reduce the cooldown of Void Eruption and Dark Ascension by $s1 sec
     improved_mass_dispel           = 5636, -- (426438) Reduces the cooldown of Mass Dispel by $s1 sec
     mind_trauma                    =  113, -- (199445) Siphon haste from enemies, stealing $s1% haste per stack of Mind Trauma, stacking up to $s2 times. Fully channeled Mind Flays grant $s3 stack of Mind Trauma and fully channeled Void Torrents grant $s4 stacks of Mind Trauma. Lasts $s5 sec. You can only gain $s6 stacks of Mind Trauma from a single enemy
-    mindgames                      = 5638, -- (375901) Assault an enemy's mind, dealing $s$s3 Shadow damage and briefly reversing their perception of reality. For $s4 sec, the next $s$s5 million damage they deal will heal their target, and the next $s6 million healing they deal will damage their target. Generates $s7 Insanity
+    mindgames                      = 5638, -- (375901) Assault an enemy's mind, dealing $s$s2 Shadow damage and briefly reversing their perception of reality. For $s3 sec, the next $s4 damage they deal will heal their target, and the next $s5 healing they deal will damage their target. Generates $s6 Insanity
     phase_shift                    = 5568, -- (408557) Step into the shadows when you cast Fade, avoiding all attacks and spells for $s1 sec. Interrupt effects are not affected by Phase Shift
     psyfiend                       =  763, -- (211522) Summons a Psyfiend with $s1 health for $s2 sec beside you to attack the target at range with Psyflay.  Psyflay Deals up to $s5% of the target's total health in Shadow damage every $s6 sec. Also slows their movement speed by $s7% and reduces healing received by $s8%
     thoughtsteal                   = 5381, -- (316262) Peer into the mind of the enemy, attempting to steal a known spell. If stolen, the victim cannot cast that spell for $s1 sec. Can only be used on Humanoids with mana. If you're unable to find a spell to steal, the cooldown of Thoughtsteal is reset
@@ -602,6 +634,7 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     power_surge = {
+        id = 453113,
         duration = 10,
         tick_time = 5,
         max_stack = 1
@@ -736,6 +769,11 @@ spec:RegisterAuras( {
         id = 423846,
         duration = 3600,
         max_stack = 1
+    },
+    sustained_potency = {
+        id = 454002,
+        duration =  60,
+        max_stack = 6
     },
     -- Taking Shadow damage every $t1 sec.
     -- https://wowhead.com/beta/spell=363656
@@ -984,6 +1022,10 @@ spec:RegisterStateExpr( "tww3_archon_4pc_helper_stacks", function()
     return PowerSurgeDPs
 end )
 
+spec:RegisterStateExpr( "tww3_archon_halo_extensions", function()
+    return floor( PowerSurgeDPs / 2 )
+end )
+
 spec:RegisterStateTable( "priest", setmetatable( {},{
     __index = function( t, k )
         if k == "self_power_infusion" then return true
@@ -998,6 +1040,7 @@ local ExpireVoidform = setfenv( function()
 end, state )
 
 local PowerSurge = setfenv( function()
+    if Hekili.ActiveDebug then Hekili:Debug( "Running local spec function - PowerSurge" ) end
     class.abilities.halo.handler()
 end, state )
 
@@ -1016,9 +1059,10 @@ spec:RegisterGear( {
             tww3_archon_4pc_helper = {
                 -- id = 999999, -- dummy ID
                 duration = spec.auras.power_surge.duration,
-                max_stack = 6, -- 3 extensions max * 2 casts per extension
+                max_stack = 4, -- 3 extensions max * 2 casts per extension
                 generate = function( t )
                     if tww3_archon_4pc_helper_stacks > 0 and state.buff.power_surge.up then
+                        local power_surge_expiry = state.buff.power_surge.expires
                         t.name = "tww3_archon_4pc_helper"
                         t.count = tww3_archon_4pc_helper_stacks
                         t.expires = power_surge_expiry
@@ -1098,6 +1142,34 @@ end )
 spec:RegisterHook( "reset_precast", function ()
     tww3_archon_4pc_helper_stacks = nil
 
+    -- Debug: Track fiend cooldown states for desync troubleshooting
+    if Hekili.ActiveDebug then
+        local shadowfiendCd = GetSpellCooldown( 34433 )  -- Shadowfiend
+        local mindbenderCd = GetSpellCooldown( 200174 )  -- Mindbender
+        local voidwraithCd = GetSpellCooldown( 451234 )  -- Voidwraith
+
+        Hekili:Debug( "Shadowfiend Cooldown - (34433): start=%.2f, duration=%.2f, remains=%.2f",
+            shadowfiendCd.startTime or 0, shadowfiendCd.duration or 0,
+            shadowfiendCd.startTime > 0 and (shadowfiendCd.startTime + shadowfiendCd.duration - GetTime()) or 0 )
+        Hekili:Debug( "Mindbender Cooldown - (200174): start=%.2f, duration=%.2f, remains=%.2f",
+            mindbenderCd.startTime or 0, mindbenderCd.duration or 0,
+            mindbenderCd.startTime > 0 and (mindbenderCd.startTime + mindbenderCd.duration - GetTime()) or 0 )
+        Hekili:Debug( "Voidwraith Cooldown - (451234): start=%.2f, duration=%.2f, remains=%.2f",
+            voidwraithCd.startTime or 0, voidwraithCd.duration or 0,
+            voidwraithCd.startTime > 0 and (voidwraithCd.startTime + voidwraithCd.duration - GetTime()) or 0 )
+
+        Hekili:Debug( "Addon sees: Remaining cooldowns -  shadowfiend=%.2f, mindbender=%.2f, fiend=%.2f",
+            cooldown.shadowfiend.remains, cooldown.mindbender.remains, cooldown.fiend.remains )
+
+        Hekili:Debug( "Fiend Debug - Active talents: mindbender=%s, voidwraith=%s",
+            talent.mindbender.enabled and "true" or "false", talent.voidwraith.enabled and "true" or "false" )
+
+        Hekili:Debug( "Fiend Debug - Ability data: spec.abilities.mindbender.id=%s, class.abilities.mindbender.id=%s, class.abilities.mindbender.cooldown=%s",
+            spec.abilities.mindbender and spec.abilities.mindbender.id or "nil",
+            class.abilities.mindbender and class.abilities.mindbender.id or "nil",
+            class.abilities.mindbender and class.abilities.mindbender.cooldown or "nil" )
+    end
+
     if buff.voidform.up or time > 0 then
         applyBuff( "shadowform" )
     end
@@ -1136,29 +1208,35 @@ spec:RegisterHook( "reset_precast", function ()
 
     rift_extensions = nil
 
-    if talent.power_surge.enabled and query_time - action.halo.lastCast < 10 then
-        applyBuff( "power_surge", ( 10 + 5 * floor( tww3_archon_4pc_helper_stacks / 2 ) ) - ( query_time - action.halo.lastCast ) )
-        if buff.power_surge.remains > 5 then
-            state:QueueAuraEvent( "power_surge", PowerSurge, buff.power_surge.expires - 5, "TICK" )
+    if buff.power_surge.up then
+        local tick, expires = buff.power_surge.applied, buff.power_surge.expires
+        local final_tick = ( 2 + tww3_archon_halo_extensions )
+        for i = 1, final_tick do
+            tick = tick + 5
+            if tick > query_time and tick <= expires then
+                state:QueueAuraEvent( "create_additional_halo", PowerSurge, tick, "AURA_PERIODIC" )
+            end
         end
-        state:QueueAuraExpiration( "power_surge", PowerSurge, buff.power_surge.expires )
     end
 
-
+    local vwRemains = cooldown.voidwraith.true_remains
+    if vwRemains > cooldown.shadowfiend.remains then
+        setCooldown( "shadowfiend", vwRemains )
+    end
 end )
 
 spec:RegisterHook( "TALENTS_UPDATED", function()
     talent.shadow_crash = talent.shadow_crash_targeted.enabled and talent.shadow_crash_targeted or talent.shadow_crash_ground
 
     -- For ability/cooldown, Mindbender takes precedent.
-    local sf = talent.mindbender.enabled and "mindbender_actual" or talent.voidwraith.enabled and "voidwraith" or "shadowfiend"
+    local sf = talent.mindbender.enabled and "mindbender_actual" or talent.voidwraith.enabled and "voidwraith" or "shadowfiend_actual"
 
-    class.abilities.shadowfiend = class.abilities.shadowfiend_actual
+    class.abilities.shadowfiend = class.abilities[ sf ]
     class.abilities.mindbender = class.abilities[ sf ]
 
-    rawset( cooldown, "shadowfiend", cooldown.shadowfiend_actual )
+    rawset( cooldown, "shadowfiend", cooldown[ sf ] )
     rawset( cooldown, "mindbender", cooldown[ sf ] )
-    rawset( cooldown, "fiend", cooldown.mindbender )
+    rawset( cooldown, "fiend", cooldown[ sf ] )
 
     -- For totem/pet/buff, Voidwraith takes precedent.
     sf = talent.voidwraith.enabled and "voidwraith" or talent.mindbender.enabled and "mindbender" or "shadowfiend"
@@ -1185,10 +1263,10 @@ local InescapableTorment = setfenv( function ()
 end, state )
 
 local TWW3ArchonTrigger = setfenv( function()
-    if tww3_archon_4pc_helper_stacks >= 6 then
+    if tww3_archon_4pc_helper_stacks >= 4 then
         return
     else
-        tww3_archon_4pc_helper_stacks = min( 6, tww3_archon_4pc_helper_stacks + 1 )
+        tww3_archon_4pc_helper_stacks = min( 4, tww3_archon_4pc_helper_stacks + 1 )
         if tww3_archon_4pc_helper_stacks % 2 == 0 then
             buff.power_surge.expires = buff.power_surge.expires + 5
         end
@@ -1447,7 +1525,7 @@ spec:RegisterAbilities( {
     halo = {
         id = 120644,
         cast = 1.5,
-        cooldown = 40,
+        cooldown = 60,
         gcd = "spell",
         school = "shadow",
 
@@ -1458,8 +1536,28 @@ spec:RegisterAbilities( {
         startsCombat = true,
 
         handler = function ()
-            gain( 10, "insanity" )
-            if talent.power_surge.enabled then applyBuff( "power_surge" ) end
+            if talent.power_surge.enabled then
+                if buff.power_surge.down then
+                    -- Don't repeatedly run these during "additional Halos", only run during initial cast
+                    gain( 10, "insanity" )
+                    applyBuff( "power_surge", nil, 10 )
+                    for i = 5, 10, 5 do
+                        -- Queue the additional Halos, one every 5 seconds until expiry
+                        -- Further halos beyond base duration from TWW3 set will be added during reset_precast
+                        state:QueueAuraEvent( "create_additional_halo", PowerSurge, query_time + i, "AURA_PERIODIC" )
+                    end
+                end
+                if talent.manifested_power.enabled then addStack( "mind_flay_insanity" ) end
+                if talent.sustained_potency.enabled then
+                    if buff.voidform.up then
+                        buff.voidform.expires = buff.voidform.expires + 1
+                    else
+                        addStack( "sustained_potency" )
+                    end
+                end
+            else
+                gain( 10, "insanity" )
+            end
         end,
     },
 
@@ -2112,7 +2210,7 @@ spec:RegisterAbilities( {
         talent = "shadow_crash",
         startsCombat = true,
 
-        velocity = 2,
+        flightTime = 1.5,
 
         cycle = "vampiric_touch",
 
@@ -2123,6 +2221,11 @@ spec:RegisterAbilities( {
                 applyDebuff( "target", "shadow_word_pain" )
                 active_dot.shadow_word_pain = min( active_enemies, active_dot.shadow_word_pain + 5 )
             end
+        end,
+
+        readyTime = function()
+            local holdCount = settings.hold_crash
+            if holdCount > 0 and active_enemies < holdCount then return action.shadow_crash.full_recharge_time end
         end,
 
         copy = { 205385, 457042 }
@@ -2362,7 +2465,7 @@ spec:RegisterAbilities( {
                 spend( spec.abilities.void_bolt.spend, spec.abilities.void_bolt.spendType )
                 applyBuff( "power_infusion", buff.power_infusion.remains + 5 )
             end
-            applyBuff( "voidform" )
+            applyBuff( "voidform", nil, ( 20 + ( buff.sustained_potency.stack ) ) )
             if talent.ancient_madness.enabled then applyBuff( "ancient_madness", nil, 20 ) end
         end,
     },
@@ -2515,4 +2618,14 @@ spec:RegisterSetting( "sw_death_protection", 50, {
     width = "full"
 } )
 
-spec:RegisterPack( "Shadow", 20250805.1, [[Hekili:T3ZFZTTnY(zXtNtrQjwwIYo1jplDtVM2PntBVmN71(hV5zkisijoMIKh)Hv1nE0N93UaGKaGauuoYj5EZBMmowIGlwS7I9xyX67gF3VD3T(KC6D)QZiNRgD9ORg6mzSZLFZD3MVlHE3TjeV7jRGFjISb(5TRj(XBXVExymXhF9S4Iup4rRZZtYE7fxSkiFDXIHEXBUilytrijpioYlLSmh)S3flcJxCr(A6ws6wyObrx8TE4q(qAqCAq(UFoilp7cF6ssry(fjPb0SC3m28oebWD3UOiim)NIUBHbCF0Rh)67ULuKVoofq3GnFhGzb((u(WPzW7F(57N)BRP7N)hKu4hmKy)8BPKSy4)NS)9i8oF01Np6Q3UF(peKMLVF(3(HFE)73)(2FxNY39YZh7aVlo)Wp3f5v(GjN7Wb6FUFEskfOslia0)DYMKG0apa4XfER)V2p3piJSieMOFkAfnkiUiB)8FHer2p)VrYZPP72pVikpiC)8GC6g4NWZjE5fKWq4rbBscPBOr5uFPz(syM)ha5mofGlX3po68SeQxWsCI3ee5VmKS7ISKG7HNheLrIa(X(5lkwUC)CV1uV7ZEv5I6FMG0(AGpEca8L4Yki6bsyG)(5P0L0uAKhntAyJERnimAYWXLKM39bycJJ8dqjJ9ZdJxHOyEmGMKCV17NJscYVkc1IKK40CKUIYmdxgdYLU(0habu3nmIw5B4CUZ1WB8B)XFiX7U72qu0JTLGl9b)6VY2IqysOGSEqiUEU7wAeYC8V7VDxoi(HdP(BUnobgjnV(1EGKgGpf)TWc4)wscZyFk1LVVADCOFq0kxyFs2AeMtoAy2hPyayI3gn8H4aFxAArco2HP0neGBUF(nt3pFLN)WneGe)1OO(8EavLalQCT3rm17N)4JsW1NKEVljZJgLHdQirgaApSccd4arEAajWu8dvJPgkjz78wh45ggeDVYZvxCLqqzTDjBGNTFEjXzOcDT8PO8mdkGeYgyriZisGzXf(Exp)mKpCPgFWdurrbGZzepqDPr0nG42(5ZyIqz5WU4CuSPIt5bBjD5FWfLW4YzI5JetXP5kTPP8DtlIS(Q4chEx4lH5m6Ekt0LlVkbjH8fOmpnFDkL47UnfGX2uss2D3wKrDJxU0fKkuWzBJVE5lZoxesYuzMMFFPrd0RPO(sblPI5IAHeWdLUqbNZuLDAoz9z)R1PmoumJJncZMI9do4Yqibwb2bMufiyYlOPPKiWmwcnmeKUqdQ2i9ghCnDh3)wj0dYCJyiktK2WBomlhmGl2DysVchbJOfPKq3SDrWYdLPxta1CP2rsRVqnI2xGvjXBPPUzfi2uYszpaiEPXjWw90GL1C7QTUcHA3XU4OZS8uNYNoOuuqF3TMkmlQgrM4LJKWodQ6gysHaNacgobHb)4m3KGW4CyZ6Q152jFwg(H4YwxDse6GOLfznwAJp0st844Sm2mTeri3ALRWw1rM0tXx9ROK0vadXNMMbcFWAZ9E6UwuVy9fAHcGt)RTOMmlz3gqRacTT0f2LcTtCk3djbPuk6or5oiCGtETjIdQ4hfDoGeOnsVQ6iBgr71nDwiW6xJeDDvd(Kh7hwiu62jAX4r1snDCQ63Qa2yhoe)cImAfBrtxhyhvV2F9xpQvnH1(dP(m5fsBGFsL84znzMWweMxp8nVA7DGDzFJLDzGF1)BQV7QqIFabm)L5UG4Vc3H7co6h7bblyAR3PxBLG90oBSHlJgu6Rigt)xfbjju)HwmUvVXOj)Qt6pfe8UqgbUW1w9885LW(8tgkLNqRdyWRzCVybxHDlTVB0v2dhdudFY)ROEL645Uf)qTZ(qCqUpKN90IHBKmyLHAqgau3eGgeGJ)jfm3yvxTbFNYhMhSHcED66hqfCZRBFA1Dv5WtBFwoeqsOFmSXsKucyslWyUF5(5xZIBummqOHNxgE4vddICxY8KHX7nnczDSd4lIkp6emJkn5vpqBHXsItAqcFj8B)9393zz1arwEgcyjHOa8TilifNRf01KhcIbbxmFt4JyMXWhXKpZKPIW6oZfuoAWxNor(AUCoVvA6a2UcEGRPeul1dOonIVF2qmZsOkQR40etp(MkJR6p1lUGfCcJBD0yLS4xlbt3kp2asr)twgwAlXh6U41jQExeABjTapzrrzvjrfGYs4TCjjjHbaYZuQvLJVg5sIRNEBCQpMVH8G8cF6bsSunpPYQoJYxLhJk)HR(6NM6h04kpaRH5JhUMaBjaD14mkYLZN3hgKnmlyvee(hyZmFn1nbZD8ojFhLgCDYRaZz46vK6HrmX8AoOw8MpzfOvtTtBlIppp8iiCohnHZPMWzs1zk1kPRs5BQlpPTiAPyE1IIHoatWMPDyQ7PBxHPWVbf)km4YwhbxtdCcOYI59npnGIjYevXHjuJLYSmDapEKS6isQhjIwMvlnfrJ1DfRwtuLVE6(EvNq2(ndzEQiEpu(00l6if(szIHLYJujMuNVssymdrTRY000GUdQQZS2q0yD1MkoGxJxBxhKLaFpqR5Gitn55NDqNLQ28vduZwunrTqheCQMjo3yGSOHS5WkhTn5ED5RCO8vl5KUbBuwM4B925fcIxmxzZyjdsHE202BvwVot5P6MzlhsNOXNzjYfnNk)r4D2pV8ajlHn37YKcaAXfnpZo4BHHuXxYxJNR32GWW9Zdbogaf4ZHuwUVhdUKKrXd4cpqTcHJRiFuqGWZ5ksCwEGagEoGGNejjGu2(5FB83BYSUrbz1f2)mdae)mC3p)74o)GZmsl3zyfXEghz2XoXWm(Nl1vvHClOmmJUCzGxalR4CFTBaXu6sq51A85r4EfnNAm7HgxSfprgdIThiU4EMdl(qPtAqlAUMOK7h1CNDOiGz5Mr2jq2)3QVE2q)NswY6a6DDn2TecGIT8mjU9zdbLvAVGMMrtVhKum5V2Npu8kjuejGUlls3zYZOViqrmVoz5yYEqD)MC2snOLs8ZK2LBi7NVg2Lp9fLfeY2TBhUnE7AkXNxvi4PtnD8OrVE0fm4DEj8EXSpGFgR5b(xCZfKzv6y6mKFZLox(MlkjwVy2Vl(no0Web0vqn5nJhp6nxGu4ZROWVy27GpdQHl)coCffGbOQFiOBDnbdp3h2a5LJQwjlXYpy(U4c4NGt1Dhh6mHAOOstMR9SkDXcYaNeOTgoOE02e3mQPKPlrOO0K7FxQLU)ZAxrn4WR7I4OISH5B364EzINvD7AY575hCNTSAZCDuvq(xiybWaUAc)8xq)NP4jvjZIrlElzLrtsSWQSgbfZZe4IugJNdCAYd8AQbc)cR3gcAJK7ShcJGi0MpYxYJJlT3w6SuZtD3GVWLKXei4TLGjy)HLyApPeHZFI6PEYgHaWBQwTnCITLr0t9m85tsjJZGdRoAU2hebuFsccnmaKnu5sdrD6BPit4RFtvsG3AKscZ9uMpLciAUGsAEwsDPWyA5uLLl4MlL2hXWpE1jb0s1d9r9z1lstbzw5WTmkCkeOr9f7N)9cicdmc(OFbMM1kcA8soa3p)VXRQJsO4bFcTkRQw5PiC(zw87yfSWS0RK22NkZU6D1lGIbMYkqPuG6(dtgOBONcm4ePOLIgfxGba9tvvaighGhJ)(ogEYKp(qizvbD4)hIflaeMgz)Y1PBcBzUxU6HcQim4x2NNtSZz)2vS95sRKmx6oQYC9YMd0palkZCQpyJKecqw5fo3II9VUmpjdecf8m6CSH0xv9yMs0tLCfftYbjhZJgzhwPpgKSkhdg7moiUGd4ptipi3S1XfH(1rG(hXP(VfFpc6FcA9loFn(A(KnKvOojUKgt2CbneFNV5Q)ISehc881dt8Y5M7)MR4blIcyMIw8WPWvsiq)SeM2uwRu(ZAQhAnfuqWGwo8j7HdINPc31h7NY6KsLrMo5qUQPkNUSDOi23znOJcwIsO0wEkQ3NBplfmbEHPhzdxOERsTb8usegJsk4V1iNdS3wtM7dm)ZjScHwSDInSmMh0ChMB3fzuarWYzhItcarGs7DptKTNeHvWw7GWIQ7WvQ7qxun4yIrVaRaWjsoXqYjT5dMIhrAdsEwR8icFHUGMv(WRhGFPOKmFWh1M0E(gBPaXLSlR8G6uo3AMcnRztYcltIdNyMusoEtcyr1aFzA8Ms7RyP(JZQPmgO4VhZnKdMCvtg0unct)tQxbOCN79sLRhQ5jvjUkfMOqOwXrAW3OOiAy5UbfNP3WeDTyfU06kGYy2elRW2xRjGj5g2YcqleePnZBmXAObo25f0anESWZ2nm)AxuWUniVDBawbbVTTCLOtXBNnzmZLLB0PPlPEO7bShk7vK6RzEbPt91cLrB5(oWKDumlx15Yjn47)tqRkgd7sHOmedlW5FGfLqq(W2IXUQiSBNgyGZZz890d1cHv9Q9cPflUYhnCSjtk4AHxj4SK5VMYtx)Us99SVjK5rFEPJ8OdmG6WHWwAkUrcPn4sNz4yb7Caq17O7jEKc1zbJUkoIL9hppAzgZXCa4d))dvu2TRdqZuRkiy1BtrdTWsjytXgwg1boFBX9DCIzT6I7nCxC7Ding6sx9FMcxEsvMmBkzWYKE7HyzzxVYJ0dUQClv(2TtCjPERbhBUmXZDnne2fwvo9LPnHnw5KHzBZu8d0uiaeUOx5QPTa5K1LAILgaskPif0ny5D3EMPQfvzqB2qXYnKQvBzT4aiNXEyBhodVQrmY2S(Zp43UMuhd5Hr72FmOBcwmHLdQiSPQ)k1gOVKIR7bQ)lO6O9wHkjJO4LbeTcHgUXAPLDyAy4eTfvgdjEiomKUZ(8(7SNlnT8qOOcTXzXQoMwzpqayvAWvTUPONQHCXTWHDneDf1IwBgrT5ijBIBn4s2wx8Uh2btKvJ1TsNqJDD)Yp8tICBbmO4yFeVZZJJmwHaA(qko202WJ23ZCOZIUdhjRA8m1(nY0KiMrMxK7lptwm0LgX9GuGTIBOAcmeiiop0H7OvuJf4qDiXD)O7fNNlHzARN9ijCK1NOob1bnj2V3mWPkFdTvMaMcwLBmtj5o6mfzH7PgXnfP72cv2cBVP7Ths(OPwOpCsk5aNmTiHfcBOuctWI8ajiKZizAvqreBbCv789bd(4mJ2NtPemLnnZ8NLmHArdVQFYhJwDcsLSNhBuD7hvIe4q7DIfJmzwmQ4u5T21v3HAA3zCbwiGgTAuZAWXPhjs3IUOfh2m6IexpF75TSf3trevpoHAeLDMNUvvbdQ6q7O6W33MVWTu6l)iIGi9Lnd7RQPhmFvcDPjPXE84Y)TTSVfLk(bWNj8Kvr78I8gKJpLDDnW8HIzG0nnjzZ0BWFoBV4AQJN4cO7LfAW(5qOb(dlN1SHOsLxo9c90N9kmXztzqeWiqf0YxfSC6zcpsLMvGr0R536cHK5MNgSAfWWaqI1ped)WH3xWZsxtsYI9394JvmXhcIOUGRTPvFhsPh0DBEgRC9P88ljNqf0fp2RIE8fbHePelReu2a(lZspqnKymEBElBkbqshAkZMKsQIRVaxvih8wGSbW3up3bZV9KRmO4dZBRnN9oagE4tPOxZJaWck8KCZsnEc0KC2SPoTecbwHdSFREeRcJxqcf1wRJJSwljHmnTwoNO6ytuLiGKtqPNte0nQTNN0Oq(4jKJ77e3Ejt1Cwczll8mU0HOc9uoHll3rd(TJ15eLFsBcSTrf0Z4y3jg4sqK)p2IWwchpYfrBbo(CSqy4UUfWdonCZ3hXSyKCG5(NFUtY6UnD(tnrOFeu1YTzq8(xfSG60m)W9gHLTnwbHYs8gAubNmu1aZ6fgCiZZJGCjVn8kyHTIVwrYWMMs1JgYWP6X25ceUCs6NE8uwVrlNLeysANBu8deJu4yeS)k80YD()dHnqocGbUd)A1Tc7t1AuZ9SsdZLjzAkxluT9ZQbusaY5YCpqtzNpvvFq6UB3ssJarzyJgRzffSH3zCyi3lkpW3xGLJlBz6JU8JP7KuKhVHGDni03yiqXSH7F)pZ4)yV557IJGjJ94xCWw8b)kO9co98Wdhgy)X)5GN28HPdU7thm6pMzR6eo66ekEH65C)7nWwqnJhhl5Bur6y2PVJ(xYvQ)c9SMoB8R7zpp6)frQxVz6OHJlxwhhiUqbedflZLqWkXB5AwlsrLRqafcFI5yklZ7QEKVaJ3Lpo2MNLaXwz0y7RcRuGCYcsg9TarfluIU5pSfoq1L174ydt0KDkVdv8BXgBVn6JeeXMxL4I2vDRXGueopbtq5vc7jaAE3byxByE9qoTa)JaRrLIWMbmO02WC1HD6NKpIvWAK00gUxoGtjG)iWx0CwBOR45NqWE8iRLlaPb4BFKDCQAC9jnmjMgZZk4Ra8LwaStxuPyzqky(jycSXE7aOTPwX4qoTa)JaRBtDI1HD6NKpIvGzvlggWPeWFe4RrLlnF(jeShpY2vDwTnYoovhwPI5X8Sc(phUrImq0jXFI5Fic)RvHm69hwizXldWAh9R(kicWprna39VhNTBRa93HGgj5B2GHBI3biGdSW)nKRhjg87ahxFlgozzFTfxBL5IUYR3xo9ctnLcZJSUftuNIALUrH5xRmjY8mDl47L9CHxXkb3P9RTY10wXJpA4PcnYgFMK(oJpNPzX4tqHa5hyz71GEsiCdX3ztDgn4yOfoMPfMSBwJCnToz8zgPf6Azn(evAHvvns0cdBL7mTqPrq8kXwHPJFvCYuwRpOlWqPXp8uHb)uMRFBNJ61vBSdvqz0rbKMnYbJac3MBcyLnzlbgv2mPD3qIiUleTsAJOHAhHORZGHMqQzWJzGevDG19Bp(5zuE293m9YE9vkd4zaPF0JpQpmNb9oRzXq3Mcl(XjGZRoSg7yJBixqa4B2VCoB26hE8XZ4WWYH7d7pkFztLjG(kC2yhaIifAGKgBCXWBe1YFLQuJYz0HIjGqIqLcR5tB)nL7aYQVy)2lZQBMkY(ZxpPNPJw(XhTvEyfj9mwjydQops50Ovow5ofDpZxMVkm7YENz(4l7XTCjF04sugZNpljM(kEFEguN0qsAMJme0AGZLQva)pKSadaSTjRUHBaBc3p)l)UtH(ktBlKYPgXjH91lSNzJK4yn76h9o02moBLQxJBi97lVMGHo9sxvLfzxnrOAXeR2XeBNLmNX3zRjb)xL1f2oK1mXPOVyu9eDkahtqPz9LbMgUMXxpfTcWUINIkttt)OGm2SmYE51FD)wfy7z6PcJcdgmBQ(2dWQq1xPsZ66kOfden2mEU1f2GBUSxZJeF24RE8XMF9nJh1yWSZqz2XmJOuGfD5TqeBmX8wryxPwn1aDeSElBFps2k3bmHq(367lvjOs)LYGDqgBPbPLI07zxKHmH5Hy(O4s)Id9VMgaw8zXaIFIPvw32iVMJA0HgE8r233WQ(GgEXnb9IJny52MdyNN5fOYGVz6Kr6OwvdPH54OrCPxdK2k2zEwVwFsR7XmpJZQSgxX0w13yEoN2R0Nw1EbZZ8uxAn(K3lu()BAmDKqnKRw5)(hP3heg8)GLjXcwHrSkoc)JneEJNWQyCOA8FCzfpuyjKLGGYyhKLsqHNk)YBkaz7rvzlyuVMn9fJAGQKPC4yztmni6H47bhC(tGGgrAhL7SG9Jp2e)k98SzxSXa9ZowvPDSLnGg2uXcs20MTlhX2S907pqnns8KjBAgfanUasRhT)LJgGXkBZEZXkym(QbmcWtQrO8S1zF0jQLPePzkn61xV2p7zUNAmdc1vQA65RpWTIgFxVZA0nnAK9bNQSRe0SYuRbQwq7963sRszkWRpZCW6icC2bsCGXepmRkXdxkK50VlG9mDbd(iKiofTghDMVYsJTHQ7S8Nfg8HzKONLmF97orxmw17uWGApbo1DNgDQSQS6xiKzPGh0Rywqv4JpwwewZM23z059V6RLWcw)LzWlR)Yg3jJbN3yj(1odgmqN0yo)tI05NjXI(e1MxAW60AbniZRUePVz63WovRsS8tzz1wJPYL)7uuDUez7ZqD0AgXqAzDz1krY(ISozTUgQQ53kFKuRG2PoJ6Pv5SYzmtCfC6qEDSgBVwEZ477TMJhdh6WKgOJ5nHyQ4H3gZHHj3(MG6IBMySXxbEqzo3dnvrnqp3OFj16DAqMQ1)YuH3wV4PxffqWCpaBcD7SsLUOZ7uR43qp3bEHJMXiDoqQwKSFijLWu4RdpbBgdcq4R7ZCVPPbpPX9dXuI(T36DQoci1)GT(vv(pzSbS0C)CvbLB8CgA7wPmBQCBWr4Pc10LDV6OUQKLulm8QwFJ6bHv32Ba(FJkRE64xlX9BT92in)Daj5Idp1(6sdkSo5ZeDwpwWQZStPt20tDy64TXtrSwn1)52oxSi0cZIjAzdbLUxf)QmEJ9GKNe7TfhwHyT712MSAUB)pYG9MmO2Z4sAZntNylCeJBvQ(A1askVBT27bm3CjFmknczfrZNAldXSWHq1IjMHTt2(a66CgELuaEMn2GLDHT481cwNPQAWH4Ea)X4U6bVs((No1y7S5vgUkQthRt07q)sXmfMFL6vuEP1dvUz6vweI6jBfqRVPmZUgAtohatcpVew6HjgDfIDRETQh2yltX6rH)838rS55a)Oipcj82lca2k8ZtVZWqughQciKAKk9m5YOdF)S5wNI85gk8Yf8WOznvO72)0XISpOteRLENAVPO84J2cUWiJP2D5du8g1IM)hst6W8Es7oHEMbduSgIIAcMKsAMfTQ1owPQnTnnCh2GFl(VPzQ2GPtP2kHwEOAmXLP7wPNFmJRr)lI21X7LoXgbo)LDh7ODnRTOj1qnCmDYO6qYA04o6zUzDmt5q7pMadB0ZdUXzu9cwQ5C0R5iNC1tDoTLu2En622D3SlRZyGtGj3vu9ZPSnB8k9EOHCftvUn1uk7(K1dmoOKLbjiNrnr0NA3DyVCBQ4PYTBkHDcrWNeo1A3v0gUDS9SIwrnmvzYPfTmF)VuQWUL(Z4pG2CnEgVU7sBQQDfU3bV6)IQaBQJ0HPiL)JghmihS97FOl5FjChB5Gfh0kQPCn)bGm4OjsgQfEKcHbWwgG1iryKnhPioZPxE0tRL)WDxFi96wSTeyCLTcTRPJHNiU0kdmvvqhkE(lhzTYHo6LoOqg4z(XzUjbHX5UvjExLMBRwfmx(aaV3okASElCgD0y(kkOxagQp(hIFqjCk19E6USg4E7aMbk1)I(RZ2nT64cHsVh4Ol47gxeeSP)A113mNlhzKvBMgzldc9mVP8Xh73n8vUecpWky8ObhKfdliJvuZGN1LQPQ1XXQ4MP89p91JSLwctPrXiiMmQSWLufEgkFp(SkWbgC(3GF(RcjOxoXWRUG4VIYCYLcEPd2IQLcpf76a6Mj6zVdOQHjfG91JKeW9ElQj7zKu(K2NNDQx1NwCN1Tf9Wo(11Sgj0D)Vp]] )
+spec:RegisterSetting( "hold_crash", 0, {
+    name = strformat( "Reserve %s Charge for Target Count", Hekili:GetSpellLinkWithTexture( spec.abilities.shadow_crash.id ) ),
+    desc = strformat( "If set above 0, the addon will not recommend your second charge of %s while there are fewer targets than specified.", Hekili:GetSpellLinkWithTexture( spec.abilities.shadow_crash.id ) ),
+    type = "range",
+    min = 0,
+    max = 15,
+    step = 1,
+    width = "full"
+} )
+
+spec:RegisterPack( "Shadow", 20250823, [[Hekili:T3ZAVnoYr(BXiiCK2XwwpSN1ZalhSzFGD3lzZG4928HdXuuKTSigksgskRrbc63(vv)GSFsrPXENjhoGfESjBwD1vvD9QRU2hg9WV(W9rbvKh(LXdhF9WBgpzWWHxnAYBE4(QT5KhUppi8dbpc)sAWk4N3VmikBd(4Tjzbr4NxMTUieE1YQQ8Y3D5LpgxTC98bHzRUSmE16KGQ4S0WIGfv4FhE58KS5xwTKSjOydm040l)MqCiVVioRiUA7FjUSQ8YiYIG1jvxMxetkR8lPZ7aeapC)81Xjv)u6dZTI7JU6H7dwxTmRaq34vFlGzXrre2WjLW3FXf7N9Rlj7N9pckGFqrI9ZUNeuMb)7K9)mcVlgEZfJN8U9Z(M3)xGxUnn889Zwg8e8zlwddlVGuwgN(i8NjbLlH3rcsA(0rdHp9x3qc(a8XuKF)SVTahy9qgEdmKFi(J7N9BzXrWOZkkiPv7NfUminLKukn0RPdTOSIIppCFcsKOmpgDc(1FHYmdO0sGReNqsr2cjnyEcj6H)8dvaHchsZtUplhgjPQ5ZEkOigFl(BjRH)zrqsj9Vk8zsalZsIGLTFiUyqyo5OHzpyjMbGjBt6GNGLUpPyDoo2bfKvbXPL7ND709ZEmmAWQaG88vitzM3(zvbWIQs7B4t9(z72jb3OGIp4hugsslXbToxgaAVSgc9zarEAQymLMX0aL8YTHlJd9tIt)GY7vxCciOS2UIoWZ2ptqCgOqxfVD(6flOqzrwXkyriZiYHzXhEUFyujYhUsJpecBMiaWzmINi(KuYkyZ0(z3TF2yGhvvehwHIn1CQWGKeF2F4Jsym5m(8fKrWP5ATPr8TfRtD(P4ch(w4HWCM(bcv0LjVkbjU8fO2POAzbjiYFtbaJnfb5LpC)6sIF2If(GuHco7A8nlFz25CyVQkZ0(3lnAGEbmSXcwsnZDvCQaEO0fk4CMQSJ5K1J(FToLzj8zCKvyAk23)GlJkHIfoy7BtvaNjpNuueKckCZjjjG0fQ63fP36GBO74(3AHEqMBifrPI0w(YbLvGPg(UdB6vyiykzDrqIF52uy5HY0GUYqsHBK05h0GO94yvE2gsHF5AeBeSu6laIxrwoSvViErd3UERlxO2FKpo6shVDS4T9fIc67U1uH5q1iYeVAOe2zrvxFBkeyeqWAfimeLv6NhNKvbBwFCzLBYNJHFiUSZvNeHooDX6sJL2OdT04VoRSKotlqeYVr5kSvDOn9uSv)JKGIhbgsePOee(G1M)hiBBr9IZpOfkao9VXHAYY8TRaTci02qM7wk0nXrShscsfK8SIkXoiCGtEJnIdQ4hfDoGeOlsVQ6ixgr96Moley9AqIUUQbVhZIswZv62jAXOHnsnDCQ61Qa2OXmi(fez0j2IMUoWokV2)83mSvnHn(dP(o5fsBGFsT84zMmtylc1Rh2MxT9oWUSV2XUmiQH)njY)XKGO4aW8xP)8GOhXD4(lifzHqyg22698RTIZEANnA4YOfL(kIXK)1648Cs0ahg3A2yyYV6K(tobVlKrGlCJtppFzjSV8KbH8eADawtRkzEXcUc7lSVB1v2dhdKHp5)juVst8C3J)rJZ(qCq(pvvEAXWnugSYqnUeaQFoqdIXXFsbZns1vBW3PQbvXRiGxN(rXeo38M2NwDxvo80cswCsyugSXkyvEmeodmPRdHONE9(z3qJBKpmqOHLbbw4vdIt9xq9KHY7TnczDS9zlIAp64mJAn51VqBHrt3qrCoBj8R)TV7VbrX)3jiYcQeYqHoi621GVfLXf4CnNSm4P4mqWfZmc(kQzm8vu5ZszQiSUl9bLJw81PtKpZLZfTst7t3vWcCTia1s9eQtlikQCaM)euf11mAITxFBTXv93gMTMgCcLBD0yLS4xlbt3kp2csr(indlTL4dDx86evVlcTTKwGtwuuwvs6Aqzj8v(b55jXaYtvQLxqcZwnpWmxsm90BYkIW8nufxToICGel1WtQTQtP815XO2F46hFAQFqJRSaSgunAWYaylbORgNrEUC(8(Y4YbLXpMcH)b2mRws8ZXSCUvY3rPb3K8kWCgUE5PEyivmVHdQfV5jRaTEQh32I4ZZlpcc34JMWnUHWzt1zbXjPRw5BbUviKHwkMxDOyOdWeSz6gM6E62vyY9BqXVclUS1rWzAGJdvAmVV90akMitufhMqnAkZk1b8OHYQJckcdsjISAPPiAKURyUtdAtEy7zgP8uEyEOyPTpCSuulI8blL(ibc0KMYGKmk(PRPuvri36YbWA03qGKr8dHz4Aky11CQOaMJG2n(zBfc2IVrMPjBOQ2fyBo(k(KdLjzj3NTy9WXeFF42WeGXtDYSKMMgLqnmTkwNpQZuERUbqXqoGRIQHPQhtHM7E)i8n7NjoulbSz(9LVgGwg(JFJVcXt)H6eaoKA2q1YGk0xWKK9ZsIXJEc)7ecnR0JaNfkbt2PrLNdUkYDPC0yKDtjq7NXwPjWSVzzCcHEOv550dT6BY(EBgCTlnQSW(Vlj6hPfDMrA5wlRi67yidsgaNRy)TqlsnYnNqXmYIfXHX08vZ8c2aIfKfGALL47tbSOutA3UVtmXw8SsSi2EGiw9ShW6Hs0t)wuUmrjRmQz16qXMsZAIS7z0)TvVWCH(Ns(R6a6jP8ybeAdD5ztC7ZgcIAqfy4CsrjP4dGKInpP(8HIxlHIib0FX6IT28z5lcueZ4szfMggu3Vn3GQLiWZl3hpUCBAwUny)SLWo8PVsuqbB2SzWMSnWheXQQa8mJMoA4W3m8s6A9cXA9v39E8V3p7N4p42ldURw)sNH8BVA8vV9sbH6v39B8FJbnm88UcQjVD0OHV9sK6Ern19v39DWFdQGfpGb34sHD4bGE1LbyqZrWMNWkuTAWIkCHTnBn8tWv3UJdDMqbtlLd8dS6z4hX6zGzUQidu((lKpUU8I)lyBYRam9BZwbk0JQDdxwkukVCWNGBSk9dfJxOlnlOA5CiY)ijbuHP15zGBdC)(XXvcXEQPU1(qKZF3ejfWDjfSh7bYX3J0Kd(dNq)2Qobd4yXDsvGGUuA)tDNjE7LMGyPylqd1KaieG025ILhd4SJQmvT9BobLT1rt2)G2EBtfLvRRu7pCJR28Q)kTdV5S2nUdHV4pplDD5GQnBg7FvEOt)b00nYjO6HAPerGkz8Vg8by)hWYHF(xXOHi45okRAa9scinORCzCp50iOywdb3QlP6kevSeGvqW0XGJvbOFvmXeegXPOFIiFPklt4JMWbBZAOWLmjqgZHqXxaUTfnqGPYIBS3OEg20rWb8Q6vRAGjN16i8uRid2KiyCwIPzSweBqiuLHb5i0W9cRiYf6J603sjdXw)2QlKWLiLeM7P04q4q09Eq1P0HQQwujPqFLlFQRK2hrXViYtGLeGwY3gjrKBExZI0w091bPjJcphc0SQH775qegiA2iAnM08AcA2cga3p7pZQrN46h8DC0NnlPzvntffs0Tfb4msF33ueU0qn0Pim)zwC9yfeXZOrjP9NQWr93Qx(m9BsDJfXg1nu28e0qXg4ztQIAnsA2Amk7FkTmiLgLn6UsivGGjgqfOEFsWJRjd()q8yoGWtrisSo9ZPlZ9YfpwCnHbFypwkrVG(BxtvmiTsk9jBjkZ1RnhyuCjGvvKiWOAqcazLp4chwc(kr(YeozyKLUoL3O6IhST8ObYr5KIGkmnQbBXc9YIKLymycAWbXeCOvWlntkLlZwNe1KMJ)rwr07WVlaDObnxMboEc)tuWQGhrLymjnQS5Csc(nF91)rzjoe4vlhKhwX8p4RVMLrcuaZwkjoCg8Lec0pkPPMYAc5pN53Q1KocUt74ShBjNdUpB9jcLq2oVyMkPANZCDuyU3q1VJYt8cN1voWA2E7odyu5CUHfzdCO6kHsaw6UsYqbe83mYNf9R1e1Epn(pQzkfRxLupTzow3UR0OCbNttp6UCaIaLo8dujvpjclNB2bzev3MnJerv)OvVfRbWNM4HmECax0uCysBqYZATdtTM2djp71tvKqWrMQhHQmApZ1SR4Wa2z)WuN7VkOQIxalIvN8lAoFHwZ5SD1xsMrPYx4etLjQW7ebnwh4HfzRegrbrB6SAl3tkEbsD24GPP3MvlvlTKpscxdAWz(Ou7GHAyTkrBPW74IWkUxZVtfczFfxSxrfuDyQvycfqzmV0IQO(nAYvsoBTynOZPGW85IVgmWXoVG6RXJ5(7UI6Z8810ReY72eJvjY7AlRB6u82ztwZbUyBnPybje9bG(szxFu)m7liDQVwaoAl3VlJ7NEcPsovcF)hbDOeMF)urziYwGZ)en2H4QbTLkdMSAwYbevTW5zmEp9aWqy1SAVuAXIR8HdgzZacUwyv7p9yHwsyh8ZwH2D6tsO(TxjCxh9sb0coa2stWnsiTbx6uZeZPNOeQmh9bjmyT6SGrdLLsZLyyirC2lyMbIG)9PAk7MLXOrPhxhGvOpbnRclL4vRxrpBgGZ3wwnooXSw9J9wMFSEhsJHU0vVxOGONuNPntjd6zY0EGuo21R8k9qOeBPQ2SzIFansvmdu(ljjWUW6RmHizk0XkNImxBMYEIuarzWe9eRMdgKF9jUBYsJbjLcKc6hVOoBrQlui0b(gCPbVAfblTuIwDe2IBFmg8HTHmEW1gre7Y4p70(7AkFSKLgTB6t)UjGrfAoOcrtta1QpKUZGOEW46dl(ruzzkbVEJO1i0aow300JNfJDOTaZPiXtzjjKTUN3FJ(EPPLfVeHRvUmt1D0A7cCaRsdUU1nhEQg0534kQSKpVUdBZyQl)iPtCRXIs3cVijyBhmvwpw)ADdg7((R)WpXZ8fWGYYIq8UQkl9yklKwWJ23ZCOQBOdhYVAumAPrJpJuVj3loLFmGfJODqkWg(DUnhgce6wiw)LPpsSwjlnX)29IbHxHabutCEUdKySS(e1jOjuj((DZWLQ9r0vHNylevMrnLm5OZuKfUNAf3uKUBlazhSDt3CpK8HPwO3)SuelJl1I)LlS1K72NcItymsQwfueXvGxnoHFWGqoZQD6csaMFgZ085iVNTC0GNMw9aKk1EwU)KsFWbtrEwH8w7M6fsnP8uUanuqRwnAyn440JiPBrz0IJBwDvIPNV9Ku2IBQiIQhVqdIspjD)66QcvDODqE437YN4wkMk8q2P0x6mSVUkXWSuX1LIN(ol(8FDd9POuXpa(mna7zbv4aO5pOcFl9Q5Gj)et3OFrE(QP3I)8owSdRONhdO7LgIW(zqicrdeZA5auPYRNEPEsZohtx2ukebmcubT484ftpJ7zQ0ScmcpZN6dHM5xve)4JaddajwrAu8dhEpopRyzqEzw02D7QzIpHv4i4IBr9ZqkD)UBZZ6Tuykl9sYjwbDXJ(POhFPqOrkX0kbLvGFZ00e0ajkJ3LxZ2seK0rQsTjPKx4MlRxnYH12qob4BQhYG9VEY1wu8HjP1LZEhadp8rs4zMVFhOWj5MLwCfGj5Y7MoULqiW6MH(BnJ4XKS5yTgXqJXYATKeY00An(zQYi51Eei5el8CkaDJAZf5gLgklXCmFNy2lPQMlZd2qdtJjDWR5tLJZYX9XHDtOh)mLNsxcSTrf0Z8y3jg4sGNhq6IWvIhpYfrBbo(sSqO4UUfWdonmZ3hXSyLCGz8NDitY6UTDytMi0pcQAz2mcc)xRPb1Pz(H5ncnRB0smMMao0OcozOQbQ1lm4qQNhXvsEBeUMg2k(zRZhyAkvpAilhHhDNlq4Qck(9hpL1B0YjibMK26NM9uGvkCgc2FbERyN)FNBdKHayG7WVwFda)9AnQ5EMWWSizttzAHASFwpabbOIjZ9ePGEQu8UZ0iqpXMGIuSAaF4EA7xkEfEv95i3ReNU7RWc8MUmJqx(X0EgSUkBfSmJO(gdbkwoy)p)xO8)rVdRfXuyYOV(vhSDUWUUHVIrpp8WHb2B0h7FAZhMw4UpDWO)uMT6t6ORti)dAMZ9)Sf2cQz84yjFTksNrpQD0)sMs9xPN907g9gp35t)pYtb7TthoyKyzDCG4sfqmGVmxabRKTHPzDDbQCfcOG7tmdtPzGx1J85y8USXr38SaRGv5rhfHdokOkyEqj5DarfRkIU5pSdoq9fZ84ydt0KDe3xo2nwKU3g9rcIylSwCr7AnAmifHZNHjqC9)obqZ6eeBBdZBgYZlW)eWAuPiSzadkTnmxDyp)tYNWkyjsAAd3fd45eWFc4lAoRn0L)(NrWE8iRJl7Qf47EKDCQmUQSwMeBJ5ff81a(khaECxuP4yqky(ZWe4I92bq7sTI1H88c8pbSUn1joh2Z)K8jScSRAXYaEob8Na(Av5I57Fgb7XJSDvNvBJSJt1HvQyFmVOG)ZHBKideDs8NO(hIW)gviJE)Hfuw2IySqr)d)bicWFNAlV7)zC2UVg0Flc6907jggUjEdHaoW8O3gCZq(G)oWX13HHtkAzU4AtKl6AVEF90lT1asSpYM2jstkQv68i2)mrsKzz6MZ3f9xJZP1B70Enw5mTvSBNL3Y1iB9Ds67S(EQMfRVbfcKFHJTx99KqydX37MoEy)JHwm2oTWMDZgKZ06K13zLwORL16BuPfov1irlSSvUZ0cLM(X58TcthDEw(uABUOlWqPjFCQWGDkZnF94J6ZvBIh1qz4rbeZM2HvaHBZTbmrdvJJrqGRPXzRl9xfKg4pNwTPBTJgQD)JUodwA4S2bpMbsu1b7OmehB)TtVYRNsLaFhq1hUBN(Wg337mZQFMHL)p3VTiEX)KQj)7Fct4hRq)WSiwv(TumGMFTQI1KZ3ZpMo(bdgLrkX68jjMEcEz8pdpcA87gSNwHG(LXPHe652Ihgqj(DRbE2f07etlAmzNNX58MkY0RTrcgn2LGHCTjq17Yjb2Q5aDA2D3iP1hXhwJlx(rQsEkNZhkQbcAC1s0MvU7VuUJzR(H9AVuTUDkpdsF1epBhp9UDUkXS15EwRMS(1NPPCQ4eJvUZI7z)6cwJzx5DM9Ja1Jz9t(41LOm2pJ3GmY5S(coOsYqe4UXYqqRHFlunb(WizfhayBtwtBGb2ISF2x(9mf9vMMSVYjpXiH90loO7gkXXm7fnENXMbh1HtFoBLOxNCi97lVwZIo9srBdQPWXX3Rkc1iM40wiF7SKjr2oBnj4)KSsS2HSMzsf9fdBMONdWrfumRrnWgZnu(6ZrRJSR4jV6200pYjJMLI2RV5R61QaRNT3YTf0V)Dt13ESBxJmHknRRRGwmqySz8cNlS(3ELN5XQF3OR3TZ8X3oAOXGPNdZDhZmIsbo0L3cr0yIzTUYUsTm1aDeSEhBFps2kZ9iUq(3efjvnPOQ6yMra6HHSHexiePzU8uYnpKXgft6Nx4an0aWIpnos8VOAL1TnYQBjJEaXUD0NByvVVH7Gtq3bPdwUzob25XBsMNYGVD6KH6OwDBscXo74INbs7e7SpR3OpPnD(OxWzvwJlFAR7MrVKt716tRAhk6fEQfwJF27sp))TZOosOgWJ66hjFioj(FILAXCAXv8ywAAa72tHHynqngsMSsikSKqtYGi2bzPeu4P2VCtbixVQoJdd9mBRmw1avltnMHLMyAC6tzFaCW5JabnnODuUZc272zIFcppn7towOFUXQATJTSb0YMkA0222SD1WMnBNuNRYqtCD7jdXWw6LvmgMCFSYRhJe5Q)vjmq0wVR62jGTLE2IY0MEjNfGEFq3upRHE65owvPVrk7fE63ZBPHPegIJqvrKHYJo9UeLPH8tw0wZWnyveeS0tTZvd73xWmT4tWXU5D01mcWj1oCEX6Vt6evrQVSib0tVgF9S3OuUB6vEs3Ac26dC9Z4zENz0Iumsm046uPfBwbYnavlXkE9SDNS5xPIPaV(mxsPnG0vYDSMCO7Qto0vCzo97(PNTlsYNGeXNJgKKUWIcPGUbS7IiVicehMXJrlqJFR7mj(yvVRj9Bm48C3II0PYQY2FHqMLciuVsQbvN72jkoV7M2B8Wl6D9xjHf0Mmu)x38qJ7Qt)lmwIF14(97RtASNtrUn9sjw0Vt96hdwNwFiczEnLo)Tt)6RPb(YXYFpl36gmvUSW5gaKiCFgQWANOMubxlr0(IScQDtEfvdETNVQ1w90Xd90QPA58GYVCwDiBDsBqvZyJw2qz78DM5olNb0ed0X(2q8awWfPP)6tqfXMz6C01G7w2tMKP(P(6j7(lPUWKbfQr5lv)DBTLjVAkaNVEaoe6JQUZ5nA9T0(LGp4y4ji8T6LL7d8satUprwJzt4o8lC7kYGtyCvHSDEnU7gt1NKNslAcxiT1tEm3axF3cSECrTDbLUBQCNrI7CcXwFpO(elRLGuVJa1Ddj1ZZSPtibSEJISF6O3iX4BTJhjn)DajzIdNAR(XGcRt(SrN1dxS(OxvAUrEQdthVTEyWnkN(p3o8JdHwywSrlneu6(f6qLXBTT0CsS3w8rfch3RTnznC3EFIXdoPFJZWcAZTtN4kceRBvQFSAmiIRzT72c0TxXgJshZwr08u7Em2fo4QwSXmCvGchqx34bxlftND7myz44kvaAXZtvv1)qCpG)yDxD)ZLVkYtTL(R6oC05wUDYthPt87ql0XoLM1LfuuIP1wDUD61oeM8KTgO1kDUZTMAB(hatclfgoARnwDeIErVDQp2Ax0XzLn8Y3pAC5bb7KLpcj92RPd6k8Zt7uXs4fhQGwK6ToE28ACmBFT9UPJ8XaZ9Xf80WSez0D6F6iEIh0jInsVtD3NC2TZvOfwzmnolFGAXPr08)q6Bl23t62z0ZSyOI2JCuZTKu(YCEGe21Q2MgUdB4Vf)40mzBXeQuNgrlfugtSiZ4kTbM7yA0)IOdU8ZshahhN)YUjU0UM1w0KAPKCMozytOzg9Yfp79VL7uQbJJjarJ2GXTJh2SGL6xlEMJCY1N6C6kFSEgDB9UB2L2SuWjWM7kA(7W78kNR3wvKlaoX2uB5Q73T2IYbLSSibnEOjIEQn8J9YDUKtLBBkH9mIGNeo1Ad30fUDSTXKwrnmrzY5dvKQ)xlvR)4VKTyHpebgG2mnEw7acsBQACf27GDdcEr9nDS05OiLheJZqKb2E9ouFFqa3roodY(TIAkD(bai9pAIKLRhbsHWazfbAnKhoP5i5XBo9QJEAD8)3(BopFDl2ocqU2wH2n3YYB43JP(hrXu0CIAdDwiyh9shuid8SOSs)84KSk)6mURsZDvwd2R0aG37gfTMk2XdpAm)rcOxagAePOeKcGLH)hiBlnW92bmfuL5Bz3lSs)nK56SDBRoMqO03bo6c(UXebbB6VrD9D34RgALvBNg5ktcE23uUBxVUHVYve6bwbJg2)GSyRjXF0yAnR8YTuTv8vJDkUzRgUM(MHUslHT8PyfetgkQdnvHNbYxTtNcCGbN)n4N)JjbOxozWNopi6rc1jxc4LoylQrk85yxxtLsPqp9oGQgQuGuPNzvnPNvs5jTpV85Ev)8I70gWzi2e4UH2BPE4)n]] )

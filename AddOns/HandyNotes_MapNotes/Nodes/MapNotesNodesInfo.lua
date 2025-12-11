@@ -107,6 +107,22 @@ nodes[946] = { } -- Worldmap
 nodes[947] = { } -- Azeroth
 nodes[971] = { } -- Telogros Rift
 
+-- Flightmaster Taxi map nodes
+nodes[993] = { } -- Broken Isles
+nodes[994] = { } -- Argus
+nodes[1647] = { } -- Shadowlands
+nodes[1569] = { } -- Shadowlands - Bastion
+nodes[1741] = { } -- Shadowlands - Maldraxxus
+nodes[1740] = { } -- Shadowlands - Ardenweald
+nodes[1742] = { } -- Shadowlands - Revendreth
+nodes[2046] = { } -- Shadowlands - Zereth Mortis
+nodes[2057] = { } -- Dragon Isles
+nodes[2175] = { } -- Zaralekcave
+nodes[2241] = { } -- Emerald Dream
+nodes[2276] = { } -- Khaz Algar
+nodes[2374] = { } -- Undermine
+nodes[2398] = { } -- K'aresh
+
 --############################
 --######### Kalimdor #########
 --############################
@@ -609,6 +625,20 @@ nodes[670] = { } -- Hellfire Citadel - Inside Dungeon Map
 --########## Legion ##########
 --############################
 
+-- Class Halls
+nodes[24] = { } -- Light's Hope Chapel - Paladin
+nodes[626] = { } -- Dalaran - Halls of Shadows - Rogue
+nodes[647] = { } -- Heart of Acherus - Deathknight
+nodes[648] = { } -- Acherus Halls - Deathknight
+nodes[695] = { } -- Skyhold - Warrior
+nodes[702] = { } -- Netherlight Tempel - Priest
+nodes[709] = { } -- The Wandering Isle - Monk
+nodes[717] = { } -- Dreadscar Rift - Warlock
+nodes[726] = { } -- Heart of Azeroth - Mahlstrom - Shaman
+nodes[734] = { } -- Hall of the Guardian - Druid
+nodes[735] = { } -- The Guardian's Library - Mage
+nodes[739] = { } -- Trueshot Lodge - Hunter
+nodes[747] = { } -- The Dreamgrove - Druid
 -- Azeroth/Continent map nodes
 nodes[619] = { } -- Broken Isles
 nodes[627] = { } -- Dalaran
@@ -620,7 +650,12 @@ nodes[641] = { } -- Val'sharah
 nodes[646] = { } -- Broken Shore
 nodes[650] = { } -- Highmountain
 nodes[652] = { } -- Highmountain Thundertotem Basement
+nodes[659] = { } -- Highmountain Dunkelsteingrotte
 nodes[680] = { } -- Suramar
+nodes[715] = { } -- Emerald Dreamway - Druid
+nodes[719] = { } -- Mardum Zone
+nodes[720] = { } -- Mardum Upper - DH
+nodes[721] = { } -- Mardum Lower - DH
 nodes[750] = { } -- Highmountain Thundertotem
 nodes[790] = { } -- Eye of Aszhara
 nodes[830] = { } -- Krokuun
@@ -699,6 +734,7 @@ nodes[1536] = { } -- Maldraxxus
 nodes[1543] = { } -- The Maw
 nodes[1550] = { } -- Shadowlands
 nodes[1565] = { } -- Ardenweald
+nodes[1816] = { } -- Klauenkamm
 nodes[1670] = { } -- Oribos
 nodes[1671] = { } -- Oribos Uppder Side
 nodes[1911] = { } -- Torghast
@@ -772,6 +808,8 @@ nodes[2322] = { } -- Hall of Awakening
 nodes[2346] = { } -- Undermine
 nodes[2371] = { } -- K'aresh
 nodes[2472] = { } -- Tazavesh
+nodes[2351] = { } -- Razorwind Shores (Housing)
+nodes[2352] = { } -- Founder's Point (Housing)
 -- Dungeon map nodes
 nodes[2315] = { } -- The Rookery - Inside Dungeon Map
 nodes[2335] = { } -- The Cinderbrew Meadery - Inside Dungeon Map

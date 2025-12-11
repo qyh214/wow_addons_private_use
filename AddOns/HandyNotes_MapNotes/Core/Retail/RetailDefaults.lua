@@ -4,8 +4,8 @@ ns.defaults = {
 
   profile = {
 
-    -- Advanced Options
-      MinimapArrowScale = 0.8,
+    -- Flightmap
+      showTaxiMapNodes = true,
       
     -- Instance single Zone icon scale and alpha
       ZoneInstanceScale = 2,
@@ -22,6 +22,8 @@ ns.defaults = {
       ZoneAlphaOldVanilla = 1,
       ZoneScaleLFR = 2,
       ZoneAlphaLFR = 1,
+      ZoneScalePetBattleDungeons = 2,
+      ZoneAlphaPetBattleDungeons = 1,
       
       -- Instance single MiniMap icon scale and alpha
       MiniMapInstanceScale = 2,
@@ -38,6 +40,8 @@ ns.defaults = {
       MiniMapAlphaOldVanilla = 1,
       MiniMapScaleLFR = 2,
       MiniMapAlphaLFR = 1,
+      MiniMapScalePetBattleDungeons = 2,
+      MiniMapAlphaPetBattleDungeons = 1,
 
     -- Transport single Zone icon scale and alpha 
       ZoneTransportScale = 1.5,
@@ -108,6 +112,8 @@ ns.defaults = {
       ZoneAlphaPvPVendor = 1,
       ZoneScalePvEVendor = 1.5,
       ZoneAlphaPvEVendor = 1,
+      ZoneScaleRenownQuartermaster = 1.5,
+      ZoneAlphaRenownQuartermaster = 1,
       ZoneScaleStablemaster = 1.5,
       ZoneAlphaStablemaster = 1,
       ZoneScaleCatalyst = 1.5,
@@ -140,6 +146,8 @@ ns.defaults = {
       MiniMapAlphaPvPVendor = 1,
       MiniMapScalePvEVendor = 1.5,
       MiniMapAlphaPvEVendor = 1,
+      MiniMapScaleRenownQuartermaster = 1.5,
+      MiniMapAlphaRenownQuartermaster = 1,
       MiniMapScaleStablemaster = 1.5,
       MiniMapAlphaStablemaster = 1,
       MiniMapScaleCatalyst = 1.5,
@@ -179,10 +187,11 @@ ns.defaults = {
       CoreChatMassage = true,
       MmbWmbChatMessage = true,
       ChatMassage = false,
-      ZoneChanged = false,
-      ZoneChangedDetail = true,
-      NpcNameTargetingChatText = true,
-      TooltipInformations = false,
+      ZoneTextChanged = false,
+      ZoneTextChangedDetail = false,
+      MapChanging = false,
+      NpcNameTargetingChatText = false,
+      TooltipInformations = true,
       DeleteIcons = false,
       CreateAndCopyLinks = false,
       RestoreAllIcons = false,
@@ -221,6 +230,7 @@ ns.defaults = {
       showMiniMapPassage = true,
       showMiniMapOldVanilla = true,
       showMiniMapLFR = true,
+      showMiniMapPetBattleDungeons = true,
     -- MiniMap Transport
       showMiniMapPortals = true,
       showMiniMapZeppelins = true,
@@ -263,6 +273,7 @@ ns.defaults = {
       showMiniMapMailbox = true,
       showMiniMapPvPVendor = true,
       showMiniMapPvEVendor = true,
+      showMiniMapRenownQuartermaster = true,
       showMiniMapTransmogger = true,
       showMiniMapStablemaster = true,
       showMiniMapItemUpgrade = true,
@@ -294,6 +305,7 @@ ns.defaults = {
       showZonePassage = true,
       showZoneOldVanilla = true,
       showZoneLFR = true,
+      showZonePetBattleDungeons = true,
     -- Zone Transport
       showZonePortals = true,
       showZoneZeppelins = true,
@@ -337,6 +349,7 @@ ns.defaults = {
       showZoneMailbox = true,
       showZonePvPVendor = true,
       showZonePvEVendor = true,
+      showZoneRenownQuartermaster = true,
       showZoneTransmogger = true,
       showZoneStablemaster = true,
       showZoneItemUpgrade = true,
@@ -362,8 +375,10 @@ ns.defaults = {
       showContinentDelves = true,
       showContinentPaths = true,
       showContinentRaces = true,
+      showContinentPetBattleDungeons = true,
       showContinentFP = true, -- only Classic and Cataclym
       showContinentPvPandPvEVendor = true,
+      showContinentRenownQuartermaster = true,
       showContinentKalimdor = true,
       showContinentEasternKingdom = true,
       showContinentOutland = true,
@@ -393,6 +408,7 @@ ns.defaults = {
       showAzerothLFR = true,
       showAzerothDelves = true,
       showAzerothRaces = true,
+      showAzerothPetBattleDungeons = true,
       showAzerothFP = true, -- only classic +
       showAzerothKalimdor = true,
       showAzerothEasternKingdom = true,
@@ -444,6 +460,7 @@ ns.defaults = {
       showCapitalsSot7S = true,
       showCapitalsStormshield = true,
       showCapitalsWarspear = true,
+      showCapitalsHousing = true,
       showCapitalsDazarAlor = true,
       showCapitalsBoralus = true,
       showCapitalsOribos = true,
@@ -505,6 +522,7 @@ ns.defaults = {
       showCapitalsTransmogger = true,
       showCapitalsPvPVendor = true,
       showCapitalsPvEVendor = true,
+      showCapitalsRenownQuartermaster = true,
       showCapitalsItemUpgrade = true,
       showCapitalsDragonFlyTransmog = true,
       showCapitalsCatalyst = true,
@@ -513,6 +531,23 @@ ns.defaults = {
       showCapitalsStablemaster = true,
       showCapitalsTradingPost = true,
       showCapitalsMountMerchent = true,
+
+    -- Capital Class Hall
+      CapitalsClassHallScale = 1.5,
+      CapitalsClassHallAlpha = 1,
+      showCapitalsClassHallEntrance = true,
+      showCapitalsClassHallPaths = true,
+      showCapitalsClassHallPortals = true,
+      showCapitalsClassHallScoutingMap = true,
+      showCapitalsClassHallArchivar = true,
+      showCapitalsClassHallMountMerchent = true,
+      showCapitalsClassHallMailbox = true,
+      showCapitalsClassHallFP = true,
+      showCapitalsClassHallArtifactForge = true,
+      showCapitalsClassHallRecruit = true,
+      showCapitalsClassHallVendor = true,
+      showCapitalsClassHallUpgrade = true,
+      showCapitalsClassHallStablemaster = true,
 
     --7 Capitals Minimap
       showMinimapCapitals = true,
@@ -531,6 +566,7 @@ ns.defaults = {
       showMinimapCapitalsSot7S = true,
       showMinimapCapitalsStormshield = true,
       showMinimapCapitalsWarspear = true,
+      showMinimapCapitalsHousing = true,
       showMinimapCapitalsDazarAlor = true,
       showMinimapCapitalsBoralus = true,
       showMinimapCapitalsOribos = true,
@@ -592,6 +628,7 @@ ns.defaults = {
       showMinimapCapitalsTransmogger = true,
       showMinimapCapitalsPvPVendor = true,
       showMinimapCapitalsPvEVendor = true,
+      showMinimapCapitalsRenownQuartermaster = true,
       showMinimapCapitalsItemUpgrade = true,
       showMinimapCapitalsDragonFlyTransmog = true,
       showMinimapCapitalsCatalyst = true,
@@ -600,18 +637,47 @@ ns.defaults = {
       showMinimapCapitalsStablemaster = true,
       showMinimapCapitalsTradingPost = true,
       showMinimapCapitalsMountMerchent = true,
-      
+
+    -- Capital Class Hall
+      MinimapCapitalsClassHallScale = 1.5,
+      MinimapCapitalsClassHallAlpha = 1,
+      showMinimapCapitalsClassHallEntrance = true,
+      showMinimapCapitalsClassHallPaths = true,
+      showMinimapCapitalsClassHallPortals = true,
+      showMinimapCapitalsClassHallScoutingMap = true,
+      showMinimapCapitalsClassHallArchivar = true,
+      showMinimapCapitalsClassHallMountMerchent = true,
+      showMinimapCapitalsClassHallMailbox = true,
+      showMinimapCapitalsClassHallFP = true,
+      showMinimapCapitalsClassHallArtifactForge = true,
+      showMinimapCapitalsClassHallRecruit = true,
+      showMinimapCapitalsClassHallVendor = true,
+      showMinimapCapitalsClassHallUpgrade = true,
+      showMinimapCapitalsClassHallStablemaster = true,
+
+    -- DevMode
+      DeveloperMode = false,
+
     --10 ns.Addon.db.profile.activate.
       activate = {
         HideMapNote = false,
         HideMMB = false,
         EnemyFaction = true,
+        ToggleMap = true,
+        ToggleMapInfo = true,
+        ToggleMapAfterCombat = false,
+        InfoBlockedInCombat = true,
+        UseInBattle = false,
         SwapButtons = false,
+        FlightmapButton = true,
         showRacesIconsDiscovered = false,
         MinimapArrow = true,
+        MinimapArrowScale = 1,
         MinimapArrowOnEnter = true,
         MinimapArrowOnEnterTime = 3,
-        ClassicIcons = false,
+        WorldMapArrow = false,
+        WorldMapArrowScale = 1,
+        noPassages = false,
         ClassicPortals = true,
         ClassicShips = true,
         ClassicZeppelin = true,
@@ -622,7 +688,17 @@ ns.defaults = {
         RemoveBlizzPOIs = true,
         RemoveBlizzPOIsZidormi = true,
         RemoveBlizzInstances = true,
-        ShowBlizzDelves = false,
+        HideBlizzDelves = false,
+        HideBlizzAuctioneer = false,
+        HideBlizzBanker = false,
+        HideBlizzBarber = false,
+        HideBlizzBattlemaster = false,
+        HideBlizzInnkeeper = false,
+        HideBlizzItemUpgrade = false,
+        HideBlizzMailbox = false,
+        HideBlizzProfTrainers = false,
+        HideBlizzStablemaster = false,
+        HideBlizzTransmog = false,
         FogOfWar = true,
         MistOfTheUnexplored = true,
         FogOfWarAlphaReduce = false,
@@ -666,14 +742,14 @@ ns.defaults = {
         CapitalsTransporting = true,
         CapitalsProfessions = true,
         CapitalsGeneral = true,
+        CapitalsClassHall = true,
       --Capitals Minimap
         MinimapCapitalsEnemyFaction = true,
         MinimapCapitalsInstances = true,
         MinimapCapitalsTransporting = true,
         MinimapCapitalsProfessions = true,
         MinimapCapitalsGeneral = true,
-
-        DeveloperMode = false,
+        MinimapCapitalsClassHall = true,
       },
 
     --11 deleted icons function
@@ -723,6 +799,7 @@ ns.defaults = {
       displayCoords = {
         showPlayerCoords = false,
         showMouseCoords = false,
+        showCoordTooltip = false,
         PlayerCoordsSize = 0.7,
         PlayerCoordsAlpha = 1,
         MouseCoordsSize = 0.7,

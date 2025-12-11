@@ -1,4 +1,4 @@
-## Interface: 11505,11506,11507
+## Interface: 11505,11506,11507,11508
 ## Title: |cff880303[163UI]|r Info
 ## Version: r20241009
 ## Author: NetEase Inc.

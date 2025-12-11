@@ -12,6 +12,7 @@
 <Script file="EarthcrawlMines\MaklinDrillstab.lua"/>
 <Script file="EarthcrawlMines\TheBiggestBug.lua"/>
 
+<Script file="ExcavationSite9\BesteGlatisant.lua"/>
 <Script file="ExcavationSite9\CraggleFritzbrains.lua"/>
 <Script file="ExcavationSite9\HarbingerUlthul.lua"/>
 <Script file="ExcavationSite9\XelaneghTheMany.lua"/>
@@ -19,6 +20,7 @@
 <Script file="FungalFolly\Maulspike.lua"/>
 <Script file="FungalFolly\Spinshroom.lua"/>
 
+<Script file="KriegvalsRest\FacelessOne.lua"/>
 <Script file="KriegvalsRest\TombRaiderDrywhisker.lua"/>
 
 <Script file="MycomancerCavern\Bogpiper.lua"/>
@@ -64,12 +66,11 @@
 <Script file="Trash\OldGod.lua"/>
 <Script file="Trash\Underkeep.lua"/>
 <!--<Script file="Trash\ZekvirRares.lua"/>-->
-<Script file="Trash\UnderpinRares.lua"/>
+<!--<Script file="Trash\UnderpinRares.lua"/>-->
 <Script file="Trash\KyvezaRares.lua"/>
 <!--<Script file="Trash\Overcharged.lua"/>-->
 
 <Script file="VoidrazorSanctuary\Kyveza.lua"/>
-<Script file="VoidrazorSanctuary\Kyveza2.lua"/>
 
 <Script file="ZekvirsLair\Zekvir.lua"/>
 <Script file="ZekvirsLair\Zekvir2.lua"/>

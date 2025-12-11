@@ -35,6 +35,9 @@ local IsInInstance = _G.IsInInstance
 local tokFunctions = Details.ToKFunctions
 
 local _, Details222 = ...
+
+---@cast Details222 details222
+
 _ = nil
 
 --constants
@@ -2241,9 +2244,20 @@ local iconFrame_OnEnter = function(self)
 
 			local lineHeight = 21
 
-			if (RaiderIO and not bIsClassic) then
-				local addedInfo = false
+			local addedInfo = false
 
+			if (C_PlayerInfo and C_PlayerInfo.GetPlayerMythicPlusRatingSummary) then
+				local dungeonPlayerInfo = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(actorName)
+				if (dungeonPlayerInfo) then
+					local currentScore = dungeonPlayerInfo.currentSeasonScore or 0
+					if (currentScore > 0) then
+						GameCooltip:AddLine("M+ Score:", currentScore, 1, "white")
+						addedInfo = true
+					end
+				end
+			end
+
+			if (not addedInfo and RaiderIO and not bIsClassic) then
 				local playerName, playerRealm = actorName:match("(%w+)%-(%w+)")
 				playerName = playerName or actorName
 				playerRealm = playerRealm or GetRealmName()
@@ -2254,14 +2268,8 @@ local iconFrame_OnEnter = function(self)
 
 				if (rioProfile and rioProfile.mythicKeystoneProfile) then
 					rioProfile = rioProfile.mythicKeystoneProfile
-
-					local previousScore = rioProfile.previousScore or 0
 					local currentScore = rioProfile.currentScore or 0
-
-					if (false and previousScore > currentScore and time() > 1700562401) then --2023.11.21 midday
-						GameCooltip:AddLine("M+ Score:", previousScore .. " (|cFFFFDD11" .. currentScore .. "|r)", 1, "white")
-						addedInfo = true
-					else
+					if (currentScore) then
 						GameCooltip:AddLine("M+ Score:", currentScore, 1, "white")
 						addedInfo = true
 					end
@@ -2276,13 +2284,7 @@ local iconFrame_OnEnter = function(self)
 					end
 				end
 
-				if (addedInfo) then
-					GameCooltip:AddIcon([[]], 1, 1, 1, 20)
-					Details:AddTooltipBackgroundStatusbar()
-					--increase frame height
-					height = height + lineHeight
-				end
-			else
+			elseif (not addedInfo) then
 				if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and C_PlayerInfo) then --is retail?
 					local dungeonPlayerInfo = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(actorName)
 					if (dungeonPlayerInfo) then
@@ -2292,10 +2294,17 @@ local iconFrame_OnEnter = function(self)
 							GameCooltip:AddIcon([[]], 1, 1, 1, 20)
 							Details:AddTooltipBackgroundStatusbar()
 							--increase frame height
-							height = height + lineHeight
+							addedInfo = true
 						end
 					end
 				end
+			end
+
+			if (addedInfo) then
+				GameCooltip:AddIcon([[]], 1, 1, 1, 20)
+				Details:AddTooltipBackgroundStatusbar()
+				--increase frame height
+				height = height + lineHeight
 			end
 
 			if (actor.spec == 1473 and actor.tipo == DETAILS_ATTRIBUTE_DAMAGE) then
@@ -6150,6 +6159,21 @@ local build_mode_list = function(self, deltaTime)
 			end
 		end
 
+		local createAllInOneWindow = function()
+			if (not Details222.AllInOneWindow:HasOpenWindow()) then
+				Details222.AllInOneWindow:OpenWindow(1)
+				gameCooltip:Hide()
+			else
+				gameCooltip:Hide()
+			end
+		end
+
+		gameCooltip:AddMenu(2, createAllInOneWindow, true, instance, nil, "Create Midnight Window (12.0)", _, true)
+		gameCooltip:AddIcon([[Interface\AddOns\Details\assets\textures\icons\midnight.png]], 2, 1, 16, 14)
+		if (hasClosedInstances) then
+			GameCooltip:AddLine("$div", nil, 2, nil, -5, -11)
+		end
+
 		local ClosedInstances = 0
 		for index = 1, math.min(#Details:GetAllInstances(), Details.instances_amount), 1 do
 			local thisInstance = Details:GetAllInstances() [index]
@@ -6395,9 +6419,11 @@ local iconLoreCoords = {30/512, 355/512, 45/512, 290/512}
 local wallpaperColor = {1, 1, 1, 0.5}
 
 -- search key: ~segments
-local buildSegmentTooltip = function(self, deltaTime)
+local buildSegmentTooltip = function(self, deltaTime, allInOneWindowFrame)
 	local gameCooltip = GameCooltip
-	local instance = parameters_table[1]
+
+	local instance = allInOneWindowFrame or parameters_table[1]
+	parameters_table[2] = parameters_table[2] or 0
 	parameters_table[2] = parameters_table[2] + deltaTime
 
 	local battleground_color = {1, 0.666, 0, 1}
@@ -6759,8 +6785,6 @@ local buildSegmentTooltip = function(self, deltaTime)
 						gameCooltip:AddLine(thisCombat:GetCombatName(false, bFindEnemyName), _, 1, "yellow", combatTimeColorGeneric) --formattedElapsedTime
 						gameCooltip:AddIcon(thisCombat:GetCombatIcon(), "main", "left")
 
-						--print("passing here...")
-
 						if (Details.tooltip.submenu_wallpaper and bCanUseBackgroundImage) then
 							gameCooltip:SetWallpaper(2, [[Interface\ACHIEVEMENTFRAME\UI-Achievement-StatsBackground]], segments_common_tex, segments_common_color, true)
 						end
@@ -7085,7 +7109,18 @@ local buildSegmentTooltip = function(self, deltaTime)
 
 		---------------------------------------------
 
-		Details:SetMenuOwner (self, instance)
+		if (not allInOneWindowFrame) then
+			show_anti_overlap (instance, self, "top")
+			Details:SetMenuOwner(self, instance)
+		else
+			if (instance.LastMenuOpened == "segments" and GameCooltipFrame1:IsShown()) then
+				--already opened
+				gameCooltip:Hide()
+				return
+			end
+			gameCooltip:SetOwner(self, "bottom", "top", 0, 4)
+			instance.LastMenuOpened = "segments"
+		end
 
 		gameCooltip:SetOption("TextSize", Details.font_sizes.menus)
 		gameCooltip:SetOption("TextFont", Details.font_faces.menus)
@@ -7104,14 +7139,14 @@ local buildSegmentTooltip = function(self, deltaTime)
 
 		Details:SetTooltipMinWidth()
 
-		show_anti_overlap (instance, self, "top")
-
 		gameCooltip:ShowCooltip()
 
 		self:SetScript("OnUpdate", nil)
 	end
 
 end
+
+Details.BuildSegmentMenu = buildSegmentTooltip
 
 -- ~skin
 

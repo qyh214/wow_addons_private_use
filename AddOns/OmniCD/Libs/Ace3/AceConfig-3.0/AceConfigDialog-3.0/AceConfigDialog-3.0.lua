@@ -1,13 +1,13 @@
 --- AceConfigDialog-3.0 generates AceGUI-3.0 based windows based on option tables.
 -- @class file
 -- @name AceConfigDialog-3.0
--- @release $Id: AceConfigDialog-3.0.lua 1351 2024-07-24 18:23:24Z funkehdude $
+-- @release $Id: AceConfigDialog-3.0.lua 1367 2025-09-08 17:06:01Z funkehdude $
 
 local LibStub = LibStub
 local gui = LibStub("AceGUI-3.0")
 local reg = LibStub("AceConfigRegistry-3.0")
 
-local MAJOR, MINOR = "AceConfigDialog-3.0", 87
+local MAJOR, MINOR = "AceConfigDialog-3.0", 88
 local AceConfigDialog, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not AceConfigDialog then return end
@@ -526,7 +526,7 @@ local function OptionOnMouseOver(widget, event)
 		tooltip:AddLine(desc, 1, 1, 1, true)
 	end
 	if type(usage) == "string" then
-		tooltip:AddLine("Usage: "..usage, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true)
+		tooltip:AddLine(usage, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true)
 	end
 
 	tooltip:Show()

@@ -2,4 +2,7 @@
   <Binding name="AutoPotion Macro" category="Auto Potion">
     -- AutoPotion
   </Binding>
+  <Binding name="AutoBandage Macro" category="Auto Potion">
+    -- AutoBandage
+  </Binding>
 </Bindings>

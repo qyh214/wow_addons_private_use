@@ -1,8 +1,10 @@
 local GlobalAddonName, ExRT = ...
 
-local math_ceil, IsEncounterInProgress, abs, UnitHealth, UnitHealthMax, GetTime, format, tableCopy = math.ceil, IsEncounterInProgress, abs, UnitHealth, UnitHealthMax, GetTime, format, ExRT.F.table_copy2
+local math_ceil, abs, UnitHealth, UnitHealthMax, GetTime, format, tableCopy = math.ceil, abs, UnitHealth, UnitHealthMax, GetTime, format, ExRT.F.table_copy2
 local SendAddonMessage = C_ChatInfo.SendAddonMessage
 local VMRT = nil
+local SendChatMessage = C_ChatInfo and C_ChatInfo.SendChatMessage or SendChatMessage
+local IsEncounterInProgress = C_InstanceEncounter and C_InstanceEncounter.IsEncounterInProgress or IsEncounterInProgress
 
 local module = ExRT:New("Timers",ExRT.L.timers)
 local ELib,L = ExRT.lib,ExRT.L
@@ -377,7 +379,7 @@ function module.options:Load()
 		end
 	end)
 	
-	self.chkTimeToKill = ELib:Check(self.TabTimerFrame,L.TimerTimeToKill,VMRT.Timers.timeToKill):Point(339,-30):Tooltip(L.TimerTimeToKillHelp):OnClick(function(self) 
+	self.chkTimeToKill = ELib:Check(self.TabTimerFrame,L.TimerTimeToKill,VMRT.Timers.timeToKill):Point(339,-30):Tooltip(L.TimerTimeToKillHelp):Shown(not ExRT.isMN):OnClick(function(self) 
 		if self:GetChecked() then
 			VMRT.Timers.timeToKill = true
 			timeToKillEnabled = true
@@ -388,7 +390,7 @@ function module.options:Load()
 		end
 	end)
 	
-	self.sliderTimeToKill = ELib:Slider(self.TabTimerFrame,L.TimerTimeToKillTime):Size(100):Point("LEFT",self.chkTimeToKill,"LEFT",180,2):Range(5,40):SetTo(VMRT.Timers.timeToKillAnalyze):OnChange(function(self,event) 
+	self.sliderTimeToKill = ELib:Slider(self.TabTimerFrame,L.TimerTimeToKillTime):Size(100):Point("LEFT",self.chkTimeToKill,"LEFT",180,2):Range(5,40):SetTo(VMRT.Timers.timeToKillAnalyze):Shown(not ExRT.isMN):OnChange(function(self,event) 
 		event = event - event%1
 		VMRT.Timers.timeToKillAnalyze = event
 		self.tooltipText = event
@@ -686,7 +688,7 @@ do
 			tmr2 = 0
 		end
 		
-		if timeToKillEnabled then
+		if timeToKillEnabled and not ExRT.isMN then
 			tmr = tmr + elapsed
 			if tmr > 0.5 then
 				tmr = 0
@@ -754,7 +756,7 @@ do
 			tmr2 = 0
 		end
 		
-		if timeToKillEnabled then
+		if timeToKillEnabled and not ExRT.isMN then
 			tmr = tmr + elapsed
 			if tmr > 0.5 then
 				tmr = 0

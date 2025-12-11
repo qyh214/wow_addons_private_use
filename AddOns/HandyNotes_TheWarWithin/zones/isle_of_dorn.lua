@@ -746,39 +746,32 @@ map.nodes[42128025] = LoreObject({
 -------------------------------- DISTURBED DIRT -------------------------------
 -------------------------------------------------------------------------------
 
-map.nodes[27026815] = DisturbedEarth()
-map.nodes[38187892] = DisturbedEarth()
-map.nodes[44767702] = DisturbedEarth()
-map.nodes[47617007] = DisturbedEarth()
-map.nodes[57493429] = DisturbedEarth()
-map.nodes[57975529] = DisturbedEarth()
-map.nodes[58405778] = DisturbedEarth()
-map.nodes[58695763] = DisturbedEarth()
-map.nodes[58793702] = DisturbedEarth()
-map.nodes[58865571] = DisturbedEarth()
-map.nodes[59517165] = DisturbedEarth()
-map.nodes[60165487] = DisturbedEarth()
-map.nodes[61893557] = DisturbedEarth()
-map.nodes[61966015] = DisturbedEarth()
-map.nodes[62162647] = DisturbedEarth()
-map.nodes[62272828] = DisturbedEarth()
-map.nodes[62522512] = DisturbedEarth()
-map.nodes[62723522] = DisturbedEarth()
-map.nodes[63826247] = DisturbedEarth()
-map.nodes[63895331] = DisturbedEarth()
-map.nodes[64776839] = DisturbedEarth()
-map.nodes[65076588] = DisturbedEarth()
-map.nodes[65337065] = DisturbedEarth()
-map.nodes[65585521] = DisturbedEarth()
-map.nodes[65696586] = DisturbedEarth()
-map.nodes[68563233] = DisturbedEarth()
-map.nodes[69003300] = DisturbedEarth()
-map.nodes[69993181] = DisturbedEarth()
-map.nodes[70653055] = DisturbedEarth()
-map.nodes[70812854] = DisturbedEarth()
-map.nodes[70902974] = DisturbedEarth()
-map.nodes[71553114] = DisturbedEarth()
-map.nodes[72613005] = DisturbedEarth()
+local DisturbedEarth_coords = {
+    24596585, 24766923, 26126804, 26486518, 27026815, 27376393, 28836833,
+    29406471, 29566735, 30086558, 30836687, 31847148, 31976586, 35946523,
+    37146647, 37666787, 38187892, 38306696, 39267617, 40196145, 42846619,
+    43427543, 43787662, 43856240, 44767702, 45297346, 45477259, 45507551,
+    46467362, 47617007, 48066283, 49337354, 49917351, 50397204, 50757349,
+    51207127, 52496007, 52805518, 57125369, 57197364, 57316513, 57456980,
+    57493429, 57917468, 57927334, 57975529, 58083481, 58307245, 58405778,
+    58473715, 58543774, 58567399, 58603945, 58695763, 58793702, 58865571,
+    58875124, 59043909, 59143658, 59436521, 59513592, 59517165, 59607324,
+    59855575, 59947355, 60165487, 60215580, 60492510, 60615780, 60772493,
+    60795533, 60795709, 60916278, 61512765, 61675893, 61825501, 61893557,
+    61943464, 61966015, 62162647, 62203380, 62225619, 62245524, 62272828,
+    62456464, 62522512, 62626527, 62723522, 62865862, 62963541, 63315450,
+    63355320, 63495548, 63693587, 63826247, 63895331, 63995784, 64076470,
+    64095469, 64156208, 64236526, 64335386, 64385468, 64435741, 64556754,
+    64736163, 64752113, 64776839, 64935370, 65036029, 65066058, 65076588,
+    65145667, 65175491, 65205316, 65276662, 65337065, 65585521, 65696585,
+    65696586, 66296031, 66975593, 67733199, 68093155, 68563233, 68695639,
+    69003300, 69993181, 70653055, 70703158, 70812854, 70902974, 71553114,
+    72613005, 72704875
+}
+
+for _, coord in ipairs(DisturbedEarth_coords) do
+    map.nodes[coord] = DisturbedEarth()
+end
 
 -------------------------------------------------------------------------------
 -------------------- ACHIEVEMENT: KHAZ ALGAR FLIGHT MASTER --------------------
@@ -922,3 +915,14 @@ rookeryLanding.nodes[12481399] = Aradan({
         }) -- Targeting
     }
 }) -- Step 4
+
+----------------------------------- SPINDLE -----------------------------------
+
+dor.nodes[46185009] = Collectible({
+    icon = 5793405,
+    parent = map.id,
+    location = L['multiple_spawns'],
+    note = L['itsy_bitsy_spider_note'],
+    group = ns.groups.ITSY_BITSY_SPIDER,
+    rewards = {Achievement({id = 40624, criteria = 68973})}
+}) -- Spindle

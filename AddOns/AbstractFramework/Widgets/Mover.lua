@@ -95,16 +95,15 @@ local function CreateAlignmentGrid()
     alignmentGrid:SetAllPoints()
 
     -- DISPLAY_SIZE_CHANGED
-    alignmentGrid:RegisterEvent("DISPLAY_SIZE_CHANGED")
-    alignmentGrid:SetScript("OnEvent", UpdateLines)
-    AF.RegisterCallback("AF_SCALE_CHANGED", UpdateLines)
+    -- alignmentGrid:RegisterEvent("DISPLAY_SIZE_CHANGED")
+    -- alignmentGrid:SetScript("OnEvent", UpdateLines)
+    AF.RegisterCallback("AF_PIXEL_UPDATE", UpdateLines)
 
     UpdateLines()
 end
 
 local function CreateMoverDialog()
-    moverDialog = AF.CreateHeaderedFrame(moverParent, "AFMoverDialog", "AF " .. _G.HUD_EDIT_MODE_MENU, 300, 180, "FULLSCREEN_DIALOG", nil, true)
-    moverDialog:SetFrameStrata("FULLSCREEN_DIALOG")
+    moverDialog = AF.CreateHeaderedFrame(moverParent, "AFMoverDialog", "AF " .. _G.HUD_EDIT_MODE_MENU, 300, 180, "FULLSCREEN", nil, true)
     moverDialog:Hide()
 
     anchorLockedText = AF.CreateFontString(moverDialog, L["Anchor Locked"], "accent", "AF_FONT_OUTLINE")
@@ -214,8 +213,10 @@ function AF.InitMoverParent()
 end
 
 ---------------------------------------------------------------------
--- calc new point
+-- calc best point
 ---------------------------------------------------------------------
+---@param owner Frame
+---@return string point, number x, number y
 function AF.CalcPoint(owner)
     local point, x, y
     local scale = owner:GetScale()
@@ -311,7 +312,7 @@ CreatePositionEditorFrame = function()
     AF.SetPoint(positionEditorFrame.tp, "BOTTOMRIGHT", -7, 7)
 
     -- anchor
-    positionEditorFrame.anchor = AF.CreateDropdown(positionEditorFrame.tp, 20, 9, "texture", true, true, nil, 1)
+    positionEditorFrame.anchor = AF.CreateDropdown(positionEditorFrame.tp, 20, 9, "horizontal", 1)
 
     local items = {}
     local anchors = {"CENTER", "LEFT", "BOTTOMLEFT", "BOTTOM", "BOTTOMRIGHT", "RIGHT", "TOPLEFT", "TOP", "TOPRIGHT"}

@@ -579,6 +579,12 @@ function criteria.update()
 
     criteria.update_step(i, current_run, criteriaInfo.description, criteriaInfo.completed, cur_value, criteriaInfo.totalQuantity, criteriaInfo.isWeightedProgress, is_percent_value)
   end
+
+  if steps < #step_frames then
+    for i = steps + 1, #step_frames do
+      step_frames[i]:Hide()
+    end
+  end
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------

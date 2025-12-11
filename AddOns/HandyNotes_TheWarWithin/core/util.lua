@@ -163,8 +163,9 @@ local function RenderLinks(str, nameOnly)
         return type .. '+' .. id
     end)
     -- render commonly colored text
-    local function renderNonNumeric(str)
+    local function renderNonNumeric(str, nameOnly)
         local result = str:gsub('{(%l+):([^{}]+)}', function(type, text)
+            if nameOnly then return text end
             if type == 'bug' then return ns.color.Red(text) end
             if type == 'emote' then return ns.color.Orange(text) end
             if type == 'location' or type == 'map' or type == 'area' then
@@ -180,6 +181,10 @@ local function RenderLinks(str, nameOnly)
                 local icon = ns.GetIconLink('world_quest', 16, 0, -1)
                 return icon .. ns.color.Yellow('[' .. text .. ']')
             end
+            if type == 'quest' then
+                local icon = ns.GetIconLink('quest_ay', 16, 0, -1)
+                return icon .. ns.color.Yellow('[' .. text .. ']')
+            end
             if type == 'dot' then
                 local r, g, b = ns.getARGB(text, 255)
                 local texStr = '|T%s:0::::16:16::16::16:%d:%d:%d|t'
@@ -190,10 +195,10 @@ local function RenderLinks(str, nameOnly)
         if result == str then
             return result
         else
-            return renderNonNumeric(result)
+            return renderNonNumeric(result, nameOnly)
         end
     end
-    links = renderNonNumeric(links)
+    links = renderNonNumeric(links, nameOnly)
     return links
 end
 

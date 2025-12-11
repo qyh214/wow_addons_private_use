@@ -6,7 +6,8 @@ local ELib,L = ExRT.lib,ExRT.L
 local VMRT = nil
 
 local GetItemInfo, GetItemInfoInstant  = C_Item and C_Item.GetItemInfo or GetItemInfo,  C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant
-
+local SendChatMessage = C_ChatInfo and C_ChatInfo.SendChatMessage or SendChatMessage
+local GetLootMethod = C_PartyInfo and C_PartyInfo.GetLootMethod or GetLootMethod
 
 module.db.cache = {}
 
@@ -62,7 +63,7 @@ end
 local function LootLink(linkAnyway)
 	local lootMethod = GetLootMethod()
 	local _,zoneType,difficulty,_,_,_,_,mapID = GetInstanceInfo()
-	if (lootMethod == "personalloot" or difficulty == 7 or difficulty == 17) and not linkAnyway then
+	if (lootMethod == "personalloot" or lootMethod == 5 or difficulty == 7 or difficulty == 17) and not linkAnyway then
 		return
 	end
 	local isFutureRaid = zoneType == 'raid' and (mapID or 0) > 1450

@@ -8,6 +8,9 @@ local C_DateAndTime_GetCurrentCalendarTime, C_DateAndTime_AdjustTimeByDays
 local ipairs, tinsert, pairs, time
 	= ipairs, tinsert, pairs, time;
 
+-- App cache
+local GetRelativeField = app.GetRelativeField
+
 -- Event Variables
 local ActiveEvents, EventInformation, NextEventSchedule = {}, {}, {};
 local UpcomingEventLeeway = 604800;	-- 604800 is a week. 86400 is a day.
@@ -22,11 +25,11 @@ local function GetEventTimeString(d)
 			return ("%s, %s %02d, %d at %02d:%02d"):format(
 				CALENDAR_WEEKDAY_NAMES[d.weekday],
 				CALENDAR_FULLDATE_MONTH_NAMES[d.month],
-				d.monthDay, d.year, d.hour, d.minute );
+				d.monthDay or d.day, d.year, d.hour, d.minute );
 		else
 			return ("%s %02d, %d at %02d:%02d"):format(
 				CALENDAR_FULLDATE_MONTH_NAMES[d.month],
-				d.monthDay, d.year, d.hour, d.minute );
+				d.monthDay or d.day, d.year, d.hour, d.minute );
 		end
 	end
 	return "??";
@@ -77,6 +80,16 @@ app.AddEventHandler("OnLoad", function()
 	remapping[1667] = 1669; -- EU
 	remapping[1668] = 1669; -- KO
 	remapping[1666] = 1669; -- TW
+
+	-- Remap SL Timewalking => US
+	-- Maybe mapping is to 1704
+	remapping[1704] = 1703; --
+	remapping[1705] = 1703; --
+	remapping[1706] = 1703; --
+	remapping[1707] = 1703; --
+	remapping[1708] = 1703; --
+	remapping[1709] = 1703; --
+	remapping[1710] = 1703; --
 end);
 
 -- Event Cache
@@ -394,7 +407,7 @@ end
 local GetTimerunningSeason;
 local PlayerGetTimerunningSeasonID = PlayerGetTimerunningSeasonID;
 -- Don't add the Timerunning Filter if there's no Season active!
-local IsTimerunningActive = false
+local IsTimerunningActive = true
 if PlayerGetTimerunningSeasonID and IsTimerunningActive then
 	-- Timerunning API is available.
 	local timerunningSeasons = L.EVENT_TIMERUNNING_SEASONS;
@@ -402,25 +415,51 @@ if PlayerGetTimerunningSeasonID and IsTimerunningActive then
 		local seasonID = PlayerGetTimerunningSeasonID();
 		if seasonID then return timerunningSeasons[seasonID]; end
 	end
+	local TimerunningEventIDs = {}
 	local TimerunningSeasonEventID
-	local GetRelativeRawWithField = app.GetRelativeRawWithField
 	local ThingKeys
+	local function CheckNestedTimerunning(group)
+		if GetRelativeField(group, "e", TimerunningSeasonEventID) then
+			return true
+		end
+
+		local nestedTimerunning = group.nestedTimerunning
+		if nestedTimerunning ~= nil then
+			return nestedTimerunning
+		end
+
+		local g = group.g
+		if not g then return end
+
+		local o
+		for i=1,#g do
+			o = g[i]
+			if CheckNestedTimerunning(o) then
+				group.nestedTimerunning = true
+				return true
+			end
+		end
+		group.nestedTimerunning = false
+	end
 	local function OnlyTimerunning(group)
 		-- app.PrintDebug("F:TR",group.e,TimerunningSeasonEventID,group.__type,ThingKeys[group.key],group.e == TimerunningSeasonEventID)
 		if not ThingKeys[group.key] then return true end
-		return GetRelativeRawWithField(group, "e") == TimerunningSeasonEventID
+
+		-- Things which are NOT Timerunning need to recusrively see if they should be included due to nested Timerunning Things
+		return CheckNestedTimerunning(group)
 	end
-	local function NotMoPRemixTimerunning(group)
-		-- app.PrintDebug("F:~TR",group.e,TimerunningSeasonEventID,group.__type,ThingKeys[group.key],not group.e or group.e ~= 437)
-		if not ThingKeys[group.key] then return true end
-		local e = GetRelativeRawWithField(group, "e")
-		-- TODO: revise with Legion Remix since we will need new eventID excluded
-		return not e or e ~= 437
+	local function NotTimerunning(group)
+		local e = group.e
+		-- app.PrintDebug("F:~TR",e,TimerunningSeasonEventID,group.__type,ThingKeys[group.key],not e or not TimerunningEventIDs[e])
+		return not e or not TimerunningEventIDs[e]
 	end
 
 	-- Add a Timerunning Filter that can be used for Live/Timerunning characters
 	-- The use of the respective filter would be enabled based on the setting
 	app.AddEventHandler("OnStartup", function()
+		for i=1,#timerunningSeasons do
+			TimerunningEventIDs[timerunningSeasons[i]] = true
+		end
 		ThingKeys = app.ThingKeys
 		local DefineFilter = app.Modules.Filter.DefineToggleFilter
 		TimerunningSeasonEventID = GetTimerunningSeason()
@@ -428,8 +467,8 @@ if PlayerGetTimerunningSeasonID and IsTimerunningActive then
 			-- app.PrintDebug("Added OnlyTimerunning filter")
 			DefineFilter("Timerunning", "A", OnlyTimerunning)
 		else
-			-- app.PrintDebug("Added NotMoPRemixTimerunning filter")
-			DefineFilter("Timerunning", "A", NotMoPRemixTimerunning)
+			-- app.PrintDebug("Added NotTimerunning filter")
+			DefineFilter("Timerunning", "A", NotTimerunning)
 		end
 	end)
 else
@@ -465,6 +504,7 @@ end;
 events.SetEventNextSchedule = function(eventID, nextEvent)
 	NextEventSchedule[eventID] = nextEvent;
 end;
+events.GetEventTimeString = GetEventTimeString;
 events.GetTimerunningSeason = GetTimerunningSeason;
 events.GetUpcomingEventLeeway = function()
 	return UpcomingEventLeeway;

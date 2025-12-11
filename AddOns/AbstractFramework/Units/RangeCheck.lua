@@ -1,6 +1,7 @@
 ---@class AbstractFramework
 local AF = _G.AbstractFramework
 
+local UnitClassBase = UnitClassBase
 local UnitIsVisible = UnitIsVisible
 local UnitInRange = UnitInRange
 local UnitCanAssist = UnitCanAssist

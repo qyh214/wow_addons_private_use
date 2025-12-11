@@ -12,7 +12,6 @@ local pairs, type, ipairs, select, math_min
 
 -- App locals
 local DESCRIPTION_SEPARATOR = app.DESCRIPTION_SEPARATOR;
-local ATTAccountWideData
 
 -- Module locals
 local GetProgressColor = app.Modules.Color.GetProgressColor;
@@ -24,6 +23,7 @@ local GetFactionLore = app.WOWAPI.GetFactionLore;
 local GetFactionReaction = app.WOWAPI.GetFactionReaction;
 local GetFactionCurrentReputation = app.WOWAPI.GetFactionCurrentReputation;
 local GetFactionReputationCeiling = app.WOWAPI.GetFactionReputationCeiling;
+local GetFactionBonusReputation = app.WOWAPI.GetFactionBonusReputation;
 
 -- Faction API Implementation
 
@@ -120,6 +120,23 @@ local function GetFactionStanding(reputationPoints)
 	end
 	return 1, 0
 end
+local function CompareReputation(t, reputation)
+	return t.reputation >= reputation;
+end
+local function CompareStanding(t, standing)
+	return t.standing >= standing;
+end
+
+-- This is used for the Grand Commendations unlocking Bonus Reputation
+app.GlobalVariants.AndFactionBonus = {
+	__name = "AndFactionBonus",
+	collected = function(t)
+		return app.IsAccountCached("FactionBonus", t.factionID)
+	end,
+	__condition = function(t)
+		return not t.repeatable;
+	end,
+}
 
 -- Faction lib
 local KEY, CACHE, SETTING = "factionID", "Factions", "Reputations"
@@ -165,24 +182,12 @@ app.CreateFaction = app.CreateClass("Faction", KEY, {
 		end
 		return false;
 	end,
-	collected = app.IsClassic and function(t)
-		if t.saved then return 1; end
-		if app.Settings.AccountWide.Reputations and ATTAccountWideData.Factions[t[KEY]] then return 2; end
-	end or function(t)
+	collected = function(t)
 		return app.TypicalCharacterCollected(CACHE, t[KEY], SETTING)
 	end,
-	saved = app.IsClassic and function(t)
-		local factionID = t[KEY];
-		if app.CurrentCharacter.Factions[factionID] then return true; end
-		if t.standing >= t.maxstanding then
-			app.CurrentCharacter.Factions[factionID] = 1;
-			ATTAccountWideData.Factions[factionID] = 1;
-			return true;
-		end
-	end or function(t)
-		local id = t[KEY];
-		-- character known
-		if app.IsCached(CACHE, id) then return true; end
+	saved = function(t)
+		-- character saved
+		if app.IsCached(CACHE, t[KEY]) then return 1 end
 	end,
 	title = function(t)
 		local title = t.standingText;
@@ -242,6 +247,9 @@ app.CreateFaction = app.CreateClass("Faction", KEY, {
 	sortProgress = function(t)
 		return ((t.reputation or -42000) + 42000) / 84000;
 	end,
+	CompareReputation = function()
+		return CompareReputation;
+	end,
 },
 C_GossipInfo_GetFriendshipReputation and "AsFriend" or false, {
 	isFriend = app.ReturnTrue,
@@ -279,7 +287,11 @@ C_GossipInfo_GetFriendshipReputation and "AsFriend" or false, {
 	standing = function(t)
 		return C_GossipInfo_GetFriendshipReputationRanks(t[KEY]).currentLevel;
 	end,
-	maxstanding = function(t)
+	maxstanding = app.IsClassic and function(t)
+		local minReputation = t.minReputation;
+		if minReputation and minReputation[1] == t[KEY] then return minReputation[2]; end
+		return C_GossipInfo_GetFriendshipReputationRanks(t[KEY]).maxLevel;
+	end or function(t)
 		return C_GossipInfo_GetFriendshipReputationRanks(t[KEY]).maxLevel;
 	end,
 	standingName = function(t)
@@ -292,6 +304,9 @@ C_GossipInfo_GetFriendshipReputation and "AsFriend" or false, {
 	rankText = function(t)
 		local standing, maxstanding = t.rank, t.maxstanding;
 		return Colorize(TRADESKILL_RANK_HEADER:format(standing), GetProgressColor(math_min(standing, maxstanding) / maxstanding));
+	end,
+	CompareReputation = function()
+		return CompareStanding;
 	end,
 },
 function(t) return C_GossipInfo_GetFriendshipReputation(t[KEY]).friendshipFactionID ~= 0; end,
@@ -356,60 +371,70 @@ C_MajorFactions_GetMajorFactionData and "WithRenown" or false, {
 	end,
 },
 function(t) return C_MajorFactions_GetMajorFactionData(t[KEY]) end);
-app.AddEventHandler("OnSavedVariablesAvailable", function(currentCharacter, accountWideData)
-	if not currentCharacter[CACHE] then currentCharacter[CACHE] = {} end
-	if not accountWideData[CACHE] then accountWideData[CACHE] = {} end
-	ATTAccountWideData = accountWideData
-end)
 
-if app.IsRetail then
-	app.AddEventHandler("OnRefreshCollections", function()
-		local faction
-		local saved, none = {}, {}
-		for id,_ in pairs(app.GetRawFieldContainer(KEY)) do
-			faction = app.SearchForObject(KEY, id, "key")
-			if faction then
-				if faction.standing >= faction.maxstanding then
-					saved[id] = true
-				else
-					none[id] = true
-				end
-			else app.PrintDebug(Colorize("MISSING FACTION", app.Colors.ChatLinkError),app:Linkify("Faction "..id,app.Colors.ChatLinkError,"search:factionID:"..id))
-			end
-		end
-		-- Character Cache
-		app.SetBatchCached(CACHE, saved, 1)
-		app.SetBatchCached(CACHE, none)
-		-- Account Cache (removals handled by Sync)
-		app.SetBatchAccountCached(CACHE, saved, 1)
-	end);
-	local function ScanForNewCollectedFactions()
-		-- app.PrintDebug("Scan uncollected factions")
-		local faction
-		local IsCached, SearchForObject = app.IsCached, app.SearchForObject
-		for id,_ in pairs(app.GetRawFieldContainer(KEY)) do
-			if not IsCached(CACHE, id) then
-				-- app.PrintDebug("Check Uncached Faction",id)
-				faction = SearchForObject(KEY, id, "key")
-				if faction then
-					-- factions can dynamically be during the 'UPDATE_FACTION' event (thanks Blizzard not telling us which Faction got rep...)
-					if faction.standing >= faction.maxstanding then
-						-- Character Cache
-						app.SetThingCollected(KEY, id, false, true)
-					end
-				else app.PrintDebug(Colorize("MISSING FACTION", app.Colors.ChatLinkError),app:Linkify("Faction "..id,app.Colors.ChatLinkError,"search:factionID:"..id))
-				end
-			end
-		end
-		-- app.PrintDebug("Scan uncollected factions:Done")
-	end
-	app.AddEventRegistration("UPDATE_FACTION", function()
-		app.CallbackHandlers.AfterCombatOrDelayedCallback(ScanForNewCollectedFactions, 2)
-	end);
+local function PrintMissingFaction(id)
+	app.PrintDebug(Colorize("MISSING FACTION", app.Colors.ChatLinkError),app:Linkify("Faction "..id,app.Colors.ChatLinkError,"search:factionID:"..id))
 end
+app.AddEventHandler("OnRefreshCollections", function()
+	local faction
+	local saved, none, bonus, nobonus = {}, {}, {}, {}
+	for id,_ in pairs(app.GetRawFieldContainer(KEY)) do
+		faction = app.SearchForObject(KEY, id, "key")
+		if faction then
+			if faction.standing >= faction.maxstanding then
+				saved[id] = true
+			else
+				none[id] = true
+			end
+			-- This is currently always 'false' in Retail, even for Factions with the bonus because Blizzard broke it
+			-- years ago and hasn't bothered fixing it
+			if not app.IsClassic and GetFactionBonusReputation(id) then	-- (sidenote: it does work in Classic at the moment)
+				-- leaving this debug print here in case it ever gets fixed I'll see it spam chat and we can rejoice
+				-- and make the Grand Commendations collectible again :)
+				app.PrintDebug("FactionBonus",id,app:SearchLink(faction))
+				bonus[id] = true
+			else
+				nobonus[id] = true
+			end
+		else PrintMissingFaction(id)
+		end
+	end
+	-- Character Cache
+	app.SetBatchCached(CACHE, saved, 1)
+	app.SetBatchCached(CACHE, none)
+	-- Account Cache (removals handled by Sync)
+	app.SetBatchAccountCached(CACHE, saved, 1)
+	-- Account Cache of FactionBonus
+	app.SetBatchAccountCached("FactionBonus", bonus, 1)
+	app.SetBatchAccountCached("FactionBonus", nobonus)
+end);
+local function ScanForNewCollectedFactions()
+	-- app.PrintDebug("Scan uncollected factions")
+	local faction
+	local IsCached, SearchForObject = app.IsCached, app.SearchForObject
+	for id,_ in pairs(app.GetRawFieldContainer(KEY)) do
+		if not IsCached(CACHE, id) then
+			-- app.PrintDebug("Check Uncached Faction",id)
+			faction = SearchForObject(KEY, id, "key")
+			if faction then
+				-- factions can dynamically be during the 'UPDATE_FACTION' event (thanks Blizzard not telling us which Faction got rep...)
+				if faction.standing >= faction.maxstanding then
+					-- Character Cache
+					app.SetThingCollected(KEY, id, false, true)
+				end
+			else PrintMissingFaction(id)
+			end
+		end
+	end
+	-- app.PrintDebug("Scan uncollected factions:Done")
+end
+app.AddEventRegistration("UPDATE_FACTION", function()
+	app.CallbackHandlers.AfterCombatOrDelayedCallback(ScanForNewCollectedFactions, 2)
+end);
 app.AddEventHandler("OnSavedVariablesAvailable", function(currentCharacter, accountWideData)
 	if not currentCharacter[CACHE] then currentCharacter[CACHE] = {} end
 	if not accountWideData[CACHE] then accountWideData[CACHE] = {} end
+	if not accountWideData.FactionBonus then accountWideData.FactionBonus = {}; end
 end);
 
 -- External APIs

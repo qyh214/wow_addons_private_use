@@ -8,29 +8,31 @@ local IsInGroup, IsPartyLFG = IsInGroup, IsPartyLFG
 local InCombatLockdown, UnitAffectingCombat = InCombatLockdown, UnitAffectingCombat
 local UnitGroupRolesAssigned, UnitSetRole = UnitGroupRolesAssigned, UnitSetRole
 
-LibSpec.RegisterGroup({}, function(_, role, _, player)
-	if myName == player and IsInGroup() and not IsPartyLFG() and UnitGroupRolesAssigned("player") ~= role then
+local function UpdateMyRole()
+	local _, role = LibSpec.MySpecialization()
+	if IsInGroup() and not IsPartyLFG() and UnitGroupRolesAssigned("player") ~= role then
 		if InCombatLockdown() or UnitAffectingCombat("player") then
 			frame:RegisterEvent("PLAYER_REGEN_ENABLED")
 			return
 		end
 		UnitSetRole("player", role)
 	end
-end)
+end
+LibSpec.RegisterPlayerSpecChange({}, UpdateMyRole)
 
 frame:SetScript("OnEvent", function(self, event)
-	self:UnregisterEvent(event)
-	if IsInGroup() and not IsPartyLFG() then
-		local _, role = LibSpec:MySpecialization()
-		if UnitGroupRolesAssigned("player") ~= role then
-			UnitSetRole("player", role)
-		end
+	if event == "GROUP_FORMED" then
+		UpdateMyRole()
+	else -- PLAYER_REGEN_ENABLED
+		self:UnregisterEvent(event)
+		UpdateMyRole()
 	end
 end)
+frame:RegisterEvent("GROUP_FORMED")
 
 local _, addonTbl = ...
 local L = addonTbl.API:GetLocale("BigWigs")
-addonTbl.API.SetToolOptionsTable("AutoRole", {
+addonTbl.API.RegisterToolOptions("AutoRole", {
 	type = "group",
 	name = L.autoRoleTitle,
 	args = {

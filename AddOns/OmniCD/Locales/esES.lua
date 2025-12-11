@@ -246,6 +246,8 @@ L["Enable if the spell is a base ability for this specialization"] = "Enable if 
 --[[Translation missing --]]
 L["Enable in automated instance groups"] = "Enable in automated instance groups"
 --[[Translation missing --]]
+L["Enable in raid groups"] = "Enable in raid groups"
+--[[Translation missing --]]
 L["Enable initial spark and marching-ants animation"] = "Enable initial spark and marching-ants animation"
 --[[Translation missing --]]
 L["Enable spell for this specialization"] = "Enable spell for this specialization"

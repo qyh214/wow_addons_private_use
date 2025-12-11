@@ -2,7 +2,9 @@ local _, addonTbl = ...
 local L = addonTbl.API:NewLocale("BigWigs", "koKR")
 if not L then return end
 
-L.tempNew = "신규: |cFFFFFFFF/key|r를 입력하면 파티원의 쐐기돌을 볼 수 있습니다."
+-- API.lua
+L.showAddonBar = "'|cFF436EEE%s|r' 애드온이 '%s' 바를 생성했습니다."
+L.requestAddonProfile = "애드온 '|cFF436EEE%s|r'이 방금 프로필 내보내기 문자열을 복사했습니다."
 
 -- Core.lua
 L.berserk = "광폭화"
@@ -61,6 +63,8 @@ L.outOfDateContentPopup = "경고!\n |cFF436EEE%s|r을 업데이트했지만 기
 L.outOfDateContentRaidWarning = "|cFF436EEE%s|r이 올바르게 작동하려면 기본 |cFF436EEEBigWigs|r 애드온의 %d 버전이 필요하지만 %d 버전을 사용 중입니다."
 L.addOnLoadFailedWithReason = "BigWigs에서 애드온 |cFF436EEE%s|r을 로드하는 데 실패했습니다. 이유는 %q입니다. BigWigs 개발팀에 알려주세요!"
 L.addOnLoadFailedUnknownError = "BigWigs에서 애드온 |cFF436EEE%s|r을 로드하는 중 오류가 발생했습니다. BigWigs 개발팀에 알려주세요!"
+L.newFeatures = "새로운 BigWigs 기능:"
+L.parentheses = "%s (%s)"
 
 L.expansionNames = {
 	"오리지널", -- Classic
@@ -74,11 +78,45 @@ L.expansionNames = {
 	"어둠땅", -- Shadowlands
 	"용군단", -- Dragonflight
 	"내부 전쟁", -- The War Within
+	"한밤", -- Midnight
 }
 L.littleWigsExtras = {
 	["LittleWigs_Delves"] = "구렁",
 	["LittleWigs_CurrentSeason"] = "현재 시즌",
 }
+L.dayNamesShort = {
+	"일요일", -- Sunday
+	"월요일", -- Monday
+	"화요일", -- Tuesday
+	"수요일", -- Wednesday
+	"목요일", -- Thursday
+	"금요일", -- Friday
+	"토요일", -- Saturday
+}
+L.dayNames = {
+	"일요일",
+	"월요일",
+	"화요일",
+	"수요일",
+	"목요일",
+	"금요일",
+	"토요일",
+}
+L.monthNames = {
+	"1월",
+	"2월",
+	"3월",
+	"4월",
+	"5월",
+	"6월",
+	"7월",
+	"8월",
+	"9월",
+	"10월",
+	"11월",
+	"12월",
+}
+L.dateFormat = "%s %d %s %d" -- Date format: "Monday 1 January 2025"
 
 -- Media.lua (These are the names of the sounds in the dropdown list in the "sounds" section)
 L.Beware = "조심해라 (알갈론)"
@@ -233,6 +271,12 @@ L.imported_countdown_position = "카운트다운 위치"
 L.imported_countdown_settings = "카운트다운 설정"
 L.imported_countdown_color = "카운트다운 색상"
 L.imported_nameplate_settings = "이름표 설정"
+L.imported_mythicplus_settings = "신화+ 설정"
+L.mythicplus_settings_import_desc = "모든 신화+ 설정 가져오기."
+L.mythicplus_settings_export_desc = "모든 신화+ 설정 내보내기."
+L.imported_battleres_settings = "전투 부활 설정"
+L.battleres_settings_import_desc = "모든 전투 부활 설정을 가져옵니다."
+L.battleres_settings_export_desc = "모든 전투 부활 설정을 내보냅니다."
 
 -- Statistics
 L.statistics = "통계"
@@ -251,7 +295,13 @@ L.LFR = "공찾"
 L.normal = "일반"
 L.heroic = "영웅"
 L.mythic = "신화"
+L.LFR_timerun = "|A:timerunning-glues-icon:14:14|a공찾"
+L.normal_timerun = "|A:timerunning-glues-icon:14:14|a일반"
+L.heroic_timerun = "|A:timerunning-glues-icon:14:14|a영웅"
+L.mythic_timerun = "|A:timerunning-glues-icon:14:14|a신화"
 L.timewalk = "시간여행"
+L.solotier8 = "솔플 8단계"
+L.solotier11 = "솔플 11단계"
 L.story = "스토리"
 L.mplus = "신화+ %d"
 L.SOD = "디스커버리 시즌"
@@ -269,7 +319,7 @@ L.H25 = "영웅 25"
 -----------------------------------------------------------------------
 
 L.tools = "도구"
-L.toolsDesc = "BigWigs은 보스와의 전투를 더욱 빠르고 간편하게 만들어 주는 다양한 도구 또는 \"편의 기능\"을 제공합니다. |cFF33FF99+|r 아이콘을 클릭하여 메뉴를 확장하면 모든 기능을 확인할 수 있습니다."
+L.toolsDesc = "BigWigs은 보스와의 전투를 더욱 빠르고 간편하게 만들어 주는 다양한 도구 또는 \"편의 기능\"을 제공합니다."
 
 -----------------------------------------------------------------------
 -- AutoRole.lua
@@ -277,6 +327,27 @@ L.toolsDesc = "BigWigs은 보스와의 전투를 더욱 빠르고 간편하게 �
 
 L.autoRoleTitle = "자동 역할"
 L.autoRoleExplainer = "그룹에 가입하거나 그룹에 있는 동안 특성 전문화를 변경할 때마다 BigWigs이 자동으로 그룹 역할(탱커, 힐러, 딜러)을 그에 맞게 조정합니다.\n\n"
+
+-----------------------------------------------------------------------
+-- BattleRes.lua
+--
+
+L.battleResTitle = "전투 부활"
+L.battleResDesc = "사용 가능한 전투 부활 충전 횟수와 다음 충전 획득까지 남은 시간을 표시하는 아이콘."
+L.battleResDesc2 = "\n아이콘 마우스 오버 시 |cFF33FF99전투 부활 기록|r을 툴팁으로 확인할 수 있습니다.\n\n"
+L.battleResHistory = "전투 부활 기록:"
+L.battleResResetAll = "모든 전투 부활 설정을 기본값으로 초기화합니다."
+L.battleResDurationText = "지속 시간 텍스트"
+L.battleResChargesText = "충전량 텍스트"
+L.battleResNoCharges = "충전량 0개"
+L.battleResHasCharges = "충전량 1개 이상"
+L.battleResPlaySound = "새로운 충전량이 획득될 때 소리를 재생합니다."
+L.iconTextureSpellID = "|T%d:0:0:0:0:64:64:4:60:4:60|t 아이콘 텍스처(주문 ID)"
+L.iconTextureSpellIDError = "아이콘 텍스처로 사용할 유효한 주문 ID를 입력해야 합니다."
+L.battleResModeIcon = "모드: 아이콘"
+L.battleResModeText = "모드: 텍스트만"
+L.battleResModeTextTooltip = "전투 부활 기능을 이동하고 마우스 오버 영역을 확인하는 데 도움이 되도록 임시 배경을 표시합니다."
+L.battleResNoteTooltip = "참고: 이 툴팁은 전투 중이 아닐 때만 표시됩니다."
 
 -----------------------------------------------------------------------
 -- Keystones.lua
@@ -302,14 +373,14 @@ L.keystoneTeleportInCombat = "전투 중에는 순간이동할 수 없습니다.
 L.keystoneTabHistory = "기록"
 L.keystoneHeaderThisWeek = "이번 주"
 L.keystoneHeaderOlder = "이전 기록"
-L.keystoneScoreTooltip = "던전 점수: |cFFFFFFFF%d|r"
-L.keystoneScoreGainedTooltip = "획득 점수: |cFFFFFFFF+%d|r"
-L.keystoneCompletedTooltip = "제한 시간 내에 완료"
-L.keystoneFailedTooltip = "제한 시간 내에 완료하지 못함"
+L.keystoneScoreGainedTooltip = "획득 점수: |cFFFFFFFF+%d|r\n던전 점수: |cFFFFFFFF%d|r"
+L.keystoneCompletedTooltip = "제한 시간 내에 완료: |cFFFFFFFF%d분 %d초|r\n제한 시간: |cFFFFFFFF%d분 %d초|r"
+L.keystoneFailedTooltip = "제한 시간 내에 완료하지 못함: |cFFFFFFFF%d분 %d초|r\n제한 시간: |cFFFFFFFF%d분 %d초|r"
 L.keystoneExplainer = "신화+ 경험을 향상시키는 다양한 도구 모음입니다."
 L.keystoneAutoSlot = "쐐기돌 자동 삽입"
 L.keystoneAutoSlotDesc = "마력의 샘을 열 때 자동으로 쐐기돌을 넣습니다."
 L.keystoneAutoSlotMessage = "%s 쐐기돌을 자동으로 넣었습니다."
+L.keystoneAutoSlotFrame = "|TInterface\\AddOns\\BigWigs\\Media\\Icons\\minimap_raid:14:14|t 쐐기돌 자동 삽입됨"
 L.keystoneModuleName = "신화+"
 L.keystoneStartBar = "%s +%d" -- Format is SHORT_DUNGEON_NAME +KEYSTONE_LEVEL e.g. "ROOK +12"
 L.keystoneStartMessage = "%s +%d 지금 시작합니다!" -- Format is LONG_DUNGEON_NAME +KEYSTONE_LEVEL e.g. "The Rookery +12 begins now!"
@@ -321,12 +392,26 @@ L.keystoneViewerTitle = "쐐기돌 뷰어"
 L.keystoneHideGuildTitle = "길드원에게 내 쐐기돌 숨기기"
 L.keystoneHideGuildDesc = "|cffff4411권장하지 않습니다.|r 이 기능은 길드원들이 당신의 쐐기돌을 볼 수 없도록 합니다. 파티 내의 다른 멤버들은 여전히 이를 확인할 수 있습니다."
 L.keystoneHideGuildWarning = "길드원이 당신의 쐐기돌을 볼 수 없도록 하는 것은 |cffff4411권장하지 않습니다|r.\n\n정말로 이 기능을 사용하시겠습니까?"
-L.keystoneAutoShowZoneIn = "던전 입장 시 표시"
-L.keystoneAutoShowZoneInDesc = "신화+ 던전에 입장할 때 자동으로 쐐기돌 뷰어를 표시합니다.\n\n|cFF33FF99이 기능을 사용하면 곧 진행할 쐐기돌을 어떤 플레이어가 소유하고 있는지 확인할 수 있습니다.|r"
 L.keystoneAutoShowEndOfRun = "신화+ 던전이 종료될 때 표시"
 L.keystoneAutoShowEndOfRunDesc = "신화+ 던전이 종료될 때 자동으로 쐐기돌 뷰어를 표시합니다.\n\n|cFF33FF99이 기능을 사용하면 파티가 획득한 새로운 쐐기돌을 확인할 수 있습니다.|r"
 L.keystoneViewerExplainer = "쐐기돌 뷰어를 열려면 |cFF33FF99/key|r 명령어를 사용하거나 아래 버튼을 클릭하세요.\n\n"
 L.keystoneViewerOpen = "쐐기돌 뷰어 열기"
+L.keystoneViewerKeybindingExplainer = "\n\n쐐기돌 뷰어를 열도록 단축키를 설정할 수도 있습니다:\n\n"
+L.keystoneViewerKeybindingDesc = "단축키로 쐐기돌 뷰어를 엽니다."
+L.keystoneClickToWhisper = "귓속말 대화 상자를 열려면 클릭"
+L.keystoneClickToTeleportNow = "\n여기로 순간이동 하려면 클릭"
+L.keystoneClickToTeleportCooldown = "\n순간이동 불가, 재사용 대기 중"
+L.keystoneClickToTeleportNotLearned = "\n순간이동 불가, 주문 미습득"
+L.keystoneHistoryRuns = "총 %d개"
+L.keystoneHistoryRunsThisWeekTooltip = "이번 주 던전 총계: |cFFFFFFFF%d|r"
+L.keystoneHistoryRunsOlderTooltip = "이번 주 이전까지 던전 총계: |cFFFFFFFF%d|r"
+L.keystoneHistoryScore = "점수 +%d"
+L.keystoneHistoryScoreThisWeekTooltip = "이번 주 획득 총 점수: |cFFFFFFFF+%d|r"
+L.keystoneHistoryScoreOlderTooltip = "이번 주 이전에 획득한 총 점수: |cFFFFFFFF+%d|r"
+L.keystoneTimeUnder = "|cFF33FF99-%02d:%02d|r"
+L.keystoneTimeOver = "|cFFFF4411+%02d:%02d|r"
+L.keystoneTeleportTip = "아래 던전 이름을 클릭하면 |cFF33FF99순간이동|r 던전 입구로 바로 이동합니다."
+L.keystoneTimerunner = "|A:timerunning-glues-icon:14:14|a이것은 시간질주자 캐릭터입니다." -- Note: Timerunning is a mode like "Legion Remix", it is NOT the same as Timewalking
 
 -- It doesn't really matter what you call it as long as it's recognizable and limited to ~6 characters
 L.keystoneShortName_TheRookery = "부화장"
@@ -343,11 +428,24 @@ L.keystoneShortName_AraKaraCityOfEchoes = "아라카라"
 L.keystoneShortName_TazaveshSoleahsGambit = "소레아"
 L.keystoneShortName_TazaveshStreetsOfWonder = "거리"
 L.keystoneShortName_TheDawnbreaker = "새인호"
+L.keystoneShortName_BlackRookHold = "검떼"
+L.keystoneShortName_CourtOfStars = "별궁"
+L.keystoneShortName_DarkheartThicket = "어숲"
+L.keystoneShortName_EyeOfAzshara = "아즈"
+L.keystoneShortName_HallsOfValor = "용맹"
+L.keystoneShortName_MawOfSouls = "아귀"
+L.keystoneShortName_NeltharionsLair = "넬둥"
+L.keystoneShortName_TheArcway = "비전로"
+L.keystoneShortName_VaultOfTheWardens = "금고"
+L.keystoneShortName_ReturnToKarazhanLower = "하층"
+L.keystoneShortName_ReturnToKarazhanUpper = "상층"
+L.keystoneShortName_CathedralOfEternalNight = "대성당"
+L.keystoneShortName_SeatOfTheTriumvirate = "삼두정"
 
 -- These short names are for the bar that shows during the Mythic+ countdown
 -- Use the real dungeon names but make them shorter to fit on the bar better
 L.keystoneShortName_TheRookery_Bar = "부화장"
-L.keystoneShortName_DarkflameCleft_Bar = "어둠불꽃 동굴"
+L.keystoneShortName_DarkflameCleft_Bar = "어불동"
 L.keystoneShortName_PrioryOfTheSacredFlame_Bar = "수도원"
 L.keystoneShortName_CinderbrewMeadery_Bar = "양조장"
 L.keystoneShortName_OperationFloodgate_Bar = "수문"
@@ -360,6 +458,34 @@ L.keystoneShortName_AraKaraCityOfEchoes_Bar = "아라카라"
 L.keystoneShortName_TazaveshSoleahsGambit_Bar = "소레아"
 L.keystoneShortName_TazaveshStreetsOfWonder_Bar = "거리"
 L.keystoneShortName_TheDawnbreaker_Bar = "새인호"
+L.keystoneShortName_BlackRookHold_Bar = "검떼"
+L.keystoneShortName_CourtOfStars_Bar = "별궁"
+L.keystoneShortName_DarkheartThicket_Bar = "어숲"
+L.keystoneShortName_EyeOfAzshara_Bar = "아즈"
+L.keystoneShortName_HallsOfValor_Bar = "용맹"
+L.keystoneShortName_MawOfSouls_Bar = "아귀"
+L.keystoneShortName_NeltharionsLair_Bar = "넬둥"
+L.keystoneShortName_TheArcway_Bar = "비전로"
+L.keystoneShortName_VaultOfTheWardens_Bar = "금고"
+L.keystoneShortName_ReturnToKarazhanLower_Bar = "하층"
+L.keystoneShortName_ReturnToKarazhanUpper_Bar = "상층"
+L.keystoneShortName_CathedralOfEternalNight_Bar = "대성당"
+L.keystoneShortName_SeatOfTheTriumvirate_Bar = "삼두정"
+
+-- Instance Keys "Who has a key?"
+L.instanceKeysTitle = "누가 쐐기돌을 가지고 있나요?"
+L.instanceKeysDesc = "신화 던전에 입장하면 해당 던전의 쐐기돌을 가진 플레이어가 목록으로 표시됩니다.\n\n"
+L.instanceKeysTest8 = "|cFF00FF98수도사:|r +8"
+L.instanceKeysTest10 = "|cFFFF7C0A드루이드:|r +10"
+L.instanceKeysDisplay = "|c%s%s:|r +%d" -- "PLAYER_NAME: +DUNGEON_LEVEL"
+L.instanceKeysDisplayWithDungeon = "|c%s%s:|r +%d (%s)" -- "PLAYER_NAME: +DUNGEON_LEVEL (DUNGEON_NAME)"
+L.instanceKeysShowAll = "모든 플레이어 항상 표시"
+L.instanceKeysShowAllDesc = "이 옵션을 활성화하면 현재 있는 던전과 관련이 없는 쐐기돌을 가진 플레이어도 목록에 표시됩니다."
+L.instanceKeysOtherDungeonColor = "다른 던전 색상"
+L.instanceKeysOtherDungeonColorDesc = "현재 있는 던전과 관련이 없는 쐐기돌을 가진 플레이어의 글꼴 색상을 선택합니다."
+L.instanceKeysEndOfRunDesc = "기본적으로 목록은 신화 던전에 들어갈 때만 표시됩니다. 이 옵션을 활성화하면 신화+가 끝난 후에도 목록이 표시됩니다."
+L.instanceKeysHideTitle = "제목 숨기기"
+L.instanceKeysHideTitleDesc = "\"누가 쐐기돌을 가지고 있나요?\" 제목을 숨깁니다."
 
 -----------------------------------------------------------------------
 -- LFGTimer.lua
@@ -377,6 +503,13 @@ L.lfgUseMasterDesc = "이 옵션을 활성화하면 파티 찾기 준비 완료�
 L.general = "일반"
 L.advanced = "고급"
 L.comma = ", "
+L.reset = "초기화"
+L.resetDesc = "위의 설정을 기본값으로 초기화합니다."
+L.resetAll = "모두 초기화"
+L.startTest = "테스트 시작"
+L.stopTest = "테스트 중지"
+L.always = "항상"
+L.never = "절대 안 함"
 
 L.positionX = "X 위치"
 L.positionY = "Y 위치"
@@ -384,11 +517,14 @@ L.positionExact = "정확한 위치"
 L.positionDesc = "고정기로부터 정확한 위치를 원한다면 상자에 입력하거나 슬라이더를 움직이세요."
 L.width = "너비"
 L.height = "높이"
+L.size = "크기"
 L.sizeDesc = "보통 고정기를 끌어서 크기를 조정합니다. 정확한 크기를 지정하고 싶다면 슬라이더를 사용하거나 직접 수치를 입력 상자안에 써넣으세요."
 L.fontSizeDesc = "글씨 크기를 슬라이더를 이용해 조정하거나 직접 수치를 입력 상자안에 써넣으세요 (최대 200)."
 L.disabled = "비활성"
 L.disableDesc = "'%s' 기능을 비활성화하려고 합니다. |cffff4411권장하지 않음|r.\n\n정말로 비활성화하시겠습니까?"
 L.keybinding = "키 설정"
+L.dragToResize = "드래그하여 크기 조정"
+L.cannotMoveInCombat = "전투 중에는 이것을 움직일 수 없습니다."
 
 -- Anchor Points
 L.UP = "위"
@@ -405,6 +541,9 @@ L.CENTER = "중앙"
 L.customAnchorPoint = "고급: 사용자 지정 앵커 지점"
 L.sourcePoint = "원본 지점"
 L.destinationPoint = "대상 지점"
+L.drawStrata = "계층"
+L.medium = "중간"
+L.low = "낮음"
 
 -----------------------------------------------------------------------
 -- AltPower.lua
@@ -567,6 +706,7 @@ L.blockDungeonPopups = "던전 팝업 배너 차단"
 L.blockDungeonPopupsDesc = "던전에 입장할 때 표시되는 팝업 배너는 때때로 매우 긴 텍스트를 포함할 수 있습니다. 이 기능을 활성화하면 이러한 팝업 배너가 완전히 차단됩니다."
 L.itemLevel = "아이템 레벨: %d"
 L.newRespawnPoint = "새로운 부활 지점"
+L.playerLevel = "%d 레벨"
 
 L.userNotifySfx = "보스 기능 차단으로 비활성화된 사운드 효과를 강제로 다시 활성화합니다."
 L.userNotifyMusic = "보스 기능 차단으로 비활성화된 배경음악를 강제로 다시 활성화합니다."
@@ -588,10 +728,8 @@ L.textShadow = "문자 그림자"
 L.expiring_normal = "일반"
 L.emphasized = "강조"
 
-L.reset = "초기화"
-L.resetDesc = "위의 색상을 기본 색상으로 초기화합니다."
-L.resetAll = "모두 초기화"
-L.resetAllDesc = "보스 전투 설정에 사용자 설정 색상을 적용했다면, 이 버튼은 여기에 정의된 색상이 대신 사용되도록 모두 초기화합니다."
+L.resetColorsDesc = "위의 색상을 기본 색상으로 초기화합니다."
+L.resetAllColorsDesc = "보스 전투 설정에 사용자 설정 색상을 적용했다면, 이 버튼은 여기에 정의된 색상이 대신 사용되도록 모두 초기화합니다."
 
 L.red = "빨강"
 L.redDesc = "일반적인 경보"
@@ -670,6 +808,11 @@ L.displayTimeDesc = "메시지를 표시할 시간, 초 단위"
 L.fadeTime = "서서히 사라질 시간"
 L.fadeTimeDesc = "메시지를 서서히 없앨 시간, 초 단위"
 
+L.messagesOptInHeaderOff = "보스 모드 메시지 '선택 활성화' 모드: 이 옵션을 활성화하면 모든 보스 모듈에서 메시지가 비활성화됩니다.\n\n원하는 메시지만 각 모듈에서 수동으로 활성화해야 합니다.\n\n"
+L.messagesOptInHeaderOn = "보스 모드 메시지 '선택 활성화' 모드가 |cFF33FF99활성화|r되었습니다. 보스 모드 메시지를 보려면 특정 보스 능력 설정에 들어가서 '|cFF33FF99메시지|r' 옵션을 활성화하세요.\n\n"
+L.messagesOptInTitle = "보스 모드 메시지 '선택 활성화' 모드"
+L.messagesOptInWarning = "|cffff4411경고!|r\n\n'선택 활성화' 모드를 활성화하면 모든 보스 모듈에서 메시지가 비활성화됩니다. 원하는 메시지만 각 모듈에서 수동으로 활성화해야 합니다.\n\nUI가 재시작됩니다. 계속하시겠습니까?"
+
 -----------------------------------------------------------------------
 -- Nameplates.lua
 --
@@ -701,9 +844,12 @@ L.showBorder = "테두리 표시"
 L.showBorderDesc = "아이콘 주위에 테두리를 표시합니다."
 L.borderColor = "테두리 색상"
 L.borderSize = "테두리 크기"
+L.borderOffset = "테두리 위치 조정"
+L.borderName = "테두리 이름"
 L.showNumbers = "숫자 표시"
 L.showNumbersDesc = "아이콘에 숫자 표시."
 L.cooldown = "쿨다운"
+L.cooldownEmphasizeHeader = "기본적으로 강조 기능은 비활성화되어 있습니다(0초). 1초 이상으로 설정하면 강조 기능이 활성화됩니다. 이렇게 하면 해당 숫자에 다른 글꼴 색상과 글꼴 크기를 설정할 수 있습니다."
 L.showCooldownSwipe = "회전 애니메이션 표시"
 L.showCooldownSwipeDesc = "쿨다운이 활성화된 경우 아이콘에 회전 애니메이션을 표시합니다."
 L.showCooldownEdge = "가장자리 표시"
@@ -722,8 +868,12 @@ L.fixate_test = "테스트 텍스트" -- Text that displays to test on the frame
 L.resetNameplateTextDesc = "이름표 텍스트와 관련된 모든 옵션을 초기화합니다."
 L.glowAt = "반짝임 시작 (초)"
 L.glowAt_desc = "반짝임이 시작될 때 재사용 대기시간이 몇 초 남았는지 선택합니다."
+L.offsetX = "X 위치 조정"
+L.offsetY = "Y 위치 조정"
 L.headerIconSizeTarget = "현재 대상의 아이콘 크기"
 L.headerIconSizeOthers = "다른 모든 대상의 아이콘 크기"
+L.headerIconPositionTarget = "현재 대상의 아이콘 위치"
+L.headerIconPositionOthers = "다른 모든 대상의 아이콘 위치"
 
 -- Glow types as part of LibCustomGlow
 L.pixelGlow = "픽셀 반짝임"
@@ -744,6 +894,11 @@ L.scale = "크기"
 L.scale_glow_desc = "애니메이션에서 반짝임의 크기."
 L.startAnimation = "애니메이션 시작"
 L.startAnimation_glow_desc = "이 반짝임은 시작 애니메이션을 가지고 있으며, 애니메이션의 활성화/비활성화를 설정합니다."
+
+L.nameplateOptInHeaderOff = "\n\n\n\n보스 모드 이름표 '선택 활성화' 모드: 이 옵션을 활성화하면 모든 보스 모듈에서 이름표가 비활성화됩니다.\n\n원하는 이름표만 각 모듈에서 수동으로 활성화해야 합니다.\n\n"
+L.nameplateOptInHeaderOn = "\n\n\n\n보스 모드 이름표 '선택 활성화' 모드가 |cFF33FF99활성화|r되었습니다. 보스 모드 이름표를 보려면 특정 보스 능력 설정에 들어가서 '|cFF33FF99이름표|r' 옵션을 활성화하세요.\n\n"
+L.nameplateOptInTitle = "보스 모드 이름표 '선택 활성화' 모드"
+L.nameplateOptInWarning = "|cffff4411경고!|r\n\n'선택 활성화' 모드를 활성화하면 모든 보스 모듈에서 이름표가 비활성화됩니다. 원하는 이름표만 각 모듈에서 수동으로 활성화해야 합니다.\n\nUI가 재시작됩니다. 계속하시겠습니까?"
 
 -----------------------------------------------------------------------
 -- Proximity.lua
@@ -788,6 +943,7 @@ L.combatLogDesc = "전투 예정 타이머 시작부터 보스 전투 종료로 
 L.pull = "전투 예정"
 L.engageSoundTitle = "보스 전투가 시작되면 사운드 재생"
 L.pullStartedSoundTitle = "전투 예정 타이머가 시작되었을때 소리 재생"
+L.pullStartedMessageTitle = "전투 예정 타이머가 시작될 때 메시지 표시"
 L.pullFinishedSoundTitle = "전투 예정 타이머가 끝났을때 소리 재생"
 L.pullStartedBy = "%s에 의해 풀 타이머가 시작되었습니다."
 L.pullStopped = "%s|1이;가; 전투 예정 타이머를 취소했습니다."

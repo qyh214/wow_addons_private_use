@@ -1,6 +1,5 @@
 local addonName, addon = ...
 
-local IS_DRAGONFLIGHT = addon.IsDragonflight();
 local outSine = addon.EasingFunctions.outSine;
 local inOutSine = addon.EasingFunctions.inOutSine
 local FadeFrame = NarciFadeUI.Fade;
@@ -466,12 +465,13 @@ function NarciMinimapButtonMixin:StartRepositioning()
 	self:StopMovingOrSizing();
 	self.PositionUpdator:Hide();
 	self.TooltipFrame:Hide();
-	self:ClearAllPoints();
+
 	if not IsShiftKeyDown() and self:IsAnchoredToMinimap() then
 		self:SetTooltipText("Hold Shift for free move");
 		self.PositionUpdator.mapX, self.PositionUpdator.mapY = Minimap:GetCenter();
 		self.PositionUpdator.uiScale = Minimap:GetEffectiveScale();
 		self.PositionUpdator:Show();
+		self:ClearAllPoints();
 		NarcissusDB.AnchorToMinimap = true;
 	else
 		self:StartMoving();
@@ -561,10 +561,8 @@ function NarciMinimapButtonMixin:SetBackground(index)
 			customStyleID = 2;
 		elseif IsAddOnLoaded("SexyMap") then
 			customStyleID = 3;
-		elseif IS_DRAGONFLIGHT then
-			customStyleID = 4;
 		else
-			customStyleID = 1;
+			customStyleID = 4;
 		end
 		--NarcissusDB.MinimapIconStyle = customStyleID;
 	end

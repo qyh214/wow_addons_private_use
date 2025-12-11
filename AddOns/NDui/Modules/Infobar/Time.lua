@@ -108,15 +108,15 @@ local questlist = {
 	{name = C_Map.GetAreaInfo(15141), id = 83333},	-- 觉醒主机
 }
 
-local delvesKeys = {84736, 84737, 84738, 84739}
+local delvesKeys = {91175, 91176, 91177, 91178}
 local keyName = C_CurrencyInfo.GetCurrencyInfo(3028).name
 
 -- Check Invasion Status
 local region = GetCVar("portal")
 local legionZoneTime = {
-	["EU"] = 1565168400, -- CN-16
-	["US"] = 1565197200, -- CN-8
-	["CN"] = 1565226000, -- CN time 8/8/2019 09:00 [1]
+	["EU"] = 1762434000, -- 2025-11-06 13:00 UTC+0
+	["US"] = 1762421400, -- 2025-11-06 01:30 UTC-8
+	["CN"] = 1762450200, -- CN time 11/7/2025 01:30 [1]
 }
 local bfaZoneTime = {
 	["CN"] = 1546743600, -- CN time 1/6/2019 11:00 [1]
@@ -125,7 +125,7 @@ local bfaZoneTime = {
 }
 
 local invIndex = {
-	[1] = {title = L["Legion Invasion"], duration = 66600, maps = {630, 641, 650, 634}, timeTable = {}, baseTime = legionZoneTime[region] or legionZoneTime["CN"]},
+	[1] = {title = L["Legion Invasion"], duration = 52200, maps = {630, 641, 650, 634}, timeTable = {}, baseTime = legionZoneTime[region] or legionZoneTime["CN"]},
 	[2] = {title = L["BfA Invasion"], duration = 68400, maps = {862, 863, 864, 896, 942, 895}, timeTable = {4, 1, 6, 2, 5, 3}, baseTime = bfaZoneTime[region] or bfaZoneTime["CN"]},
 }
 
@@ -269,11 +269,12 @@ local delveList = {
 	{uiMapID = 2215, delveID = 7780}, -- Mycomancer Cavern
 	{uiMapID = 2214, delveID = 7782}, -- The Waterworks
 	{uiMapID = 2214, delveID = 7788}, -- The Dread Pit
+	{uiMapID = 2214, delveID = 8181}, -- Excavation Site 9
 	{uiMapID = 2255, delveID = 7790}, -- The Spiral Weave
 	{uiMapID = 2255, delveID = 7784}, -- Tak-Rethan Abyss
 	{uiMapID = 2255, delveID = 7786}, -- The Underkeep
 	{uiMapID = 2346, delveID = 8246}, -- Sidestree Sluice
-	{uiMapID = 2214, delveID = 8181}, -- Excavation Site 9
+	{uiMapID = 2371, delveID = 8273}, -- Archival Assault
 }
 
 info.onEnter = function(self)

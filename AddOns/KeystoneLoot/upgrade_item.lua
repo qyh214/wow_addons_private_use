@@ -18,14 +18,16 @@ local _itemLevelBonusId = {
 
 local _specialBonusId = {
 	[178708] = 6917,
-	[178715] = 6923
+	[178715] = 6923,
+	[243308] = 13503
 };
 
 local _blacklistedItems = {
     [237588] = true, [237596] = true, [237592] = true, [237600] = true, [237584] = true,
 	[237587] = true, [237595] = true, [237591] = true, [237599] = true, [237583] = true,
 	[237586] = true, [237594] = true, [237590] = true, [237598] = true, [237582] = true,
-	[237585] = true, [237593] = true, [237589] = true, [237597] = true, [237581] = true
+	[237585] = true, [237593] = true, [237589] = true, [237597] = true, [237581] = true,
+	[250104] = true
 }
 
 function KeystoneLoot:UpdateUpgradeTooltip()

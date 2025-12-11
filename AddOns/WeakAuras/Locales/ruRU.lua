@@ -127,6 +127,10 @@ Last upgrade: %s]=] ] = [=[Вы уверены, что хотите запуст
 L["Arena"] = "Арена"
 L["Armor (%)"] = "Броня (%)"
 L["Armor against Target (%)"] = "Броня против текущей цели (%)"
+--[[Translation missing --]]
+L["Armor Peneration Percent"] = "Armor Peneration Percent"
+--[[Translation missing --]]
+L["Armor Peneration Rating"] = "Armor Peneration Rating"
 L["Armor Rating"] = "Показатель брони"
 L["Array"] = "Массив"
 L["Ascending"] = "По возрастанию"
@@ -192,6 +196,8 @@ L["Bar enabled in Boss Mod addon settings"] = "Bar enabled in Boss Mod addon set
 --[[Translation missing --]]
 L["Bar enabled in DBM settings"] = "Bar enabled in DBM settings"
 L["Bar Texture"] = "Текстура полосы"
+--[[Translation missing --]]
+L["Bar Type"] = "Bar Type"
 L["Baron Geddon"] = "Барон Геддон"
 L["Battle for Azeroth"] = "Battle for Azeroth"
 L["Battle.net Whisper"] = "Шепот в сети Battle.net"
@@ -236,6 +242,7 @@ L["Bottom Right"] = "Снизу справа"
 L["Bottom to Top"] = "Снизу вверх"
 L["Bounce"] = "Отскок"
 L["Bounce with Decay"] = "Отскок с затуханием"
+L["Break"] = "Перерыв"
 L["BreakUpLargeNumbers (Blizzard)"] = "РазделениеБольшихЧисел (Blizzard)"
 L["Broodlord Lashlayer"] = "Предводитель драконов Разящий Бич"
 L["Buff"] = "Бафф"
@@ -396,6 +403,8 @@ L["Debuff Type"] = "Тип дебаффа"
 L["Debug Log contains more than 1000 entries"] = "Журнал отладки содержит более 1000 записей."
 L["Debug Logging enabled"] = "Ведение журнала отладки включено"
 L["Debug Logging enabled for '%s'"] = "Ведение журнала отладки включено для индикации %s."
+--[[Translation missing --]]
+L["Defense"] = "Defense"
 L["Defensive Stats"] = "Защитная характеристика"
 L["Deflect"] = "Отклонение"
 L["Delve"] = "Вылазка"
@@ -439,6 +448,8 @@ L["Dragonflight"] = "Dragonflight"
 L["Drain"] = "Вытягивание"
 L["Dropdown Menu"] = "Выпадающее меню"
 L["Dumping table"] = "Дамп таблицы"
+--[[Translation missing --]]
+L["Dungeon (Celestial)"] = "Dungeon (Celestial)"
 L["Dungeon (Heroic)"] = "Подземелье (героическое)"
 L["Dungeon (Mythic)"] = "Подземелье (эпохальное)"
 L["Dungeon (Mythic+)"] = "Подземелье (М+)"
@@ -509,7 +520,7 @@ L["Error deserializing"] = "Ошибка десериализации"
 L["Error Frame"] = "Область вывода ошибок"
 L["ERROR in '%s' unknown or incompatible sub element type '%s'"] = "Ошибка в индикации %s. Внутренний элемент неизвестного или несовместимого типа %s."
 --[[Translation missing --]]
-L["Error in aura '%s'"] = "Error in aura '%s'"
+L["Error in Aura '%s'"] = "Error in Aura '%s'"
 L["Error not receiving display information from %s"] = [=[Ошибка при получении информации об индикации 
 от %s]=]
 L["Essence"] = "Сущность"
@@ -792,13 +803,18 @@ L["Loot"] = "Добыча"
 L["Loot Specialization"] = "Специализация добычи"
 L["Loot Specialization Id"] = "Идентификатор специализации добычи"
 L["Loot Specialization Name"] = "Название специализации добычи"
+--[[Translation missing --]]
+L["Lord Kazzak"] = "Lord Kazzak"
+--[[Translation missing --]]
+L["Lorewalking"] = "Lorewalking"
 L["Lost"] = "Израсходован"
 L["Low Damage"] = "Незначительный урон"
 L["Lower Than Tank"] = "Меньше чем у основной цели"
 --[[Translation missing --]]
 L["Lowest Spell Id"] = "Lowest Spell Id"
 L["Lua error"] = "Ошибка Lua"
-L["Lua error in aura '%s': %s"] = "Ошибка Lua в индикации '%s': %s"
+--[[Translation missing --]]
+L["Lua error in Aura '%s': %s"] = "Lua error in Aura '%s': %s"
 L["Lucifron"] = "Люцифрон"
 L["Maexxna"] = "Мексна"
 L["Magic"] = "Магия"
@@ -980,6 +996,8 @@ L["Other Addons"] = "Другие аддоны"
 L["Other Events"] = "Другие события"
 L["Ouro"] = "Оуро"
 L["Outline"] = "Контур"
+--[[Translation missing --]]
+L["Over Energize"] = "Over Energize"
 L["Overhealing"] = "Избыточное исцеление"
 L["Overkill"] = "Избыточный урон"
 L["Overlay %s"] = "Наложение %s"
@@ -1057,8 +1075,12 @@ L["Progress"] = "Прогресс"
 L["Progress Source"] = "Источник прогресса"
 L["Progress Total"] = "Общее значение"
 L["Progress Value"] = "Текущее значение"
+--[[Translation missing --]]
+L["Pull"] = "Pull"
 L["Pulse"] = "Пульсация"
 L["PvP Flagged"] = "В режиме PvP"
+--[[Translation missing --]]
+L["PvP Mode Active"] = "PvP Mode Active"
 L["PvP Talent selected"] = "PvP талант выбран"
 L["PvP Talent Selected"] = "PvP талант выбран"
 L["Quality Id"] = "ID качества"
@@ -1177,6 +1199,8 @@ L[ [=[Secure frame detected. Find more information:
 https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=] ] = [=[Обнаружен защищённый кадр. Подробная информация на странице:
 https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=]
 L["Select Frame"] = "Выбрать кадр"
+--[[Translation missing --]]
+L["Select the type of timer to filter"] = "Select the type of timer to filter"
 L["Selection Mode"] = "Режим выбора"
 L["Separator"] = "Разделитель"
 L["Set IDs can be found on websites such as wowhead.com/cata/item-sets"] = "Идентификаторы комплектов можно найти здесь - wowhead.com/cata/item-sets"
@@ -1400,6 +1424,8 @@ L["Time since stack gain"] = "Время с момента увеличения 
 L["Time since stack lost"] = "Время с момента потери стака"
 L["Timed"] = "По истечении времени"
 L["Timed Progress"] = "Прогресс по времени"
+--[[Translation missing --]]
+L["Timer"] = "Timer"
 L["Timer Id"] = "ID таймера"
 L["Toggle"] = "Переключатель (флажок)"
 L["Toggle List"] = "Список переключателей (флажков)"

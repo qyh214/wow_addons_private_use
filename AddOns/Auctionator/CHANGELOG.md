@@ -1,6 +1,6 @@
 # Auctionator
 
-## [288](https://github.com/Auctionator/Auctionator/tree/288) (2025-08-04)
-[Full Changelog](https://github.com/Auctionator/Auctionator/compare/287...288) 
+## [305](https://github.com/TheMouseNest/Auctionator/tree/305) (2025-12-03)
+[Full Changelog](https://github.com/TheMouseNest/Auctionator/compare/304...305) 
 
-- Fix error when posting too low price with "Post next item" enabled  
+- Selling: Add "Housing", and fix durations on TBC/Wrath  

@@ -4,6 +4,10 @@ local UnitName, GetRaidTargetIndex, SetRaidTargetIcon = UnitName, GetRaidTargetI
 
 local VMRT = nil
 
+if ExRT.isMN then
+	return
+end
+
 local module = ExRT:New("Marks",ExRT.L.Marks)
 local ELib,L = ExRT.lib,ExRT.L
 

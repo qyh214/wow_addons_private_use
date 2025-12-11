@@ -53,25 +53,32 @@
 ---@field keep_information_for_debugging boolean keep certain information for debugging
 ---@field developer_mode boolean enable certain information only useful when developing the addon
 ---@field migrations_done number[] the timestamp of when a migration was done, where the key is the migration number from migrations.lua
+---@field migrations_data table misc data for migrations
 ---@field font fontsettings font settings
 ---@field logs string[] logs of the addon
 ---@field logout_logs string[]
 ---@field minimap minimap the minimap settings
 ---@field last_run_id number the id of the last run
 ---@field visible_scoreboard_columns table<string, boolean> key is the id/name of the column, the value is whether or not it's shown
+---@field likes_given table<playername, number[]> store the ggs the player gave to other players, store the runIds #table is the amount of likes given
 
 ---@class detailsmythicplus : table
 ---@field profile profile store the profile settings
 ---@field detailsEventListener table register and listen to Details! events
 ---@field loot loot
+---@field recentLikes table<string, number> store the recent likes given in the current session, key is the player name, value is the amount of likes received
+---@field LikesAmountFontString fontstring[] store fontstrings that show the amount of likes in the scoreboard
+---@field eventCallbacks table<string, table<function[]>> eventName = {functions to call[]}
 ---@field data table store data from the current mythic plus run
 ---@field Enum enum
 ---@field temporaryTimers timer[] store timers created with C_Timer, all timers here are stopped when an update in the scoreboard is about to start
 ---@field dataBroker table?
 ---@field minimap table
+---@field FireEvent fun(eventName: string, ...: any)
 ---@field Compress compressrun
 ---@field Comm comm
----@field Migrations table<number, fun()>
+---@field Migrations table<function[]>
+---@field MigrationsPerCharacter table<function[]>
 ---@field selectedRunInfo runinfo currently run info in use (showing the data in the scoreboard), if any
 ---@field mythicPlusBreakdown details_mythicplus_breakdown
 ---@field activityTimeline activitytimeline namespace for functions related to the activity timeline
@@ -87,7 +94,8 @@
 ---@field OnPlayerLeaveCombat fun(...) run on COMBAT_PLAYER_LEAVE
 ---@field StartParser fun() start the combatlog parser
 ---@field StopParser fun() stop the combatlog parser
----@field IsParsing fun():boolean whether or parsing at the moment
+---@field IsParsing fun():boolean whether or parsing at the 
+---@field CreateScoreboardFrame fun() : scoreboard_mainframe create the mythic plus breakdown big frame
 ---@field CreateRunInfo fun(segment:combat) : runinfo create a run info from the mythic+ overall segment
 ---@field OpenScoreboardFrame fun() open the mythic plus breakdown big frame
 ---@field RefreshOpenScoreBoard fun():scoreboard_mainframe Refreshes the score board, but only if it's visible
@@ -106,12 +114,18 @@
 ---@field GetRunAverageHealingPerSecond fun(runInfo:runinfo, timeType:combattimetype) : number return the average healing per second
 ---@field SetSelectedRunIndex fun(index:number) set the selected run index
 ---@field GetSelectedRunIndex fun() : number get the selected run index
+---@field GetRunIndexById fun(runId:number) : number|nil get the index of the run by its ID
 ---@field GetDropdownRunDescription fun(runInfo:runinfo) : table indexed table containing: [1] dungeonName, [2] keyLevel, [3] runTime, [4] keyUpgradeLevels, [5] timeString, [6] onTime [7] mapId [8] dungeonId
 ---@field GetPlayerDeathReason fun(runInfo:runinfo, unitName:playername, deathIndex:number) : death_last_hits[]|nil return a table with subtables of type death_last_hits which tells the last hits that killed the player
+---@field GetRegisteredColumns fun() : scoreboard_column[] return a table with all registered columns
+---@field SignalHeadersChanged fun() signal that the headers have changed and the scoreboard should be updated
 ---@field PreparePlayerName fun(name:string) : string removes the realm name, and transliterates if configured
 ---@field ShowMythicPlusOptionsWindow fun() opens the options window for the addon
 ---@field RegisterScoreboardColumn fun(column:scoreboard_column) register a column to be shown in the scoreboard
 ---@field CreateRunSelectorDropdown fun(readyFrame:scoreboard_mainframe) create a dropdown to select the run to show in the scoreboard
+---@field GetOrCreateExportFrame fun() : exportframe get or create the export frame
+---@field ShowExportFrame fun(exportText:string) show the export frame with the given text
+---@field WipeLikeCache fun() wipe the like cache, so the likes can be recounted
 
 ---@class scoreboard_keystone_texture: texture show the keystone dungeon icon the player has
 ---@field KeystoneDungeonLevel fontstring show the keystone level of the player
@@ -248,9 +262,10 @@
 ---@field maxEvents number
 ---@field UpdateBossWidgets fun(self:scoreboard_activityframe, runData:runinfo, multiplier:number) update the boss widgets showing the kill time of each boss
 ---@field UpdateBloodlustWidgets fun(self:scoreboard_activityframe, runData:runinfo, multiplier:number) update the bloodlust widgets showing the time of bloodlust usage
+---@field UpdateTimeSections fun(self:scoreboard_activityframe, totalRuntime:number, multiplier:number) update the time section labels showing sections of time in the timeline
 ---@field ResetSegmentTextures fun(self:scoreboard_activityframe) reset the next index of texture to use and hide all existing textures
 ---@field GetSegmentTexture fun(self:scoreboard_activityframe) : texture return a texture to be used as a segment of the activity bar
----@field RenderKeyFinishedMarker fun(frame:scoreboard_activityframe, event:timeline_event, marker:activitytimeline_marker) : activitytimeline_marker_data
+---@field RenderKeyFinishedMarker fun(frame:scoreboard_activityframe, event:timeline_event, marker:activitytimeline_marker, runData:runinfo) : activitytimeline_marker_data
 ---@field RenderDeathMarker fun(frame:scoreboard_activityframe, event:timeline_event, marker:activitytimeline_marker, runData:runinfo) : activitytimeline_marker_data
 ---@field PrepareEventFrames fun(frame:scoreboard_activityframe, events:timeline_event[]) : timeline_event, activitytimeline_marker
 
@@ -277,3 +292,5 @@
 ---@field runId number
 ---@field instanceId number
 ---@field groupMembers table<playername, class>
+---@field likesGiven table<playername, table<playername, boolean>>
+

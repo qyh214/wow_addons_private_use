@@ -4,7 +4,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 function ns.LoadInsideDungeonNodesLocationInfo(self)
 local db = ns.Addon.db.profile
 local nodes = ns.nodes
-ns._currentSourceFile = "RetailInsideDungeonNodesLocation.lua"
+ns.currentSourceFile = "RetailInsideDungeonNodesLocation.lua"
 
 --#####################################################################################################
 --##########################        function to hide all nodes below         ##########################

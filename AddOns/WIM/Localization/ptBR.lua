@@ -110,6 +110,8 @@ WIM.AddLocale("ptBR", {
     ["Direction:"] = "Direção:",
     ["Tabs"] = "Guias",
     ["Sort tabs by:"] = "Classificar guias por:",
+	["Window Created"] = "Janela criada",
+	["Last Activity"] = "Última atividade",
     ["Alphabetical"] = "Alfabético",
     ["Recent Activity"] = "Recente atividade",
     ["Keep windows on top of your UI."] = "Manter as janelas no topo do seu IU",
@@ -216,9 +218,9 @@ WIM.AddLocale("ptBR", {
     ["Unknown"] = "Desconhecido",
     ["Click to update..."] = "Clique para atualizar...",
     ["Coordinates"] = "Coordenadas",
-    ["Invite to Party"] = "Convidar para grupo",
+    ["Invite to Party"] = "Convidar",
     ["Add Friend"] = "Adicionar amigo",
-    ["Ignore User"] = "Ignorar usuário",
+    ["Ignore User"] = "Ignorar Jogador",
     ["Are you sure you want to\nignore %s?"] = "Você tem certeza que você quer\nignora %s?",
     ["Right-Click for profile links..."] = "Clique-Dereita nos links do perfil...",
     ["Profile Links"] = "Links de perfil",
@@ -290,7 +292,7 @@ WIM.AddLocale("ptBR", {
     ["Display Tutorials"] = "Exibir tutoriais",
     ["Reset Tutorials"] = "Resetar tutoriais",
     ["Credits"] = "Créditos",
-    ["This is a long message which contains both emoticons and urls 8)."] = "Esta é uma mensagem longa que contém emoticons e URLs 8).",
+    ["This is a long message which contains both emoticons and urls 8). WIM's home is www.WIMAddon.com."] = "Esta é uma mensagem longa que contém emoticons e URLs 8). A página do WIM é www.WIMAddon.com.",
     ["Message Formatting"] = "Formatação",
     ["Manipulate how WIM displays messages."] = "Manipule como WIM exibi mensagens.",
     ["Preview"] = "Previsualização",
@@ -411,8 +413,6 @@ WIM.AddLocale("ptBR", {
     ["Place friends in their own group."] = "Colocar amigos no seu próprio grupo",
     ["Place guild members in their own group."] = "Colocar membros da guilda no seu próprio grupo",
     ["Does not apply to windows already opened."] = "Isso não se aplica à janelas já abertas.",
-	["Last Activity"] = "Última atividade",
-    ["Window Created"] = "Janela criada",
 
     -- Talent Specs --
     ["Affliction"] = "Suplício",
@@ -514,4 +514,8 @@ WIM.AddLocale("ptBR", {
     --Misc
     ["WIM has detected that you are playing on a private server. Some servers can not process ChatAddonMessages. Would you like to enable them anyway?"] = "O WIM detectou que você está jogando em um servidor privado. Alguns servidores não podem processar o ChatAddonMessages. Deseja ativá-los de qualquer maneira?",
 
+	-- Whisper Mode Warnings
+	["Set whispers to In-line"] = "Definir sussurros como Em linha",
+	["Message suppression requires whispers to be set to 'In-line'."] = "A supressão de mensagens requer que os sussurros estejam configurados como 'Em linha'.",
+	["It is recommended for whispers to be set to in-line in order to handle their behavior properly."] = "Recomenda-se configurar os sussurros como Em linha para lidar corretamente com seu comportamento.",
 });

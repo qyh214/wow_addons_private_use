@@ -2,6 +2,11 @@ local W, F, L, P, O = unpack(select(2, ...))
 local GI = W:GetModule("GroupInfo")
 local LFGPI = W.Utilities.LFGPlayerInfo
 
+local format = format
+local pairs = pairs
+
+local StaticPopup_Show = StaticPopup_Show
+
 local cache = {
 	groupInfo = {},
 }

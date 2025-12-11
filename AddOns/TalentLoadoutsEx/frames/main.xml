@@ -2,6 +2,54 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.blizzard.com/wow/ui/	..\FrameXML\UI.xsd">
 
+	<CheckButton name="TalentLoadoutExCheckButtonTemplate" inherits="UICheckButtonTemplate" virtual="true">
+		<KeyValues>
+			<KeyValue key="CheckButtonText" value=""/>
+		</KeyValues>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Text" font="ChatFontNormal" text="">
+					<Color r="1" g="1" b="1" a="1"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent" relativePoint="RIGHT"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				self.Text:SetText(self.CheckButtonText);
+			</OnLoad>
+		</Scripts>
+	</CheckButton>
+	<Frame name="TalentLoadoutExPresetAddonFrameTemplate" virtual="true">
+		<KeyValues>
+			<KeyValue key="title" value=""/>
+			<KeyValue key="addonName" value=""/>
+		</KeyValues>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Title" font="ChatFontNormal" text="">
+					<Color r="1" g="1" b="1" a="1"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="5" y="-5"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				self.Title:SetText(self.title);
+				for index, checkButton in ipairs(self.CategoryCheckButtons) do
+					if index == 1 then
+						checkButton:SetPoint("TOPLEFT", self, "TOPLEFT", 20, -20);
+					else
+						checkButton:SetPoint("TOPLEFT", self.CategoryCheckButtons[index - 1], "BOTTOMLEFT");
+					end
+				end
+			</OnLoad>
+		</Scripts>
+	</Frame>
 	<Button name="TalentLoadoutExPanelButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
 		<Size x="63" y="22"/>
 		<Scripts>
@@ -117,18 +165,11 @@
 					<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" x="4" y="4"/>
 					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-4" y="4"/>
 				</Anchors>
-				<Layers>
-					<Layer level="ARTWORK">
-						<FontString inherits="Game12Font" text="PvP Talents">
-							<Anchors>
-								<Anchor point="LEFT" x="35"/>
-							</Anchors>
-							<Color r="1" g="1" b="1"/>
-						</FontString>
-					</Layer>
-				</Layers>
 				<Frames>
-					<CheckButton parentKey="CheckButton" inherits="UICheckButtonTemplate" checked="true">
+					<CheckButton parentKey="CheckButton" inherits="TalentLoadoutExCheckButtonTemplate">
+						<KeyValues>
+							<KeyValue key="CheckButtonText" value="PvP Talents"/>
+						</KeyValues>
 						<Anchors>
 							<Anchor point="LEFT" relativePoint="LEFT" x="4"/>
 						</Anchors>
@@ -149,7 +190,7 @@
 			</EventFrame>
 			<Frame parentKey="EditPopupFrame" mixin="TalentLoadoutExEditPopupMixin" inherits="IconSelectorPopupFrameTemplate" enableMouse="true" hidden="true" frameLevel="50">
 				<KeyValues>
-					<KeyValue key="editBoxHeaderText" value="Enter Config Name" type="string"/>
+					<KeyValue key="editBoxHeaderText" value="Enter Config Name"/>
 				</KeyValues>
 				<Frames>
 					<Frame parentKey="TalentTextFrame" frameStrata="HIGH" enableMouse="true">
@@ -356,9 +397,7 @@
 				</Scripts>
 			</Frame>
 			<Frame parentKey="PresetPopupFrame" enableMouse="true" hidden="true" frameLevel="50">
-				<Size>
-					<AbsDimension x="350" y="200"/>
-				</Size>
+				<Size x="270" y="300"/>
 				<Anchors>
 					<Anchor point="TOPRIGHT" relativePoint="TOPLEFT" y="-21"/>
 				</Anchors>
@@ -366,124 +405,80 @@
 					<Frame parentKey="Border" inherits="DialogBorderTemplate"/>
 					<Frame parentKey="Header" inherits="DialogHeaderTemplate">
 						<KeyValues>
-							<KeyValue key="textString" value="Preset Data Option" type="string"/>
+							<KeyValue key="textString" value="Preset Data Option"/>
 						</KeyValues>
 					</Frame>
-					<Frame parentKey="Main" inherits="InsetFrameTemplate">
+					<Frame parentKey="Main" inherits="InsetFrameTemplate" >
 						<Anchors>
 							<Anchor point="TOPLEFT" x="10" y="-10"/>
 							<Anchor point="BOTTOMRIGHT" x="-10" y="10"/>
 						</Anchors>
-						<Layers>
-							<Layer level="ARTWORK">
-								<FontString parentKey="AddonDropDownText" font="ChatFontNormal" text="Source Addon:">
-									<Color r="1" g="1" b="1" a="1"/>
-									<Anchors>
-										<Anchor point="TOPLEFT" x="10" y="-20"/>
-									</Anchors>
-								</FontString>
-							</Layer>
-						</Layers>
 						<Frames>
-							<DropdownButton parentKey="AddonDropDownMenu" inherits="WowStyle1DropdownTemplate">
+							<CheckButton parentKey="CombineCheckButton" inherits="TalentLoadoutExCheckButtonTemplate">
+								<KeyValues>
+									<KeyValue key="CheckButtonText" value="Combine Groups"/>
+								</KeyValues>
 								<Anchors>
-									<Anchor point="TOPLEFT" x="10" y="-40"/>
-									<Anchor point="TOPRIGHT" x="-10" y="-40"/>
+									<Anchor point="TOPLEFT" x="10" y="-15"/>
 								</Anchors>
-							</DropdownButton>
-							<Frame parentKey="AddonConfigFrame0" hidden="true">
-								<Anchors>
-									<Anchor point="TOPLEFT" relativeKey="$parent.AddonDropDownMenu" relativePoint="BOTTOMLEFT"/>
-									<Anchor point="BOTTOMRIGHT" x="-10" y="10"/>
-								</Anchors>
-								<Layers>
-									<Layer level="ARTWORK">
-										<FontString font="ChatFontNormal" text="This addon is not loaded.">
-											<Color r="1" g="1" b="1" a="1"/>
-											<Anchors>
-												<Anchor point="TOPLEFT" x="5" y="-5"/>
-											</Anchors>
-										</FontString>
-									</Layer>
-								</Layers>
-							</Frame>
-							<Frame parentKey="AddonConfigFrame1" hidden="true">
-								<!-- PeaversTalentsData -->
-								<Anchors>
-									<Anchor point="TOPLEFT" relativeKey="$parent.AddonDropDownMenu" relativePoint="BOTTOMLEFT"/>
-									<Anchor point="BOTTOMRIGHT" x="-10" y="10"/>
-								</Anchors>
+							</CheckButton>
+							<Frame parentArray="PresetAddons" inherits="TalentLoadoutExPresetAddonFrameTemplate">
+								<Size x="100" y="120"/>
+								<KeyValues>
+									<KeyValue key="title" value="Archon(PeaversTalentsData)"/>
+									<KeyValue key="addonName" value="PeaversTalentsData"/>
+								</KeyValues>
 								<Frames>
-									<Frame parentKey="PvpTextFrame">
-										<Size x="30" y="20"/>
-										<Anchors>
-											<Anchor point="TOPLEFT" x="5" y="-10"/>
-											<Anchor point="TOPLEFT" x="5" y="-10"/>
-										</Anchors>
-										<Layers>
-											<Layer level="ARTWORK">
-												<FontString parentKey="PvpText" font="ChatFontNormal" text="This addon doesn't support PvP Talent.">
-													<Color r="1" g="1" b="1" a="1"/>
-													<Anchors>
-														<Anchor point="TOPLEFT"/>
-													</Anchors>
-												</FontString>
-											</Layer>
-										</Layers>
-									</Frame>
-									<Frame parentKey="ModeOptionFrame">
-										<Size x="30" y="25"/>
-										<Anchors>
-											<Anchor point="TOPLEFT" relativeKey="$parent.PvpTextFrame" relativePoint="BOTTOMLEFT" y="-5"/>
-											<Anchor point="TOPRIGHT" relativeKey="$parent.PvpTextFrame" relativePoint="BOTTOMRIGHT" y="-5"/>
-										</Anchors>
-										<Layers>
-											<Layer level="ARTWORK">
-												<FontString parentKey="OptionText" font="ChatFontNormal" text="Mode: ">
-													<Color r="1" g="1" b="1" a="1"/>
-													<Anchors>
-														<Anchor point="LEFT"/>
-													</Anchors>
-												</FontString>
-											</Layer>
-										</Layers>
-										<Frames>
-											<DropdownButton parentKey="DropDownMenu" inherits="WowStyle1DropdownTemplate">
-												<Size x="100" y="25"/>
-												<Anchors>
-													<Anchor point="LEFT" x="135"/>
-												</Anchors>
-											</DropdownButton>
-										</Frames>
-									</Frame>
-									<Frame parentKey="CombineOptionFrame">
-										<Size x="30" y="32"/>
-										<Anchors>
-											<Anchor point="TOPLEFT" relativeKey="$parent.ModeOptionFrame" relativePoint="BOTTOMLEFT" y="-5"/>
-											<Anchor point="TOPRIGHT" relativeKey="$parent.ModeOptionFrame" relativePoint="BOTTOMRIGHT" y="-5"/>
-										</Anchors>
-										<Layers>
-											<Layer level="ARTWORK">
-												<FontString parentKey="OptionText" font="ChatFontNormal" text="Combine Groups: ">
-													<Color r="1" g="1" b="1" a="1"/>
-													<Anchors>
-														<Anchor point="LEFT"/>
-													</Anchors>
-												</FontString>
-											</Layer>
-										</Layers>
-										<Frames>
-											<CheckButton parentKey="CheckButton" inherits="UICheckButtonTemplate" checked="true">
-												<Anchors>
-													<Anchor point="LEFT" x="130"/>
-												</Anchors>
-											</CheckButton>
-										</Frames>
-									</Frame>
+									<CheckButton parentArray="CategoryCheckButtons" inherits="TalentLoadoutExCheckButtonTemplate">
+										<KeyValues>
+											<KeyValue key="CheckButtonText" value="Mythic+"/>
+											<KeyValue key="category" value="mythic"/>
+										</KeyValues>
+									</CheckButton>
+									<CheckButton parentArray="CategoryCheckButtons" inherits="TalentLoadoutExCheckButtonTemplate">
+										<KeyValues>
+											<KeyValue key="CheckButtonText" value="Raid Heroic"/>
+											<KeyValue key="category" value="heroic_raid"/>
+										</KeyValues>
+									</CheckButton>
+									<CheckButton parentArray="CategoryCheckButtons" inherits="TalentLoadoutExCheckButtonTemplate">
+										<KeyValues>
+											<KeyValue key="CheckButtonText" value="Raid Mythic"/>
+											<KeyValue key="category" value="mythic_raid"/>
+										</KeyValues>
+									</CheckButton>
 								</Frames>
 							</Frame>
-							<Frame parentKey="AddonConfigFrame2" hidden="true"/>
+							<Frame parentArray="PresetAddons" inherits="TalentLoadoutExPresetAddonFrameTemplate">
+								<Size x="100" y="80"/>
+								<KeyValues>
+									<KeyValue key="title" value="Murlok.io(MurlokExport)"/>
+									<KeyValue key="addonName" value="MurlokExport"/>
+								</KeyValues>
+								<Frames>
+									<CheckButton parentArray="CategoryCheckButtons" inherits="TalentLoadoutExCheckButtonTemplate">
+										<KeyValues>
+											<KeyValue key="CheckButtonText" value="Mythic+"/>
+											<KeyValue key="category" value="mm+"/>
+										</KeyValues>
+									</CheckButton>
+									<CheckButton parentArray="CategoryCheckButtons" inherits="TalentLoadoutExCheckButtonTemplate">
+										<KeyValues>
+											<KeyValue key="CheckButtonText" value="Solo PvP (+PvP Talents)"/>
+											<KeyValue key="category" value="solo"/>
+										</KeyValues>
+									</CheckButton>
+								</Frames>
+							</Frame>
 						</Frames>
+						<Scripts>
+							<OnLoad>
+								for index, presetAddonFrame in ipairs(self.PresetAddons) do
+									local relativeTo = index > 1 and self.PresetAddons[index - 1] or self.CombineCheckButton;
+									presetAddonFrame:SetPoint("TOPLEFT", relativeTo, "BOTTOMLEFT");
+								end
+							</OnLoad>
+						</Scripts>
 					</Frame>
 				</Frames>
 				<Scripts>

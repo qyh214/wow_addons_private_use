@@ -33,6 +33,112 @@ if not PossibleCatalystBonusIDLookups then
 end
 local BonusCatalysts = PossibleCatalystBonusIDLookups.BonusCatalysts
 
+local BonusIDUpgradeTiers = {
+	-- TWW:S1
+	-- Veteran
+	[10281] = 10378,
+	[10280] = 10378,
+	[10279] = 10378,
+	[10278] = 10378,
+	[10277] = 10377,
+	[10276] = 10377,
+	[10275] = 10377,
+	[10274] = 10377,
+	-- Champion
+	[10273] = 10377,
+	[10272] = 10377,
+	[10271] = 10377,
+	[10270] = 10377,
+	[10269] = 10379,
+	[10268] = 10379,
+	[10267] = 10379,
+	[10266] = 10379,
+	-- Hero
+	[10265] = 10379,
+	[10264] = 10379,
+	[10263] = 10379,
+	[10262] = 10379,
+	[10261] = 10380,
+	[10256] = 10380,
+	-- Myth
+	[10260] = 10380,
+	[10259] = 10380,
+	[10258] = 10380,
+	[10257] = 10380,
+	[10298] = 10380,
+	[10299] = 10380,
+
+	-- TWW:S2
+	-- Veteran
+	[11969] = 11965,
+	[11970] = 11965,
+	[11971] = 11965,
+	[11972] = 11965,
+	[11973] = 11966,
+	[11974] = 11966,
+	[11975] = 11966,
+	[11976] = 11966,
+	-- Champion
+	[11977] = 11966,
+	[11978] = 11966,
+	[11979] = 11966,
+	[11980] = 11966,
+	[11981] = 11967,
+	[11982] = 11967,
+	[11983] = 11967,
+	[11984] = 11967,
+	-- Hero
+	[11985] = 11967,
+	[11986] = 11967,
+	[11987] = 11967,
+	[11988] = 11967,
+	[11989] = 11998,
+	[11990] = 11998,
+	[12371] = 11998,
+	[12372] = 11998,
+	-- Myth
+	[11991] = 11998,
+	[11992] = 11998,
+	[11993] = 11998,
+	[11994] = 11998,
+	[11995] = 11998,
+	[11996] = 11998,
+	[12375] = 11998,
+	[12376] = 11998,
+}
+
+-- apparently Blizzard decided that removing all Upgrade info from old season items was beneficial to someone, so now we have to add all this
+-- extra mapping data to retroactively show properly catalyst outputs from old season items
+local BonusIDReMappers = {
+	-- When an prior-season Item maps as a specific BonusID for Catalyst, it no longer returns Upgrade information, which means
+	-- we have to maintain a mapping of BonusID -> Upgrade Appearance since Blizzard CBA to persist that information themselves anymore
+	PastUpgrade = function(data)
+		-- so for this bonusID, we need to actually determine the proper tier of the item based on old Upgrade bonusIDs
+		-- which Blizzard no longer includes in exportable Wago data
+		local bonuses = data.bonuses
+		if not bonuses or #bonuses < 1 then return end
+
+		local newBonusID = containsAnyKey(BonusIDUpgradeTiers, bonuses)
+		return BonusIDUpgradeTiers[newBonusID]
+	end
+}
+-- TWW:S1
+-- Veteran
+BonusIDReMappers[10376] = BonusIDReMappers.PastUpgrade
+BonusIDReMappers[10378] = BonusIDReMappers.PastUpgrade
+-- Champion
+BonusIDReMappers[10377] = BonusIDReMappers.PastUpgrade
+-- Hero
+BonusIDReMappers[10379] = BonusIDReMappers.PastUpgrade
+-- TWW:S2
+-- Veteran
+BonusIDReMappers[11964] = BonusIDReMappers.PastUpgrade
+BonusIDReMappers[11965] = BonusIDReMappers.PastUpgrade
+-- Champion
+BonusIDReMappers[11966] = BonusIDReMappers.PastUpgrade
+-- Hero
+BonusIDReMappers[11967] = BonusIDReMappers.PastUpgrade
+
 local CatalystArmorSlots = {
 	["INVTYPE_HEAD"] = true,
 	["INVTYPE_SHOULDER"] = true,
@@ -111,14 +217,14 @@ ItemUpgradeLevelMatch = ItemUpgradeLevelMatch:gsub("%%s","[^%s]+")
 local function CheckGameTooltipForUpgradeLevel()
 	local tooltipData = GameTooltip and GameTooltip:GetTooltipData()
 	-- not sure how this could happen
-	if not tooltipData then return true end
+	if not tooltipData then return end
 
 	-- only need to check tooltip data if it matches the data we are testing to catalyst
-	if not tooltipData.id then return true end
+	if not tooltipData.id then return end
 
 	tooltipData = tooltipData.lines
 	-- not sure how this could happen either
-	if not tooltipData then return true end
+	if not tooltipData then return end
 
 	-- scan first 3 lines possibly for an Upgrade Level
 	local level
@@ -182,10 +288,19 @@ local function GetCatalysts(data)
 	local upgradeTrackID = upgradeInfo.trackStringID
 	local upgradeLevel = upgradeInfo.currentLevel or 0
 
+	local remappedBonusID
 	-- Non-Upgrade cases (use bonusID to find the matching upgradeTrackID lookup)
 	if not upgradeTrackID then
 		-- app.PrintDebug("Non-upgrade Item",data.link)
 		-- app.PrintTable(upgradeInfo)
+		-- Old Items whose catalyst-bonusID doesn't directly indicate the proper appearance tier anymore for some reason
+		local remapperFunc = BonusIDReMappers[bonusID]
+		if remapperFunc then
+			-- app.PrintDebug("remapping bonusID",bonusID)
+			remappedBonusID = bonusID
+			bonusID = remapperFunc(data)
+			-- app.PrintDebug("-->",bonusID)
+		end
 		-- Primalist Items, DF S1
 		if upgradeLevel == 2 and upgradeInfo.maxLevel == 3 then
 			-- Primalist converts to Normal
@@ -226,7 +341,11 @@ local function GetCatalysts(data)
 	end
 
 	local newBonuses = app.CloneArray(bonuses)
-	tremove(newBonuses, app.indexOf(newBonuses, bonusID))
+	if remappedBonusID then
+		tremove(newBonuses, app.indexOf(newBonuses, remappedBonusID))
+	else
+		tremove(newBonuses, app.indexOf(newBonuses, bonusID))
+	end
 	local catalystResult
 	for i=1,#catalystResults do
 		catalystResult = catalystResults[i]
@@ -346,6 +465,6 @@ app.AddEventHandler("OnLoad", function()
 	{
 		ScopesIgnored = { "LIST" },
 		SettingsIcon = app.asset("Interface_Catalyst"),
-		SettingsTooltip = "Fills the Catalyst |T"..app.asset("Interface_Catalyst")..":0|t result of the current Item if one is possible and determined via ATT.\n\nNOTE: This Filler is not applied to the ATT Mini List."
+		SettingsTooltip = app.L.FILL_CATALYST_DATA_CHECKBOX_TOOLTIP,
 	})
 end)

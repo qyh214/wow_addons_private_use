@@ -162,16 +162,34 @@ local function atToAbs( str )
  end
 
 
- local mathBreak = {
+ local leftBreak = {
     ["<"] = true,
     [">"] = true,
     ["="] = true,
     ["&"] = true,
     ["|"] = true,
     [","] = true,
+    ["?"] = true,
+    ["("] = true
 }
 
-local function HandleDeprecatedOperators( str, opStr, prefix  )
+local rightBreak = {
+    ["<"] = true,
+    [">"] = true,
+    ["="] = true,
+    ["&"] = true,
+    ["|"] = true,
+    [","] = true,
+    ["?"] = true,
+    ["+"] = true,
+    ["-"] = true,
+    ["%"] = true,
+    ["*"] = true,
+    ["/"] = true,
+    [")"] = true
+}
+
+local function HandleDeprecatedOperators( str, opStr, prefix )
     --str = str:gsub("%s", "")
     for left, op, right in str:gmatch("(.+)(" .. opStr .. ")(.+)") do
         local leftLen, rightLen = left:len(), right:len()
@@ -192,7 +210,7 @@ local function HandleDeprecatedOperators( str, opStr, prefix  )
                 if char == ")" then
                     -- Grab the full bracketed pair and move on.
                     i = i + left:sub( 1, 1 + leftLen - i ):match( "(%b())$" ):len()
-                elseif mathBreak[ char ] or char == "(" then
+                elseif leftBreak[ char ] then
                     eos = i - 1
                     break
                 end
@@ -208,6 +226,7 @@ local function HandleDeprecatedOperators( str, opStr, prefix  )
         end
 
         val1 = val1:trim()
+        if not tonumber( val1 ) then val1 = format( "safenum(%s)", val1 ) end
 
         if right:sub(1, 1) == "(" then
             val2 = right:match("^(%b())")
@@ -222,7 +241,7 @@ local function HandleDeprecatedOperators( str, opStr, prefix  )
 
                 if char == "(" then
                     i = i + right:sub( i ):match( "^(%b())" ):len()
-                elseif mathBreak[char] or char == ")" then
+                elseif rightBreak[ char ] then
                     eos = i - 1
                     break
                 end
@@ -238,8 +257,16 @@ local function HandleDeprecatedOperators( str, opStr, prefix  )
         end
 
         val2 = val2:trim()
+        if not tonumber( val2 ) then val2 = format( "safenum(%s)", val2 ) end
 
-        str = left:sub( 1, leftLen - len1 ) .. " " .. prefix .. "(safenum(" .. val1 .. "),safenum(" .. val2 .. ")) " .. right:sub( 1 + len2 )
+        local lhs = left:sub( 1, leftLen - len1 )
+        if lhs:sub( -7 ) == "safenum" then
+            lhs = lhs:sub( 1, -8 )
+        elseif lhs:sub( -8 ) == "safebool" then
+            lhs = lhs:sub( 1, -9 )
+        end
+
+        str = lhs .. prefix .. "(" .. val1 .. "," .. val2 .. ")" .. right:sub( 1 + len2 )
     end
 
     if str:find(opStr) then return scripts.HandleDeprecatedOperators( str, opStr, prefix ) end
@@ -470,6 +497,7 @@ do
         { "^cooldown%.([a-z0-9_]+)%.ready$"                      , "cooldown.%1.remains"                      },
         { "^cooldown%.([a-z0-9_]+)%.up$"                         , "cooldown.%1.remains"                      },
         { "^!?cooldown%.([a-z0-9_]+)%.remains$"                  , "cooldown.%1.remains"                      },
+        { "^!?cooldown%.([a-z0-9_]+)%.true_remains$"             , "cooldown.%1.true_remains"                 },
         { "^charges_fractional=(.-)$"                            , "(%1-charges_fractional)*recharge"         },
         { "^charges_fractional>=?(.-)$"                          , "0.01+(%1-charges_fractional)*recharge"    },
         { "^charges=(.-)$"                                       , "(%1-charges_fractional)*recharge"         },
@@ -528,6 +556,9 @@ do
         { "^time_to_imps%.(.+)$" , "time_to_imps[%1]"             }, -- Demo Warlock
         { "^!?diabolic_ritual$"  , "buff.diabolic_ritual.remains" }, -- Warlocks
         { "^!?demonic_art$"      , "buff.demonic_art.remains"     },
+        
+        { "^!?two_cast_imps>(.-)$" , "time_to_n_cast_imps_exceeds_y(2,1+(%1))" },
+        { "^!?last_cast_imps>(.-)$", "time_to_n_cast_imps_exceeds_y(1,1+(%1))" },
 
         { "^active_bt_triggers$"       , "time_to_bt_triggers(0)"    }, -- Feral Druid w/ Bloodtalons.
         { "^active_bt_triggers<?=0$"   , "time_to_bt_triggers(0)"    }, -- Feral Druid w/ Bloodtalons.
@@ -558,6 +589,7 @@ do
     -- Things that tick down.
     local decreases = {
         ["remains$"] = true,
+        ["true_remains$"] = true,
         ["ticks_remain$"] = true,
         ["execute_remains$"] = true,
         ["channel_remains$"] = true,
@@ -766,7 +798,6 @@ do
 
         conditions = conditions:gsub( " +", "" )
         conditions = self:EmulateSyntax( conditions, true )
-
         local exprs = self:SplitExpr( conditions )
 
         if #exprs > 0 then
@@ -856,8 +887,12 @@ do
     local esDepth = 0
     local esString
 
+    local tree = {}
+
     function scripts:EmulateSyntax( p, numeric )
         if not p or type( p ) ~= "string" then return p end
+
+        insert( tree, p )
 
         if esDepth == 0 then
             esString = p
@@ -970,7 +1005,12 @@ do
                 piece.s = "(!" .. piece.s .. ")"
             elseif piece.t == "expr" and piece.s:match( "^%s*[a-z0-9_]+%s*%(" ) then
                 trimmed_prefix = piece.s:match( "^%s*([a-z0-9_]+)%s*%(" )
-                piece.s = piece.s:gsub( "^%s*" .. trimmed_prefix .. "%s*", "" )
+                if trimmed_prefix == "max" or trimmed_prefix == "min" then
+                    piece.s = piece.s:gsub( "%s*", "" )
+                    trimmed_prefix = nil
+                else
+                    piece.s = piece.s:gsub( "^%s*" .. trimmed_prefix .. "%s*", "" )
+                end
             end
 
             if piece and piece.t == "expr" then
@@ -983,6 +1023,8 @@ do
                         if abss then orig = orig:gsub( "@", " abs " ) end
 
                         esDepth = esDepth - 1
+                        table.remove( tree )
+
                         return orig
                     end
 
@@ -1012,7 +1054,13 @@ do
                                 if trimmed_prefix ~= "safenum" and ( val == nil or type( val ) ~= "number" ) then piece.s = "safenum(" .. piece.s .. ")" end
                             end
                         else
-                            Hekili:Error( "Unable to compile '" .. ( piece.s ):gsub("%%","%%%%") .. "' - " .. warn .. " (loadstring-n)\nFrom: " .. esString:gsub( "%%", "%%%%" ) )
+                            local treetoString
+                            for i = #tree, 1, -1 do
+                                local elem = tree[ i ]
+                                if treeToString then treeToString = format( "%s\n[%d] %s", treeToString, i, elem )
+                                else treeToString = format( "[%d] %s", i, elem ) end
+                            end
+                            Hekili:Error( "Unable to compile '" .. ( piece.s ):gsub("%%","%%%%") .. "' - " .. warn .. " (loadstring-n)\n\nFrom: " .. treeToString )
                         end
                     end
                     piece.r = nil
@@ -1071,6 +1119,7 @@ do
         output = output:gsub( "%(%s*(%b())%s*%)", "%1" )
 
         esDepth = esDepth - 1
+        table.remove( tree )
         return output
     end
 end
@@ -1178,24 +1227,33 @@ end
 scripts.stripScript = stripScript
 
 
-function scripts:StoreValues( tbl, node, mod )
-    wipe( tbl )
+do
+    local ignore = {
+        min = 1,
+        max = 1
+    }
 
-    if type( node ) == 'string' then node = self.DB[ node ] end
-    if not node then return end
+    function scripts:StoreValues( tbl, node, mod )
+        wipe( tbl )
 
-    local elems
-    if mod then elems = node.ModElements[ mod ]
-    else elems = node.Elements end
+        if type( node ) == 'string' then node = self.DB[ node ] end
+        if not node then return end
 
-    if not elems then return end
+        local elems
+        if mod then elems = node.ModElements[ mod ]
+        else elems = node.Elements end
 
-    for k, v in pairs( elems ) do
-        local s, r = pcall( v )
+        if not elems then return end
 
-        if s then tbl[ k ] = r
-        elseif type( r ) == 'string' then tbl[ k ] = r:match( "lua:(%d+: .*)" ) or r end
-        if tbl[ k ] == nil then tbl[ k ] = 'nil' end
+        for k, v in pairs( elems ) do
+            if not ignore[ k ] then
+                local s, r = pcall( v )
+
+                if s then tbl[ k ] = r
+                elseif type( r ) == 'string' then tbl[ k ] = r:match( "lua:(%d+: .*)" ) or r end
+                if tbl[ k ] == nil then tbl[ k ] = 'nil' end
+            end
+        end
     end
 end
 
@@ -1530,7 +1588,8 @@ local function ConvertScript( node, hasModifiers, header )
                     if type( node[ m ] ) == 'string' then modSimC[ m ] = SimcWithResources( node[ m ]:trim() ) end
                 else
                     modifiers[ m ] = nil
-                    modifiers[ "error:" .. m ] = e
+                    modifiers[ "error:" .. m ] = e .. "\n - " .. emulated
+                    Hekili:Error( format( "Error in %s modifier %s: %s\n\n - %s", header, m, e, emulated ) )
                 end
             end
         end

@@ -48,7 +48,7 @@ function Implementation:New(name)
 	if(self.instances[name]) then return error(("cargBags: Implementation '%s' already exists!"):format(name)) end
 	if(_G[name]) then return error(("cargBags: Global '%s' for Implementation is already used!"):format(name)) end
 
-	local impl = setmetatable(CreateFrame("Button", name, UIParent), self.__index)
+	local impl = setmetatable(CreateFrame("Frame", name, UIParent), self.__index)
 	impl.name = name
 
 	impl:SetAllPoints()
@@ -322,14 +322,14 @@ function Implementation:GetItemInfo(bagID, slotID, i)
 	if info then
 		i.texture, i.count, i.locked, i.quality, i.link, i.id, i.hasPrice = info.iconFileID, info.stackCount, info.isLocked, (info.quality or 1), info.hyperlink, info.itemID, (not info.hasNoValue)
 
-		--i.isInSet, i.setName = C_Container.GetContainerItemEquipmentSetInfo(bagID, slotID)
+		i.isInSet, i.setName = C_Container.GetContainerItemEquipmentSetInfo(bagID, slotID)
 
 		i.cdStart, i.cdFinish, i.cdEnable = C_Container.GetContainerItemCooldown(bagID, slotID)
 
 		local questInfo = C_Container.GetContainerItemQuestInfo(bagID, slotID)
 		i.isQuestItem, i.questID, i.questActive = questInfo.isQuestItem, questInfo.questID, questInfo.isActive
 
-		i.name, _, _, _, _, i.type, i.subType, _, i.equipLoc, _, _, i.classID, i.subClassID = C_Item.GetItemInfo(i.link)
+		i.name, _, _, _, _, i.type, i.subType, _, i.equipLoc, _, _, i.classID, i.subClassID, _, i.expacID = C_Item.GetItemInfo(i.link)
 		i.equipLoc = _G[i.equipLoc] -- INVTYPE to localized string
 
 		if isItemHasLevel(i) then
@@ -418,19 +418,31 @@ end
 	@callback Container:OnBagUpdate(bagID, slotID)
 ]]
 local isUpdating = false
+
 function Implementation:BAG_UPDATE(_, bagID, slotID)
+	if self.isSorting then return end
 	if isUpdating then return end
 	isUpdating = true
 
-	if self.isSorting then return end
-
-	if(bagID and slotID) then
+	if bagID and slotID then
 		self:UpdateSlot(bagID, slotID)
-	elseif(bagID) then
+	elseif bagID then
 		self:UpdateBag(bagID)
 	else
-		for bagID = 0, 16 do
+		for bagID = 0, 5 do
 			self:UpdateBag(bagID)
+		end
+
+		local bankType = BankFrame.BankPanel.bankType
+
+		if bankType == Enum.BankType.Character then
+			for bagID = 6, 11 do
+				self:UpdateBag(bagID)
+			end
+		elseif bankType == Enum.BankType.Account then
+			for bagID = 12, 16 do
+				self:UpdateBag(bagID)
+			end
 		end
 	end
 

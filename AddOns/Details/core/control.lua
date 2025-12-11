@@ -556,6 +556,8 @@
 		--remove death events that are irrelevant for the death log
 		currentCombat:CutDeathEventsByTime()
 
+		Details222.Parser.CountInterruptOverlaps()
+
 		--get waste shields
 		if (Details.close_shields) then
 			Details:CloseShields(currentCombat)
@@ -1557,6 +1559,48 @@
 		end
 	end
 
+	function Details:PostBuildInstanceBarTooltip(actorObject)
+		if (actorObject.serial and actorObject.serial ~= "") then
+			local avatar = NickTag:GetNicknameTable(actorObject:Name(), true)
+			if (avatar and not Details.ignore_nicktag) then
+				if (avatar[2] and avatar[4] and avatar[1]) then
+					GameCooltip:SetBannerImage(1, 1, avatar [2], 80, 40, avatarPoint, avatarTexCoord, nil) --overlay [2] avatar path
+					GameCooltip:SetBannerImage(1, 2, avatar [4], 200, 55, backgroundPoint, avatar [5], avatar [6]) --background
+					GameCooltip:SetBannerText(1, 1, (not Details.ignore_nicktag and avatar[1]) or actorObject.nome, textPoint, avatarTextColor, 14, SharedMedia:Fetch("font", Details.tooltip.fontface)) --text [1] nickname
+				end
+			end
+		end
+
+		Details:AddRoundedCornerToTooltip()
+
+		GameCooltip:ShowCooltip()
+
+		if (not Details.GameCooltipFrame1Shadow) then
+			Details.GameCooltipFrame1Shadow = GameCooltipFrame1:CreateTexture(nil, "background")
+			Details.GameCooltipFrame1Shadow:SetTexture([[Interface\AddOns\Details\images\shadow_square.png]], nil, nil, "TRILINEAR")
+			GameCooltipFrame1:HookScript("OnHide", function(self)
+				Details.GameCooltipFrame1Shadow:Hide()
+			end)
+		end
+
+		if (Details.tooltip.show_border_shadow) then
+			local offset = 1
+			if (GameCooltipFrame1:GetHeight() > 200) then
+				offset = 4
+			elseif (GameCooltipFrame1:GetHeight() > 150) then
+				offset = 3
+			elseif (GameCooltipFrame1:GetHeight() > 80) then
+				offset = 2
+			end
+
+			Details.GameCooltipFrame1Shadow:SetPoint("topleft", GameCooltipFrame1, "topleft", -offset, offset)
+			Details.GameCooltipFrame1Shadow:SetPoint("bottomright", GameCooltipFrame1, "bottomright", offset, -offset)
+			Details.GameCooltipFrame1Shadow:Show()
+		else
+			Details.GameCooltipFrame1Shadow:Hide()
+		end
+	end
+
 	---@param self instance
 	---@param frame table
 	---@param whichRowLine number
@@ -1600,45 +1644,7 @@
 		local bTooltipBuilt = object:ToolTip(self, whichRowLine, thisLine, keydown) --instance, lineId, lineObject, keydown
 
 		if (bTooltipBuilt) then
-			if (object.serial and object.serial ~= "") then
-				local avatar = NickTag:GetNicknameTable(object:Name(), true)
-				if (avatar and not Details.ignore_nicktag) then
-					if (avatar[2] and avatar[4] and avatar[1]) then
-						GameCooltip:SetBannerImage(1, 1, avatar [2], 80, 40, avatarPoint, avatarTexCoord, nil) --overlay [2] avatar path
-						GameCooltip:SetBannerImage(1, 2, avatar [4], 200, 55, backgroundPoint, avatar [5], avatar [6]) --background
-						GameCooltip:SetBannerText(1, 1, (not Details.ignore_nicktag and avatar[1]) or object.nome, textPoint, avatarTextColor, 14, SharedMedia:Fetch("font", Details.tooltip.fontface)) --text [1] nickname
-					end
-				end
-			end
-
-			Details:AddRoundedCornerToTooltip()
-
-			GameCooltip:ShowCooltip()
-
-			if (not Details.GameCooltipFrame1Shadow) then
-				Details.GameCooltipFrame1Shadow = GameCooltipFrame1:CreateTexture(nil, "background")
-				Details.GameCooltipFrame1Shadow:SetTexture([[Interface\AddOns\Details\images\shadow_square.png]], nil, nil, "TRILINEAR")
-				GameCooltipFrame1:HookScript("OnHide", function(self)
-					Details.GameCooltipFrame1Shadow:Hide()
-				end)
-			end
-
-			if (Details.tooltip.show_border_shadow) then
-				local offset = 1
-				if (GameCooltipFrame1:GetHeight() > 200) then
-					offset = 4
-				elseif (GameCooltipFrame1:GetHeight() > 150) then
-					offset = 3
-				elseif (GameCooltipFrame1:GetHeight() > 80) then
-					offset = 2
-				end
-
-				Details.GameCooltipFrame1Shadow:SetPoint("topleft", GameCooltipFrame1, "topleft", -offset, offset)
-				Details.GameCooltipFrame1Shadow:SetPoint("bottomright", GameCooltipFrame1, "bottomright", offset, -offset)
-				Details.GameCooltipFrame1Shadow:Show()
-			else
-				Details.GameCooltipFrame1Shadow:Hide()
-			end
+			Details:PostBuildInstanceBarTooltip(object)
 		end
 	end
 
@@ -1899,3 +1905,134 @@
 		_tempo = Details._tempo
 	end
 
+
+local keyName
+local sortIfHaveKey = function(table1, table2)
+	if (table1[keyName] and table2[keyName]) then
+		return table1[keyName] > table2[keyName]
+
+	elseif (table1[keyName] and not table2[keyName]) then
+		return true
+	else
+		return false
+	end
+end
+
+--make an ascending sort
+local sortIfHaveKey_ASC = function(table1, table2)
+	if (table1[keyName] and table2[keyName]) then
+		return table1[keyName] < table2[keyName]
+
+	elseif (table1[keyName] and not table2[keyName]) then
+		return false
+	elseif (not table1[keyName] and table2[keyName]) then
+		return true
+	else
+		return false
+	end
+end
+
+function Details:GetKeyNameFromAttribute(attribute, subAttribute)
+	if (attribute == 1) then
+		if (subAttribute == 1) then --DAMAGE DONE
+			return "total"
+		elseif(subAttribute == 2) then --DPS
+			return "last_dps"
+		elseif(subAttribute == 3) then --DAMAGE TAKEN
+			return "damage_taken"
+		elseif(subAttribute == 4) then --FRIENDLY FIRE
+			return "friendlyfire_total"
+		elseif(subAttribute == 5) then --FRAGS
+			return "frags"
+		elseif(subAttribute == 6) then --ENEMIES
+			return "enemies"
+		elseif(subAttribute == 7) then --AURAS VOIDZONES
+			return "voidzones"
+		elseif(subAttribute == 8) then --BY SPELL
+			return "damage_taken_by_spells"
+		end
+
+	elseif (attribute == 2) then
+		if (subAttribute == 1) then --healing DONE
+			return "total"
+		elseif (subAttribute == 2) then --HPS
+			return "last_hps"
+		elseif (subAttribute == 3) then --overheal
+			return "totalover"
+		elseif (subAttribute == 4) then --healing take
+			return "healing_taken"
+		elseif (subAttribute == 5) then --enemy heal
+			return "heal_enemy_amt"
+		elseif (subAttribute == 6) then --absorbs
+			return "totalabsorb"
+		elseif (subAttribute == 7) then --heal absorb
+			return "totaldenied"
+		end
+
+	elseif (attribute == 3) then
+		if (subAttribute == 1) then --RESOURCE GAINED
+			return "total"
+		elseif (subAttribute == 2) then --RESOURCE SPENT
+			return "totalover"
+		elseif (subAttribute == 3) then --MANA REGEN
+			return "mana_potion"
+		end
+
+	elseif (attribute == 4) then
+		if (subAttribute == 1) then --CC BREAKS
+			return "cc_break"
+		elseif (subAttribute == 2) then --RESS
+			return "ress"
+		elseif (subAttribute == 3) then --INTERRUPT
+			return "interrupt"
+		elseif (subAttribute == 4) then --DISPELLS
+			return "dispell"
+		elseif (subAttribute == 5) then --DEATHS
+			return "dead"
+		elseif (subAttribute == 6) then --DEFENSIVE COOLDOWNS
+			return "cooldowns_defensive"
+		elseif (subAttribute == 7) then --BUFF UPTIME
+			return "buff_uptime"
+		elseif (subAttribute == 8) then --DEBUFF UPTIME
+			return "debuff_uptime"
+		end
+	end
+end
+
+---@param self details
+---@param combatObject combat
+---@param attribute number
+---@param subAttribute number
+---@param order string
+function Details:JustSortData(combatObject, attribute, subAttribute, order)
+	---@type actorcontainer
+	local actorContainer = combatObject[attribute]
+	keyName = Details:GetKeyNameFromAttribute(attribute, subAttribute)
+	if (order == "ASC") then
+		table.sort(actorContainer._ActorTable, sortIfHaveKey_ASC)
+	else
+		table.sort(actorContainer._ActorTable, sortIfHaveKey)
+	end
+	actorContainer:Remap()
+end
+
+--the received actorContainer is already sorted by 'order', find the top player respecting the order
+function Details:FindTopPlayer(actorContainer, order)
+	if (order == "ASC") then
+		--iterate from the end of the table to index 1 and find the first actor with the key 'grupo'
+		for i = #actorContainer._ActorTable, 1, -1 do
+			local actorObject = actorContainer._ActorTable[i]
+			if (actorObject.grupo) then
+				return actorObject
+			end
+		end
+	else
+		--iterate from index 1 to the end of the table and find the first actor with the key 'grupo'
+		for i = 1, #actorContainer._ActorTable do
+			local actorObject = actorContainer._ActorTable[i]
+			if (actorObject.grupo) then
+				return actorObject
+			end
+		end
+	end
+end

@@ -77,7 +77,7 @@ function M:GuildBest_Create()
 			if DetailsKeystoneInfoFrame and DetailsKeystoneInfoFrame:IsShown() then
 				DetailsKeystoneInfoFrame:Hide()
 			else
-				SlashCmdList.KEYSTONE()
+				SlashCmdList.KEYSTONE("/keys", ChatFrame1.editBox)
 			end
 		end)
 		local tex = button:CreateTexture()
@@ -145,12 +145,15 @@ function M:GuildBest_Update()
 	end
 end
 
+local function LoadGuildBest()
+	hooksecurefunc(ChallengesFrame, "Update", M.GuildBest_Update)
+	M:KeystoneInfo_Create()
+	ChallengesFrame.WeeklyInfo.Child.WeeklyChest:HookScript("OnEnter", M.KeystoneInfo_WeeklyRuns)
+end
+
 function M.GuildBest_OnLoad(event, addon)
 	if addon == "Blizzard_ChallengesUI" then
-		hooksecurefunc(ChallengesFrame, "Update", M.GuildBest_Update)
-		M:KeystoneInfo_Create()
-		ChallengesFrame.WeeklyInfo.Child.WeeklyChest:HookScript("OnEnter", M.KeystoneInfo_WeeklyRuns)
-
+		LoadGuildBest()
 		B:UnregisterEvent(event, M.GuildBest_OnLoad)
 	end
 end
@@ -242,7 +245,11 @@ function M:GuildBest()
 	if not C.db["Misc"]["MDGuildBest"] then return end
 
 	hasAngryKeystones = C_AddOns.IsAddOnLoaded("AngryKeystones")
-	B:RegisterEvent("ADDON_LOADED", M.GuildBest_OnLoad)
+	if C_AddOns.IsAddOnLoaded("Blizzard_ChallengesUI") and ChallengesFrame then
+		LoadGuildBest()
+	else
+		B:RegisterEvent("ADDON_LOADED", M.GuildBest_OnLoad)
+	end
 
 	M:KeystoneInfo_Update()
 	B:RegisterEvent("BAG_UPDATE", M.KeystoneInfo_Update)

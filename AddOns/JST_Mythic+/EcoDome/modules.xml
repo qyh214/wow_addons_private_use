@@ -1,0 +1,7 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="data.lua"/>
+	<Script file="0_Trash.lua"/>
+	<Script file="1_Azhiccar.lua"/>
+	<Script file="2_TaahbatandAwazj.lua"/>	
+	<Script file="3_SoulScribe.lua"/>
+</Ui>

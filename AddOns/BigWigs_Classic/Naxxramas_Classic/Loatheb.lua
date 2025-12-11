@@ -143,36 +143,54 @@ function mod:SummonSpore(args)
 	self:PlaySound(args.spellId, "info")
 end
 
-function mod:CorruptedMindApplied(args)
-	if self:Me(args.destGUID) then
-		self:TargetBar(29184, 60, args.destName)
-		self:PersonalMessage(29184)
-	end
-	self:DeleteFromTable(healerList, args.destName)
-	healerList[#healerList + 1] = args.destName
-	healerDebuffTime[args.destName] = GetTime() + 60
-end
+do
+	local function SortTableByDebuffThenName(firstName, secondName)
+		local firstNameHasDebuff, secondNameHasDebuff = healerDebuffTime[firstName], healerDebuffTime[secondName]
 
-function mod:CorruptedMindRemoved(args)
-	healerDebuffTime[args.destName] = nil
-	if self:Me(args.destGUID) then
-		self:StopBar(args.spellName, args.destName)
-		self:PersonalMessage(29184, "removed")
-		self:PlaySound(29184, "long")
+		if firstNameHasDebuff and secondNameHasDebuff then
+			return firstNameHasDebuff < secondNameHasDebuff -- If both players have a debuff, sort by debuff time
+		elseif not firstNameHasDebuff and not secondNameHasDebuff then
+			return firstName < secondName -- If both players don't have a debuff, sort by name
+		elseif not firstNameHasDebuff and secondNameHasDebuff then
+			return true -- If only one of the healers has a debuff, the one without a debuff shows first
+		else
+			return false
+		end
 	end
-end
 
-function mod:InitialCorruptedMindApplied(args)
-	self:DeleteFromTable(healerList, args.destName)
-	healerList[#healerList + 1] = args.destName
-	if #healerList > 10 and numInfoLines ~= 20 then
-		numInfoLines = 20
-		self:OpenInfo(29184, CL.other:format("BigWigs", "|T136122:0:0:0:0:64:64:4:60:4:60|t".. self:SpellName(29184)), numInfoLines)
+	function mod:CorruptedMindApplied(args)
+		if self:Me(args.destGUID) then
+			self:TargetBar(29184, 60, args.destName)
+			self:PersonalMessage(29184)
+		end
+		healerDebuffTime[args.destName] = GetTime() + 60
+		table.sort(healerList, SortTableByDebuffThenName)
 	end
-end
 
-function mod:InitialCorruptedMindRemoved(args) -- The player died
-	self:DeleteFromTable(healerList, args.destName)
+	function mod:CorruptedMindRemoved(args)
+		healerDebuffTime[args.destName] = nil
+		table.sort(healerList, SortTableByDebuffThenName)
+		if self:Me(args.destGUID) then
+			self:StopBar(args.spellName, args.destName)
+			self:PersonalMessage(29184, "removed")
+			self:PlaySound(29184, "long")
+		end
+	end
+
+	function mod:InitialCorruptedMindApplied(args)
+		self:DeleteFromTable(healerList, args.destName)
+		healerList[#healerList + 1] = args.destName
+		table.sort(healerList, SortTableByDebuffThenName)
+		if #healerList > 10 and numInfoLines ~= 20 then
+			numInfoLines = 20
+			self:OpenInfo(29184, CL.other:format("BigWigs", "|T136122:0:0:0:0:64:64:4:60:4:60|t".. self:SpellName(29184)), numInfoLines)
+		end
+	end
+
+	function mod:InitialCorruptedMindRemoved(args) -- The player died
+		self:DeleteFromTable(healerList, args.destName)
+		table.sort(healerList, SortTableByDebuffThenName)
+	end
 end
 
 function mod:FungalBloomApplied(args)

@@ -177,6 +177,8 @@ L["STRING_DODGE"] = "Schivata"
 L["STRING_DOT"] = "(DoT)"
 L["STRING_DPS"] = "DPS"
 L["STRING_EMPTY_SEGMENT"] = "Segmento Vuoto"
+--[[Translation missing --]]
+L["STRING_ENABLE_DO_NOT_DISTURB"] = "Enable Do Not Disturb"
 L["STRING_ENABLED"] = "Abilitato"
 L["STRING_ENVIRONMENTAL_DROWNING"] = "Ambiente (Annegamento)"
 L["STRING_ENVIRONMENTAL_FALLING"] = "Ambiente (Caduta)"
@@ -297,11 +299,27 @@ L["STRING_KEYBIND_TOGGLE_WINDOWS"] = "Muovi Tutto"
 L["STRING_KEYBIND_WINDOW_CONTROL"] = "Finestre"
 L["STRING_KEYBIND_WINDOW_REPORT"] = "Riporta i dati mostrati su finestra #%s."
 L["STRING_KEYBIND_WINDOW_REPORT_HEADER"] = "Riporta Data"
+--[[Translation missing --]]
+L["STRING_KEYSTONE_ADD_TO_FRIENDS_TOOLTIP"] = "Add to friends list as character (not battlenet friend request)."
+--[[Translation missing --]]
+L["STRING_KEYSTONE_CLICK_TO_VIEW_SCOREBOARD"] = "Click to view the scoreboard."
+--[[Translation missing --]]
+L["STRING_KEYSTONE_DND_TOOLTIP"] = "Your key won't be sent to your guild or friends. While in a group, it will still be sent."
+--[[Translation missing --]]
+L["STRING_KEYSTONE_LIFETIME_LIKES_YOU_GAVE"] = [=[Life-time likes you gave for this player through the 'GG' button in the |cFFFFFF00Details! Damage Meter Mythic+|r addon.
+
+View run breakdown by selecting a Mythic+ run you did with this player.]=]
+--[[Translation missing --]]
+L["STRING_KEYSTONE_NO_MYTHICPLUS_ADDON"] = "Mythic+ addon not found."
+--[[Translation missing --]]
+L["STRING_KEYSTONE_REQUEST_FROM_GUILD"] = "Request from Guild"
 L["STRING_KILLED"] = "Ucciso"
 L["STRING_LAST_COOLDOWN"] = "ultimo cooldown utilizzato"
 L["STRING_LEFT"] = "sinistra"
 L["STRING_LEFT_CLICK_SHARE"] = "Tasto sinistro per reportare."
 L["STRING_LEFT_TO_RIGHT"] = "Sinistra a Destra"
+--[[Translation missing --]]
+L["STRING_LIKES_YOU_GAVE"] = "Likes you gave"
 L["STRING_LOCK_DESC"] = "Blocca o sblocca la finestra"
 L["STRING_LOCK_WINDOW"] = "blocca"
 L["STRING_MASTERY"] = "Maestria"
@@ -363,9 +381,13 @@ L["STRING_NEWS_REINSTALL"] = "Trovato un problema dopo un aggiornamento? Prova i
 L["STRING_NEWS_TITLE"] = "Novità In Questa Versione"
 L["STRING_NO"] = "No"
 L["STRING_NO_DATA"] = "i dati sono già stati puliti"
+--[[Translation missing --]]
+L["STRING_NO_MYTHIC_PLUS_ADDON"] = "To track your Mythic+ runs including loot, score, damage, healing done, and who you played with, install the |cFFFFAA00Details! Damage Meter Mythic+|r addon on |cFFfff1c1Wago AddOns|r or |cFFfff1c1Curse Forge|r."
 L["STRING_NO_SPELL"] = "nessun incantesimo è stato usato"
 L["STRING_NO_TARGET"] = "Nessun bersaglio trovato"
 L["STRING_NO_TARGET_BOX"] = "Nessun Bersaglio Disponibile"
+--[[Translation missing --]]
+L["STRING_NO_TELEPORTER"] = "You don't have this teleporter"
 L["STRING_NOCLOSED_INSTANCES"] = "Non ci sono finestre chiuse, premi per aprirne una nuova."
 L["STRING_NOLAST_COOLDOWN"] = "nessun cooldown usato"
 L["STRING_NOMORE_INSTANCES"] = "Numero massimo di finestre raggiunto. Cambia il limite nel pannello opzioni."
@@ -718,10 +740,6 @@ L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT"] = "New Combat on Boss Pull"
 L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT_DESC"] = "If a boss is pulled while in combat, this option closes the current combat encounter and initiates a new one for the boss."
 --[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_DPS_ANCHOR"] = "Overall Segment DPS Calculation"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_MAKEOVERALL"] = "Make Overall Segment"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_MAKEOVERALL_DESC"] = "After the run is completed, this option creates a new segment containing all combat data from the run."
 --[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_MERGETRASH"] = "Merge Trash"
 --[[Translation missing --]]
@@ -1231,6 +1249,8 @@ L["STRING_QUERY_INSPECT_REFRESH"] = "richiede aggiornamento"
 L["STRING_RAID_WIDE"] = "[*] raid wide cooldown"
 L["STRING_RAIDCHECK_PLUGIN_DESC"] = "Mentre sei all'interno di un'istanza d'incursione, mostra l'icona su Details! barra del titolo che mostra fiaschetta, cibo, uso della pre-pozione."
 L["STRING_RAIDCHECK_PLUGIN_NAME"] = "Controllo Incursione"
+--[[Translation missing --]]
+L["STRING_RECENT_PLAYERS"] = "Recent Players:"
 L["STRING_REPORT"] = "per"
 L["STRING_REPORT_BUTTON_TOOLTIP"] = "Fare clic per aprire la finestra di dialogo del Rapporto"
 L["STRING_REPORT_FIGHT"] = "combattimento"
@@ -1343,6 +1363,10 @@ L["STRING_SWITCH_WARNING"] = "Ruolo cambiato. Cambiando: |cFFFFAA00%s|r"
 L["STRING_TARGET"] = "Bersaglio"
 L["STRING_TARGETS"] = "Bersagli"
 L["STRING_TARGETS_OTHER1"] = "Compagni e Altri Bersagli"
+--[[Translation missing --]]
+L["STRING_TELEPORT"] = "Teleport"
+--[[Translation missing --]]
+L["STRING_TELEPORTERS"] = "Teleporters"
 L["STRING_TEXTURE"] = "Texture"
 L["STRING_TIME_OF_DEATH"] = "Morte"
 L["STRING_TOOOLD"] = "non può essere installato perché il tuo Details! ha la versione troppo vecchia."

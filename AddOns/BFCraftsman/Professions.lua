@@ -78,12 +78,14 @@ end
 function BFC.UpdateLearnedProfessions()
     wipe(BFC.learnedProfessions)
     for _, t in pairs(BFC_DB.publish.characters) do
-        -- fix for old versions, will be removed in the future
-        if not t.faction and AF.player.fullName == t.name then
-            t.faction = AF.player.faction
-        end
+        if not BFC_DB.publish.currentServerOnly or AF.IsConnectedRealm(t.name) then
+            -- fix for old versions, will be removed in the future
+            if not t.faction and AF.player.fullName == t.name then
+                t.faction = AF.player.faction
+            end
 
-        Update(t.prof1, t.name, t.class, t.faction)
-        Update(t.prof2, t.name, t.class, t.faction)
+            Update(t.prof1, t.name, t.class, t.faction)
+            Update(t.prof2, t.name, t.class, t.faction)
+        end
     end
 end

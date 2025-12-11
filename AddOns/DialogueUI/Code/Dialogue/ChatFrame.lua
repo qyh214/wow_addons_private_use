@@ -1,6 +1,7 @@
 local _, addon = ...
 local GetDBBool = addon.GetDBBool;
 local UpdateTextureSliceScale = addon.API.UpdateTextureSliceScale;
+local canaccessvalue = addon.API.canaccessvalue;
 
 local tinsert = table.insert;
 local format = string.format;
@@ -8,6 +9,7 @@ local gsub = string.gsub;
 local find = string.find;
 local ipairs = ipairs;
 local time = time;
+local IsInInstance = IsInInstance;
 
 
 local BASE_TIME;
@@ -458,6 +460,8 @@ do
 end
 
 function ChatFrame:AddMessage(text, name, event)
+    if not (canaccessvalue(text) and canaccessvalue(name)) then return end;
+
     local type = EventIndex[event];
     local prefix = ChatEventData[event].prefix;
 
@@ -594,7 +598,19 @@ ChatFrame:SetScript("OnHide", ChatFrame.OnHide);
 --ChatFrame:SetScript("OnEnter", ChatFrame.OnEnter);
 
 function ChatFrame:OnEvent(event, ...)
-    if ChatEventData[event] ~= nil then
+    if event == "PLAYER_ENTERING_WORLD" then
+        if IsInInstance() then
+            self.haltProcessing = true;
+        else
+            self.haltProcessing = false;
+        end
+        return
+    end
+
+    if (not self.haltProcessing) and ChatEventData[event] ~= nil then
+        if IsInInstance() then
+            self.haltProcessing = true;
+        end
         local text, name = ...
         self:AddMessage(text, name, event);
     end
@@ -606,10 +622,13 @@ function ChatFrame:ListenEvents(state)
             self:RegisterEvent(event);
         end
         self:SetScript("OnEvent", self.OnEvent);
+        self:RegisterEvent("PLAYER_ENTERING_WORLD");
+        self:OnEvent("PLAYER_ENTERING_WORLD");
     else
         for event in pairs(EventIndex) do
             self:UnregisterEvent(event);
         end
+        self:UnregisterEvent("PLAYER_ENTERING_WORLD");
         self:SetScript("OnEvent", nil);
     end
 end

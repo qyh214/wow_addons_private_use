@@ -44,6 +44,13 @@ local timers = { -- Mythic P1 is timed
 	[228162] = {20, 20, 33, 22, 20, 35}, -- Shield of Light
 	[228029] = {25, 20, 15, 30, 20, 15}, -- ExpelLight
 }
+local sayMessages = {
+	[227490] = "{rt3} %s {rt3}", -- Boss_OdunRunes_Purple
+	[227491] = "{rt2} %s {rt2}", -- Boss_OdunRunes_Orange
+	[227498] = "{rt1} %s {rt1}", -- Boss_OdunRunes_Yellow
+	[227499] = "{rt6} %s {rt6}", -- Boss_OdunRunes_Blue
+	[227500] = "{rt4} %s {rt4}", -- Boss_OdunRunes_Green
+}
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -57,13 +64,6 @@ if L then
 	L.hymdall_icon = "inv_helm_mail_vrykuldragonrider_b_01" -- 214382 / Follower: Hymdall
 	L.hyrja = -14006
 	L.hyrja_icon = "inv_shield_1h_hyrja_d_01"
-
-	L.say = {}
-	L.say[227490] = "{rt3} %s {rt3}" -- Boss_OdunRunes_Purple
-	L.say[227491] = "{rt2} %s {rt2}" -- Boss_OdunRunes_Orange
-	L.say[227498] = "{rt1} %s {rt1}" -- Boss_OdunRunes_Yellow
-	L.say[227499] = "{rt6} %s {rt6}" -- Boss_OdunRunes_Blue
-	L.say[227500] = "{rt4} %s {rt4}" -- Boss_OdunRunes_Green
 
 	L.yields = "%s yields" -- used when Hymdall and Helya leave the fight in P2: "Hymdall yields"
 
@@ -454,7 +454,7 @@ function mod:BrandedFixate(args)
 	if self:Me(args.destGUID) then
 		self:MessageOld(-14495, "blue", "warning", L[args.spellId], args.spellId)
 		self:Flash(-14495, args.spellId)
-		self:Say(-14495, L.say[args.spellId]:format(args.spellName), nil, L.say[args.spellId]:format("Branded"))
+		self:Say(-14495, sayMessages[args.spellId]:format(args.spellName), nil, sayMessages[args.spellId]:format("Branded"))
 		myAddGUID = args.sourceGUID
 	end
 	addFixates[args.spellId] = self:ColorName(args.destName)
@@ -566,7 +566,7 @@ do
 			isOnMe = args.spellId
 			self:MessageOld(197961, "blue", "warning", CL.other:format(args.spellName, L[translatedSpellId]), args.spellId)
 			self:Flash(197961, args.spellId)
-			self:Say(197961, L.say[translatedSpellId]:format(args.spellName), nil, L.say[translatedSpellId]:format("Runic Brand")) -- note, L.say is not a localized string
+			self:Say(197961, sayMessages[translatedSpellId]:format(args.spellName), nil, sayMessages[translatedSpellId]:format("Runic Brand"))
 			self:TargetBar(197961, 10, args.destName, nil, args.spellId)
 		end
 		proxLists[args.spellId][#proxLists[args.spellId]+1] = args.destName

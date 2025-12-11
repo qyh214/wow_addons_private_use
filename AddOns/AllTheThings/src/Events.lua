@@ -68,6 +68,11 @@ app.AddEventRegistration = function(event, func, doNotPreRegister)
 		OnReadyEventRegistrations[event] = func
 	end
 end
+-- Allows adding an EventRegistry callback handler for Custom Events which are not considered part of the global event system
+app.AddEventRegistryCallback = EventRegistry and function(event, func)
+	EventRegistry:RegisterCallback(event, func)
+end
+or function(event) app.print("EventRegistry not available, cannot add callback for",event) end
 app.AddEventHandler("OnReady", function()
 	local Register = app.RegisterFuncEvent
 	for event,func in pairs(OnReadyEventRegistrations) do

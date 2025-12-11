@@ -69,11 +69,51 @@ function AF.GetLocalizedClassName(classFileOrID)
     return ""
 end
 
+---@return string|nil icon class icon atlas
+function AF.GetClassIcon(classFileOrID)
+    local class = AF.GetClassFile(classFileOrID)
+    if class then
+        return "classicon-" .. class:lower()
+    end
+end
+
+local GetSpecializationInfoForSpecID = GetSpecializationInfoForSpecID
+function AF.GetSpecIcon(specID)
+    if not specID then return end
+    local icon = select(4, GetSpecializationInfoForSpecID(specID))
+    return icon
+end
+
+function AF.GetSpecRole(specID)
+    if not specID then return end
+    local role = select(5, GetSpecializationInfoForSpecID(specID))
+    return role
+end
+
+local GetSpecializationInfoForClassID = GetSpecializationInfoForClassID
+function AF.GetSpecIconForClassID(classID, index)
+    if not (classID and index) then return end
+    local icon = select(4, GetSpecializationInfoForClassID(classID, index))
+    return icon
+end
+
+---@return function iterator classFile, classID, index
 function AF.IterateClasses()
     local i = 0
     return function()
         i = i + 1
         if i <= GetNumClasses() then
+            return sortedClasses[i], classFileToID[sortedClasses[i]], i
+        end
+    end
+end
+
+---@return function iterator classFile, classID, index
+function AF.IterateSortedClasses()
+    local i = 0
+    return function()
+        i = i + 1
+        if i <= #sortedClasses then
             return sortedClasses[i], classFileToID[sortedClasses[i]], i
         end
     end

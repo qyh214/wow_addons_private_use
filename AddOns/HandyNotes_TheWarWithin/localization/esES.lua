@@ -659,16 +659,23 @@ L['george_the_big_pinch_note'] = 'Haz click rápidamente en los 5 {npc:238189} p
 L['options_icons_karesh_lore_hunter'] = '{achievement:60890}'
 L['options_icons_karesh_lore_hunter_desc'] = 'Muestra dónde están los objetos históricos del logro {achievement:60890}.'
 
+L['options_icons_phase_lost_and_found'] = '{achievement:61017}'
+L['options_icons_phase_lost_and_found_desc'] = 'Muestra dónde están los Orbes de buceo de fase para el logro {achievement:61017}.'
+L['phaseorb_label'] = 'Orbe de buceo de fase'
+L['phaseorb_note'] = 'Pasa a través del Orbe de buceo de fase para tener una probabilidad de conseguir una de las transfiguraciones.'
+
 L['options_icons_purrkins'] = '{achievement:42729}'
 L['options_icons_purrkins_desc'] = 'Muestra dónde están los ronroneadores para el logro {achievement:42729}.'
 L['purrkins_note'] = 'Teclea {emote:/acariciar} en el ronroneador.'
-L['kareshire_sublabel'] = 'Cambia de fases'
+L['kareshire_sublabel'] = 'En fase o fuera de fase'
 L['in_a_tree'] = 'Encima del árbol.'
-L['little_ms_phaser_sublabel'] = 'Cambia de fases'
+L['little_ms_phaser_sublabel'] = 'En fase o fuera de fase'
 
 L['mailroom_distribution_note'] = 'Interactúa con el carro de fuera y abre la puerta de la sala de correo. Párate en los círculos y usa el botón de acción adicional. El tesoro aparecerá cerca de la puerta.'
 L['gift_of_the_brothers_note'] = 'Interactúa con el {object:Farol chisporroteante} y habla con {npc:233881}. Después ves a buscar a {npc:234112} ({dot:Red}), {npc:234113} ({dot:Yellow}) y {npc:234075} ({dot:Green}). Por último, vuelve a {npc:233881} en el {object:Farol chisporroteante}.'
 L['ancient_coffer_note'] = 'Recoge el {item:233794}({dot:Red}) y la {item:233799}({dot:Yellow}). Devuélvelos a la {object:Arca antigua} para conseguir {item:245269}.'
 
 L['sthaarbs_note'] = 'Usa el teletransportador cerca del {object:Conducto de fase} para alcanzar a {npc:234845}.'
-L['heka_tamos_note'] = nil
+L['heka_tamos_note'] = 'Consigue un buff de {object:Minador de rocío}, {object:Farol espectral}, {object:Exquisitez terránea} y {object:Atrapavientos} que aparecen cerca e interactúa con el {object:Blandón de unión elemental} para invocar al raro.'
+
+L['translocated_gorger_note'] = 'Recoge 1x {item:246240} por boss cada semana de la banda guerrera del boss durante una {object:Invasión de devoradores}. Combínalas y conseguirás tu montura.'

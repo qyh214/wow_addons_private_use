@@ -49,6 +49,11 @@ end
 
 -- Excavation Site 9
 
+L = BigWigs:NewBossLocale("Beste Glatisant", "deDE")
+if L then
+	--L.beste_glatisant = "Beste Glatisant"
+end
+
 L = BigWigs:NewBossLocale("Craggle Fritzbrains", "deDE")
 if L then
 	L.craggle_fritzbrains = "Craggle Knipshirn"
@@ -78,6 +83,11 @@ if L then
 end
 
 -- Kriegval's Rest
+
+L = BigWigs:NewBossLocale("Faceless One Kriegval's Rest", "deDE")
+if L then
+	L.faceless_one = "Gesichtsloser"
+end
 
 L = BigWigs:NewBossLocale("Tomb-Raider Drywhisker", "deDE")
 if L then
@@ -230,14 +240,9 @@ end
 
 -- Voidrazor Sanctuary
 
-L = BigWigs:NewBossLocale("Nexus-Princess Ky'veza (Tier 8)", "deDE")
-if L then
-	L.nexus_princess_kyveza = "Nexusprinzessin Ky'veza (Stufe 8)"
-end
-
 L = BigWigs:NewBossLocale("Nexus-Princess Ky'veza (Tier 11)", "deDE")
 if L then
-	L.nexus_princess_kyveza = "Nexusprinzessin Ky'veza (Stufe 11)"
+	L.nexus_princess_kyveza = "Nexusprinzessin Ky'veza"
 end
 
 -- Zekvir's Lair
@@ -266,6 +271,7 @@ if L then
 	L.shadowguard_soulbreaker = "Seelenbrecher der Schattenwache"
 	L.shadowguard_steelsoul = "Stahlseele der Schattenwache"
 	L.siphoned_drake = "Ausgelaugter Drache"
+	L.steelsoul_arcanoward = "Stahlseelenarkanoschutz"
 end
 
 L = BigWigs:NewBossLocale("Fungarian Delve Trash", "deDE")
@@ -294,6 +300,7 @@ if L then
 	L.punchy_thug = "Schlagfertiger Schläger"
 	L.flinging_flicker = "Schleuderflacker"
 	L.bomb_bot = "Bombenbot"
+	L.rad_rat = "Radikale Ratte"
 end
 
 L = BigWigs:NewBossLocale("Kobold Delve Trash", "deDE")
@@ -322,15 +329,19 @@ L = BigWigs:NewBossLocale("Ky'veza Rares", "deDE")
 if L then
 	L.rares = "Ky'veza Rares"
 
+	L.treasure_wraith = "Schatzgespenst"
+	L.invasive_phasecrawler = "Invasiver Phasenkriecher"
+	L.drude = "D'rude"
+	L.great_devourer = "Großer Verschlinger"
+	L.mercenary_acquisitionist = "Söldner-Akquisiteur"
 	L.pactsworn_fraycaller = "Paktgeschworener Getümmelrufer"
 	L.pactsworn_dustblade = "Paktgeschworene Staubklinge"
 	L.pactsworn_sandreaver = "Paktgeschworener Sandjäger"
 	L.pactsworn_arcanist = "Paktgeschworener Arkanist"
 	L.pactsworn_wildcaller = "Paktgeschworener Wildrufer"
-	L.invasive_phasecrawler = "Invasiver Phasenkriecher"
-	L.drude = "D'rude"
-	L.great_devourer = "Großer Verschlinger"
 	L.nexus_princess_kyveza = "Nexusprinzessin Ky'veza (Zufälliges Erscheinen)"
+	L.zekvir = "Zekvir"
+	L.the_underpin = "Der Lorenboss"
 end
 
 L = BigWigs:NewBossLocale("Nerubian Delve Trash", "deDE")
@@ -374,22 +385,4 @@ if L then
 	L.deepwalker_guardian = "Tiefenläuferwächter"
 	L.crazed_abomination = "Wahnsinnige Monstrosität"
 	L.web_marauder = "Netzmarodeur"
-end
-
-L = BigWigs:NewBossLocale("Underpin Rares", "deDE")
-if L then
-	L.rares = "Lorenboss Rares"
-
-	L.treasure_wraith = "Schatzgespenst"
-	L.treasure_crab = "Schatzkrabbe"
-	L.hovering_menace = "Schwebende Bedrohung"
-	L.malfunctioning_pummeler = "Defekter Verprügler"
-	L.underpins_adoring_fan = "Schwärmender Fan des Lorenbosses"
-	L.underpins_well_connected_friend = "Gut vernetzter Freund des Lorenbosses"
-	L.underpins_explosive_ally = "Explosiver Verbündeter des Lorenbosses"
-	L.underpins_bodyguards_intern = "Praktikant des Leibwächters des Lorenbosses"
-	L.aggressively_lost_hobgoblin = "Wirklich verirrter Hobgoblin"
-	L.the_underpin = "Der Lorenboss (Zufälliges Erscheinen)"
-
-	L.underpin_retreat_trigger = "Die Leute bringen immer mein legal und urkundlich übertragenes Land durcheinander!"
 end

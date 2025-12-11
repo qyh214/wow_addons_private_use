@@ -137,6 +137,8 @@ L["Don't show again"] = "다시 표시하지 않음"
 L["Enable CD tracking in the current zone"] = "현 영역에서 쿨기추적 사용"
 L["Enable if the spell is a base ability for this specialization"] = "주문이 전문화 기본 스킬이면 사용 설정 하십시오"
 L["Enable in automated instance groups"] = "자동으로 구성된 인스턴스 그룹에서 활성화"
+--[[Translation missing --]]
+L["Enable in raid groups"] = "Enable in raid groups"
 L["Enable initial spark and marching-ants animation"] = "초기 섬광 효과와 테두리 애니메이션  활성화"
 L["Enable spell for this specialization"] = "현 직업 특성에 주문 활성화"
 L["Enable to customize the 2nd row icons when using 'Double Row' layout."] = "'두 줄 배치' 사용 시 둘째 줄 아이콘 설정 활성화"

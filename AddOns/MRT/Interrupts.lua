@@ -1,5 +1,9 @@
 local GlobalAddonName, ExRT = ...
 
+if ExRT.isMN then
+	return
+end
+
 local VMRT = nil
 
 local ELib,L = ExRT.lib,ExRT.L

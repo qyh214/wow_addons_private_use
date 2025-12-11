@@ -79,30 +79,32 @@ function mod:AbsorbLeystones(args)
 	self:Bar(args.spellId, 8)
 end
 
-function mod:WebWrap(args)
-	if self:GetOption(wrapMarker) then
-		wraps = {}
-		wrapCount = 8
+do
+	local function UnregisterUnitAura()
+		mod:UnregisterUnitEvent("UNIT_AURA", "player")
 	end
-	self:RegisterUnitEvent("UNIT_AURA", nil, "player")
-	self:ScheduleTimer("UnregisterUnitEvent", 5, "UNIT_AURA", "player")
-	self:MessageOld(args.spellId, "green", "warning")
+	function mod:WebWrap(args)
+		if self:GetOption(wrapMarker) then
+			wraps = {}
+			wrapCount = 8
+		end
+		self:RegisterUnitEvent("UNIT_AURA", nil, "player")
+		self:SimpleTimer(UnregisterUnitAura, 2)
+		self:MessageOld(args.spellId, "green", "warning")
+	end
+end
+
+function mod:UNIT_AURA(event, unit)
+	if self:GetPlayerAura(219865) then -- Web Wrap
+		self:UnregisterUnitEvent(event, unit)
+		self:Say(219861, nil, nil, "Web Wrap")
+	end
 end
 
 function mod:WebWrapSummon(args)
 	if self:GetOption(wrapMarker) then
 		wraps[args.destGUID] = wrapCount
 		wrapCount = wrapCount - 1
-	end
-end
-
-do
-	local spellName = mod:SpellName(219861)
-	function mod:UNIT_AURA(event, unit)
-		if self:UnitDebuff(unit, spellName) then
-			self:UnregisterUnitEvent(event, unit)
-			self:Say(219861, nil, nil, "Web Wrap")
-		end
 	end
 end
 

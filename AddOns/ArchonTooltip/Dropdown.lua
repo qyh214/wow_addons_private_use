@@ -140,7 +140,7 @@ local function ExtractCharacterInformation(context)
 						currentDropDownSelection.realm = context.server
 					end
 				end
-			elseif Private.IsRetail then
+			elseif Private.IsRetail or Private.IsMists then
 				local name, realm = strsplit("-", context.chatTarget)
 
 				currentDropDownSelection.name = name

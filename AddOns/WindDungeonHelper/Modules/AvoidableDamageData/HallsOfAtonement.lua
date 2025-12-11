@@ -18,15 +18,10 @@ local mistakes = {
 		spell = 319703,
 	},
 	{
-		-- 粉碎猛擊 (哈奇厄斯)
+		-- 玻璃裂片 (哈奇厄斯)
 		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 322936,
+		spell = 323001,
 		playerIsNotTank = true,
-	},
-	{
-		-- 拋擲殘骸 (哈奇厄斯)
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 322945,
 	},
 	{
 		-- 念力碰撞
@@ -72,7 +67,7 @@ local mistakes = {
 	{
 		-- 爆發折磨 (宮務大臣)
 		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 327885,
+		spell = 1236964,
 	},
 	{
 		-- 念力猛襲 (宮務大臣)

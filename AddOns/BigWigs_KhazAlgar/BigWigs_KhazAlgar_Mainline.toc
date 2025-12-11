@@ -1,4 +1,4 @@
-## Interface: 110105, 110107, 110200
+## Interface: 110205, 110207, 120000
 
 ## Title: BigWigs [|cffeda55fKhaz Algar|r]
 ## Title-deDE: BigWigs [|cffeda55fKhaz Algar|r]
@@ -23,20 +23,21 @@
 ## Notes-zhCN: BigWigs 卡兹阿加模块。
 ## Notes-zhTW: BigWigs 卡兹阿爾加模組。
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
-## Version: v392.7
+## Version: v402.1
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
 
 ## X-Category: Raid
 ## X-BigWigs-ExtraMenu: -2274
-## X-BigWigs-LoadOn-WorldBoss: -2214, 220999, -2215, 221224, -2213, 221067, -2248, 221084, -2346, 231821
+## X-BigWigs-LoadOn-WorldBoss: -2214, 220999, -2215, 221224, -2213, 221067, -2248, 221084, -2346, 231821, -2371, 238319
 
 AggregationOfHorrors.lua
 Shurrai.lua
 Orta.lua
 Kordac.lua
 Gobfather.lua
+Reshanor.lua
 
 Locales\[TextLocale].lua [AllowLoadTextLocale deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW]
 !Options.lua

@@ -55,6 +55,7 @@ local specTemplate = {
     custom1Name = "Custom 1",
     custom2Name = "Custom 2",
     noFeignedCooldown = false,
+    disable_items = false,
 
     abilities = {
         ['**'] = {
@@ -1292,6 +1293,7 @@ function Hekili:RestoreDefaults()
 
         if msg then
             C_Timer.After( 5, function()
+                Hekili:ReviewPacks()
                 if Hekili.DB.profile.notifications.enabled then Hekili:Notify( msg, 6 ) end
                 Hekili:Print( msg )
             end )
@@ -1317,6 +1319,7 @@ function Hekili:RestoreDefaults()
 
         if msg then
             C_Timer.After( 6, function()
+                Hekili:ReviewPacks()
                 if Hekili.DB.profile.notifications.enabled then Hekili:Notify( msg, 6 ) end
                 Hekili:Print( msg )
             end )
@@ -1338,6 +1341,8 @@ function Hekili:RestoreDefault( name )
             data.payload.version = default.version
             data.payload.date = default.version
             data.payload.builtIn = true
+
+            Hekili:ReviewPacks()
         end
     end
 end
@@ -1511,7 +1516,8 @@ all:RegisterAuras( {
     voidbinding = {
         id = 462661,
         duration = 30,
-        max_stack = 1
+        max_stack = 1,
+        shared = "player"
     },
     -- Priory of the Sacred Flame
     blessing_of_the_sacred_flame = {
@@ -2707,7 +2713,11 @@ do
         {
             name = "cavedwellers_delight",
             items = { 212242, 212243, 212244 }
-        }
+        },
+        {
+            name = "invigorating_healing_potion",
+            items = { 244835, 244838, 244839 }
+        }        
     }
 
 ---@diagnostic disable-next-line: need-check-nil
@@ -2870,16 +2880,17 @@ local gotn_classes = {
 }
 
 local baseClass = UnitClassBase( "player" ) or "WARRIOR"
+local gotnID = gotn_classes[ baseClass ] or 28880
 
 all:RegisterAura( "gift_of_the_naaru", {
-    id = gotn_classes[ baseClass ],
+    id = gotnID,
     duration = 5,
     max_stack = 1,
     copy = { 28800, 121093, 59545, 59547, 59543, 59544, 59548, 59542, 370626 }
 } )
 
 all:RegisterAbility( "gift_of_the_naaru", {
-    id = gotn_classes[ baseClass ],
+    id = gotnID,
     cast = 0,
     cooldown = 180,
     gcd = "off",
@@ -3450,7 +3461,9 @@ do
         { "obsidian_aspirants_medallion", 205779 },
         { "obsidian_gladiators_medallion", 205711 },
         { "forged_aspirants_medallion", 218422 },
-        { "forged_gladiators_medallion", 218716 }
+        { "forged_gladiators_medallion", 218716 },
+        { "astral_aspirants_medallion", 230353 },
+        { "astral_gladiators_medallion", 230641 },
     }
 
     local pvp_medallions_copy = {}
@@ -3483,7 +3496,7 @@ do
             end
             return m
         end,
-        items = { 161674, 162897, 165055, 165220, 167377, 167525, 181333, 184052, 184055, 172666, 184058, 185309, 185304, 186966, 186869, 192412, 192298, 204164, 205779, 205711, 205779, 205711, 218422, 218716 },
+        items = { 161674, 162897, 165055, 165220, 167377, 167525, 181333, 184052, 184055, 172666, 184058, 185309, 185304, 186966, 186869, 192412, 192298, 204164, 205779, 205711, 205779, 205711, 218422, 218716, 230353, 230641 },
         toggle = "defensives",
 
         usable = function () return debuff.loss_of_control.up, "requires loss of control effect" end,
@@ -3530,7 +3543,9 @@ do
         { "forged_aspirants_badge_of_ferocity", 218421 },
         { "forged_gladiators_badge_of_ferocity", 218713 },
         { "prized_aspirants_badge_of_ferocity", 229491 },
-        { "prized_gladiators_badge_of_ferocity", 229780 }
+        { "prized_gladiators_badge_of_ferocity", 229780 },
+        { "astral_aspirants_badge_of_ferocity", 230352 },
+        { "astral_gladiators_badge_of_ferocity", 230638 }  
     }
 
     local pvp_badges_copy = {}
@@ -3555,7 +3570,7 @@ do
         cooldown = 120,
         gcd = "off",
 
-        items = { 162966, 161902, 165223, 165058, 167528, 167380, 172849, 172669, 175884, 175921, 185161, 185197, 186906, 186866, 192352, 192295, 201449, 201807, 205778, 205708, 209763, 209343, 218421, 218713, 229491, 229780 },
+        items = { 162966, 161902, 165223, 165058, 167528, 167380, 172849, 172669, 175884, 175921, 185161, 185197, 186906, 186866, 192352, 192295, 201449, 201807, 205778, 205708, 209763, 209343, 218421, 218713, 229491, 229780, 230352, 230638 },
         texture = 135884,
 
         toggle = "cooldowns",
@@ -3635,7 +3650,9 @@ do
         algari_competitors_emblem = 219933,
         forged_gladiators_emblem = 218715,
         prized_aspirants_emblem = 229494,
-        prized_gladiators_emblem = 229782
+        prized_gladiators_emblem = 229782,
+        astral_aspirants_emblem = 230355,
+        astral_gladiators_emblem = 230640
     }
 
     local pvp_emblems_copy = {}
@@ -3669,7 +3686,7 @@ do
             end
             return e
         end,
-        items = { 162898, 161675, 165221, 165056, 167378, 167526, 172667, 172847, 178334, 178447, 185242, 185282, 186946, 186868, 192392, 192297, 201452, 201809, 204166, 205781, 205710, 209766, 208309, 209345, 219933, 218715, 229494, 229782 },
+        items = { 162898, 161675, 165221, 165056, 167378, 167526, 172667, 172847, 178334, 178447, 185242, 185282, 186946, 186868, 192392, 192297, 201452, 201809, 204166, 205781, 205710, 209766, 208309, 209345, 219933, 218715, 229494, 229782, 230355, 230640 },
         toggle = "cooldowns",
 
         handler = function ()
@@ -4102,6 +4119,7 @@ function Hekili:SpecializationChanged()
 
     wipe( state.buff )
     wipe( state.debuff )
+    wipe( state.cooldown )
 
     wipe( class.auras )
     wipe( class.abilities )

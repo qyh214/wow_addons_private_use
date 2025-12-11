@@ -111,7 +111,7 @@ do
 			local text = self.Text:GetText()
 			local title = text and strmatch(text, titleString)
 			if title then
-				ChatFrame_OpenChat(gsub(title, " %- ", "."), SELECTED_DOCK_FRAME)
+				ChatFrameUtil.OpenChat(gsub(title, " %- ", "."), SELECTED_DOCK_FRAME)
 			end
 		end)
 
@@ -144,12 +144,33 @@ end
 
 -- remove <Right click for Frame Settings>
 do
-	function UnitFrame_UpdateTooltip(self)
-		GameTooltip_SetDefaultAnchor(GameTooltip, self)
-		if GameTooltip:SetUnit(self.unit, self.hideStatusOnTooltip) then
-			self.UpdateTooltip = UnitFrame_UpdateTooltip
-		else
-			self.UpdateTooltip = nil
+	if not P.isMidnight  then
+		function UnitFrame_UpdateTooltip(self)
+			GameTooltip_SetDefaultAnchor(GameTooltip, self)
+			if GameTooltip:SetUnit(self.unit, self.hideStatusOnTooltip) then
+				self.UpdateTooltip = UnitFrame_UpdateTooltip
+			else
+				self.UpdateTooltip = nil
+			end
 		end
 	end
+end
+
+-- Auto-Complete C.H.E.T.T. List
+do
+	B:RegisterEvent("PLAYER_CHOICE_UPDATE", function()
+		C_Timer.After(.1, function()
+			local choiceInfo = C_PlayerChoice.GetCurrentPlayerChoiceInfo()
+			if choiceInfo and choiceInfo.choiceID == 850 then
+				local optionInfo = choiceInfo.options and choiceInfo.options[1]
+				local buttons = optionInfo and optionInfo.buttons
+				if buttons and #buttons > 1 then
+					local button = buttons[1]
+					if button and not button.disabled then
+						C_PlayerChoice.SendPlayerChoiceResponse(button.id)
+					end
+				end
+			end
+		end)
+	end)
 end

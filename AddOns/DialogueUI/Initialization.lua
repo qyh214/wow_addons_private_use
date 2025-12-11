@@ -1,5 +1,5 @@
-local VERSION_TEXT = "v0.6.7";
-local VERSION_DATE = 1754000000;
+local VERSION_TEXT = "v0.6.8";
+local VERSION_DATE = 1763300000;
 
 
 local addonName, addon = ...
@@ -99,6 +99,7 @@ local DefaultValues = {
     --Not shown in the Settings. Accessible by other means
     TooltipShowItemComparison = false,          --Tooltip
     TTSReadTranslation = false,                 --Read original text or translation. Controlled by TTSButton modifier key
+    MuteTargetLostSound = true,                 --Mute target lost sound caused by hiding UI. Accessed through command only: /run DialogueUI_DB.MuteTargetLostSound = false
 
     --WidgetManagerPosition = {x, y};
     --QuestItemDisplayPosition = {x, y};
@@ -196,6 +197,7 @@ addon.SetTutorialRead = SetTutorialRead;
 local EL = CreateFrame("Frame");
 EL:RegisterEvent("ADDON_LOADED");
 EL:RegisterEvent("PLAYER_ENTERING_WORLD");
+EL:RegisterEvent("LOADING_SCREEN_DISABLED");
 
 EL:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
@@ -212,6 +214,9 @@ EL:SetScript("OnEvent", function(self, event, ...)
         SetDBValue(dbKey, DB[dbKey]);
 
         addon.CallbackRegistry:Trigger("PLAYER_ENTERING_WORLD");
+    elseif event == "LOADING_SCREEN_DISABLED" then
+        self:UnregisterEvent(event);
+        addon.CallbackRegistry:Trigger("InitialLoadingComplete");
     end
 end);
 
@@ -231,6 +236,7 @@ do
 
     addon.IS_CLASSIC = not IsToCVersionEqualOrNewerThan(100000);
     addon.IS_CATA = currentToCVersion >= 40400 and currentToCVersion < 50000;
+    addon.IS_MIDNIGHT = currentToCVersion >= 120000;
 end
 
 

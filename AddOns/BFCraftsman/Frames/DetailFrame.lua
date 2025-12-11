@@ -54,7 +54,7 @@ end
 ---------------------------------------------------------------------
 local function CreateDetailFrame()
     detailFrame = AF.CreateBorderedFrame(BFCBrowseFrame, "BFCDetailFrame", nil, nil, nil, "accent")
-    AF.SetFrameLevel(detailFrame, 50)
+    AF.SetFrameLevel(detailFrame, 150)
     detailFrame:Hide()
     AF.SetInside(detailFrame, BFCBrowseFrameList, 5)
 
@@ -142,7 +142,7 @@ local function CreateDetailFrame()
         updateRequired = true
     end)
 
-    AF.SetTooltips(blockButton, "BOTTOMRIGHT", 0, -1,
+    AF.SetTooltip(blockButton, "BOTTOMRIGHT", 0, -1,
         L["Blacklist"],
         L["The blacklist button in the list has the same functionality"],
         " ",

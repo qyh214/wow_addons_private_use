@@ -1,12 +1,11 @@
 local W, F, L = unpack(select(2, ...))
+local LibStub = LibStub
 local GI = W:NewModule("GroupInfo", "AceHook-3.0")
 local LFGPI = W.Utilities.LFGPlayerInfo
 
 local _G = _G
 local format = format
 local ipairs = ipairs
-
-local LibStub = LibStub
 
 local C_AddOns_IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 

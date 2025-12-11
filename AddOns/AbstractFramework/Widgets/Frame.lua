@@ -7,13 +7,18 @@ local AF = _G.AbstractFramework
 ---@class AF_Frame:Frame,AF_BaseWidgetMixin
 local AF_FrameMixin = {}
 
+---@param parent Frame
+---@param name? string
+---@param width? number
+---@param height? number
+---@param template? string
 ---@return AF_Frame frame
 function AF.CreateFrame(parent, name, width, height, template)
     local f = CreateFrame("Frame", name, parent, template)
     AF.SetSize(f, width, height)
     Mixin(f, AF_FrameMixin)
     Mixin(f, AF_BaseWidgetMixin)
-    AF.AddToPixelUpdater(f)
+    AF.AddToPixelUpdater_OnShow(f)
     return f
 end
 
@@ -23,6 +28,7 @@ end
 ---@class AF_HeaderedFrame:AF_Frame
 local AF_HeaderedFrameMixin = {}
 
+---@param justify "LEFT" | "RIGHT" | "CENTER"
 function AF_HeaderedFrameMixin:SetTitleJustify(justify)
     AF.ClearPoints(self.header.text)
     if justify == "LEFT" then
@@ -90,6 +96,14 @@ end
 -- function AF_HeaderedFrameMixin:SetHeaderColor(color)
 -- end
 
+---@param parent Frame
+---@param name? string
+---@param title string
+---@param width? number
+---@param height? number
+---@param frameStrata? string default is "HIGH"
+---@param frameLevel? number default is 1
+---@param notUserPlaced? boolean default is false
 ---@return AF_HeaderedFrame headeredFrame
 function AF.CreateHeaderedFrame(parent, name, title, width, height, frameStrata, frameLevel, notUserPlaced)
     local f = CreateFrame("Frame", name, parent, "BackdropTemplate")
@@ -116,9 +130,9 @@ function AF.CreateHeaderedFrame(parent, name, title, width, height, frameStrata,
     header:EnableMouse(true)
     header:SetClampedToScreen(true)
     header:RegisterForDrag("LeftButton")
-    header:SetScript("OnMouseDown", function()
-        f:Raise()
-    end)
+    -- header:SetScript("OnMouseDown", function()
+    --     f:Raise()
+    -- end)
 
     AF.ShowNormalGlow(f, "shadow", 2)
     AF.ClearPoints(f.normalGlow)
@@ -174,7 +188,7 @@ function AF.CreateHeaderedFrame(parent, name, title, width, height, frameStrata,
 
     f:SetMovable(true)
 
-    AF.AddToPixelUpdater(f)
+    AF.AddToPixelUpdater_OnShow(f)
 
     return f
 end
@@ -201,6 +215,32 @@ function AF_BorderedFrameMixin:SetLabel(label, fontColor, font, isInside)
     end
 end
 
+---@param color string|table|nil color name / table
+function AF_BorderedFrameMixin:SetBorderColor(color)
+    if type(color) == "string" then
+        self:SetBackdropBorderColor(AF.GetColorRGB(color))
+    elseif type(color) == "table" then
+        self:SetBackdropBorderColor(AF.UnpackColor(color))
+    else
+        self:SetBackdropBorderColor(AF.GetColorRGB("border"))
+    end
+end
+
+---@param color string|table|nil color name / table
+function AF_BorderedFrameMixin:SetBackgroundColor(color)
+    if type(color) == "string" then
+        self:SetBackdropColor(AF.GetColorRGB(color))
+    elseif type(color) == "table" then
+        self:SetBackdropColor(AF.UnpackColor(color))
+    else
+        self:SetBackdropColor(AF.GetColorRGB("background"))
+    end
+end
+
+---@param parent Frame
+---@param name? string
+---@param width? number
+---@param height? number
 ---@param color string|table color name / table
 ---@param borderColor string|table color name / table
 ---@return AF_BorderedFrame borderedFrame
@@ -214,7 +254,7 @@ function AF.CreateBorderedFrame(parent, name, width, height, color, borderColor)
     Mixin(f, AF_FrameMixin)
     Mixin(f, AF_BorderedFrameMixin)
     Mixin(f, AF_BaseWidgetMixin)
-    AF.AddToPixelUpdater(f)
+    AF.AddToPixelUpdater_OnShow(f)
 
     return f
 end
@@ -247,7 +287,11 @@ function AF_TitledPaneMixin:SetTips(...)
     self.tips:SetTips(...)
 end
 
--- recommended position for first component is "TOPLEFT", 0, -25/-30
+-- Recommended position for the first component:
+-- | Type             | Point     | X    | Y       |
+-- |------------------|-----------|------|---------|
+-- | Button/CheckBox  | "TOPLEFT" | 5/15 | -25/-27 |
+-- | Slider           | "TOPLEFT" | 5/15 | -40/-45 |
 ---@param parent Frame
 ---@param title string
 ---@param width? number
@@ -257,7 +301,7 @@ end
 function AF.CreateTitledPane(parent, title, width, height, color)
     color = color or AF.GetAddonAccentColorName()
 
-    local pane = CreateFrame("Frame", nil, parent, "BackdropTemplate")
+    local pane = CreateFrame("Frame", nil, parent)
     AF.SetSize(pane, width, height)
 
     -- underline
@@ -279,18 +323,37 @@ function AF.CreateTitledPane(parent, title, width, height, color)
     local text = AF.CreateFontString(pane, title, color)
     pane.title = text
     text:SetJustifyH("LEFT")
-    AF.SetPoint(text, "BOTTOMLEFT", line, "TOPLEFT", 0, 2)
+    AF.SetPoint(text, "BOTTOMLEFT", line, "TOPLEFT", 1, 2)
 
     Mixin(pane, AF_TitledPaneMixin)
     Mixin(pane, AF_BaseWidgetMixin)
-    AF.AddToPixelUpdater(pane)
+    AF.AddToPixelUpdater_OnShow(pane)
 
     return pane
 end
 
 ---------------------------------------------------------------------
--- mask (+30 frame level)
+-- mask (+100 frame level)
 ---------------------------------------------------------------------
+---@param parent Frame
+---@return Frame parent.mask
+function AF.CreateMask(parent)
+    local mask = AF.CreateFrame(parent)
+    parent.mask = mask
+
+    AF.ApplyDefaultBackdrop_NoBorder(mask)
+    mask:SetBackdropColor(AF.GetColorRGB("mask"))
+    mask:BlockMouse(true)
+
+    mask.text = AF.CreateFontString(mask, "", "firebrick")
+    AF.SetPoint(mask.text, "LEFT", 5, 0)
+    AF.SetPoint(mask.text, "RIGHT", -5, 0)
+
+    mask:Hide()
+
+    return mask
+end
+
 ---@param parent Frame
 ---@param tlX number topleft x
 ---@param tlY number topleft y
@@ -299,19 +362,7 @@ end
 ---@return Frame
 function AF.ShowMask(parent, text, tlX, tlY, brX, brY)
     if not parent.mask then
-        parent.mask = AF.CreateFrame(parent)
-        AF.ApplyDefaultBackdrop_NoBorder(parent.mask)
-        parent.mask:SetBackdropColor(AF.GetColorRGB("mask"))
-        parent.mask:EnableMouse(true)
-        -- parent.mask:EnableMouseWheel(true) -- not enough
-        parent.mask:SetScript("OnMouseWheel", function(self, delta)
-            -- setting the OnMouseWheel script automatically implies EnableMouseWheel(true)
-            -- print("OnMouseWheel", delta)
-        end)
-
-        parent.mask.text = AF.CreateFontString(parent.mask, "", "firebrick")
-        AF.SetPoint(parent.mask.text, "LEFT", 5, 0)
-        AF.SetPoint(parent.mask.text, "RIGHT", -5, 0)
+        AF.CreateMask(parent)
     end
 
     parent.mask.text:SetText(text)
@@ -323,7 +374,7 @@ function AF.ShowMask(parent, text, tlX, tlY, brX, brY)
     else
         AF.SetOnePixelInside(parent.mask, parent)
     end
-    AF.SetFrameLevel(parent.mask, 30, parent)
+    AF.SetFrameLevel(parent.mask, 100, parent)
     parent.mask:Show()
 
     return parent.mask
@@ -378,20 +429,106 @@ function AF.CreateCooldown(parent, name, texture, color, reverse)
 
     Mixin(cd, AF_CooldownMixin)
 
-    AF.AddToPixelUpdater(cd)
+    AF.AddToPixelUpdater_OnShow(cd)
 
     return cd
 end
 
+
 ---------------------------------------------------------------------
--- combat mask (+100 frame level)
+-- flipbook animation frame
+---------------------------------------------------------------------
+---@class AF_FlipBook:AF_Frame
+local AF_FlipBookMixin = {}
+
+function AF_FlipBookMixin:Play()
+    self.animation:Play()
+end
+
+function AF_FlipBookMixin:Stop()
+    self.animation:Stop()
+end
+
+function AF_FlipBookMixin:Pause()
+    self.animation:Pause()
+end
+
+function AF_FlipBookMixin:Restart()
+    self.animation:Restart()
+end
+
+function AF_FlipBookMixin:IsPlaying()
+    return self.animation:IsPlaying()
+end
+
+function AF_FlipBookMixin:SetTexture(texture)
+    self.tex:SetTexture(texture)
+    if self:IsPlaying() then
+        self:Restart()
+    else
+        self:Restart()
+        self:Pause()
+    end
+end
+
+---@param duration number
+---@param rows number
+---@param columns number
+---@param frames number
+---@param width number|nil
+---@param height number|nil
+function AF_FlipBookMixin:SetFlipBookInfo(duration, rows, columns, frames, width, height)
+    local flip = self.animation.flipbook
+    flip:SetDuration(duration)
+    flip:SetFlipBookRows(rows)
+    flip:SetFlipBookColumns(columns)
+    flip:SetFlipBookFrames(frames)
+    flip:SetFlipBookFrameWidth(width or 0)
+    flip:SetFlipBookFrameHeight(height or 0)
+end
+
+---@param parent Frame
+---@param createMask boolean whether to create a mask texture for the flipbook, remember to set position/size for the mask
+---@return AF_FlipBook flipbook
+function AF.CreateFlipBookFrame(parent, createMask, template)
+    local flipbook = AF.CreateFrame(parent, nil, nil, nil, template)
+
+    local tex = flipbook:CreateTexture(nil, "ARTWORK")
+    flipbook.tex = tex
+    tex:SetAllPoints()
+    -- tex:SetParentKey("Flipbook")
+
+    if createMask then
+        local mask = flipbook:CreateMaskTexture()
+        flipbook.mask = mask
+        mask:SetTexture(AF.GetPlainTexture(), "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE", "NEAREST")
+        tex:AddMaskTexture(mask)
+    end
+
+    local ag = flipbook:CreateAnimationGroup()
+    flipbook.animation = ag
+    ag:SetLooping("REPEAT")
+
+    local flip = ag:CreateAnimation("FlipBook")
+    flipbook.animation.flipbook = flip
+    -- flip:SetChildKey("Flipbook")
+    flip:SetTarget(tex)
+
+    Mixin(flipbook, AF_FlipBookMixin)
+    AF.AddToPixelUpdater_OnShow(flipbook)
+
+    return flipbook
+end
+
+---------------------------------------------------------------------
+-- frame combat protection (+200 frame level)
 ---------------------------------------------------------------------
 local function CreateCombatMask(parent, tlX, tlY, brX, brY)
     parent.combatMask = AF.CreateFrame(parent)
     AF.ApplyDefaultBackdrop_NoBorder(parent.combatMask)
     parent.combatMask:SetBackdropColor(AF.GetColorRGB("combat_mask"))
 
-    AF.SetFrameLevel(parent.combatMask, 100, parent)
+    AF.SetFrameLevel(parent.combatMask, 200, parent)
     parent.combatMask:EnableMouse(true)
     parent.combatMask:SetScript("OnMouseWheel", function() end)
 
@@ -418,36 +555,52 @@ end
 -- show mask
 local protectedFrames = {}
 -- while in combat, overlay a non-click-through mask to protect the frame.
--- do not use SetScript OnShow/OnHide scripts after this function.
+-- this function hooks OnShow/OnHide to track the frame visibility.
 function AF.ApplyCombatProtectionToFrame(frame, tlX, tlY, brX, brY)
     if not frame.combatMask then
         CreateCombatMask(frame, tlX, tlY, brX, brY)
+
+        frame:HookScript("OnShow", function()
+            if not frame.combatMask.enabled then return end
+            protectedFrames[frame] = true
+            if InCombatLockdown() then
+                frame.combatMask:Show()
+            else
+                frame.combatMask:Hide()
+            end
+        end)
+
+        frame:HookScript("OnHide", function()
+            if not frame.combatMask.enabled then return end
+            protectedFrames[frame] = nil
+            frame.combatMask:Hide()
+        end)
     end
 
-    protectedFrames[frame] = true
+    frame.combatMask.enabled = true
 
-    if InCombatLockdown() then
-        frame.combatMask:Show()
-    end
-
-    frame:HookScript("OnShow", function()
+    if frame:IsShown() then
         protectedFrames[frame] = true
         if InCombatLockdown() then
             frame.combatMask:Show()
-        else
-            frame.combatMask:Hide()
         end
-    end)
-
-    frame:HookScript("OnHide", function()
-        protectedFrames[frame] = nil
-        frame.combatMask:Hide()
-    end)
+    end
 end
 
+function AF.RemoveCombatProtectionFromFrame(frame)
+    if frame.combatMask then
+        frame.combatMask:Hide()
+        frame.combatMask.enabled = false
+    end
+    protectedFrames[frame] = nil
+end
+
+---------------------------------------------------------------------
+-- widget combat protection
+---------------------------------------------------------------------
 local protectedWidgets = {}
 -- while in combat, protect the widget by SetEnabled(false).
--- do not use SetScript OnShow/OnHide scripts after this function.
+-- this function hooks OnShow/OnHide to track the frame visibility.
 -- NOT SUGGESTED on widgets that are enabled/disabled by other events.
 function AF.ApplyCombatProtectionToWidget(widget)
     if InCombatLockdown() then
@@ -467,20 +620,45 @@ function AF.ApplyCombatProtectionToWidget(widget)
     end)
 end
 
+---------------------------------------------------------------------
+-- combat hidden frames
+---------------------------------------------------------------------
+local combatHiddenFrames = {}
+
+function AF.RegisterCombatHiddenFrame(frame)
+    combatHiddenFrames[frame] = true
+    if InCombatLockdown() then
+        frame:Hide()
+    end
+end
+
+function AF.UnregisterCombatHiddenFrame(frame)
+    combatHiddenFrames[frame] = nil
+end
+
+---------------------------------------------------------------------
+-- event handler
+---------------------------------------------------------------------
 AF.CreateBasicEventHandler(function(self, event)
     if event == "PLAYER_REGEN_DISABLED" then
-        for f in pairs(protectedFrames) do
+        for f in next, protectedFrames do
             f.combatMask:Show()
         end
-        for w in pairs(protectedWidgets) do
+        for w in next, protectedWidgets do
             w:SetEnabled(false)
         end
+        for f in next, combatHiddenFrames do
+            f:Hide()
+        end
     elseif event == "PLAYER_REGEN_ENABLED" then
-        for f in pairs(protectedFrames) do
+        for f in next, protectedFrames do
             f.combatMask:Hide()
         end
-        for w in pairs(protectedWidgets) do
+        for w in next, protectedWidgets do
             w:SetEnabled(true)
+        end
+        for f in next, combatHiddenFrames do
+            f:Show()
         end
     end
 end, "PLAYER_REGEN_DISABLED", "PLAYER_REGEN_ENABLED")

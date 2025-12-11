@@ -13,7 +13,7 @@ local L = {
     HEADER_NAMES = {};
     QUEST_NAMES = {};
     MAP_ID_TO_ZONE_TEXT = {};
-	
+
 	SPELL_NAME_TO_SPELL_ID = {
 		-- Riding
 		["Riding"] = 33388,
@@ -39,19 +39,18 @@ local L = {
 		["草藥學"] = 2366,
 
 		-- French (Classic Era)
-		["Ingénierie"] = 4036,    -- Engineering
-		["Secourisme"] = 3273,    -- First Aid
+		["Ingénierie"] = 4036,	-- Engineering
+		["Secourisme"] = 3273,	-- First Aid
 
 		-- Spanish (Classic Era)
-		["Costura"] = 3908,    -- Tailoring
-		["Marroquinería"] = 2108,    -- Leatherworking
+		["Costura"] = 3908,	-- Tailoring
+		["Marroquinería"] = 2108,	-- Leatherworking
 
 		["Ganzúa"] = 1809,        -- Lock Pick    -- Required for ES (EU)
 		["Desollar"] = 8613,    -- Skinning        -- Required for ES (EU)
 		["Cнятие шкур"] = 8613,    -- Skinning        -- Required for RU
 	},
-	
-	
+
 	EXPANSION_DATA = {
 		{	-- Classic
 			["icon"] = app.asset("Expansion_CLASSIC"),
@@ -98,8 +97,8 @@ local L = {
 			["lore"] = "The War Within is the tenth expansion for World of Warcraft and the beginning of the Worldsoul Saga. Journey through never-before-seen subterranean worlds filled with hidden wonders and lurking perils, down to the dark depths of the nerubian empire, where the malicious Harbinger of the Void is gathering arachnid forces to bring Azeroth to its knees.",
 		},
 		{	-- Midnight
-			["icon"] = app.asset("Expansion_MD"),
-			["lore"] = "Midnight is the eleventh expansion for World of Warcraft and the second installment of the Worldsoul Saga.",
+			["icon"] = app.asset("Expansion_MN"),
+			["lore"] = "Midnight is the eleventh expansion for World of Warcraft and the second chapter of the Worldsoul Saga. Return to Quel'Thalas, where the forces of the Void have invaded Azeroth, intent on claiming the Sunwell and plunging the world into darkness and fear. Reunify the scattered elven tribes of Azeroth and ultimately fight alongside the forces of the Light to banish the Shadow forever.",
 		},
 		{	-- The Last Titan
 			["icon"] = app.asset("Expansion_TLT"),
@@ -113,9 +112,14 @@ local L = {
 		"",									-- 3, we want no icon for these
 		app.asset("status-seasonal-unavailable"),	-- 4 Seasonal unavailable
 		app.asset("status-seasonal-available"),	-- 5 Seasonal available
-		app.asset("status-unsorted"), -- 6 Unsorted
+		app.asset("status-unsorted"),	-- 6 Unsorted
 	},
 };
+L = setmetatable(L, { __index = function(t, k)
+	app.print(("MISSING LOCALE: %s"):format(k))
+	rawset(t, k, UNKNOWN)
+	return UNKNOWN
+end })
 app.L = L;
 
 -- Abbreviations are used to reduce the length of the source locations
@@ -168,7 +172,6 @@ local ABBREVIATIONS = {
 	["Yor'sahj the Unsleeping"] = "Yor'sahj",
 	-- DF
 	["Aberrus, the Shadowed Crucible"] = "Aberrus",
-	["Antorus, the Burning Throne"] = "Antorus",
 	["Amirdrassil, the Dream's Hope"] = "Amirdrassil",
 	["Kazzara, the Hellforged"] = "Kazzara",
 	["Larodar, Keeper of the Flame"] = "Larodar",
@@ -176,6 +179,7 @@ local ABBREVIATIONS = {
 	["Tindral Sageswift, Seer of the Flame"] = "Tindral Sageswift",
 	-- Legion
 	["Il'gynoth, The Heart of Corruption"] = "Il'gynoth",
+	["Antorus, the Burning Throne"] = "Antorus",
 	-- BFA
 	["Ny'alotha, the Waking City"] = "Ny'alotha",
 	-- SL
@@ -184,6 +188,7 @@ local ABBREVIATIONS = {
 	["Ara-Kara, City of Echoes"] = "Ara-Kara",
 	["Enterprising Hero: The War Within Season Two"] = "Enterprising Hero: TWW S2",
 	["The War Within Keystone Legend: SeasonTwo"] = "TWW Keystone Legend: S2",
+	["Unbound Hero: The War Within Season Three"] = "Unbound Hero: TWW S3",
 	["Mug'Zee, Heads of Security"] = "Mug'Zee",
 	["Sikran, Captain of the Sureki"] = "Sikran",
 	["Vexie and the Geargrinders"] = "Vexie & the Geargrinders",
@@ -246,9 +251,9 @@ if localeString == "deDE" then
 	L.EXPANSION_DATA[3].lore = "Wrath of the Lich King ist die zweite Erweiterung. Der Großteil dieser Erweiterung findet in Nordend statt und dreht sich um die Pläne des Lichkönigs. Zu den inhaltlichen Highlights gehören die Erhöhung der maximalen Stufe von 70 auf 80, die Einführung der neuen Todesritter Heldenklasse und neue PvP/Welt PvP Inhalte";
 	L.EXPANSION_DATA[4].lore = "Cataclysm ist die dritte Erweiterung. Die Erweiterung spielt hauptsächlich in einem dramatisch umgestalteten Kalimdor & der Östlichen Königreiche auf der Welt von Azeroth und folgt der Rückkehr von Todesschwinge, der während seiner Rückkehr von Tiefenheim in diese Welt eine katastrophale Teilung verursacht. Mit Cataclysm kehren Spieler hauptsächlich auf die alten Kontinente von Azeroth zurück und betreten unter anderem neue Gebiete wie den Berg Hyjal's, die versunkende Welt von Vashj'ir, Tiefenheim, Uldum und das Zwielicht-Hochland. Außerdem sind zwei neue spielbare Völker, die Worgen und die Goblins, verfügbar. Die maximale Stufe wurde auf 85 erhöht, ermöglicht Spielern das Fliegen in Kalimdor & den Östlichen Königreichen, fügt den neuen Beruf der Archäologie & umschmieden der Rüstung hinzu und strukturiert die Welt selbst um";
 	L.EXPANSION_DATA[5].lore = "Mists of Pandaria ist die vierte Erweiterung. Die Erweiterung konzentriert sich in erster Linie auf den Krieg zwischen Allianz und Horde, der durch die zufällige Wiederentdeckung von Pandaria ausgelöst wurde. Die Abenteurer entdecken das uralte Volk der Pandaren wieder, dessen Weisheit sie zu neuen Schicksalen führen wird, den uralten Feind des Pandarenreiches, die Mantiden und ihre legendären Unterdrücker, die rätselhaften Mogu. Das Land verändert sich mit der Zeit und der Konflikt zwischen Varian Wrynn und Garrosh Höllschrei eskaliert. Während in der Horde ein Bürgerkrieg ausbricht, schließen sich die Allianz und die Kräfte in der Horde, die gegen Höllschreis gewalttätigen Aufstand sind, zusammen, um den Kampf direkt gegen Höllschrei und seine von Sha berührten Verbündeten in Orgrimmar zu führen.";
-	L.EXPANSION_DATA[6].lore = "Warlords of Draenor ist die fünfte Erweiterung. Across Draenor's savage jungles & battle-scarred plains, Azeroth's heroes will engage in a mythic conflict involving mystical draenei champions & mighty orc clans, & cross axes with the likes of Grommash Hellscream, Blackhand, & Ner'zhul at the height of their primal power. Players will need to scour this unwelcoming land in search of allies to help build a desperate defense against the old Horde's formidable engine of conquest, or else watch their own world's bloody, war-torn history repeat itself.";	--TODO:
-	L.EXPANSION_DATA[7].lore = "Legion ist die sechste Erweiterung. Gul'dan is expelled into Azeroth to reopen the Tomb of Sargeras & the gateway to Argus, commencing the third invasion of the Burning Legion. After the defeat at the Broken Shore, the defenders of Azeroth search for the Pillars of Creation, which were Azeroth's only hope for closing the massive demonic portal at the heart of the Tomb. However, the Broken Isles came with their own perils to overcome, from Xavius, to God-King Skovald, to the nightborne, & to Tidemistress Athissa. Khadgar moved Dalaran to the shores of this land, the city serves as a central hub for the heroes. The death knights of Acherus also took their floating necropolis to the Isles. The heroes of Azeroth sought out legendary artifact weapons to wield in battle, but also found unexpected allies in the form of the Illidari. Ongoing conflict between the Alliance & the Horde led to the formation of the class orders, with exceptional commanders putting aside faction to lead their classes in the fight against the Legion.";	--TODO:
-	L.EXPANSION_DATA[8].lore = "Battle for Azeroth ist die siebte Erweiterung. Azeroth paid a terrible price to end the apocalyptic march of the Legion's crusade—but even as the world's wounds are tended, it is the shattered trust between the Alliance and Horde that may prove the hardest to mend. In Battle for Azeroth, the fall of the Burning Legion sets off a series of disastrous incidents that reignites the conflict at the heart of the Warcraft saga. As a new age of warfare begins, Azeroth's heroes must set out on a journey to recruit new allies, race to claim the world's mightiest resources, and fight on several fronts to determine whether the Horde or Alliance will lead Azeroth into its uncertain future.";	--TODO:
+	L.EXPANSION_DATA[6].lore = "Warlords of Draenor ist die fünfte Erweiterung. Across Draenor's savage jungles & battle-scarred plains, Azeroth's heroes will engage in a mythic conflict involving mystical draenei champions & mighty orc clans, & cross axes with the likes of Grommash Hellscream, Blackhand, & Ner'zhul at the height of their primal power. Players will need to scour this unwelcoming land in search of allies to help build a desperate defense against the old Horde's formidable engine of conquest, or else watch their own world's bloody, war-torn history repeat itself.";	-- TODO:
+	L.EXPANSION_DATA[7].lore = "Legion ist die sechste Erweiterung. Gul'dan is expelled into Azeroth to reopen the Tomb of Sargeras & the gateway to Argus, commencing the third invasion of the Burning Legion. After the defeat at the Broken Shore, the defenders of Azeroth search for the Pillars of Creation, which were Azeroth's only hope for closing the massive demonic portal at the heart of the Tomb. However, the Broken Isles came with their own perils to overcome, from Xavius, to God-King Skovald, to the nightborne, & to Tidemistress Athissa. Khadgar moved Dalaran to the shores of this land, the city serves as a central hub for the heroes. The death knights of Acherus also took their floating necropolis to the Isles. The heroes of Azeroth sought out legendary artifact weapons to wield in battle, but also found unexpected allies in the form of the Illidari. Ongoing conflict between the Alliance & the Horde led to the formation of the class orders, with exceptional commanders putting aside faction to lead their classes in the fight against the Legion.";	-- TODO:
+	L.EXPANSION_DATA[8].lore = "Battle for Azeroth ist die siebte Erweiterung. Azeroth paid a terrible price to end the apocalyptic march of the Legion's crusade—but even as the world's wounds are tended, it is the shattered trust between the Alliance and Horde that may prove the hardest to mend. In Battle for Azeroth, the fall of the Burning Legion sets off a series of disastrous incidents that reignites the conflict at the heart of the Warcraft saga. As a new age of warfare begins, Azeroth's heroes must set out on a journey to recruit new allies, race to claim the world's mightiest resources, and fight on several fronts to determine whether the Horde or Alliance will lead Azeroth into its uncertain future.";	-- TODO:
 	L.EXPANSION_DATA[9].lore = "Shadowlands ist die achte Erweiterung. Was liegt hinter die Welt die du kennst? Die Shadowlands, Ruheplatz für jede sterbliche seele—tugendhaft oder abscheulich—die jemals gelebt hat.";
 	L.EXPANSION_DATA[10].lore = "Dragonflight ist die neunte Erweiterung. Die Drachenschwärme von Azeroth sind zurück und folgen dem Ruf, die Dracheninseln, ihre angestammte Heimat, zu verteidigen. Erfüllt von elementarer Macht und Azeroths Lebensenergie erwachen die Inseln erneut, und es liegt an euch, ihre urzeitlichen Wunder zu erforschen und lang vergessene Geheimnisse ans Licht zu bringen.";
 
@@ -288,43 +293,59 @@ if localeString == "esES" or localeString == "esMX" then
 	L.EXPANSION_DATA[4].lore = "Cataclysm es la tercera expansión. Ambientada principalmente en un Kalimdor y los Reinos del Este dramáticamente reforjados en el mundo de Azeroth, la expansión sigue el regreso de Alamuerte, quien provoca una nueva ruptura al realizar su cataclísmica reentrada al mundo desde Infralar. Cataclismo devuelve a los jugadores a los dos continentes de Azeroth durante la mayor parte de su campaña, abriendo nuevas zonas como el Monte Hyjal, el mundo sumergido de Vashj'ir, Infralar, Uldum y las Tierras Altas Crepusculares. Incluye dos nuevas razas jugables: los huargen y los goblins. La expansión aumenta el nivel máximo a 85, añade la capacidad de volar en Kalimdor y los Reinos del Este, introduce la arqueología, la reforja y reestructura el mundo.";
 	L.EXPANSION_DATA[5].lore = "Mists of Pandaria es la cuarta expansión. Esta expansión se centra principalmente en la guerra entre la Alianza y la Horda, tras el redescubrimiento accidental de Pandaria. Los aventureros redescubren al antiguo pueblo pandaren, cuya sabiduría los guiará hacia nuevos destinos; a los antiguos enemigos del Imperio Pandaren, los mántides; y a sus legendarios opresores, los enigmáticos mogu. La tierra cambia con el tiempo y el conflicto entre Varian Wrynn y Garrosh Grito Infernal se intensifica. Mientras la guerra civil azota a la Horda, la Alianza y las fuerzas de la Horda opuestas al violento levantamiento de Grito Infernal unen fuerzas para llevar la batalla directamente a Grito Infernal y sus aliados tocados por el Sha en Orgrimmar.";
 	L.EXPANSION_DATA[6].lore = "Warlords of Draenor es la quinta expansión. A través de las junglas salvajes y las llanuras asoladas por la batalla de Draenor, los héroes de Azeroth se enfrentarán en un conflicto mítico que involucra a místicos campeones draenei y poderosos clanes orcos, y se enfrentarán con personajes como Grommash Grito Infernal, Puño Negro y Ner'zhul en la cúspide de su poder primigenio. Los jugadores deberán recorrer esta tierra hostil en busca de aliados que les ayuden a construir una defensa desesperada contra la formidable máquina de conquista de la antigua Horda, o verán cómo se repite la sangrienta y bélica historia de su propio mundo.";
-	L.EXPANSION_DATA[7].lore = "Legion es la sexta expansión. Gul'dan es expulsado a Azeroth para reabrir la Tumba de Sargeras y la puerta a Argus, dando inicio a la tercera invasión de la Legión Ardiente. Tras la derrota en la Costa Abrupta, los defensores de Azeroth buscan los Pilares de la Creación, la única esperanza de Azeroth para cerrar el enorme portal demoníaco en el corazón de la Tumba. Sin embargo, las Islas Abruptas llegaron con sus propios peligros que superar, desde Xavius ​​hasta el Rey Dios Skovald, los nocheterna y la Señora de las Mareas Athissa. Khadgar trasladó Dalaran a las costas de esta tierra; la ciudad sirve como centro neurálgico para los héroes. Los caballeros de la Muerte de Acherus también llevaron su necrópolis flotante a las Islas. Los héroes de Azeroth buscaron armas artefacto legendarias para empuñar en batalla, pero también encontraron aliados inesperados en la forma de los Illidari. El conflicto en curso entre la Alianza y la Horda condujo a la formación de las órdenes de clases, con comandantes excepcionales que dejaron de lado la facción para liderar sus clases en la lucha contra la Legión.";
+	L.EXPANSION_DATA[7].lore = "Legion es la sexta expansión. Gul'dan es expulsado a Azeroth para reabrir la Tumba de Sargeras y la puerta a Argus, dando inicio a la tercera invasión de la Legión Ardiente. Tras la derrota en la Costa Abrupta, los defensores de Azeroth buscan los Pilares de la Creación, la única esperanza de Azeroth para cerrar el enorme portal demoníaco en el corazón de la Tumba. Sin embargo, las Islas Abruptas llegaron con sus propios peligros que superar, desde Xavius hasta el Rey Dios Skovald, los nocheterna y la Señora de las Mareas Athissa. Khadgar trasladó Dalaran a las costas de esta tierra; la ciudad sirve como centro neurálgico para los héroes. Los caballeros de la Muerte de Acherus también llevaron su necrópolis flotante a las Islas. Los héroes de Azeroth buscaron armas artefacto legendarias para empuñar en batalla, pero también encontraron aliados inesperados en la forma de los Illidari. El conflicto en curso entre la Alianza y la Horda condujo a la formación de las órdenes de clases, con comandantes excepcionales que dejaron de lado la facción para liderar sus clases en la lucha contra la Legión.";
 	L.EXPANSION_DATA[8].lore = "Battle for Azeroth es la séptima expansión. Azeroth pagó un precio terrible para poner fin a la marcha apocalíptica de la cruzada de la Legión; pero aunque las heridas del mundo se curen, la confianza rota entre la Alianza y la Horda podría ser la más difícil de sanar. En Battle for Azeroth, la caída de la Legión Ardiente desencadena una serie de incidentes desastrosos que reavivan el conflicto central de la saga de Warcraft. Con el inicio de una nueva era bélica, los héroes de Azeroth deben emprender un viaje para reclutar nuevos aliados, competir por los recursos más poderosos del mundo y luchar en varios frentes para determinar si la Horda o la Alianza liderarán Azeroth hacia su incierto futuro.";
 	L.EXPANSION_DATA[9].lore = "Shadowlands es la octava expansión. ¿Qué hay más allá del mundo que conoces? Las Tierras Sombrías, lugar de descanso para cada alma mortal, virtuosa o vil, que haya existido jamás.";
 	L.EXPANSION_DATA[10].lore = "Dragonflight es la novena expansión. Los Vuelos de Azeroth han regresado, llamados a defender su ancestral hogar, las Islas Dragón. Rebosante de magia elemental y de las energías vitales de Azeroth, este archipiélago despierta de nuevo. Está en tus manos explorar sus maravillas primordiales y descubrir los olvidados secretos que oculta.";
 	L.EXPANSION_DATA[11].lore = "The War Within es la décima expansión de World of Warcraft y el inicio de la Saga Alma del Mundo. Viaja a través de mundos subterráneos nunca antes vistos, repletos de maravillas ocultas y peligros acechantes, hasta las oscuras profundidades del imperio nerubiano, donde la maligna Presagista del Vacío reúne fuerzas arácnidas para doblegar a Azeroth.";
 	L.EXPANSION_DATA[12].lore = "Midnight es la undécima expansión de World of Warcraft y la segunda entrega de la saga Alma del Mundo.";
 	L.EXPANSION_DATA[13].lore = "The Last Titan es la duodécima expansión de World of Warcraft y la última entrega de la saga Alma del Mundo.";
-	
+
 	for key,value in pairs({
-		["Antorus, el Trono Ardiente"] = "Antorus",	-- ["Antorus, the Burning Throne"] = "Antorus"
-		["Evento pre lanzamiento"] = "Pre",
-		["Características de expansión"] = "EF",
-		[GROUP_FINDER] = "D&R",	-- ["Dungeons & Raids"] = "D&R"
-		["The Burning Crusade"] = "BC",
-		["Burning Crusade"] = "BC",
-		["The BC"] = "BC",
-		["Wrath of the Lich King"] = "WotLK",
-		["Cataclismo "] = "Cata ",
-		["Las Tierras Sombrías"] = "SL",
-		["Shadowlands"] = "SL",
-		["Jugador contra Jugador"] = "JcJ",
-		["Buscador de bandas"] = "LFR",
-		["Normal"] = "N",
-		["Heroica"] = "H",
-		["Mítica"] = "M",
-		["Ny'alotha, Ciudad del Despertar"] = "Ny'alotha",	-- ["Ny'alotha, the Waking City"] = "Ny'alotha"
-		["Tazavesh, el Mercado Velado"] = "Tazavesh",	-- ["Tazavesh, the Veiled Market"] = "Tazavesh"
-		["10 jugadores"] = "10M",
-		["10 jugadores (Heroico)"] = "10M (H)",
-		["25 jugadores"] = "25M",
-		["25 jugadores (Heroico)"] = "25M (H)",
-		["Misiones de emisario"] = "Emissary",
-		[TRACKER_HEADER_WORLD_QUESTS] = "WQ",	-- ["World Quests"] = "WQ"
-		["Curia:"] = "Cov:",
+		["Expansion Features"] = "CE",
+		[GROUP_FINDER] = "BdG",
+		["Dungeons & Raids"] = "MyB",
+		-- Expansion sorted
+		["Wrath of the Lich King"] = "Lich",
+		-- Dungeon & Raid
+		["Raid Finder"] = "BdB",
+		["Looking For Raid"] = "BdB",
+		["10 Player"] = "10",
+		["10 Player (Heroic)"] = "10 (H)",
+		["25 Player"] = "25",
+		["25 Player (Heroic)"] = "25 (H)",
+		[BATTLEGROUNDS] = "CdB",
+		-- Dungeon & Raid Names
+		-- Classic
+		["Scarlet Monastery of Old"] = "ME: Viejo",
+		-- Cata
+		["Majordomo Staghelm"] = "Mayordomo",
+		["Omnotron Defense System"] = "Omnitron",
+		["Theralion and Valiona"] = "TheralionyValiona",
+		-- DF
+		["Tindral Sageswift, Seer of the Flame"] = "Tindral Sabioveloz",
+		-- TWW
+		["Enterprising Hero: The War Within Season Two"] = "Héroe Emprendedor: TWW T2",
+		["The War Within Keystone Legend: SeasonTwo"] = "TWW Leyenda de la piedra angular: T2",
+		["Vexie and the Geargrinders"] = "Vexie y los Cadenas",
+		-- Outdoor Zones
+		["Quartermaster Miranda Breechlock"] = "Intendente Miranda",
+		["Season "] = "T ",
+		["The Azure Span"] = "Tierras Azures",
+		["The Forbidden Reach"] = "Confín Olvidado",
+		["The Superbloom"] = "Superfloración",
+		["The Waking Shores"] = "Orillas del Despertar",
+		["The Primalist Future"] = "Futuro primalista",
+		["The Storm's Fury"] = "Furia de la tormenta",
+		["WoW Anniversary"] = "Aniversario",
+
+		[BLACK_MARKET_AUCTION_HOUSE] = "CSMN",
+		["Emissary Quests"] = "Emisario",
+		[TRACKER_HEADER_WORLD_QUESTS] = "MM",
+		["Covenant:"] = "Curia:",
 	})
 	do ABBREVIATIONS[key] = value; end
-	
+
 	if localeString == "esMX" then
 		L.EXPANSION_DATA[1].lore = "Cuatro años después de la batalla del Monte Hyjal, tensiones entre la Alianza y la Horda empiezan a surgir nuevamente. Con la intención de establecerse en la región árida de Durotar, la nueva Horda de Thrall expande sus miembros, invitando a los no muertos a unirse a orcos, tauren, y trols. Mientras tanto, enanos, gnomos y los ancestrales elfos de la noche prometieron su lealtad a una Alianza revitalizada, guiada por el reino humano de Ventormenta. Después de que el rey de Ventormenta Varian Wrynn misteriosamente desapareciera, el Alto Señor Bolvar Fordragon sirve como Regente pero Su servicio se vio empañado por las manipulaciones y el control mental de Onyxia, quien gobierna disfrazada como una humana de la nobleza. Mientras los héroes investigaban las manipulaciones de Onyxia, antiguos enemigos surgieron en tierras de todo el mundo para amenazar a la Horda y a la Alianza por igual.";
 		L.EXPANSION_DATA[2].lore = "The Burning Crusade es la primera expansión. Sus principales características incluyen un aumento del nivel máximo a 70, la introducción de los elfos de sangre y los draenei como razas jugables, y la incorporación del mundo de Terrallende, junto con varias zonas, calabozos, objetos, misiones y monstruos nuevos.";
@@ -332,45 +353,55 @@ if localeString == "esES" or localeString == "esMX" then
 		L.EXPANSION_DATA[4].lore = "Cataclysm es la tercera expansión. Ambientada principalmente en un Kalimdor y los Reinos del Este dramáticamente reforjados en el mundo de Azeroth, la expansión sigue el regreso de Alamuerte, quien provoca una nueva ruptura al realizar su cataclísmica reentrada al mundo desde Infralar. Cataclismo devuelve a los jugadores a los dos continentes de Azeroth durante la mayor parte de su campaña, abriendo nuevas zonas como el Monte Hyjal, el mundo sumergido de Vashj'ir, Infralar, Uldum y las Tierras Altas Crepusculares. Incluye dos nuevas razas jugables: los huargen y los goblins. La expansión aumenta el nivel máximo a 85, añade la capacidad de volar en Kalimdor y los Reinos del Este, introduce la arqueología, la reforja y reestructura el mundo.";
 		L.EXPANSION_DATA[5].lore = "Mists of Pandaria es la cuarta expansión. Esta expansión se centra principalmente en la guerra entre la Alianza y la Horda, tras el redescubrimiento accidental de Pandaria. Los aventureros redescubren al antiguo pueblo pandaren, cuya sabiduría los guiará hacia nuevos destinos; a los antiguos enemigos del Imperio Pandaren, los mántides; y a sus legendarios opresores, los enigmáticos mogu. La tierra cambia con el tiempo y el conflicto entre Varian Wrynn y Garrosh Grito Infernal se intensifica. Mientras la guerra civil azota a la Horda, la Alianza y las fuerzas de la Horda opuestas al violento levantamiento de Grito Infernal unen fuerzas para llevar la batalla directamente a Grito Infernal y sus aliados tocados por el Sha en Orgrimmar.";
 		L.EXPANSION_DATA[6].lore = "Warlords of Draenor es la quinta expansión. A través de las junglas salvajes y las llanuras asoladas por la batalla de Draenor, los héroes de Azeroth se enfrentarán en un conflicto mítico que involucra a místicos campeones draenei y poderosos clanes orcos, y se enfrentarán con personajes como Grommash Grito Infernal, Puño Negro y Ner'zhul en la cúspide de su poder primigenio. Los jugadores deberán recorrer esta tierra hostil en busca de aliados que les ayuden a construir una defensa desesperada contra la formidable máquina de conquista de la antigua Horda, o verán cómo se repite la sangrienta y bélica historia de su propio mundo.";
-		L.EXPANSION_DATA[7].lore = "Legion es la sexta expansión. Gul'dan es expulsado a Azeroth para reabrir la Tumba de Sargeras y la puerta a Argus, dando inicio a la tercera invasión de la Legión Ardiente. Tras la derrota en la Costa Quebrada, los defensores de Azeroth buscan los Pilares de la Creación, la única esperanza de Azeroth para cerrar el enorme portal demoníaco en el corazón de la Tumba. Sin embargo, las Islas Quebradas llegaron con sus propios peligros que superar, desde Xavius ​​hasta el Rey Dios Skovald, los natonocturnos y la Señora de las Mareas Athissa. Khadgar trasladó Dalaran a las costas de esta tierra; la ciudad sirve como centro neurálgico para los héroes. Los caballeros de la Muerte de Acherus también llevaron su necrópolis flotante a las Islas. Los héroes de Azeroth buscaron armas artefacto legendarias para empuñar en batalla, pero también encontraron aliados inesperados en la forma de los Illidari. El conflicto en curso entre la Alianza y la Horda condujo a la formación de las órdenes de clases, con comandantes excepcionales que dejaron de lado la facción para liderar sus clases en la lucha contra la Legión.";
+		L.EXPANSION_DATA[7].lore = "Legion es la sexta expansión. Gul'dan es expulsado a Azeroth para reabrir la Tumba de Sargeras y la puerta a Argus, dando inicio a la tercera invasión de la Legión Ardiente. Tras la derrota en la Costa Quebrada, los defensores de Azeroth buscan los Pilares de la Creación, la única esperanza de Azeroth para cerrar el enorme portal demoníaco en el corazón de la Tumba. Sin embargo, las Islas Quebradas llegaron con sus propios peligros que superar, desde Xavius hasta el Rey Dios Skovald, los natonocturnos y la Señora de las Mareas Athissa. Khadgar trasladó Dalaran a las costas de esta tierra; la ciudad sirve como centro neurálgico para los héroes. Los caballeros de la Muerte de Acherus también llevaron su necrópolis flotante a las Islas. Los héroes de Azeroth buscaron armas artefacto legendarias para empuñar en batalla, pero también encontraron aliados inesperados en la forma de los Illidari. El conflicto en curso entre la Alianza y la Horda condujo a la formación de las órdenes de clases, con comandantes excepcionales que dejaron de lado la facción para liderar sus clases en la lucha contra la Legión.";
 		L.EXPANSION_DATA[8].lore = "Battle for Azeroth es la séptima expansión. Azeroth pagó un precio terrible para poner fin a la marcha apocalíptica de la cruzada de la Legión; pero aunque las heridas del mundo se curen, la confianza rota entre la Alianza y la Horda podría ser la más difícil de sanar. En Battle for Azeroth, la caída de la Legión Ardiente desencadena una serie de incidentes desastrosos que reavivan el conflicto central de la saga de Warcraft. Con el inicio de una nueva era bélica, los héroes de Azeroth deben emprender un viaje para reclutar nuevos aliados, competir por los recursos más poderosos del mundo y luchar en varios frentes para determinar si la Horda o la Alianza liderarán Azeroth hacia su incierto futuro.";
 		L.EXPANSION_DATA[9].lore = "Shadowlands es la octava expansión. ¿Qué hay más allá del mundo que conoces? Las Tierras de las Sombras, lugar de descanso para cada alma mortal, virtuosa o vil, que haya existido jamás.";
 		L.EXPANSION_DATA[10].lore = "Dragonflight es la novena expansión. Los Vuelos de Azeroth han regresado, llamados a defender su ancestral hogar, las Islas Dragón. Rebosante de magia elemental y de las energías vitales de Azeroth, este archipiélago despierta de nuevo. Está en tus manos explorar sus maravillas primordiales y descubrir los olvidados secretos que oculta.";
 		L.EXPANSION_DATA[11].lore = "The War Within es la décima expansión de World of Warcraft y el inicio de la Saga Worldsoul. Viaja a través de mundos subterráneos nunca antes vistos, repletos de maravillas ocultas y peligros acechantes, hasta las oscuras profundidades del imperio nerubiano, donde la maligna Emisaria del Vacío reúne fuerzas arácnidas para doblegar a Azeroth.";
 		L.EXPANSION_DATA[12].lore = "Midnight es la undécima expansión de World of Warcraft y la segunda entrega de la saga Worldsoul.";
 		L.EXPANSION_DATA[13].lore = "The Last Titan es la duodécima expansión de World of Warcraft y la última entrega de la saga Worldsoul.";
-		
+
 		for key,value in pairs({
-			["Antorus, el Trono Ardiente"] = "Antorus",	-- ["Antorus, the Burning Throne"] = "Antorus"
-			["Evento pre expansión"] = "Pre",
-			["Características de expansión"] = "EF",
-			[GROUP_FINDER] = "D&R",	-- ["Dungeons & Raids"] = "D&R"
-			["The Burning Crusade"] = "BC",
-			["Burning Crusade"] = "BC",
-			["The BC"] = "BC",
-			["Wrath of the Lich King"] = "WotLK",
-			["Cataclysm "] = "Cata ",
-			["Mists of Pandaria"] = "MoP",
-			["Warlords of Draenor"] = "WoD",
-			["Battle for Azeroth"] = "BFA",
-			["Las Tierras de las Sombras"] = "SL",
-			["Shadowlands"] = "SL",
-			["Jugador contra Jugador"] = "JcJ",
-			["Raid Finder"] = "LFR",
-			["Buscador de bandas"] = "LFR",
-			["Normal"] = "N",
-			["Heroica"] = "H",
-			["Mítica"] = "M",
-			["Ny'alotha, la ciudad despierta"] = "Ny'alotha",	-- ["Ny'alotha, the Waking City"] = "Ny'alotha"
-			["Tazavesh, el Mercado Velado"] = "Tazavesh",	-- ["Tazavesh, the Veiled Market"] = "Tazavesh"
-			["10 jugadores"] = "10M",
-			["10 jugadores (Heroico)"] = "10M (H)",
-			["25 jugadores"] = "25M",
-			["25 jugadores (Heroico)"] = "25M (H)",
-			["Misiones de emisario"] = "Emissary",
-			[TRACKER_HEADER_WORLD_QUESTS] = "WQ",	-- ["World Quests"] = "WQ"
-			["WoW Anniversary"] = "Anniversary",
-			["Pacto:"] = "Cov:",
+			["Expansion Features"] = "CE",
+			[GROUP_FINDER] = "BdG",
+			["Dungeons & Raids"] = "CyB",
+			-- Expansion sorted
+			["Wrath of the Lich King"] = "Lich",
+			-- Dungeon & Raid
+			["Raid Finder"] = "BdB",
+			["Looking For Raid"] = "BdB",
+			["10 Player"] = "10",
+			["10 Player (Heroic)"] = "10 (H)",
+			["25 Player"] = "25",
+			["25 Player (Heroic)"] = "25 (H)",
+			[BATTLEGROUNDS] = "CdB",
+			-- Dungeon & Raid Names
+			-- Classic
+			["Scarlet Monastery of Old"] = "ME: Viejo",
+			-- Cata
+			["Majordomo Staghelm"] = "Mayordomo",
+			["Omnotron Defense System"] = "Omnitron",
+			["Theralion and Valiona"] = "TheralionyValiona",
+			-- DF
+			["Tindral Sageswift, Seer of the Flame"] = "Yescal Sabioveloz",
+			-- TWW
+			["Enterprising Hero: The War Within Season Two"] = "Héroe Emprendedor: TWW T2",
+			["The War Within Keystone Legend: SeasonTwo"] = "TWW Leyenda de la piedra angular: T2",
+			["Vexie and the Geargrinders"] = "Vexie y los rugemotores",
+			-- Outdoor Zones
+			["Quartermaster Miranda Breechlock"] = "Intendente Miranda",
+			["Season "] = "T ",
+			["The Azure Span"] = "Trecho Azur",
+			["The Forbidden Reach"] = "Confín Prohibido",
+			["The Superbloom"] = "Superflorecimiento",
+			["The Waking Shores"] = "Costas del Despertar",
+			["The Primalist Future"] = "Futuro primalista",
+			["The Storm's Fury"] = "Furia de la tormenta",
+			["WoW Anniversary"] = "Aniversario",
+			[BLACK_MARKET_AUCTION_HOUSE] = "CSMN",
+			["Emissary Quests"] = "Emisario",
+			[TRACKER_HEADER_WORLD_QUESTS] = "MM",
+			["Covenant:"] = "Pacto:",
 		})
 		do ABBREVIATIONS[key] = value; end
 	end
@@ -386,7 +417,7 @@ if localeString == "frFR" then
 	L.EXPANSION_DATA[8].lore = "Battle for Azeroth est la 7ème extension. Les blessures ouvertes en Azeroth par Sargeras, le titan noir, ont fait apparaître une substance instable : l’azérite, le sang de la planète elle-même. Les tensions entre la Horde et l’Alliance ont redoublé d’intensité depuis que les deux factions ont découvert le véritable pouvoir de l’azérite, marquant le début d’une guerre totale qui a mené à la chute de Teldrassil et Fossoyeuse. Affaiblies et à la recherche de nouveaux alliés, l’Alliance et la Horde ont sollicité l’aide de leurs plus valeureux héros pour étayer leurs rangs. Jaina Portvaillant s’est rendue dans son royaume natal, Kul Tiras, dans l’espoir de convaincre les siens de revenir dans l’Alliance. Elle y a rencontré des nobles querelleurs et un peuple amer, unis dans leur mépris à l’égard de ses actions passées. De son côté, la Horde a fait sortir la princesse zandalari Talanji de la prison de Hurlevent. En retour, celle-ci s’est efforcée de convaincre les Trolls zandalari de prêter main-forte à la Horde malgré la réticence de son père, le roi Rastakhan. Ces efforts diplomatiques ont porté leurs fruits, et avec l’appui de leurs nouveaux alliés, les deux factions ont pu établir de nouveaux avant-postes en Zandalar et en Kul Tiras. Aux côtés de leurs nouveaux frères d’armes, l’Alliance et la Horde se tiennent une fois de plus sur les rives de la guerre, alors que les flots de la vengeance menacent à l’horizon…";
 	L.EXPANSION_DATA[9].lore = "Shadowlands est la 8ème extension. Après avoir fui Orgrimmar, Sylvanas Coursevent met le cap vers la citadelle de la Couronne de glace. Là, elle affronte Bolvar, le roi-liche, et s’empare du Heaume de domination. Par un simple acte de destruction, Sylvanas ouvre le passage vers le royaume de l’au-delà : l’Ombreterre, un monde entre les mondes dont l’équilibre délicat préserve aussi bien la vie que la mort. Anduin, Baine, Jaina, Thrall et les héros d’Azeroth suivent Sylvanas en Ombreterre, mais se retrouvent pris au piège dans l’Antre, un royaume effroyable réservé aux âmes malfaisantes au-delà de toute rédemption. Après avoir réussi à s’échapper envers et contre tout, nos héros finissent par se rendre à Oribos, la cité éternelle qui accueille habituellement toutes les âmes fraîchement arrivées en Ombreterre. Ils découvrent alors que l’impassible Arbitre, chargée d’aiguiller les défunts vers leur dernière demeure, est en sommeil et incapable d’honorer ses devoirs. Pire encore, les quatre congrégations de l’Ombreterre ont plongé dans le chaos, et se livrent bataille pour s’approprier une ressource aussi rare que vitale : l’anima. Les héros d’Azeroth décident de venir en aide aux habitants de l’Ombreterre, espérant lever le voile sur les agissements de Sylvanas. Ils finissent par découvrir un traître au sein des congrégations : Denathrius, fondateur et dirigeant de Revendreth, foyer des Venthyrs. Ce dernier assiste secrètement Sylvanas dans son projet de libérer leur mystérieux bienfaiteur commun : une entité surnommée le Geôlier, qui règne sur tout l’Antre. L’infâme seigneur de Revendreth est mis en déroute dans son propre domaine, le château Nathria, mais Sylvanas et le Geôlier ont déjà mis leur plan à exécution : utiliser Anduin contre son gré pour servir leurs terribles desseins.";
 	L.EXPANSION_DATA[10].lore = "Dragonflight est la 9ème extension. Les Vols draconiques d’Azeroth sont de retour pour défendre leur foyer ancestral, les îles aux Dragons. Débordantes de magie élémentaire et de l’essence vitale d’Azeroth, les îles s’éveillent de nouveau et vous invitent à découvrir leurs merveilles primordiales et leurs secrets longtemps oubliés.";
-	
+
 	for key,value in pairs({
 		["Antorus, le Trône ardent"] = "Antorus",	-- ["Antorus, the Burning Throne"] = "Antorus"
 		["Expansion Pre"] = "Pré",
@@ -423,8 +454,8 @@ if localeString == "frFR" then
 	do ABBREVIATIONS[key] = value; end
 end
 if localeString == "itIT" then
-	L.EXPANSION_DATA[10].lore = "Dragonflight is the ninth expansion. Gli Stormi dei Draghi di Azeroth sono tornati, richiamati a difendere la loro dimora ancestrale, le Isole dei Draghi. Ricche di magia elementale e delle energie vitali di Azeroth, le isole si sono risvegliate, e starà a te esplorare le loro meraviglie primordiali e i loro segreti dimenticati da tempo immemore.";	--TODO: First sentence
-	
+	L.EXPANSION_DATA[10].lore = "Dragonflight is the ninth expansion. Gli Stormi dei Draghi di Azeroth sono tornati, richiamati a difendere la loro dimora ancestrale, le Isole dei Draghi. Ricche di magia elementale e delle energie vitali di Azeroth, le isole si sono risvegliate, e starà a te esplorare le loro meraviglie primordiali e i loro segreti dimenticati da tempo immemore.";	-- TODO: First sentence
+
 	for key,value in pairs({
 		["Antorus, il Trono Infuocato"] = "Antorus",	-- ["Antorus, the Burning Throne"] = "Antorus"
 		["Ny'alotha, la Città Risvegliata"] = "Ny'alotha",	-- ["Ny'alotha, the Waking City"] = "Ny'alotha"
@@ -433,8 +464,8 @@ if localeString == "itIT" then
 	do ABBREVIATIONS[key] = value; end
 end
 if localeString == "ptBR" then
-	L.EXPANSION_DATA[10].lore = "Dragonflight is the ninth expansion. As revoadas dragônicas de Azeroth retornaram, convocadas a defender seu lar ancestral, as Ilhas do Dragão. Repletas de magia elemental e das energias vitais de Azeroth, as Ilhas despertam uma vez mais. Cabe a você explorar suas maravilhas primordiais e revelar segredos há muito esquecidos.";	--TODO: First sentence
-	
+	L.EXPANSION_DATA[10].lore = "Dragonflight is the ninth expansion. As revoadas dragônicas de Azeroth retornaram, convocadas a defender seu lar ancestral, as Ilhas do Dragão. Repletas de magia elemental e das energias vitais de Azeroth, as Ilhas despertam uma vez mais. Cabe a você explorar suas maravilhas primordiais e revelar segredos há muito esquecidos.";	-- TODO: First sentence
+
 	for key,value in pairs({
 		["Antorus, o Trono Ardente"] = "Antorus",	-- ["Antorus, the Burning Throne"] = "Antorus"
 		["Ny'alotha, a Cidade Desperta"] = "Ny'alotha",	-- ["Ny'alotha, the Waking City"] = "Ny'alotha"
@@ -454,7 +485,7 @@ if localeString == "ruRU" then
 	L.EXPANSION_DATA[8].lore = "Когда Саргерас нанес Азерот страшную рану, из недр планеты поднялась нестабильная субстанция, прозванная азеритом — кровь самого спящего титана. Вскоре Альянс и Орда поняли, какой потенциал сокрыт в этом веществе, и взаимная неприязнь перешла в открытую конфронтацию. В стремлении завладеть как можно большим количеством азерита, Орда сожгла Тельдрассил, а затем Альянс осадил Подгород.\n\nОбе фракции были ослаблены и нуждались в новых союзниках и в героях, которые бы помогли их найти. Так Джайна Праудмур отправилась на свою родину, Кул-Тирас, в надежде уговорить морскую державу вновь присоединиться к Альянсу. Однако местные дворянские дома погрязли в конфликтах и проявили единодушие лишь в ненависти к Джайне за ее прошлые поступки. В то же время герои Орды вызволили зандаларскую принцессу Таланджи из тюрьмы Штормграда. И, хотя сперва ее отец, король Растахан, не был настроен слушать послов, со временем Таланджи все-таки уговорила зандаларских троллей присоединиться к Орде. Дипломатия помогла обеим фракциям, и в результате успешных военных кампаний они основали надежные базы в Зандаларе и Кул-Тирасе.\n\nДобившись доверия со стороны своих новых союзников, Альянс и Орда вновь скрестили клинки, не замечая, что над ними нависли грозные волны возмездия…";
 	L.EXPANSION_DATA[9].lore = "Одним отчаянным ударом Сильвана Ветрокрылая разрушила границу между миром живых и загробным царством. Храбрейших защитников Азерота затянула всепожирающая тьма. Несущая смерть древняя сила грозит сбросить оковы и уничтожить саму реальность.\n\nТех, кто осмелится сделать шаг в царство мертвых, ждут чудесные и пугающие неизведанные миры. Темные земли — это царство, в котором обитают души умерших. Это мир между мирами, от хрупкого баланса в котором зависит само существование жизни и смерти.\n\nКак одного из величайших защитников Азерота, вас наделили способностью пребывать в этом мире, не теряя своей телесной оболочки. Теперь вам предстоит раскрыть заговор, грозящий уничтожением Вселенной, и помочь легендарным героям всех эпох Warcraft вернуться в Азерот... или окончательно покинуть этот мир.";
 	L.EXPANSION_DATA[10].lore = "Драконы Азерота откликнулись на зов и вернулись, чтобы защитить свою родину, Драконьи острова. Магия стихий и энергия жизни Азерота наполняют вновь пробудившиеся Драконьи острова, и теперь вам предстоит исследовать их первобытные чудеса и раскрыть давно забытые тайны.";
-	
+
 	for key,value in pairs({
 		["Анторус, Пылающий Трон"] = "Анторус";	-- ["Antorus, the Burning Throne"] = "Antorus"
 		["Expansion Pre"] = "Препатч";
@@ -478,8 +509,8 @@ if localeString == "ruRU" then
 	do ABBREVIATIONS[key] = value; end
 end
 if localeString == "koKR" then
-	L.EXPANSION_DATA[10].lore = "용군단 is the ninth expansion. 아제로스의 용군단이 부름을 받들어 선조의 보금자리인 용의 섬을 수호하고자 귀환했습니다. 섬 전역에서 정령 마력과 아제로스의 생명력이 넘쳐흐르는 지금, 용의 섬이 다시 한번 기지개를 켜며 깨어나고 있습니다. 여러분은 이제 태고의 경이를 모험하며 아득히 먼 옛날 잊힌 비밀을 탐구해야 합니다.";	--TODO: First sentence
-	
+	L.EXPANSION_DATA[10].lore = "용군단 is the ninth expansion. 아제로스의 용군단이 부름을 받들어 선조의 보금자리인 용의 섬을 수호하고자 귀환했습니다. 섬 전역에서 정령 마력과 아제로스의 생명력이 넘쳐흐르는 지금, 용의 섬이 다시 한번 기지개를 켜며 깨어나고 있습니다. 여러분은 이제 태고의 경이를 모험하며 아득히 먼 옛날 잊힌 비밀을 탐구해야 합니다.";	-- TODO: First sentence
+
 	for key,value in pairs({
 		["안토러스 - 불타는 왕좌"] = "안토러스",	-- ["Antorus, the Burning Throne"] = "Antorus"
 		["깨어난 도시 나이알로사"] = "나이알로사",	-- ["Ny'alotha, the Waking City"] = "Ny'alotha"
@@ -498,10 +529,10 @@ if localeString == "zhCN" or localeString == "zhTW" then
 	L.EXPANSION_DATA[8].lore = "争霸艾泽拉斯是第七个资料片。艾泽拉斯为结束军团十字军的天启付出了惨重的代价，但即使世界上的创伤得到了修复，联盟和部落之间破碎的信任也可能是最难弥补的。在艾泽拉斯战役中，燃烧军团的垮台引发了一系列灾难性事件，重新引发了魔兽世界中心的冲突。随着一个新的战争时代的开始，艾泽拉斯的英雄们必须开始征募新的盟友，争夺世界上最强大的资源，并在多条战线上战斗，以确定部落或联盟是否会带领艾泽拉斯进入不确定的未来。";
 	L.EXPANSION_DATA[9].lore = "暗影国度是第八个资料片。你所知道的世界之外还有什么? 暗影国度。每一个世俗的人(无论是邪恶的还是邪恶的)都曾居住过的地方。";
 	L.EXPANSION_DATA[10].lore = "巨龙时代是第九个资料片。艾泽拉斯的巨龙军团已经回归，他们响应了召唤，前去保护自己世代相传的家园：巨龙群岛。巨龙群岛涌动着元素魔法和艾泽拉斯的生命能量，如今它已从睡梦中苏醒，原始的奇观和尘封已久的秘密正等待你去揭露。";
-	L.EXPANSION_DATA[11].lore = "地心之战是第十个资料片。也是世界之魂传说三部曲的开端。穿越前所未见的地下世界，那里充满了隐藏的奇迹和潜伏的危险，一直到蛛魔帝国的黑暗深处，那里邪恶的虚空先驱正在聚集蛛魔力量，试图让艾泽拉斯屈服。";
-	L.EXPANSION_DATA[12].lore = "至暗之夜是第十一个资料片。也是世界之魂传说的第二部份。";
+	L.EXPANSION_DATA[11].lore = "地心之战是第十个资料片。也是世界之魂传说三部曲的开端。穿越前所未见的地底世界，探索隐匿的奇观绝景，面对潜藏的惊天危机，深入蛛魔帝国的黑暗深渊。穷凶极恶的虚空先驱正在召集一支蜘蛛大军，企图让整个艾泽拉斯俯首称臣。";
+	L.EXPANSION_DATA[12].lore = "至暗之夜是第十一个资料片。也是世界之魂传说的第二部份。萨拉塔斯对艾泽拉斯的入侵已经开始，虚影风暴企图使整个世界在黑暗中沉沦。在此刻重返并保卫奎尔萨拉斯的精灵王国。";
 	L.EXPANSION_DATA[13].lore = "最后的泰坦是第十二个资料片。也是世界之魂传说三部曲终章。";
-	
+
 	for key,value in pairs({
 		["安托鲁斯，燃烧王座"] = "安托鲁斯",	-- ["Antorus, the Burning Throne"] = "Antorus"
 		["资料片前夕"] = "前夕",	-- ["Expansion Pre"] = "Pre"
@@ -512,7 +543,7 @@ if localeString == "zhCN" or localeString == "zhTW" then
 		["艾拉-卡拉，回响之城"] = "回响之城",	-- ["Ara-Kara, City of Echoes"] = "Ara-Kara"
 	})
 	do ABBREVIATIONS[key] = value; end
-	
+
 	if localeString == "zhTW" then
 		L.EXPANSION_DATA[1].lore = "海加爾山之戰的四年後，聯盟和部落之間的關係又一次緊張了起來。在貧瘠之地杜洛塔，由索爾所領導的部落安頓定居下來並繼續擴充軍隊的規模，他們邀請被遺忘者加入獸人、牛頭人和食人妖的行列。同時，矮人、地精和古老的夜精靈也發誓效忠由人類王國暴風城所領導的聯盟。在暴風城國王瓦里安·烏瑞恩神秘失蹤後，大領主伯瓦爾‧弗塔根擔任攝政王一職，但是偽裝成人類女貴族的黑龍軍團的奧妮克希亞控制他的心智，從幕後操控整個王國。正當英雄們探查奧妮克希亞的陰謀時，古老的強敵卻現身世界各地，威脅著部落和聯盟。";
 		L.EXPANSION_DATA[2].lore = "燃燒的遠征是第一個資料片。它的主要內容包括將等級上限提高到70，將血精靈和德萊尼作為可玩的種族引入，以及外域世界的加入，以及許多新區域、地城、物品、任務和怪物。";
@@ -521,13 +552,13 @@ if localeString == "zhCN" or localeString == "zhTW" then
 		L.EXPANSION_DATA[5].lore = "潘達利亞之謎是第四個資料片。在潘達利亞意外重新發現之後，資料片主要重新集中在聯盟和部落之間的戰爭。冒險者重新發現了古老的熊貓人，他們的智慧將有助於引導他們走向新的命運；熊貓人帝國的古代敵人螳螂人；和他們傳說中的壓迫者神秘的魔古族。領土隨著時間的推移而變化，瓦里安．烏瑞恩和卡爾洛斯．地獄吼之間的衝突逐漸升級。內戰席捲了部落，聯盟和部落中反對地獄吼的暴力起義聯合起來直接把戰爭帶到地獄吼和被煞侵蝕的奧格瑪的盟友。";
 		L.EXPANSION_DATA[6].lore = "德拉諾之霸是第五個資料片。在德拉諾的原始叢林和戰爭創傷的平原上，艾澤拉斯的英雄們將參與一場神話般的衝突，包括神秘的德萊尼冠軍和強大的獸人部落，以及在原始力量的頂峰與葛羅瑪許．地獄吼、黑手和耐奧祖等。玩家需要在這片不受歡迎的土地上搜尋盟友，以幫助建立一個絕望的防禦，對抗舊部落強大的統治，或者觀看他們自己世界上血腥的、飽受戰爭蹂躪的歷史重演。";
 		L.EXPANSION_DATA[7].lore = "軍臨天下是第六個資料片。古爾丹被驅逐到艾澤拉斯，重新開啟薩格拉斯之墓和阿古斯之門，燃燒軍團開始第三次入侵。在破碎海岸被擊敗後，艾澤拉斯的防衛者們尋找創造之柱，這是在艾澤拉斯關閉薩墓中心巨大的惡魔之門的唯一希望。然而，破碎群島也有自己的危險要克服，從薩維斯到神王斯科瓦德，到夜裔精靈，再到潮汐之力艾薩拉。卡德加將達拉然遷移到這片土地的海岸，這座城市是英雄的中心樞紐。亞榭洛的死亡騎士也將他們的黯黑堡帶到了群島。艾澤拉斯的英雄們在戰鬥中尋找傳說中的神器，但也發現了意外的盟友伊利達瑞。聯盟和部落之間正在發生的衝突導致了階級秩序的形成，特殊的指揮官擱置陣營紛爭來領導他們的隊伍參加對抗軍團的戰爭。";
-		L.EXPANSION_DATA[8].lore = "決戰艾澤拉斯是第七個資料片。艾澤拉斯為結束燃燒軍團的天啓付出了慘重的代價，但即使世界上的創傷得到了修復，聯盟和部落之間破碎的信任也可能是最難彌補的。在決戰艾澤拉斯中，燃燒軍團的垮台引發了一系列災難性事件，重新引發了魔獸世界中心的衝突。隨著一個新的戰爭時代開始，艾澤拉斯的英雄們必須開始招募新的盟友，爭奪世界上最強大的資源，並在多條戰線上戰鬥，以決定部落或聯盟是否會帶領艾澤拉斯進入不確定的未來。";
+		L.EXPANSION_DATA[8].lore = "決戰艾澤拉斯是第七個資料片。艾澤拉斯為結束燃燒軍團的天啟付出了慘重的代價，但即使世界上的創傷得到了修復，聯盟和部落之間破碎的信任也可能是最難彌補的。在決戰艾澤拉斯中，燃燒軍團的垮台引發了一系列災難性事件，重新引發了魔獸世界中心的衝突。隨著一個新的戰爭時代開始，艾澤拉斯的英雄們必須開始招募新的盟友，爭奪世界上最強大的資源，並在多條戰線上戰鬥，以決定部落或聯盟是否會帶領艾澤拉斯進入不確定的未來。";
 		L.EXPANSION_DATA[9].lore = "暗影之境是第八個資料片。你所知道的世界之外還有什麼？暗影之境。每一個世俗的人（無論是善良的還是邪惡的）都曾居住過的地方。";
-		L.EXPANSION_DATA[10].lore = "巨龍崛起是第九個資料片。艾澤拉斯的巨龍軍團已經回歸，他們響應了召喚，前去保護自己世代相傳的家園：巨龍群島。巨龍群島湧動著元素魔法和艾澤拉斯的生命能量，如今它已從睡夢中甦醒，原始的奇觀和塵封已久的秘密正等待你去揭曉。";
-		L.EXPANSION_DATA[11].lore = "地心之戰是第十個資料片。也是世界之魂戰記三部曲的開端。穿越前所未見的地下世界，那裡充滿了隱藏的奇觀和潛伏的危險，一直到蛛魔帝國的黑暗深處，那裡邪惡的虛空先驅正在聚集蛛魔力量，試圖讓艾澤拉斯屈服。";
-		L.EXPANSION_DATA[12].lore = "至暗之夜是第十一個資料片。也是世界之魂戰記的第二部份。";
+		L.EXPANSION_DATA[10].lore = "巨龍崛起是第九個資料片。艾澤拉斯的飛龍軍團回來了，它們受到號召，準備保護祖先的家園「巨龍群島」。這些群島再次現世，並湧升出元素魔法和艾澤拉斯的生命能量，你必須踏上旅程探索島嶼的原始奇觀，並從中找出失落已久的秘辛。";
+		L.EXPANSION_DATA[11].lore = "地心之戰是第十個資料片。也是世界之魂戰記三部曲的開端。探索前所未見，且充滿隱藏奇觀和潛在危機的地下世界，深入奈幽蟲族帝國的黑暗深淵，邪惡的虛無先驅者正在那裡集結蜘蛛大軍，準備征服艾澤拉斯。";
+		L.EXPANSION_DATA[12].lore = "至暗之夜是第十一個資料片。也是世界之魂戰記的第二部份。回到奎爾薩拉斯精靈王國，迎戰薩拉塔斯對艾澤拉斯的入侵，虛無風暴也正威脅著將世界籠罩在黑暗之中。";
 		L.EXPANSION_DATA[13].lore = "最後的泰坦是第十二個資料片。也是世界之魂戰記三部曲終章。";
-		
+
 		for key,value in pairs({
 			["資料片前夕"] = "前夕",
 			["安托洛斯，燃燒王座"] = "安托洛斯",		-- ["Antorus, the Burning Throne"] = "Antorus"
@@ -589,7 +620,7 @@ if app.IsRetail then
 		},
 	};
 	L.CUSTOM_COLLECTS_REASONS = CUSTOM_COLLECTS_REASONS;
-	
+
 	--[[
 	if localeString == "deDE" then
 		CUSTOM_COLLECTS_REASONS["NPE"].text = "New Player Experience";
@@ -607,7 +638,7 @@ if app.IsRetail then
 		CUSTOM_COLLECTS_REASONS["SL_SKIP"].desc = "Sólo un personaje que elige saltarse la historia de las Tierras Sombrías puede coleccionar esto.";
 		CUSTOM_COLLECTS_REASONS["HOA"].desc = "Sólo un personaje que ha obtenido el |cffe6cc80"..GetSpellName(275825).."|r puede coleccionar esto.";
 		CUSTOM_COLLECTS_REASONS["!HOA"].desc = "Sólo un personaje que |cffff0000no|r ha obtenido el |cffe6cc80"..GetSpellName(275825).."|r puede coleccionar esto.";
-		
+
 		if localeString == "esMX" then
 			CUSTOM_COLLECTS_REASONS["NPE"].text = "Experiencia de los jugadores nuevos";
 			CUSTOM_COLLECTS_REASONS["NPE"].desc = "Sólo un personaje nuevo puede coleccionar esto.";
@@ -671,7 +702,7 @@ if app.IsRetail then
 		CUSTOM_COLLECTS_REASONS["SL_SKIP"].desc = "只有选择跳过暗影国度故事线的角色才能收藏这个。";
 		CUSTOM_COLLECTS_REASONS["HOA"].desc = "只有角色获得 |cffe6cc80"..GetSpellName(275825).."|r 可以收集。";
 		CUSTOM_COLLECTS_REASONS["!HOA"].desc = "只有角色 |cffff0000没有|r 获得 |cffe6cc80"..GetSpellName(275825).."|r 可以收集。";
-		
+
 		if localeString == "zhTW" then
 			CUSTOM_COLLECTS_REASONS["NPE"].text = "新玩家體驗";
 			CUSTOM_COLLECTS_REASONS["NPE"].desc = "只有新角色可以收藏這個。";

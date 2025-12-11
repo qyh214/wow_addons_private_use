@@ -8,6 +8,10 @@ local floor, ceil, abs, max, min = math.floor, math.ceil, math.abs, math.max, ma
 ---------------------------------------------------------------------
 AF.epsilon = 0.00001
 
+---@param a number
+---@param b number
+---@param epsilon number|nil default is AF.epsilon (0.00001)
+---@return boolean
 function AF.ApproxEqual(a, b, epsilon)
     return abs(a - b) <= (epsilon or AF.epsilon)
 end
@@ -36,8 +40,24 @@ function AF.RoundToNearestMultiple(num, multiplier)
     return AF.Round(num / multiplier) * multiplier
 end
 
-function AF.Interpolate(start, stop, step, maxSteps)
-    return start + (stop - start) * step / maxSteps
+function AF.CeilToEven(num)
+    local ceiledNum = ceil(num)
+    if ceiledNum % 2 == 0 then
+        return ceiledNum
+    else
+        return ceiledNum + 1
+    end
+end
+
+function AF.Interpolate(startValue, endValue, step, maxSteps)
+    if maxSteps <= 0 then
+        return startValue
+    end
+    return startValue + (endValue - startValue) * step / maxSteps
+end
+
+function AF.Lerp(startValue, endValue, amount)
+    return startValue + (endValue - startValue) * amount
 end
 
 function AF.Clamp(value, minValue, maxValue)

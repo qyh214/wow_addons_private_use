@@ -19,17 +19,28 @@ local IsSpellKnown, GetNumSpellTabs, GetSpellTabInfo, IsSpellKnownOrOverridesKno
 ---@diagnostic disable-next-line: deprecated
 	= app.WOWAPI.IsSpellKnown, GetNumSpellTabs, GetSpellTabInfo, app.WOWAPI.IsSpellKnownOrOverridesKnown
 
-local function IsSpellKnownByQuestComplete(spellID)
-	if spellID == 390631 and IsQuestFlaggedCompleted(66444) then	-- Ottuk Taming returning false for the above functions
-		return true;
+local SpellQuestLinks = {
+	-- double check added Mount spells in Mount.lua [PerCharacterMountSpells/AccountWideMountSpells]
+	[390631] = 66444,	-- Ottuk Taming
+	[241857] = 46319,	-- Lunarwing
+	[231437] = 46319,	-- Lunarwing
+	[148972] = 32325,	-- Green Dreadsteed
+	[148970] = 32325,	-- Green Felsteed
+	[1255451] = 92638,	-- Feldruid's Scornwing Idol
+}
+local SpellQuestOverrides = setmetatable({}, { __index = function(t,key)
+	local questID = SpellQuestLinks[key]
+	if not questID then
+		t[key] = false
+		return
 	end
-	if (spellID == 241857 or spellID == 231437) and IsQuestFlaggedCompleted(46319) then	-- Lunarwing returning false for the above functions
-		return true;
-	end
-	if (spellID == 148972 or spellID == 148970) and IsQuestFlaggedCompleted(32325) then	-- Green Dread/Fel-Steed returning false for the above functions
-		return true;
-	end
-end
+
+	local saved = IsQuestFlaggedCompleted(questID)
+	if not saved then return end
+
+	t[key] = saved
+	return saved
+end})
 -- Consolidates some spell checking
 ---@param spellID number
 ---@param rank? number
@@ -43,7 +54,7 @@ if app.GameBuildVersion >= 110200 then
 			or IsSpellKnown(spellID, 1)
 			or IsSpellKnownOrOverridesKnown(spellID, 0, true)
 			or IsSpellKnownOrOverridesKnown(spellID, 1, true)
-			or IsSpellKnownByQuestComplete(spellID) then
+			or SpellQuestOverrides[spellID] then
 			return true
 		end
 	end
@@ -55,7 +66,7 @@ else
 			or IsSpellKnown(spellID, true)
 			or IsSpellKnownOrOverridesKnown(spellID)
 			or IsSpellKnownOrOverridesKnown(spellID, true)
-			or IsSpellKnownByQuestComplete(spellID) then
+			or SpellQuestOverrides[spellID] then
 			return true
 		end
 	end

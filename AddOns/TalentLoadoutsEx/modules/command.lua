@@ -47,15 +47,79 @@ function Addon:CommitConfigByName(name)
 	);
 end
 
+local loadedConfigNames = {};
+local function UpdateLoadedConfigNames()
+	if not Addon.loadedDataList then
+		PlayerSpellsFrame.TalentsFrame:UpdateTreeInfo();
+		Addon:UpdateScrollBox();
+	end
+
+	table.wipe(loadedConfigNames);
+	for _, data in ipairs(Addon.loadedDataList) do
+		loadedConfigNames[data.name] = true;
+	end
+end
+
+local function IsMatchedOption(option)
+	local optionText = "";
+	for conditionals in option:gmatch("(%[[^%[%]]*%])") do
+		optionText = optionText.."[";
+		for conditional in conditionals:gsub("[%[%]]", ""):gmatch("([^,]+)") do
+			local tlx = conditional:match("^tlx:(.+)$");
+			local notlx = conditional:match("^notlx:(.+)$");
+
+			if tlx then
+				if not loadedConfigNames[tlx] then
+					return false;
+				end
+			elseif notlx then
+				if loadedConfigNames[notlx] then
+					return false;
+				end
+			else
+				optionText = optionText..","..conditional;
+			end
+		end
+
+		optionText = optionText.."]";
+	end
+
+	return SecureCmdOptionParse(optionText) and true or false;
+end
+
+local function CmdOptionParse(msg)
+	UpdateLoadedConfigNames();
+
+	for option in msg:gmatch("([^;]+)") do
+		local name = option:match("[^%]]*$");
+		if not name or #name == 0 then
+			return nil;
+		end
+
+		if not option:match("%]") then
+			return name;
+		end
+
+		if IsMatchedOption(option) then
+			return name;
+		end
+	end
+end
+
+function Addon:ExecuteCommand(msg)
+	local name = CmdOptionParse(msg or "");
+	if name and #name > 0 then
+		Addon:CommitConfigByName(name);
+	end
+end
+
 local commandName_Load = addonName.."_Load";
 _G["SLASH_"..commandName_Load..1] = "/tlx"
 SlashCmdList[commandName_Load] = function(msg, ...)
-	local name = SecureCmdOptionParse(msg or "");
-	if name and #name > 0 then
-		if Addon:IsAddOnLoaded("Blizzard_PlayerSpells") then
-			Addon:CommitConfigByName(name);
-		else
-			Addon:RegisterAddonLoad("Blizzard_PlayerSpells", true, "CommitConfigByName", name);
-		end
+	msg = msg or "";
+	if Addon:IsAddOnLoaded("Blizzard_PlayerSpells") then
+		Addon:ExecuteCommand(msg);
+	else
+		Addon:RegisterAddonLoad("Blizzard_PlayerSpells", true, "ExecuteCommand", msg);
 	end
 end

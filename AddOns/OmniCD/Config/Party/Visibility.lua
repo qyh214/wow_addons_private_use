@@ -4,7 +4,7 @@ local P = E.Party
 local sliderTimer
 
 local visibility = {
-	name = L["Visibility"],
+	name = E.STR.WHATS_NEW_ESCSEQ .. L["Visibility"],
 	order = 0,
 	type = "group",
 	get = function(info) return E.profile.Party.visibility[ info[#info] ] end,
@@ -32,6 +32,7 @@ local visibility = {
 			args = {
 				finder = {
 					name = ENABLE,
+					order = 1,
 					desc = format("%s (%s, %s, ...)", L["Enable in automated instance groups"],
 						LOOKING_FOR_DUNGEON_PVEFRAME, SKIRMISH),
 					type = "toggle",
@@ -54,6 +55,25 @@ local visibility = {
 				end
 			end,
 			args = {}
+		},
+		raidGroup = {
+			name = E.STR.WHATS_NEW_ESCSEQ .. RAIDS,
+			desc = L["Enable in raid groups"],
+			order = 40,
+			type = "multiselect",
+			inline = true,
+			values = {
+				["scenario"] = L["Scenarios"],
+				["none"] = L["Outdoor Zones"],
+			},
+			get = function(_, k) return E.profile.Party.raidGroup[k] end,
+			set = function(_, k, value)
+				E.profile.Party.raidGroup[k] = value
+				if P.isInTestMode and P.testZone == k then
+					P:Test()
+				end
+				P:Refresh()
+			end,
 		},
 	}
 }

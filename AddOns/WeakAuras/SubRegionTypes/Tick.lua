@@ -202,6 +202,7 @@ local funcs = {
       self:UpdateTickDesaturated()
     else
       for _, tick in ipairs(self.ticks) do
+        tick:SetVertexColor(r, g, b, a or 1)
         tick:SetColorTexture(r, g, b, a or 1)
       end
     end

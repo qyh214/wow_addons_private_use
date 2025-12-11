@@ -184,6 +184,8 @@ L["STRING_DODGE"] = "Ausweichen"
 L["STRING_DOT"] = "(DoT)"
 L["STRING_DPS"] = "DPS"
 L["STRING_EMPTY_SEGMENT"] = "Leeres Segment"
+--[[Translation missing --]]
+L["STRING_ENABLE_DO_NOT_DISTURB"] = "Enable Do Not Disturb"
 L["STRING_ENABLED"] = "Aktiviert"
 L["STRING_ENVIRONMENTAL_DROWNING"] = "Umgebung: (Ertrinken)"
 L["STRING_ENVIRONMENTAL_FALLING"] = "Umgebung: (Fallen)"
@@ -304,11 +306,27 @@ L["STRING_KEYBIND_TOGGLE_WINDOWS"] = "Alle umschalten"
 L["STRING_KEYBIND_WINDOW_CONTROL"] = "Fenster"
 L["STRING_KEYBIND_WINDOW_REPORT"] = "Bericht aus Fenster #%s."
 L["STRING_KEYBIND_WINDOW_REPORT_HEADER"] = "Berichtsdaten"
+--[[Translation missing --]]
+L["STRING_KEYSTONE_ADD_TO_FRIENDS_TOOLTIP"] = "Add to friends list as character (not battlenet friend request)."
+--[[Translation missing --]]
+L["STRING_KEYSTONE_CLICK_TO_VIEW_SCOREBOARD"] = "Click to view the scoreboard."
+--[[Translation missing --]]
+L["STRING_KEYSTONE_DND_TOOLTIP"] = "Your key won't be sent to your guild or friends. While in a group, it will still be sent."
+--[[Translation missing --]]
+L["STRING_KEYSTONE_LIFETIME_LIKES_YOU_GAVE"] = [=[Life-time likes you gave for this player through the 'GG' button in the |cFFFFFF00Details! Damage Meter Mythic+|r addon.
+
+View run breakdown by selecting a Mythic+ run you did with this player.]=]
+--[[Translation missing --]]
+L["STRING_KEYSTONE_NO_MYTHICPLUS_ADDON"] = "Mythic+ addon not found."
+--[[Translation missing --]]
+L["STRING_KEYSTONE_REQUEST_FROM_GUILD"] = "Request from Guild"
 L["STRING_KILLED"] = "Getötet"
 L["STRING_LAST_COOLDOWN"] = "Letzter benutzter Cooldown"
 L["STRING_LEFT"] = "links"
 L["STRING_LEFT_CLICK_SHARE"] = "Linksklick, um zu berichten"
 L["STRING_LEFT_TO_RIGHT"] = "Links nach Rechts"
+--[[Translation missing --]]
+L["STRING_LIKES_YOU_GAVE"] = "Likes you gave"
 L["STRING_LOCK_DESC"] = "Fenster fixieren/freigeben"
 L["STRING_LOCK_WINDOW"] = "fixieren"
 L["STRING_MASTERY"] = "Meisterschaft"
@@ -376,9 +394,13 @@ L["STRING_NEWS_REINSTALL"] = "Treten nach einem Update Fehler auf? Probier '/det
 L["STRING_NEWS_TITLE"] = "Was ist neu in dieser Version?"
 L["STRING_NO"] = "Nein"
 L["STRING_NO_DATA"] = "Daten wurden bereits bereinigt."
+--[[Translation missing --]]
+L["STRING_NO_MYTHIC_PLUS_ADDON"] = "To track your Mythic+ runs including loot, score, damage, healing done, and who you played with, install the |cFFFFAA00Details! Damage Meter Mythic+|r addon on |cFFfff1c1Wago AddOns|r or |cFFfff1c1Curse Forge|r."
 L["STRING_NO_SPELL"] = "Kein Zauber wurde benutzt."
 L["STRING_NO_TARGET"] = "Kein Ziel gefunden."
 L["STRING_NO_TARGET_BOX"] = "Keine Ziele verfügbar"
+--[[Translation missing --]]
+L["STRING_NO_TELEPORTER"] = "You don't have this teleporter"
 L["STRING_NOCLOSED_INSTANCES"] = [=[Es gibt keine geschlossenen Fenster,
 klicke, um ein neues zu erstellen.]=]
 L["STRING_NOLAST_COOLDOWN"] = "Kein Cooldown benutzt."
@@ -841,10 +863,6 @@ L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT"] = "Neuer Kampf bei Boss Pull"
 --[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT_DESC"] = "If a boss is pulled while in combat, this option closes the current combat encounter and initiates a new one for the boss."
 L["STRING_OPTIONS_MPLUS_DPS_ANCHOR"] = "DPS-Berechnung für das gesamte Segment"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_MAKEOVERALL"] = "Make Overall Segment"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_MAKEOVERALL_DESC"] = "After the run is completed, this option creates a new segment containing all combat data from the run."
 --[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_MERGETRASH"] = "Merge Trash"
 --[[Translation missing --]]
@@ -1458,6 +1476,8 @@ L["STRING_QUERY_INSPECT_REFRESH"] = "Aktualisierung benötigt"
 L["STRING_RAID_WIDE"] = "[*] Schlachtzugsweite Abklingzeiten"
 L["STRING_RAIDCHECK_PLUGIN_DESC"] = "Zeigt innerhalb von Schlachtzugsinstanzen ein Symbol auf der Details!-Titelleiste, das Fläschchen-, Essen- und Voraustrank-Nutzung anzeigt."
 L["STRING_RAIDCHECK_PLUGIN_NAME"] = "Raid-Nachprüfung"
+--[[Translation missing --]]
+L["STRING_RECENT_PLAYERS"] = "Recent Players:"
 L["STRING_REPORT"] = "für"
 L["STRING_REPORT_BUTTON_TOOLTIP"] = "Klicke, um den Berichtsdialog zu öffnen"
 L["STRING_REPORT_FIGHT"] = "Kampf"
@@ -1576,6 +1596,10 @@ L["STRING_SWITCH_WARNING"] = "Rolle geändert. Wechsel: |cFFFFAA00%s|r "
 L["STRING_TARGET"] = "Ziel"
 L["STRING_TARGETS"] = "Ziele"
 L["STRING_TARGETS_OTHER1"] = "Begleiter und andere Ziele"
+--[[Translation missing --]]
+L["STRING_TELEPORT"] = "Teleport"
+--[[Translation missing --]]
+L["STRING_TELEPORTERS"] = "Teleporters"
 L["STRING_TEXTURE"] = "Textur"
 L["STRING_TIME_OF_DEATH"] = "Tod"
 L["STRING_TOOOLD"] = "konnte nicht installiert werden, weil deine Details!-Version zu alt ist."

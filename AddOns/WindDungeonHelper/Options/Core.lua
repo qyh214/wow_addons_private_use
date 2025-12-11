@@ -62,7 +62,7 @@ function W:BuildOptions()
 		end,
 	})
 
-	LDBI:Register(L["Wind Dungeon Helper"], self.DataBroker, self.db.minimapIcon)
+	LDBI:Register("WindDungeonHelper", self.DataBroker, self.db.minimapIcon)
 end
 
 function W:ShowOptions()

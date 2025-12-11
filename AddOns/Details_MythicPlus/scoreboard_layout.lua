@@ -1,6 +1,8 @@
 local addonName, private = ...
 local Details, DetailsFramework = Details, DetailsFramework
 
+---@cast DetailsFramework detailsframework
+
 ---@type detailsmythicplus
 local addon = private.addon
 
@@ -37,7 +39,7 @@ end
 local function DoPlayerTooltip(playerData, owner, renderContent, rightHeaderColumn, r, g, b)
     GameCooltip:Preset(2)
 
-    local classColor = RAID_CLASS_COLORS[playerData.class]
+    local classColor = RAID_CLASS_COLORS[playerData.class] or {r = 1, g = 1, b = 1, a = 1}
     GameCooltip:AddLine(addon.PreparePlayerName(playerData.name), rightHeaderColumn, nil, classColor.r, classColor.g, classColor.b, 1, r, g, b, 1)
     if (playerData.spec) then
         GameCooltip:AddIcon(select(4, GetSpecializationInfoByID(playerData.spec)), 1, 1, 18, 18)
@@ -136,7 +138,7 @@ end
 local CreateLootSquare = function(line)
     ---@type details_lootsquare
     local lootSquare = CreateFrame("frame", "$parentLootSquare", line)
-    lootSquare:SetSize(46, 46)
+    lootSquare:SetSize(50, 50)
     lootSquare:SetFrameLevel(line:GetFrameLevel()+10)
     lootSquare:Hide()
 
@@ -162,29 +164,30 @@ local CreateLootSquare = function(line)
     end)
 
     local lootIcon = lootSquare:CreateTexture("$parentLootIcon", "artwork")
-    lootIcon:SetSize(46, 46)
-    lootIcon:SetPoint("center", lootSquare, "center", 0, 0)
+    lootIcon:SetSize(50, 50)
+    lootIcon:SetPoint("center", lootSquare, "center", 0, 2)
     lootIcon:SetTexture([[Interface\ICONS\INV_Misc_QuestionMark]])
     lootSquare.LootIcon = lootIcon
 
     local lootIconBorder = lootSquare:CreateTexture("$parentLootSquareBorder", "overlay")
     lootIconBorder:SetTexture([[Interface\COMMON\WhiteIconFrame]])
     lootIconBorder:SetTexCoord(0, 1, 0, 1)
-    lootIconBorder:SetSize(46, 46)
+    lootIconBorder:SetSize(50, 50)
     lootIconBorder:SetPoint("center", lootIcon, "center", 0, 0)
     lootSquare.LootIconBorder = lootIconBorder
 
     local lootItemLevel = lootSquare:CreateFontString("$parentLootItemLevel", "overlay", "GameFontNormal")
-    lootItemLevel:SetPoint("bottom", lootSquare, "bottom", 0, 0)
+    lootItemLevel:SetPoint("bottom", lootSquare, "bottom", 0, 2)
     lootItemLevel:SetTextColor(1, 1, 1)
     DetailsFramework:SetFontSize(lootItemLevel, 11)
     lootSquare.LootItemLevel = lootItemLevel
 
-    local lootItemLevelBackgroundTexture = lootSquare:CreateTexture("$parentItemLevelBackgroundTexture", "artwork")
+    local lootItemLevelBackgroundTexture = lootSquare:CreateTexture("$parentItemLevelBackgroundTexture", "overlay")
     lootItemLevelBackgroundTexture:SetTexture([[Interface\Cooldown\LoC-ShadowBG]])
+    lootItemLevelBackgroundTexture:SetDrawLayer("overlay", 5)
     lootItemLevelBackgroundTexture:SetPoint("bottomleft", lootSquare, "bottomleft", -7, 1)
-    lootItemLevelBackgroundTexture:SetPoint("bottomright", lootSquare, "bottomright", 7, -11)
-    lootItemLevelBackgroundTexture:SetHeight(10)
+    lootItemLevelBackgroundTexture:SetPoint("bottomright", lootSquare, "bottomright", 7, 1)
+    lootItemLevelBackgroundTexture:SetHeight(14)
     lootSquare.LootItemLevelBackgroundTexture = lootItemLevelBackgroundTexture
 
     return lootSquare
@@ -192,31 +195,92 @@ end
 
 do -- player likes
     local column = addon.ScoreboardColumn:Create("player-likes", "", 34, function (line)
-        local texture = line:CreateTexture("$parentRankTexture", "ARTWORK")
-        texture:SetSize(30, 30)
+        local anchorFrame = CreateFrame("frame", "$parentLikesAnchorFrame", line)
+        anchorFrame:SetSize(32, 26)
 
-        local hint = line:CreateTexture("$parentRankTextureHint", "OVERLAY")
+        anchorFrame:SetScript("OnShow", function()
+        end)
+
+        local likesFontString = anchorFrame:CreateFontString("$parentLikesFontString", "overlay", "GameFontNormal")
+        likesFontString:SetText(L["SCOREBOARD_BUTTON_GG_LIKE"])
+        likesFontString:SetPoint("bottom", anchorFrame, "bottom", 0, 0)
+        DetailsFramework:SetFontSize(likesFontString, 7)
+        anchorFrame.LikesFontString = likesFontString
+
+        local likesAmountFontString = anchorFrame:CreateFontString("$parentLikesAmountFontString", "overlay", "GameFontNormal")
+        likesAmountFontString:SetText("0")
+        likesAmountFontString:SetPoint("bottom", likesFontString, "top", 0, 2)
+        likesAmountFontString.amount = 0
+        DetailsFramework:SetFontSize(likesAmountFontString, 16)
+        anchorFrame.LikesAmountFontString = likesAmountFontString
+        addon.LikesAmountFontString[#addon.LikesAmountFontString + 1] = likesAmountFontString
+        --likesFontString:SetPoint("TOPLEFT", line, "TOPLEFT", 5, -5)
+
+        local nextLikesAmountFontString = anchorFrame:CreateFontString("$parentNextLikesAmountFontString", "overlay", "GameFontNormal") --this fontstring is only used for animation purposes
+        nextLikesAmountFontString:SetText("0")
+        nextLikesAmountFontString:SetPoint("bottom", likesFontString, "top", 0, -18)
+        DetailsFramework:SetFontSize(nextLikesAmountFontString, 16)
+        anchorFrame.NextLikesFontString = nextLikesAmountFontString
+        nextLikesAmountFontString:Hide()
+
+        --create two animations using detailsframework, one when a player receives a like, the fontstring likesAmountFontString will from where it is now to up and fadeout, while the nextLikesAmountFontString will move up from below and fade in stopping where the likesAmountFontString was.
+        do
+            local order = 1
+            local duration = 0.2
+
+            local likeReceivedAnimation = DetailsFramework:CreateAnimationHub(likesAmountFontString, nil, function() likesAmountFontString:Hide(); likesAmountFontString:SetText(nextLikesAmountFontString:GetText()) end)
+            DetailsFramework:CreateAnimation(likeReceivedAnimation, "Alpha", order, duration, 1, 0)
+            DetailsFramework:CreateAnimation(likeReceivedAnimation, "Translation", order, duration, 0, 20)
+            likesAmountFontString.LikeReceivedAnimation = likeReceivedAnimation
+
+            local nextLikeReceivedAnimation = DetailsFramework:CreateAnimationHub(nextLikesAmountFontString, function() nextLikesAmountFontString:Show() end, function() nextLikesAmountFontString:Hide(); likesAmountFontString:Show(); end)
+            DetailsFramework:CreateAnimation(nextLikeReceivedAnimation, "Alpha", order, duration, 0, 1)
+            DetailsFramework:CreateAnimation(nextLikeReceivedAnimation, "Translation", order, duration-0.05, 0, 23)
+            DetailsFramework:CreateAnimation(nextLikeReceivedAnimation, "Translation", order+1, 0.05, 0, -3)
+            --DetailsFramework:CreateAnimation(nextLikeReceivedAnimation, "Translation", order+3, 0.05, 0, -3)
+            nextLikesAmountFontString.LikeReceivedAnimation = nextLikeReceivedAnimation
+        end
+
+
+        local texture = anchorFrame:CreateTexture("$parentRankTexture", "artwork")
+        texture:SetSize(30, 30)
+        texture:SetPoint("center", anchorFrame, "center", 0, 0)
+        texture:SetAlpha(0.1)
+        anchorFrame.LikesTexture = texture
+
+        local hint = anchorFrame:CreateTexture("$parentRankTextureHint", "overlay")
         hint:SetAtlas("UI-HUD-Minimap-Arrow-QuestTracking")
         hint:SetPoint("TOPRIGHT", texture, "TOPRIGHT", 5, 5)
         hint:SetSize(16, 16)
         hint:Hide()
 
-        texture.Hint = hint
-        texture.Line = line
         line.LikeHint = hint
+        anchorFrame.LikeHintTexture = hint
+        texture.Line = line
 
-        return texture
+        return anchorFrame
     end)
 
-    column:SetOnRender(function (frame, playerData)
-        local likes = 1
-        for _, liked in pairs(playerData.likedBy or {}) do
+    column:SetOnRender(function (anchorFrame, playerData)
+        local likes = 0
+        for playerName, liked in pairs(playerData.likedBy or {}) do
             if (liked) then
+                --print(playerName .. " liked " .. playerData.name) --DEBUG
                 likes = likes + 1
             end
         end
 
-        frame:SetAtlas("Professions-ChatIcon-Quality-Tier" .. likes)
+        local currentLikes = anchorFrame.LikesAmountFontString.amount
+
+        anchorFrame.NextLikesFontString:SetText(likes)
+        anchorFrame.LikesTexture:SetAtlas("Professions-ChatIcon-Quality-Tier" .. (likes + 1))
+
+        --play animation if likes increased
+        if (likes > currentLikes) then
+            anchorFrame.LikesAmountFontString.LikeReceivedAnimation:Play()
+            anchorFrame.NextLikesFontString.LikeReceivedAnimation:Play()
+            anchorFrame.LikesAmountFontString.amount = likes
+        end
     end)
 
     addon.RegisterScoreboardColumn(column)
@@ -232,6 +296,21 @@ do -- player portrait
         playerPortrait.RoleIcon:SetSize(18, 18)
         playerPortrait.RoleIcon:ClearAllPoints()
         playerPortrait.RoleIcon:SetPoint("bottomleft", playerPortrait.Portrait, "bottomright", -9, -2)
+        playerPortrait.RoleIcon:SetDrawLayer("overlay", 6)
+
+        local itemLevelText = playerPortrait:CreateFontString("$parentLootItemLevel", "overlay", "GameFontNormal")
+        itemLevelText:SetPoint("bottom", playerPortrait, "bottom", 0, 0)
+        itemLevelText:SetTextColor(1, 1, 1)
+        DetailsFramework:SetFontSize(itemLevelText, 11)
+        playerPortrait.ItemLevelText = itemLevelText
+
+        local itemLevelBg = playerPortrait:CreateTexture("$parentItemLevelBackgroundTexture", "overlay")
+        itemLevelBg:SetDrawLayer("overlay", 5)
+        itemLevelBg:SetTexture([[Interface\Cooldown\LoC-ShadowBG]])
+        itemLevelBg:SetPoint("bottomleft", playerPortrait.Portrait, "bottomleft", -7, -1)
+        itemLevelBg:SetPoint("bottomright", playerPortrait.Portrait, "bottomright", 7, -1)
+        itemLevelBg:SetHeight(14)
+        playerPortrait.ItemLevelBg = itemLevelBg
 
         return playerPortrait
     end)
@@ -244,6 +323,17 @@ do -- player portrait
             local class = playerData.class
             frame.Portrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
             frame.Portrait:SetTexCoord(unpack(CLASS_ICON_TCOORDS[class]))
+        end
+
+        if (playerData.ilevel) then
+            local classColor = RAID_CLASS_COLORS[playerData.class] or {r = 1, g = 1, b = 1, a = 1}
+            frame.ItemLevelText:SetTextColor(classColor.r, classColor.g, classColor.b)
+            frame.ItemLevelText:SetText(DetailsFramework.Math.Round(playerData.ilevel))
+            frame.ItemLevelText:Show()
+            frame.ItemLevelBg:Show()
+        else
+            frame.ItemLevelText:Hide()
+            frame.ItemLevelBg:Hide()
         end
 
         local role = playerData.role
@@ -282,7 +372,7 @@ do -- Player name
 
     ---@param playerData scoreboard_playerdata
     column:SetOnRender(function (frame, playerData)
-        local classColor = RAID_CLASS_COLORS[playerData.class]
+        local classColor = RAID_CLASS_COLORS[playerData.class] or {r = 1, g = 1, b = 1, a = 1}
         frame:SetTextColor(classColor.r, classColor.g, classColor.b)
         frame:SetText(addon.PreparePlayerName(playerData.name))
     end)
@@ -292,38 +382,121 @@ end
 
 do -- Like button
     local likeButtonTemplate = "OPTIONS_CIRCLEBUTTON_TEMPLATE"
+    local likeButtonWidth = 45
+    local likeButtonDebug = false --avoid hiding the like button
+
+    ---@class likebutton : df_button
+    ---@field LikeTextureAnimation animationgroup
+    ---@field OnClickAnimation animationgroup
+    ---@field ShinnyBarAnimation animationgroup
 
     local column = addon.ScoreboardColumn:Create("player-like-button", "", 50, function (line)
-        local frame = DetailsFramework:CreateButton(line, function (self)
+        ---@type likebutton
+        local likeButton = DetailsFramework:CreateButton(line, function (self)
             if (self.MyObject.OnClick) then
                 self.MyObject:OnClick()
             end
-        end, 35, 22, nil, nil, nil, nil, nil, nil, nil, likeButtonTemplate, {font = "GameFontNormal", size = 12})
+        end, likeButtonWidth, 22, nil, nil, nil, nil, nil, nil, nil, likeButtonTemplate, {font = "GameFontNormal", size = 12})
 
-        frame:SetScript("OnEnter", function ()
+        --like texture
+        ---@type texture
+        local likeTexture = likeButton:CreateTexture("$parentLikeTexture", "overlay")
+        likeTexture:SetTexture([[Interface\AddOns\Details_MythicPlus\Assets\Textures\thumbsup.png]])
+        likeTexture:SetSize(20, 20)
+        likeTexture:SetPoint("left", likeButton.widget, "left", 2, 0)
+
+        --create a details framework animation to move the likeTexture down and up once
+        do
+            local likeTextureAnimation = DetailsFramework:CreateAnimationHub(likeTexture)
+            local order = 1
+            local duration = 0.075
+            local pixelsToMove = 1
+            DetailsFramework:CreateAnimation(likeTextureAnimation, "Translation", order, duration, 0, -pixelsToMove)
+            DetailsFramework:CreateAnimation(likeTextureAnimation, "Translation", order + 1, duration, 0, pixelsToMove)
+            likeButton.LikeTextureAnimation = likeTextureAnimation
+        end
+
+        do
+            --create a details framework animation which decreases the alpha of the likeButton from 1 to 0 and the scale from 1 to 2, in 0.4 seconds
+            local likeButtonAnimation = DetailsFramework:CreateAnimationHub(likeButton.widget, function() likeButton.widget:Show() end, function() likeButton.widget:Hide() end)
+            local order = 1
+            local duration = 0.2
+            DetailsFramework:CreateAnimation(likeButtonAnimation, "Alpha", order, duration, 1, 0)
+            DetailsFramework:CreateAnimation(likeButtonAnimation, "Scale", order, duration, 1, 1, 1.5, 1.5)
+            likeButton.OnClickAnimation = likeButtonAnimation
+        end
+
+        local textFontString = likeButton:GetFontString()
+        textFontString:ClearAllPoints()
+        textFontString:SetPoint("left", likeTexture, "right", 2, 0)
+
+        likeButton:SetScript("OnEnter", function ()
             line.LikeHint:Show()
+            --show cooltip with the text enEnterTooltipText
+            GameCooltip:Preset(2)
+            GameCooltip:AddLine(L["SCOREBOARD_BUTTON_GG_TOOLTIP_LINE_1"])
+            GameCooltip:AddIcon("common-radiobutton-dot", 1, 1, 12, 12)
+            GameCooltip:AddLine(L["SCOREBOARD_BUTTON_GG_TOOLTIP_LINE_2"])
+            GameCooltip:AddIcon("common-radiobutton-dot", 1, 1, 12, 12)
+            GameCooltip:SetOwner(likeButton.widget, "bottom", "top", 0, -4)
+            GameCooltip:SetOption("FixedWidth", false)
+            GameCooltip:Show()
+
+            likeButton.LikeTextureAnimation:Play()
         end)
-        frame:SetScript("OnLeave", function ()
+
+        likeButton:SetScript("OnLeave", function ()
             line.LikeHint:Hide()
+            GameCooltip:Hide()
         end)
-        return frame
+
+        local shinnyBarTexture = likeButton:CreateTexture("$parentShinnyBarTexture", "overlay")
+        shinnyBarTexture:SetTexture([[Interface\AddOns\Details_MythicPlus\Assets\Textures\shinebar.png]])
+        shinnyBarTexture:SetSize(32, 32)
+        shinnyBarTexture:SetPoint("left", likeButton.widget, "left", -20, 0)
+        shinnyBarTexture:Hide()
+
+        DetailsFramework:SetMask(shinnyBarTexture, [[Interface\AddOns\Details_MythicPlus\Assets\Textures\rectanglemask.png]])
+        shinnyBarTexture.MaskTexture:ClearAllPoints()
+        shinnyBarTexture.MaskTexture:SetAllPoints(likeButton.widget)
+
+        local highlightTexture = likeButton:CreateTexture("$parentTextMask", "highlight")
+        highlightTexture:SetTexture([[Interface\AddOns\Details_MythicPlus\Assets\Textures\rectanglemask.png]])
+        highlightTexture:SetAlpha(0.1)
+        highlightTexture:SetPoint("topleft", likeButton.widget, "topleft", 1, -1)
+        highlightTexture:SetPoint("bottomright", likeButton.widget, "bottomright", -1, 1)
+
+        --create a details framework animation to show the shinny bar, move it with translation from left to right, and when finishes, hide the texture
+        local shinnyBarAnimation = DetailsFramework:CreateAnimationHub(shinnyBarTexture, function() shinnyBarTexture:Show() end, function() shinnyBarTexture:Hide() end)
+        local order = 1
+        local duration = 0.35
+        DetailsFramework:CreateAnimation(shinnyBarAnimation, "Translation", order, duration, likeButtonWidth + 20, 0, 0)
+        likeButton.ShinnyBarAnimation = shinnyBarAnimation
+
+        return likeButton
     end)
 
-    column:SetOnRender(function (frame, playerData)
+    column:SetOnRender(function (likeButton, playerData)
         local myName = UnitName("player")
         if (addon.profile.last_run_id ~= playerData.runId or myName == playerData.name or (playerData.likedBy and playerData.likedBy[myName]) or not addon.Compress.HasLastRun()) then
-            frame.OnClick = nil
-            frame:Hide()
-
-            return
+            likeButton.OnClick = nil
+            likeButton:Hide()
+            if not likeButtonDebug then
+                return
+            end
         end
 
-        frame.OnClick = function()
+        likeButton.OnClick = function()
             addon.LikePlayer(playerData.name)
-            frame:Hide()
+            likeButton.OnClickAnimation:Play()
+            --likeButton:Hide()
         end
-        frame:SetText(L["SCOREBOARD_BUTTON_GG"])
-        frame:Show()
+        likeButton:SetText(L["SCOREBOARD_BUTTON_GG"])
+        likeButton:Show()
+
+        C_Timer.After(1, function()
+            likeButton.ShinnyBarAnimation:Play()
+        end)
     end)
 
     addon.RegisterScoreboardColumn(column)
@@ -368,14 +541,14 @@ do -- keystone
         keystoneDungeonIcon.DungeonBorderTexture = keystoneDungeonBorderTexture
 
         local keystoneDungeonLevelFontstring = line:CreateFontString("$parentDungeonLevelFontstring", "overlay", "GameFontNormal")
-        keystoneDungeonLevelFontstring:SetPoint("bottom", keystoneDungeonIcon, "bottom", 0, -2)
-        DetailsFramework:SetFontSize(keystoneDungeonLevelFontstring, 15)
+        keystoneDungeonLevelFontstring:SetPoint("bottom", keystoneDungeonIcon, "bottom", 0, -1)
+        DetailsFramework:SetFontSize(keystoneDungeonLevelFontstring, 12)
         keystoneDungeonIcon.KeystoneDungeonLevel = keystoneDungeonLevelFontstring
 
         local keystoneDungeonLevelBackgroundTexture = line:CreateTexture("$parentDungeonLevelBackgroundTexture", "artwork", nil, 6)
         keystoneDungeonLevelBackgroundTexture:SetTexture([[Interface\Cooldown\LoC-ShadowBG]])
-        keystoneDungeonLevelBackgroundTexture:SetPoint("bottomleft", keystoneDungeonIcon, "bottomleft", -10, -2)
-        keystoneDungeonLevelBackgroundTexture:SetPoint("bottomright", keystoneDungeonIcon, "bottomright", 10, -15)
+        keystoneDungeonLevelBackgroundTexture:SetPoint("bottomleft", keystoneDungeonIcon, "bottomleft", -5, -1)
+        keystoneDungeonLevelBackgroundTexture:SetPoint("bottomright", keystoneDungeonIcon, "bottomright", 5, -1)
         keystoneDungeonLevelBackgroundTexture:SetHeight(12)
         keystoneDungeonIcon.KeystoneDungeonLevelBackground = keystoneDungeonLevelBackgroundTexture
 
@@ -411,8 +584,10 @@ do -- keystone
 
             if (tonumber(playerData.keystoneLevel) == 0) then
                 keystoneLevel:SetText("")
+                frame.KeystoneDungeonLevelBackground:Hide()
             else
                 keystoneLevel:SetText(playerData.keystoneLevel)
+                frame.KeystoneDungeonLevelBackground:Show()
             end
 
             --the scoreboard open after the local player open the loot cache.

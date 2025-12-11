@@ -5,6 +5,7 @@ local pairs, tostring, math_floor, setmetatable, rawget
 	= pairs, tostring, math.floor, setmetatable, rawget;
 
 -- Get Current Expansion Number by in-game API.
+-- This returns 0 on initial load of the game client prior to the player entering the world
 app.CURRENT_EXPANSION = GetServerExpansionLevel() + 1
 
 local function GetExpansionName(expansionID)

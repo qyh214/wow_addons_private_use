@@ -369,7 +369,7 @@ end
 function Details:ToolTipDead(instance, deathTable, barFrame)
 	local gameCooltip = GameCooltip
 
-	local builtTooltip = Details.ShowDeathTooltipFunction(instance, barFrame, instance:GetShowingCombat(), deathTable)
+	local builtTooltip = Details.ShowDeathTooltipFunction(instance, barFrame, instance:GetCombat(), deathTable)
 	if (builtTooltip) then
 		local myPoint = Details.tooltip.anchor_point
 		local anchorPoint = Details.tooltip.anchor_relative
@@ -656,7 +656,7 @@ function atributo_misc:UpdateDeathRow(deathTable, whichRowLine, rankPosition, in
 	if (instanceObject.row_info.use_spec_icons) then
 		local nome = deathTable[3]
 		local spec = instanceObject.showing(1, nome) and instanceObject.showing(1, nome).spec or(instanceObject.showing(2, nome) and instanceObject.showing(2, nome).spec)
-		if (spec and spec ~= 0) then
+		if (spec and spec ~= 0 and Details.class_specs_coords[spec]) then
 			thisRow.icone_classe:SetTexture(instanceObject.row_info.spec_file)
 			thisRow.icone_classe:SetTexCoord(unpack(Details.class_specs_coords[spec]))
 		else
@@ -701,7 +701,9 @@ function atributo_misc:RefreshWindow(instance, combatObject, bIsForceRefresh, bI
 	instance.top = 0
 
 	--the main attribute is utility, the sub attribute is the type of utility(cc break, ress, etc)
-	local subAttribute = instance.sub_atributo
+	local subAttribute = Details222.OverrideSubAttributeOnNextRefresh or instance.sub_atributo
+	Details222.OverrideSubAttributeOnNextRefresh = nil
+
 	local conteudo = utilityActorContainer._ActorTable
 	local amount = #conteudo
 	local modo = instance.modo
@@ -1011,9 +1013,23 @@ function atributo_misc:RefreshLine(instancia, barras_container, whichRowLine, lu
 					end
 
 					if (amountOfInterruptsCasted > 0) then
-						meu_total = meu_total .. " (" .. tostring(amountOfInterruptsCasted) .. ")"
+						meu_total = meu_total .. " / " .. tostring(amountOfInterruptsCasted) .. ""
 					end
 				end
+			end
+		end
+	end
+
+	instancia.show_interrupt_overlaps = true
+
+	if (instancia.show_interrupt_overlaps) then
+		if (sub_atributo == DETAILS_SUBATTRIBUTE_INTERRUPT) then --interrupts
+			--get the amount of overlaps for this actor
+			local overlapsAmount = self.interrupt_cast_overlap
+			if (overlapsAmount and overlapsAmount > 0) then
+				meu_total = meu_total .. " / " .. tostring(overlapsAmount) .. ""
+			else
+				meu_total = meu_total .. " / 0"
 			end
 		end
 	end
@@ -1170,6 +1186,7 @@ local barAlha = .6
 
 function atributo_misc:ToolTipDead(instancia, numero, barra)
 	--is this even called?
+	do return end
 	local last_dead = self.dead_log [#self.dead_log]
 	Details:Msg("utility class called ToolTipDead, a deprecated function.")
 end
@@ -1230,7 +1247,7 @@ function atributo_misc:ToolTipCC(instancia, numero, barra)
 	return true
 end
 
-function atributo_misc:ToolTipDispell(instancia, numero, barra)
+function atributo_misc:ToolTipDispell(instance, numero, barra)
 	local owner = self.owner
 	if (owner and owner.classe) then
 		r, g, b = unpack(Details.class_colors[owner.classe])
@@ -1240,6 +1257,7 @@ function atributo_misc:ToolTipDispell(instancia, numero, barra)
 
 	local totalDispels = math.floor(self["dispell"])
 	local habilidades = self.dispell_spells._ActorTable
+	local combatObject = instance:GetCombat()
 
 	--habilidade usada para dispelar
 	local spellsUsedToDispel = {}
@@ -1321,7 +1339,7 @@ function atributo_misc:ToolTipDispell(instancia, numero, barra)
 		GameCooltip:AddLine(alvos_dispelados[i][1], Details:comma_value(alvos_dispelados[i][2]) .." (".._cstr("%.1f", alvos_dispelados[i][3]).."%)")
 		Details:AddTooltipBackgroundStatusbar()
 
-		local targetActor = instancia.showing[4]:PegarCombatente(_, alvos_dispelados[i][1])
+		local targetActor = combatObject[4]:PegarCombatente(_, alvos_dispelados[i][1])
 
 		if (targetActor) then
 			local classe = targetActor.classe
@@ -1349,7 +1367,7 @@ function atributo_misc:ToolTipDispell(instancia, numero, barra)
 			if (not quantidade [nome]) then
 				quantidade [nome] = 1
 
-				local my_self = instancia.showing[class_type]:PegarCombatente(nil, nome)
+				local my_self = combatObject[class_type]:PegarCombatente(nil, nome)
 				if (my_self and my_self.dispell) then
 					totais [#totais+1] = {nome, my_self.dispell}
 				end
@@ -1815,7 +1833,7 @@ local Sort2Reverse = function(a, b)
 	return a[2] < b[2]
 end
 
-function atributo_misc:ToolTipDebuffUptime(instancia, numero, barra)
+function atributo_misc:ToolTipDebuffUptime(instance, numero, barra)
 
 	local owner = self.owner
 	if (owner and owner.classe) then
@@ -1826,11 +1844,12 @@ function atributo_misc:ToolTipDebuffUptime(instancia, numero, barra)
 
 	local meu_total = self ["debuff_uptime"]
 	local minha_tabela = self.debuff_uptime_spells._ActorTable
+	local combatObject = instance:GetCombat()
 
 --habilidade usada para interromper
 	local debuffs_usados = {}
 
-	local _combat_time = instancia.showing:GetCombatTime()
+	local _combat_time = combatObject:GetCombatTime()
 
 	for _spellid, _tabela in pairs(minha_tabela) do
 		if (_tabela.uptime and _tabela.uptime > 0) then
@@ -1967,7 +1986,7 @@ function atributo_misc:ToolTipBuffUptime(instance, barFrame)
 	return true
 end
 
-function atributo_misc:ToolTipDefensiveCooldowns(instancia, numero, barra)
+function atributo_misc:ToolTipDefensiveCooldowns(instance, numero, barra)
 
 	local owner = self.owner
 	if (owner and owner.classe) then
@@ -1978,6 +1997,7 @@ function atributo_misc:ToolTipDefensiveCooldowns(instancia, numero, barra)
 
 	local meu_total = _math_floor(self ["cooldowns_defensive"])
 	local minha_tabela = self.cooldowns_defensive_spells._ActorTable
+	local combatObject = instance:GetCombat()
 
 --spells
 	local cooldowns_usados = {}
@@ -2025,7 +2045,7 @@ function atributo_misc:ToolTipDefensiveCooldowns(instancia, numero, barra)
 
 			GameCooltip:AddIcon("Interface\\Icons\\PALADIN_HOLY", nil, nil, icon_size.W, icon_size.H, icon_border.L, icon_border.R, icon_border.T, icon_border.B)
 
-			local targetActor = instancia.showing[4]:PegarCombatente(_, alvos[i][1])
+			local targetActor = combatObject[4]:PegarCombatente(_, alvos[i][1])
 			if (targetActor) then
 				local classe = targetActor.classe
 				if (not classe) then
@@ -2051,7 +2071,7 @@ function atributo_misc:ToolTipDefensiveCooldowns(instancia, numero, barra)
 
 end
 
-function atributo_misc:ToolTipRess(instancia, numero, barra)
+function atributo_misc:ToolTipRess(instance, numero, barra)
 
 	local owner = self.owner
 	if (owner and owner.classe) then
@@ -2060,6 +2080,8 @@ function atributo_misc:ToolTipRess(instancia, numero, barra)
 		r, g, b = unpack(Details.class_colors [self.classe])
 	end
 
+	---@type combat
+	local combatObject = instance:GetCombat()
 	local meu_total = self ["ress"]
 	local minha_tabela = self.ress_spells._ActorTable
 	local lineHeight = Details.tooltip.line_height
@@ -2105,7 +2127,7 @@ function atributo_misc:ToolTipRess(instancia, numero, barra)
 			GameCooltip:AddLine(alvos[i][1], alvos[i][2])
 			Details:AddTooltipBackgroundStatusbar()
 
-			local targetActor = instancia.showing[4]:PegarCombatente(_, alvos[i][1])
+			local targetActor = combatObject[4]:PegarCombatente(_, alvos[i][1])
 			if (targetActor) then
 				local classe = targetActor.classe
 				if (not classe) then
@@ -2131,8 +2153,7 @@ function atributo_misc:ToolTipRess(instancia, numero, barra)
 
 end
 
-function atributo_misc:ToolTipInterrupt(instancia, numero, barra)
-
+function atributo_misc:ToolTipInterrupt(instance, numero, barra)
 	local owner = self.owner
 	if (owner and owner.classe) then
 		r, g, b = unpack(Details.class_colors [owner.classe])
@@ -2142,6 +2163,9 @@ function atributo_misc:ToolTipInterrupt(instancia, numero, barra)
 
 	local meu_total = self ["interrupt"]
 	local minha_tabela = self.interrupt_spells._ActorTable
+
+	---@type combat
+	local combatObject = instance:GetCombat()
 
 	local icon_size = Details.tooltip.icon_size
 	local icon_border = Details.tooltip.icon_border_texcoord
@@ -2169,6 +2193,34 @@ function atributo_misc:ToolTipInterrupt(instancia, numero, barra)
 	else
 		GameTooltip:AddLine(Loc ["STRING_NO_SPELL"])
 	end
+
+	local amountOfInterruptsCasted = 0
+	if (LIB_OPEN_RAID_SPELL_INTERRUPT_BYCLASS) then
+		---@type table<spellname, table>
+		local classInterrupts = LIB_OPEN_RAID_SPELL_INTERRUPT_BYCLASS[self.classe]
+		if (classInterrupts) then
+			---@type table<spellname, number> number is the amount of casts
+			local spellCasts = combatObject.amountCasts[self.nome]
+			--iterating between the spells that are interrupts for this class
+			for spellNameOrId in pairs(classInterrupts) do
+				--if the actor casted this spell
+				if (spellCasts[spellNameOrId]) then
+					amountOfInterruptsCasted = amountOfInterruptsCasted + spellCasts[spellNameOrId]
+				end
+			end
+		end
+	end
+
+	local interruptAmount = combatObject:GetInterruptCastAmount(self.nome)
+	GameCooltip:AddLine("Total Interrupt Cast", interruptAmount)
+	GameCooltip:AddIcon("", nil, nil, icon_size.W, icon_size.H, icon_border.L, icon_border.R, icon_border.T, icon_border.B)
+	Details:AddTooltipBackgroundStatusbar()
+
+	local overlapsAmount = self.interrupt_cast_overlap or 0
+	GameCooltip:AddLine("Overlaps", overlapsAmount .. " (" .. _cstr("%.1f", floor(overlapsAmount)/floor(amountOfInterruptsCasted)*100).."%)")
+	GameCooltip:AddIcon("", nil, nil, icon_size.W, icon_size.H, icon_border.L, icon_border.R, icon_border.T, icon_border.B)
+	Details:AddTooltipBackgroundStatusbar()
+
 
 --quais habilidades foram interrompidas
 	local interruptedSpells = {}
@@ -2204,7 +2256,7 @@ function atributo_misc:ToolTipInterrupt(instancia, numero, barra)
 			if (not quantidade [nome]) then
 				quantidade [nome] = 1
 
-				local my_self = instancia.showing[class_type]:PegarCombatente(nil, nome)
+				local my_self = combatObject[class_type]:PegarCombatente(nil, nome)
 				if (my_self and my_self.interrupt) then
 					totais [#totais+1] = {nome, my_self.interrupt}
 				end
@@ -2235,7 +2287,7 @@ function atributo_misc:ToolTipInterrupt(instancia, numero, barra)
 				end
 
 				local n = _table [1]:gsub(("%s%<.*"), "")
-				GameCooltip:AddLine(n, _table [2] .. " (" .. _math_floor(_table [2]/self.interrupt*100) .. "%)")
+				GameCooltip:AddLine(n, floor(_table [2]) .. " (" .. _math_floor(_table [2]/self.interrupt*100) .. "%)")
 				Details:AddTooltipBackgroundStatusbar()
 				GameCooltip:AddIcon([[Interface\AddOns\Details\images\classes_small]], 1, 1, 14, 14, 0.25, 0.49609375, 0.75, 1)
 			end
@@ -2838,10 +2890,14 @@ function atributo_misc:r_connect_shadow(actor, no_refresh, combat_object)
 	if (actor.interrupt) then
 		if (not shadow.interrupt_targets) then
 			shadow.interrupt = 0
+			shadow.interrupt_cast_overlap = 0
 			shadow.interrupt_targets = {}
 			shadow.interrupt_spells = container_habilidades:NovoContainer(Details.container_type.CONTAINER_MISC_CLASS) --cria o container das habilidades usadas para interromper
 			shadow.interrompeu_oque = {}
 		end
+
+		shadow.interrupt_cast_overlap = shadow.interrupt_cast_overlap or 0
+		shadow.interrupt_cast_overlap = shadow.interrupt_cast_overlap + (actor.interrupt_cast_overlap or 0)
 
 		shadow.interrupt = shadow.interrupt + actor.interrupt
 		host_combat.totals[4].interrupt = host_combat.totals[4].interrupt + actor.interrupt
@@ -3132,6 +3188,7 @@ atributo_misc.__add = function(tabela1, tabela2)
 	if (tabela2.interrupt) then
 		if (not tabela1.interrupt) then
 			tabela1.interrupt = 0
+			tabela1.interrupt_cast_overlap = 0
 			tabela1.interrupt_targets = {}
 			tabela1.interrupt_spells = container_habilidades:NovoContainer(container_misc)
 			tabela1.interrompeu_oque = {}
@@ -3139,6 +3196,8 @@ atributo_misc.__add = function(tabela1, tabela2)
 
 		--total de interrupts
 			tabela1.interrupt = tabela1.interrupt + tabela2.interrupt
+			tabela1.interrupt_cast_overlap = tabela1.interrupt_cast_overlap or 0
+			tabela1.interrupt_cast_overlap = tabela1.interrupt_cast_overlap + (tabela2.interrupt_cast_overlap or 0)
 
 		--soma o interrompeu o que
 			for spellid, amount in pairs(tabela2.interrompeu_oque) do
@@ -3416,6 +3475,7 @@ atributo_misc.__sub = function(tabela1, tabela2)
 	if (tabela2.interrupt) then
 		--total de interrupts
 			tabela1.interrupt = tabela1.interrupt - tabela2.interrupt
+			tabela1.interrupt_cast_overlap = tabela1.interrupt_cast_overlap - tabela2.interrupt_cast_overlap
 
 		--soma o interrompeu o que
 			for spellid, amount in pairs(tabela2.interrompeu_oque) do

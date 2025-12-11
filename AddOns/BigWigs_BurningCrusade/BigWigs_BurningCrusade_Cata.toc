@@ -1,4 +1,4 @@
-## Interface: 40402, 40401
+## Interface: 40402
 
 ## Title: BigWigs [|cffeda55fBurning Crusade|r]
 ## Title-zhCN: BigWigs [|cffeda55f燃烧的远征|r]
@@ -25,7 +25,7 @@
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
-## Version: v11.1.4
+## Version: v11.2.0
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_legacy.tga
 
 ## X-Category: Raid

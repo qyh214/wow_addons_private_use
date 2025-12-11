@@ -18,55 +18,60 @@ OnTooltipShow = function(tooltip)
   tooltip:AddLine(L["Shift + Right-click => hide"] .. " " .. "|cffffff00" .. L["-> MiniMapButton <-"],1,1,1)
   tooltip:AddLine(L["Middle-Mouse-Button => Open/Close"] .. " " .. "|cff00ccff" .. "-> " .. WORLDMAP_BUTTON .." <-",1,1,1)
 
-      ---- Zone without Sync function
-      if not ns.Addon.db.profile.activate.SyncZoneAndMinimap and not 
-        (GetBestMapForUnit == 85 or GetBestMapForUnit == 88 or GetBestMapForUnit == 998 or GetBestMapForUnit == 110
-        or GetBestMapForUnit == 103 or GetBestMapForUnit == 89 or GetBestMapForUnit == 84 or GetBestMapForUnit == 87
-        or GetBestMapForUnit == 111 or GetBestMapForUnit == 86 or GetBestMapForUnit == 125 or GetBestMapForUnit == 126 
-        or GetBestMapForUnit == 391 or GetBestMapForUnit  == 392 or GetBestMapForUnit  == 393 or GetBestMapForUnit  == 394 
-        or GetBestMapForUnit  == 407)
-      then
-        tooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
-        tooltip:Show()
-    end
+  ---- Zone without Sync function
+  if not ns.Addon.db.profile.activate.SyncZoneAndMinimap and not 
+    (GetBestMapForUnit == 85 or GetBestMapForUnit == 88 or GetBestMapForUnit == 998 or GetBestMapForUnit == 110
+    or GetBestMapForUnit == 103 or GetBestMapForUnit == 89 or GetBestMapForUnit == 84 or GetBestMapForUnit == 87
+    or GetBestMapForUnit == 111 or GetBestMapForUnit == 86 or GetBestMapForUnit == 125 or GetBestMapForUnit == 126 
+    or GetBestMapForUnit == 391 or GetBestMapForUnit  == 392 or GetBestMapForUnit  == 393 or GetBestMapForUnit  == 394 
+    or GetBestMapForUnit  == 407)
+  then
+    tooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+    tooltip:Show()
+  end
 
-    -- Zone Sync function
-    if ns.Addon.db.profile.activate.SyncZoneAndMinimap and not
-      (GetBestMapForUnit == 85 or GetBestMapForUnit == 88 or GetBestMapForUnit == 998 or GetBestMapForUnit == 110
-      or GetBestMapForUnit == 103 or GetBestMapForUnit == 89 or GetBestMapForUnit == 84 or GetBestMapForUnit == 87
-      or GetBestMapForUnit == 111 or GetBestMapForUnit == 86 or GetBestMapForUnit == 125 or GetBestMapForUnit == 126 
-      or GetBestMapForUnit == 391 or GetBestMapForUnit  == 392 or GetBestMapForUnit  == 393 or GetBestMapForUnit  == 394 
-      or GetBestMapForUnit  == 407)  
-    then
-      tooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
-      tooltip:Show()
-    end
+  -- Zone Sync function
+  if ns.Addon.db.profile.activate.SyncZoneAndMinimap and not
+    (GetBestMapForUnit == 85 or GetBestMapForUnit == 88 or GetBestMapForUnit == 998 or GetBestMapForUnit == 110
+    or GetBestMapForUnit == 103 or GetBestMapForUnit == 89 or GetBestMapForUnit == 84 or GetBestMapForUnit == 87
+    or GetBestMapForUnit == 111 or GetBestMapForUnit == 86 or GetBestMapForUnit == 125 or GetBestMapForUnit == 126 
+    or GetBestMapForUnit == 391 or GetBestMapForUnit  == 392 or GetBestMapForUnit  == 393 or GetBestMapForUnit  == 394 
+    or GetBestMapForUnit  == 407)  
+  then
+    tooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+    tooltip:Show()
+  end
 
-      -- Capital without Synch function
-      if not ns.Addon.db.profile.activate.SyncCapitalsAndMinimap and
-        (GetBestMapForUnit == 85 or GetBestMapForUnit == 88 or GetBestMapForUnit == 998 or GetBestMapForUnit == 110
-        or GetBestMapForUnit == 103 or GetBestMapForUnit == 89 or GetBestMapForUnit == 84 or GetBestMapForUnit == 87
-        or GetBestMapForUnit == 111 or GetBestMapForUnit == 86 or GetBestMapForUnit == 125 or GetBestMapForUnit == 126 
-        or GetBestMapForUnit == 391 or GetBestMapForUnit  == 392 or GetBestMapForUnit  == 393 or GetBestMapForUnit  == 394 
-        or GetBestMapForUnit  == 407)
-      then
-        tooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Capitals"] .. " " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
-        tooltip:Show()
-      end
+  -- Capital without Synch function
+  if not ns.Addon.db.profile.activate.SyncCapitalsAndMinimap and
+    (GetBestMapForUnit == 85 or GetBestMapForUnit == 88 or GetBestMapForUnit == 998 or GetBestMapForUnit == 110
+    or GetBestMapForUnit == 103 or GetBestMapForUnit == 89 or GetBestMapForUnit == 84 or GetBestMapForUnit == 87
+    or GetBestMapForUnit == 111 or GetBestMapForUnit == 86 or GetBestMapForUnit == 125 or GetBestMapForUnit == 126 
+    or GetBestMapForUnit == 391 or GetBestMapForUnit  == 392 or GetBestMapForUnit  == 393 or GetBestMapForUnit  == 394 
+    or GetBestMapForUnit  == 407)
+  then
+    tooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Capitals"] .. " " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+    tooltip:Show()
+  end
 
-    -- Capital Synch function
-    if ns.Addon.db.profile.activate.SyncCapitalsAndMinimap and
-      (GetBestMapForUnit == 85 or GetBestMapForUnit == 88 or GetBestMapForUnit == 998 or GetBestMapForUnit == 110
-      or GetBestMapForUnit == 103 or GetBestMapForUnit == 89 or GetBestMapForUnit == 84 or GetBestMapForUnit == 87
-      or GetBestMapForUnit == 111 or GetBestMapForUnit == 86 or GetBestMapForUnit == 125 or GetBestMapForUnit == 126 
-      or GetBestMapForUnit == 391 or GetBestMapForUnit  == 392 or GetBestMapForUnit  == 393 or GetBestMapForUnit  == 394 
-      or GetBestMapForUnit  == 407) 
-    then
-      tooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Capitals"] .. " & " .. L["Capitals"] .. " " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
-      tooltip:Show()
-    end
+  -- Capital Synch function
+  if ns.Addon.db.profile.activate.SyncCapitalsAndMinimap and
+    (GetBestMapForUnit == 85 or GetBestMapForUnit == 88 or GetBestMapForUnit == 998 or GetBestMapForUnit == 110
+    or GetBestMapForUnit == 103 or GetBestMapForUnit == 89 or GetBestMapForUnit == 84 or GetBestMapForUnit == 87
+    or GetBestMapForUnit == 111 or GetBestMapForUnit == 86 or GetBestMapForUnit == 125 or GetBestMapForUnit == 126 
+    or GetBestMapForUnit == 391 or GetBestMapForUnit  == 392 or GetBestMapForUnit  == 393 or GetBestMapForUnit  == 394 
+    or GetBestMapForUnit  == 407) 
+  then
+    tooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Capitals"] .. " & " .. L["Capitals"] .. " " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+    tooltip:Show()
+  end
 
-  end,
+  ns._suppressAreaMapMirror = true
+  ns.Addon:FullUpdate()
+  HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
+  C_Timer.After(0, function() ns._suppressAreaMapMirror = nil end)
+end,
+
 OnClick = function(self, button)
   local GetBestMapForUnit = C_Map.GetBestMapForUnit("player")
   
@@ -167,6 +172,8 @@ OnClick = function(self, button)
     end
   end
 
+  ns._suppressAreaMapMirror = true
   ns.Addon:FullUpdate()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
+  C_Timer.After(0, function() ns._suppressAreaMapMirror = nil end)
 end }

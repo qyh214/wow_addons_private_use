@@ -5,6 +5,17 @@ local L = AF.L
 local format = string.format
 local date, time = date, time
 
+-- _G.CALENDAR_WEEKDAY_NAMES
+local weekdays = {
+    _G.WEEKDAY_SUNDAY, _G.WEEKDAY_MONDAY, _G.WEEKDAY_TUESDAY, _G.WEEKDAY_WEDNESDAY, _G.WEEKDAY_THURSDAY, _G.WEEKDAY_FRIDAY, _G.WEEKDAY_SATURDAY
+}
+
+-- _G.CALENDAR_FULLDATE_MONTH_NAMES
+local months = {
+    _G.MONTH_JANUARY, _G.MONTH_FEBRUARY, _G.MONTH_MARCH, _G.MONTH_APRIL, _G.MONTH_MAY, _G.MONTH_JUNE,
+    _G.MONTH_JULY, _G.MONTH_AUGUST, _G.MONTH_SEPTEMBER, _G.MONTH_OCTOBER, _G.MONTH_NOVEMBER, _G.MONTH_DECEMBER
+}
+
 ---------------------------------------------------------------------
 -- date & time
 ---------------------------------------------------------------------
@@ -33,6 +44,33 @@ function AF.GetDateSeconds(dateStr)
     local year, month, day = dateStr:match("(%d%d%d%d)(%d%d)(%d%d)")
     if not (year and month and day) then return end
     return time({year = year, month = month, day = day, hour = 0, min = 0, sec = 0})
+end
+
+---@param sec number?
+---@return table dateTable date("*t") with localized weekdayName and monthName
+function AF.GetDateTable(sec)
+    local t = date("*t", sec)
+    t.weekdayName = weekdays[t.wday]
+    t.monthName = months[t.month]
+    return t
+end
+
+---@param asRemaining boolean if true, return seconds remaining until next day 00:00:00, else return the timestamp of next day 00:00:00
+---@return number seconds
+function AF.GetNextDaySeconds(asRemaining)
+    local now = time()
+
+    local tomorrow = date("*t", now)
+    tomorrow.day = tomorrow.day + 1
+    tomorrow.hour = 0
+    tomorrow.min = 0
+    tomorrow.sec = 0
+
+    if asRemaining then
+        return time(tomorrow) - now
+    else
+        return time(tomorrow)
+    end
 end
 
 ---@param sec number

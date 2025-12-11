@@ -2,8 +2,8 @@
 local appName, app = ...;
 
 -- Global locals
-local pairs, ipairs, tinsert, math_floor, tonumber, pi, MODELFRAME_DEFAULT_ROTATION
-	= pairs, ipairs, tinsert, math.floor, tonumber, math.pi, MODELFRAME_DEFAULT_ROTATION;
+local pairs, ipairs, math_floor, tonumber, pi, MODELFRAME_DEFAULT_ROTATION
+	= pairs, ipairs, math.floor, tonumber, math.pi, MODELFRAME_DEFAULT_ROTATION;
 ---@class ATTGameTooltip: GameTooltip
 local GameTooltip = GameTooltip;
 
@@ -72,13 +72,7 @@ for i=1,MAX_CREATURES_PER_ENCOUNTER do
 		model:SetDepth(i);
 	end
 	model:Hide();
-	tinsert(Models, model);
-end
-local function HideAllModels()
-	for _,m in ipairs(Models) do
-		m:Hide();
-	end
-	GameTooltipModelModel:Hide();
+	Models[#Models + 1] = model
 end
 local function CalculateModelRotation(number)
 	return number and ((number * pi) / 180) or MODELFRAME_DEFAULT_ROTATION;
@@ -259,12 +253,18 @@ ModelAssignmentFunctions.Add(TrySetSourceID)
 ModelAssignmentFunctions.Add(TrySetUnit)
 ModelAssignmentFunctions.Add(TrySetAtlas)
 
+local function HideAllModels()
+	for i=1,#Models do
+		Models[i]:Hide();
+	end
+	GameTooltipModelModel:Hide();
+end
 local function TrySetModel(reference)
 	HideAllModels();
 	if not app.Settings:GetTooltipSetting("Models") then return end
 
-	for _,tryset in ipairs(ModelAssignmentFunctions) do
-		if tryset(reference) then return true end
+	for i=1,#ModelAssignmentFunctions do
+		if ModelAssignmentFunctions[i](reference) then return true end
 	end
 end
 GameTooltipModel:Hide();

@@ -13,14 +13,14 @@ local tinsert, tremove, tsort, tconcat = table.insert, table.remove, table.sort,
 ---@return number
 function AF.Getn(t)
     local count = 0
-    for k, v in pairs(t) do
+    for k, v in next, t do
         count = count + 1
     end
     return count
 end
 
 function AF.GetIndex(t, e)
-    for i, v in pairs(t) do
+    for i, v in next, t do
         if e == v then
             return i
         end
@@ -30,7 +30,7 @@ end
 
 function AF.GetKeys(t)
     local keys = {}
-    for k in pairs(t) do
+    for k in next, t do
         tinsert(keys, k)
     end
     return keys
@@ -41,7 +41,7 @@ end
 ---@return any? maxValue value of maxKey
 function AF.GetMaxKeyValue(t)
     local maxKey = nil
-    for k in pairs(t) do
+    for k in next, t do
         local kn = tonumber(k)
         if not maxKey or (kn and kn > tonumber(maxKey)) then
             maxKey = k
@@ -59,7 +59,7 @@ function AF.Copy(...)
     local newTbl = {}
     for i = 1, select("#", ...) do
         local t = select(i, ...)
-        for k, v in pairs(t) do
+        for k, v in next, t do
             if type(v) == "table" then
                 newTbl[k] = AF.Copy(v)
             else
@@ -71,10 +71,24 @@ function AF.Copy(...)
 end
 
 function AF.Contains(t, v)
-    for _, value in pairs(t) do
+    for _, value in next, t do
         if value == v then return true end
     end
     return false
+end
+
+function AF.IndexOf(t, v)
+    for i, value in next, t do
+        if value == v then return i end
+    end
+    return nil
+end
+
+function AF.LastIndexOf(t, v)
+    for i = #t, 1, -1 do
+        if t[i] == v then return i end
+    end
+    return nil
 end
 
 -- insert into the first empty slot
@@ -89,6 +103,9 @@ function AF.Insert(t, v)
     until done
 end
 
+-- remove all occurrences of a value from a table
+---@param t table
+---@param v any the value to remove
 function AF.Remove(t, v)
     for i = #t, 1, -1 do
         if t[i] == v then
@@ -103,11 +120,65 @@ end
 function AF.Merge(t, ...)
     for i = 1, select("#", ...) do
         local _t = select(i, ...)
-        for k, v in pairs(_t) do
+        for k, v in next, _t do
             if type(v) == "table" then
                 t[k] = AF.Copy(v)
             else
                 t[k] = v
+            end
+        end
+    end
+end
+
+-- merge into the first table, but only if the key already exists
+---@param t table
+---@param ... table
+function AF.MergeExistingKeys(t, ...)
+    for i = 1, select("#", ...) do
+        local _t = select(i, ...)
+        for k, v in next, _t do
+            if type(t[k]) ~= "nil" then
+                if type(v) == "table" then
+                    t[k] = AF.Copy(v)
+                else
+                    t[k] = v
+                end
+            end
+        end
+    end
+end
+
+-- for plain tables only
+---@param t table
+---@param ... table
+function AF.InsertAll(t, ...)
+    for i = 1, select("#", ...) do
+        local _t = select(i, ...)
+        for _, v in next, _t do
+            tinsert(t, v)
+        end
+    end
+end
+
+-- for plain tables only
+---@param t table
+---@param ... any simple values or tables
+function AF.InsertIfNotExists(t, ...)
+    local exists = AF.TransposeTable(t, true)
+
+    for i = 1, select("#", ...) do
+        local v = select(i, ...)
+        if type(v) == "table" then
+            for _, vv in ipairs(v) do
+                if not exists[vv] then
+                    tinsert(t, vv)
+                    exists[vv] = true
+                end
+            end
+        else
+            if not exists[v] then
+                tinsert(t, v)
+                exists[v] = true
             end
         end
     end
@@ -132,7 +203,7 @@ function AF.RemoveElementsExceptKeys(tbl, ...)
         keys[k] = true
     end
 
-    for k in pairs(tbl) do
+    for k in next, tbl do
         if not keys[k] then
             tbl[k] = nil
         end
@@ -146,13 +217,31 @@ function AF.RemoveElementsByKeys(tbl, ...)
     end
 end
 
+function AF.MoveElementToEnd(t, index)
+    if not index or index < 1 or index > #t then
+        return
+    end
+
+    local element = tremove(t, index)
+    tinsert(t, element)
+end
+
+function AF.MoveElementToIndex(t, fromIndex, toIndex)
+    if not fromIndex or not toIndex or fromIndex < 1 or fromIndex > #t or toIndex < 1 or toIndex > #t then
+        return
+    end
+
+    local element = tremove(t, fromIndex)
+    tinsert(t, toIndex, element)
+end
+
 -- transposes a table, swapping its keys and values
 ---@param t table the table to transpose
 ---@param value? any the value to assign to the transposed keys
 ---@return table
 function AF.TransposeTable(t, value)
     local temp = {}
-    for k, v in ipairs(t) do
+    for k, v in next, t do
         temp[v] = value or k
     end
     return temp
@@ -162,7 +251,7 @@ end
 ---@return table temp a new table with the keys and values swapped
 function AF.SwapKeyValue(t)
     local temp = {}
-    for k, v in pairs(t) do
+    for k, v in next, t do
         temp[v] = k
     end
     return temp
@@ -173,9 +262,12 @@ end
 ---@param processor fun(key: any, value: any): (any, any) the processor function that takes a key and value and returns a new key and value
 function AF.ConvertTable(t, processor)
     local temp = {}
-    for k, v in ipairs(t) do
-        local newKey, newValue = processor(k, v)
-        temp[newKey] = newValue
+    local newKey, newValue
+    for k, v in next, t do
+        newKey, newValue = processor(k, v)
+        if newKey and newValue then
+            temp[newKey] = newValue
+        end
     end
     return temp
 end
@@ -185,7 +277,7 @@ end
 ---@return table temp a new table containing the values of the specified key from each sub-table
 function AF.ExtractSubTableValues(t, key)
     local temp = {}
-    for k, v in pairs(t) do
+    for k, v in next, t do
         if type(v) == "table" and v[key] then
             tinsert(temp, v[key])
         end
@@ -228,7 +320,7 @@ end
 
 local function SortComparator(criteria)
     return function(a, b)
-        for _, criterion in ipairs(criteria) do
+        for _, criterion in next, criteria do
             local result = CompareField(a, b, criterion.key, criterion.order)
             if result ~= nil then
                 return result

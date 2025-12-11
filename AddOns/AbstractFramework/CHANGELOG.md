@@ -1,5 +1,23 @@
-[Full Changelog](https://github.com/enderneko/AbstractWidgets/compare/r11...cb04e525b6bf9e958976510bc06526007f6e7e85)
+[View Full Changelog](https://github.com/enderneko/AbstractWidgets/compare/r15...e4d851b26e01b4144ec9ce22a257ecb47367c235)
 
-- Fix instance state events
-- Fix AceComm
-- Fix aura tooltip anchor
+- Add MoP support
+- Add AF_ScrollEditBoxMixin:SetSpacing
+- Add AF_ScrollFrameMixin:DisableScrollFrameReanchor
+- Add AF_Switch.SetLabel
+- Add AF_TextureMixin:SetTextureOrAtlas
+- Add auto slot height support for AF_ScrollList
+- Add DisableSlotFrameReanchor for AF_ScrollList/Grid
+- Add callback to AF.ResizeToFitText
+- Add GetScrollStep/SetScroll/GetScroll for AF_ScrollFrameMixin
+- Add scrollTo param to AF_ScrollList.SetWidgets/SetData
+- Add skipScrollReset arg to AF_ScrollFrame:SetContentHeight
+- Fix scroll thumb positioning and height logic
+- Refactor AF_EditBox script handlers into local functions
+- Refactor AF_ScrollEditBox script handling
+- Refactor AF_ScrollFrame script handling
+- Refactor label sizing in AF_SwitchMixin
+- Remove labels parameter from AF.CreateSwitch
+- Update enable/disable states for AF_IconButton
+- Update icons
+- Update list slot height handling
+- Update spell rank related functions

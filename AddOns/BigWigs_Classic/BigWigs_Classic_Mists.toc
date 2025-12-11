@@ -1,4 +1,4 @@
-## Interface: 50500
+## Interface: 50502, 50503
 
 ## Title: BigWigs [|cffeda55fClassic|r]
 ## Title-zhCN: BigWigs [|cffeda55f经典旧世|r]
@@ -25,7 +25,7 @@
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
-## Version: v11.1.52
+## Version: v11.2.4
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_legacy.tga
 
 ## X-Category: Raid
@@ -35,7 +35,7 @@
 ## X-WoWI-ID: 22095
 ## X-Wago-ID: rNkPgm6a
 ## X-BigWigs-LoadOn-InstanceId: 409, 469, 509, 531
-## X-BigWigs-Minimum: 381
+## X-BigWigs-Minimum: 401
 
 MoltenCore\modules.xml
 BlackwingLair\modules.xml

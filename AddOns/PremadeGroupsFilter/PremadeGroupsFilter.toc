@@ -1,6 +1,6 @@
-## Interface: 110200
+## Interface: 110205
 ## Title: Premade Groups Filter
-## Version: 6.8.1
+## Version: 6.11.0
 ## IconTexture: 397907
 ## X-Flavor: Retail
 ## Notes: Allows filtering of premade groups using an UI or advanced filter expressions.
@@ -41,7 +41,6 @@ Localization\ruRU.lua
 Localization\esES.lua
 Localization\itIT.lua
 Modules\Logger.lua
-Fixes\FixReportAdvertisement.lua
 UI\StaticPopup.xml
 UI\StaticPopup.lua
 Modules\Util.lua
@@ -67,6 +66,7 @@ Plugins\PremadeRegions.lua
 Plugins\RaiderIO.lua
 Settings\Settings.xml
 Settings\Settings.lua
+UI\TextButtonMixin.lua
 UI\Common.lua
 UI\PopupMenu.xml
 UI\PopupMenu.lua
@@ -76,6 +76,8 @@ UI\Dialog.xml
 UI\Dialog.lua
 UI\DungeonPanel.xml
 UI\DungeonPanel.lua
+UI\DelvePanel.xml
+UI\DelvePanel.lua
 UI\RolePanel.xml
 UI\RolePanel.lua
 UI\ArenaPanel.xml

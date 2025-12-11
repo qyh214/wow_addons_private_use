@@ -7,10 +7,10 @@ local addonName, Details222 = ...
 local detailsFramework = DetailsFramework
 local _
 
-local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
-if (not openRaidLib) then
-    return
-end
+Details222.ArenaSummary = {
+    arenaData = {},
+}
+
 
 --PVPMatchResults.content
 --PVPMatchResults.content.earningsContainer
@@ -21,6 +21,8 @@ end
 --PVPMatchResults.header (fontstring VICTORY or DEFEAT)
 
 ---@class details : table
+---@field zone_type string the type of the current zone, e.g. "arena", "raid", "dungeon", "scenario"
+---@field arena_debug boolean
 ---@field arena_data_headers table
 ---@field arena_data_compressed table
 ---@field arena_data_index_selected number which dataset is showing in the arena scoreboard
@@ -80,10 +82,6 @@ end
 ---@field CreateWindow fun(): frame --creates the arena summary window
 ---@field SetFontSettings fun() --sets the font settings for the arena summary window
 
-Details222.ArenaSummary = {
-    arenaData = {},
-}
-
 local tickerId = 1
 
 local ArenaSummary = Details222.ArenaSummary
@@ -94,11 +92,11 @@ function Details:OpenArenaSummaryWindow()
 end
 
 function ArenaSummary.OpenWindow()
-    if not ArenaSummary.window then
+    if (not ArenaSummary.window) then
         ArenaSummary.window = ArenaSummary.CreateWindow()
     end
 
-    if not ArenaSummary.window:IsShown() then
+    if (not ArenaSummary.window:IsShown()) then
         ArenaSummary.window:Show()
     end
 
@@ -192,8 +190,6 @@ local arenaTicker = function(tickerObject)
         if (currentDPS > playerData.realTimePeakDamage) then
             playerData.realTimePeakDamage = currentDPS
         end
-
-        --print("CurrentDPS:", unitName, currentDPS)
     end
 
     Details222.ArenaSummary.arenaData.dampening = C_Commentator.GetDampeningPercent()
@@ -202,7 +198,9 @@ local arenaTicker = function(tickerObject)
 end
 
 function ArenaSummary.OnArenaStart() --~start
-    print("ARENA STARTED!!", "elapsed time:", "date:", date("%Y-%m-%d %H:%M:%S", time()), time())
+    if (Details.arena_debug) then
+        print("ARENA STARTED!!", "elapsed time:", "date:", date("%Y-%m-%d %H:%M:%S", time()), time())
+    end
 
     local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, LfgDungeonID = GetInstanceInfo()
 
@@ -219,6 +217,10 @@ function ArenaSummary.OnArenaStart() --~start
 
     if (not ArenaSummary.DeathHook) then --~death ~dead ~kill
         local onDeathEvent = function(_, token, time, sourceGUID, sourceName, sourceFlags, targetGUID, targetName, targetFlags, playerDeathTable, lastCooldown, combatElapsedTime, maxHealth)
+            if (Details.zone_type ~= "arena") then
+                return
+            end
+
             --when a death occurs, get the deathTable and examin it to get the player which did the most amount of damage
             --[=[
                 playerDeathTable = {
@@ -241,7 +243,9 @@ function ArenaSummary.OnArenaStart() --~start
                 local event = eventsBeforePlayerDeath[i]
                 local evType, spellId, amount, eventTime, heathPercent, sourceName, absorbed, spellSchool, friendlyFire, overkill, criticalHit, crushing = Details:UnpackDeathEvent(event)
                 if (evType == true) then --is a damage event
-                    damageSum[sourceName] = (damageSum[sourceName] or 0) + amount
+                    if (Details222.ArenaSummary.arenaData.combatData.groupMembers[sourceName]) then
+                        damageSum[sourceName] = (damageSum[sourceName] or 0) + amount
+                    end
                 end
             end
 
@@ -264,7 +268,10 @@ function ArenaSummary.OnArenaStart() --~start
                     damageByPlayers = orderedTable
                 }
                 killingBlows[#killingBlows + 1] = thisKillingBlow
-                print("ADDED a KILL for player", mostDamagePlayer.name, "with damage:", mostDamagePlayer.damage)
+
+                if (Details.arena_debug) then
+                    print("ADDED a KILL for player", mostDamagePlayer.name, "with damage:", mostDamagePlayer.damage)
+                end
             end
         end
 
@@ -358,7 +365,9 @@ function ArenaSummary.OnArenaEnd() --~end
 
     local combat = Details:GetCurrentCombat()
     local combatTime = combat:GetCombatTime()
-    print("ARENA ENDED!!", "elapsed time:", combatTime, "date:", date("%Y-%m-%d %H:%M:%S", time()), "/run Details:OpenArenaSummaryWindow()")
+    if (Details.arena_debug) then
+        print("ARENA ENDED!!", "elapsed time:", combatTime, "date:", date("%Y-%m-%d %H:%M:%S", time()), "/run Details:OpenArenaSummaryWindow()")
+    end
 
     local damageContainer = combat:GetContainer(DETAILS_ATTRIBUTE_DAMAGE)
     for index, actor in damageContainer:ListActors() do
@@ -372,41 +381,47 @@ function ArenaSummary.OnArenaEnd() --~end
 
     local actorContainer = currentCombat:GetContainer(DETAILS_ATTRIBUTE_DAMAGE)
 
+
+
     --player and arena information
 	local teamInfos = {
-		C_PvP.GetTeamInfo(0),
-		C_PvP.GetTeamInfo(1),
+		C_PvP.GetTeamInfo and C_PvP.GetTeamInfo(0) or {},
+		C_PvP.GetTeamInfo and C_PvP.GetTeamInfo(1) or {},
 	}
 
     --dumpt(C_PvP.GetTeamInfo(0))
 
     Details222.ArenaSummary.arenaData.combatData.teamInfos = teamInfos
     Details222.ArenaSummary.arenaData.isArenaSkirmish = IsArenaSkirmish()
-    Details222.ArenaSummary.arenaData.isRatedSoloShuffle = C_PvP.IsRatedSoloShuffle()
-    Details222.ArenaSummary.arenaData.isFactionalMatch = C_PvP.IsMatchFactional()
-    Details222.ArenaSummary.arenaData.isBrawlSoloShuffle = C_PvP.IsBrawlSoloShuffle()
-    Details222.ArenaSummary.arenaData.isBrawlSoloRBG = C_PvP.IsBrawlSoloRBG()
-    Details222.ArenaSummary.arenaData.isSoloShuffle = C_PvP.IsSoloShuffle()
-    Details222.ArenaSummary.arenaData.playerScoreInfo = C_PvP.GetScoreInfoByPlayerGuid(GetPlayerGuid())
-    Details222.ArenaSummary.arenaData.doesMatchOutcomeAffectRating = C_PvP.DoesMatchOutcomeAffectRating()
-    Details222.ArenaSummary.arenaData.statColumns = C_PvP.GetMatchPVPStatColumns()
+    Details222.ArenaSummary.arenaData.isRatedSoloShuffle = C_PvP.IsRatedSoloShuffle and C_PvP.IsRatedSoloShuffle() or false
+    Details222.ArenaSummary.arenaData.isFactionalMatch = C_PvP.IsMatchFactional and C_PvP.IsMatchFactional() or false
+    Details222.ArenaSummary.arenaData.isBrawlSoloShuffle = C_PvP.IsBrawlSoloShuffle and C_PvP.IsBrawlSoloShuffle() or false
+    Details222.ArenaSummary.arenaData.isBrawlSoloRBG = C_PvP.IsBrawlSoloRBG and C_PvP.IsBrawlSoloRBG() or false
+    Details222.ArenaSummary.arenaData.isSoloShuffle = C_PvP.IsSoloShuffle and C_PvP.IsSoloShuffle() or false
+    Details222.ArenaSummary.arenaData.playerScoreInfo = C_PvP.GetScoreInfoByPlayerGuid and C_PvP.GetScoreInfoByPlayerGuid(UnitGUID("player")) or 0
+    Details222.ArenaSummary.arenaData.doesMatchOutcomeAffectRating = C_PvP.DoesMatchOutcomeAffectRating and C_PvP.DoesMatchOutcomeAffectRating() or false
+    Details222.ArenaSummary.arenaData.statColumns = C_PvP.GetMatchPVPStatColumns and C_PvP.GetMatchPVPStatColumns() or {}
 
-    local personalRatedInfo = C_PvP.GetPVPActiveMatchPersonalRatedInfo()
+    local personalRatedInfo = C_PvP.GetPVPActiveMatchPersonalRatedInfo and C_PvP.GetPVPActiveMatchPersonalRatedInfo()
     if (personalRatedInfo) then
         Details222.ArenaSummary.arenaData.playerPersonalRatedInfo = personalRatedInfo
     end
 
     --player rewards
     Details222.ArenaSummary.arenaData.playerRewards = {}
-	for k, item in pairs(C_PvP.GetPostMatchItemRewards()) do
-        ---@cast item pvppostmatchitemreward
-        table.insert(Details222.ArenaSummary.arenaData.playerRewards, item)
-	end
+    if (C_PvP.GetPostMatchItemRewards) then
+        for k, item in pairs(C_PvP.GetPostMatchItemRewards()) do
+            ---@cast item pvppostmatchitemreward
+            table.insert(Details222.ArenaSummary.arenaData.playerRewards, item)
+        end
+    end
 
-	for k, currency in pairs(C_PvP.GetPostMatchCurrencyRewards()) do
-        ---@cast currency pvppostmatchcurrencyreward
-        table.insert(Details222.ArenaSummary.arenaData.playerRewards, currency)
-	end
+    if (C_PvP.GetPostMatchCurrencyRewards) then
+        for k, currency in pairs(C_PvP.GetPostMatchCurrencyRewards()) do
+            ---@cast currency pvppostmatchcurrencyreward
+            table.insert(Details222.ArenaSummary.arenaData.playerRewards, currency)
+        end
+    end
 
     --iterate among the arena players and update their data
     for unitName, playerInfo in pairs(Details222.ArenaSummary.arenaData.combatData.groupMembers) do
@@ -469,7 +484,7 @@ function ArenaSummary.OnArenaEnd() --~end
         if (UnitIsUnit(unitName, "player")) then
             local playerGUID = UnitGUID("player")
             ---@type pvpscoreinfo
-            local localPlayerScoreInfo = C_PvP.GetScoreInfoByPlayerGuid(playerGUID)
+            local localPlayerScoreInfo = C_PvP.GetScoreInfoByPlayerGuid and C_PvP.GetScoreInfoByPlayerGuid(playerGUID) or {}
             if (localPlayerScoreInfo) then
                 --playerInfo.killingBlows = localPlayerScoreInfo.killingBlows or 0
                 playerInfo.guid = localPlayerScoreInfo.guid or "NONE"
@@ -492,7 +507,7 @@ function ArenaSummary.OnArenaEnd() --~end
 
         elseif (playerInfo.guid) then
             ---@type pvpscoreinfo
-            local localPlayerScoreInfo = C_PvP.GetScoreInfoByPlayerGuid(playerInfo.guid)
+            local localPlayerScoreInfo = C_PvP.GetScoreInfoByPlayerGuid and C_PvP.GetScoreInfoByPlayerGuid(playerInfo.guid) or {}
             --print("UName:", unitName, playerInfo.guid, localPlayerScoreInfo)
             if (localPlayerScoreInfo) then
                 --playerInfo.killingBlows = localPlayerScoreInfo.killingBlows or 0
@@ -521,12 +536,15 @@ function ArenaSummary.OnArenaEnd() --~end
         local ccUsed = {}
 
         if (Details:GetCoreVersion() < 166) then
-            for spellName, casts in pairs(currentCombat:GetCrowdControlSpells(unitName)) do
-                local spellInfo = C_Spell.GetSpellInfo(spellName)
-                local spellId = spellInfo and spellInfo.spellID or openRaidLib.GetCCSpellIdBySpellName(spellName)
-                if (spellId ~= 197214) then
-                    ccUsed[spellName] = casts
-                    ccTotal = ccTotal + casts
+            local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
+            if (openRaidLib) then
+                for spellName, casts in pairs(currentCombat:GetCrowdControlSpells(unitName)) do
+                    local spellInfo = C_Spell.GetSpellInfo(spellName)
+                    local spellId = spellInfo and spellInfo.spellID or openRaidLib.GetCCSpellIdBySpellName(spellName)
+                    if (spellId ~= 197214) then
+                        ccUsed[spellName] = casts
+                        ccTotal = ccTotal + casts
+                    end
                 end
             end
         else
@@ -556,10 +574,10 @@ function ArenaSummary.OnArenaEnd() --~end
 
     local arenaDataCompressed = Details.arena_data_compressed
 
-    local factionIndex = GetBattlefieldArenaFaction() --0 for horde, 1 for alliance
+    local factionIndex = GetBattlefieldArenaFaction and GetBattlefieldArenaFaction() --0 for horde, 1 for alliance
     --couldn't find much documentation about custom victory, assuming is custom games and shuffles.
-    local victoryStatID = C_PvP.GetCustomVictoryStatID()
-    local hasNoWinner = victoryStatID > 0 and not C_PvP.IsRatedSoloShuffle();
+    local victoryStatID = C_PvP.GetCustomVictoryStatID and C_PvP.GetCustomVictoryStatID() or 0
+    local hasNoWinner = victoryStatID > 0 and not (C_PvP.IsRatedSoloShuffle and C_PvP.IsRatedSoloShuffle())
 
     --0: PVP_SCOREBOARD_MATCH_COMPLETE, 1: PVP_MATCH_VICTORY, 2: PVP_MATCH_DEFEAT, 3: PVP_MATCH_DRAW
 
@@ -567,7 +585,7 @@ function ArenaSummary.OnArenaEnd() --~end
 
     if (not hasNoWinner) then
         local enemyFactionIndex = (factionIndex + 1) % 2
-        local winner = C_PvP.GetActiveMatchWinner()
+        local winner = C_PvP.GetActiveMatchWinner and C_PvP.GetActiveMatchWinner()
 
         if (winner == factionIndex) then
             winnerStatus = 1 --win
@@ -579,10 +597,10 @@ function ArenaSummary.OnArenaEnd() --~end
     end
 
     local scoresTable = {}
-    local scores = GetNumBattlefieldScores();
+    local scores = GetNumBattlefieldScores and GetNumBattlefieldScores() or 0
     --print("GetNumBattlefieldScores():", scores)
     for index = 1, scores do
-        scoresTable[index] = C_PvP.GetScoreInfo(index)
+        scoresTable[index] = C_PvP.GetScoreInfo and C_PvP.GetScoreInfo(index) or {}
     end
 
     local thisArenaData = {
@@ -600,15 +618,15 @@ function ArenaSummary.OnArenaEnd() --~end
         winnerStatus = winnerStatus, --0: no winner, 1: win, 2: loss, 3: draw
         factionIndex = factionIndex, --0 for horde, 1 for alliance
         teamInfos = teamInfos,
-        isArenaSkirmish = IsArenaSkirmish(),
-        isRatedSoloShuffle = C_PvP.IsRatedSoloShuffle(),
-        isFactionalMatch = C_PvP.IsMatchFactional(),
-        isBrawlSoloShuffle = C_PvP.IsBrawlSoloShuffle(),
-        isBrawlSoloRBG = C_PvP.IsBrawlSoloRBG(),
-        isSoloShuffle = C_PvP.IsSoloShuffle(),
-        playerScoreInfo = C_PvP.GetScoreInfoByPlayerGuid(GetPlayerGuid()),
-        doesMatchOutcomeAffectRating = C_PvP.DoesMatchOutcomeAffectRating(),
-        statColumns = C_PvP.GetMatchPVPStatColumns(),
+        isArenaSkirmish = IsArenaSkirmish and IsArenaSkirmish() or false,
+        isRatedSoloShuffle = C_PvP.IsRatedSoloShuffle and C_PvP.IsRatedSoloShuffle() or false,
+        isFactionalMatch = C_PvP.IsMatchFactional and C_PvP.IsMatchFactional() or false,
+        isBrawlSoloShuffle = C_PvP.IsBrawlSoloShuffle and C_PvP.IsBrawlSoloShuffle() or false,
+        isBrawlSoloRBG = C_PvP.IsBrawlSoloRBG and C_PvP.IsBrawlSoloRBG() or false,
+        isSoloShuffle = C_PvP.IsSoloShuffle and C_PvP.IsSoloShuffle() or false,
+        playerScoreInfo = C_PvP.GetScoreInfoByPlayerGuid and C_PvP.GetScoreInfoByPlayerGuid(GetPlayerGuid()) or {},
+        doesMatchOutcomeAffectRating = C_PvP.DoesMatchOutcomeAffectRating and C_PvP.DoesMatchOutcomeAffectRating() or false,
+        statColumns = C_PvP.GetMatchPVPStatColumns and C_PvP.GetMatchPVPStatColumns() or {},
         playerRewards = Details222.ArenaSummary.arenaData.playerRewards,
         playerPersonalRatedInfo = Details222.ArenaSummary.arenaData.playerPersonalRatedInfo,
     }
@@ -659,6 +677,8 @@ function ArenaSummary.CreateWindow() --~create
     window:SetFrameStrata("HIGH")
     window:SetFrameLevel(10)
 
+    window:SetFrameStrata("DIALOG")
+
     detailsFramework:ApplyStandardBackdrop(window)
 
     local arenaInfoText = window:CreateFontString("$parentArenaInfoText", "overlay", "GameFontNormal")
@@ -680,7 +700,7 @@ function ArenaSummary.CreateWindow() --~create
 			{text = "", width = 22}, --1
 			{text = "Name", width = 120}, --2
 			{text = "Kills", width = 60}, --3
-			{text = "Peak Damage", width = 90}, --4
+			{text = "Peak Dps", width = 90}, --4
 			{text = "Dps", width = 60}, --5
             {text = "Hps", width = 60}, --6
             {text = "Dispels", width = 60}, --7
@@ -1154,13 +1174,13 @@ function ArenaSummary.CreateWindow() --~create
 --print("arenaData.winnerStatus", arenaData.winnerStatus)
 --dumpt(arenaData)
 
-            window.ArenaOutcomeText:SetText(PVP_SCOREBOARD_MATCH_COMPLETE)
+            window.ArenaOutcomeText:SetText(PVP_SCOREBOARD_MATCH_COMPLETE or "Match Completed")
             if (arenaData.winnerStatus == 1) then
-                window.ArenaOutcomeText:SetText(PVP_MATCH_VICTORY)
+                window.ArenaOutcomeText:SetText(PVP_MATCH_VICTORY or "VICTORY")
             elseif (arenaData.winnerStatus == 2) then
-                window.ArenaOutcomeText:SetText(PVP_MATCH_DEFEAT)
+                window.ArenaOutcomeText:SetText(PVP_MATCH_DEFEAT or "DEFEAT")
             elseif (arenaData.winnerStatus == 3) then
-                window.ArenaOutcomeText:SetText(PVP_MATCH_DRAW)
+                window.ArenaOutcomeText:SetText(PVP_MATCH_DRAW or "DRAW")
             end
         end
 
@@ -1203,7 +1223,7 @@ function ArenaSummary.UncompressArena(headerIndex)
     assert(C_EncodingUtil, "C_EncodingUtil is nil")
 
     local compressedArenas = Details.arena_data_compressed
-    print("##:", #compressedArenas, "headerIndex:", headerIndex)
+    --print("##:", #compressedArenas, "headerIndex:", headerIndex)
 
     local arenaData = compressedArenas[headerIndex]
     if (not arenaData) then

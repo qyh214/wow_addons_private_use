@@ -27,6 +27,14 @@ C.Party = {
 	},
 	["noneZoneSetting"] = "arena",
 	["scenarioZoneSetting"] = "arena",
+	["raidGroup"] = {
+		["arena"] = true,
+		["pvp"] = true,
+		["party"] = true,
+		["raid"] = true,
+		["scenario"] = false,
+		["none"] = false,
+	},
 }
 
 C.Party.arena = {

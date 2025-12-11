@@ -211,6 +211,8 @@ L["Enable if the spell is a base ability for this specialization"] = "Enable if 
 --[[Translation missing --]]
 L["Enable in automated instance groups"] = "Enable in automated instance groups"
 --[[Translation missing --]]
+L["Enable in raid groups"] = "Enable in raid groups"
+--[[Translation missing --]]
 L["Enable initial spark and marching-ants animation"] = "Enable initial spark and marching-ants animation"
 L["Enable spell for this specialization"] = "Activer le sort pour cette spécialisation"
 L["Enable to customize the 2nd row icons when using 'Double Row' layout."] = "Activer pour personnaliser les icônes de la 2ème ligne lors de l'utilisation de «l'affichage sur deux lignes»."

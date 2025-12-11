@@ -2,6 +2,10 @@ local GlobalAddonName, ExRT = ...
 
 local VMRT = nil
 
+if ExRT.isMN then
+	return
+end
+
 local module = ExRT:New("WhoPulled",ExRT.L.WhoPulled)
 local ELib,L = ExRT.lib,ExRT.L
 

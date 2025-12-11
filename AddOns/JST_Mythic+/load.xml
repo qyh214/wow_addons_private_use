@@ -1,0 +1,10 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Include file="AraKara\modules.xml"/>
+	<Include file="TheDawnbreaker\modules.xml"/>
+	<Include file="PrioryOfTheSacredFlame\modules.xml"/>
+	<Include file="OperationFloodgate\modules.xml"/>
+	<Include file="EcoDome\modules.xml"/>
+	<Include file="HallsofAtonement\modules.xml"/>
+	<Include file="TazaveshGambit\modules.xml"/>
+	<Include file="TazaveshStreet\modules.xml"/>
+</Ui>

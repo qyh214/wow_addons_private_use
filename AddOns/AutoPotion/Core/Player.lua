@@ -13,15 +13,14 @@ ham.Player.new = function()
   end
 
   function self.getHealingSpells()
-    local spells = {}
-
-    for i, spell in ipairs(HAMDB.activatedSpells) do
-      if IsSpellKnown(spell) or IsSpellKnown(spell, true) then
-        table.insert(spells, spell)
+    local mySpells = {}
+    for i, id in ipairs(HAMDB.activatedSpells) do
+      local currentSpell = ham.Spell.new(id)
+      if currentSpell.isKnown() then
+        table.insert(mySpells, currentSpell)
       end
     end
-
-    return spells
+    return mySpells
   end
 
   return self

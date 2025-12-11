@@ -216,7 +216,12 @@ local enemyExclusions = {
     [237967] = true,              -- Gallywix: Discharged Giga Bomb
     [237968] = true,              -- Gallywix: Charged Giga Bomb
     [151579] = true,              -- Operation: Mechagon - Shield Generator
-    [219588] = true               -- Cinderbrew Meadery - Yes Man (etc.)
+    [219588] = true,              -- Cinderbrew Meadery - Yes Man (etc.),
+    [165913] = true,              -- Halls of Atonement: Ghastly Parishioner
+    [240905] = 1231726,           -- Manaforge Omega: Forgeweaver Araz - Arcane Collectord immunity during P1
+    [233817] = 1231726,           -- Manaforge Omega: Forgeweaver Araz - Forgeweaver Araz immunity during Intermission
+    [237763] = 1228284,           -- Manaforge Omega: Nexus King Salad Bar - Royal Ward immunity
+    [245705] = true               -- Manaforge Omega: Dimensius - Voidwarden (one should be focussed/cleaved down off miniboss, no reason to full AoE)
 }
 
 local requiredForInclusion = {
@@ -315,11 +320,31 @@ do
     RegisterEvent( "PLAYER_ENTERING_WORLD", CheckWarMode )
 end
 
+-- Timerunning Hardmode
+local timeRunningHwt = false
+
+do
+    local IsPlayerInTimerunningHeroicWorldTier = C_PlayerInfo.IsPlayerInTimerunningHeroicWorldTier
+
+    local function UpdateTimerunning()
+        timeRunningHwt = IsPlayerInTimerunningHeroicWorldTier()
+    end
+
+    local function TimerunningCheck()
+        timeRunningHwt = IsPlayerInTimerunningHeroicWorldTier()
+        C_Timer.After( 2, UpdateTimerunning )
+    end
+
+    ns.TimerunningCheck = TimerunningCheck
+
+    RegisterEvent( "PLAYER_ENTERING_WORLD", TimerunningCheck )
+end
 
 local function UnitInPhase( unit )
     local reason = UnitPhaseReason( unit )
     local wm = not IsInInstance() and warmode
 
+    if reason == 4 and timeRunningHwt then return true end
     if reason == 3 and chromieTime then return true end
     if reason == 2 and wm then return true end
     if reason == nil then return true end
@@ -432,7 +457,8 @@ do
                                     details = format( "%s\n    - Excluded by pet range.", details )
                                 end
                             end
-
+                            -- FIXME It looks like some kind of resolution/backup plan is needed for range checking (note to self: see Targets.lua line 436)
+                            -- https://github.com/Hekili/hekili/issues/4845
                             if not excluded and checkPlates then
                                 local _, maxR = RC:GetRange( unit )
                                 excluded = maxR ~= nil and maxR > checkPlates

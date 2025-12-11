@@ -2,7 +2,10 @@
 -- Module Declaration
 --
 
-local plugin, L = BigWigs:NewPlugin("Bars")
+local plugin, L = BigWigs:NewPlugin("Bars", {
+	"db",
+	"SendCustomBarToGroup",
+})
 if not plugin then return end
 
 --------------------------------------------------------------------------------
@@ -16,18 +19,14 @@ local SetBarStyle
 
 local colors = nil
 local candy = LibStub("LibCandyBar-3.0")
-local media = LibStub("LibSharedMedia-3.0")
-local FONT = media.MediaType and media.MediaType.FONT or "font"
-local STATUSBAR = media.MediaType and media.MediaType.STATUSBAR or "statusbar"
+local LibSharedMedia = LibStub("LibSharedMedia-3.0")
+local FONT = LibSharedMedia.MediaType and LibSharedMedia.MediaType.FONT or "font"
+local STATUSBAR = LibSharedMedia.MediaType and LibSharedMedia.MediaType.STATUSBAR or "statusbar"
 local next = next
 local db = nil
 local normalAnchor, emphasizeAnchor = nil, nil
 local rearrangeBars
 
-local validFramePoints = {
-	["TOPLEFT"] = L.TOPLEFT, ["TOPRIGHT"] = L.TOPRIGHT, ["BOTTOMLEFT"] = L.BOTTOMLEFT, ["BOTTOMRIGHT"] = L.BOTTOMRIGHT,
-	["TOP"] = L.TOP, ["BOTTOM"] = L.BOTTOM, ["LEFT"] = L.LEFT, ["RIGHT"] = L.RIGHT, ["CENTER"] = L.CENTER,
-}
 local minBarWidth, minBarHeight, maxBarWidth, maxBarHeight = 120, 10, 550, 100
 
 --------------------------------------------------------------------------------
@@ -81,10 +80,10 @@ local function updateProfile()
 
 	SetBarStyle(db.barStyle)
 
-	if not media:IsValid(FONT, db.fontName) then
-		db.fontName = plugin:GetDefaultFont()
+	if not LibSharedMedia:IsValid(FONT, db.fontName) then
+		db.fontName = plugin.defaultDB.fontName
 	end
-	if not media:IsValid(STATUSBAR, db.texture) then
+	if not LibSharedMedia:IsValid(STATUSBAR, db.texture) then
 		db.texture = plugin.defaultDB.texture
 	end
 	if db.fontSize < 10 or db.fontSize > 200 then
@@ -135,8 +134,12 @@ local function updateProfile()
 
 	if type(db.normalPosition[1]) ~= "string" or type(db.normalPosition[2]) ~= "string"
 	or type(db.normalPosition[3]) ~= "number" or type(db.normalPosition[4]) ~= "number"
-	or not validFramePoints[db.normalPosition[1]] or not validFramePoints[db.normalPosition[2]] then
-		db.normalPosition = plugin.defaultDB.normalPosition
+	or not BigWigsAPI.IsValidFramePoint(db.normalPosition[1]) or not BigWigsAPI.IsValidFramePoint(db.normalPosition[2]) then
+		db.normalPosition[1] = plugin.defaultDB.normalPosition[1]
+		db.normalPosition[2] = plugin.defaultDB.normalPosition[2]
+		db.normalPosition[3] = plugin.defaultDB.normalPosition[3]
+		db.normalPosition[4] = plugin.defaultDB.normalPosition[4]
+		db.normalPosition[5] = plugin.defaultDB.normalPosition[5]
 	else
 		local x = math.floor(db.normalPosition[3]+0.5)
 		if x ~= db.normalPosition[3] then
@@ -150,14 +153,22 @@ local function updateProfile()
 	if db.normalPosition[5] ~= plugin.defaultDB.normalPosition[5] then
 		local frame = _G[db.normalPosition[5]]
 		if type(frame) ~= "table" or type(frame.GetObjectType) ~= "function" or type(frame.IsForbidden) ~= "function" or frame:IsForbidden() then
-			db.normalPosition = plugin.defaultDB.normalPosition
+			db.normalPosition[1] = plugin.defaultDB.normalPosition[1]
+			db.normalPosition[2] = plugin.defaultDB.normalPosition[2]
+			db.normalPosition[3] = plugin.defaultDB.normalPosition[3]
+			db.normalPosition[4] = plugin.defaultDB.normalPosition[4]
+			db.normalPosition[5] = plugin.defaultDB.normalPosition[5]
 		end
 	end
 
 	if type(db.expPosition[1]) ~= "string" or type(db.expPosition[2]) ~= "string"
 	or type(db.expPosition[3]) ~= "number" or type(db.expPosition[4]) ~= "number"
-	or not validFramePoints[db.expPosition[1]] or not validFramePoints[db.expPosition[2]] then
-		db.expPosition = plugin.defaultDB.expPosition
+	or not BigWigsAPI.IsValidFramePoint(db.expPosition[1]) or not BigWigsAPI.IsValidFramePoint(db.expPosition[2]) then
+		db.expPosition[1] = plugin.defaultDB.expPosition[1]
+		db.expPosition[2] = plugin.defaultDB.expPosition[2]
+		db.expPosition[3] = plugin.defaultDB.expPosition[3]
+		db.expPosition[4] = plugin.defaultDB.expPosition[4]
+		db.expPosition[5] = plugin.defaultDB.expPosition[5]
 	else
 		local x = math.floor(db.expPosition[3]+0.5)
 		if x ~= db.expPosition[3] then
@@ -171,7 +182,11 @@ local function updateProfile()
 	if db.expPosition[5] ~= plugin.defaultDB.expPosition[5] then
 		local frame = _G[db.expPosition[5]]
 		if type(frame) ~= "table" or type(frame.GetObjectType) ~= "function" or type(frame.IsForbidden) ~= "function" or frame:IsForbidden() then
-			db.expPosition = plugin.defaultDB.expPosition
+			db.expPosition[1] = plugin.defaultDB.expPosition[1]
+			db.expPosition[2] = plugin.defaultDB.expPosition[2]
+			db.expPosition[3] = plugin.defaultDB.expPosition[3]
+			db.expPosition[4] = plugin.defaultDB.expPosition[4]
+			db.expPosition[5] = plugin.defaultDB.expPosition[5]
 		end
 	end
 
@@ -190,8 +205,8 @@ local function updateProfile()
 	elseif db.outline ~= "NONE" then
 		flags = db.outline
 	end
-	local font = media:Fetch(FONT, db.fontName)
-	local texture = media:Fetch(STATUSBAR, db.texture)
+	local font = LibSharedMedia:Fetch(FONT, db.fontName)
+	local texture = LibSharedMedia:Fetch(STATUSBAR, db.texture)
 
 	for bar in next, normalAnchor.bars do
 		currentBarStyler.BarStopped(bar)
@@ -314,15 +329,15 @@ do
 						type = "select",
 						name = L.font,
 						order = 1,
-						values = media:List(FONT),
+						values = LibSharedMedia:List(FONT),
 						itemControl = "DDI-Font",
 						get = function()
-							for i, v in next, media:List(FONT) do
+							for i, v in next, LibSharedMedia:List(FONT) do
 								if v == db.fontName then return i end
 							end
 						end,
 						set = function(_, value)
-							local list = media:List(FONT)
+							local list = LibSharedMedia:List(FONT)
 							db.fontName = list[value]
 							updateProfile()
 						end,
@@ -420,15 +435,15 @@ do
 						name = L.texture,
 						order = 8,
 						width = 2,
-						values = media:List(STATUSBAR),
+						values = LibSharedMedia:List(STATUSBAR),
 						itemControl = "DDI-Statusbar",
 						get = function(info)
-							for i, v in next, media:List(STATUSBAR) do
+							for i, v in next, LibSharedMedia:List(STATUSBAR) do
 								if v == db[info[#info]] then return i end
 							end
 						end,
 						set = function(info, value)
-							local list = media:List(STATUSBAR)
+							local list = LibSharedMedia:List(STATUSBAR)
 							local tex = list[value]
 							db[info[#info]] = tex
 							updateProfile()
@@ -689,9 +704,17 @@ do
 										return
 									end
 									if value ~= plugin.defaultDB.normalPosition[5] then
-										db.normalPosition = {"CENTER", "CENTER", 0, 0, value}
+										db.normalPosition[1] = "CENTER"
+										db.normalPosition[2] = "CENTER"
+										db.normalPosition[3] = 0
+										db.normalPosition[4] = 0
+										db.normalPosition[5] = value
 									else
-										db.normalPosition = plugin.defaultDB.normalPosition
+										db.normalPosition[1] = plugin.defaultDB.normalPosition[1]
+										db.normalPosition[2] = plugin.defaultDB.normalPosition[2]
+										db.normalPosition[3] = plugin.defaultDB.normalPosition[3]
+										db.normalPosition[4] = plugin.defaultDB.normalPosition[4]
+										db.normalPosition[5] = plugin.defaultDB.normalPosition[5]
 									end
 									updateProfile()
 								end,
@@ -705,12 +728,12 @@ do
 									return db.normalPosition[1]
 								end,
 								set = function(_, value)
-									if validFramePoints[value] then
+									if BigWigsAPI.IsValidFramePoint(value) then
 										db.normalPosition[1] = value
 										updateProfile()
 									end
 								end,
-								values = validFramePoints,
+								values = BigWigsAPI.GetFramePointList(),
 								name = L.sourcePoint,
 								order = 6,
 								width = 1.6,
@@ -722,12 +745,12 @@ do
 									return db.normalPosition[2]
 								end,
 								set = function(_, value)
-									if validFramePoints[value] then
+									if BigWigsAPI.IsValidFramePoint(value) then
 										db.normalPosition[2] = value
 										updateProfile()
 									end
 								end,
-								values = validFramePoints,
+								values = BigWigsAPI.GetFramePointList(),
 								name = L.destinationPoint,
 								order = 7,
 								width = 1.6,
@@ -805,9 +828,17 @@ do
 										return
 									end
 									if value ~= plugin.defaultDB.expPosition[5] then
-										db.expPosition = {"CENTER", "CENTER", 0, 0, value}
+										db.expPosition[1] = "CENTER"
+										db.expPosition[2] = "CENTER"
+										db.expPosition[3] = 0
+										db.expPosition[4] = 0
+										db.expPosition[5] = value
 									else
-										db.expPosition = plugin.defaultDB.expPosition
+										db.expPosition[1] = plugin.defaultDB.expPosition[1]
+										db.expPosition[2] = plugin.defaultDB.expPosition[2]
+										db.expPosition[3] = plugin.defaultDB.expPosition[3]
+										db.expPosition[4] = plugin.defaultDB.expPosition[4]
+										db.expPosition[5] = plugin.defaultDB.expPosition[5]
 									end
 									updateProfile()
 								end,
@@ -821,12 +852,12 @@ do
 									return db.expPosition[1]
 								end,
 								set = function(_, value)
-									if validFramePoints[value] then
+									if BigWigsAPI.IsValidFramePoint(value) then
 										db.expPosition[1] = value
 										updateProfile()
 									end
 								end,
-								values = validFramePoints,
+								values = BigWigsAPI.GetFramePointList(),
 								name = L.sourcePoint,
 								order = 6,
 								width = 1.6,
@@ -838,12 +869,12 @@ do
 									return db.expPosition[2]
 								end,
 								set = function(_, value)
-									if validFramePoints[value] then
+									if BigWigsAPI.IsValidFramePoint(value) then
 										db.expPosition[2] = value
 										updateProfile()
 									end
 								end,
-								values = validFramePoints,
+								values = BigWigsAPI.GetFramePointList(),
 								name = L.destinationPoint,
 								order = 7,
 								width = 1.6,
@@ -986,12 +1017,18 @@ do
 	end
 	local function OnMouseDown(self)
 		self:GetParent():StartSizing("BOTTOMRIGHT")
+		GameTooltip_Hide()
 	end
 	local function OnMouseUp(self)
 		self:GetParent():StopMovingOrSizing()
 		if BigWigsOptions and BigWigsOptions:IsOpen() then
 			plugin:UpdateGUI() -- Update X/Y if GUI is open
 		end
+	end
+	local function OnEnter(self)
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+		GameTooltip:SetText(L.dragToResize)
+		GameTooltip:Show()
 	end
 
 	local function createAnchor(position, title, frameLevel, width, height)
@@ -1024,16 +1061,16 @@ do
 		local drag = CreateFrame("Frame", nil, display)
 		drag:SetWidth(16)
 		drag:SetHeight(16)
-		drag:SetPoint("BOTTOMRIGHT", display, -1, 1)
+		drag:SetPoint("BOTTOMRIGHT", -1, 1)
 		drag:EnableMouse(true)
 		drag:SetScript("OnMouseDown", OnMouseDown)
 		drag:SetScript("OnMouseUp", OnMouseUp)
+		drag:SetScript("OnEnter", OnEnter)
+		drag:SetScript("OnLeave", GameTooltip_Hide)
 		local tex = drag:CreateTexture(nil, "OVERLAY")
 		tex:SetTexture("Interface\\AddOns\\BigWigs\\Media\\Icons\\draghandle")
-		tex:SetWidth(16)
-		tex:SetHeight(16)
+		tex:SetAllPoints(drag)
 		tex:SetBlendMode("ADD")
-		tex:SetPoint("CENTER", drag)
 		display.bars = {}
 		display.RefixPosition = RefixPosition
 		local point, relPoint = plugin.defaultDB[position][1], plugin.defaultDB[position][2]
@@ -1091,8 +1128,11 @@ function plugin:OnPluginEnable()
 	self:RegisterMessage("BigWigs_PluginComm")
 	self:RegisterMessage("DBM_AddonMessage")
 
-	-- XXX temporary workaround for wow custom font loading issues, start a dummy bar to force load the selected font into memory
-	self:SendMessage("BigWigs_StartBar", self, nil, "test", 0.01, 134376)
+	if BigWigsLoader.isBeta then -- XXX 12.0
+		self:RegisterEvent("ENCOUNTER_TIMELINE_EVENT_ADDED")
+		self:RegisterEvent("ENCOUNTER_TIMELINE_EVENT_STATE_CHANGED")
+		self:RegisterEvent("ENCOUNTER_TIMELINE_EVENT_REMOVED")
+	end
 end
 
 function plugin:OnPluginDisable()
@@ -1182,6 +1222,38 @@ function plugin:ResumeBar(_, module, text)
 	end
 end
 
+function plugin:PauseSecretBar(key)
+	if not normalAnchor then return end
+	for k in next, normalAnchor.bars do
+		if k:Get("bigwigs:hasSecrets") and k:Get("bigwigs:option") == key then
+			k:Pause()
+			return
+		end
+	end
+	for k in next, emphasizeAnchor.bars do
+		if k:Get("bigwigs:hasSecrets") and k:Get("bigwigs:option") == key then
+			k:Pause()
+			return
+		end
+	end
+end
+
+function plugin:ResumeSecretBar(key)
+	if not normalAnchor then return end
+	for k in next, normalAnchor.bars do
+		if k:Get("bigwigs:hasSecrets") and k:Get("bigwigs:option") == key then
+			k:Resume()
+			return
+		end
+	end
+	for k in next, emphasizeAnchor.bars do
+		if k:Get("bigwigs:hasSecrets") and k:Get("bigwigs:option") == key then
+			k:Resume()
+			return
+		end
+	end
+end
+
 --------------------------------------------------------------------------------
 -- Stopping bars
 --
@@ -1209,6 +1281,20 @@ function plugin:StopModuleBars(_, module)
 	end
 	for k in next, emphasizeAnchor.bars do
 		if k:Get("bigwigs:module") == module then
+			k:Stop()
+		end
+	end
+end
+
+function plugin:StopSecretBar(key)
+	if not normalAnchor then return end
+	for k in next, normalAnchor.bars do
+		if k:Get("bigwigs:hasSecrets") and k:Get("bigwigs:option") == key then
+			k:Stop()
+		end
+	end
+	for k in next, emphasizeAnchor.bars do
+		if k:Get("bigwigs:hasSecrets") and k:Get("bigwigs:option") == key then
 			k:Stop()
 		end
 	end
@@ -1248,41 +1334,59 @@ end
 -- Start bars
 --
 
-function plugin:CreateBar(module, key, text, time, icon, isApprox)
-	local width, height
-	width = db.normalWidth
-	height = db.normalHeight
-	local bar = candy:New(media:Fetch(STATUSBAR, db.texture), width, height)
-	bar:Set("bigwigs:module", module)
-	bar:Set("bigwigs:option", key)
-	bar:Set("bigwigs:anchor", "normalPosition")
-	normalAnchor.bars[bar] = true
-	bar:SetIcon(db.icon and icon or nil)
-	bar:SetLabel(text)
-	bar:SetDuration(time, isApprox)
-	bar:SetColor(colors:GetColor("barColor", module, key))
-	bar:SetBackgroundColor(colors:GetColor("barBackground", module, key))
-	bar:SetTextColor(colors:GetColor("barText", module, key))
-	bar:SetShadowColor(colors:GetColor("barTextShadow", module, key))
-	bar.candyBarLabel:SetJustifyH(db.alignText)
-	bar.candyBarDuration:SetJustifyH(db.alignTime)
-	local flags = nil
-	if db.monochrome and db.outline ~= "NONE" then
-		flags = "MONOCHROME," .. db.outline
-	elseif db.monochrome then
-		flags = "MONOCHROME"
-	elseif db.outline ~= "NONE" then
-		flags = db.outline
+do
+	local initial = true
+	function plugin:CreateBar(module, key, text, time, icon, isApprox, hasSecrets)
+		local width, height
+		width = db.normalWidth
+		height = db.normalHeight
+		local bar = candy:New(LibSharedMedia:Fetch(STATUSBAR, db.texture), width, height)
+		local flags = nil
+		if db.monochrome and db.outline ~= "NONE" then
+			flags = "MONOCHROME," .. db.outline
+		elseif db.monochrome then
+			flags = "MONOCHROME"
+		elseif db.outline ~= "NONE" then
+			flags = db.outline
+		end
+		local f = LibSharedMedia:Fetch(FONT, db.fontName)
+		bar:SetFont(f, db.fontSize, flags)
+		bar:Set("bigwigs:module", module)
+		bar:Set("bigwigs:option", key)
+		bar:Set("bigwigs:hasSecrets", hasSecrets and hasSecrets or false)
+		bar:Set("bigwigs:anchor", "normalPosition")
+		normalAnchor.bars[bar] = true
+		if db.icon then
+			bar:SetIcon(icon)
+		else
+			bar:SetIcon(nil)
+		end
+		bar:SetDuration(time, isApprox)
+		bar:SetColor(colors:GetColor("barColor", module, key))
+		bar:SetBackgroundColor(colors:GetColor("barBackground", module, key))
+		bar:SetTextColor(colors:GetColor("barText", module, key))
+		bar:SetShadowColor(colors:GetColor("barTextShadow", module, key))
+		bar.candyBarLabel:SetJustifyH(db.alignText)
+		bar.candyBarDuration:SetJustifyH(db.alignTime)
+
+		bar:SetTimeVisibility(db.time)
+		bar:SetLabelVisibility(db.text)
+		bar:SetIconPosition(db.iconPosition)
+		bar:SetFill(db.fill)
+		bar:SetLabel(text)
+		if not issecretvalue and initial then -- XXX 12.0 compat
+			-- Workaround for wow custom font loading issues
+			self:SimpleTimer(function()
+				initial = false
+				if bar:GetLabel() == text then
+					bar:SetLabel("-1")
+					bar:SetLabel(text)
+				end
+			end, 0.3)
+		end
+
+		return bar
 	end
-	local f = media:Fetch(FONT, db.fontName)
-	bar:SetFont(f, db.fontSize, flags)
-
-	bar:SetTimeVisibility(db.time)
-	bar:SetLabelVisibility(db.text)
-	bar:SetIconPosition(db.iconPosition)
-	bar:SetFill(db.fill)
-
-	return bar
 end
 
 do
@@ -1293,10 +1397,12 @@ do
 		rearrangeBars(emphasizeAnchor)
 	end
 
-	function plugin:BigWigs_StartBar(_, module, key, text, time, icon, isApprox, maxTime)
-		if not text then text = "" end
-		self:StopSpecificBar(nil, module, text)
-		local bar = self:CreateBar(module, key, text, time, icon, isApprox)
+	function plugin:BigWigs_StartBar(_, module, key, text, time, icon, isApprox, maxTime, hasSecrets)
+		if not hasSecrets and not text then text = "" end
+		if not hasSecrets then
+			self:StopSpecificBar(nil, module, text)
+		end
+		local bar = self:CreateBar(module, key, text, time, icon, isApprox, hasSecrets)
 		if isApprox then
 			bar:SetPauseWhenDone(true)
 		end
@@ -1352,7 +1458,7 @@ function plugin:EmphasizeBar(bar, freshBar)
 	elseif db.outline ~= "NONE" then
 		flags = db.outline
 	end
-	local f = media:Fetch(FONT, db.fontName)
+	local f = LibSharedMedia:Fetch(FONT, db.fontName)
 	bar:SetFont(f, db.fontSizeEmph, flags)
 
 	bar:SetColor(colors:GetColor("barEmphasized", module, key))
@@ -1372,7 +1478,7 @@ end
 -- Custom Bars
 --
 
-local function parseTime(input)
+local function ConvertTimeStringToSeconds(input)
 	if type(input) == "nil" then return end
 	if tonumber(input) then return tonumber(input) end
 	if type(input) == "string" then
@@ -1384,6 +1490,29 @@ local function parseTime(input)
 		elseif input:find("^%d+mi?n?$") then
 			local _, _, t = input:find("^(%d+)mi?n?$")
 			return tonumber(t) * 60
+		end
+	end
+end
+
+local ReplaceIconWithTexture
+do
+	local markerIcons = {
+		"|T137001:0|t",
+		"|T137002:0|t",
+		"|T137003:0|t",
+		"|T137004:0|t",
+		"|T137005:0|t",
+		"|T137006:0|t",
+		"|T137007:0|t",
+		"|T137008:0|t",
+	}
+
+	function ReplaceIconWithTexture(msg)
+		local id = tonumber(msg)
+		if id and id >= 1 and id <= 8 then
+			return markerIcons[id]
+		else
+			("{rt%s}"):format(msg)
 		end
 	end
 end
@@ -1402,11 +1531,10 @@ do
 			prevBars[bar] = GetTime()
 			if not UnitIsGroupLeader(nick) and not UnitIsGroupAssistant(nick) then return end
 			seconds, barText = bar:match("(%S+) (.*)")
-			seconds = parseTime(seconds)
+			seconds = ConvertTimeStringToSeconds(seconds)
 			if type(seconds) ~= "number" or type(barText) ~= "string" or seconds < 0 then
 				return
 			end
-			BigWigs:Print(L.customBarStarted:format(barText, isDBM and "DBM" or "BigWigs", nick))
 		end
 
 		local id = "bwcb" .. nick .. barText
@@ -1415,6 +1543,10 @@ do
 			timers[id] = nil
 		end
 
+		barText = barText:gsub("{[Rr][Tt](%d)}", ReplaceIconWithTexture)
+		if not localOnly then
+			BigWigs:Print(L.customBarStarted:format(barText, isDBM and "DBM" or "BigWigs", nick))
+		end
 		nick = nick:gsub("%-.+", "*") -- Remove server name
 		if seconds == 0 then
 			plugin:SendMessage("BigWigs_StopBar", plugin, nick..": "..barText)
@@ -1441,41 +1573,45 @@ function plugin:BigWigs_PluginComm(_, msg, seconds, sender)
 	end
 end
 
--------------------------------------------------------------------------------
--- Slashcommand
---
-
 do
 	local SendAddonMessage = BigWigsLoader.SendAddonMessage
 	local dbmPrefix = BigWigsLoader.dbmPrefix
 	local times
-	BigWigsAPI.RegisterSlashCommand("/raidbar", function(input)
-		if not plugin:IsEnabled() then BigWigs:Enable() end
-
+	function plugin:SendCustomBarToGroup(message, duration)
+		if BigWigsLoader.isBeta then return end -- XXX 12.0 Needs fixing (not allowed in raids/dungeons atm)
+		if not duration or duration < 3 then BigWigs:Print(L.wrongTime) return end
 		if not IsInGroup() or (not UnitIsGroupLeader("player") and not UnitIsGroupAssistant("player")) then BigWigs:Print(L.requiresLeadOrAssist) return end
-
-		local seconds, barText = input:match("(%S+) (.*)")
-		if not seconds or not barText then BigWigs:Print(L.wrongCustomBarFormat) return end
-
-		seconds = parseTime(seconds)
-		if not seconds or seconds < 0 then BigWigs:Print(L.wrongTime) return end
+		if not plugin:IsEnabled() then BigWigs:Enable() end
 
 		if not times then times = {} end
 		local t = GetTime()
-		if not times[input] or (times[input] and (times[input] + 2) < t) then
-			times[input] = t
-			BigWigs:Print(L.sendCustomBar:format(barText))
-			plugin:Sync("CBar", input)
+		local id = duration .." ".. message
+		if not times[id] or (times[id] and (times[id] + 1) < t) then
+			times[id] = t
+			local barTextForPrinting = message:gsub("{[Rr][Tt](%d)}", ReplaceIconWithTexture)
+			BigWigs:Print(L.sendCustomBar:format(barTextForPrinting))
+			plugin:Sync("CBar", id)
 			local name = plugin:UnitName("player")
 			local realm = GetRealmName()
 			local normalizedPlayerRealm = realm:gsub("[%s-]+", "") -- Has to mimic DBM code
-			local result = SendAddonMessage(dbmPrefix, ("%s-%s\t1\tU\t%d\t%s"):format(name, normalizedPlayerRealm, seconds, barText), IsInGroup(2) and "INSTANCE_CHAT" or "RAID") -- DBM message
+			local result = SendAddonMessage(dbmPrefix, ("%s-%s\t1\tU\t%d\t%s"):format(name, normalizedPlayerRealm, duration, message), IsInGroup(2) and "INSTANCE_CHAT" or "RAID") -- DBM message
 			if type(result) == "number" and result ~= 0 then
 				BigWigs:Error("BigWigs: Failed to send raid bar. Error code: ".. result)
 			end
 		end
-	end)
+	end
 end
+
+-------------------------------------------------------------------------------
+-- Slashcommand
+--
+
+BigWigsAPI.RegisterSlashCommand("/raidbar", function(input)
+	local seconds, barText = input:match("(%S+) (.*)")
+	if not seconds or not barText then BigWigs:Print(L.wrongCustomBarFormat) return end
+	seconds = ConvertTimeStringToSeconds(seconds)
+	plugin:SendCustomBarToGroup(barText, seconds)
+end)
 
 BigWigsAPI.RegisterSlashCommand("/localbar", function(input)
 	if not plugin:IsEnabled() then BigWigs:Enable() end
@@ -1483,8 +1619,53 @@ BigWigsAPI.RegisterSlashCommand("/localbar", function(input)
 	local seconds, barText = input:match("(%S+) (.*)")
 	if not seconds or not barText then BigWigs:Print(L.wrongCustomBarFormat:gsub("/raidbar", "/localbar")) return end
 
-	seconds = parseTime(seconds)
+	seconds = ConvertTimeStringToSeconds(seconds)
 	if not seconds then BigWigs:Print(L.wrongTime) return end
 
 	startCustomBar(seconds, plugin:UnitName("player"), barText)
 end)
+
+-------------------------------------------------------------------------------
+-- 12.0 Midnight
+--
+
+function plugin:ENCOUNTER_TIMELINE_EVENT_ADDED(_, eventInfo)
+	-- Not Secrets
+	local eventID = eventInfo.id
+	local duration = eventInfo.duration
+	local source = eventInfo.source
+	local state = C_EncounterTimeline.GetEventState(eventID) -- 0 = Running, 1 = Paused
+
+	-- Secrets
+	local spellId = eventInfo.spellID
+	local spellName = eventInfo.spellName
+	local iconId = eventInfo.iconFileID
+	-- local dispelType = eventInfo.dispelType
+	-- local role = eventInfo.role
+	-- local priority = eventInfo.priority
+	self:BigWigs_StartBar(nil, nil, eventID, spellName, duration, iconId, nil, nil, true)
+
+	if state == 1 then -- Starting Paused
+		self:PauseSecretBar(eventID)
+	end
+end
+
+function plugin:ENCOUNTER_TIMELINE_EVENT_STATE_CHANGED(_, eventID)
+	local newState = C_EncounterTimeline.GetEventState(eventID) -- 0 = Running, 1 = Paused
+	if newState == 0 then -- Resumed
+		self:ResumeSecretBar(eventID)
+	elseif newState == 1 then -- Paused
+		self:PauseSecretBar(eventID)
+
+	-- Are Finished and/or Canceled needed?
+	-- it also triggers `ENCOUNTER_TIMELINE_EVENT_REMOVED` when the timer is removed.
+	-- elseif newState == 2 then -- Finished
+	-- 	plugin:StopSecretBar(eventID)
+	-- elseif newState == 3 then -- Canceled
+	-- 	plugin:StopSecretBar(eventID)
+	end
+end
+
+function plugin:ENCOUNTER_TIMELINE_EVENT_REMOVED(_, eventID)
+	self:StopSecretBar(eventID)
+end

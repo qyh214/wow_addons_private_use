@@ -942,14 +942,21 @@ function module.main:ENCOUNTER_START(encounterID, encounterName, difficultyID, g
 	if not IsInRaid() then	--Disable this in 5ppl or solo
 		return
 	end
-	EncounterStartLog(encounterID, encounterName, difficultyID, groupSize)
-	lastStartEvent = GetTime()
-	ExRT.F.Timer(ExRT.F.SendExMsg, 1, "raidatt_event","ENCOUNTER_START\t"..(encounterID or 0).."\t"..(encounterName or "unk").."\t"..(difficultyID or 0).."\t"..(groupSize or 0))
+	if not ExRT.isMN then
+		EncounterStartLog(encounterID, encounterName, difficultyID, groupSize)
+		lastStartEvent = GetTime()
+		ExRT.F.Timer(ExRT.F.SendExMsg, 1, "raidatt_event","ENCOUNTER_START\t"..(encounterID or 0).."\t"..(encounterName or "unk").."\t"..(difficultyID or 0).."\t"..(groupSize or 0))
+	end
 end
 
 function module.main:ENCOUNTER_END(encounterID, encounterName, difficultyID, groupSize, isKill)
 	if not IsInRaid() then	--Disable this in 5ppl or solo
 		return
+	end
+	if ExRT.isMN then
+		EncounterStartLog(encounterID, encounterName, difficultyID, groupSize)
+		lastStartEvent = GetTime()
+		ExRT.F.Timer(ExRT.F.SendExMsg, 1, "raidatt_event","ENCOUNTER_START\t"..(encounterID or 0).."\t"..(encounterName or "unk").."\t"..(difficultyID or 0).."\t"..(groupSize or 0))
 	end
 	EncounterEndLog(encounterID, encounterName, difficultyID, groupSize, isKill)
 	lastEndEvent = GetTime()

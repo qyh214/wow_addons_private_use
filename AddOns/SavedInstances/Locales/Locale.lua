@@ -203,6 +203,7 @@ Ld["Interleave"] = "Interleave"
 Ld["Kain Firebrand"] = "Kain Firebrand"
 Ld["Kaja Cruising"] = "Kaja Cruising"
 Ld["Karantun"] = "Karantun"
+Ld["K'aresh Warrants"] = "K'aresh Warrants"
 Ld["Keystone report target"] = "Keystone report target"
 Ld["Khaz Algar Transmute"] = "Khaz Algar Transmute"
 Ld["KR"] = "KR"
@@ -350,7 +351,6 @@ Ld["Storm's Fury"] = "Storm's Fury"
 Ld["STRT"] = "STRT"
 Ld["SV"] = "SV"
 Ld["TAV"] = "TAV"
-Ld["Tazavesh Warrant Quests"] = "Tazavesh Warrant Quests"
 Ld["TD"] = "TD"
 Ld["Text"] = "Text"
 Ld["The Big Dig: Traitor's Rest"] = "The Big Dig: Traitor's Rest"
@@ -388,6 +388,7 @@ Ld["Trial of Elements"] = "Trial of Elements"
 Ld["Trial of Flood"] = "Trial of Flood"
 Ld["TWW Algari Treatise"] = "TWW Algari Treatise"
 Ld["TWW Profession Weeklies"] = "TWW Profession Weeklies"
+Ld["TWW Season 3 Weekly Cache"] = "TWW Season 3 Weekly Cache"
 Ld["TWW Weekly Cache"] = "TWW Weekly Cache"
 Ld["Type"] = "Type"
 Ld["ULD"] = "ULD"
@@ -635,6 +636,8 @@ La["Kain Firebrand"] = "Kain Marquefeu"
 --[[Translation missing --]]
 La["Kaja Cruising"] = "Kaja Cruising"
 La["Karantun"] = "Karantun"
+--[[Translation missing --]]
+La["K'aresh Warrants"] = "K'aresh Warrants"
 La["Keystone report target"] = "Cible du rapport de Clé mythique"
 La["Khaz Algar Transmute"] = "Transmutation de Khaz Algar"
 --[[Translation missing --]]
@@ -820,8 +823,6 @@ La["SV"] = "SV"
 --[[Translation missing --]]
 La["TAV"] = "TAV"
 --[[Translation missing --]]
-La["Tazavesh Warrant Quests"] = "Tazavesh Warrant Quests"
---[[Translation missing --]]
 La["TD"] = "TD"
 La["Text"] = "Texte"
 --[[Translation missing --]]
@@ -878,6 +879,8 @@ La["Trial of Flood"] = "Trial of Flood"
 La["TWW Algari Treatise"] = "TWW Algari Treatise"
 --[[Translation missing --]]
 La["TWW Profession Weeklies"] = "TWW Profession Weeklies"
+--[[Translation missing --]]
+La["TWW Season 3 Weekly Cache"] = "TWW Season 3 Weekly Cache"
 La["TWW Weekly Cache"] = "TWW cache hebdomadaire"
 La["Type"] = "Type"
 --[[Translation missing --]]
@@ -1106,6 +1109,8 @@ La["Interleave"] = "Zusammenmischen"
 La["Kain Firebrand"] = "Kain Feuermal"
 La["Kaja Cruising"] = "Kaja'cruisen"
 La["Karantun"] = "Karantun"
+--[[Translation missing --]]
+La["K'aresh Warrants"] = "K'aresh Warrants"
 La["Keystone report target"] = "Sende Schlüsselstein an Ziel"
 La["Khaz Algar Transmute"] = "Transmutation von Khaz Algar"
 La["KR"] = "KR"
@@ -1131,8 +1136,7 @@ La["Loot Wyrm Crest Fragment"] = "Schattenflammenwappenbruchstück des Wyrms gep
 La["Lord Kazzak"] = "Lord Kazzak"
 La["LOWR"] = "LOWR"
 La["Manage"] = "Verwalten"
---[[Translation missing --]]
-La["Many Jobs, Handle It!"] = "Many Jobs, Handle It!"
+La["Many Jobs, Handle It!"] = "Viele Aufträge, kümmert Euch drum!"
 La["Mechanized Chest"] = "Mechanisierte Truhe"
 La["Miscellaneous Tracking"] = "Sonstige Verfolgung"
 La["MISTS"] = "MISTS"
@@ -1179,8 +1183,7 @@ La["Recent Bonus Rolls"] = "Letzte Bonuswürfe"
 La["Recent Instances"] = "Kürzliche Instanzen"
 La["Reclaimed Scrap"] = "Zurückgewonnener Schrott"
 La["Recover Dailies"] = "Dailies wiederherstellen"
---[[Translation missing --]]
-La["Reduce, Reuse, Resell"] = "Reduce, Reuse, Resell"
+La["Reduce, Reuse, Resell"] = "Aus alt mach Profit"
 La["Replenish the Reservoir"] = "Das Reservoir auffüllen"
 La["Report instance resets to group"] = "Instanzzurücksetzungen an die Gruppe melden"
 La["Researchers Under Fire"] = "Forscher unter Feuer"
@@ -1256,8 +1259,6 @@ La["Storm's Fury"] = "Zorn des Sturms"
 La["STRT"] = "STRT"
 La["SV"] = "SV"
 La["TAV"] = "TAV"
---[[Translation missing --]]
-La["Tazavesh Warrant Quests"] = "Tazavesh Warrant Quests"
 La["TD"] = "TD"
 La["Text"] = "Text"
 La["The Big Dig: Traitor's Rest"] = "Das große Buddeln: Ruhestätte des Verräters"
@@ -1295,13 +1296,14 @@ La["Trial of Elements"] = "Prüfung der Elemente"
 La["Trial of Flood"] = "Prüfung der Flut"
 La["TWW Algari Treatise"] = "Algarische Abhandlung"
 La["TWW Profession Weeklies"] = "TWW Wöchentliche Berufsquests"
+--[[Translation missing --]]
+La["TWW Season 3 Weekly Cache"] = "TWW Season 3 Weekly Cache"
 La["TWW Weekly Cache"] = "TWW Wöchentliche Truhe"
 La["Type"] = "Art"
 La["ULD"] = "ULD"
 La["UNDR"] = "UNDR"
 La["UPPR"] = "UPPR"
---[[Translation missing --]]
-La["Urge to Surge"] = "Urge to Surge"
+La["Urge to Surge"] = "Heiße Preise"
 La["Use class color"] = "Klassenfarbe verwenden"
 La["User"] = "Benutzer"
 La["Vision Boss + 2 Bonus Objectives"] = "Visions-Boss + 2 Bonusziele"
@@ -1506,6 +1508,8 @@ La["Interleave"] = "끼워넣기"
 La["Kain Firebrand"] = "케인 파이어브랜드"
 La["Kaja Cruising"] = "카자 주행"
 La["Karantun"] = "카란툰"
+--[[Translation missing --]]
+La["K'aresh Warrants"] = "K'aresh Warrants"
 La["Keystone report target"] = "쐐기돌 보고 대상"
 La["Khaz Algar Transmute"] = "카즈 알가르 변환"
 La["KR"] = "왕안"
@@ -1656,8 +1660,6 @@ La["Storm's Fury"] = "폭풍의 격노"
 La["STRT"] = "타자:경이"
 La["SV"] = "바위금고"
 La["TAV"] = "하늘빛 보관소"
---[[Translation missing --]]
-La["Tazavesh Warrant Quests"] = "Tazavesh Warrant Quests"
 La["TD"] = "톨다고르"
 La["Text"] = "글자"
 La["The Big Dig: Traitor's Rest"] = "대규모 발굴: 배신자의 안식처"
@@ -1695,6 +1697,8 @@ La["Trial of Elements"] = "정령의 시험"
 La["Trial of Flood"] = "홍수의 시험"
 La["TWW Algari Treatise"] = "내부전쟁 알가르 논문"
 La["TWW Profession Weeklies"] = "내부전쟁 주간 전문기술"
+--[[Translation missing --]]
+La["TWW Season 3 Weekly Cache"] = "TWW Season 3 Weekly Cache"
 La["TWW Weekly Cache"] = "내부전쟁 주간 보관함"
 La["Type"] = "유형"
 La["ULD"] = "울다만"
@@ -2040,6 +2044,8 @@ La["Kaja Cruising"] = "Kaja Cruising"
 --[[Translation missing --]]
 La["Karantun"] = "Karantun"
 --[[Translation missing --]]
+La["K'aresh Warrants"] = "K'aresh Warrants"
+--[[Translation missing --]]
 La["Keystone report target"] = "Keystone report target"
 --[[Translation missing --]]
 La["Khaz Algar Transmute"] = "Khaz Algar Transmute"
@@ -2285,8 +2291,6 @@ La["SV"] = "SV"
 --[[Translation missing --]]
 La["TAV"] = "TAV"
 --[[Translation missing --]]
-La["Tazavesh Warrant Quests"] = "Tazavesh Warrant Quests"
---[[Translation missing --]]
 La["TD"] = "TD"
 La["Text"] = "Texto"
 --[[Translation missing --]]
@@ -2350,6 +2354,8 @@ La["Trial of Flood"] = "Trial of Flood"
 La["TWW Algari Treatise"] = "TWW Algari Treatise"
 --[[Translation missing --]]
 La["TWW Profession Weeklies"] = "TWW Profession Weeklies"
+--[[Translation missing --]]
+La["TWW Season 3 Weekly Cache"] = "TWW Season 3 Weekly Cache"
 --[[Translation missing --]]
 La["TWW Weekly Cache"] = "TWW Weekly Cache"
 La["Type"] = "Tipo"
@@ -2514,8 +2520,7 @@ La["Earth Core"] = "Земляное ядро"
 La["EB"] = "ВЦ"
 --[[Translation missing --]]
 La["Ecological Succession"] = "Ecological Succession"
---[[Translation missing --]]
-La["EDA"] = "EDA"
+La["EDA"] = "ЗА"
 La["Emblazion"] = "Пламенион"
 La["Emissary Missing"] = "Посланники отсутствуют"
 La["Emissary of War"] = "Посланник войны"
@@ -2584,6 +2589,8 @@ La["Interleave"] = "Смешивать в пределах соединенно�
 La["Kain Firebrand"] = "Кайн Жгучее Клеймо"
 La["Kaja Cruising"] = "Каджа-коллекция"
 La["Karantun"] = "Карантун"
+--[[Translation missing --]]
+La["K'aresh Warrants"] = "K'aresh Warrants"
 La["Keystone report target"] = "Цель отчета по ключам"
 La["Khaz Algar Transmute"] = "Трансмутация Каз Алгара"
 La["KR"] = "ГК"
@@ -2609,8 +2616,7 @@ La["Loot Wyrm Crest Fragment"] = "Фрагмент гребня змея из п
 La["Lord Kazzak"] = "Владыка Каззак"
 La["LOWR"] = "НИЗ"
 La["Manage"] = "Управление"
---[[Translation missing --]]
-La["Many Jobs, Handle It!"] = "Many Jobs, Handle It!"
+La["Many Jobs, Handle It!"] = "Куча доставок!"
 La["Mechanized Chest"] = "Механизированный сундук"
 La["Miscellaneous Tracking"] = "Разнообразное отслеживание"
 La["MISTS"] = "ТТС"
@@ -2657,8 +2663,7 @@ La["Recent Bonus Rolls"] = "Недавние бонусные броски"
 La["Recent Instances"] = "Недавние подземелья"
 La["Reclaimed Scrap"] = "Возвращенный утиль"
 La["Recover Dailies"] = "Восстановление Ежедневных заданий"
---[[Translation missing --]]
-La["Reduce, Reuse, Resell"] = "Reduce, Reuse, Resell"
+La["Reduce, Reuse, Resell"] = "Переработка и перепродажа"
 La["Replenish the Reservoir"] = "Наполнение резервуара"
 La["Report instance resets to group"] = "Сообщать группе об обновлении подземелья"
 La["Researchers Under Fire"] = "Исследователи под огнем"
@@ -2734,8 +2739,6 @@ La["Storm's Fury"] = "Неистовство бури"
 La["STRT"] = "УЛИЦЫ"
 La["SV"] = "КС"
 La["TAV"] = "ЛХ"
---[[Translation missing --]]
-La["Tazavesh Warrant Quests"] = "Tazavesh Warrant Quests"
 La["TD"] = "ТД"
 La["Text"] = "Текст"
 La["The Big Dig: Traitor's Rest"] = "Большие раскопки: Удел Предателя"
@@ -2773,13 +2776,14 @@ La["Trial of Elements"] = "Испытание стихий"
 La["Trial of Flood"] = "Испытание наводнения"
 La["TWW Algari Treatise"] = "Алгарийский трактат"
 La["TWW Profession Weeklies"] = "Еженедельные профессии TWW"
+--[[Translation missing --]]
+La["TWW Season 3 Weekly Cache"] = "TWW Season 3 Weekly Cache"
 La["TWW Weekly Cache"] = "Еженедельный тайник TWW"
 La["Type"] = "Тип"
 La["ULD"] = "УЛЬДАМАН"
 La["UNDR"] = "ПОДГН"
 La["UPPR"] = "ВЕРХ"
---[[Translation missing --]]
-La["Urge to Surge"] = "Urge to Surge"
+La["Urge to Surge"] = "Все выше и выше"
 La["Use class color"] = "Использовать цвет класса"
 La["User"] = "Пользователь"
 La["Vision Boss + 2 Bonus Objectives"] = "Босс Видения + 2 Бонусных цели"
@@ -2913,10 +2917,8 @@ La["Dungeon Runs"] = "地下城记录"
 La["Earth"] = "大地"
 La["Earth Core"] = "原始大地核心"
 La["EB"] = "永茂"
---[[Translation missing --]]
-La["Ecological Succession"] = "Ecological Succession"
---[[Translation missing --]]
-La["EDA"] = "EDA"
+La["Ecological Succession"] = "生态演替"
+La["EDA"] = "圆顶"
 La["Emblazion"] = "恩布拉基昂"
 La["Emissary Missing"] = "大使任务缺失"
 La["Emissary of War"] = "战争的使者"
@@ -2985,6 +2987,7 @@ La["Interleave"] = "交错"
 La["Kain Firebrand"] = "凯恩·火印"
 La["Kaja Cruising"] = "卡亚巡游"
 La["Karantun"] = "卡兰土恩"
+La["K'aresh Warrants"] = "卡雷什悬赏令"
 La["Keystone report target"] = "史诗钥石导出目标"
 La["Khaz Algar Transmute"] = "卡兹阿加转化"
 La["KR"] = "诸王"
@@ -2992,7 +2995,7 @@ La["Last updated"] = "最后更新"
 La["Legion Transmute"] = "军团转化"
 La["Lesser Keyflame"] = "小型钥焰"
 La["Lesser Visions of N'Zoth"] = "恩佐斯的小型幻象"
-La["Level %d Characters"] = "等级 %d 人物"
+La["Level %d Characters"] = "等级 %d 角色"
 La["LFG cooldown"] = "随机地下城冷却"
 La["LFR"] = "团队搜寻器"
 La["List categories from the current expansion pack first"] = "从目前的资料片开始依次向后显示"
@@ -3010,15 +3013,13 @@ La["Loot Wyrm Crest Fragment"] = "拾取魔龙纹章碎片"
 La["Lord Kazzak"] = "卡扎克"
 La["LOWR"] = "卡下"
 La["Manage"] = "管理"
---[[Translation missing --]]
-La["Many Jobs, Handle It!"] = "Many Jobs, Handle It!"
+La["Many Jobs, Handle It!"] = "差事太多，赶紧做完！"
 La["Mechanized Chest"] = "机械化的宝箱"
 La["Miscellaneous Tracking"] = "杂项"
 La["MISTS"] = "仙林"
 La["ML"] = "暴富"
 La["Mogu Strongbox"] = "魔古保险箱"
---[[Translation missing --]]
-La["More Than Just a Phase"] = "More Than Just a Phase"
+La["More Than Just a Phase"] = "不只是相位"
 La["MOS"] = "噬魂"
 La["Most recent first"] = "当前的资料片优先"
 La["Mythic Best"] = "史诗钥石每周最佳记录"
@@ -3058,8 +3059,7 @@ La["Recent Bonus Rolls"] = "近期额外拾取情况"
 La["Recent Instances"] = "近期副本"
 La["Reclaimed Scrap"] = "回收的废料"
 La["Recover Dailies"] = "提取日常任务"
---[[Translation missing --]]
-La["Reduce, Reuse, Resell"] = "Reduce, Reuse, Resell"
+La["Reduce, Reuse, Resell"] = "节减、回收、再转售"
 La["Replenish the Reservoir"] = "补充储备"
 La["Report instance resets to group"] = "报告副本重置"
 La["Researchers Under Fire"] = "研究员遇袭"
@@ -3135,8 +3135,6 @@ La["Storm's Fury"] = "暴风之怒"
 La["STRT"] = "天街"
 La["SV"] = "宝库"
 La["TAV"] = "魔馆"
---[[Translation missing --]]
-La["Tazavesh Warrant Quests"] = "Tazavesh Warrant Quests"
 La["TD"] = "托尔"
 La["Text"] = "文本"
 La["The Big Dig: Traitor's Rest"] = "盛大发掘：叛徒之眠"
@@ -3174,13 +3172,13 @@ La["Trial of Elements"] = "元素试炼"
 La["Trial of Flood"] = "洪水试炼"
 La["TWW Algari Treatise"] = "地心之战阿加论述"
 La["TWW Profession Weeklies"] = "地心之战专业周常"
+La["TWW Season 3 Weekly Cache"] = "地心之战第3赛季每周宝箱"
 La["TWW Weekly Cache"] = "地心之战每周宝箱"
 La["Type"] = "类型"
 La["ULD"] = "奥达曼"
 La["UNDR"] = "孢林"
 La["UPPR"] = "卡上"
---[[Translation missing --]]
-La["Urge to Surge"] = "Urge to Surge"
+La["Urge to Surge"] = "尖峰时刻"
 La["Use class color"] = "使用职业颜色"
 La["User"] = "用户"
 La["Vision Boss + 2 Bonus Objectives"] = "三箱"
@@ -3288,8 +3286,7 @@ La["Brawl Weekly"] = "Brawl Weekly"
 La["BREW"] = "BREW"
 --[[Translation missing --]]
 La["BRH"] = "BRH"
---[[Translation missing --]]
-La["C.H.E.T.T. List"] = "C.H.E.T.T. List"
+La["C.H.E.T.T. List"] = "Lista de la T.C.E.H.T."
 --[[Translation missing --]]
 La["Calling Missing"] = "Calling Missing"
 --[[Translation missing --]]
@@ -3329,8 +3326,7 @@ La["Debug Mode"] = "Modo de depuración"
 La["Delete Entry"] = "Delete Entry"
 --[[Translation missing --]]
 La["Delver's Bounty"] = "Delver's Bounty"
---[[Translation missing --]]
-La["Delves"] = "Delves"
+La["Delves"] = "Profundidades"
 --[[Translation missing --]]
 La["Desire to D.R.I.V.E."] = "Desire to D.R.I.V.E."
 --[[Translation missing --]]
@@ -3371,8 +3367,7 @@ La["EDA"] = "EDA"
 La["Emblazion"] = "Emblazion"
 --[[Translation missing --]]
 La["Emissary Missing"] = "Emissary Missing"
---[[Translation missing --]]
-La["Emissary of War"] = "Emissary of War"
+La["Emissary of War"] = "Emisario de guerra"
 --[[Translation missing --]]
 La["Emissary Quests"] = "Emissary Quests"
 --[[Translation missing --]]
@@ -3476,6 +3471,8 @@ La["Kaja Cruising"] = "Kaja Cruising"
 --[[Translation missing --]]
 La["Karantun"] = "Karantun"
 --[[Translation missing --]]
+La["K'aresh Warrants"] = "K'aresh Warrants"
+--[[Translation missing --]]
 La["Keystone report target"] = "Keystone report target"
 --[[Translation missing --]]
 La["Khaz Algar Transmute"] = "Khaz Algar Transmute"
@@ -3573,8 +3570,7 @@ La["Primal Storms Elementals"] = "Primal Storms Elementals"
 La["Progress Persists"] = "Progress Persists"
 --[[Translation missing --]]
 La["PSF"] = "PSF"
---[[Translation missing --]]
-La["PvP Weekly"] = "PvP Weekly"
+La["PvP Weekly"] = "Misiones semanales de PVP"
 --[[Translation missing --]]
 La["Quest ID"] = "Quest ID"
 --[[Translation missing --]]
@@ -3641,7 +3637,7 @@ La["Show category names in the tooltip"] = "Mostrar los nombres de categorías e
 La["Show cooldown for characters to use battleground system"] = "Muestra el tiempo de reutilización de personajes para entrar en un campo de batalla."
 La["Show cooldown for characters to use LFG dungeon system"] = "Muestra el tiempo de reutilización de personajes para utilizar el sistema BdG."
 La["Show currency earned"] = "Mostrar cantidad ganada"
-La["Show currency max"] = "Mostrar cantidad máxima de moneda"
+La["Show currency max"] = "Mostrar cantidad máxima"
 --[[Translation missing --]]
 La["Show emissary line when all quests completed"] = "Show emissary line when all quests completed"
 La["Show Expired"] = "Mostrar acabados"
@@ -3698,8 +3694,6 @@ La["SV"] = "SV"
 --[[Translation missing --]]
 La["TAV"] = "TAV"
 --[[Translation missing --]]
-La["Tazavesh Warrant Quests"] = "Tazavesh Warrant Quests"
---[[Translation missing --]]
 La["TD"] = "TD"
 La["Text"] = "Texto"
 --[[Translation missing --]]
@@ -3724,8 +3718,7 @@ La["Time Left"] = "Tiempo restante"
 La["Time Rift"] = "Time Rift"
 --[[Translation missing --]]
 La["Time to Vacate"] = "Time to Vacate"
---[[Translation missing --]]
-La["Timewalking Weekend Event"] = "Timewalking Weekend Event"
+La["Timewalking Weekend Event"] = "Paseo en el tiempo"
 --[[Translation missing --]]
 La["Timeworn Mythic Keystone"] = "Timeworn Mythic Keystone"
 --[[Translation missing --]]
@@ -3752,8 +3745,8 @@ La["Trial of Elements"] = "Trial of Elements"
 La["Trial of Flood"] = "Trial of Flood"
 --[[Translation missing --]]
 La["TWW Algari Treatise"] = "TWW Algari Treatise"
---[[Translation missing --]]
-La["TWW Profession Weeklies"] = "TWW Profession Weeklies"
+La["TWW Profession Weeklies"] = "TWW Misiones semanales de profesiones"
+La["TWW Season 3 Weekly Cache"] = "TWW Alijo semanal S3"
 La["TWW Weekly Cache"] = "TWW Alijo semanal"
 La["Type"] = "Tipo"
 --[[Translation missing --]]
@@ -3794,8 +3787,7 @@ La["WM"] = "WM"
 La["WORK"] = "WORK"
 La["World Boss"] = "Jefe del mundo"
 La["World Bosses"] = "Jefes del mundo"
---[[Translation missing --]]
-La["World PvP Weekly"] = "World PvP Weekly"
+La["World PvP Weekly"] = "Misiones semanales de mundo de PVP"
 --[[Translation missing --]]
 La["Wrath of the Jailer"] = "Wrath of the Jailer"
 --[[Translation missing --]]
@@ -3983,6 +3975,8 @@ La["Interleave"] = "交錯"
 La["Kain Firebrand"] = "凱恩‧火烙"
 La["Kaja Cruising"] = "卡迦巡航"
 La["Karantun"] = "卡倫棠"
+--[[Translation missing --]]
+La["K'aresh Warrants"] = "K'aresh Warrants"
 La["Keystone report target"] = "報告目標鑰石"
 La["Khaz Algar Transmute"] = "卡茲阿爾加轉化"
 La["KR"] = "諸王"
@@ -4008,15 +4002,13 @@ La["Loot Wyrm Crest Fragment"] = "拾取巨龍紋章碎片"
 La["Lord Kazzak"] = "卡扎克領主"
 La["LOWR"] = "卡拉下"
 La["Manage"] = "管理"
---[[Translation missing --]]
-La["Many Jobs, Handle It!"] = "Many Jobs, Handle It!"
+La["Many Jobs, Handle It!"] = "處理工作不怕難！"
 La["Mechanized Chest"] = "機械箱"
 La["Miscellaneous Tracking"] = "其他追蹤"
 La["MISTS"] = "迷霧"
 La["ML"] = "晶喜鎮"
 La["Mogu Strongbox"] = "魔古寶箱"
---[[Translation missing --]]
-La["More Than Just a Phase"] = "More Than Just a Phase"
+La["More Than Just a Phase"] = "不只是相位"
 La["MOS"] = "靈魂"
 La["Most recent first"] = "最近的優先"
 La["Mythic Best"] = "最佳傳奇"
@@ -4056,8 +4048,7 @@ La["Recent Bonus Rolls"] = "最近的額外骰子"
 La["Recent Instances"] = "最近的副本"
 La["Reclaimed Scrap"] = "回收的廢料"
 La["Recover Dailies"] = "恢復每日"
---[[Translation missing --]]
-La["Reduce, Reuse, Resell"] = "Reduce, Reuse, Resell"
+La["Reduce, Reuse, Resell"] = "廢物回收轉售"
 La["Replenish the Reservoir"] = "補充靈魄庫"
 La["Report instance resets to group"] = "重置副本時通報團隊"
 La["Researchers Under Fire"] = "被攻擊的研究員"
@@ -4133,8 +4124,6 @@ La["Storm's Fury"] = "風暴之怒"
 La["STRT"] = "街道"
 La["SV"] = "石庫"
 La["TAV"] = "蒼藍"
---[[Translation missing --]]
-La["Tazavesh Warrant Quests"] = "Tazavesh Warrant Quests"
 La["TD"] = "托達"
 La["Text"] = "文字"
 La["The Big Dig: Traitor's Rest"] = "重大挖掘：背叛者之眠"
@@ -4172,13 +4161,14 @@ La["Trial of Elements"] = "元素的試煉"
 La["Trial of Flood"] = "洪流的試煉"
 La["TWW Algari Treatise"] = "阿爾加概論"
 La["TWW Profession Weeklies"] = "地心專業周任"
+--[[Translation missing --]]
+La["TWW Season 3 Weekly Cache"] = "TWW Season 3 Weekly Cache"
 La["TWW Weekly Cache"] = "地心之戰每週寶箱"
 La["Type"] = "類型"
 La["ULD"] = "奧達曼"
 La["UNDR"] = "幽腐"
 La["UPPR"] = "卡拉上"
---[[Translation missing --]]
-La["Urge to Surge"] = "Urge to Surge"
+La["Urge to Surge"] = "拼命賺錢"
 La["Use class color"] = "使用職業顏色"
 La["User"] = "使用者"
 La["Vision Boss + 2 Bonus Objectives"] = "幻象首領 + 2個獎勵目標"
@@ -4387,6 +4377,8 @@ La["Kain Firebrand"] = "Kain Temerário"
 La["Kaja Cruising"] = "Cruzeiro de Jaka"
 La["Karantun"] = "Karantun"
 --[[Translation missing --]]
+La["K'aresh Warrants"] = "K'aresh Warrants"
+--[[Translation missing --]]
 La["Keystone report target"] = "Keystone report target"
 La["Khaz Algar Transmute"] = "Transmutação (Alquimia de Khaz Algar)"
 La["KR"] = "RDR"
@@ -4540,8 +4532,6 @@ La["Storm's Fury"] = "A fúria da tempestade"
 La["STRT"] = "RUAS"
 La["SV"] = "ADP"
 La["TAV"] = "LAZULI"
---[[Translation missing --]]
-La["Tazavesh Warrant Quests"] = "Tazavesh Warrant Quests"
 La["TD"] = "TD"
 La["Text"] = "Texto"
 La["The Big Dig: Traitor's Rest"] = "Grande Escavação: Descanso do Traidor"
@@ -4579,6 +4569,8 @@ La["Trial of Elements"] = "Prova dos Elementos"
 La["Trial of Flood"] = "Prova da Inundação"
 La["TWW Algari Treatise"] = "Tratado Algari de TWW"
 La["TWW Profession Weeklies"] = "Semanais das Profissões de TWW"
+--[[Translation missing --]]
+La["TWW Season 3 Weekly Cache"] = "TWW Season 3 Weekly Cache"
 La["TWW Weekly Cache"] = "Baús Semanais de TWW"
 La["Type"] = "Tipo"
 La["ULD"] = "ULD"
@@ -4839,6 +4831,8 @@ La["Kain Firebrand"] = "Kain Brandifuoco"
 La["Kaja Cruising"] = "Kaja Cruising"
 --[[Translation missing --]]
 La["Karantun"] = "Karantun"
+--[[Translation missing --]]
+La["K'aresh Warrants"] = "K'aresh Warrants"
 La["Keystone report target"] = "Rapporto del bersaglio nella Chiave del Potere"
 --[[Translation missing --]]
 La["Khaz Algar Transmute"] = "Khaz Algar Transmute"
@@ -5022,8 +5016,6 @@ La["SV"] = "SV"
 --[[Translation missing --]]
 La["TAV"] = "TAV"
 --[[Translation missing --]]
-La["Tazavesh Warrant Quests"] = "Tazavesh Warrant Quests"
---[[Translation missing --]]
 La["TD"] = "TD"
 La["Text"] = "Testo"
 La["The Big Dig: Traitor's Rest"] = "Il Grande Scavo: Riposo del Traditore"
@@ -5072,6 +5064,8 @@ La["Trial of Flood"] = "Prova del Torrente"
 La["TWW Algari Treatise"] = "TWW Algari Treatise"
 --[[Translation missing --]]
 La["TWW Profession Weeklies"] = "TWW Profession Weeklies"
+--[[Translation missing --]]
+La["TWW Season 3 Weekly Cache"] = "TWW Season 3 Weekly Cache"
 --[[Translation missing --]]
 La["TWW Weekly Cache"] = "TWW Weekly Cache"
 La["Type"] = "Tipo"

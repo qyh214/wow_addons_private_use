@@ -3,4 +3,5 @@
 	<Script file='Developer.lua'/>
 	<Script file='NPCInfo.lua'/>
 	<Script file='Strings.lua'/>
+	<Script file='TaskManager.lua'/>
 </Ui>

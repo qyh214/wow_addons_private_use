@@ -69,6 +69,10 @@ local list = {
 		{AuraID = 1213433, UnitID = "player", Text = L["Crit"]},	-- 哈哈棱镜
 		{AuraID = 1213434, UnitID = "player", Text = L["Haste"]},	-- 哈哈棱镜
 		{AuraID = 466681, UnitID = "player"},	-- 纸牌屋
+		{AuraID = 1241806, UnitID = "player"},	-- 被诅咒的雕像
+		{AuraID = 1239675, UnitID = "player", Combat = true},	-- 棱镜，叠层
+		{AuraID = 1233556, UnitID = "player"},	-- 棱镜
+		{AuraID = 1232802, UnitID = "player"},	-- 熔炉
 		-- 10.0 饰品
 		{AuraID = 381476, UnitID = "player"},	-- 爆发烈焰
 		{AuraID = 383941, UnitID = "player"},	-- 崩坏之力
@@ -411,7 +415,7 @@ local list = {
 		{IntID = 114018, Duration = 15, OnSuccess = true, UnitID = "all"},	-- 帷幕
 		--{IntID = 240447, Duration = 20},	-- 大米，践踏
 		--{IntID = 316958, Duration = 30, OnSuccess = true, UnitID = "all"},	-- 红土
-		--{IntID = 353635, Duration = 27.5, OnSuccess = true, UnitID = "all"},-- 坍缩之星自爆时间
+		{IntID = 353635, Duration = 27.5, OnSuccess = true, UnitID = "all"},-- 坍缩之星自爆时间
 	},
 }
 

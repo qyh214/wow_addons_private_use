@@ -119,6 +119,16 @@ app.CreateObject = app.CreateClass("Object", "objectID", {
 		end
 		return unsavedCoords;
 	end,
+	maps = function(t)
+		local unsaved = {};
+		for _,group in ipairs(t.g) do
+			-- show collected maps of all sub-objects which are not saved
+			if group.objectID and group.maps and not group.saved then
+				ArrayAppend(unsaved, group.maps)
+			end
+		end
+		return unsaved
+	end,
 	indicatorIcon = function(t)
 		local anyActive
 		local activeObjectVignettes = app.ActiveVignettes.object

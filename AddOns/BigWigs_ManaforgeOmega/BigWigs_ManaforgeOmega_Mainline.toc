@@ -1,4 +1,4 @@
-## Interface: 110105, 110107, 110200
+## Interface: 110205, 110207, 120000
 
 ## Title: BigWigs [|cffeda55fManaforge Omega|r]
 ## Title-deDE: BigWigs [|cffeda55fManaschmiede Omega|r]
@@ -23,7 +23,7 @@
 ## Notes-zhCN: BigWigs 法力熔炉：欧米伽模块
 ## Notes-zhTW: BigWigs 法力熔爐歐美加模組
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
-## Version: v392.7
+## Version: v402.1
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs

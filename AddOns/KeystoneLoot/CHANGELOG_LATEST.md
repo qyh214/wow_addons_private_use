@@ -1,2 +1,2 @@
-## Bugfixes
-- Season 3 dungeon data
+## Other Changes
+- Bump TOC Version

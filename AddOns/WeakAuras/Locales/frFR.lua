@@ -129,6 +129,10 @@ Last upgrade: %s]=] ] = "Êtes-vous sûr de vouloir exécuter l'outil de répara
 L["Arena"] = "Arène"
 L["Armor (%)"] = "Armure (%)"
 L["Armor against Target (%)"] = "Armure contre Cible (%)"
+--[[Translation missing --]]
+L["Armor Peneration Percent"] = "Armor Peneration Percent"
+--[[Translation missing --]]
+L["Armor Peneration Rating"] = "Armor Peneration Rating"
 L["Armor Rating"] = "Categorie d'armure"
 L["Array"] = "Tableau"
 L["Ascending"] = "Croissant"
@@ -202,6 +206,8 @@ L["Bar enabled in DBM settings"] = [=[Barre activée dans les paramètres de DBM
 
 ]=]
 L["Bar Texture"] = "Texture de la barre"
+--[[Translation missing --]]
+L["Bar Type"] = "Bar Type"
 L["Baron Geddon"] = "Baron Geddon"
 L["Battle for Azeroth"] = "Battle for Azeroth"
 L["Battle.net Whisper"] = "Message Battle.net"
@@ -259,6 +265,8 @@ L["Bottom Right"] = "Bas Droite"
 L["Bottom to Top"] = "De Bas en Haut"
 L["Bounce"] = "Rebond"
 L["Bounce with Decay"] = "Rebond décroissant"
+--[[Translation missing --]]
+L["Break"] = "Break"
 --[[Translation missing --]]
 L["BreakUpLargeNumbers (Blizzard)"] = "BreakUpLargeNumbers (Blizzard)"
 --[[Translation missing --]]
@@ -481,6 +489,8 @@ L["Debug Logging enabled"] = "Debug Logging enabled"
 --[[Translation missing --]]
 L["Debug Logging enabled for '%s'"] = "Debug Logging enabled for '%s'"
 --[[Translation missing --]]
+L["Defense"] = "Defense"
+--[[Translation missing --]]
 L["Defensive Stats"] = "Defensive Stats"
 L["Deflect"] = "Déviation"
 --[[Translation missing --]]
@@ -539,6 +549,8 @@ L["Drain"] = "Drain"
 L["Dropdown Menu"] = "Menu Déroulant"
 --[[Translation missing --]]
 L["Dumping table"] = "Dumping table"
+--[[Translation missing --]]
+L["Dungeon (Celestial)"] = "Dungeon (Celestial)"
 L["Dungeon (Heroic)"] = "Donjon (Héroïque)"
 L["Dungeon (Mythic)"] = "Donjon (Mythique)"
 --[[Translation missing --]]
@@ -643,7 +655,7 @@ L["Error Frame"] = "Fenêtre d'erreur"
 --[[Translation missing --]]
 L["ERROR in '%s' unknown or incompatible sub element type '%s'"] = "ERROR in '%s' unknown or incompatible sub element type '%s'"
 --[[Translation missing --]]
-L["Error in aura '%s'"] = "Error in aura '%s'"
+L["Error in Aura '%s'"] = "Error in Aura '%s'"
 L["Error not receiving display information from %s"] = "Erreur de non-réception d'informations d'affichage de %s"
 --[[Translation missing --]]
 L["Essence"] = "Essence"
@@ -1051,6 +1063,10 @@ L["Loot Specialization"] = "Loot Specialization"
 L["Loot Specialization Id"] = "Loot Specialization Id"
 --[[Translation missing --]]
 L["Loot Specialization Name"] = "Loot Specialization Name"
+--[[Translation missing --]]
+L["Lord Kazzak"] = "Lord Kazzak"
+--[[Translation missing --]]
+L["Lorewalking"] = "Lorewalking"
 L["Lost"] = "Perdu"
 L["Low Damage"] = "Dégâts faibles"
 L["Lower Than Tank"] = "Plus bas que le tank"
@@ -1059,7 +1075,7 @@ L["Lowest Spell Id"] = "Lowest Spell Id"
 --[[Translation missing --]]
 L["Lua error"] = "Lua error"
 --[[Translation missing --]]
-L["Lua error in aura '%s': %s"] = "Lua error in aura '%s': %s"
+L["Lua error in Aura '%s': %s"] = "Lua error in Aura '%s': %s"
 --[[Translation missing --]]
 L["Lucifron"] = "Lucifron"
 --[[Translation missing --]]
@@ -1323,6 +1339,8 @@ L["Other Addons"] = "Autre Addons"
 L["Other Events"] = "Autre Événements"
 L["Ouro"] = "Ouro"
 L["Outline"] = "Contour"
+--[[Translation missing --]]
+L["Over Energize"] = "Over Energize"
 L["Overhealing"] = "Soin en excès"
 L["Overkill"] = "Dégâts en excès"
 L["Overlay %s"] = "Superposer %s"
@@ -1421,8 +1439,12 @@ L["Progress"] = "Progrès"
 L["Progress Source"] = "Progress Source"
 L["Progress Total"] = "Progrès Total"
 L["Progress Value"] = "Valeur de progression"
+--[[Translation missing --]]
+L["Pull"] = "Pull"
 L["Pulse"] = "Pulsation"
 L["PvP Flagged"] = "JcJ activé"
+--[[Translation missing --]]
+L["PvP Mode Active"] = "PvP Mode Active"
 L["PvP Talent selected"] = "Talent JcJ sélectionné"
 --[[Translation missing --]]
 L["PvP Talent Selected"] = "PvP Talent Selected"
@@ -1583,6 +1605,8 @@ L[ [=[Secure frame detected. Find more information:
 https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=] ] = [=[Secure frame detected. Find more information:
 https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=]
 L["Select Frame"] = "Sélectionner le cadre"
+--[[Translation missing --]]
+L["Select the type of timer to filter"] = "Select the type of timer to filter"
 --[[Translation missing --]]
 L["Selection Mode"] = "Selection Mode"
 L["Separator"] = "Séparateur"
@@ -1918,6 +1942,8 @@ L["Time since stack lost"] = "Time since stack lost"
 L["Timed"] = "Temporisé"
 --[[Translation missing --]]
 L["Timed Progress"] = "Timed Progress"
+--[[Translation missing --]]
+L["Timer"] = "Timer"
 --[[Translation missing --]]
 L["Timer Id"] = "Timer Id"
 L["Toggle"] = "Basculer"

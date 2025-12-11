@@ -100,7 +100,8 @@ local function IsInShadowlands()
 end
 
 function P:UpdateDelayedZoneData()
-	self.isInShadowlands = E.isSL or (E.postDF and not self.isInPvPInstance and IsInShadowlands())
+
+	self.isInShadowlands = E.isSL or E.postDF and not self.isInPvPInstance and self.zone ~= "party" and IsInShadowlands()
 end
 
 local function InspectAllGroupMembers()
@@ -257,12 +258,17 @@ end
 
 function P:UpdateRosterInfo(force, clearSession)
 	local size = P:GetEffectiveNumGroupMembers()
+	local isInRaid = IsInRaid()
 
 	local wasDisabled = P.disabled
-	P.disabled = not P.isInTestMode and (size == 0 or E.isInPetBattle
-		or (size == 1 and P.isUserDisabled)
-		or (GetNumGroupMembers(LE_PARTY_CATEGORY_HOME) == 0 and not E.profile.Party.visibility.finder)
-		or (size > E.profile.Party.groupSize[P.zone]))
+	P.disabled = not P.isInTestMode and (
+		size == 0 or
+		E.isInPetBattle or
+		size == 1 and P.isUserDisabled or
+		GetNumGroupMembers(LE_PARTY_CATEGORY_HOME) == 0 and not E.profile.Party.visibility.finder or
+		size > E.profile.Party.groupSize[P.zone] or
+		isInRaid and not E.profile.Party.raidGroup[P.zone]
+	)
 
 	if P.disabled then
 		if not wasDisabled then
@@ -279,7 +285,6 @@ function P:UpdateRosterInfo(force, clearSession)
 
 	E.Libs.CBH:Fire("OnStartup")
 
-	local isInRaid = IsInRaid()
 	local isCallback = type(self) == "userdata"
 	local isReadyForSync = isCallback and P.groupJoined
 

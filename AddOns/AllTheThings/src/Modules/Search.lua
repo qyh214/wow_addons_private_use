@@ -87,6 +87,7 @@ local KeyMaps = setmetatable({
 	species = "speciesID",
 	spell = "spellID",
 	talent = "spellID",
+	transmogappearance = "sourceID",
 	q = "questID",
 	quest = "questID",
 }, { __index = function(t,key) return key.."ID" end})
@@ -123,7 +124,8 @@ local function SearchByItemLink(link)
 		-- app.PrintDebug("SEARCHING FOR ITEM LINK WITH SOURCE", link, itemID, sourceID);
 		search = SearchForObject("sourceID", sourceID, nil, true)
 		-- app.PrintDebug("SFL.sourceID",sourceID,#search)
-		if #search > 0 then return search, "sourceID", sourceID end
+		-- if #search > 0 then return search, "sourceID", sourceID end
+		return search, "sourceID", sourceID
 	end
 	-- Search for the Item ID. (an item without an appearance)
 	-- app.PrintDebug("SFL-exact",itemID, modID, (tonumber(bonusCount) or 0) > 0 and bonusID1)
@@ -224,6 +226,10 @@ do
 		end,
 		currencyID = function(field, id)
 			local results = SearchForObject(field, id, "field", true)
+			return results
+		end,
+		achievementID = function(field, id)
+			local results = SearchForObject(field, id, "key", true)
 			return results
 		end,
 		LinkSources = function(link)
@@ -506,17 +512,8 @@ function app:BuildTargettedSearchResponse(groups, field, value, drop, criteria)
 	return ClonedHierarchyGroups;
 end
 
--- Allows a user to use /att search|? [link]
--- to enable Debug Printing of Event messages
-app.ChatCommands.Add({"search","?"}, function(args)
-	local search = args[2]
-	if not search then
-		local guid = UnitGUID("target");
-		if guid then
-			search = "n:" .. select(6, ("-"):split(guid));
-		end
-	end
-
+-- Performs the internal logic of searching ATT for a given command/link and then navigating ATT's UI to show the results
+app.SearchAndOpen = function(search)
 	local results = SearchForLink(search)
 	if not results or #results == 0 then
 		results = SourceSearcher.LinkSources(search)
@@ -529,13 +526,14 @@ app.ChatCommands.Add({"search","?"}, function(args)
 	-- expand the hierarchy to each search result
 	local DGR = app.DirectGroupRefresh
 	local GetRelative = app.GetRelativeRawWithField
-	local window
-	local o
+	local windows = {}
+	local window, o
 	for i = 1,#results do
 		o = results[i]
-		if not window then
-			-- find the containing window
-			window = GetRelative(o, "window")
+		-- find the containing window
+		window = GetRelative(o, "window")
+		if window and not windows[window] then
+			windows[window] = true
 
 			-- open the containing Window
 			window:SetVisible(true)
@@ -556,10 +554,26 @@ app.ChatCommands.Add({"search","?"}, function(args)
 
 	-- report results
 	local firstResult = results[1]
-	app.print("Found",#results,"results for",app:SearchLink(firstResult),"within",window.Suffix)
+	app.print("Found",#results,"results for",app:SearchLink(firstResult))
 
-	-- mark the window to scroll to the first result
-	window:ScrollTo(firstResult.key, firstResult[firstResult.key])
+	-- mark the window(s) to scroll to the first result
+	for window,_ in pairs(windows) do
+		window:ScrollTo(firstResult.key, firstResult[firstResult.key])
+	end
+end
+
+-- Allows a user to use /att search|? [link]
+-- to enable Debug Printing of Event messages
+app.ChatCommands.Add({"search","?"}, function(args)
+	local search = args[2]
+	if not search then
+		local guid = UnitGUID("target");
+		if guid then
+			search = "n:" .. select(6, ("-"):split(guid));
+		end
+	end
+
+	app.SearchAndOpen(search)
 
 	return true
 end, {

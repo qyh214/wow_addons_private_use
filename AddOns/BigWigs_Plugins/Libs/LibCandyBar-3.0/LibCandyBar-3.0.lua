@@ -48,6 +48,10 @@ local _fontShadowX, _fontShadowY = GameFontHighlightSmallOutline:GetShadowOffset
 local _fontShadowR, _fontShadowG, _fontShadowB, _fontShadowA = GameFontHighlightSmallOutline:GetShadowColor()
 local SetWidth, SetHeight, SetSize = lib.dummyFrame.SetWidth, lib.dummyFrame.SetHeight, lib.dummyFrame.SetSize
 
+local issecretvalue = issecretvalue or function() -- 12.0 compatibility
+	return false
+end
+
 local function stopBar(bar)
 	bar.updater:Stop()
 	bar.data = nil
@@ -174,7 +178,7 @@ local function restyleBar(self)
 	self.candyBarIconFrame:ClearAllPoints()
 	self.candyBarBar:ClearAllPoints()
 	-- In the past we used a :GetTexture check here, but as of WoW v5 it randomly returns nil, so use our own trustworthy variable.
-	if self.candyBarIconFrame.icon then
+	if issecretvalue(self.candyBarIconFrame.icon) or self.candyBarIconFrame.icon then
 		self.candyBarIconFrame:SetWidth(self.height)
 		if self.iconPosition == "RIGHT" then
 			self.candyBarIconFrame:SetPoint("TOPRIGHT", self)
@@ -197,7 +201,7 @@ local function restyleBar(self)
 		self.candyBarBar:SetPoint("BOTTOMRIGHT", self)
 		self.candyBarIconFrame:Hide()
 	end
-	if self.showLabel and self.candyBarLabel.text then
+	if self.showLabel and (issecretvalue(self.candyBarLabel.text) or self.candyBarLabel.text) then
 		self.candyBarLabel:Show()
 	else
 		self.candyBarLabel:Hide()
@@ -319,7 +323,7 @@ end
 function barPrototype:SetLabel(text)
 	self.candyBarLabel.text = text
 	self.candyBarLabel:SetText(text)
-	if text then
+	if issecretvalue(text) or text then
 		self.candyBarLabel:Show()
 	else
 		self.candyBarLabel:Hide()
@@ -574,4 +578,3 @@ function lib:New(texture, width, height)
 
 	return bar
 end
-

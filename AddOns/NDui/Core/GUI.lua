@@ -9,7 +9,7 @@ local guiTab, guiPage, f = {}, {}
 
 -- Default Settings
 G.DefaultSettings = {
-	Reset = false,
+	Reset2 = false,
 	Mover = {},
 	InternalCD = {},
 	AuraWatchMover = {},
@@ -93,7 +93,7 @@ G.DefaultSettings = {
 		BarStancePerRow = 10,
 		VehButtonSize = 34,
 		MBSize = 22,
-		MBPerRow = 12,
+		MBPerRow = 13,
 		MBSpacing = 5,
 	},
 	Bags = {
@@ -132,6 +132,7 @@ G.DefaultSettings = {
 		FilterStone = false,
 		FilterAOE = true,
 		FilterLower = true,
+		FilterLegacy = false,
 	},
 	Auras = {
 		Reminder = true,
@@ -249,7 +250,7 @@ G.DefaultSettings = {
 		AutoBuffs = false,
 		ShowRoleMode = 1,
 		OverAbsorb = false,
-		PrivateSize = 30,
+		PrivateSize = 22,
 		ReversePrivate = false,
 
 		PlayerWidth = 245,
@@ -713,9 +714,9 @@ loader:SetScript("OnEvent", function(self, _, addon)
 	end
 	InitialSettings(G.DefaultSettings, C.db, true)
 
-	if not C.db["Reset"] then
-		C.db["Actionbar"]["Enable"] = true
-		C.db["Reset"] = true
+	if not C.db["Reset2"] then
+		C.db["Actionbar"]["MBPerRow"] = 13
+		C.db["Reset2"] = true
 	end
 
 	B:SetupUIScale(true)
@@ -1159,7 +1160,7 @@ end
 
 G.TabList = {
 	L["Actionbar"],
-	L["Bags"],
+	IsNew..L["Bags"],
 	L["Unitframes"],
 	L["RaidFrame"],
 	L["Nameplate"],
@@ -1201,7 +1202,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	[2] = {
 		{1, "Bags", "Enable", HeaderTag..L["Enable Bags"]},
 		{},--blank
-		{1, "Bags", "ItemFilter", L["Bags ItemFilter"].."*", nil, setupBagFilter, updateBagStatus},
+		{1, "Bags", "ItemFilter", IsNew..L["Bags ItemFilter"].."*", nil, setupBagFilter, updateBagStatus},
 		{1, "Bags", "GatherEmpty", L["Bags GatherEmpty"].."*", true, nil, updateBagStatus},
 		{1, "Bags", "SpecialBagsColor", L["SpecialBagsColor"].."*", nil, nil, updateBagStatus, L["SpecialBagsColorTip"]},
 		{1, "Bags", "ShowNewItem", L["Bags ShowNewItem"], true},
@@ -1256,6 +1257,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "BuffClickThru", L["BuffClickThru"].."*", true, nil, updateRaidAurasOptions, L["ClickThroughTip"]},
 		{3, "UFs", "RaidDebuffSize", L["RaidDebuffSize"].."*", nil, {5, 30, 1}, updateRaidAurasOptions},
 		{3, "UFs", "RaidBuffSize", L["RaidBuffSize"].."*", true, {5, 30, 1}, updateRaidAurasOptions},
+		{3, "UFs", "PrivateSize", "PrivateAuras", nil, {5, 30, 1}},
 		{},--blank
 		{1, "UFs", "RaidBuffIndicator", HeaderTag..L["RaidBuffIndicator"].."*", nil, setupSpellsIndicator, updateRaidAurasOptions, L["RaidBuffIndicatorTip"]},
 		{4, "UFs", "BuffIndicatorType", L["BuffIndicatorType"].."*", nil, {L["BI_Blocks"], L["BI_Icons"], L["BI_Numbers"]}, updateRaidAurasOptions},

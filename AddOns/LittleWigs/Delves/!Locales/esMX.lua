@@ -49,6 +49,11 @@ end
 
 -- Excavation Site 9
 
+L = BigWigs:NewBossLocale("Beste Glatisant", "esMX")
+if L then
+	L.beste_glatisant = "Bestia aulladora"
+end
+
 L = BigWigs:NewBossLocale("Craggle Fritzbrains", "esMX")
 if L then
 	--L.craggle_fritzbrains = "Craggle Fritzbrains"
@@ -78,6 +83,11 @@ if L then
 end
 
 -- Kriegval's Rest
+
+L = BigWigs:NewBossLocale("Faceless One Kriegval's Rest", "esMX")
+if L then
+	L.faceless_one = "Ignoto"
+end
 
 L = BigWigs:NewBossLocale("Tomb-Raider Drywhisker", "esMX")
 if L then
@@ -230,14 +240,9 @@ end
 
 -- Voidrazor Sanctuary
 
-L = BigWigs:NewBossLocale("Nexus-Princess Ky'veza (Tier 8)", "esMX")
-if L then
-	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza (Tier 8)"
-end
-
 L = BigWigs:NewBossLocale("Nexus-Princess Ky'veza (Tier 11)", "esMX")
 if L then
-	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza (Tier 11)"
+	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza"
 end
 
 -- Zekvir's Lair
@@ -266,6 +271,7 @@ if L then
 	--L.shadowguard_soulbreaker = "Shadowguard Soulbreaker"
 	--L.shadowguard_steelsoul = "Shadowguard Steelsoul"
 	--L.siphoned_drake = "Siphoned Drake"
+	L.steelsoul_arcanoward = "Guardarcano almaférrea"
 end
 
 L = BigWigs:NewBossLocale("Fungarian Delve Trash", "esMX")
@@ -294,6 +300,7 @@ if L then
 	L.punchy_thug = "Matón contundente"
 	--L.flinging_flicker = "Flinging Flicker"
 	L.bomb_bot = "Bombabot"
+	--L.rad_rat = "Rad Rat"
 end
 
 L = BigWigs:NewBossLocale("Kobold Delve Trash", "esMX")
@@ -322,15 +329,19 @@ L = BigWigs:NewBossLocale("Ky'veza Rares", "esMX")
 if L then
 	--L.rares = "Ky'veza Rares"
 
+	L.treasure_wraith = "Ánima del tesoro"
+	--L.invasive_phasecrawler = "Invasive Phasecrawler"
+	--L.drude = "D'rude"
+	--L.great_devourer = "Great Devourer"
+	L.mercenary_acquisitionist = "Adquiriente mercenario"
 	--L.pactsworn_fraycaller = "Pactsworn Fraycaller"
 	--L.pactsworn_dustblade = "Pactsworn Dustblade"
 	--L.pactsworn_sandreaver = "Pactsworn Sandreaver"
 	--L.pactsworn_arcanist = "Pactsworn Arcanist"
 	--L.pactsworn_wildcaller = "Pactsworn Wildcaller"
-	--L.invasive_phasecrawler = "Invasive Phasecrawler"
-	--L.drude = "D'rude"
-	--L.great_devourer = "Great Devourer"
 	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza (Random Spawn)"
+	L.zekvir = "Zekvir"
+	L.the_underpin = "El Capo de Minahonda"
 end
 
 L = BigWigs:NewBossLocale("Nerubian Delve Trash", "esMX")
@@ -374,22 +385,4 @@ if L then
 	L.deepwalker_guardian = "Guardián Andahondo"
 	L.crazed_abomination = "Abominación enloquecida"
 	L.web_marauder = "Maleante de telaraña"
-end
-
-L = BigWigs:NewBossLocale("Underpin Rares", "esMX")
-if L then
-	--L.rares = "Underpin Rares"
-
-	L.treasure_wraith = "Ánima del tesoro"
-	--L.treasure_crab = "Treasure Crab"
-	--L.hovering_menace = "Hovering Menace"
-	--L.malfunctioning_pummeler = "Malfunctioning Pummeler"
-	--L.underpins_adoring_fan = "Underpin's Adoring Fan"
-	--L.underpins_well_connected_friend = "Underpin's Well-Connected Friend"
-	--L.underpins_explosive_ally = "Underpin's Explosive Ally"
-	--L.underpins_bodyguards_intern = "Underpin's Bodyguard's Intern"
-	--L.aggressively_lost_hobgoblin = "Aggressively Lost Hobgoblin"
-	--L.the_underpin = "The Underpin (Random Spawn)"
-
-	--L.underpin_retreat_trigger = "People always messin' around on my perfectly legal, deeded land!"
 end

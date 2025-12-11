@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+    <script file="Base.lua" />
+    <script file="Scrollframe.lua"/>
+    <script file="ItemIcon.lua"/>
+    <script file="Dropdown.lua"/>
+    <script file="Label.lua"/>
+    <script file="TextBox.lua"/>
+    <script file="CheckBox.lua"/>
+    <script file="RoundedIcon.lua"/>
+    <script file="NodeIcon.lua"/>
+    <script file="ProgressBar.lua"/>
+    <script file="SpecSelect.lua"/>
+    <script file="Alert.lua"/>
+</Ui>

@@ -82,6 +82,7 @@ ns.defaults.profile.achievementsHidden = {
     [40475] = true, -- To All the Slimes I Love
     [40762] = true, -- Khaz Algar Lore Hunter (is disabled by Blizzard currently)
     [40620] = true, -- Back to the Wall
+    [61017] = true, -- Phase-Lost-and-Found
 }
 
 ns.groups["junk"] = BAG_FILTER_JUNK

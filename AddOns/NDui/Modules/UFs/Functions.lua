@@ -59,6 +59,12 @@ local function UF_OnLeave(self)
 	self.Highlight:Hide()
 end
 
+function UF:UpdateClickState()
+	self:RegisterForClicks(self.onKeyDown and "AnyDown" or "AnyUp")
+	self.onKeyDown = nil
+	self:UnregisterEvent("PLAYER_REGEN_ENABLED", UF.UpdateClickState, true)
+end
+
 function UF:CreateHeader(self, onKeyDown)
 	local hl = self:CreateTexture(nil, "OVERLAY")
 	hl:SetAllPoints()
@@ -69,7 +75,12 @@ function UF:CreateHeader(self, onKeyDown)
 	hl:Hide()
 	self.Highlight = hl
 
-	self:RegisterForClicks(onKeyDown and "AnyDown" or "AnyUp")
+	if InCombatLockdown() then
+		self.onKeyDown = onKeyDown
+		self:RegisterEvent("PLAYER_REGEN_ENABLED", UF.UpdateClickState, true)
+	else
+		self:RegisterForClicks(onKeyDown and "AnyDown" or "AnyUp")
+	end
 	self:HookScript("OnEnter", UF_OnEnter)
 	self:HookScript("OnLeave", UF_OnLeave)
 end
@@ -962,40 +973,13 @@ function UF.PostUpdateButton(element, button, unit, data)
 	end
 end
 
-function UF.AurasPostUpdateInfo(element, _, _, debuffsChanged)
-	element.bolsterStacks = 0
-	element.bolsterInstanceID = nil
-
-	for auraInstanceID, data in next, element.allBuffs do
-		if data.spellId == 209859 then
-			if not element.bolsterInstanceID then
-				element.bolsterInstanceID = auraInstanceID
-				element.activeBuffs[auraInstanceID] = true
-			end
-			element.bolsterStacks = element.bolsterStacks + 1
-			if element.bolsterStacks > 1 then
-				element.activeBuffs[auraInstanceID] = nil
-			end
-		end
-	end
-	if element.bolsterStacks > 0 then
-		for i = 1, element.visibleButtons do
-			local button = element[i]
-			if element.bolsterInstanceID and element.bolsterInstanceID == button.auraInstanceID then
-				button.Count:SetText(element.bolsterStacks)
+function UF.AurasPostUpdateInfo(element)
+	element.hasTheDot = nil
+	if C.db["Nameplate"]["ColorByDot"] then
+		for _, data in next, element.allDebuffs do
+			if data.isPlayerAura and C.db["Nameplate"]["DotSpells"][data.spellId] then
+				element.hasTheDot = true
 				break
-			end
-		end
-	end
-
-	if debuffsChanged then
-		element.hasTheDot = nil
-		if C.db["Nameplate"]["ColorByDot"] then
-			for _, data in next, element.allDebuffs do
-				if data.isPlayerAura and C.db["Nameplate"]["DotSpells"][data.spellId] then
-					element.hasTheDot = true
-					break
-				end
 			end
 		end
 	end
@@ -1012,9 +996,6 @@ function UF.CustomFilter(element, unit, data)
 	local name, debuffType, isStealable, spellID, nameplateShowAll = data.name, data.dispelName, data.isStealable, data.spellId, data.nameplateShowAll
 
 	if style == "nameplate" or style == "boss" or style == "arena" then
-		if name and spellID == 209859 then -- pass all bolster
-			return true
-		end
 		if element.__owner.plateType == "NameOnly" then
 			return UF.NameplateWhite[spellID]
 		elseif UF.NameplateBlack[spellID] then

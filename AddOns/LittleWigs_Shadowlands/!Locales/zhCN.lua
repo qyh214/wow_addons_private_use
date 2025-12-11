@@ -28,6 +28,11 @@ end
 
 -- Halls of Atonement
 
+L = BigWigs:NewBossLocale("High Adjudicator Aleez", "zhCN")
+if L then
+	L.empty_anima_vessel = "空的心能容器"
+end
+
 L = BigWigs:NewBossLocale("Halls of Atonement Trash", "zhCN")
 if L then
 	L.depraved_houndmaster = "堕落的驯犬者"
@@ -157,12 +162,13 @@ end
 L = BigWigs:NewBossLocale("Mailroom Mayhem", "zhCN")
 if L then
 	L.delivery_portal = "投递传送门"
-	L.delivery_portal_desc = "显示投递传送门何时更改位置的计时器。"
+	L.delivery_portal_desc = "显示投递传送门何时更改位置的计时条。"
 end
 
 L = BigWigs:NewBossLocale("Myza's Oasis", "zhCN")
 if L then
-	L.add_wave_killed = "击退保安 (%d/%d)"
+	L.notes = "音符"
+	L.notes_desc = "当音符可用时显示提示信息。使用你的乐器击中音符可获得'爵士乐'增益。\n\n|T237554:16|t爵士乐\n{348567}"
 end
 
 L = BigWigs:NewBossLocale("So'leah", "zhCN")
@@ -174,9 +180,20 @@ L = BigWigs:NewBossLocale("Tazavesh Trash", "zhCN")
 if L then
 	L.zophex_warmup_trigger = "上交……所有……违禁品……"
 	L.menagerie_warmup_trigger = "现在是大家期待已久的拍品！传说中被恶魔诅咒的湮灭之刃！"
+	L.menagerie_warmup_trigger2 = "赛财团见钱眼开。希望这样他们就能帮我们。"
+	L.mailroom_door_trigger = "有位朋友也许能帮我们获得佐财团的签名。"
+	L.vendor_active_trigger = "麦扎的绿洲。塔扎维什最令人心驰神往的娱乐场所。只要赢得老板的欢心，我们就能拿到奥财团的签名了。"
 	L.soazmi_warmup_trigger = "不好意思打扰了，索·莉亚。希望我们没耽误你什么大事。"
 	L.portal_authority = "传送局隧道师"
 	L.custom_on_portal_autotalk_desc = "与传送局 NPC 交谈时立即打开传送门可以在副本内传送。"
+	L.mailroom_door_desc = "显示收发室大门何时开启的计时条。"
+	L.vendor_active = "商人激活"
+	L.vendor_active_desc = "显示交易游戏商人何时激活的计时条。"
+	L.vendor_autopurchase = "自动购买交易游戏物品"
+	L.vendor_autopurchase_desc = "自动从商人处购买初始的交易游戏物品。"
+	L.vendor_autopurchase_message = "已购买 %s"
+	L.tradeable_goods = "可交易的货物"
+	L.tradeable_goods_desc = "当拾取可交易货物时显示提示信息。"
 	L.trading_game = "交易游戏"
 	L.trading_game_desc = "在交易游戏期间使用正确的密码发出警报。"
 	L.custom_on_trading_game_autotalk_desc = "交易游戏结束后，立即选择正确的密码。"
@@ -201,6 +218,7 @@ if L then
 	L.tracker_zokorss = "追踪者佐·刻斯"
 	L.ancient_core_hound = "上古熔火恶犬"
 	L.enraged_direhorn = "暴怒的恐角龙"
+	L.frenzied_nightclaw = "狂乱的夜爪豹"
 	L.cartel_skulker = "财团潜伏者"
 	L.cartel_wiseguy = "财团智囊"
 	L.cartel_muscle = "财团打手"
@@ -208,13 +226,16 @@ if L then
 	L.defective_sorter = "损坏的分拣机"
 	L.overloaded_mailemental = "过载的邮件元素"
 	L.post_worker = "P.O.S.T.工人"
+	L.smuggled_creature = "走私来的生物"
 	L.bazaar_overseer = "集市监督者"
 	L.market_peacekeeper = "集市维和者"
 	L.veteran_sparkcaster = "老练的火花法师"
 	L.commerce_enforcer = "贸易执行者"
 	L.commander_zofar = "指挥官佐·法"
 
-	L.tazavesh_soleahs_gambit = "塔扎维什：索·莉亚的宏图"
+	L.hylbrande_warmup_trigger = "那就看看你的智慧在泰坦的力量面前，表现如何。"
+	L.portal_open = "开启传送门"
+	L.portal_open_desc = "显示通往下一区域的传送门何时开启的计时条。"
 	L.murkbrine_scalebinder = "浊盐缚鳞者"
 	L.murkbrine_fishmancer = "浊盐鱼术师"
 	L.murkbrine_shellcrusher = "浊盐碎壳者"

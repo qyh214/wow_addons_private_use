@@ -28,6 +28,11 @@ end
 
 -- Halls of Atonement
 
+L = BigWigs:NewBossLocale("High Adjudicator Aleez", "deDE")
+if L then
+	L.empty_anima_vessel = "Leeres Animagefäß"
+end
+
 L = BigWigs:NewBossLocale("Halls of Atonement Trash", "deDE")
 if L then
 	L.depraved_houndmaster = "Verkommener Hundemeister"
@@ -162,7 +167,8 @@ end
 
 L = BigWigs:NewBossLocale("Myza's Oasis", "deDE")
 if L then
-	L.add_wave_killed = "Add Welle getötet (%d/%d)"
+	L.notes = "Noten"
+	L.notes_desc = "Zeigt eine Nachricht an, sobald die Noten verfügbar sind. Noten mit der Instrumentenfähigkeit treffen um 'Jazzig' zu erhalten.\n\n|T237554:16|tJazzig\n{348567}"
 end
 
 L = BigWigs:NewBossLocale("So'leah", "deDE")
@@ -174,9 +180,20 @@ L = BigWigs:NewBossLocale("Tazavesh Trash", "deDE")
 if L then
 	L.zophex_warmup_trigger = "Gebt alle... Schmuggelware... ab..."
 	L.menagerie_warmup_trigger = "Und nun zu dem Posten, auf den alle warten! Die angeblich dämonenverfluchte Schneide des Vergessens!"
+	L.menagerie_warmup_trigger2 = "Kartell Xys Unternehmung ist profitabel. Hoffentlich sind sie dadurch bereit, unserer zu helfen."
+	L.mailroom_door_trigger = "Ein Freund hier könnte uns helfen, die Signatur von Zo zu bekommen."
+	L.vendor_active_trigger = "Myzas Oase. Der berauschendste Laden in Tazavesh. Mit der Gunst der Besitzerin sichern wir uns die Unterschrift von Kartell Au."
 	L.soazmi_warmup_trigger = "Entschuldigt unser Eindringen, So'leah. Ich hoffe, wir stören."
 	L.portal_authority = "Portalbehörde von Tazavesh"
 	L.custom_on_portal_autotalk_desc = "Portale zurück zum Eingang sofort öffnen wenn mit Mittlern gesprochen wird."
+	L.mailroom_door_desc = "Zeigt mit Hilfe einer Leiste wann sich die Tür zum Postraum öffnet."
+	L.vendor_active = "Händler aktiv"
+	L.vendor_active_desc = "Zeigt mit Hilfe einer Leiste wann der Händler für das Handels-Event aktiv ist."
+	L.vendor_autopurchase = "Handels-Event Gegenstand automatisch kaufen"
+	L.vendor_autopurchase_desc = "Kauft automatisch den ersten Gegestand des Handels-Events vom Händler."
+	L.vendor_autopurchase_message = "%s gekauft"
+	L.tradeable_goods = "Handelbare Waren"
+	L.tradeable_goods_desc = "Zeigt eine Nachricht wenn handelbare Waren aufgenommen wurden."
 	L.trading_game = "Handels-Event"
 	L.trading_game_desc = "Warnungen mit korrektem Password während des Handels-Event."
 	L.custom_on_trading_game_autotalk_desc = "Wählt direkt das korrekte Passwort nach Abschluss des Handels-Events."
@@ -201,6 +218,7 @@ if L then
 	L.tracker_zokorss = "Fährtenleser Zo'korss"
 	L.ancient_core_hound = "Uralter Kernhund"
 	L.enraged_direhorn = "Wütendes Terrorhorn"
+	L.frenzied_nightclaw = "Rasende Nachtkralle"
 	L.cartel_skulker = "Kartellschleicher"
 	L.cartel_wiseguy = "Kartellmitglied"
 	L.cartel_muscle = "Kartellkraftprotz"
@@ -208,13 +226,16 @@ if L then
 	L.defective_sorter = "Defekter Sortierer"
 	L.overloaded_mailemental = "Überladener Eilementarl"
 	L.post_worker = "P.O.S.T.-Mitarbeiter"
-	--L.bazaar_overseer = "Bazaar Overseer"
+	L.smuggled_creature = "Geschmuggelte Kreatur"
+	L.bazaar_overseer = "Basaraufseher"
 	L.market_peacekeeper = "Friedensbewahrer des Marktes"
 	L.veteran_sparkcaster = "Erfahrener Funkenzauberer"
 	L.commerce_enforcer = "Handelsvollstrecker"
 	L.commander_zofar = "Kommandant Zo'far"
 
-	L.tazavesh_soleahs_gambit = "Tazavesh: So'leahs Schachzug"
+	L.hylbrande_warmup_trigger = "Seht, wie sich Eure Weisheit gegen die Macht der Titanen behauptet."
+	L.portal_open = "Portal wird geöffnet"
+	L.portal_open_desc = "Zeigt mit einem Timer an, wann das Portal zum nächsten Bereich geöffnet wird."
 	L.murkbrine_scalebinder = "Schuppenbinder der Finstergischt"
 	L.murkbrine_fishmancer = "Fischomant der Finstergischt"
 	L.murkbrine_shellcrusher = "Panzerbrecher der Finstergischt"

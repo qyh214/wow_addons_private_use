@@ -413,16 +413,14 @@ app.LoadDebugger = function()
 				[32642] = 1,	-- Mojodishu (Mammoth)
 				[32641] = 1,	-- Drix Blackwrench (Mammoth)
 			};
-			self:SetData({
-				['text'] = "Session History",
+			self:SetData(app.CreateRawText("Session History", {
 				['icon'] = app.asset("WindowIcon_RaidAssistant"),
 				["description"] = "This keeps a visual record of all of the quests, maps, loot, and vendors that you have come into contact with since the session was started.",
 				["OnUpdate"] = app.AlwaysShowUpdate,
 				['back'] = 1,
 				['options'] = {
-					{
+					app.CreateRawText("Clear History", {
 						["hash"] = "clearHistory",
-						['text'] = "Clear History",
 						['icon'] = 132293,
 						["description"] = "Click this to fully clear this window.\n\nNOTE: If you click this by accident, use the dynamic Restore Buttons that this generates to reapply the data that was cleared.\n\nWARNING: If you reload the UI, the data stored in the Reload Button will be lost forever!",
 						["OnUpdate"] = app.AlwaysShowUpdate,
@@ -440,22 +438,22 @@ app.LoadDebugger = function()
 								return true;
 							end
 							row.ref.count = row.ref.count + 1;
-							tinsert(self.data.options, {
-								["hash"] = "restore" .. row.ref.count,
-								['text'] = "Restore Button " .. row.ref.count,
-								['icon'] = app.asset("Button_Reroll"),
-								["description"] = "Click this to restore your cleared data.\n\nNOTE: Each Restore Button houses different data.\n\nWARNING: This data will be lost forever when you reload your UI!",
-								["OnUpdate"] = app.AlwaysShowUpdate,
-								['data'] = copy,
-								['OnClick'] = function(row, button)
-									for i,info in ipairs(row.ref.data) do
-										app.NestObject(self.data, app.__CreateObject(info));
-									end
-									app.AssignChildren(self.data);
-									AfterCombatCallback(self.Update, self, true);
-									return true;
-								end,
-							});
+							tinsert(self.data.options,
+								app.CreateRawText("Restore Button " .. row.ref.count, {
+									["hash"] = "restore" .. row.ref.count,
+									['icon'] = app.asset("Button_Reroll"),
+									["description"] = "Click this to restore your cleared data.\n\nNOTE: Each Restore Button houses different data.\n\nWARNING: This data will be lost forever when you reload your UI!",
+									["OnUpdate"] = app.AlwaysShowUpdate,
+									['data'] = copy,
+									['OnClick'] = function(row, button)
+										for i,info in ipairs(row.ref.data) do
+											app.NestObject(self.data, app.__CreateObject(info));
+										end
+										app.AssignChildren(self.data);
+										AfterCombatCallback(self.Update, self, true);
+										return true;
+									end,
+								}))
 							wipe(self.rawData);
 							wipe(self.data.g);
 							for i=#self.data.options,1,-1 do
@@ -465,10 +463,10 @@ app.LoadDebugger = function()
 							AfterCombatCallback(self.Update, self, true);
 							return true;
 						end,
-					},
+					}),
 				},
 				['g'] = {},
-			});
+			}));
 
 			local function CategorizeObject(info)
 				if info.isVendor then

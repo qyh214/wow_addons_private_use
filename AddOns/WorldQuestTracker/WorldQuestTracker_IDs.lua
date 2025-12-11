@@ -57,7 +57,7 @@ WorldQuestTracker.MapData.ZoneIDs = {
 		CITYTHREADS = 	2213,
 		CITYTHREADS_LOWER =	2216,
 		UNDERMINE = 	2346,
-		KARESH = 15336,
+		KARESH = 2371,
 
 	--Dragonflight
 		DRAGONISLES = 	1978,
@@ -133,6 +133,7 @@ WorldQuestTracker.DotLineScale = {
 	[zoneIDs.CITYTHREADS] = 3,
 	[zoneIDs.CITYTHREADS_LOWER] = 3,
 	[zoneIDs.UNDERMINE] = 3,
+	[zoneIDs.KARESH] = 3,
 }
 
 WorldQuestTracker.MapData.ZoneToHub = {
@@ -274,10 +275,20 @@ WorldQuestTracker.mapTables = {
 		},
 	},
 
+	[zoneIDs.KARESH] = 		{
+		widgets = {},
+		Anchor_X = 0.002,
+		Anchor_Y = 0.25,
+		GrowRight = true,
+		show_on_map = {
+			[zoneIDs.KHAZALGAR] = true,
+		},
+	},
+
 	[zoneIDs.HALLOWFALL] = 		{
 		widgets = {},
 		Anchor_X = 0.002,
-		Anchor_Y = 0.28,
+		Anchor_Y = 0.45,
 		GrowRight = true,
 		show_on_map = {
 			[zoneIDs.KHAZALGAR] = true,
@@ -296,7 +307,7 @@ WorldQuestTracker.mapTables = {
 
 	[zoneIDs.DORN] = 		{
 		widgets = {},
-		Anchor_X = 0.3,
+		Anchor_X = 0.4,
 		Anchor_Y = 0.12,
 		GrowRight = true,
 		show_on_map = {
@@ -761,6 +772,7 @@ WorldQuestTracker.MapData.ReputationIcons = {
 	[5891367] = true, --The Assembly of the Deeps
 	[5891368] = true, --Hallowfall Arathi
 	[5891370] = true, --The Severed Threads
+	[6937965] = true, --The K'aresh Trust
 
 	--Dragonflight
 	[4687627] = true, --Maruuk Centaur
@@ -805,6 +817,8 @@ WorldQuestTracker.MapData.AllFactionIds = {
 	[2594] = true, --The Assembly of the Deeps
 	[2570] = true, --Hallowfall Arathi
 	[2600] = true, --The Severed Threads
+	[2653] = true, --The Cartels of Undermine
+	[2658] = true, --The K'aresh Trust
 
 	--Dragonflight Factions
 	[2503] = true, --Maruuk Centaur
@@ -860,6 +874,8 @@ WorldQuestTracker.MapData.FactionMapId = {
 	[2594] = zoneIDs.RINGINGDEEPS, --The Assembly of the Deeps
 	[2570] = zoneIDs.HALLOWFALL, --Hallowfall Arathi
 	[2600] = zoneIDs.AZJKAHET, --The Severed Threads
+	[2653] = zoneIDs.UNDERMINE, --The Cartels of Undermine
+	[2658] = zoneIDs.KARESH, --The K'aresh Trust
 
 	--Dragonflight
 	[2503] = zoneIDs.OHNAHRANPLAINS, --Maruuk Centaur
@@ -886,6 +902,8 @@ WorldQuestTracker.MapData.FactionIcons = {
 	[2594] = 5891367, --The Assembly of the Deeps
 	[2570] = 5891368, --Hallowfall Arathi
 	[2600] = 5891370, --The Severed Threads
+	[2653] = 6252691, --The Cartels of Undermine
+	[2658] = 6937965, --The K'aresh Trust
 
 	--Dragonflight
 	[2503] = 4687627, --Maruuk Centaur
@@ -931,7 +949,7 @@ WorldQuestTracker.MapData.FactionIcons = {
 	[1859] = "Interface\\ICONS\\INV_Legion_Faction_NightFallen", --The Nightfallen
 	[1894] = "Interface\\ICONS\\INV_Legion_Faction_Warden", --The Wardens
 	[1948] = "Interface\\ICONS\\INV_Legion_Faction_Valarjar", --Valarjar
---	/run for i =1, 3000 do local N={WorldQuestTracker.GetFactionDataByID(i)}if(N[1])then print(N[1].." "..N[14])end end
+--	/run for i =1, 3000 do local N={WorldQuestTrackerAddon.GetFactionDataByID(i)}if(N[1])then print(N[1].." "..N[14])end end
 }
 
 local WOW11Factions = { --DLC10 (tww)
@@ -939,6 +957,8 @@ local WOW11Factions = { --DLC10 (tww)
 	[2594] = true, --The Assembly of the Deeps
 	[2570] = true, --Hallowfall Arathi
 	[2600] = true, --The Severed Threads
+	[2653] = true, --The Cartels of Undermine
+	[2658] = true, --The K'aresh Trust --/dumpt {WorldQuestTrackerAddon.GetFactionDataByID(2658)}
 }
 
 WorldQuestTracker.MapData.FactionHasWarbandReputation = {}
@@ -1091,6 +1111,22 @@ WorldQuestTracker.MapData.ReplaceIcon = {
 WorldQuestTracker.MapData.IgnoredRewardTexures = {
 	[2565244] = true, --BFA honorbound service medal
 	[2565243] = true, --BFA 7th legion service medal
+}
+
+WorldQuestTracker.MapData.KareshDividingQuests = {
+	["enUS"] = "Phase Diving", --/dumpt {GetLocale()}
+	["esMX"] = "Fasenáutica",
+	["esES"] = "Buceo de fase",
+	["ptBR"] = "Mergulho fásico",
+	["frFR"] = "Plongée phasique",
+	["deDE"] = "Phasentauchen",
+	["itIT"] = "Esplorazione Fasica",
+	["koKR"] = "위상 잠수",
+	["zhTW"] = "相位深潛",
+	["ruRU"] = "Фазовый переход",
+	["zhCN"] = "相位潜行",
+
+	--need verification:
 }
 
 WorldQuestTracker.MapData.QuestTypeIcons = {

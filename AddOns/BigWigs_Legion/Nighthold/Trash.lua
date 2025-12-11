@@ -82,10 +82,6 @@ if L then
 	--[[ Aluriel to Tichondrius ]]--
 	L.chaosmage = "Felsworn Chaos-Mage"
 	L.watcher = "Abyss Watcher"
-
-	L.fear = "{224944} ({5782})"
-	L.fear_desc = 224944
-	L.fear_icon = 224944
 end
 
 --------------------------------------------------------------------------------
@@ -132,9 +128,9 @@ function mod:GetOptions()
 		{221344, "SAY", "FLASH"}, -- Annihilating Orb (Searing Infernal)
 
 		--[[ Aluriel to Tichondrius ]]--
-		{"fear", "SAY", "FLASH"}, -- Will of the Legion (Felsworn Chaos-Mage)
+		{224944, "SAY", "FLASH"}, -- Will of the Legion (Felsworn Chaos-Mage)
 		{224982, "SAY", "FLASH"}, -- Fel Glare (Abyss Watcher)
-	}, {
+	},{
 		[230438] = L.torm,
 		[221164] = L.fulminant,
 		[221160] = L.pulsauron,
@@ -151,8 +147,10 @@ function mod:GetOptions()
 		[225857] = L.manasaber,
 		[225856] = L.naturalist,
 		[221344] = L.infernal,
-		["fear"] = L.chaosmage,
+		[224944] = L.chaosmage,
 		[224982] = L.watcher,
+	},{
+		[224944] = CL.fear, -- Will of the Legion (Fear)
 	}
 end
 
@@ -479,12 +477,12 @@ end
 
 --[[ Aluriel to Tichondrius ]]--
 function mod:WillOfTheLegion(args)
-	self:TargetMessageOld("fear", args.destName, "red", "long", CL.fear, args.spellId, true)
-	self:TargetBar("fear", 10, args.destName, CL.fear, args.spellId)
+	self:TargetMessageOld(args.spellId, args.destName, "red", "long", CL.fear, args.spellId, true)
+	self:TargetBar(args.spellId, 10, args.destName, CL.fear, args.spellId)
 	if self:Me(args.destGUID) then
-		self:Say("fear", CL.fear, nil, "Fear")
+		self:Say(args.spellId, CL.fear, nil, "Fear")
 	elseif self:Dispeller("magic") then
-		self:Flash("fear", args.spellId)
+		self:Flash(args.spellId, args.spellId)
 	end
 end
 

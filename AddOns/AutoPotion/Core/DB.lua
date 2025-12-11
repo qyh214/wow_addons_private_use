@@ -7,14 +7,14 @@ ham.defaults = {
     witheringDreamsPotion = false,
     cavedwellerDelight = true,
     heartseekingInjector = false,
-    activatedSpells = { ham.crimsonVialSpell, ham.renewal, ham.exhilaration, ham.fortitudeOfTheBear, ham.lastStand, ham
-        .bitterImmunity,
-        ham.desperatePrayer, ham.healingElixir, ham.darkPact, ham.giftOfTheNaaruDK, ham.giftOfTheNaaruHunter, ham
-        .giftOfTheNaaruMage,
-        ham.giftOfTheNaaruMageWarlock, ham.giftOfTheNaaruMonk, ham.giftOfTheNaaruPaladin, ham.giftOfTheNaaruPriest, ham
-        .giftOfTheNaaruRogue, ham.giftOfTheNaaruShaman, ham.giftOfTheNaaruWarrior, ham.bagOfTricks }
+    activatedSpells = { ham.recuperate.getId(), ham.crimsonVialSpell.getId(), ham.renewal.getId(),
+        ham.exhilaration.getId(), ham.fortitudeOfTheBear.getId(), ham.lastStand.getId(), ham.bitterImmunity.getId(),
+        ham.desperatePrayer.getId(), ham.healingElixir.getId(), ham.darkPact.getId(), ham.giftOfTheNaaruDK.getId(),
+        ham.giftOfTheNaaruHunter.getId(), ham.giftOfTheNaaruMage.getId(), ham.giftOfTheNaaruMageWarlock.getId(),
+        ham.giftOfTheNaaruMonk.getId(), ham.giftOfTheNaaruPaladin.getId(), ham.giftOfTheNaaruPriest.getId(),
+        ham.giftOfTheNaaruRogue.getId(), ham.giftOfTheNaaruShaman.getId(), ham.giftOfTheNaaruWarrior.getId(),
+        ham.bagOfTricks.getId() }
 }
-
 
 function ham.dbContains(id)
     local found = false

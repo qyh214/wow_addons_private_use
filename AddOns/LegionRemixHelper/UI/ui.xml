@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+    <Include file="Components/components.xml"/>
+    <script file="ScrappingUI.lua"/>
+    <script file="CollectionsTabUI.lua"/>
+    <script file="QuickActionBarUI.lua"/>
+    <script file="ToastUI.lua"/>
+    <script file="UXUI.lua"/>
+    <Include file="Tabs/tabs.xml"/>
+</Ui>

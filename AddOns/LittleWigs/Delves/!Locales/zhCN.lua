@@ -49,6 +49,11 @@ end
 
 -- Excavation Site 9
 
+L = BigWigs:NewBossLocale("Beste Glatisant", "zhCN")
+if L then
+	L.beste_glatisant = "绝凶邪兽"
+end
+
 L = BigWigs:NewBossLocale("Craggle Fritzbrains", "zhCN")
 if L then
 	L.craggle_fritzbrains = "克拉格·弗里茨布兰"
@@ -78,6 +83,11 @@ if L then
 end
 
 -- Kriegval's Rest
+
+L = BigWigs:NewBossLocale("Faceless One Kriegval's Rest", "zhCN")
+if L then
+	L.faceless_one = "无面者"
+end
 
 L = BigWigs:NewBossLocale("Tomb-Raider Drywhisker", "zhCN")
 if L then
@@ -230,14 +240,9 @@ end
 
 -- Voidrazor Sanctuary
 
-L = BigWigs:NewBossLocale("Nexus-Princess Ky'veza (Tier 8)", "zhCN")
-if L then
-	L.nexus_princess_kyveza = "节点女亲王凯威扎（难度8）"
-end
-
 L = BigWigs:NewBossLocale("Nexus-Princess Ky'veza (Tier 11)", "zhCN")
 if L then
-	L.nexus_princess_kyveza = "节点女亲王凯威扎（难度11）"
+	L.nexus_princess_kyveza = "节点女亲王凯威扎"
 end
 
 -- Zekvir's Lair
@@ -266,6 +271,7 @@ if L then
 	L.shadowguard_soulbreaker = "影卫碎魂者"
 	L.shadowguard_steelsoul = "影卫钢魂守卫"
 	L.siphoned_drake = "被吸干的幼龙"
+	L.steelsoul_arcanoward = "钢魂奥能守卫"
 end
 
 L = BigWigs:NewBossLocale("Fungarian Delve Trash", "zhCN")
@@ -294,6 +300,7 @@ if L then
 	L.punchy_thug = "重拳恶党"
 	L.flinging_flicker = "迅捷的闪动者"
 	L.bomb_bot = "炸弹机器人"
+	L.rad_rat = "小棒鼠"
 end
 
 L = BigWigs:NewBossLocale("Kobold Delve Trash", "zhCN")
@@ -322,15 +329,19 @@ L = BigWigs:NewBossLocale("Ky'veza Rares", "zhCN")
 if L then
 	L.rares = "凯威扎精英（稀有）"
 
-	L.pactsworn_fraycaller = "誓约唤荒者"
+	L.treasure_wraith = "宝藏怨灵"
+	L.invasive_phasecrawler = "入侵的相位爬行者"
+	L.drude = "德鲁德"
+	L.great_devourer = "大吞噬者"
+	L.mercenary_acquisitionist = "佣兵收购专家"
+	L.pactsworn_fraycaller = "誓约唤厄者"
 	L.pactsworn_dustblade = "誓约沙尘剑士"
 	L.pactsworn_sandreaver = "誓约掠沙者"
 	L.pactsworn_arcanist = "誓约奥术师"
 	L.pactsworn_wildcaller = "誓约唤荒者"
-	L.invasive_phasecrawler = "入侵的相位爬行者"
-	L.drude = "德鲁德"
-	L.great_devourer = "大吞噬者"
 	L.nexus_princess_kyveza = "节点女亲王凯威扎（随机出现）"
+	L.zekvir = "泽克维尔"
+	L.the_underpin = "幽坑太保"
 end
 
 L = BigWigs:NewBossLocale("Nerubian Delve Trash", "zhCN")
@@ -374,22 +385,4 @@ if L then
 	L.deepwalker_guardian = "深渊行者护卫"
 	L.crazed_abomination = "疯乱憎恶"
 	L.web_marauder = "掠网者"
-end
-
-L = BigWigs:NewBossLocale("Underpin Rares", "zhCN")
-if L then
-	L.rares = "幽坑稀有"
-
-	L.treasure_wraith = "宝藏怨灵"
-	L.treasure_crab = "宝藏螃蟹"
-	L.hovering_menace = "悬浮灾厄"
-	L.malfunctioning_pummeler = "出故障的打击者"
-	L.underpins_adoring_fan = "幽坑太保的铁杆粉丝"
-	L.underpins_well_connected_friend = "幽坑太保的亲密好友"
-	L.underpins_explosive_ally = "幽坑太保的劲爆盟友"
-	L.underpins_bodyguards_intern = "幽坑太保的见习保镖"
-	L.aggressively_lost_hobgoblin = "凶狠的走失大地精"
-	L.the_underpin = "幽坑太保（随机出现）"
-
-	L.underpin_retreat_trigger = "总有人在我绝对合法的过户土地上瞎闹！"
 end

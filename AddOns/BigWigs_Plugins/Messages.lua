@@ -9,9 +9,9 @@ if not plugin then return end
 -- Locals
 --
 
-local media = LibStub("LibSharedMedia-3.0")
-local sink = LibStub("LibSink-2.0")
-local FONT = media.MediaType and media.MediaType.FONT or "font"
+local LibSharedMedia = LibStub("LibSharedMedia-3.0")
+local LibSink = LibStub("LibSink-2.0")
+local FONT = LibSharedMedia.MediaType and LibSharedMedia.MediaType.FONT or "font"
 
 local labels = {}
 
@@ -26,11 +26,6 @@ local labelsPrimaryPoint, labelsSecondaryPoint = nil, nil
 local db = nil
 
 plugin.displayName = L.messages
-
-local validFramePoints = {
-	["TOPLEFT"] = L.TOPLEFT, ["TOPRIGHT"] = L.TOPRIGHT, ["BOTTOMLEFT"] = L.BOTTOMLEFT, ["BOTTOMRIGHT"] = L.BOTTOMRIGHT,
-	["TOP"] = L.TOP, ["BOTTOM"] = L.BOTTOM, ["LEFT"] = L.LEFT, ["RIGHT"] = L.RIGHT, ["CENTER"] = L.CENTER,
-}
 
 --------------------------------------------------------------------------------
 -- Profile
@@ -53,8 +48,6 @@ plugin.defaultDB = {
 	displaytime = 2,
 	fadetime = 1.2,
 	emphUppercase = true,
-	disabled = false,
-	emphDisabled = false,
 	-- Designed by default to be just under the boss emote frame and grow down away from it
 	-- By order from top to bottom:
 	-- >> UIErrorsFrame (anchored to top of UIParent)
@@ -100,16 +93,19 @@ local function updateProfile()
 	if db.fadetime < 1 or db.fadetime > 10 then
 		db.fadetime = plugin.defaultDB.fadetime
 	end
-	if not media:IsValid(FONT, db.fontName) then
-		db.fontName = plugin:GetDefaultFont()
+	if not LibSharedMedia:IsValid(FONT, db.fontName) then
+		db.fontName = plugin.defaultDB.fontName
 	end
-	if not media:IsValid(FONT, db.emphFontName) then
-		db.emphFontName = plugin:GetDefaultFont()
+	if not LibSharedMedia:IsValid(FONT, db.emphFontName) then
+		db.emphFontName = plugin.defaultDB.emphFontName
 	end
 	if type(db.normalPosition[1]) ~= "string" or type(db.normalPosition[2]) ~= "string"
 	or type(db.normalPosition[3]) ~= "number" or type(db.normalPosition[4]) ~= "number"
-	or not validFramePoints[db.normalPosition[1]] or not validFramePoints[db.normalPosition[2]] then
-		db.normalPosition = plugin.defaultDB.normalPosition
+	or not BigWigsAPI.IsValidFramePoint(db.normalPosition[1]) or not BigWigsAPI.IsValidFramePoint(db.normalPosition[2]) then
+		db.normalPosition[1] = plugin.defaultDB.normalPosition[1]
+		db.normalPosition[2] = plugin.defaultDB.normalPosition[2]
+		db.normalPosition[3] = plugin.defaultDB.normalPosition[3]
+		db.normalPosition[4] = plugin.defaultDB.normalPosition[4]
 	else
 		local x = math.floor(db.normalPosition[3]+0.5)
 		if x ~= db.normalPosition[3] then
@@ -122,8 +118,11 @@ local function updateProfile()
 	end
 	if type(db.emphPosition[1]) ~= "string" or type(db.emphPosition[2]) ~= "string"
 	or type(db.emphPosition[3]) ~= "number" or type(db.emphPosition[4]) ~= "number"
-	or not validFramePoints[db.emphPosition[1]] or not validFramePoints[db.emphPosition[2]] then
-		db.emphPosition = plugin.defaultDB.emphPosition
+	or not BigWigsAPI.IsValidFramePoint(db.emphPosition[1]) or not BigWigsAPI.IsValidFramePoint(db.emphPosition[2]) then
+		db.emphPosition[1] = plugin.defaultDB.emphPosition[1]
+		db.emphPosition[2] = plugin.defaultDB.emphPosition[2]
+		db.emphPosition[3] = plugin.defaultDB.emphPosition[3]
+		db.emphPosition[4] = plugin.defaultDB.emphPosition[4]
 	else
 		local x = math.floor(db.emphPosition[3]+0.5)
 		if x ~= db.emphPosition[3] then
@@ -143,7 +142,7 @@ local function updateProfile()
 	elseif db.emphOutline ~= "NONE" then
 		emphFlags = db.emphOutline
 	end
-	emphMessageText:SetFont(media:Fetch(FONT, db.emphFontName), db.emphFontSize, emphFlags)
+	emphMessageText:SetFont(LibSharedMedia:Fetch(FONT, db.emphFontName), db.emphFontSize, emphFlags)
 
 	normalMessageAnchor:RefixPosition()
 	emphMessageAnchor:RefixPosition()
@@ -172,7 +171,7 @@ local function updateProfile()
 		font.icon.animFade:SetDuration(db.fadetime)
 		font.icon:SetSize(db.fontSize, db.fontSize)
 		font:SetHeight(db.fontSize)
-		font:SetFont(media:Fetch(FONT, db.fontName), db.fontSize, flags)
+		font:SetFont(LibSharedMedia:Fetch(FONT, db.fontName), db.fontSize, flags)
 	end
 end
 
@@ -381,15 +380,15 @@ do
 						type = "select",
 						name = L.font,
 						order = 1,
-						values = media:List(FONT),
+						values = LibSharedMedia:List(FONT),
 						itemControl = "DDI-Font",
 						get = function()
-							for i, v in next, media:List(FONT) do
+							for i, v in next, LibSharedMedia:List(FONT) do
 								if v == plugin.db.profile.fontName then return i end
 							end
 						end,
 						set = function(_, value)
-							local list = media:List(FONT)
+							local list = LibSharedMedia:List(FONT)
 							plugin.db.profile.fontName = list[value]
 							updateProfile()
 						end,
@@ -485,28 +484,17 @@ do
 						order = 12,
 						width = 2,
 					},
-					disabled = {
-						type = "toggle",
-						name = L.disabled,
-						--desc = "XXX",
-						order = 13,
-						confirm = function(_, value)
-							if value then
-								return L.disableDesc:format(L.messages)
-							end
-						end,
-					},
 					header1 = {
 						type = "header",
 						name = "",
-						order = 14,
+						order = 13,
 					},
 					reset = {
 						type = "execute",
 						name = L.resetAll,
 						desc = L.resetMessagesDesc,
 						func = function() plugin.db:ResetProfile() updateProfile() end,
-						order = 15,
+						order = 14,
 					},
 				},
 			},
@@ -526,15 +514,15 @@ do
 						type = "select",
 						name = L.font,
 						order = 2,
-						values = media:List(FONT),
+						values = LibSharedMedia:List(FONT),
 						itemControl = "DDI-Font",
 						get = function()
-							for i, v in next, media:List(FONT) do
+							for i, v in next, LibSharedMedia:List(FONT) do
 								if v == plugin.db.profile.emphFontName then return i end
 							end
 						end,
 						set = function(_, value)
-							local list = media:List(FONT)
+							local list = LibSharedMedia:List(FONT)
 							plugin.db.profile.emphFontName = list[value]
 							updateProfile()
 						end,
@@ -572,17 +560,6 @@ do
 							local loc = GetLocale()
 							if loc == "zhCN" or loc == "zhTW" or loc == "koKR" then
 								return true
-							end
-						end,
-					},
-					emphDisabled = {
-						type = "toggle",
-						name = L.disabled,
-						--desc = "XXX",
-						order = 7,
-						confirm = function(_, value)
-							if value then
-								return L.disableDesc:format(L.emphasizedMessages)
 							end
 						end,
 					},
@@ -680,6 +657,70 @@ do
 					},
 				},
 			},
+			advanced = {
+				type = "group",
+				name = L.advanced,
+				order = 4,
+				childGroups = "tab",
+				args = {
+					heading = {
+						type = "description",
+						name = function()
+							if not BigWigsLoader.db.profile.bossModMessagesDisabled then
+								return L.messagesOptInHeaderOff
+							else
+								return L.messagesOptInHeaderOn
+							end
+						end,
+						order = 1,
+						width = "full",
+						fontSize = "medium",
+					},
+					optintoggle = {
+						type = "toggle",
+						name = L.messagesOptInTitle,
+						order = 2,
+						width = "full",
+						get = function()
+							return BigWigsLoader.db.profile.bossModMessagesDisabled
+						end,
+						set = function(_, value)
+							local profileName = BigWigsLoader.db:GetCurrentProfile()
+							if type(profileName) == "string" and type(BigWigs3DB.namespaces) == "table" then
+								if value then
+									for moduleName, moduleSettings in next, BigWigs3DB.namespaces do
+										if type(moduleName) == "string" and type(moduleSettings) == "table" and strfind(moduleName, "BigWigs_Bosses", nil, true) and type(BigWigs3DB.namespaces[moduleName].profiles) == "table" and type(BigWigs3DB.namespaces[moduleName].profiles[profileName]) == "table" then
+											for optionKey, optionValue in next, BigWigs3DB.namespaces[moduleName].profiles[profileName] do
+												if type(optionValue) == "number" and optionValue > 10 and bit.band(optionValue, BigWigs.C.MESSAGE) == BigWigs.C.MESSAGE then
+													BigWigs3DB.namespaces[moduleName].profiles[profileName][optionKey] = optionValue - BigWigs.C.MESSAGE
+												end
+											end
+										end
+									end
+									BigWigsLoader.db.profile.bossModMessagesDisabled = true
+								else
+									for moduleName, moduleSettings in next, BigWigs3DB.namespaces do
+										if type(moduleName) == "string" and type(moduleSettings) == "table" and strfind(moduleName, "BigWigs_Bosses", nil, true) and type(BigWigs3DB.namespaces[moduleName].profiles) == "table" and type(BigWigs3DB.namespaces[moduleName].profiles[profileName]) == "table" then
+											for optionKey, optionValue in next, BigWigs3DB.namespaces[moduleName].profiles[profileName] do
+												if type(optionValue) == "number" and optionValue > 10 and bit.band(optionValue, BigWigs.C.MESSAGE) ~= BigWigs.C.MESSAGE then
+													BigWigs3DB.namespaces[moduleName].profiles[profileName][optionKey] = optionValue + BigWigs.C.MESSAGE
+												end
+											end
+										end
+									end
+									BigWigsLoader.db.profile.bossModMessagesDisabled = false
+								end
+								C_UI.Reload()
+							end
+						end,
+						confirm = function(_, value)
+							if value then
+								return L.messagesOptInWarning
+							end
+						end,
+					},
+				},
+			},
 		},
 	}
 end
@@ -689,8 +730,8 @@ end
 --
 
 function plugin:OnRegister()
-	sink.RegisterSink(self, "BigWigsEmphasized", L.bwEmphasized, L.emphasizedSinkDescription, "EmphasizedPrint")
-	sink.RegisterSink(self, "BigWigs", "BigWigs", L.sinkDescription, "Print")
+	LibSink.RegisterSink(self, "BigWigsEmphasized", L.bwEmphasized, L.emphasizedSinkDescription, "EmphasizedPrint")
+	LibSink.RegisterSink(self, "BigWigs", "BigWigs", L.sinkDescription, "Print")
 end
 
 function plugin:OnPluginEnable()
@@ -849,18 +890,12 @@ do
 		if not db.useicons then icon = nil end
 
 		if emphasized then
-			if db.emphDisabled and module and module.IsEnableMob then
-				return
-			end
 			if db.emphUppercase then
 				text = upper(text)
 				text = gsub(text, "(:%d+|)T", "%1t") -- Fix texture paths that need to end in lowercase |t
 			end
 			self:EmphasizedPrint(nil, text, r, g, b, nil, nil, nil, nil, nil, nil, customDisplayTime)
 		else
-			if db.disabled and module and module.IsEnableMob then
-				return
-			end
 			self:Print(nil, text, r, g, b, nil, nil, nil, nil, nil, icon, customDisplayTime)
 		end
 		if db.chat then

@@ -127,7 +127,7 @@ do
 	local key, spellName = 0, ""
 
 	function mod:UNIT_AURA(_, unit) -- XXX get Blizz to fix this
-		if self:UnitDebuff(unit, spellName, 215449) then -- 215449 is Necrotic Venom on Mythic
+		if self:UnitDebuff(unit, spellName, 215449, 210863) then -- 215449 is Necrotic Venom on Mythic, 210863 is Twisting Shadows
 			local guid = self:UnitGUID(unit)
 			if not players[guid] then
 				local spellId = key -- SetOption:215443,210864:
@@ -138,7 +138,7 @@ do
 					self:Flash(spellId)
 					self:Say(spellId, nil, nil, spellId == 215443 and "Necrotic Venom" or "Twisting Shadows")
 
-					local _, _, _, expires = self:UnitDebuff(unit, spellName)
+					local _, _, _, expires = self:UnitDebuff(unit, spellName, 215449, 210863)
 					local remaining = expires-GetTime()
 					self:Bar(spellId, remaining, CL.you:format(spellName))
 					self:SayCountdown(spellId, remaining)
@@ -210,14 +210,18 @@ end
 function mod:WebOfPainApplied(args)
 	if self:Me(args.destGUID) then
 		self:MessageOld(args.spellId, "blue", "warning", L.yourLink:format(self:ColorName(args.sourceName)))
-		local _, _, _, expires = self:UnitDebuff("player", args.spellName, 215300, 215307) -- I think 215307 is the secondary player (the person you're linked to) id?
-		local remaining = expires-GetTime()
-		self:Bar(args.spellId, remaining, L.yourLinkShort:format(self:ColorName(args.sourceName)))
+		local auraTbl = self:GetPlayerAura(args.spellId)
+		if auraTbl then
+			local remaining = auraTbl.expirationTime-GetTime()
+			self:Bar(args.spellId, remaining, L.yourLinkShort:format(self:ColorName(args.sourceName)))
+		end
 	elseif self:Me(args.sourceGUID) then
 		self:MessageOld(args.spellId, "blue", "warning", L.yourLink:format(self:ColorName(args.destName)))
-		local _, _, _, expires = self:UnitDebuff("player", args.spellName, 215300, 215307) -- I think 215307 is the secondary player (the person you're linked to) id?
-		local remaining = expires-GetTime()
-		self:Bar(args.spellId, remaining, L.yourLinkShort:format(self:ColorName(args.destName)))
+		local auraTbl = self:GetPlayerAura(args.spellId)
+		if auraTbl then
+			local remaining = auraTbl.expirationTime-GetTime()
+			self:Bar(args.spellId, remaining, L.yourLinkShort:format(self:ColorName(args.destName)))
+		end
 	elseif not self:CheckOption(args.spellId, "ME_ONLY") then
 		self:MessageOld(args.spellId, "yellow", nil, L.isLinkedWith:format(self:ColorName(args.sourceName), self:ColorName(args.destName)))
 	end

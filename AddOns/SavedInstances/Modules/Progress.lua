@@ -816,6 +816,29 @@ local presets = {
       [84739] = L["Fourth Cache"],
     },
   },
+  -- TWW Season 3 Weekly Cache
+  ["tww-s3-weekly-cache"] = {
+    type = "list",
+    expansion = 10,
+    index = 1.1,
+    name = L["TWW Season 3 Weekly Cache"],
+    questID = {
+      91175,
+      91176,
+      91177,
+      91178,
+    },
+    reset = "weekly",
+    persists = false,
+    progress = false,
+    onlyOnOrCompleted = false,
+    questName = {
+      [91175] = L["First Cache"],
+      [91176] = L["Second Cache"],
+      [91177] = L["Third Cache"],
+      [91178] = L["Fourth Cache"],
+    },
+  },
   -- Delver's Bounty
   ["tww-delvers-bounty"] = {
     type = "single",
@@ -1376,30 +1399,23 @@ local presets = {
     persists = true,
     fullObjective = false,
   },
-  -- Tazavesh Warrant Quests
-  ["tww-tazavesh-warrant-quests"] = {
-    type = "list",
+  -- K'aresh Warrants
+  ["tww-karesh-warrants"] = {
+    type = "any",
     expansion = 10,
     index = 28,
-    name = L["Tazavesh Warrant Quests"],
+    name = L["K'aresh Warrants"],
     questID = {
-      87001, -- Warrant: Shatterpulse
-      87343, -- Warrant: Hollowbane
-      87345, -- Warrant: Xy'vox the Twisted
-      87405, -- Warrant: Grubber
-      87546, -- Warrant: Purple Peat
-      89490, -- Warrant: Arcana-Monger So'zer
-      90124, -- Eliminate Shatterpulse
-      90123, -- Eliminate Hollowbane
       90122, -- Eliminate Xy'vox the Twisted
-      90126, -- Eliminate Grubber
+      90123, -- Eliminate Hollowbane
+      90124, -- Eliminate Shatterpulse
       90125, -- Eliminate Purple Peat
+      90126, -- Eliminate Grubber
       90127, -- Eliminate Arcana-Monger So'zer
     },
     reset = "weekly",
     persists = false,
-    progress = true,
-    onlyOnOrCompleted = false,
+    fullObjective = false,
   },
 }
 

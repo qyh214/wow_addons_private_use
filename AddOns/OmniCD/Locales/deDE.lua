@@ -150,6 +150,8 @@ L["Don't show again"] = "Nicht mehr anzeigen"
 L["Enable CD tracking in the current zone"] = "CD-Anzeige in der aktuellen Zone aktivieren"
 L["Enable if the spell is a base ability for this specialization"] = "Aktivieren, wenn der Zauber eine Basisfähigkeit für diese Spezialisierung ist"
 L["Enable in automated instance groups"] = "Aktivieren in automatisierten Instanzgruppen"
+--[[Translation missing --]]
+L["Enable in raid groups"] = "Enable in raid groups"
 L["Enable initial spark and marching-ants animation"] = "Anfangsfunken- und Wanderanimation einschalten."
 L["Enable spell for this specialization"] = "Zauber für diese Spezialisierung aktivieren"
 L["Enable to customize the 2nd row icons when using 'Double Row' layout."] = "Ermöglicht die Anpassung der Symbole in der 2. Zeile bei Verwendung des Layouts 'Doppelreihe'."

@@ -98,7 +98,7 @@ end
 function mod:FloorRemoved(_, _, _, spellId)
 	-- Trigger Phase A when the spark hits the conduit
 	if spellId == 118189 then
-		self:Bar("floor", 6, L["floor"], L.floor_icon)
+		self:Bar("floor", self:Classic() and 16 or 6, L["floor"], L.floor_icon)
 		self:MessageOld("floor", "blue", "alarm", L["floor_message"], L.floor_icon)
 		self:Flash("floor", L.floor_icon)
 	end

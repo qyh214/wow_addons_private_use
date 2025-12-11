@@ -1,0 +1,47 @@
+## Interface: 50500, 110205, 110207
+## Title: BtWQuests
+## Version: 2.58.0
+## Notes: 
+## Author: Breen
+## SavedVariables: BtWQuests_Characters BtWQuests_AccountSettings
+## SavedVariablesPerCharacter: BtWQuests_Settings BtWQuests_AutoLoad
+## AddonCompartmentFunc: BtWQuests_OnAddonCompartmentClick
+## IconTexture: Interface\QuestFrame\UI-QuestLog-BookIcon
+## X-Curse-Project-ID: 280369
+## X-WoWI-ID: 24680
+## X-Wago-ID: yQKyzeG7
+## Category-enUS: Quests
+## Category-deDE: Quests
+## Category-esES: Misiones
+## Category-esMX: Misiones
+## Category-frFR: Quêtes
+## Category-itIT: Missioni
+## Category-koKR: 퀘스트
+## Category-ptBR: Missões
+## Category-ruRU: Задания
+## Category-zhCN: 任务
+## Category-zhTW: 任務
+
+Defines.lua
+BtWQuestsCharacters.lua
+BtWQuestsDatabase.lua
+
+Localization.lua
+Localization.deDE.lua
+Localization.esES.lua
+Localization.esMX.lua
+Localization.frFR.lua
+Localization.itIT.lua
+Localization.koKR.lua
+Localization.ptBR.lua
+Localization.ruRU.lua
+Localization.zhCN.lua
+Localization.zhTW.lua
+
+BtWQuestsTemplates.xml
+BtWQuests.xml
+BtWQuestsQuestDataProvider.xml
+BtWQuestsQuestPOIDataProvider.xml
+BtWQuestsGuideDataProvider.xml
+BtWQuestsMinimapButton.xml
+LibMapPinHandler.lua

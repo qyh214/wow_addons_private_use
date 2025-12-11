@@ -208,9 +208,8 @@ function mod:MarkApplied(args)
 			self:StopBar(CL.count:format(args.spellName, amount-1), args.destName)
 		end
 
-		-- 203102 is Ysondre's on Normal & Mythic, 203125 is Emeriss' on Mythic
-		local _, _, duration = self:UnitDebuff("player", args.spellName, 203102, 203125)
-		self:TargetBar(-12809, duration or 35, args.destName, CL.count:format(args.spellName, amount), args.spellId)
+		local auraTbl = self:GetPlayerAura(args.spellId)
+		self:TargetBar(-12809, auraTbl and auraTbl.duration or 35, args.destName, CL.count:format(args.spellName, amount), args.spellId)
 	end
 end
 

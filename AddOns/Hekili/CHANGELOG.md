@@ -1,49 +1,46 @@
 # Hekili
 
-## [v11.2.0-1.0.0e](https://github.com/Hekili/hekili/tree/v11.2.0-1.0.0e) (2025-08-07)
-[Full Changelog](https://github.com/Hekili/hekili/compare/v11.2.0-1.0.0d...v11.2.0-1.0.0e) [Previous Releases](https://github.com/Hekili/hekili/releases)
+## [v11.2.5-1.0.0](https://github.com/Hekili/hekili/tree/v11.2.5-1.0.0) (2025-11-01)
+[Full Changelog](https://github.com/Hekili/hekili/compare/v11.2.0-1.0.1h...v11.2.5-1.0.0) [Previous Releases](https://github.com/Hekili/hekili/releases)
 
-- Merge pull request #5042 from syrifgit/sub-rogue-rupture  
-    Sub Rogue - Account for not talenting Flagellation  
-- Merge pull request #5041 from syrifgit/11-2-housekeeping  
-    Housekeeping  
-- Sub Rogue - Account for not talenting Flagellation  
-    APL gets weird because when not talented, flagellation cooldown returns 0.  
-    I worked around a lot of this last season, but this case was never noticed because literally every sub build used flag. Now that there's a no-flag build, it has popped up.  
-    Fixes https://github.com/Hekili/hekili/issues/5035  
-- Housekeeping  
-    `raid&boss` will be undone the next time any of these are exported to pack strings  
-- Merge pull request #5037 from syrifgit/elemental-apl  
-    Elemental APL  
-- review notes  
-- Merge pull request #5034 from syrifgit/11-2-sin-tweak  
-    Sin Rogue - Rupture Fix  
-- Merge pull request #5039 from syrifgit/marksmanship-apl  
-    Marksmanship apl + dark ranger tidy up  
-- Frost DK Set Bonus  
-- Merge pull request #5032 from syrifgit/frostbane  
-    Death knight Fixes  
-- variable math, breath CD  
-- Update HunterBeastMastery.lua  
-- Marksmanship APL + tidy up  
-    ## APL Sync: https://github.com/simulationcraft/simc/commit/0fb177014fc85f5688c383f812d22ae0c1aa2ecf + https://github.com/simulationcraft/simc/commit/fd7df65a34caa11d0a3b194482cadbf9ae24e458  
-    ## BM APL  
-    Fix trinket lines  
-    ## Dark Ranger  
-    Fix black arrow in flight mechanics, this successfully stops multishot from flickering while it's in flight due to tricks/beast cleave being applied on impact.  
-- Elemental APL  
-    Updated APL: https://github.com/simulationcraft/simc/commit/6d828cebb86355a4148a0cf11d9c8f4b293b350e  
-- Sin Rogue - Rupture Fix  
-    My custom APL tweak fell apart on the new APL when facing less than 5 targets (the cap for the stacking rupture talent).  
-    This is the custom edit that forces more rupture on the same target for users who do not enable target swaps, to spread via carnage talent and not grief their damage.  
-    Fixes https://github.com/Hekili/hekili/issues/5030  
-- spellID  
-- Fix totem alias  
-- Update DeathKnightUnholy.lua  
-- Update DeathKnightFrost.lua  
-- oops  
-- SimC Syntax  
-- Unholy had some spellID changes  
-- fix Frost Strike being unknown while frostbane is up  
-    Might need to examine spell overrides more broadly, maybe?  
-    Fixes https://github.com/Hekili/hekili/issues/5031  
+- TOC  
+- Merge pull request #5344 from eXhausted/patch-1  
+    Update Targets.lua  
+- Merge pull request #5343 from syrifgit/legion-remix  
+    Support Legion Remix Hard Mode Target Detection  
+- Merge pull request #5342 from syrifgit/guardian-apl  
+    Guardian Header Update  
+- Merge pull request #5341 from syrifgit/fire-apl  
+    Fire Mage APL Sync  
+- Merge pull request #5340 from syrifgit/bm-apl  
+    Hunter APL Sync  
+- Merge pull request #5323 from johnnylam88/fix/setting-purify-for-niuzao  
+    fix: using Purifying Brew to trigger Niuzao Stomp is baseline  
+- Update Targets.lua  
+    Adding exception for Araz encounter in Manaforge Omega  
+- Update Targets.lua  
+- Support Legion Remix Hard Mode Target Detection  
+- Guardian Header Update  
+    No actual changes needed, it just removes prowl which you already commented out  
+- Fire Mage APL Sync  
+    Standard sync: https://github.com/simulationcraft/simc/commit/1a1f68bbc5fbd69d5155a97e5a69dfc6a46223dd  
+- Hunter APL Sync  
+    # Standard syncs  
+    ## BM  
+    - https://github.com/simulationcraft/simc/commit/69f166b9bde8faf03d5042291c9c74e455441e0b  
+    - https://github.com/simulationcraft/simc/commit/66444322d45efbe39d172bc8d3ee36afacd0ff6b  
+    - https://github.com/simulationcraft/simc/commit/07fcac77e140c923d37232299153513cc8ee4504  
+    ## MM  
+    - https://github.com/simulationcraft/simc/commit/96226625caa584b265367686c1fff943b7b69625  
+- fix: using Purifying Brew to trigger Niuzao Stomp is baseline  
+- Merge pull request #5309 from syrifgit/outlaw-disorienting-strikes  
+    Unseen Blade Stuff Again  
+- Merge pull request #5318 from johnnylam88/fix/dk-visceral-strength  
+    fix: track the strength buff from San'layn Visceral Strength  
+- fix: track the strength buff from San'layn Visceral Strength  
+    In SimulationCraft, the strength buff is simply `visceral_strength` for  
+    both Blood and Unholy, so rename `visceral_strength_buff` to match.  
+    Apply the buff when Crimson Scourge is consumed as Blood or if Sudden  
+    Doom is consumed as Unholy.  
+- Update Sub  
+- Unseen Blade Stuff Again  

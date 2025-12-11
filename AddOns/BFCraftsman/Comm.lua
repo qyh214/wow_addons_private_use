@@ -38,26 +38,31 @@ local timer
 function BFC.ScheduleNextSync(useDelay)
     if useDelay then
         timer = C_Timer.NewTimer(BFC_PUBLISH_DELAY, function()
-            if BFC_DB.publish.mode == "always" then
-                -- print("ScheduleNextSync() - always")
-                BFC.Publish()
-                BFC.ScheduleNextSync()
-            elseif BFC_DB.publish.mode == "outdoors" then
-                if AF.IsInInstance() then
-                    -- print("ScheduleNextSync() - outdoors, in instance, unpublish")
-                    BFC.Unpublish()
-                else
-                    -- print("ScheduleNextSync() - outdoors, not in instance, publish")
+            if AF.IsEmpty(BFC.learnedProfessions) then
+                -- print("ScheduleNextSync - no learnedProfessions, unpublish")
+                BFC.Unpublish()
+            else
+                if BFC_DB.publish.mode == "always" then
+                    -- print("ScheduleNextSync - always")
                     BFC.Publish()
                     BFC.ScheduleNextSync()
+                elseif BFC_DB.publish.mode == "outdoors" then
+                    if AF.IsInInstance() then
+                        -- print("ScheduleNextSync - outdoors, in instance, unpublish")
+                        BFC.Unpublish()
+                    else
+                        -- print("ScheduleNextSync - outdoors, not in instance, publish")
+                        BFC.Publish()
+                        BFC.ScheduleNextSync()
+                    end
+                else
+                    -- print("ScheduleNextSync - disabled, unpublish")
+                    BFC.Unpublish()
                 end
-            else
-                -- print("ScheduleNextSync - disabled, unpublish")
-                BFC.Unpublish()
             end
         end)
     else
-        -- print("ScheduleNextSync() - default interval")
+        -- print("ScheduleNextSync - default interval")
         timer = C_Timer.NewTimer(SYNC_INTERVAL, function()
             BFC.Publish()
             BFC.ScheduleNextSync()

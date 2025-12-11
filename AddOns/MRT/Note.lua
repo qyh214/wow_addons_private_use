@@ -13,6 +13,7 @@ local GetSpellName = C_Spell and C_Spell.GetSpellName or GetSpellInfo
 local GetSpecializationInfo = C_SpecializationInfo and C_SpecializationInfo.GetSpecializationInfo or GetSpecializationInfo
 local GetSpecialization = GetSpecialization or C_SpecializationInfo and C_SpecializationInfo.GetSpecialization
 local NewVMRTTableData
+local SendChatMessage = C_ChatInfo and C_ChatInfo.SendChatMessage or SendChatMessage
 
 if MRT.isMoP then
 
@@ -360,6 +361,14 @@ formats:
 {time:2:30,wa:nzoth_hs1}	--run weakauras custom event MRT_NOTE_TIME_EVENT with arg1 = nzoth_hs1, arg2 = time left (event runs every second when timer has 5 seconds or lower), arg3 = note line text
 ]]
 
+local mynamelowered = MRT.SDB.charName:lower()
+local function GSUB_Time_hideOtherNames(name)
+	local namefound = name:gsub("|c........",""):gsub("|r",""):lower()
+	if namefound ~= mynamelowered and strsplit("@",namefound) ~= mynamelowered then
+		return ""
+	end
+end
+
 local function GSUB_Time(preText,t,msg,newlinesym)
 	local timeText, opts = strsplit(",", t, 2)
 
@@ -458,8 +467,13 @@ local function GSUB_Time(preText,t,msg,newlinesym)
 		end
 	end
 
-	if not msg:find(MRT.SDB.charName) and not msg:find("{everyone}") and VMRT.Note.TimerOnlyMy and not isAllParam then
+	if VMRT.Note.TimerOnlyMy and not isAllParam and not msg:find(MRT.SDB.charName) and not msg:find("{everyone}") then
 		return ""
+	end
+
+	--remove all names in line format: 0:00 - Name1 {spell:0}  Name2 {spell:0}
+	if VMRT.Note.TimerOnlyMy and not VMRT.Note.TimerOnlyMyEnableAllNames and msg:find("^%d+:%d+.-%- ") then
+		msg = msg:gsub("([^ %-]+) |T.-|t *",GSUB_Time_hideOtherNames)
 	end
 
 	if time > 10 or not module.db.encounter_time or anyType == 2 then
@@ -523,6 +537,9 @@ end
 
 local GSUB_AutoColor_Data = {}
 local function GSUB_AutoColorCreate()
+	if canaccessvalue and ((IsInRaid() and not canaccessvalue("raid1")) or (not IsInRaid() and not canaccessvalue("party1"))) then
+		return
+	end
 	wipe(GSUB_AutoColor_Data)
 	for _, name, subgroup, class, guid, rank, level, online, isDead, combatRole in MRT.F.IterateRoster, MRT.F.GetRaidDiffMaxGroup() do
 		if class and name then
@@ -594,6 +611,14 @@ function module.options:Load()
 		2825,32182,80353,0,
 		106898,192077,46968,119381,179057,192058,30283,0,
 		29166,32375,114018,108199,49576,116844,0,
+		1219223,1217649,1219450,1218626,1218148,1227794,1219532,1219248,1220489,1235816,1218669,1223364,1219263,0,
+		1247672,1226315,1243771,1238502,1247029,1228059,1231408,1227782,1227226,1237272,1226395,1226366,1247045,1242303,1227263,1226867,1231403,0,
+		1223859,1235576,1239988,1240754,1241100,1225616,1226827,1242018,1227048,1246775,1227276,1225582,1227052,0,
+		1243641,1228454,1248171,1237322,1236207,1238874,1232221,1240705,1226260,1228214,1243901,1233076,1231720,1245640,1228219,1227631,1234328,1238266,1228502,1233074,1232412,1233415,1228103,1232738,1243272,1231726,1248009,1228218,0,
+		1233968,1233381,1227117,1233105,1227113,1218103,1234565,1249198,1227809,1242284,1245978,1241917,1233093,1221490,1225154,1240891,1227685,1233863,1241833,1227355,1241306,1235045,1247415,1225127,1245743,1226493,1242304,1222310,1222232,0,
+		1247424,1231871,1233657,1227373,1224414,1232130,1220394,1233917,1227378,1226089,1247495,1232760,1236785,1236784,0,
+		1234539,1224776,1228053,1226417,1224906,1250044,1226042,1225099,1224787,1228065,1224731,1228075,1238975,1227891,1226362,1226384,1227330,1230261,1224812,1226648,1225444,1225634,1248137,1234906,1226879,1228284,1237105,1230302,1237107,1232327,1228163,1224822,1225645,1224827,1224764,1228113,1224767,1228265,1227529,1247215,1232399,1226347,1234529,0,
+		1254384,1237690,1228367,1237694,1235490,1235114,1250614,1246143,1233292,1243690,1229327,1234242,1234243,1230087,1232987,1243699,1234251,1246537,1243577,1248240,1230979,1246541,1241188,1230168,1230674,1246930,1234052,1235467,1234054,1228206,1229674,1245292,1249248,1239262,1239270,1231002,1229038,1227665,1231005,1228207,1243704,1232394,1243609,1237080,0,
 		0,
 		1216731,459943,460153,460386,473507,459627,459666,468207,468147,460116,471403,459974,459453,459994,473636,460603,466615,459679,460625,0,
 		1214190,465446,472220,1221826,473951,472223,472231,471557,473983,473650,463800,1218088,466178,463925,463840,471660,1213994,1214039,465833,0,
@@ -2474,7 +2499,7 @@ function module.options:Load()
 		self:tooltipReload(self)
 	end)
 
-	self.sliderscale = ELib:Slider(self.tab.tabs[2],L.messagebutscale):Size(300):Point("TOPLEFT",self.slideralphaback,"BOTTOMLEFT",0,-20):Range(5,200):SetTo(VMRT.Note.Scale or 100):OnChange(function(self,event) 
+	self.sliderscale = ELib:Slider(self.tab.tabs[2],L.messagebutscale):Size(300):Point("TOP",self.slideralpha,"TOP",0,0):Point("LEFT",self.slideralpha,"RIGHT",50,0):Range(5,200):SetTo(VMRT.Note.Scale or 100):OnChange(function(self,event) 
 		event = event - event%1
 		VMRT.Note.Scale = event
 		module.allframes:ScaleFix(event/100)
@@ -2482,7 +2507,7 @@ function module.options:Load()
 		self:tooltipReload(self)
 	end)
 
-	self.moreOptionsDropDown = ELib:DropDown(self.tab.tabs[2],275,#frameStrataList+1):Point("TOPLEFT",self.sliderscale,"BOTTOMLEFT",0,-15):Size(300):SetText(L.NoteFrameStrata)
+	self.moreOptionsDropDown = ELib:DropDown(self.tab.tabs[2],275,#frameStrataList+1):Point("TOPLEFT",self.slideralphaback,"BOTTOMLEFT",0,-15):Size(300):SetText(L.NoteFrameStrata)
 
 	local function moreOptionsDropDown_SetVaule(_,arg)
 		VMRT.Note.Strata = arg
@@ -2538,6 +2563,15 @@ function module.options:Load()
 			VMRT.Note.TimerOnlyMy = true
 		else
 			VMRT.Note.TimerOnlyMy = nil
+		end
+		module.allframes:UpdateText()
+	end)
+
+	self.chkTimersOnlyMyEnableAllNames = ELib:Check(self.tab.tabs[2],L.NoteTimersOnlyMyEnableAllNames,not VMRT.Note.TimerOnlyMyEnableAllNames):Point("TOPLEFT",self.chkTimersOnlyMy,"BOTTOMLEFT",25,-5):OnClick(function(self) 
+		if self:GetChecked() then
+			VMRT.Note.TimerOnlyMyEnableAllNames = nil
+		else
+			VMRT.Note.TimerOnlyMyEnableAllNames = true
 		end
 		module.allframes:UpdateText()
 	end)
@@ -3045,7 +3079,8 @@ function module.options:Load()
 		(MRT.isClassic and "|n|cffffff00{race:|r|cff00ff00troll,orc|r|cffffff00}|r...|cffffff00{/race}|r - "..L.NoteHelp11 or "")..
 		(MRT.isClassic and "|n|cffffff00{!race:|r|cff00ff00dwarf|r|cffffff00}|r...|cffffff00{/race}|r - "..L.NoteHelp11b or "")..
 		("|n|cffffff00{time:|r|cff00ff002:45|r|cffffff00}|r - "..L.NoteHelp7 or "")..
-		(not MRT.isClassic and "|n|cffffff00{p|r|cff00ff002|r|cffffff00}|r...|cffffff00{/p}|r - "..L.NoteHelp9 or "")
+		(not MRT.isClassic and "|n|cffffff00{p|r|cff00ff002|r|cffffff00}|r...|cffffff00{/p}|r - "..L.NoteHelp9 or "")..
+		"|n|cffffff00{0}|r...|cffffff00{/0}|r - "..L.NoteHelp12
 	):Point("TOPLEFT",10,-20):Point("TOPRIGHT",-10,-20):Color()
 
 	self.advancedHelp = ELib:Button(self.tab.tabs[4],L.NoteHelpAdvanced):Size(400,20):Point("TOP",self.textHelp,"BOTTOM",0,-20):OnClick(function() 
@@ -3060,8 +3095,8 @@ function module.options:Load()
 
 	self.textHelpAdv = ELib:Text(self.advancedScroll.C,
 		"|cffffff00{time:|r|cff00ff001:06,p2|r|cffffff00}|r - "..L.NoteHelpAdv1..
-		"|n|cffffff00{time:|r|cff00ff000:30,SCC:17:2|r|cffffff00}|r - "..L.NoteHelpAdv2..
-		"|n   "..(HUD_EDIT_MODE_ENABLE_ADVANCED_OPTIONS or "Advanced Options")..": |cffffff00{time:|cff00ff00TIME|r,|cff00ff00SCC/SCS/SAA/SAR|r:|cff00ff00SPELL_ID|r:|cff00ff00SPELL_COUNT|r:|cff00ffffSOURCE_NAME|r:|cff00ffffPHASE|r}|r"..
+		(not MRT.isMN and "|n|cffffff00{time:|r|cff00ff000:30,SCC:17:2|r|cffffff00}|r - "..L.NoteHelpAdv2 or "")..
+		(not MRT.isMN and "|n   "..(HUD_EDIT_MODE_ENABLE_ADVANCED_OPTIONS or "Advanced Options")..": |cffffff00{time:|cff00ff00TIME|r,|cff00ff00SCC/SCS/SAA/SAR|r:|cff00ff00SPELL_ID|r:|cff00ff00SPELL_COUNT|r:|cff00ffffSOURCE_NAME|r:|cff00ffffPHASE|r}|r" or "")..
 		"|n|cffffff00{time:|r|cff00ff002:00,e,customevent|r|cffffff00}|r - "..L.NoteHelpAdv3..
 		"|n|cffffff00{time:|r|cff00ff003:40,glowall|r|cffffff00}|r - "..L.NoteHelpAdv6..
 		"|n|cffffff00{time:|r|cff00ff004:15,glow|r|cffffff00}|r - "..L.NoteHelpAdv7..
@@ -3146,14 +3181,27 @@ local function NoteWindow_OnDragStop(self)
 	VMRT.Note[self.Name.."Top"] = self:GetTop()
 end
 
+local function NoteWindow_UpdateMaxSymbolsLimit(self)
+	local width_, height_ = self:GetSize()
+
+	local fontSize = VMRT and VMRT.Note and VMRT.Note.FontSize or 12
+
+	local maxPerLine = ceil(width_ / (fontSize / 4))
+	local maxLines = ceil(height_ / (fontSize / 4))
+
+	self.maxSymbols = (maxLines + 1) * (maxPerLine + 5)
+end
+
 local function NoteWindow_OnSizeChanged(self, width, height)
 	local width_, height_ = self:GetSize()
+	self:UpdateMaxSymbolsLimit()
 	if VMRT and VMRT.Note then
 		VMRT.Note[self.Name.."Width"] = width
 		VMRT.Note[self.Name.."Height"] = height
 
 		self:UpdateText()
 	end
+
 	self.sf.C:SetWidth( width_ )
 end
 
@@ -3181,6 +3229,8 @@ local function NoteWindow_UpdateFont(self)
 			c = c + 1
 		end
 	end
+
+	self:UpdateMaxSymbolsLimit()
 end
 
 local function NoteWindow_UpdateText(self,onlyTimerUpdate)
@@ -3192,6 +3242,10 @@ local function NoteWindow_UpdateText(self,onlyTimerUpdate)
 	while self["text"..c] do
 		self["text"..c]:SetText(" ")
 		c = c + 1
+	end
+
+	if self.maxSymbols and #text > self.maxSymbols then
+		text = text:sub(1,self.maxSymbols)
 	end
 	
 	if #text > 8192 then
@@ -3413,6 +3467,7 @@ function module:CreateNoteWindow(windowName,isCustomWindow)
 	frame.Enable = NoteWindow_Enable
 	frame.Disable = NoteWindow_Disable
 	frame.ScaleFix = NoteWindow_ScaleFix
+	frame.UpdateMaxSymbolsLimit = NoteWindow_UpdateMaxSymbolsLimit
 
 	frame.GetRawText = NoteWindow_RawNull
 	
@@ -4043,9 +4098,9 @@ local function CheckSubZone()
 	
 	if zoneText then
 		local bossID = SubzoneTextToBossID[zoneText]
-		if not bossID and locale == "enUS" then
-			bossID = SubzoneTextToBossID["The "..zoneText]
-		end
+		--if not bossID and locale == "enUS" then
+		--	bossID = SubzoneTextToBossID["The "..zoneText]
+		--end
 		if bossID then
 			if SubzoneBossIDInctanceReq[bossID] and select(8,GetInstanceInfo()) ~= SubzoneBossIDInctanceReq[bossID] then
 				return

@@ -658,6 +658,11 @@ L['george_the_big_pinch_note'] = 'Cliquez rapidement sur les 5 {npc:238189} pour
 L['options_icons_karesh_lore_hunter'] = '{achievement:60890}'
 L['options_icons_karesh_lore_hunter_desc'] = 'Afficher les emplacements des objets d\'histoire pour le haut-fait {achievement:60890}.'
 
+L['options_icons_phase_lost_and_found'] = '{achievement:61017}'
+L['options_icons_phase_lost_and_found_desc'] = 'Afficher les emplacements des Orbes de Plongée phasique pour le haut-fait {achievement:61017}.'
+L['phaseorb_label'] = 'Orbe de Plongée phasique'
+L['phaseorb_note'] = 'Traversez l\'Orbe de Plongée phasique pour avoir une chance d\'obtenir l\'une des apparences.'
+
 L['options_icons_purrkins'] = '{achievement:42729}'
 L['options_icons_purrkins_desc'] = 'Afficher les emplacements des félidrons pour le haut-fait {achievement:42729}.'
 L['purrkins_note'] = '{emote:/Caressez} le félidron.'
@@ -670,4 +675,6 @@ L['gift_of_the_brothers_note'] = 'Interagissez avec la {object:Lanterne vacillan
 L['ancient_coffer_note'] = 'Récupérez le {item:233794}({dot:Red}) et la {item:233799}({dot:Yellow}), puis retournez à l\'emplacement du {object:Coffre ancien} pour recevoir {item:245269}.'
 
 L['sthaarbs_note'] = 'Utilisez le téléporteur près du {object:Conduit de phase} pour atteindre {npc:234845}.'
-L['heka_tamos_note'] = nil
+L['heka_tamos_note'] = 'Récupérez un buff auprès de chacun des objects {object:Veile-rosée}, {object:Lanterne spectrale}, {object:Succulente terreuse} et {object:Ventianne} qui apparaissent à proximité, puis interagissez avec le {object:Brasero d\'union élementaire} pour invoquer le rare.'
+
+L['translocated_gorger_note'] = 'Récupérez 1x {item:246240} par boss, par semaine et par bataillon sur le boss final de chaque {object:Attaque de dévoreur} et combinez-les pour créer la monture.'

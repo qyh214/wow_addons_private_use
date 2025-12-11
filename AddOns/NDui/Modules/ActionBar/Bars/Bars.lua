@@ -110,6 +110,7 @@ function Bar:UpdateButtonConfig(i)
 	self.buttonConfig.clickOnDown = GetCVarBool("ActionButtonUseKeyDown")
 	self.buttonConfig.showGrid = C.db["Actionbar"]["Grid"]
 	self.buttonConfig.flyoutDirection = directions[C.db["Actionbar"]["Bar"..i.."Flyout"]]
+	self.buttonConfig.actionButtonUI = true -- rotation highlight
 
 	local hotkey = self.buttonConfig.text.hotkey
 	hotkey.font.font = DB.Font[1]
@@ -197,7 +198,7 @@ function Bar:UpdateBarConfig()
 end
 
 function Bar:ReassignBindings()
-	if InCombatLockdown() then return end
+	if InCombatLockdown() or Bar.isHousing then return end
 
 	for index = 1, 8 do
 		local frame = Bar.headers[index]
@@ -223,6 +224,15 @@ function Bar:ClearBindings()
 		if frame then
 			ClearOverrideBindings(frame)
 		end
+	end
+end
+
+function Bar:UpdateHousingState(state)
+	Bar.isHousing = (state ~= 0)
+	if Bar.isHousing then
+		Bar:ClearBindings()
+	else
+		Bar:ReassignBindings()
 	end
 end
 
@@ -365,6 +375,7 @@ function Bar:OnLogin()
 	B:RegisterEvent("UPDATE_BINDINGS", Bar.ReassignBindings)
 	B:RegisterEvent("PET_BATTLE_CLOSE", Bar.ReassignBindings)
 	B:RegisterEvent("PET_BATTLE_OPENING_DONE", Bar.ClearBindings)
+	B:RegisterEvent("HOUSE_EDITOR_MODE_CHANGED", Bar.UpdateHousingState)
 
 	if AdiButtonAuras then
 		AdiButtonAuras:RegisterLAB("LibActionButton-1.0-NDui")

@@ -86,6 +86,9 @@ do
     L["SCOREBOARD_RELOADED_WARNING"] = "Incomplete Data"
     L["SCOREBOARD_RELOADED_TOOLTIP"] = "This run's data is incomplete, and possibly incorrect because of a reload or relog mid-run"
     L["SCOREBOARD_BUTTON_GG"] = "gg"
+    L["SCOREBOARD_BUTTON_GG_LIKE"] = "LIKES"
+    L["SCOREBOARD_BUTTON_GG_TOOLTIP_LINE_1"] = "Give an anonymous GG to this player"
+    L["SCOREBOARD_BUTTON_GG_TOOLTIP_LINE_2"] = "GGs you give are saved for later references"
 
     ------------------------------------------------------------
     L["ADDON_MENU_ADDONS_TITLE"] = "Mythic+ Scoreboard"

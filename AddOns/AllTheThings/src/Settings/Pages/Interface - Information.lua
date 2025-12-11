@@ -8,6 +8,7 @@ local Colorize = app.Modules.Color.Colorize;
 local GetNumberWithZeros = app.Modules.Color.GetNumberWithZeros;
 local IsRetrieving = app.Modules.RetrievingData.IsRetrieving;
 local GetRelativeValue = app.GetRelativeValue;
+local wipearray = app.wipearray
 local GetRealmName = GetRealmName
 
 -- WoW API Cache
@@ -89,30 +90,33 @@ local ConversionMethods = setmetatable({
 		end
 	end,
 	itemName = function(itemID, reference)
-		local name = select(2, GetItemInfo(itemID));
-		if IsRetrieving(name) then
+		local item = app.SearchForObject("itemID", itemID, "field") or app.CreateItem(itemID)
+		local link = item and item.link
+		if IsRetrieving(link) then
 			reference.working = true
-			name = "Item: " .. RETRIEVING_DATA;
+			link = "Item: " .. RETRIEVING_DATA
 		end
 		if app.Settings:GetTooltipSetting("itemID") then
-			return name .. " (" .. itemID .. ")";
+			return link .. " (" .. itemID .. ")"
 		else
-			return name;
+			return link
 		end
 	end,
 	itemNameAndIcon = function(itemID, reference)
-		local _,name,_,_,_,_,_,_,_,icon = GetItemInfo(itemID);
-		if IsRetrieving(name) then
+		local item = app.SearchForObject("itemID", itemID, "field") or app.CreateItem(itemID)
+		local link = item and item.link
+		if IsRetrieving(link) then
 			reference.working = true
-			name = "Item: " .. RETRIEVING_DATA;
+			link = "Item: " .. RETRIEVING_DATA
 		end
+		local icon = item and item.icon
 		if icon then
-			name = "|T" .. icon .. ":0|t" .. name;
+			link = "|T" .. icon .. ":0|t" .. link
 		end
 		if app.Settings:GetTooltipSetting("itemID") then
-			return name .. " (" .. itemID .. ")";
+			return link .. " (" .. itemID .. ")"
 		else
-			return name;
+			return link
 		end
 	end,
 	objectName = function(objectID, reference)
@@ -230,7 +234,7 @@ local function BuildKnownByInfoForKind(tooltipInfo, kind)
 			desc = desc .. (character.text or "???");
 		end
 		tinsert(tooltipInfo, { left = kind:format(desc:gsub("-" .. GetRealmName(), "")), wrap = true, color = app.Colors.TooltipDescription });
-		wipe(knownBy);
+		wipearray(knownBy);
 	end
 end
 local function ProcessForCompletedBy(t, reference, tooltipInfo)
@@ -374,7 +378,7 @@ local function ProcessForKnownBy(t, reference, tooltipInfo)
 						right = data[2] .. " / " .. data[3],
 					});
 				end
-				wipe(knownBy);
+				wipearray(knownBy);
 				return;
 			end
 		end
@@ -480,32 +484,33 @@ app.GetSpecsString = GetSpecsString
 
 -- Cost Helper Functions
 local function formatNumericWithCommas(amount)
-    local k
-    while true do
-        amount, k = tostring(amount):gsub("^(-?%d+)(%d%d%d)", '%1,%2')
-        if k == 0 then
-            break
-        end
-    end
-    return amount
+	local k
+	while true do
+		amount, k = tostring(amount):gsub("^(-?%d+)(%d%d%d)", '%1,%2')
+		if k == 0 then
+			break
+		end
+	end
+	return amount
 end
+app.formatNumericWithCommas = formatNumericWithCommas
 local function GetMoneyString(amount)
-    if amount > 0 then
-        local formatted
-        local gold, silver, copper = math_floor(amount / 100 / 100), math_floor((amount / 100) % 100),
-            math_floor(amount % 100)
-        if gold > 0 then
-            formatted = formatNumericWithCommas(gold) .. "|T237618:0|t"
-        end
-        if silver > 0 then
-            formatted = (formatted or "") .. silver .. "|T237620:0|t"
-        end
-        if copper > 0 then
-            formatted = (formatted or "") .. copper .. "|T237617:0|t"
-        end
-        return formatted
-    end
-    return amount
+	if amount > 0 then
+		local formatted
+		local gold, silver, copper = math_floor(amount / 100 / 100), math_floor((amount / 100) % 100),
+			math_floor(amount % 100)
+		if gold > 0 then
+			formatted = formatNumericWithCommas(gold) .. "|T237618:0|t"
+		end
+		if silver > 0 then
+			formatted = (formatted or "") .. silver .. "|T237620:0|t"
+		end
+		if copper > 0 then
+			formatted = (formatted or "") .. copper .. "|T237617:0|t"
+		end
+		return formatted
+	end
+	return amount
 end
 local CostCurrencyCache = setmetatable({}, {
 	__index = function(t, id)
@@ -531,7 +536,7 @@ local PostProcessor = CreateInformationType("__postprocessor", {
 			for i,entry in ipairs(AppendedInformationTextEntries) do
 				tinsert(tooltipInfo, entry);
 			end
-			wipe(AppendedInformationTextEntries);
+			wipearray(AppendedInformationTextEntries);
 		end
 	end,
 });
@@ -540,6 +545,7 @@ local function AppendInformationTextEntry(entry)
 	tinsert(AppendedInformationTextEntries, entry);
 end
 settings.AppendInformationTextEntry = AppendInformationTextEntry;
+local AccountWideIcon = app.GameBuildVersion >= 110005 and "|T6124644:0:0:0:0:64:64:4:60:4:60|t " or "|T413589:0:0:0:0:64:64:4:60:4:60|t "
 
 -- All of the Default Information Types.
 local InformationTypes = {
@@ -760,14 +766,28 @@ local InformationTypes = {
 	}),
 	CreateInformationType("description", { text = L.DESCRIPTIONS, priority = 2.5,
 		Process = function(t, reference, tooltipInfo)
-			local description = reference.description
-				or GetRelativeValue(reference, "sharedDescription")
+			local description = (app.ActiveRowReference or reference).description
+			local sharedDescription = GetRelativeValue(reference, "sharedDescription")
 				-- duplicated search results loose their parent references in order to prevent issues in filtering/tooltips
 				-- so also check the active row reference for accuracy if the tooltip is in context of a row
 				or GetRelativeValue(app.ActiveRowReference, "sharedDescription")
 			if description then
+				if sharedDescription then
+					tinsert(tooltipInfo, {
+						left = description.."\n"..sharedDescription,
+						color = app.Colors.TooltipDescription,
+						wrap = true,
+					});
+				else
+					tinsert(tooltipInfo, {
+						left = description,
+						color = app.Colors.TooltipDescription,
+						wrap = true,
+					});
+				end
+			elseif sharedDescription then
 				tinsert(tooltipInfo, {
-					left = description,
+					left = sharedDescription,
 					color = app.Colors.TooltipDescription,
 					wrap = true,
 				});
@@ -788,9 +808,9 @@ local InformationTypes = {
 			end
 			if maps and #maps > 0 then
 				local mapNames,uniques,name = {},{},nil;
-				local rootMapID = reference.mapID;
+				local rootMapID = reference.mapID
 				local myRealMapID = app.RealMapID
-				local onMyMap = rootMapID == myRealMapID
+				local onMyMap = myRealMapID and rootMapID == myRealMapID
 				if rootMapID then uniques[app.GetMapName(rootMapID) or rootMapID] = true; end
 				for i,mapID in ipairs(maps) do
 					onMyMap = onMyMap or mapID == myRealMapID
@@ -953,6 +973,7 @@ local InformationTypes = {
 	CreateInformationType("modID", { text = L.MOD_ID, priority = 6 }),
 	CreateInformationType("artID", { text = L.ART_ID, priority = 7 }),
 	CreateInformationType("campsiteID", { text = L.CAMPSITE_ID, priority = 7 }),
+	CreateInformationType("decorID", { text = L.DECOR_ID, priority = 7 }),
 	CreateInformationType("iconPath", { text = L.ICON_PATH, ShouldDisplayInExternalTooltips = false, priority = 7 }),
 	CreateInformationType("visualID", { text = L.VISUAL_ID, priority = 7 }),
 
@@ -978,9 +999,11 @@ local InformationTypes = {
 		Process = function(t, reference, tooltipInfo)
 			local questID = reference.questID
 			if not questID then return end
+
+			local account = app.AccountWideQuestsDB[questID]
 			tinsert(tooltipInfo, {
 				left = L.QUEST_ID,
-				right = reference.questID.." "..app.GetCompletionIcon(app.IsQuestFlaggedCompleted(questID)),
+				right = reference.questID.." "..(account and AccountWideIcon or "")..app.GetCompletionIcon(app.IsQuestFlaggedCompleted(questID)),
 			});
 		end
 	}),
@@ -1230,7 +1253,7 @@ local InformationTypes = {
 					if itemID == 54537 or		-- Heart-Shaped Box [Love is in the Air]
 						itemID == 117393 or		-- Keg-Shaped Treasure Chest [Brewfest]
 						itemID == 117394 or		-- Satchel of Chilled Goods [Midsummer Fire Festival]
-						--itemID == 209024 or		-- Loot-Filled Pumpkin [Hallow's End] (Blizz is inconsistent, big mad.)
+						-- itemID == 209024 or		-- Loot-Filled Pumpkin [Hallow's End] (Blizz is inconsistent, big mad.)
 						itemID == 216874		-- Loot-Filled Basket [Noblegarden]
 					then
 						tinsert(tooltipInfo, 1, { left = L.HOLIDAY_DROP, wrap = true, color = app.Colors.TooltipDescription });
@@ -1310,7 +1333,7 @@ local InformationTypes = {
 				tinsert(tooltipInfo, { right = app.GetSpecsString(specs, true, true) });
 			end
 		end,
-	});
+	}),
 
 	-- We want this after most of the regular fields.
 	CreateInformationType("OnTooltip", {
@@ -1321,7 +1344,7 @@ local InformationTypes = {
 			local OnTooltip = reference.OnTooltip;
 			if OnTooltip then OnTooltip(reference, tooltipInfo); end
 		end,
-	});
+	}),
 };
 settings.InformationTypes = InformationTypes;
 
@@ -1340,8 +1363,8 @@ local function SortInformationTypesByPriority(a,b)
 	end
 end
 local function RefreshActiveInformationTypes()
-	wipe(ActiveInformationTypesForExternalTooltips);
-	wipe(ActiveInformationTypes);
+	wipearray(ActiveInformationTypesForExternalTooltips);
+	wipearray(ActiveInformationTypes);
 
 	for _,informationType in ipairs(SortedInformationTypes) do
 		if settings:GetTooltipSetting(informationType.informationTypeID) or informationType.ForceActive then
@@ -1361,8 +1384,8 @@ end
 -- other settings can control what information is displayed without themselves being an information type
 app.AddEventHandler("OnSettingsRefreshed", RefreshActiveInformationTypes)
 local function SortInformationTypes()
-	wipe(SortedInformationTypes);
-	wipe(SortedInformationTypesByName);
+	wipearray(SortedInformationTypes);
+	wipearray(SortedInformationTypesByName);
 	for i,informationType in ipairs(InformationTypes) do
 		SortedInformationTypes[#SortedInformationTypes + 1] = informationType;
 		if not (informationType.ForceActive or informationType.HideCheckBox) then
@@ -1471,6 +1494,34 @@ settings.CreateInformationType("ExclusionFilters", {
 		end
 	end
 })
+settings.CreateInformationType("ExclusionFiltersRow", {
+	priority = 99999,
+	text = "DEBUG: Exclusion Filters - Row",
+	HideCheckBox = not app.Debugging,
+	Process = function(t, reference, tooltipInfo)
+		local ref = app.ActiveRowReference
+		if not ref then return end
+
+		local excludes = {}
+		local Filter = app.Modules.Filter
+		for filterName,filterFunc in pairs(Filter.Filters) do
+			if not filterFunc(ref) then
+				excludes[#excludes + 1] = Colorize(filterName, Filter.Get[filterName]() and app.Colors.ChatLinkError or app.Colors.RemovedWithPatch)
+			else
+				excludes[#excludes + 1] = Colorize(filterName, Filter.Get[filterName]() and app.Colors.Time or app.Colors.ChatLinkHQT)
+			end
+		end
+		if #excludes > 0 then
+			tinsert(tooltipInfo, {
+				left = "Row Filter Checks",
+			});
+			tinsert(tooltipInfo, {
+				left = app.TableConcat(excludes, nil, nil, ", "),
+				wrap = true
+			});
+		end
+	end
+})
 settings.CreateInformationType("LinkSourceID", {
 	priority = 99999,
 	text = "DEBUG: Link SourceID",
@@ -1482,7 +1533,7 @@ settings.CreateInformationType("LinkSourceID", {
 		local itemName = GetItemInfo(link)
 		-- If it doesn't, the source ID will need to be harvested.
 		local sourceID, success = app.GetSourceID(link);
-		-- app.PrintDebug("SourceIDs",data.modItemID,source,sourceID,success,link)
+		-- app.PrintDebug("SourceIDs",data.modItemID,rowSource,source,sourceID,success,link)
 		if sourceID and sourceID > 0 then
 			-- only save the source if it is different than what we already have, or being forced
 			if not source or source < 1 or source ~= sourceID then

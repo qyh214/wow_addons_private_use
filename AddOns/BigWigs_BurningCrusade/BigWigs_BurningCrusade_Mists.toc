@@ -1,4 +1,5 @@
-## Interface: 50500
+## Interface: 50502, 50503
+
 ## Title: BigWigs [|cffeda55fBurning Crusade|r]
 ## Title-zhCN: BigWigs [|cffeda55f燃烧的远征|r]
 ## Title-zhTW: BigWigs [|cffeda55fBurning Crusade|r]
@@ -24,7 +25,7 @@
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
-## Version: v11.1.4
+## Version: v11.2.0
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_legacy.tga
 
 ## X-Category: Raid

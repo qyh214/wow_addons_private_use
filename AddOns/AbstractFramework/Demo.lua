@@ -12,9 +12,8 @@ function AF.ShowDemo()
     -----------------------------------------------------------------------------
     local demo = AF.CreateHeaderedFrame(AF.UIParent, "AF_DEMO",
         AF.GetIconString("AF", 16) .. AF.GetGradientText("AbstractFramework", "blazing_tangerine", "vivid_raspberry")
-        .. " " .. AF.WrapTextInColor(AF.GetAddOnVersion(AF.name) .. " Demo", "white"), 710, 500)
-    -- AF.SetPoint(demo, "LEFT", 100, 0)
-    demo:SetPoint("CENTER")
+        .. " " .. AF.WrapTextInColor(AF.GetAddOnVersion(AF.name) .. " Demo", "white"), 710, 520)
+    AF.SetPoint(demo, "CENTER")
     demo:SetFrameLevel(500)
     demo:SetTitleJustify("LEFT")
 
@@ -77,7 +76,7 @@ function AF.ShowDemo()
     -----------------------------------------------------------------------------
     local b1 = AF.CreateButton(demo, "Button A", "accent", 100, 20)
     AF.SetPoint(b1, "TOPLEFT", 10, -10)
-    AF.SetTooltips(b1, "ANCHOR_TOPLEFT", 0, 2, "Tooltip Title", "This is a tooltip")
+    b1:SetTooltip("Tooltip Title", "This is a tooltip")
 
     local b2 = AF.CreateButton(demo, "Button B", "green", 100, 20)
     AF.SetPoint(b2, "TOPLEFT", b1, "TOPRIGHT", 10, 0)
@@ -85,7 +84,7 @@ function AF.ShowDemo()
 
     local b3 = AF.CreateButton(demo, "Button C", "static", 100, 20)
     AF.SetPoint(b3, "TOPLEFT", b2, "TOPRIGHT", 10, 0)
-    AF.SetTooltips(b3, "ANCHOR_TOPLEFT", 0, 2, "Another Style", "SetTextHighlightColor", "SetBorderHighlightColor")
+    AF.SetTooltip(b3, "TOPLEFT", 0, 2, "Another Style", "SetTextHighlightColor", "SetBorderHighlightColor")
     b3:SetTextHighlightColor("accent")
     b3:SetBorderHighlightColor("accent")
 
@@ -96,14 +95,14 @@ function AF.ShowDemo()
     local b5 = AF.CreateButton(demo, nil, "accent", 20, 20)
     b5:SetTexture("classicon-" .. strlower(PlayerUtil.GetClassFile()), {16, 16}, {"CENTER", 0, 0}, true)
     AF.SetPoint(b5, "TOPLEFT", b4, "TOPRIGHT", 10, 0)
+    b5:SetEnabled(false)
 
-    local b6 = AF.CreateButton(demo, nil, "accent", 20, 20)
-    b6:SetTexture("classicon-" .. strlower(PlayerUtil.GetClassFile()), {16, 16}, {"CENTER", 0, 0}, true)
-    AF.SetPoint(b6, "TOPLEFT", b5, "TOPRIGHT", 10, 0)
-    b6:SetEnabled(false)
+    local iconBtn = AF.CreateIconButton(demo, AF.GetIcon("Question_Round"), 20, 20, 2, "gray", "accent", "TRILINEAR")
+    AF.SetPoint(iconBtn, "TOPLEFT", b5, "TOPRIGHT", 10, 0)
 
-    local iconBtn = AF.CreateIconButton(demo, AF.GetIcon("Info_Square"), 20, 20, 2, "gray")
-    AF.SetPoint(iconBtn, "TOPLEFT", b6, "TOPRIGHT", 10, 0)
+    local tipsBtn = AF.CreateTipsButton(demo)
+    AF.SetPoint(tipsBtn, "TOPLEFT", iconBtn, "TOPRIGHT", 10, -2)
+    tipsBtn:SetTips("Tips Button", "This button shows tips when hovered over")
 
 
     -----------------------------------------------------------------------------
@@ -111,7 +110,7 @@ function AF.ShowDemo()
     -----------------------------------------------------------------------------
     local cb1 = AF.CreateCheckButton(demo, "Check boxes")
     AF.SetPoint(cb1, "TOPLEFT", b1, "BOTTOMLEFT", 0, -10)
-    AF.SetTooltips(cb1, "ANCHOR_TOPLEFT", 0, 3, "Check Button", "The hit rectangle of these check buttons are different")
+    AF.SetTooltip(cb1, "TOPLEFT", 0, 2, "Check Button", "The hit rectangle of these check buttons are different")
 
     local cb2 = AF.CreateCheckButton(demo, "With")
     AF.SetPoint(cb2, "TOPLEFT", cb1, "BOTTOMLEFT", 0, -7)
@@ -189,23 +188,23 @@ function AF.ShowDemo()
     gb1:SetTextJustifyH("LEFT")
     AF.SetPoint(gb1, "TOPLEFT")
     AF.SetPoint(gb1, "RIGHT")
-    AF.SetTooltips(gb1, "LEFT", -2, 0, "Item A")
+    AF.SetTooltip(gb1, "LEFT", -2, 0, "Item A")
 
     local gb2 = AF.CreateButton(bf2, "Item B", "red_transparent", 100, 20, nil, "none", "")
     gb2.id = "gb2"
     gb2:SetTextJustifyH("LEFT")
     AF.SetPoint(gb2, "TOPLEFT", gb1, "BOTTOMLEFT", 0, 1)
     AF.SetPoint(gb2, "RIGHT")
-    AF.SetTooltips(gb2, "LEFT", -2, 0, "Item B")
+    AF.SetTooltip(gb2, "LEFT", -2, 0, "Item B")
 
     local gb3 = AF.CreateButton(bf2, "Item C", "lime_transparent", 100, 20, nil, "none", "")
     gb3.id = "gb3"
     gb3:SetTextJustifyH("LEFT")
     AF.SetPoint(gb3, "TOPLEFT", gb2, "BOTTOMLEFT", 0, 1)
     AF.SetPoint(gb3, "RIGHT")
-    AF.SetTooltips(gb3, "LEFT", -2, 0, "Item C")
+    AF.SetTooltip(gb3, "LEFT", -2, 0, "Item C")
 
-    AF.CreateButtonGroup({gb1, gb2, gb3}, function(id)
+    AF.CreateButtonGroup({gb1, gb2, gb3}, function(_, id)
         AF.Print("selected", id)
     end)
 
@@ -231,7 +230,9 @@ function AF.ShowDemo()
     -----------------------------------------------------------------------------
     --                                  switch                                 --
     -----------------------------------------------------------------------------
-    local sw1 = AF.CreateSwitch(demo, 150, 20, {
+    local sw1 = AF.CreateSwitch(demo, 150, 20)
+    AF.SetPoint(sw1, "TOPLEFT", sf1, "BOTTOMLEFT", 0, -10)
+    sw1:SetLabels({
         {
             ["text"] = "20",
             ["value"] = 20,
@@ -254,14 +255,13 @@ function AF.ShowDemo()
             end,
         },
         {
-            ["text"] = "400",
-            ["value"] = 400,
+            ["text"] = "700",
+            ["value"] = 700,
             ["onClick"] = function()
-                sf1:SetContentHeight(400)
+                sf1:SetContentHeight(700)
             end,
         }
     })
-    AF.SetPoint(sw1, "TOPLEFT", sf1, "BOTTOMLEFT", 0, -10)
     sw1:SetSelectedValue(20)
 
 
@@ -270,7 +270,7 @@ function AF.ShowDemo()
     -----------------------------------------------------------------------------
     local sl1 = AF.CreateSlider(tp1, "Scale", 130, 0.5, 2, 0.01)
     AF.SetPoint(sl1, "TOPLEFT", 5, -40)
-    AF.SetTooltips(sl1, "TOPLEFT", 0, 20, "Set scale of AF.UIParent", "If scale is too small, there can be some display issues", "It's highly recommended to do a UI reload after changing scale")
+    AF.SetTooltip(sl1, "TOPLEFT", 0, 20, "Set scale of AF.UIParent", "If scale is too small, there can be some display issues", "It's highly recommended to do a UI reload after changing scale")
     sl1:SetValue(AF.GetScale())
     sl1:SetAfterValueChanged(function(value)
         AF.SetScale(value)
@@ -297,6 +297,7 @@ function AF.ShowDemo()
     local sl3 = AF.CreateVerticalSlider(demo, "Vertical Slider", 100, -50, 50, 1)
     AF.SetPoint(sl3, "TOPLEFT", sl2, "BOTTOMLEFT", 45, -30)
     sl3:UpdateWordWrap()
+    sl3:SetTooltip("Vertical Slider")
     sl3:SetValue(0) -- for percentage, set value * 100
     sl3:SetOnValueChanged(function(value)
         AF.Print("VERTICAL_OnSliderValueChanged:", value) -- for percentage, get value / 100
@@ -326,7 +327,6 @@ function AF.ShowDemo()
     slist1:SetWidgets(widgets)
 
 
-
     -----------------------------------------------------------------------------
     --                             cascading menu                              --
     -----------------------------------------------------------------------------
@@ -337,8 +337,7 @@ function AF.ShowDemo()
 
     do
         local data = {
-            druid = {774, 8936, 190984},
-            monk = {119611, 124682, 450805},
+            druid = {774, 8936},
             priest = {139, 41635, 17},
         }
 
@@ -433,9 +432,9 @@ function AF.ShowDemo()
     -- normal dropdown (items <= 10)
     local dd1 = AF.CreateDropdown(demo, 150)
     AF.SetPoint(dd1, "TOPLEFT", cm, "BOTTOMLEFT", 0, -30)
-    AF.SetTooltips(dd1, "TOPLEFT", 0, 2, "Normal Dropdown 1")
+    dd1:SetTooltip("Normal Dropdown 1")
     dd1:SetLabel("Normal Dropdown 1")
-    dd1:SetOnClick(function(value)
+    dd1:SetOnSelect(function(value)
         AF.Print("NormalDropdown1 Selected:", value)
     end)
     local items = {}
@@ -447,9 +446,9 @@ function AF.ShowDemo()
     -- normal dropdown (items > 10)
     local dd2 = AF.CreateDropdown(demo, 150)
     AF.SetPoint(dd2, "TOPLEFT", dd1, "BOTTOMLEFT", 0, -30)
-    AF.SetTooltips(dd2, "TOPLEFT", 0, 2, "Normal Dropdown 2")
+    AF.SetTooltip(dd2, "TOPLEFT", 0, 2, "Normal Dropdown 2")
     dd2:SetLabel("Normal Dropdown 2")
-    dd2:SetOnClick(function(value)
+    dd2:SetOnSelect(function(value)
         AF.Print("NormalDropdown2 Selected:", value)
     end)
     local items = {}
@@ -478,10 +477,10 @@ function AF.ShowDemo()
     -- dd4:SetSelectedValue("item0")
 
     -- font dropdown
-    local dd5 = AF.CreateDropdown(demo, 150, 10, "font")
+    local dd5 = AF.CreateDropdown(demo, 150, 10)
     AF.SetPoint(dd5, "TOPLEFT", dd4, "BOTTOMLEFT", 0, -30)
     dd5:SetLabel("Font Dropdown")
-    AF.SetTooltips(dd5, "TOPLEFT", 0, 2, "Font Dropdown", "Using LibSharedMedia")
+    AF.SetTooltip(dd5, "TOPLEFT", 0, 2, "Font Dropdown", "Using LibSharedMedia")
 
     local LSM = LibStub("LibSharedMedia-3.0", true)
     if LSM then
@@ -497,10 +496,10 @@ function AF.ShowDemo()
     end
 
     -- texture dropdown
-    local dd6 = AF.CreateDropdown(demo, 150, 10, "texture")
+    local dd6 = AF.CreateDropdown(demo, 150, 10)
     AF.SetPoint(dd6, "TOPLEFT", dd5, "BOTTOMLEFT", 0, -30)
     dd6:SetLabel("Texture Dropdown")
-    AF.SetTooltips(dd6, "TOPLEFT", 0, 2, "Texture Dropdown", "Using LibSharedMedia")
+    AF.SetTooltip(dd6, "TOPLEFT", 0, 2, "Texture Dropdown", "Using LibSharedMedia")
 
     if LSM then
         local items = {}
@@ -515,8 +514,9 @@ function AF.ShowDemo()
     end
 
     -- vertical mini dropdown
-    local dd7 = AF.CreateDropdown(demo, 100, 10, nil, true)
+    local dd7 = AF.CreateDropdown(demo, 100, 10, "vertical")
     AF.SetPoint(dd7, "TOPLEFT", dd6, "BOTTOMLEFT", 0, -30)
+    dd7:SetTooltip("Mini Dropdown (V)")
     dd7:SetLabel("Mini Dropdown (V)")
     local items = {}
     for i = 1, 5 do
@@ -527,7 +527,7 @@ function AF.ShowDemo()
     dd7:SetItems(items)
 
     -- horizontal mini dropdown
-    local dd8 = AF.CreateDropdown(demo, 100, 10, nil, true, true)
+    local dd8 = AF.CreateDropdown(demo, 100, 10, "horizontal")
     AF.SetPoint(dd8, "TOPLEFT", dd7, "BOTTOMLEFT", 0, -30)
     dd8:SetLabel("Mini Dropdown (H)")
     local items = {}
@@ -563,77 +563,101 @@ function AF.ShowDemo()
     -----------------------------------------------------------------------------
     --                                 dialog1                                 --
     -----------------------------------------------------------------------------
-    local b7 = AF.CreateButton(demo, "Dialog1", "accent_hover", 150, 20)
-    AF.SetPoint(b7, "TOPLEFT", cp3, "BOTTOMLEFT", 0, -10)
-    b7:SetScript("OnClick", function()
+    local dialog1Btn = AF.CreateButton(demo, "Dialog1", "accent_hover", 75, 20)
+    AF.SetPoint(dialog1Btn, "TOPLEFT", cp3, "BOTTOMLEFT", 0, -10)
+    dialog1Btn:SetScript("OnClick", function()
         local text = AF.WrapTextInColor("Test Message", "firebrick") .. "\nReload UI now?\n" .. AF.WrapTextInColor("The quick brown fox jumps over the lazy dog", "gray")
-        AF.ShowDialog(demo, text, 200, nil, nil, true)
-        AF.SetDialogPoint("TOPLEFT", 255, -170)
-        AF.SetDialogOnConfirm(function()
-            C_UI.Reload()
-        end)
+        local dialog = AF.GetDialog(demo, text, 200)
+        AF.SetPoint(dialog, "TOPLEFT", 255, -170)
+        dialog:SetOnConfirm(C_UI.Reload)
     end)
 
 
     -----------------------------------------------------------------------------
     --                                 dialog2                                 --
     -----------------------------------------------------------------------------
-    local b8 = AF.CreateButton(demo, "Dialog2", "accent_hover", 150, 20)
-    AF.SetPoint(b8, "TOPLEFT", b7, "BOTTOMLEFT", 0, -7)
+    local dialog2Btn = AF.CreateButton(demo, "Dialog2", "accent_hover", 75, 20)
+    AF.SetPoint(dialog2Btn, "TOPLEFT", dialog1Btn, "TOPRIGHT", -1, 0)
 
     -- content
-    local form = AF.CreateDialogContent(50)
+    local form = CreateFrame("Frame", nil, demo)
 
     -- NOTE: use WIDTH for pixel perfect
 
-    local eb5 = AF.CreateEditBox(form, "type somthing", 172, 20)
-    AF.SetPoint(eb5, "TOPLEFT")
+    local dialogEB = AF.CreateEditBox(form, "type somthing", 172, 20)
+    AF.SetPoint(dialogEB, "TOPLEFT")
     -- AF.SetPoint(eb5, "TOPRIGHT")
 
-    local dd9 = AF.CreateDropdown(form, 172)
-    AF.SetPoint(dd9, "TOPLEFT", eb5, "BOTTOMLEFT", 0, -7)
+    local dialogDD = AF.CreateDropdown(form, 172)
+    AF.SetPoint(dialogDD, "TOPLEFT", dialogEB, "BOTTOMLEFT", 0, -7)
     -- AF.SetPoint(dd9, "TOPRIGHT", eb5, "BOTTOMRIGHT", 0, -7)
     local items = {}
     for i = 1, 7 do
         tinsert(items, {["text"] = "Item " .. i})
     end
-    dd9:SetItems(items)
+    dialogDD:SetItems(items)
 
-    eb5:SetOnTextChanged(function(text)
-        form.dialog.yes:SetEnabled(text ~= "" and dd9:GetSelected())
+    dialogEB:SetOnTextChanged(function(text)
         form.value1 = text
+        if form.dialog then
+            form.dialog.yes:SetEnabled(text ~= "" and dialogDD:GetSelected())
+        end
     end)
 
-    dd9:SetOnClick(function(value)
-        form.dialog.yes:SetEnabled(strtrim(eb5:GetText()) ~= "" and dd9:GetSelected())
+    dialogDD:SetOnSelect(function(value)
         form.value2 = value
+        if form.dialog then
+            form.dialog.yes:SetEnabled(strtrim(dialogEB:GetText()) ~= "" and dialogDD:GetSelected())
+        end
     end)
 
     form:SetScript("OnShow", function()
-        eb5:Clear()
-        dd9:ClearSelected()
+        dialogEB:Clear()
+        dialogDD:ClearSelected()
     end)
 
-    b8:SetScript("OnClick", function()
-        AF.ShowDialog(demo, AF.WrapTextInColor("Test Form", "yellow"), 200, _G.OKAY, _G.CANCEL, true, form, true)
-        AF.SetDialogPoint("TOPLEFT", 255, -170)
-        AF.ResizeDialogButtonToFitText(70)
-        AF.SetDialogOnConfirm(function()
+    dialog2Btn:SetScript("OnClick", function()
+        local dialog = AF.GetDialog(demo, AF.WrapTextInColor("Test Form", "yellow"))
+        AF.SetPoint(dialog, "TOPLEFT", 255, -170)
+        dialog:SetToOkayCancel()
+        dialog:EnableYes(false)
+        dialog:SetContent(form, 50)
+        dialog:SetOnConfirm(function()
             AF.Print("Dialog Confirmed:", form.value1, form.value2)
         end)
     end)
 
 
     -----------------------------------------------------------------------------
-    --                            notificator dialog                           --
+    --                              message dialog                             --
     -----------------------------------------------------------------------------
-    local b9 = AF.CreateButton(demo, "NotificationDialog", "accent_hover", 150, 20)
-    AF.SetPoint(b9, "TOPLEFT", b8, "BOTTOMLEFT", 0, -7)
-    b9:SetScript("OnClick", function()
+    local msgDialogBtn = AF.CreateButton(demo, "MessageDialog", "accent_hover", 150, 20)
+    AF.SetPoint(msgDialogBtn, "TOPLEFT", dialog1Btn, "BOTTOMLEFT", 0, -7)
+    msgDialogBtn:SetScript("OnClick", function()
         local text = AF.WrapTextInColor("NOTICE", "orange") .. "\n" .. "One day, when what has happened behind the scene could be told, developers and gamers will have a whole new level understanding of how much damage a jerk can make."
-        local dialog = AF.ShowNotificationDialog(demo, text, 200, true, 3)
+        local dialog = AF.GetMessageDialog(demo, text, 200, nil, 3)
         AF.ShowNormalGlow(dialog, "accent", 3)
-        AF.SetNotificationDialogPoint("TOPLEFT", 255, -120)
+        AF.SetPoint(dialog, "TOPLEFT", 255, -120)
+    end)
+
+
+    -----------------------------------------------------------------------------
+    --                              global dialog                              --
+    -----------------------------------------------------------------------------
+    local globalDialogBtn = AF.CreateButton(demo, "GlobalDialog", "accent_hover", 150, 20)
+    AF.SetPoint(globalDialogBtn, "TOPLEFT", msgDialogBtn, "BOTTOMLEFT", 0, -7)
+    globalDialogBtn.count = 0
+    globalDialogBtn:SetOnClick(function()
+        globalDialogBtn.count = globalDialogBtn.count + 1
+        local text = "This is a global dialog.\nIt uses a queue mechanism to respond to each " .. AF.WrapTextInColor("AF.ShowGlobalDialog", "accent") .. " in order.\n"
+            .. AF.WrapTextInColor("(" .. globalDialogBtn.count .. ")", "gray")
+        local confirmed = "Global Dialog " .. globalDialogBtn.count .. " Confirmed"
+        local canceled = "Global Dialog " .. globalDialogBtn.count .. " Canceled"
+        AF.ShowGlobalDialog(text, function()
+            AF.Print(confirmed)
+        end, function()
+            AF.Print(canceled)
+        end)
     end)
 
 
@@ -643,7 +667,7 @@ function AF.ShowDemo()
     local bf3 = AF.CreateBorderedFrame(demo, nil, 530, 20)
     AF.SetPoint(bf3, "TOPLEFT", bf2, "BOTTOMLEFT", 0, -10)
 
-    local st = AF.CreateScrollingText(bf3, 0.01)
+    local st = AF.CreateScrollingText(bf3)
     AF.SetPoint(st, "TOPLEFT", 4, 0)
     AF.SetPoint(st, "TOPRIGHT", -4, 0)
     st:SetText("World of Warcraft, often abbreviated as WoW, is a massively multiplayer online roleplaying game (MMORPG) developed by Blizzard Entertainment and released on November 23, 2004, on the 10th anniversary of the Warcraft franchise, three years after its announcement on September 2, 2001. It is the fourth released game set in the Warcraft universe, and takes place four years after the events of Warcraft III: The Frozen Throne.", "gold")
@@ -656,7 +680,7 @@ function AF.ShowDemo()
     AF.SetPoint(b10, "TOPLEFT", bf3, "BOTTOMLEFT", 0, -10)
 
     local bf4 = AF.CreateBorderedFrame(demo, nil, 120, 78, nil, "hotpink")
-    AF.SetFrameLevel(bf4, 50)
+    AF.SetFrameLevel(bf4, 150)
     bf4:Hide()
     AF.SetPoint(bf4, "BOTTOMLEFT", b10, "TOPLEFT", 0, 10)
 
@@ -678,7 +702,7 @@ function AF.ShowDemo()
             bf4:Hide()
         else
             AF.ShowMask(demo)
-            AF.SetFrameLevel(b10, 50)
+            AF.SetFrameLevel(b10, 150)
             bf4:Show()
         end
     end)
@@ -826,7 +850,7 @@ function AF.ShowDemo()
 
     local b14 = AF.CreateButton(bf5, "PPopup+", "accent", 95, 20)
     AF.SetPoint(b14, "BOTTOMRIGHT")
-    AF.SetTooltips(b14, "ANCHOR_TOPLEFT", 0, 2, "Progress Popup", "With progress bar", "Hide in 5 sec after completion")
+    AF.SetTooltip(b14, "TOPLEFT", 0, 2, "Progress Popup", "With progress bar", "Hide in 5 sec after completion")
     b14:SetScript("OnClick", function()
         local callback = AF.ShowProgressPopup("In Progress...", 100)
         local v = 0
@@ -838,7 +862,7 @@ function AF.ShowDemo()
 
     local b15 = AF.CreateButton(bf5, "CPopup+", "accent", 95, 20)
     AF.SetPoint(b15, "BOTTOMRIGHT", b14, "BOTTOMLEFT", 1, 0)
-    AF.SetTooltips(b15, "ANCHOR_TOPLEFT", 0, 2, "Confirm Popup", "With \"Yes\" & \"No\" buttons", "Won't hide automatically")
+    AF.SetTooltip(b15, "TOPLEFT", 0, 2, "Confirm Popup", "With \"Yes\" & \"No\" buttons", "Won't hide automatically")
     b15:SetScript("OnClick", function()
         for i = 1, 3 do
             AF.ShowConfirmPopup("Confirm " .. i, function()
@@ -851,7 +875,7 @@ function AF.ShowDemo()
 
     local b16 = AF.CreateButton(bf5, "NPopup+", "accent", 95, 20)
     AF.SetPoint(b16, "BOTTOMRIGHT", b15, "BOTTOMLEFT", 1, 0)
-    AF.SetTooltips(b16, "ANCHOR_TOPLEFT", 0, 2, "Notification Popup", "With timeout", "Right-Click to hide")
+    AF.SetTooltip(b16, "TOPLEFT", 0, 2, "Notification Popup", "With timeout", "Right-Click to hide")
     b16:SetScript("OnClick", function()
         for i = 1, 3 do
             local timeout = random(2, 7)
@@ -863,7 +887,7 @@ function AF.ShowDemo()
     --                                 calendar                                --
     -----------------------------------------------------------------------------
     local dw = AF.CreateCalendarButton(demo, 150, "TOPLEFT")
-    AF.SetPoint(dw, "TOPLEFT", b9, "BOTTOMLEFT", 0, -7)
+    AF.SetPoint(dw, "TOPLEFT", globalDialogBtn, "BOTTOMLEFT", 0, -7)
     local niceDays = {}
     local colors = {"firebrick", "hotpink", "chartreuse", "vividblue"}
     local today = date("*t")
@@ -902,9 +926,9 @@ function AF.ShowDemo()
         mDropdown:ClearSelected()
     end)
 
-    mDropdown = AF.CreateDropdown(mbf, 85, 10, nil, true)
+    mDropdown = AF.CreateDropdown(mbf, 85, 10, "vertical")
     AF.SetPoint(mDropdown, "TOPRIGHT", hmBtn, "TOPLEFT", 1, 0)
-    AF.SetTooltips(mDropdown, "TOPLEFT", 0, 2, "Mover Tips", "- Drag to move", "- Use (shift) mouse wheel to move frame by 1 pixel", "- Right-Click to open fine-tuning frame", "- Shift+Right-Click to hide a mover")
+    AF.SetTooltip(mDropdown, "TOPLEFT", 0, 2, "Mover Tips", "- Drag to move", "- Use (shift) mouse wheel to move frame by 1 pixel", "- Right-Click to open fine-tuning frame", "- Shift+Right-Click to hide a mover")
     mDropdown:SetItems({
         {
             ["text"] = "All",
@@ -943,7 +967,7 @@ function AF.ShowDemo()
     -- group1
     CreateMoverTestFrame(1, "Test 1", "TOPLEFT")
     CreateMoverTestFrame(2, "Test 1", "LEFT")
-    CreateMoverTestFrame(3, "Test 1", "BOTTOMLEFT")
+    -- CreateMoverTestFrame(3, "Test 1", "BOTTOMLEFT")
     CreateMoverTestFrame(4, "Test 1", "TOP")
     CreateMoverTestFrame(5, "Test 1", "CENTER")
 
@@ -972,7 +996,7 @@ function AF.ShowDemo()
             end
         },
         {
-            widget = b7,
+            widget = dialog1Btn,
             position = "LEFT",
             text = "Dialog\n(Group HelpTip 2/3)",
             glow = true,
@@ -1003,5 +1027,63 @@ function AF.ShowDemo()
             end
         })
         AF.ShowHelpTipGroup(tips)
+    end)
+
+    -----------------------------------------------------------------------------
+    --                               drag sorter                               --
+    -----------------------------------------------------------------------------
+    local dsbf = AF.CreateBorderedFrame(demo, nil, nil, 20)
+    AF.SetPoint(dsbf, "TOPLEFT", mbf, "BOTTOMLEFT", 0, -10)
+    AF.SetPoint(dsbf, "RIGHT", demo, -10, 0)
+
+    dsbf.text = AF.CreateFontString(dsbf, "DragSorter", "accent")
+    AF.SetPoint(dsbf.text, "LEFT", dsbf, 10, 0)
+
+    local ds = AF.CreateDragSorter(demo, nil, nil, 90)
+    AF.SetPoint(ds, "TOPLEFT", dsbf, 85, 0)
+
+    local widgets = {}
+    local config = {"Tank", "Healer", "Damager"}
+
+    for i = 1, 3 do
+        local b = AF.CreateButton(ds, config[i], "accent_hover")
+        tinsert(widgets, b)
+
+        b.cb = AF.CreateCheckButton(b, nil, function(checked)
+            b:SetEnabled(checked)
+
+            if checked then
+                config[b.index] = b.value
+                local firstNoneIndex = AF.IndexOf(config, "None")
+                if firstNoneIndex and firstNoneIndex < b.index then
+                    AF.MoveElementToIndex(config, b.index, AF.IndexOf(config, "None"))
+                end
+                b:InvokeOnEnter()
+            else
+                config[b.index] = "None"
+                AF.MoveElementToEnd(config, b.index)
+                b:InvokeOnLeave()
+            end
+
+            ds:Refresh()
+        end)
+        AF.SetPoint(b.cb, "LEFT", b, 5, 0)
+
+        AF.SetPoint(b.text, "LEFT", b.cb, "RIGHT", 5, 0)
+        b.text:SetJustifyH("LEFT")
+
+        b.cb:SetChecked(true)
+        b.cb:HookOnEnter(function() if b:IsEnabled() then b:InvokeOnEnter() end end)
+        b.cb:HookOnLeave(b:GetOnLeave())
+
+        b.value = config[i]
+        b.tipText = config[i]
+        b.tipIcon = AF.GetIcon("Role_" .. config[i]:upper())
+    end
+
+    ds:SetWidgets(widgets)
+    ds:SetConfigTable(config)
+    ds:SetCallback(function(config)
+        AF.Print("DragSorter.callback: " .. AF.TableToString(config, ", "))
     end)
 end

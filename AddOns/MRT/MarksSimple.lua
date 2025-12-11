@@ -1,8 +1,13 @@
 local GlobalAddonName, ExRT = ...
 
-local UnitName, UnitGUID, GetRaidTargetIndex, SetRaidTarget, math_frexp, tonumber, IsEncounterInProgress = UnitName, UnitGUID, GetRaidTargetIndex, SetRaidTarget, math.frexp, tonumber, IsEncounterInProgress
+if ExRT.isMN then
+	return
+end
+
+local UnitName, UnitGUID, GetRaidTargetIndex, SetRaidTarget, math_frexp, tonumber = UnitName, UnitGUID, GetRaidTargetIndex, SetRaidTarget, math.frexp, tonumber
 local wipe, sort = wipe, sort
 local GetSpellInfo = ExRT.F.GetSpellInfo or GetSpellInfo
+local IsEncounterInProgress = C_InstanceEncounter and C_InstanceEncounter.IsEncounterInProgress or IsEncounterInProgress
 
 local VMRT = nil
 
@@ -19,9 +24,14 @@ function module.options:Load()
 	self.decorationLine:SetPoint("BOTTOMRIGHT",self,"TOPRIGHT",0,-45)
 	ELib:Texture(self.decorationLine,1,1,1,1,"BACKGROUND"):Point('x'):Gradient("VERTICAL",.24,.25,.30,1,.27,.28,.33,1)
 	
-	self.t = ELib:Tabs(self,0,L.panelmarksTab1,L.panelmarksTab2,L.panelmarksTab3):Point(0,-45):Size(690,570):SetTo(3)
+	self.t = ELib:Tabs(self,0,L.panelmarksTab1,L.panelmarksTab2,L.panelmarksTab3):Point(0,-45):Size(690,570):SetTo(ExRT.isMN and 1 or 3)
 	self.t:SetBackdropBorderColor(0,0,0,0)
 	self.t:SetBackdropColor(0,0,0,0)
+
+	if ExRT.isMN then
+		self.t.tabs[2].button:Hide()
+		self.t.tabs[3].button:Hide()
+	end
 	
 	local function Tab1EditBoxOnChange(self)
 		local text = self:GetText()
@@ -655,6 +665,9 @@ function module:UpdateState()
 	UpdateData()
 	VMRT_MarksSimple_buffMarkEnabled = VMRT.MarksSimple.buffMarkEnabled
 	VMRT_MarksSimple_autoMarkEnabled = VMRT.MarksSimple.autoMarkEnabled
+	if ExRT.isMN then
+		return
+	end
 	module:UnregisterEvents('UNIT_TARGET','UPDATE_MOUSEOVER_UNIT','NAME_PLATE_UNIT_ADDED','INSTANCE_ENCOUNTER_ENGAGE_UNIT','UNIT_NAME_UPDATE','COMBAT_LOG_EVENT_UNFILTERED')
 	if VMRT_MarksSimple_autoMarkEnabled then
 		module:RegisterEvents('UNIT_TARGET','UPDATE_MOUSEOVER_UNIT','NAME_PLATE_UNIT_ADDED','INSTANCE_ENCOUNTER_ENGAGE_UNIT','UNIT_NAME_UPDATE')

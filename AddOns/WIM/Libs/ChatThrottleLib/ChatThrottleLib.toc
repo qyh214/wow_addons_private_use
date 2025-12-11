@@ -1,4 +1,4 @@
-## Interface: 100207
+## Interface: 110205, 110207, 120000
 ## Title: Lib: ChatThrottleLib
 ## Notes: Embeddable chat throttling library with traffic shaping and priorities
 ## Author: Mikk

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+    <script file="DatabaseUtils.lua" />
+    <script file="CallbackUtils.lua" />
+    <script file="SettingsUtils.lua" />
+    <script file="CommsUtils.lua" />
+    <script file="ItemUtils.lua" />
+    <script file="ItemOpenerUtils.lua" />
+    <script file="TooltipUtils.lua" />
+    <script file="ToastUtils.lua" />
+    <script file="QuestUtils.lua" />
+    <script file="QuickActionBarUtils.lua" />
+    <script file="ResearchTaskUtils.lua" />
+    <script file="ScrappingUtils.lua" />
+    <script file="ArtifactTraitUtils.lua" />
+    <script file="CollectionUtils.lua" />
+    <script file="UpdateUtils.lua" />
+    <script file="MerchantUtils.lua" />
+    <script file="UXUtils.lua" />
+    <script file="CommandUtils.lua" />
+    <script file="EditModeUtils.lua" />
+</Ui>

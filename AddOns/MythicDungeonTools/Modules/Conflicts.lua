@@ -55,6 +55,21 @@ local candidates = {
 
     end,
   },
+  ["WowauditInviteTool"] = {
+    name = "WowauditInviteTool",
+    version = 117,
+    detected = false,
+    onDetect = function()
+
+    end,
+  },
+  ["PetJournalEnhanced"] = {
+    name = "PetJournalEnhanced",
+    detected = false,
+    onDetect = function()
+
+    end,
+  },
 }
 
 local conflictCheckFrame = CreateFrame("Frame")

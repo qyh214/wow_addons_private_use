@@ -1,5 +1,3 @@
-if not BigWigsLoader.isNext then return end
-
 --------------------------------------------------------------------------------
 -- Module Declaration
 --
@@ -34,7 +32,8 @@ local invokeCount = 1
 local beheadCount = 1
 local besiegeCount = 1
 
-local manaForgedTitansKilled = 1
+local manaForgedTitansKilled = 0
+local princesKilled = 0
 
 local breakerCount = 1
 local breathCount = 1
@@ -49,6 +48,7 @@ local swingCount = 1
 
 local L = mod:GetLocale()
 if L then
+	L.fractal_images = "Dragons" -- Fractal Images
 	L.oath_bound_removed_dose = "1x Oath-Bound Removed"
 	L.behead = "Claws" -- Claws of a dragon
 	L.netherbreaker = "Circles"
@@ -93,10 +93,11 @@ function mod:GetOptions()
 				{1224767, "ME_ONLY", "ME_ONLY_EMPHASIZE"}, -- King's Thrall
 			1224776, -- Subjugation Rule
 				{1224787, "CASTBAR"}, -- Conquer
-				1224812, -- Vanquish
-			{1227549, "ME_ONLY_EMPHASIZE"}, -- Banishment
+				{1224812, "TANK"}, -- Vanquish
+			{1227549, "ME_ONLY"}, -- Banishment
 			1224906, -- Invoke the Oath
 			-- Royal Voidwing
+				1225099, -- Fractal Images
 				{1224827, "PRIVATE"}, -- Behead
 					1231097, -- Cosmic Rip
 			1227470, -- Besiege
@@ -109,11 +110,13 @@ function mod:GetOptions()
 			{1234529, "TANK"}, -- Cosmic Maw
 		-- Intermission One: Nexus Descent
 			-- Manaforged Titan
-				1230302, -- Self-Destruct
+				{1230302, "COUNTDOWN"}, -- Self-Destruct
 				1232399, -- Dread Mortar
 			-- Nexus-Prince Ky'vor / Nexus-Prince Xevvos
 				1228075, -- Nexus Beams
 				1230261, -- Netherblast
+			-- Shadowguard Reaper
+				1228053, -- Reap
 		-- Intermission Two: King's Hunger
 			-- Nexus-King Salhadaar
 			{1228265, "CASTBAR"}, -- King's Hunger
@@ -127,6 +130,7 @@ function mod:GetOptions()
 			1225634, -- World in Twilight
 		-- Mythic
 		1238975, -- Vengeful Oath
+		{1237106, "PRIVATE"}, -- Twilight Massacre
 	},{
 		-- Tabs
 		{
@@ -135,7 +139,7 @@ function mod:GetOptions()
 		},
 		{
 			tabName = CL.stage:format(1),
-			{1224737, 1224767, 1224776, 1224787, 1224812, 1227549, 1224906, 1224827, 1231097, 1227470, 1238975}
+			{1224737, 1224767, 1224776, 1224787, 1224812, 1227549, 1224906, 1225099, 1224827, 1231097, 1227470, 1238975}
 		},
 		{
 			tabName = CL.stage:format(2),
@@ -143,7 +147,7 @@ function mod:GetOptions()
 		},
 		{
 			tabName = CL.count:format(CL.intermission, 1),
-			{1230302, 1232399, 1228075, 1230261}
+			{1230302, 1232399, 1228075, 1230261, 1228053, 1237106}
 		},
 		{
 			tabName = CL.count:format(CL.intermission, 2),
@@ -156,17 +160,20 @@ function mod:GetOptions()
 		-- Sections
 		-- Stage 1
 		[1224737] = -32227, -- Nexus-King Salhadaar
-		[1224827] = -32228, -- Royal Voidwing
+		[1225099] = -32228, -- Royal Voidwing
 		-- Stage 2
 		[1227734] = -32227, -- Nexus-King Salhadaar
 		[1228163] = -32228, -- Royal Voidwing
 		-- Intermission 1
 		[1230302] = -32639, -- Manaforged Titan
 		[1228075] = CL.plus:format(self:SpellName(-33469), self:SpellName(-32642)), -- Nexus-Prince Ky'vor + Nexus-Prince Xevvos
+		[1228053] = -32645, -- Shadowguard Reaper
 		-- Mythic
 		[1238975] = "mythic", -- Vengeful Oath
+		[1237106] = "mythic", -- Twilight Massacre
 	},
 	{
+		[1225099] = L.fractal_images, -- Fractal Images (Dragons)
 		[1224827] = L.behead, -- Behead (Claws)
 		[1224776] = CL.tank_combo, -- Subjugation Rule (Tank Combo)
 		[1224787] = CL.soak, -- Conquer (Soak)
@@ -203,7 +210,7 @@ function mod:OnBossEnable()
 		self:Log("SPELL_CAST_START", "InvokeTheOath", 1224906)
 
 		-- Royal Voidwing
-		self:Log("SPELL_CAST_START", "CommandBehead", 1225010, 1234904) -- Stage 1, Stage 2
+		self:Log("SPELL_CAST_SUCCESS", "CommandBehead", 1225010, 1234904) -- Stage 1, Stage 2
 		self:Log("SPELL_CAST_START", "CommandBesiege", 1225016)
 
 	-- Stage Two: Rider of the Dark
@@ -211,6 +218,7 @@ function mod:OnBossEnable()
 		-- Nexus-King Salhadaar
 		self:Log("SPELL_CAST_START", "Netherbreaker", 1228115)
 		self:Log("SPELL_CAST_START", "DimensionBreath", 1228163)
+		self:Log("SPELL_CAST_START", "DimensionBreathPortal", 1237068)
 		self:Log("SPELL_CAST_START", "CosmicMaw", 1234529)
 		self:Log("SPELL_AURA_APPLIED", "CosmicMawApplied", 1234529)
 
@@ -227,13 +235,20 @@ function mod:OnBossEnable()
 		-- Nexus-Prince Ky'vor / Nexus-Prince Xevvos
 		self:Log("SPELL_CAST_START", "NexusBeams", 1228075)
 		self:Log("SPELL_CAST_START", "Netherblast", 1230261)
+		self:Death("NexusPrinceDeath", 241798, 241803) -- Xevvos, Ky'vor
+
+		-- Shadowguard Reaper
+		self:Log("SPELL_CAST_SUCCESS", "ReapSuccess", 1228053)
+		self:Log("SPELL_CAST_START", "TwilightMassacre", 1237106)
+		self:Log("SPELL_AURA_APPLIED", "PhaseWarpApplied", 1232524)
 
 	-- Intermission Two: King's Hunger
 		self:Log("SPELL_CAST_START", "KingsHunger", 1228265)
 		self:Log("SPELL_AURA_REMOVED", "KingsHungerRemoved", 1228265)
 
 	-- Stage Three: World in Twilight
-		self:Log("SPELL_CAST_SUCCESS", "GalacticSmash", 1226648)
+		self:Log("SPELL_CAST_SUCCESS", "GalacticSmashApplied", 1226648) -- PA Debuffs applying
+		self:Log("SPELL_CAST_START", "GalacticSmashStart", 1225319)
 		self:Log("SPELL_AURA_APPLIED", "TwilightScarApplied", 1226362)
 		self:Log("SPELL_AURA_APPLIED", "StarshatteredApplied", 1226413)
 		self:Log("SPELL_CAST_SUCCESS", "StarkillerSwing", 1226442)
@@ -249,11 +264,14 @@ function mod:OnEngage()
 	beheadCount = 1
 	besiegeCount = 1
 
-	self:Bar(1224776, 14.4, CL.count:format(CL.tank_combo, tankComboCount)) -- Subjugation Rule
-	self:Bar(1227549, 30.4, CL.count:format(self:SpellName(1227549), banishmentCount)) -- Banishment
-	self:Bar(1224827, 32.4, CL.count:format(L.behead, beheadCount)) -- Behead
-	self:Bar(1227470, 48.9, CL.count:format(CL.breath, besiegeCount)) -- Besiege
-	self:Bar(1224906, 117) -- Invoke the Oath
+	self:Bar(1224776, self:Easy() and 12.5 or 13.5, CL.count:format(CL.tank_combo, tankComboCount)) -- Subjugation Rule
+	if not self:Easy() then
+		self:Bar(1227549, self:Mythic() and 31.9 or 33.1, CL.count:format(self:SpellName(1227549), banishmentCount)) -- Banishment
+	end
+	self:Bar(1224827, self:Mythic() and 34.5 or 37.0, CL.count:format(L.behead, beheadCount)) -- Behead
+	self:Bar(1227470, self:Mythic() and 9.1 or self:Easy() and 46 or 49.0, CL.count:format(CL.breath, besiegeCount)) -- Besiege
+	self:Bar(1224906, 115.0) -- Invoke the Oath
+	self:Bar("stages", 119.6, CL.stage:format(2), 1227734) -- Coalesce Voidwing
 end
 
 --------------------------------------------------------------------------------
@@ -275,8 +293,8 @@ do
 	function mod:AvoidableDamage(args)
 		if self:Me(args.destGUID) and args.time - prev > 2 then
 			prev = args.time
-			self:PlaySound(args.spellId, "underyou", nil, args.destName)
 			self:PersonalMessage(args.spellId, "underyou")
+			self:PlaySound(args.spellId, "underyou", nil, args.destName)
 		end
 	end
 end
@@ -323,22 +341,22 @@ function mod:SubjugationRule()
 		self:Bar(1224776, 40, CL.count:format(CL.tank_combo, tankComboCount))
 	end
 	if self:Mythic() then
-		local spiritsTimer = 15.8
-		self:Bar(1238975, spiritsTimer, L.vengeful_oath)
+		local spiritsTimer = tankComboCount == 4 and 16.5 or 32
+		self:Bar(1238975, spiritsTimer, CL.count:format(L.vengeful_oath, tankComboCount-1))
 		self:ScheduleTimer("SpiritsSpawn", spiritsTimer)
 	end
 end
 
 function mod:SpiritsSpawn()
-	self:Message(1238975, "red", CL.spawning:format(L.vengeful_oath))
+	self:Message(1238975, "red", CL.spawning:format(CL.count:format(L.vengeful_oath, tankComboCount-1)))
 	self:PlaySound(1238975, "warning") -- face your spirits
 end
 
 function mod:Conquer(args)
 	self:Message(args.spellId, "red", CL.casting:format(CL.count:format(CL.soak, conquerCount)))
-	self:PlaySound(args.spellId, "warning") -- get in to lose a stack
-	conquerCount = conquerCount + 1
 	self:CastBar(args.spellId, 4, CL.count:format(CL.soak, conquerCount))
+	conquerCount = conquerCount + 1
+	self:PlaySound(args.spellId, "warning") -- get in to lose a stack
 end
 
 function mod:Vanquish(args)
@@ -352,18 +370,19 @@ do
 		playerList = {}
 		self:StopBar(CL.count:format(args.spellName, banishmentCount))
 		banishmentCount = banishmentCount + 1
-		if banishmentCount <= 4 then -- 4 in p1
-			local cd = banishmentCount % 2 == 0 and 16 or 24
-			self:Bar(1227549, cd, CL.count:format(args.spellName, banishmentCount))
+		local banishmentTimers = {33.1, 13.4, 23.6, 16.4, 0}
+		if self:Mythic() then
+			banishmentTimers = {31.9, 15.9, 23.6, 16.4, 0}
 		end
+		self:Bar(1227549, banishmentTimers[banishmentCount], CL.count:format(args.spellName, banishmentCount))
 	end
 
 	function mod:BanishmentApplied(args)
-		if self:Me(args.destGUID) then
-			self:PlaySound(args.spellId, "alarm")
-		end
 		playerList[#playerList+1] = args.destName
 		self:TargetsMessage(args.spellId, "yellow", playerList, 4, CL.count:format(args.spellName, banishmentCount-1))
+		if self:Me(args.destGUID) then
+			self:PlaySound(args.spellId, "alarm", nil, args.destName)
+		end
 	end
 end
 
@@ -385,22 +404,27 @@ function mod:CommandBehead()
 	beheadCount = beheadCount + 1
 
 	local stage = self:GetStage()
-	if stage == 1 and beheadCount > 2 then return end -- 2x in stage 1
-	if stage == 2 and not intermissionDone then return end -- Only 1 cast pre-intermission in stage 2 in heroic
-
-	local cd = stage == 2 and 100 or 40
-	self:Bar(1224827, cd, CL.count:format(L.behead, beheadCount))
+	if stage == 1 then
+		if beheadCount <= 2 then -- 2x in stage 1
+			self:Bar(1224827, self:Mythic() and 40 or 38.0, CL.count:format(L.behead, beheadCount))
+		end
+	elseif stage ~= 2 then -- 1x stage 2
+		self:Bar(1224827, self:Mythic() and 40 or 38.0, CL.count:format(L.behead, beheadCount))
+	end
 end
 
 function mod:CommandBesiege()
 	self:StopBar(CL.count:format(CL.breath, besiegeCount))
 	self:Message(1227470, "yellow", CL.count:format(CL.breath, besiegeCount))
-	self:PlaySound(1227470, "alert") -- watch breath location
 	besiegeCount = besiegeCount + 1
 	local maxCasts = self:Mythic() and 3 or 2
 	if besiegeCount <= maxCasts then
 		self:Bar(1227470, 40, CL.count:format(CL.breath, besiegeCount))
 	end
+	if self:Mythic() then
+		self:Bar(1225099, 20, L.fractal_images) -- Fractal Images Spawning back
+	end
+	self:PlaySound(1227470, "alert") -- watch breath location
 end
 
 -- Stage Two: Rider of the Dark
@@ -409,14 +433,13 @@ function mod:Stage2Start()
 	self:SetStage(2)
 	stage2StartTime = GetTime()
 
+	self:StopBar(CL.stage:format(2))
 	self:StopBar(CL.count:format(CL.tank_combo, tankComboCount)) -- Subjugation Rule
 	self:StopBar(CL.count:format(self:SpellName(1227549), banishmentCount)) -- Banishment
 	self:StopBar(CL.count:format(self:SpellName(1224906), invokeCount)) -- Invoke the Oath
 	self:StopBar(CL.count:format(L.behead, beheadCount)) -- Behead
 	self:StopBar(CL.count:format(CL.breath, besiegeCount)) -- Besiege
-
-	self:Message("stages", "yellow", CL.stage:format(2), false)
-	self:PlaySound("stages", "long") -- staging
+	self:StopBar(L.fractal_images)
 
 	beheadCount = 1
 	breakerCount = 1
@@ -429,47 +452,71 @@ function mod:Stage2Start()
 	end
 	self:Bar(1234529, self:Mythic() and 16.0 or 23.0, CL.count:format(self:SpellName(1234529), cosmicMawCount)) -- Cosmic Maw
 	self:Bar(1228163, self:Mythic() and 21.0 or 29.0, CL.count:format(CL.beams, breathCount)) -- Dimension Breath
-	self:Bar("stages", 38.9, CL.count:format(CL.intermission, 1), 1228065) -- Rally the Shadowguard
+	self:Bar("stages", 39.0, CL.count:format(CL.intermission, 1), 1228065) -- Rally the Shadowguard
+
+	self:Message("stages", "yellow", CL.stage:format(2), false)
+	self:PlaySound("stages", "long") -- staging
 end
 
 function mod:CoalesceVoidwing(args)
 	self:Message(args.spellId, "red", CL.casting:format(CL.knockback))
-	self:PlaySound(args.spellId, "warning") -- knockback incoming
 	self:CastBar(args.spellId, 6.2, CL.knockback) -- Coalesce Voidwing
+	self:PlaySound(args.spellId, "warning") -- knockback incoming
 end
 
 function mod:Netherbreaker(args)
 	self:StopBar(CL.count:format(L.netherbreaker, breakerCount))
 	self:Message(args.spellId, "yellow", CL.count:format(L.netherbreaker, breakerCount))
+	breakerCount = breakerCount + 1
+	if intermissionDone and not self:Mythic() then
+		self:Bar(args.spellId, 39.0, CL.count:format(L.netherbreaker, breakerCount))
+	end
 	-- No Sound, Debuffs are Private
 	-- In Mythic it's on the floor so we do play a sound
 	if self:Mythic() then
 		self:PlaySound(args.spellId, "alert") -- watch circles
 	end
-	breakerCount = breakerCount + 1
-	if intermissionDone then
-		self:Bar(args.spellId, 39.0, CL.count:format(L.netherbreaker, breakerCount))
-	end
 end
 
-function mod:DimensionBreath(args)
-	self:StopBar(CL.count:format(CL.beams, breathCount))
-	self:Message(args.spellId, "purple", CL.count:format(CL.beams, breathCount))
-	self:PlaySound(args.spellId, "alert") -- watch breath location
-	breathCount = breathCount + 1
-	if intermissionDone then
-		self:Bar(args.spellId, 39.0, CL.count:format(CL.beams, breathCount))
+do
+	local portalBreathCount = 1
+	local prev = 0
+	function mod:DimensionBreath(args)
+		self:StopBar(CL.count:format(CL.beams, breathCount))
+		self:Message(args.spellId, "purple", CL.count:format(CL.beams, breathCount))
+		breathCount = breathCount + 1
+		if intermissionDone and not self:Mythic() then
+			self:Bar(args.spellId, 39.0, CL.count:format(CL.beams, breathCount))
+		end
+		portalBreathCount = 1
+		self:PlaySound(args.spellId, "alert") -- watch breath location
+	end
+
+	function mod:DimensionBreathPortal(args)
+		if self:Mythic() and args.time - prev > 2 then
+			prev = args.time
+			if portalBreathCount > 1 then
+				self:Message(1228163, "purple", CL.count_amount:format(CL.beams, portalBreathCount, 3))
+			end
+			portalBreathCount = portalBreathCount + 1
+			if portalBreathCount <= 3 then
+				self:Bar(1228163, 6, CL.count_amount:format(CL.beams, portalBreathCount, 3))
+			end
+			if (portalBreathCount-1) > 1 then
+				self:PlaySound(1228163, "info")
+			end
+		end
 	end
 end
 
 function mod:CosmicMaw(args)
 	self:StopBar(CL.count:format(args.spellName, cosmicMawCount))
 	self:Message(args.spellId, "purple", CL.count:format(args.spellName, cosmicMawCount))
-	self:PlaySound(args.spellId, "alert")
 	cosmicMawCount = cosmicMawCount + 1
-	if intermissionDone then
+	if intermissionDone and not self:Mythic() then
 		self:Bar(args.spellId, 39.0, CL.count:format(args.spellName, cosmicMawCount))
 	end
+	self:PlaySound(args.spellId, "alert")
 end
 
 function mod:CosmicMawApplied(args)
@@ -493,28 +540,38 @@ function mod:RallyTheShadowguard()
 	self:StopBar(CL.count:format(self:SpellName(1234529), cosmicMawCount)) -- Cosmic Maw
 	self:StopBar(CL.count:format(CL.intermission, 1))
 
+	manaForgedTitansKilled = 0
+	princesKilled = 0
+	self:Bar(1228075, self:Mythic() and 30 or 24.4, CL.beams) -- Nexus Beams eta
+	self:Bar(1232399, self:Mythic() and 23.1 or 15.9) -- Dread Mortar eta
+	self:Bar(1228053, self:Mythic() and 14.6 or 15.9) -- Reap eta
+	if self:Mythic() then
+		self:Bar(1237106, 17.5) -- Twilight Massacre eta
+	end
+	self:Bar(1230302, 64.0) -- Self-Destruct, until success
+
 	self:Message("stages", "green", CL.count:format(CL.intermission, 1), false)
 	self:PlaySound("stages", "long") -- intermission
-
-	manaForgedTitansKilled = 0
-	self:Bar(1230302, 64) -- Self-Destruct, until success
 end
 
 do
 	local prev	= 0
 	function mod:SelfDestruct(args)
 		if args.time - prev > 2 then -- throttle
+			prev = args.time
 			self:Message(args.spellId, "red", CL.casting:format(args.spellName))
-			self:PlaySound(args.spellId, "warning") -- self destructing
 			-- update the bar so it fits the end
-			self:Bar(1230302, {10, 64}) -- Update remaining time
+			self:Bar(1230302, {10.0, 64.0}) -- Update remaining time
+			self:PlaySound(args.spellId, "warning") -- self destructing
 		end
 	end
 end
+
 function mod:DreadMortar(args)
 	local unit = self:UnitTokenFromGUID(args.sourceGUID)
 	if unit and self:UnitWithinRange(unit, 45) then
 		self:Message(args.spellId, "yellow")
+		self:Bar(args.spellId, 24.5)
 		self:PlaySound(args.spellId, "alert") -- watch feet
 	end
 end
@@ -522,7 +579,8 @@ end
 function mod:ManaforgedTitanDeath()
 	manaForgedTitansKilled = manaForgedTitansKilled + 1
 	if manaForgedTitansKilled == 2 then
-		self:StopBar(1230302)
+		self:StopBar(1230302) -- Self-Destruct
+		self:StopBar(1232399) -- Dread Mortar
 	end
 end
 
@@ -530,6 +588,7 @@ function mod:NexusBeams(args)
 	local unit = self:UnitTokenFromGUID(args.sourceGUID)
 	if unit and self:UnitWithinRange(unit, 45) then
 		self:Message(args.spellId, "orange", CL.beams)
+		self:Bar(args.spellId, 20.9, CL.beams)
 		self:PlaySound(args.spellId, "alert") -- watch beams
 	end
 end
@@ -542,12 +601,54 @@ function mod:Netherblast(args)
 	end
 end
 
+function mod:NexusPrinceDeath(args)
+	princesKilled = princesKilled + 1
+	if princesKilled == 2 then
+		self:StopBar(1228075) -- Nexus Beams
+	end
+end
+
+do
+	local prev = 0
+	function mod:ReapSuccess(args)
+		local unit = self:UnitTokenFromGUID(args.sourceGUID)
+		if unit and self:UnitWithinRange(unit, 45) and args.time - prev > 2 then
+			prev = args.time
+			if self:GetStage() == 1.5 then -- don't restart when already back in p2
+				self:Bar(1228053, 12.2) -- Reap
+			end
+		end
+	end
+end
+
+do
+	local prev = 0
+	function mod:TwilightMassacre(args)
+		local unit = self:UnitTokenFromGUID(args.sourceGUID)
+		if unit and self:UnitWithinRange(unit, 45) and args.time - prev > 2 then
+			prev = args.time
+			self:Message(args.spellId, "red")
+			-- Targets have a PA
+			if self:GetStage() == 1.5 then
+				self:Bar(args.spellId, 25)
+			end
+		end
+	end
+end
+
+function mod:PhaseWarpApplied(args)
+	if self:Me(args.destGUID) and manaForgedTitansKilled > 0 then
+		-- End the bars when you teleport back
+		self:StopBar(1228053) -- Reap
+		self:StopBar(1237106) -- Twilight Massacre
+	end
+end
+
 function mod:RoyalWardRemoved(args)
 	if self:MobId(args.destGUID) == 233823 then -- The Royal Voidwing
+
 		intermissionDone = true
 		self:SetStage(2) -- Stage 2
-		self:Message("stages", "green", CL.over:format(CL.count:format(CL.intermission, 1)), false)
-		self:PlaySound("stages", "long") -- intermission over
 
 		-- Let's keep the counts from pre-intermission.
 		-- beheadCount = 1
@@ -555,17 +656,23 @@ function mod:RoyalWardRemoved(args)
 		-- breathCount = 1
 		-- cosmicMawCount = 1
 
-		local time = GetTime()
-		local stage2Offset = time - stage2StartTime
-		self:Bar(1228115, 114 - stage2Offset, CL.count:format(L.netherbreaker, breakerCount)) -- Netherbreaker
-		self:Bar(1224827, 120.9 - stage2Offset, CL.count:format(L.behead, beheadCount)) -- Behead
+		local stage2Offset = GetTime() - stage2StartTime
+		self:Bar(1228115, (self:Mythic() and 109.0 or 114.0) - stage2Offset, CL.count:format(L.netherbreaker, breakerCount)) -- Netherbreaker
+		if not self:Mythic() then
+			self:Bar(1224827, 121.0 - stage2Offset, CL.count:format(L.behead, beheadCount)) -- Behead
+		end
 		self:Bar(1234529, 123.0 - stage2Offset, CL.count:format(self:SpellName(1234529), cosmicMawCount)) -- Cosmic Maw
-		self:Bar(1228163, 129 - stage2Offset, CL.count:format(CL.beams, breathCount)) -- Dimension Breath
+		self:Bar(1228163, (self:Mythic() and 121.0 or 129.0) - stage2Offset, CL.count:format(CL.beams, breathCount)) -- Dimension Breath
+		self:Bar("stages", 140.5 - stage2Offset, CL.count:format(CL.intermission, 2), 1228265) -- King's Hunger icon
+
+		self:Message("stages", "green", CL.over:format(CL.count:format(CL.intermission, 1)), false)
+		self:PlaySound("stages", "long") -- intermission over
 	end
 end
 
 -- Intermission Two: King's Hunger
 function mod:KingsHunger(args)
+	self:StopBar(CL.count:format(CL.intermission, 2))
 	self:StopBar(CL.count:format(L.behead, beheadCount)) -- Behead
 	self:StopBar(CL.count:format(L.netherbreaker, breakerCount)) -- Netherbreaker
 	self:StopBar(CL.count:format(CL.beams, breathCount)) -- Dimension Breath
@@ -573,35 +680,45 @@ function mod:KingsHunger(args)
 	self:StopBar(CL.count:format(self:SpellName(1227529), banishmentCount)) -- Banishment
 	self:StopBar(CL.count:format(CL.breath, besiegeCount)) -- Besiege
 
+	self:SetStage(2.5)
+	if self:Mythic() then -- check if also in other diffs?
+		self:Bar(1224827, 33.0, L.behead)
+	end
+	self:CastBar(args.spellId, 36, CL.count:format(args.spellName, 1)) -- King's Hunger
+
 	self:Message("stages", "green", CL.count:format(CL.intermission, 2), false)
 	self:PlaySound("stages", "long") -- intermission 2
-	self:SetStage(2.5)
-	self:CastBar(args.spellId, 30, CL.count:format(args.spellName, 1)) -- King's Hunger
 end
 
 function mod:KingsHungerRemoved(args)
+	self:StopBar(L.behead)
 	self:StopCastBar(args.spellId)
-	self:Message(args.spellId, "green", CL.over:format(args.spellName))
-	self:PlaySound(args.spellId, "long") -- intermission over
 	self:SetStage(3) -- Stage 3
 
 	smashCount = 1
 	swingCount = 1
 
-	self:Bar(1226648, 9, CL.count:format(L.galaxy_smash, smashCount)) -- Galactic Smash
-	self:Bar(1226442, self:Normal() and 46.8 or 36.8, CL.count:format(L.starkiller_swing, swingCount)) -- Starkiller Swing
-	self:Bar(1225634, 182.5) -- World in Twilight // end of channel aka full room (Also adjust time in _START function)
+	self:Bar(1226648, 5, CL.count:format(L.galaxy_smash, smashCount)) -- Galactic Smash
+	-- -2 s on Starkiller swing for image bait timings
+	self:Bar(1226442, (self:Normal() and 46.8 or 36.8) - 2, CL.count:format(L.starkiller_swing, swingCount)) -- Starkiller Swing
+	self:Bar(1225634, self:Mythic() and 195 or 182.0) -- World in Twilight // end of channel aka full room (Also adjust time in _START function)
+
+	self:Message(args.spellId, "green", CL.over:format(args.spellName))
+	self:PlaySound(args.spellId, "long") -- intermission over
 end
 
-function mod:GalacticSmash(args)
+function mod:GalacticSmashApplied(args)
 	self:StopBar(CL.count:format(L.galaxy_smash, smashCount))
-	self:Message(args.spellId, "orange", CL.casting:format(CL.count:format(L.galaxy_smash, smashCount)))
 	-- No Sounds, Private Debuffs
-	self:CastBar(args.spellId, 8, CL.count:format(L.galaxy_smash, smashCount))
 	smashCount = smashCount + 1
 	if smashCount <= 3 then -- only 3 before enrage
 		self:Bar(args.spellId, 55, CL.count:format(L.galaxy_smash, smashCount))
 	end
+end
+
+function mod:GalacticSmashStart(args)
+	self:Message(1226648, "orange", CL.casting:format(CL.count:format(L.galaxy_smash, smashCount)))
+	self:CastBar(1226648, 8, CL.count:format(L.galaxy_smash, smashCount))
 end
 
 function mod:TwilightScarApplied(args)
@@ -626,17 +743,19 @@ function mod:StarkillerSwing(args)
 	-- No Sounds, Private Debuffs
 	self:CastBar(args.spellId, 6, CL.count:format(L.starkiller_swing, swingCount))
 	swingCount = swingCount + 1
-	if swingCount <= 3 then -- only 3 before enrage
-			local cd = swingCount % 2 == 0 and 15 or 40 -- Heroic
+	local totalCasts = self:Easy() and 3 or 6
+	if swingCount <= totalCasts then
+		local cd = swingCount % 2 == 0 and 15 or 40
 		if self:Easy() then
 			cd = 55
 		end
-		self:Bar(args.spellId, cd, CL.count:format(L.starkiller_swing, swingCount))
+		-- removed 2 seconds to be on ghost spawn, not application
+		self:Bar(args.spellId, cd - 2, CL.count:format(L.starkiller_swing, swingCount))
 	end
 end
 
 function mod:WorldInTwilight(args)
 	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+	self:Bar(args.spellId, {10, self:Mythic() and 195 or 182.0}) -- Update remaining time until room full
 	self:PlaySound(args.spellId, "long") -- enrage
-	self:Bar(args.spellId, {12.5, 182.5}) -- Update remaining time until room full
 end

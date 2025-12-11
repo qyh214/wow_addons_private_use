@@ -2,6 +2,7 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local TT = B:RegisterModule("Tooltip")
 
+local cr, cg, cb = DB.r, DB.g, DB.b
 local strfind, format, strupper, strlen, pairs, unpack = string.find, string.format, string.upper, string.len, pairs, unpack
 local ICON_LIST = ICON_LIST
 local HIGHLIGHT_FONT_COLOR = HIGHLIGHT_FONT_COLOR
@@ -394,7 +395,7 @@ function TT:ReskinTooltip()
 
 	if not self.tipStyled then
 		self:HideBackdrop()
-		self:DisableDrawLayer("BACKGROUND")
+		if self.background then self.background:Hide() end
 		self.bg = B.SetBD(self, .7)
 		self.bg:SetInside(self)
 		self.bg:SetFrameLevel(self:GetFrameLevel())
@@ -402,6 +403,17 @@ function TT:ReskinTooltip()
 
 		if self.StatusBar then
 			TT.ReskinStatusBar(self)
+		end
+
+		local header = self.CompareHeader
+		if header then
+			B.StripTextures(header)
+			local bg = header:CreateTexture(nil, "ARTWORK")
+			bg:SetTexture("Interface\\LFGFrame\\UI-LFG-SEPARATOR")
+			bg:SetTexCoord(0, .66, 0, .31)
+			bg:SetVertexColor(cr, cg, cb, .8)
+			bg:SetPoint("BOTTOM", 0, -4)
+			bg:SetSize(100, 30)
 		end
 
 		self.tipStyled = true
@@ -583,8 +595,7 @@ TT:RegisterTooltips("NDui", function()
 	hooksecurefunc("UIDropDownMenu_CreateFrames", reskinDropdown)
 
 	-- IME
-	local r, g, b = DB.r, DB.g, DB.b
-	IMECandidatesFrame.selection:SetVertexColor(r, g, b)
+	IMECandidatesFrame.selection:SetVertexColor(cr, cg, cb)
 
 	-- Pet Tooltip
 	PetBattlePrimaryUnitTooltip:HookScript("OnShow", function(self)

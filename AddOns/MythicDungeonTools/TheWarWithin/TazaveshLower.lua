@@ -25,8 +25,7 @@ MDT.dungeonSubLevels[dungeonIndex] = {
   [1] = L["TazaveshLower"],
 }
 
-MDT.dungeonTotalCount[dungeonIndex] = { normal = 328, teeming = 1000, teemingEnabled = true }
-
+MDT.dungeonTotalCount[dungeonIndex] = { normal = 360 }
 
 MDT.mapPOIs[dungeonIndex] = {
   [1] = {
@@ -39,8 +38,8 @@ MDT.mapPOIs[dungeonIndex] = {
     [2] = {
       ["template"] = "MapLinkPinTemplate",
       ["type"] = "textFrame",
-      ["x"] = 430,
-      ["y"] = -250,
+      ["x"] = 468.95208748999,
+      ["y"] = -307.09992379279,
       ["text"] = "",
     },
     [3] = {
@@ -64,30 +63,15 @@ MDT.mapPOIs[dungeonIndex] = {
       ["y"] = -242.46363267786,
       ["text"] = "streetBazaarEventNote3",
     },
-    [6] = {
-      ["template"] = "MapLinkPinTemplate",
-      ["type"] = "generalNote",
-      ["x"] = 162.80648386513,
-      ["y"] = -122.71107531701,
-      ["text"] = "streetOasisBossNote1",
-    },
-    [7] = {
-      ["template"] = "MapLinkPinTemplate",
-      ["type"] = "generalNote",
-      ["x"] = 207.40050362146,
-      ["y"] = -92.647681618932,
-      ["text"] = "streetOasisBossNote2",
-    },
   },
 };
-
 
 MDT.dungeonEnemies[dungeonIndex] = {
   [1] = {
     ["name"] = "Customs Security",
     ["id"] = 177807,
     ["count"] = 4,
-    ["health"] = 88225372,
+    ["health"] = 102034571,
     ["scale"] = 1.3,
     ["displayId"] = 100873,
     ["creatureType"] = "Humanoid",
@@ -96,11 +80,19 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
       ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
+      ["Repentance"] = true,
+      ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
       ["Mind Soothe"] = true,
     },
     ["spells"] = {
@@ -112,8 +104,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
       [355891] = {
       },
       [355900] = {
-      },
-      [355903] = {
       },
     },
     ["clones"] = {
@@ -146,7 +136,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["y"] = -343.70338830544,
         ["g"] = 7,
         ["sublevel"] = 1,
-        ["inspiring"] = true,
       },
       [6] = {
         ["x"] = 728.8060554646,
@@ -178,17 +167,16 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Gatewarden Zo'mazz",
     ["id"] = 178392,
     ["count"] = 18,
-    ["health"] = 128327813,
+    ["health"] = 148413922,
     ["scale"] = 1.8,
     ["displayId"] = 101505,
     ["creatureType"] = "Humanoid",
     ["level"] = 81,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
-      [351047] = {
-      },
       [352796] = {
       },
       [356548] = {
@@ -207,7 +195,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Support Officer",
     ["id"] = 177817,
     ["count"] = 4,
-    ["health"] = 72184395,
+    ["health"] = 83482831,
     ["scale"] = 1.2,
     ["displayId"] = 100876,
     ["creatureType"] = "Humanoid",
@@ -216,12 +204,20 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
       ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
+      ["Repentance"] = true,
       ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [354297] = {
@@ -249,7 +245,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["y"] = -353.60227396425,
         ["g"] = 4,
         ["sublevel"] = 1,
-        ["disguised"] = true,
       },
       [3] = {
         ["x"] = 685.34961115295,
@@ -263,7 +258,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Interrogation Specialist",
     ["id"] = 177816,
     ["count"] = 4,
-    ["health"] = 72184395,
+    ["health"] = 83482831,
     ["scale"] = 1.3,
     ["displayId"] = 100877,
     ["creatureType"] = "Humanoid",
@@ -272,11 +267,19 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
       ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
+      ["Repentance"] = true,
+      ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
       ["Mind Soothe"] = true,
     },
     ["spells"] = {
@@ -296,7 +299,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["y"] = -327.28290413951,
         ["g"] = 5,
         ["sublevel"] = 1,
-        ["inspiring"] = true,
       },
       [3] = {
         ["x"] = 676.5579355197,
@@ -316,17 +318,16 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Armored Overseer",
     ["id"] = 177808,
     ["count"] = 8,
-    ["health"] = 104266348,
+    ["health"] = 129862181,
     ["scale"] = 1.6,
     ["displayId"] = 100874,
     ["creatureType"] = "Humanoid",
     ["level"] = 81,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
-      [351047] = {
-      },
       [352796] = {
       },
       [356001] = {
@@ -370,7 +371,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["x"] = 620.39336224905,
         ["y"] = -350.1935945753,
         ["sublevel"] = 1,
-        ["disguised"] = true,
       },
     },
   },
@@ -378,22 +378,19 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Portalmancer Zo'honn",
     ["id"] = 179334,
     ["count"] = 24,
-    ["health"] = 160409767,
+    ["health"] = 185517402,
     ["scale"] = 2.2,
     ["displayId"] = 100877,
     ["creatureType"] = "Humanoid",
     ["level"] = 81,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [352390] = {
       },
       [352393] = {
-      },
-      [355306] = {
-      },
-      [355331] = {
       },
       [356324] = {
       },
@@ -415,7 +412,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Zo'phex",
     ["id"] = 175616,
     ["count"] = 0,
-    ["health"] = 481574146,
+    ["health"] = 556827200,
     ["scale"] = 2,
     ["displayId"] = 100049,
     ["creatureType"] = "Humanoid",
@@ -425,6 +422,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["instanceID"] = 0,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [345770] = {
@@ -442,8 +440,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
       [347949] = {
       },
       [348128] = {
-      },
-      [348276] = {
       },
       [348350] = {
       },
@@ -466,7 +462,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Tracker Zo'korss",
     ["id"] = 179837,
     ["count"] = 18,
-    ["health"] = 160409767,
+    ["health"] = 185517402,
     ["scale"] = 2,
     ["stealthDetect"] = true,
     ["displayId"] = 101474,
@@ -474,11 +470,10 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["level"] = 81,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [356001] = {
-      },
-      [356011] = {
       },
       [356929] = {
       },
@@ -502,10 +497,11 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Ancient Core Hound",
     ["id"] = 180091,
     ["count"] = 12,
-    ["health"] = 104266348,
+    ["health"] = 120586312,
     ["scale"] = 2,
     ["displayId"] = 101639,
     ["creatureType"] = "Beast",
+    ["stealthDetect"] = true,
     ["level"] = 81,
     ["characteristics"] = {
       ["Taunt"] = true,
@@ -537,7 +533,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Enraged Direhorn",
     ["id"] = 180495,
     ["count"] = 10,
-    ["health"] = 128327813,
+    ["health"] = 148413922,
     ["scale"] = 2,
     ["displayId"] = 47441,
     ["creatureType"] = "Beast",
@@ -565,17 +561,29 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Frenzied Nightclaw",
     ["id"] = 180567,
     ["count"] = 4,
-    ["health"] = 64163907,
+    ["health"] = 74206961,
     ["scale"] = 1.3,
     ["displayId"] = 101951,
     ["creatureType"] = "Beast",
     ["level"] = 80,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Incapacitate"] = true,
+      ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
       ["Root"] = true,
+      ["Fear"] = true,
       ["Disorient"] = true,
+      ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
+      ["Scare Beast"] = true,
+      ["Hibernate"] = true,
     },
     ["spells"] = {
       [357827] = {
@@ -612,7 +620,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Market Peacekeeper",
     ["id"] = 179840,
     ["count"] = 4,
-    ["health"] = 96245860,
+    ["health"] = 111310441,
     ["scale"] = 1.3,
     ["displayId"] = 101475,
     ["creatureType"] = "Humanoid",
@@ -621,14 +629,19 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
       ["Polymorph"] = true,
       ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
+      ["Repentance"] = true,
       ["Imprison"] = true,
       ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
       ["Mind Soothe"] = true,
     },
     ["spells"] = {
@@ -693,7 +706,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["y"] = -471.21371142123,
         ["g"] = 25,
         ["sublevel"] = 1,
-        ["disguised"] = true,
       },
       [10] = {
         ["x"] = 176.86888906463,
@@ -724,7 +736,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Veteran Sparkcaster",
     ["id"] = 179841,
     ["count"] = 4,
-    ["health"] = 72184395,
+    ["health"] = 83482831,
     ["scale"] = 1.3,
     ["displayId"] = 101476,
     ["creatureType"] = "Humanoid",
@@ -733,11 +745,19 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
+      ["Repentance"] = true,
       ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
       ["Mind Soothe"] = true,
     },
     ["spells"] = {
@@ -769,7 +789,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["y"] = -421.29613965601,
         ["g"] = 23,
         ["sublevel"] = 1,
-        ["disguised"] = true,
       },
       [4] = {
         ["x"] = 194.68544179238,
@@ -782,7 +801,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["y"] = -385.54637064953,
         ["g"] = 19,
         ["sublevel"] = 1,
-        ["disguised"] = true,
       },
       [6] = {
         ["x"] = 213.33451930542,
@@ -802,13 +820,14 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Commerce Enforcer",
     ["id"] = 179842,
     ["count"] = 8,
-    ["health"] = 121911421,
+    ["health"] = 140993223,
     ["scale"] = 1.6,
     ["displayId"] = 101477,
     ["creatureType"] = "Humanoid",
     ["level"] = 81,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [355477] = {
@@ -903,14 +922,15 @@ MDT.dungeonEnemies[dungeonIndex] = {
   [15] = {
     ["name"] = "Commander Zo'far",
     ["id"] = 179821,
-    ["count"] = 24,
-    ["health"] = 192491720,
+    ["count"] = 30,
+    ["health"] = 185517402,
     ["scale"] = 2,
     ["displayId"] = 101473,
     ["creatureType"] = "Humanoid",
     ["level"] = 81,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [355473] = {
@@ -934,13 +954,14 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Cartel Muscle",
     ["id"] = 180348,
     ["count"] = 8,
-    ["health"] = 120307325,
+    ["health"] = 139482458,
     ["scale"] = 1.7,
     ["displayId"] = 101598,
     ["creatureType"] = "Humanoid",
     ["level"] = 81,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [356967] = {
@@ -954,7 +975,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["y"] = -316.50386390063,
         ["g"] = 16,
         ["sublevel"] = 1,
-        ["disguised"] = true,
       },
       [2] = {
         ["x"] = 351.39318832028,
@@ -1058,18 +1078,28 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Cartel Smuggler",
     ["id"] = 180335,
     ["count"] = 5,
-    ["health"] = 72184395,
+    ["health"] = 83482831,
     ["scale"] = 1.3,
     ["displayId"] = 101595,
     ["creatureType"] = "Humanoid",
     ["level"] = 80,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
+      ["Disorient"] = true,
+      ["Repentance"] = true,
       ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
       ["Mind Soothe"] = true,
     },
     ["spells"] = {
@@ -1115,14 +1145,12 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["y"] = -270.46065704506,
         ["g"] = 12,
         ["sublevel"] = 1,
-        ["inspiring"] = true,
       },
       [7] = {
         ["x"] = 410.67820084526,
         ["y"] = -213.24354887894,
         ["g"] = 11,
         ["sublevel"] = 1,
-        ["disguised"] = true,
       },
       [8] = {
         ["x"] = 422.37907583214,
@@ -1142,17 +1170,28 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Cartel Wiseguy",
     ["id"] = 180336,
     ["count"] = 5,
-    ["health"] = 64163907,
+    ["health"] = 74206961,
     ["scale"] = 1.3,
     ["displayId"] = 101596,
     ["creatureType"] = "Humanoid",
     ["level"] = 80,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
+      ["Disorient"] = true,
+      ["Repentance"] = true,
+      ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
       ["Mind Soothe"] = true,
     },
     ["spells"] = {
@@ -1196,7 +1235,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["y"] = -264.255300504,
         ["g"] = 12,
         ["sublevel"] = 1,
-        ["disguised"] = true,
       },
       [6] = {
         ["x"] = 415.98788015518,
@@ -1216,7 +1254,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Cartel Skulker",
     ["id"] = 179893,
     ["count"] = 4,
-    ["health"] = 80204883,
+    ["health"] = 92988305,
     ["scale"] = 1.3,
     ["displayId"] = 101734,
     ["creatureType"] = "Humanoid",
@@ -1225,9 +1263,20 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
+      ["Disorient"] = true,
+      ["Repentance"] = true,
+      ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [30831] = {
@@ -1364,13 +1413,14 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Oasis Security",
     ["id"] = 179269,
     ["count"] = 0,
-    ["health"] = 102662250,
+    ["health"] = 118731144,
     ["scale"] = 2,
     ["displayId"] = 101270,
     ["creatureType"] = "Humanoid",
     ["level"] = 81,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [350916] = {
@@ -1379,25 +1429,12 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["interruptible"] = true,
       },
       [353706] = {
-        ["enrage"] = true,
       },
     },
     ["clones"] = {
-      [1] = {
-        ["x"] = 205.13118709665,
-        ["y"] = -64.078318575479,
-        ["g"] = 33,
-        ["sublevel"] = 1,
-      },
       [2] = {
-        ["x"] = 125.11626537892,
-        ["y"] = -111.04522479639,
-        ["g"] = 33,
-        ["sublevel"] = 1,
-      },
-      [3] = {
-        ["x"] = 214.85949004837,
-        ["y"] = -80.474997489481,
+        ["x"] = 163.63133917638,
+        ["y"] = -101.19255177683,
         ["g"] = 33,
         ["sublevel"] = 1,
       },
@@ -1407,7 +1444,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Disruptive Patron",
     ["id"] = 176565,
     ["count"] = 0,
-    ["health"] = 76863014,
+    ["health"] = 88893763,
     ["scale"] = 2,
     ["displayId"] = 101271,
     ["creatureType"] = "Humanoid",
@@ -1416,14 +1453,24 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
+      ["Repentance"] = true,
       ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [353706] = {
+        ["enrage"] = true,
       },
       [353783] = {
       },
@@ -1432,15 +1479,9 @@ MDT.dungeonEnemies[dungeonIndex] = {
       },
     },
     ["clones"] = {
-      [1] = {
-        ["x"] = 196.49783127233,
-        ["y"] = -81.495988123684,
-        ["g"] = 33,
-        ["sublevel"] = 1,
-      },
       [2] = {
-        ["x"] = 133.58389632216,
-        ["y"] = -128.43345954495,
+        ["x"] = 172.09897011962,
+        ["y"] = -118.58078652539,
         ["g"] = 33,
         ["sublevel"] = 1,
       },
@@ -1450,7 +1491,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Brawling Patron",
     ["id"] = 180159,
     ["count"] = 0,
-    ["health"] = 51464799,
+    ["health"] = 59520170,
     ["scale"] = 2,
     ["displayId"] = 101546,
     ["creatureType"] = "Humanoid",
@@ -1459,27 +1500,35 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
+      ["Repentance"] = true,
+      ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [348566] = {
       },
-      [353706] = {
-      },
     },
     ["clones"] = {
       [1] = {
-        ["x"] = 150.02724158808,
-        ["y"] = -118.42030602276,
+        ["x"] = 188.54231538554,
+        ["y"] = -108.5676330032,
         ["g"] = 33,
         ["sublevel"] = 1,
       },
       [2] = {
-        ["x"] = 140.92992090337,
-        ["y"] = -101.60752529024,
+        ["x"] = 179.44499470083,
+        ["y"] = -91.754852270677,
         ["g"] = 33,
         ["sublevel"] = 1,
       },
@@ -1489,7 +1538,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Zo'gron",
     ["id"] = 176563,
     ["count"] = 0,
-    ["health"] = 321049431,
+    ["health"] = 371218134,
     ["scale"] = 2,
     ["displayId"] = 101481,
     ["creatureType"] = "Humanoid",
@@ -1499,13 +1548,12 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["instanceID"] = 0,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [181089] = {
       },
       [350919] = {
-      },
-      [350921] = {
       },
       [350922] = {
         ["interruptible"] = true,
@@ -1519,12 +1567,13 @@ MDT.dungeonEnemies[dungeonIndex] = {
       [1241023] = {
       },
       [1241032] = {
+        ["interruptible"] = true,
       },
     },
     ["clones"] = {
       [1] = {
-        ["x"] = 149.87873800052,
-        ["y"] = -55.659576346848,
+        ["x"] = 147.19159251453,
+        ["y"] = -59.690221914933,
         ["g"] = 33,
         ["sublevel"] = 1,
       },
@@ -1534,7 +1583,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Alcruux",
     ["id"] = 176556,
     ["count"] = 0,
-    ["health"] = 240787073,
+    ["health"] = 232011334,
     ["scale"] = 1.6,
     ["displayId"] = 101039,
     ["creatureType"] = "Aberration",
@@ -1574,7 +1623,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Achillite",
     ["id"] = 176555,
     ["count"] = 0,
-    ["health"] = 240787073,
+    ["health"] = 232011334,
     ["scale"] = 1.6,
     ["displayId"] = 101044,
     ["creatureType"] = "Mechanical",
@@ -1621,7 +1670,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Venza Goldfuse",
     ["id"] = 176705,
     ["count"] = 0,
-    ["health"] = 288944488,
+    ["health"] = 278413600,
     ["scale"] = 1.6,
     ["displayId"] = 100564,
     ["creatureType"] = "Humanoid",
@@ -1631,6 +1680,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["instanceID"] = 0,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [181089] = {
@@ -1661,7 +1711,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Defective Sorter",
     ["id"] = 176396,
     ["count"] = 3,
-    ["health"] = 32081953,
+    ["health"] = 37103480,
     ["scale"] = 1.3,
     ["displayId"] = 100408,
     ["creatureType"] = "Mechanical",
@@ -1670,11 +1720,14 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
       ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
     },
     ["spells"] = {
       [347721] = {
@@ -1733,7 +1786,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "P.O.S.T. Worker",
     ["id"] = 176394,
     ["count"] = 5,
-    ["health"] = 80204883,
+    ["health"] = 92758701,
     ["scale"] = 1.3,
     ["displayId"] = 100406,
     ["creatureType"] = "Mechanical",
@@ -1742,11 +1795,14 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
       ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
     },
     ["spells"] = {
       [347716] = {
@@ -1770,7 +1826,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["y"] = -287.6142228861,
         ["g"] = 31,
         ["sublevel"] = 1,
-        ["disguised"] = true,
       },
       [4] = {
         ["x"] = 67.889594958912,
@@ -1784,7 +1839,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Overloaded Mailemental",
     ["id"] = 176395,
     ["count"] = 5,
-    ["health"] = 60153662,
+    ["health"] = 69569026,
     ["scale"] = 1.3,
     ["displayId"] = 68547,
     ["creatureType"] = "Elemental",
@@ -1793,12 +1848,16 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
       ["Root"] = true,
       ["Fear"] = true,
       ["Banish"] = true,
       ["Disorient"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
     },
     ["spells"] = {
       [347775] = {
@@ -1833,7 +1892,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "P.O.S.T. Master",
     ["id"] = 175646,
     ["count"] = 0,
-    ["health"] = 505652853,
+    ["health"] = 584668560,
     ["scale"] = 2,
     ["displayId"] = 100722,
     ["creatureType"] = "Mechanical",
@@ -1847,32 +1906,15 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["spells"] = {
       [346286] = {
       },
-      [346291] = {
-      },
-      [346296] = {
-      },
-      [346297] = {
-      },
-      [346329] = {
-      },
-      [346381] = {
-      },
       [346741] = {
       },
       [346742] = {
-      },
-      [346844] = {
-        ["magic"] = true,
       },
       [346947] = {
       },
       [346962] = {
       },
       [346967] = {
-      },
-      [354939] = {
-      },
-      [369133] = {
       },
     },
     ["clones"] = {
@@ -1887,7 +1929,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "So'azmi",
     ["id"] = 175806,
     ["count"] = 0,
-    ["health"] = 505652853,
+    ["health"] = 584668560,
     ["scale"] = 2,
     ["displayId"] = 99094,
     ["creatureType"] = "Humanoid",
@@ -1897,6 +1939,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["instanceID"] = 1194,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [347481] = {
@@ -1935,7 +1978,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Smuggled Creature",
     ["id"] = 175677,
     ["count"] = 0,
-    ["health"] = 64163907,
+    ["health"] = 74206961,
     ["scale"] = 1,
     ["displayId"] = 93756,
     ["creatureType"] = "Beast",
@@ -1944,10 +1987,20 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
+      ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
+      ["Scare Beast"] = true,
+      ["Hibernate"] = true,
     },
     ["spells"] = {
       [347841] = {
@@ -1968,11 +2021,15 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Unruly Patron",
     ["id"] = 176561,
     ["count"] = 0,
-    ["health"] = 16040977,
+    ["health"] = 18551740,
     ["scale"] = 1.2,
     ["displayId"] = 101542,
     ["creatureType"] = "Humanoid",
     ["level"] = 80,
+    ["characteristics"] = {
+      ["Taunt"] = true,
+      ["Mind Soothe"] = true,
+    },
     ["spells"] = {
       [356482] = {
       },
@@ -1981,8 +2038,8 @@ MDT.dungeonEnemies[dungeonIndex] = {
     },
     ["clones"] = {
       [1] = {
-        ["x"] = 83.99410416743,
-        ["y"] = -79.02481361665,
+        ["x"] = 114.00005346802,
+        ["y"] = -129.63192099957,
         ["sublevel"] = 1,
       },
     },
@@ -1991,15 +2048,29 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Bazaar Strongarm",
     ["id"] = 178388,
     ["count"] = 3,
-    ["health"] = 56143418,
+    ["health"] = 64931091,
     ["scale"] = 1.3,
     ["displayId"] = 102057,
     ["creatureType"] = "Humanoid",
     ["level"] = 80,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Incapacitate"] = true,
+      ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
+      ["Root"] = true,
+      ["Fear"] = true,
+      ["Disorient"] = true,
+      ["Repentance"] = true,
+      ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [351956] = {
@@ -2037,17 +2108,29 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Cartel Lackey",
     ["id"] = 178394,
     ["count"] = 1,
-    ["health"] = 16040977,
+    ["health"] = 18551740,
     ["scale"] = 1,
     ["displayId"] = 100869,
     ["creatureType"] = "Humanoid",
     ["level"] = 80,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Incapacitate"] = true,
+      ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
+      ["Repentance"] = true,
+      ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [1242960] = {
@@ -2138,11 +2221,15 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Unruly Patron",
     ["id"] = 180158,
     ["count"] = 0,
-    ["health"] = 16040977,
+    ["health"] = 18597661,
     ["scale"] = 1.2,
     ["displayId"] = 101543,
     ["creatureType"] = "Humanoid",
     ["level"] = 80,
+    ["characteristics"] = {
+      ["Taunt"] = true,
+      ["Mind Soothe"] = true,
+    },
     ["spells"] = {
       [356482] = {
       },
@@ -2151,8 +2238,8 @@ MDT.dungeonEnemies[dungeonIndex] = {
     },
     ["clones"] = {
       [1] = {
-        ["x"] = 78.678614312137,
-        ["y"] = -68.085132973051,
+        ["x"] = 109.13239697343,
+        ["y"] = -116.90076159137,
         ["sublevel"] = 1,
       },
     },
@@ -2161,13 +2248,14 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Bazaar Overseer",
     ["id"] = 246285,
     ["count"] = 12,
-    ["health"] = 136348302,
+    ["health"] = 157689792,
     ["scale"] = 1.8,
     ["displayId"] = 129965,
     ["creatureType"] = "Humanoid",
     ["level"] = 80,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [1240811] = {

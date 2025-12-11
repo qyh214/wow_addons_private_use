@@ -184,7 +184,6 @@ Off Screen]=] ] = [=[提醒效果
 	L["Aura: '%s'"] = "光環: '%s'"
 	L["Auto-Clone (Show All Matches)"] = "自動複製 (顯示所有符合的)"
 	L["Automatic length"] = "自動長度"
-	L["Available Voices are system specific"] = "可用語音為系統指定"
 	L["Backdrop Color"] = "背景顏色"
 	L["Backdrop in Front"] = "背景在前面"
 	L["Backdrop Style"] = "背景類型"
@@ -224,6 +223,7 @@ Off Screen]=] ] = [=[提醒效果
 	L["Circular Texture %s"] = "圓形材質 %s"
 	L["Clear Debug Logs"] = "清除偵錯紀錄"
 	L["Clear Saved Data"] = "清空已儲存的資料"
+	L["Click to replace the name with %s."] = "按一下以將名稱取代為 %s。"
 	L["Clip Overlays"] = "裁剪疊加圖層"
 	L["Clipped by Foreground"] = "被前景剪裁"
 	L["Close"] = "關閉"
@@ -267,7 +267,7 @@ Off Screen]=] ] = [=[提醒效果
 	L["Custom Init"] = "自訂初始化"
 	L["Custom Load"] = "自訂載入"
 	L["Custom Options"] = "自訂選項"
-	L["Custom Text Update Throttle"] = "自定義文字更新限制"
+	L["Custom Text Update Throttle"] = "自訂文字更新限制"
 	L["Custom Trigger"] = "自訂觸發"
 	L["Custom trigger event tooltip"] = [=[選擇自訂觸發要檢查的事件。
 可用逗號分隔多個事件。
@@ -280,7 +280,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 
 |cFF4444FF例如:|r
 UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
-	L["Custom trigger Update Throttle"] = "自定義觸發器更新限制"
+	L["Custom trigger Update Throttle"] = "自訂觸發器更新限制"
 	L["Custom Trigger: Ignore Lua Errors on OPTIONS event"] = "自訂觸發: 忽略 OPTIONS 事件的 Lua 錯誤"
 	L["Custom Trigger: Send fake events instead of STATUS event"] = "自訂觸發: 發送假的事件而不是 STATUS 事件"
 	L["Custom Unload"] = "自訂取消載入"
@@ -448,6 +448,7 @@ Bleed classification via LibDispel]=] ] = "只過濾被 LibDispel 分類為流�
 	L["Group Settings"] = "群組設定"
 	L["Hawk"] = "老鷹"
 	L["Help"] = "說明"
+	L["Hide After"] = "隱藏之後的"
 	L["Hide Background"] = "隱藏背景"
 	L["Hide Glows applied by this aura"] = "隱藏這個提醒效果所套用的發光效果"
 	L["Hide on"] = "隱藏"
@@ -538,6 +539,7 @@ Bleed classification via LibDispel]=] ] = "只過濾被 LibDispel 分類為流�
 	L["Magnetically Align"] = "磁吸式對齊"
 	L["Main"] = "主要"
 	L["Manual with %i/%i"] = "手動 %i/%i "
+	L["Matches %s spells"] = "符合 %s 法術"
 	L["Matches the height setting of a horizontal bar or width for a vertical bar."] = "符合水平進度條的高度設定，或垂直進度條的寬度。"
 	L["Max"] = "最大"
 	L["Max Length"] = "最大長度"
@@ -642,6 +644,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件發�
 	L["Paste Trigger Settings"] = "貼上觸發設定"
 	L["Places a tick on the bar"] = "在進度條上顯示每次進度指示"
 	L["Play Sound"] = "播放音效"
+	L["Player Spells found:"] = "找到的玩家法術："
 	L["Portrait Zoom"] = "人像變焦"
 	L["Position and Size Settings"] = "位置與大小設定"
 	L["Preferred Match"] = "優先選擇符合"
@@ -775,6 +778,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件發�
 	L["Spark Texture"] = "亮點材質"
 	L["Specific Currency ID"] = "特定兌換通貨ID"
 	L["Spell Selection Filters"] = "法術選擇過濾器"
+	L["Spells found:"] = "找到的法術："
 	L["Stack Info"] = "堆疊層數資訊"
 	L["Stacks - The number of stacks of an aura (usually)"] = "層數 - 光環的疊加數（通常）"
 	L["Standby"] = "準備就緒"
@@ -787,6 +791,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件發�
 	L["Stop Motion %s"] = "停止動畫 %s"
 	L["Stop Motion Settings"] = "定格設定"
 	L["Stop Sound"] = "停止音效"
+	L["Stretched by Foreground"] = "由前景圖層拉伸"
 	L["Sub Elements"] = "子元素"
 	L["Sub Option %i"] = "子選項 %i"
 	L["Subevent"] = "子事件"
@@ -810,6 +815,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件發�
 	L["The duration of the animation in seconds."] = "動畫的持續時間(秒)。"
 	L["The duration of the animation in seconds. The finish animation does not start playing until after the display would normally be hidden."] = "動畫的持續時間 (秒)。直到提醒效果正常隱藏後，才會播放結束時的動畫。"
 	L["The group and all direct children will share the same base frame level."] = "此群組和所有直接的子項目將共用相同的基礎框架層級。"
+	L["The Multi Target mode is less reliable and not recommended."] = "多目標模式較不可靠，不建議使用。"
+	L["The Multi Target mode requires a name or spell id filter"] = "多目標模式需要名稱或法術ID過濾器"
 	L["The trigger number is optional. When no trigger number is specified, the trigger selected via dynamic information will be used."] = "觸發編號是可選的。當未指定觸發編號時，將使用透過動態資訊選擇的觸發。"
 	L["The type of trigger"] = "觸發類型"
 	L["The WeakAuras Options Addon version %s doesn't match the WeakAuras version %s. If you updated the addon while the game was running, try restarting World of Warcraft. Otherwise try reinstalling WeakAuras"] = "WeakAuras 選項插件版本 %s 與 WeakAuras 版本 %s 不符。如果您在遊戲運行時更新了插件，請嘗試重新啟動《魔獸世界》。否則嘗試重新安裝 WeakAuras"
@@ -897,9 +904,10 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["Vertical Bar"] = "垂直進度條"
 	L["View"] = "檢視"
 	L["View custom code"] = "檢視自訂程式碼"
-	L["Voice"] = "語音"
+	L["Voice Settings"] = "聲音設定"
 	L["We thank"] = "我們感謝"
 	L["WeakAuras %s on WoW %s"] = "WeakAuras %s 在 WoW %s"
+	L["WeakAuras recommends using spell ids instead of names. Spell ids are automatically localized."] = "WeakAuras 建議使用法術ID而不是名稱。法術ID會自動本地化。"
 	L["What do you want to do?"] = "你想要怎麼做?"
 	L["Whole Area"] = "整個區域"
 	L["wrapping"] = "自動換行"
@@ -915,6 +923,11 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["You already have this group/aura. Importing will create a duplicate."] = "你已經有了這個群組/提醒效果。匯入後將會建立另一個複製版本。"
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "你正準備要刪除 %d 個提醒效果，刪除後將|cFFFF0000無法還原!|r 請問是否要繼續?"
 	L["You are about to delete a trigger. |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "你正要刪除觸發。 |cFFFF0000刪除後將無法還原!|r 是否確定要繼續?"
+	L[ [=[You are about to Import an Aura with custom Lua code on a Hardcore server.
+
+|cFFFF0000There is a risk the custom code could be used to kill your hardcore character!|r
+
+Would you like to continue?]=] ] = "你即將在專家伺服器上匯入一個包含自訂 Lua 程式碼的提醒效果。|cFFFF0000存在自訂程式碼可能被利用來殺死你的專家角色的風險!|r 你確定要繼續嗎?"
 	L[ [=[You can add a comma-separated list of state values here that (when changed) WeakAuras should also run the Anchor Code on.
 
 WeakAuras will always run custom anchor code if you include 'changed' in this list, or when a region is added, removed, or re-ordered.]=] ] = "您可以在此處添加一個以逗號分隔的狀態值清單，當這些值發生變化時，WeakAuras 也會運行錨點程式碼 (Anchor Code)。如果您在此清單中包含 'changed'，或者新增、刪除或重新排序某個區塊時，WeakAuras 將會永遠運行自定錨點程式碼。"

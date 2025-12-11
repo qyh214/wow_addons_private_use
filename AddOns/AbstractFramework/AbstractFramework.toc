@@ -1,7 +1,7 @@
-## Interface: 110105
+## Interface: 50502,110205,110207
 ## Title: |cffff6600A|r|cffff5f06b|r|cffff590cs|r|cffff5213t|r|cffff4c19r|r|cffff461fa|r|cffff3f26c|r|cffff392ct|r|cffff3333F|r|cffff2c39r|r|cffff263fa|r|cffff1f46m|r|cffff194ce|r|cffff1352w|r|cffff0c59o|r|cffff065fr|r|cffff0066k|r
 ## Author: enderneko
-## Version: r12
+## Version: r16
 ## DefaultState: enabled
 ## IconTexture: Interface\AddOns\AbstractFramework\Media\Icons\AF
 ## SavedVariables: AFConfig
@@ -9,4 +9,114 @@
 ## X-Curse-Project-ID: 1131087
 ## X-Wago-ID: mKOv2E6x
 
-Load.xml
+# libs
+Libs\utf8.lua
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\base64.lua
+Libs\json.lua
+Libs\md5.lua
+Libs\sha256.lua
+Libs\qrcode.lua
+Libs\TaintLess\TaintLess.xml
+Libs\LibSharedMedia-3.0\lib.xml
+Libs\LibCustomGlow-1.0\LibCustomGlow-1.0.xml
+Libs\AceComm-3.0\AceComm-3.0.xml
+Libs\LibSerialize\lib.xml
+Libs\LibDeflate\lib.xml
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\lib.xml
+
+# init
+Init.lua
+Locales.lua
+
+# data
+Data\ObjectPool.lua
+Data\Queue.lua
+
+# utils
+Utils\Math.lua
+Utils\Table.lua
+Utils\String.lua
+Utils\DateTime.lua
+Utils\Delay.lua
+Utils\Serialization.lua
+Utils\Color.lua
+
+# system
+System\Addon.lua
+System\CallbackHandler.lua
+System\EventHandler.lua
+System\Communication.lua
+System\Hooks.lua
+
+# Executors
+Executors\OnUpdateExecutor.lua
+Executors\ItemLoadExecutor.lua
+
+# utils/pixel
+Utils\PixelUtil.lua
+
+# units/player
+Units\Player.lua
+
+# media
+Media\Media.lua
+Media\SharedMedia.lua
+
+# widgets
+Widgets\Color.lua
+Widgets\Texture.lua
+Widgets\Font.lua
+Widgets\Animation.lua
+Widgets\Base.lua
+Widgets\Frame.lua
+Widgets\Scroll.lua
+Widgets\Glow.lua
+Widgets\TooltipTemplate.xml [AllowLoadGameType mainline]
+Widgets\TooltipTemplate_Classic.xml [AllowLoadGameType vanilla,mists]
+Widgets\Tooltip.lua
+Widgets\Mover.lua
+Widgets\FontString.lua
+Widgets\Button.lua
+Widgets\EditBox.lua
+Widgets\Slider.lua
+Widgets\SmoothStatusBarMixin.lua
+Widgets\StatusBar.lua
+Widgets\Dropdown.lua
+Widgets\CascadingMenu.lua
+Widgets\ColorPicker.lua
+Widgets\Dialog.lua
+Widgets\Popup.lua
+Widgets\Calendar.lua
+Widgets\Sheet.lua
+Widgets\HelpTip.lua
+Widgets\AuraCooldown.xml
+Widgets\Aura.lua
+Widgets\Misc.lua
+Widgets\DataBroker.lua
+Widgets\DragSorter.lua
+
+# media/glyphs
+Media\Glyphs.lua
+
+# units
+Units\Common.lua
+Units\Class.lua
+Units\RangeCheck.lua
+Units\ItemLevel.lua
+
+# spells
+Spells\Common.lua
+Spells\Bleeds.lua
+Spells\CrowdControls.lua
+Spells\Dispellables.lua [AllowLoadGameType mainline]
+Spells\Dispellables_Mists.lua [AllowLoadGameType mists]
+Spells\Interrupts.lua
+
+# system\events
+System\Events.lua
+
+# demo
+Demo.lua

@@ -1,4 +1,4 @@
--- Generated from CurseForge on Fri Aug  8 08:45:24 UTC 2025
+-- Generated from CurseForge on Thu Dec 11 09:02:42 UTC 2025
 local ns = select(2, ...) ---@class ns @The addon namespace.
 
 if ns:IsSameLocale("ptBR") then
@@ -78,8 +78,7 @@ L["DUNGEON_SHORT_NAME_DFC"] = "Fenda Chamanegra"
 L["DUNGEON_SHORT_NAME_DHT"] = "Bosque Corenegro"
 L["DUNGEON_SHORT_NAME_DOS"] = "Outro Lado"
 L["DUNGEON_SHORT_NAME_EB"] = "Floretérnia"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_EDA"] = ""--]] 
+L["DUNGEON_SHORT_NAME_EDA"] = "Ecodomo Al'dani"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_EOA"] = ""--]] 
 L["DUNGEON_SHORT_NAME_FALL"] = "Ruína de Galakrond"
@@ -88,7 +87,7 @@ L["DUNGEON_SHORT_NAME_FLOOD"] = "Operação: Comporta"
 L["DUNGEON_SHORT_NAME_GB"] = "Grim Batol"
 L["DUNGEON_SHORT_NAME_GD"] = "Central do Carrilcruel"
 L["DUNGEON_SHORT_NAME_GMBT"] = "Gambito de So'leah"
-L["DUNGEON_SHORT_NAME_HOA"] = "Salões"
+L["DUNGEON_SHORT_NAME_HOA"] = "Salões da Expiação"
 L["DUNGEON_SHORT_NAME_HOI"] = "Salões da Infusão"
 L["DUNGEON_SHORT_NAME_HOV"] = "Salões da Bravura"
 L["DUNGEON_SHORT_NAME_ID"] = "Docas de Ferro"
@@ -369,22 +368,14 @@ L["RAID_BOSS_LOU_5"] = "Rebimbocador Travaguarda"
 L["RAID_BOSS_LOU_6"] = "Bandido de Um Braço"
 L["RAID_BOSS_LOU_7"] = "Mag’Guila, Chefes de Segurança"
 L["RAID_BOSS_LOU_8"] = "Rei do Cromo Gallywix"
---[[Translation missing --]]
---[[ L["RAID_BOSS_MFO_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MFO_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MFO_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MFO_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MFO_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MFO_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MFO_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MFO_8"] = ""--]] 
+L["RAID_BOSS_MFO_1"] = "Sentinela do Plexo"
+L["RAID_BOSS_MFO_2"] = "Fian'dhar"
+L["RAID_BOSS_MFO_3"] = "Atalmas Naazindhri"
+L["RAID_BOSS_MFO_4"] = "Tece-forja Araz"
+L["RAID_BOSS_MFO_5"] = "Os Caça-almas"
+L["RAID_BOSS_MFO_6"] = "Fractillus"
+L["RAID_BOSS_MFO_7"] = "Rei do Nexus Salhadaar"
+L["RAID_BOSS_MFO_8"] = "Dimensius, que Tudo Devora"
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_MSV_1"] = ""--]] 
 --[[Translation missing --]]
@@ -430,11 +421,45 @@ L["RAID_BOSS_SOD_9"] = "Kel'Thuzad"
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_ToES_1"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_TOES_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOES_2"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_ToES_2"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_ToES_3"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_TOES_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOES_4"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_ToES_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_11"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_12"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_13"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_9"] = ""--]] 
 L["RAID_BOSS_TOTFW_1"] = "O Conclave do Vento"
 L["RAID_BOSS_TOTFW_2"] = "Al'Akir"
 L["RAID_BOSS_VOTI_1"] = "Eranog"
@@ -469,12 +494,15 @@ L["RAID_FL"] = "Terras do Fogo"
 L["RAID_HOF"] = "Coração do Medo"
 L["RAID_ICC"] = "Cidadela da Coroa de Gelo"
 L["RAID_LOU"] = "Libertação da Inframina"
---[[Translation missing --]]
---[[ L["RAID_MFO"] = ""--]] 
+L["RAID_MFO"] = "Manaforja Ômega"
 L["RAID_MSV"] = "Galerias Mogu'shan"
 L["RAID_NP"] = "Palácio Nerub-ar"
 L["RAID_RS"] = "Santuário Rubi"
 L["RAID_ToES"] = "Terraço da Primavera Eterna"
+--[[Translation missing --]]
+--[[ L["RAID_TOES"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_TOT"] = ""--]] 
 L["RAID_TOTFW"] = "Trono dos Quatro Ventos"
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Pontuações Médias para Runs Dentro do Tempo +%s"
 L["RAIDERIO_BEST_RUN"] = "Raider.IO Melhor Mítica+"

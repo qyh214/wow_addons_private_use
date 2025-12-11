@@ -19,6 +19,14 @@ local CONST_LAST_RUN_TIMEOUT = 5 * 60
 --primaryAffix seens to not exists
 --local dungeonName, id, timeLimit, texture, backgroundTexture = C_ChallengeMode.GetMapUIInfo(challengemodecompletioninfo.mapChallengeModeID)
 
+function addon.WipeLikeCache()
+    table.wipe(addon.recentLikes)
+    for i = 1, #addon.LikesAmountFontString do
+        addon.LikesAmountFontString[i]:SetText("0")
+        addon.LikesAmountFontString[i].amount = 0
+    end
+end
+
 ---runs on details! event COMBAT_MYTHICPLUS_OVERALL_READY
 function addon.CreateRunInfo(mythicPlusOverallSegment)
     local completionInfo = C_ChallengeMode.GetChallengeCompletionInfo()
@@ -28,6 +36,8 @@ function addon.CreateRunInfo(mythicPlusOverallSegment)
     end
 
     local combatTime = mythicPlusOverallSegment:GetCombatTime()
+
+    addon.WipeLikeCache()
 
     --debug
     if (not addon.profile.last_run_data.encounter_timeline) then
@@ -95,7 +105,7 @@ function addon.CreateRunInfo(mythicPlusOverallSegment)
     for _, actorObject in damageContainer:ListActors() do
         ---@cast actorObject actordamage
 
-        if (actorObject:IsPlayer()) then
+        if (actorObject:IsPlayer() and actorObject:Class() ~= "UNGROUPPLAYER") then
             local unitName = actorObject:Name()
             local damageTakenFromSpells = {}
             for i, damageTaken in pairs(mythicPlusOverallSegment:GetDamageTakenBySpells(unitName)) do
@@ -278,9 +288,25 @@ end
 ---set the index of the latest selected run info
 ---@param index number
 function addon.SetSelectedRunIndex(index)
+    addon.WipeLikeCache()
     addon.profile.saved_runs_selected_index = index
     --call refresh on the score board
     addon.RefreshOpenScoreBoard()
+end
+
+---get the runId passed and return the index of the run by iterating the headers
+---@param runId number
+---@return number|nil
+function addon.GetRunIndexById(runId)
+    local allHeaders = addon.Compress.GetHeaders()
+
+    for i, runHeader in ipairs(allHeaders) do
+        if (runHeader.runId == runId) then
+            return i
+        end
+    end
+
+    return nil
 end
 
 ---get the index of the latest selected run info
@@ -420,13 +446,14 @@ end
 ---@field GetSavedRuns fun() : string[] return a table with compressed run info where the first index in the newest run
 ---@field GetHeaders fun() : runinfocompressed_header[] return a table with headers where the first index in the newest run
 ---@field GetRunHeader fun(headerIndex:number) : runinfocompressed_header? return the compressed header from the saved run
+---@field GetRunHeaderById fun(runId:number) : runinfocompressed_header? return the header from the saved runId
 ---@field UncompressedRun fun(headerIndex:number) : runinfo? return the uncompressed run data from the compressed run data
 ---@field GetDropdownRunDescription fun(header:runinfocompressed_header) : table
 ---@field GetSelectedRun fun() : runinfo return the uncompressed run data from the compressed run data
 ---@field SetValue fun(headerIndex:number, path:string, value:any) : boolean
 ---@field CompressRun fun(runInfo:runinfo) : string? compresses the run info and returns the compressed data
 ---@field HasLastRun fun() : boolean checks if there's run info for GetLastRun
----@field GetLastRun fun() : runinfo? return the run info for the last run finished before the next one starts
+---@field GetLastRun fun() : runinfo?, runinfocompressed_header? return the run info for the last run finished before the next one starts
 
 ---@diagnostic disable-next-line: missing-fields
 addon.Compress = {}
@@ -448,14 +475,32 @@ end
 
 ---return the run info for the last run finished before the next one starts
 ---@return runinfo?
+---@return runinfocompressed_header?
 function addon.Compress.GetLastRun()
-    return addon.Compress.HasLastRun() and addon.Compress.UncompressedRun(1)
+    if (addon.Compress.HasLastRun()) then
+        local umcompressedRun = addon.Compress.UncompressedRun(1)
+        local runHeader = addon.Compress.GetRunHeader(1)
+        return umcompressedRun, runHeader
+    end
 end
 
 ---return a table with headers where the first index in the newest run
 ---@return runinfocompressed_header[]
 function addon.Compress.GetHeaders()
     return addon.profile.saved_runs_compressed_headers
+end
+
+---return the header for the given runId
+---@param runId number
+---@return runinfocompressed_header|nil
+function addon.Compress.GetRunHeaderById(runId)
+    local headers = addon.Compress.GetHeaders()
+    for i, header in ipairs(headers) do
+        if (header.runId == runId) then
+            return header
+        end
+    end
+    return nil
 end
 
 ---return the header for a compressed run info
@@ -586,6 +631,7 @@ function addon.Compress.CompressAndSaveRun(runInfo, atIndex)
         runId = runInfo.runId,
         instanceId = runInfo.instanceId,
         groupMembers = {},
+        likesGiven = {}, --table<playername, true>
     }
 
     for playerName, playerInfo in pairs(runInfo.combatData.groupMembers) do
@@ -607,6 +653,8 @@ function addon.Compress.YeetRunsOverStorageLimit()
     while #addon.profile.saved_runs_compressed_headers > addon.profile.saved_runs_limit do
         table.remove(addon.profile.saved_runs_compressed_headers, addon.profile.saved_runs_limit + 1)
     end
+
+    --TODO: erase the runId from the likes given to players in the addon.profile.likes_given
 end
 
 ---return a table with data to be used in the dropdown menu to select which run to show in the scoreboard
@@ -671,4 +719,68 @@ function addon.Compress.GetSelectedRun()
     end
 
     return addon.Compress.UncompressedRun(selectedRunIndex)
+end
+
+--given a table T, iterate among the values and create another table where the keys that are numbers, get converted to string
+local stringuifyTableKeys = function(T)
+    local newTable = {}
+    for k,v in pairs(T) do
+        if (type(k) == "number") then
+            k = tostring(k)
+        end
+        newTable[k] = v
+    end
+    return newTable
+end
+
+function addon.ExportToJson(runId)
+    local runInfo = addon.Compress.UncompressedRun(runId)
+    if (not runInfo) then
+        return
+    end
+
+    local t = {}
+    for k,v in pairs(runInfo) do
+        if (type(v) ~= "table") then
+            t[k] = v
+        end
+    end
+
+    local combatData = {
+        groupMembers = {},
+    }
+
+    for playerName, playerInfo in pairs(runInfo.combatData.groupMembers) do
+        local thisPlayerInfo = {}
+
+        for k,v in pairs(playerInfo) do
+            if (type(v) ~= "table") then
+                thisPlayerInfo[k] = v
+            end
+        end
+
+        thisPlayerInfo.likedBy = C_EncodingUtil.SerializeJSON(stringuifyTableKeys(playerInfo.likedBy))
+        thisPlayerInfo.damageDoneBySpells = C_EncodingUtil.SerializeJSON(stringuifyTableKeys(playerInfo.damageDoneBySpells))
+        thisPlayerInfo.deathEvents = C_EncodingUtil.SerializeJSON(stringuifyTableKeys(playerInfo.deathEvents))
+        thisPlayerInfo.dispelWhat = C_EncodingUtil.SerializeJSON(stringuifyTableKeys(playerInfo.dispelWhat))
+        thisPlayerInfo.deathLastHits = C_EncodingUtil.SerializeJSON(stringuifyTableKeys(playerInfo.deathLastHits))
+        thisPlayerInfo.interruptWhat = C_EncodingUtil.SerializeJSON(stringuifyTableKeys(playerInfo.interruptWhat))
+        thisPlayerInfo.crowdControlSpells = C_EncodingUtil.SerializeJSON(stringuifyTableKeys(playerInfo.crowdControlSpells))
+        thisPlayerInfo.damageTakenFromSpells = C_EncodingUtil.SerializeJSON(stringuifyTableKeys(playerInfo.damageTakenFromSpells))
+        thisPlayerInfo.healDoneBySpells = C_EncodingUtil.SerializeJSON(stringuifyTableKeys(playerInfo.healDoneBySpells))
+
+        combatData.groupMembers[playerName] = thisPlayerInfo
+    end
+
+    t["combatData"] = combatData --can't export
+    t["combatTimeline"] = runInfo.timeInCombat --okay
+    t["encounters"] = runInfo.encounters --okay
+    t["completionInfo"] = runInfo.completionInfo --okay
+
+    local jsonString = C_EncodingUtil.SerializeJSON(t)
+    if (not jsonString) then
+        return ""
+    end
+
+    return jsonString
 end

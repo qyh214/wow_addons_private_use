@@ -13,7 +13,7 @@ local function CreateAboutFrame()
     aboutFrame = AF.CreateBorderedFrame(BFCMainFrame, "BFCAboutFrame", nil, 200, nil, "accent")
     AF.SetPoint(aboutFrame, "TOPLEFT", BFCMainFrame, 10, -10)
     AF.SetPoint(aboutFrame, "TOPRIGHT", BFCMainFrame, -10, -10)
-    AF.SetFrameLevel(aboutFrame, 100)
+    AF.SetFrameLevel(aboutFrame, 150)
     aboutFrame:Hide()
 
     aboutFrame:SetOnShow(function()

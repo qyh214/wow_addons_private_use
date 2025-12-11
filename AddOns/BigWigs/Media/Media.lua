@@ -33,7 +33,7 @@ do
 
 	-- Ingame sounds used for raid warning messages
 	media:Register(SOUND, "BigWigs: Raid Warning", 567397) -- Sound\\Interface\\RaidWarning
-	media:Register(SOUND, "BigWigs: Raid Boss Whisper", 876098) -- Sound\\Interface\\UI_RaidBossWhisperWarning
+	--media:Register(SOUND, "BigWigs: Raid Boss Whisper", 876098) -- Sound\\Interface\\UI_RaidBossWhisperWarning
 
 	-- Victory
 	media:Register(SOUND, "BigWigs: Victory", "Interface\\AddOns\\BigWigs\\Media\\Sounds\\Victory.ogg")
@@ -46,6 +46,13 @@ do
 	local FONT = media.MediaType and media.MediaType.FONT or "font"
 	media:Register(FONT, "Noto Sans Regular", "Interface\\AddOns\\BigWigs\\Media\\Fonts\\NotoSans-Regular.otf", 130) -- 130 latin + cyr
 	media:Register(FONT, "Noto Sans SemiCondensed", "Interface\\AddOns\\BigWigs\\Media\\Fonts\\NotoSans-SemiCondensed.otf", 130) -- 130 latin + cyr
+	media:Register(FONT, "Noto Sans Medium", "Interface\\AddOns\\BigWigs\\Media\\Fonts\\NotoSans-Medium.otf", 130) -- 130 latin + cyr
+end
+
+-- Border
+do
+	local BORDER = media.MediaType and media.MediaType.BORDER or "border"
+	media:Register(BORDER, "Solid", "Interface\\Buttons\\WHITE8X8")
 end
 
 -- Countdowns

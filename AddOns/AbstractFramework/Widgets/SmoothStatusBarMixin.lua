@@ -32,10 +32,9 @@ end
 C_Timer.NewTicker(0, ProcessSmoothStatusBars)
 
 ---@class AF_SmoothStatusBar
-local SmoothStatusBarMixin = {}
-AF.SmoothStatusBarMixin = SmoothStatusBarMixin
+AF_SmoothStatusBarMixin = {}
 
-function SmoothStatusBarMixin:ResetSmoothedValue(value) --If nil, tries to set to the last target value
+function AF_SmoothStatusBarMixin:ResetSmoothedValue(value) --If nil, tries to set to the last target value
     local targetValue = g_updatingBars[self]
     if targetValue then
         g_updatingBars[self] = nil
@@ -45,11 +44,11 @@ function SmoothStatusBarMixin:ResetSmoothedValue(value) --If nil, tries to set t
     end
 end
 
-function SmoothStatusBarMixin:SetSmoothedValue(value)
+function AF_SmoothStatusBarMixin:SetSmoothedValue(value)
     g_updatingBars[self] = value
 end
 
-function SmoothStatusBarMixin:SetMinMaxSmoothedValue(min, max)
+function AF_SmoothStatusBarMixin:SetMinMaxSmoothedValue(min, max)
     self:SetMinMaxValues(min, max)
 
     local targetValue = g_updatingBars[self]

@@ -82,6 +82,7 @@ local specToSpecIconMap = {
 	--
 	["DemonHunter-Vengeance"] = "ability_demonhunter_spectank",
 	["DemonHunter-Havoc"] = "ability_demonhunter_specdps",
+	["DemonHunter-Devourer"] = "classicon_demonhunter_void",
 }
 
 table.insert(Private.LoginFnQueue, function()
@@ -101,7 +102,7 @@ function Private.GetSpecIcon(spec)
 	return specToSpecIconMap[spec] or "inv_misc_questionmark"
 end
 
-Private.HasDifficulties = Private.IsRetail or Private.IsCata or Private.IsWrath or Private.IsClassicEra
+Private.HasDifficulties = Private.IsRetail or Private.IsCata or (Private.IsWrath and C_Seasons.GetActiveSeason() ~= 109) or Private.IsClassicEra
 
 ---@type table<string, string>
 Private.LocaleToSiteSubDomainMap = {

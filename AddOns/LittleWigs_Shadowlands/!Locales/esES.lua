@@ -28,6 +28,11 @@ end
 
 -- Halls of Atonement
 
+L = BigWigs:NewBossLocale("High Adjudicator Aleez", "esES")
+if L then
+	L.empty_anima_vessel = "Receptáculo de ánima vacío"
+end
+
 L = BigWigs:NewBossLocale("Halls of Atonement Trash", "esES")
 if L then
 	L.depraved_houndmaster = "Maestra de canes depravada"
@@ -162,7 +167,8 @@ end
 
 L = BigWigs:NewBossLocale("Myza's Oasis", "esES")
 if L then
-	L.add_wave_killed = "Oleada de esbirros matados (%d/%d)"
+	L.notes = "Notas"
+	L.notes_desc = "Muestra un mensaje cuando las notas estén disponibles. Alcanza las notas con la habilidad de tu instrumento para obtener 'Dándolo todo'.\n\n|T237554:16|tDándolo todo\n{348567}"
 end
 
 L = BigWigs:NewBossLocale("So'leah", "esES")
@@ -174,9 +180,20 @@ L = BigWigs:NewBossLocale("Tazavesh Trash", "esES")
 if L then
 	L.zophex_warmup_trigger = "Entrega... todo... el contrabando..."
 	L.menagerie_warmup_trigger = "¡Y ahora, lo que todos estabais esperando! ¡El filo del olvido, supuestamente maldito por un demonio!"
+	--L.menagerie_warmup_trigger2 = "Cartel Xy has a profitable venture. Hopefully this inclines them to aid our own."
+	--L.mailroom_door_trigger = "A friend here may be of help in acquiring Zo's signature."
+	--L.vendor_active_trigger = "Myza's Oasis. The most intoxicating establishment in Tazavesh. Gaining the owner's favor will secure Cartel Au's signature."
 	L.soazmi_warmup_trigger = "Disculpa la intrusión, So'leah. Espero que sea un momento inoportuno."
 	L.portal_authority = "Jefatura de Portales de Tazavesh"
 	L.custom_on_portal_autotalk_desc = "Al instante se abren portales que llevan a la entrada al hablar con un PNJ Especulador."
+	--L.mailroom_door_desc = "Show a bar indicating when the door to the mailroom will open."
+	--L.vendor_active = "Vendor active"
+	--L.vendor_active_desc = "Show a bar indicating when the vendor for the Trading Game will be active."
+	--L.vendor_autopurchase = "Auto-purchase trading game item"
+	--L.vendor_autopurchase_desc = "Automatically purchase the initial trading game item from the vendor."
+	--L.vendor_autopurchase_message = "Purchased %s"
+	--L.tradeable_goods = "Tradeable Goods"
+	--L.tradeable_goods_desc = "Show a message indicating when tradeable goods have been picked up."
 	L.trading_game = "Juego del trueque"
 	L.trading_game_desc = "Aviso con la contraseña correcta durante el Juego del trueque."
 	L.custom_on_trading_game_autotalk_desc = "Selecciona al instante la contraseña correcta después de que el Juego del trueque haya finalizado."
@@ -192,8 +209,8 @@ if L then
 		["Flor pálida"] = 53267,
 		["Cuchillo carmesí"] = 53268
 	}
-	--L.gatewarden_zomazz = "Gatewarden Zo'mazz"
-	--L.customs_security = "Customs Security"
+	L.gatewarden_zomazz = "Celador de la puerta Zo'mazz"
+	L.customs_security = "Seguridad aduanera"
 	L.interrogation_specialist = "Especialista en interrogatorios"
 	L.portalmancer_zohonn = "Portalmante Zo'honn"
 	L.armored_overseer = "Sobrestante acorazado"
@@ -201,20 +218,24 @@ if L then
 	L.tracker_zokorss = "Rastreador Zo'korss"
 	L.ancient_core_hound = "Can del Núcleo anciano"
 	L.enraged_direhorn = "Cuernoatroz iracundo"
-	--L.cartel_skulker = "Cartel Skulker"
-	--L.cartel_wiseguy = "Cartel Wiseguy"
+	L.frenzied_nightclaw = "Garranoche enloquecido"
+	L.cartel_skulker = "Vagador del cártel"
+	L.cartel_wiseguy = "Mafioso del cártel"
 	L.cartel_muscle = "Matón del cártel"
 	L.cartel_smuggler = "Contrabandista del cártel"
 	L.defective_sorter = "Clasificador defectuoso"
-	--L.overloaded_mailemental = "Overloaded Mailemental"
-	--L.post_worker = "P.O.S.T. Worker"
-	--L.bazaar_overseer = "Bazaar Overseer"
+	L.overloaded_mailemental = "Elemailtal sobrecargado"
+	L.post_worker = "Trabajador de correos"
+	L.smuggled_creature = "Criatura de contrabando"
+	L.bazaar_overseer = "Sobrestante del bazar"
 	L.market_peacekeeper = "Pacificador del mercado"
 	L.veteran_sparkcaster = "Chispaturgo veterano"
 	L.commerce_enforcer = "Déspota comercial"
 	L.commander_zofar = "Comandante Zo'far"
 
-	L.tazavesh_soleahs_gambit = "Tazavesh: Gambito de So'leah"
+	L.hylbrande_warmup_trigger = "A ver cómo le va a tu sabiduría contra el poder de los titanes."
+	L.portal_open = "Portal abierto"
+	L.portal_open_desc = "Muestra una barra que indica cuándo se abrirá el portal a la siguiente zona."
 	L.murkbrine_scalebinder = "Sujetascamas Salmuerasucia"
 	L.murkbrine_fishmancer = "Piscimante Salmuerasucia"
 	L.murkbrine_shellcrusher = "Rompeconchas Salmuerasucia"

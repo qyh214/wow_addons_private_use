@@ -12,8 +12,12 @@ local SetSpellByID = tt.SetSpellByID
 local anchorOverride = {
     ["LEFT"] = "RIGHT",
     ["RIGHT"] = "LEFT",
+    ["TOP"] = "BOTTOM",
+    ["BOTTOM"] = "TOP",
     ["BOTTOMLEFT"] = "TOPLEFT",
     ["BOTTOMRIGHT"] = "TOPRIGHT",
+    ["TOPLEFT"] = "BOTTOMLEFT",
+    ["TOPRIGHT"] = "BOTTOMRIGHT",
 }
 
 ---@param widget Frame
@@ -21,7 +25,7 @@ local anchorOverride = {
 ---@param x number
 ---@param y number
 ---@param lines string[]
-function AF.ShowTooltips(widget, anchor, x, y, lines)
+function AF.ShowTooltip(widget, anchor, x, y, lines)
     if type(lines) ~= "table" or #lines == 0 then
         AF.Tooltip:Hide()
         return
@@ -32,12 +36,17 @@ function AF.ShowTooltips(widget, anchor, x, y, lines)
 
     AF.Tooltip:ClearLines()
 
-    if anchorOverride[anchor] then
-        AF.Tooltip:SetOwner(widget, "ANCHOR_NONE")
+    if widget._tooltipOwner then
+        AF.Tooltip:SetOwner(widget._tooltipOwner, "ANCHOR_NONE")
         AF.Tooltip:SetPoint(anchorOverride[anchor], widget, anchor, x, y)
     else
-        if anchor and not strfind(anchor, "^ANCHOR_") then anchor = "ANCHOR_" .. anchor end
-        AF.Tooltip:SetOwner(widget, anchor or "ANCHOR_TOP", x or 0, y or 0)
+        if anchorOverride[anchor] then
+            AF.Tooltip:SetOwner(widget, "ANCHOR_NONE")
+            AF.Tooltip:SetPoint(anchorOverride[anchor], widget, anchor, x, y)
+        else
+            -- if anchor and not strfind(anchor, "^ANCHOR_") then anchor = "ANCHOR_" .. anchor end
+            AF.Tooltip:SetOwner(widget, anchor or "ANCHOR_TOP", x or 0, y or 0)
+        end
     end
 
     local r, g, b = AF.GetColorRGB(widget.accentColor or "accent")
@@ -57,7 +66,9 @@ function AF.ShowTooltips(widget, anchor, x, y, lines)
 
     AF.Tooltip:SetFrameStrata("TOOLTIP")
     -- AF.Tooltip:SetCustomLineSpacing(5)
-    AF.Tooltip:SetCustomWordWrapMinWidth(300)
+    if AF.Tooltip.SetCustomWordWrapMinWidth then
+        AF.Tooltip:SetCustomWordWrapMinWidth(widget._tooltipWordWrapMinWidth or 300)
+    end
     AF.Tooltip:Show()
 end
 
@@ -66,21 +77,22 @@ end
 ---@param x number
 ---@param y number
 ---@param ... string
-function AF.SetTooltips(widget, anchor, x, y, ...)
+function AF.SetTooltip(widget, anchor, x, y, ...)
     if type(select(1, ...)) == "table" then
-        widget._tooltips = ...
+        widget._tooltip = ...
     else
-        widget._tooltips = {...}
+        widget._tooltip = {...}
     end
-    widget._tooltipsAnchor = anchor
-    widget._tooltipsX = x
-    widget._tooltipsY = y
+    widget._tooltipAnchor = anchor
+    widget._tooltipX = x
+    widget._tooltipY = y
 
-    if not widget._tooltipsInited then
-        widget._tooltipsInited = true
+    if not widget._tooltipInited then
+        widget._tooltipInited = true
 
         widget:HookScript("OnEnter", function()
-            AF.ShowTooltips(widget, anchor, x, y, widget._tooltips)
+            if widget.IsEnabled and not widget:IsEnabled() then return end -- for slider
+            AF.ShowTooltip(widget, anchor, x, y, widget._tooltip)
         end)
         widget:HookScript("OnLeave", function()
             AF.Tooltip:Hide()
@@ -88,14 +100,18 @@ function AF.SetTooltips(widget, anchor, x, y, ...)
     end
 end
 
-function AF.ClearTooltips(widget)
-    widget._tooltips = nil
+function AF.ClearTooltip(widget)
+    widget._tooltip = nil
 end
 
 local tooltips = {}
-function AF.HideTooltips()
-    for _, tooltip in pairs(tooltips) do
-        tooltip:Hide()
+function AF.HideTooltip(hideAll)
+    if hideAll == true then
+        for _, tooltip in pairs(tooltips) do
+            tooltip:Hide()
+        end
+    else
+        AF.Tooltip:Hide() -- AFTooltip
     end
 end
 
@@ -131,9 +147,9 @@ local function TOOLTIP_DATA_UPDATE(self)
         -- Interface\FrameXML\GameTooltip.lua GameTooltipDataMixin:RefreshData()
         -- self:RefreshData()
         if self.itemID then
-            self:SetItemByID(self.itemID)
+            self:SetItemByID(self.itemID, self.showIcon)
         elseif self.spellID then
-            self:SetSpellByID(self.spellID)
+            self:SetSpellByID(self.spellID, self.showIcon)
         end
     end
 end
@@ -154,19 +170,19 @@ local function GameTooltip_OnHide(self)
     GameTooltip_ClearStatusBars(self)
     GameTooltip_ClearProgressBars(self)
     GameTooltip_ClearWidgetSet(self)
-    TooltipComparisonManager:Clear(self)
-
     GameTooltip_HideBattlePetTooltip()
+    GameTooltip_ClearStatusBars(self)
 
     if self.ItemTooltip then
         EmbeddedItemTooltip_Hide(self.ItemTooltip)
     end
     self:SetPadding(0, 0, 0, 0)
-
     self:ClearHandlerInfo()
 
-    GameTooltip_ClearStatusBars(self)
-    GameTooltip_ClearStatusBarWatch(self)
+    if AF.isRetail then
+        TooltipComparisonManager:Clear(self)
+        GameTooltip_ClearStatusBarWatch(self)
+    end
 end
 
 ---@class AF_Tooltip:GameTooltip
@@ -218,9 +234,10 @@ function AF_TooltipMixin:RequireModifier(modifier)
     self:RegisterEvent("MODIFIER_STATE_CHANGED", MODIFIER_STATE_CHANGED)
 end
 
-function AF_TooltipMixin:SetItemByID(itemID)
+function AF_TooltipMixin:SetItemByID(itemID, showIcon)
     self.itemID = itemID
     self.spellID = nil
+    self.showIcon = showIcon
 
     SetItemByID(self, itemID)
 
@@ -229,12 +246,15 @@ function AF_TooltipMixin:SetItemByID(itemID)
         self:SetBackdropBorderColor(AF.GetItemQualityColor(quality))
     end
 
-    local icon = GetItemIconByID(itemID)
-    if icon then
+    if showIcon then
+        local icon = GetItemIconByID(itemID) or AF.GetIcon("QuestionMark")
         if not self.icon then
             self:SetupIcon("TOPRIGHT", "TOPLEFT", -1, 0)
         end
         self.icon:SetTexture(icon)
+        self:ShowIcon()
+    else
+        self:HideIcon()
     end
 
     self:Show()
@@ -243,18 +263,22 @@ end
 
 AF_TooltipMixin.SetItem = AF_TooltipMixin.SetItemByID
 
-function AF_TooltipMixin:SetSpellByID(spellID)
+function AF_TooltipMixin:SetSpellByID(spellID, showIcon)
     self.spellID = spellID
     self.itemID = nil
+    self.showIcon = showIcon
 
     SetSpellByID(self, spellID)
 
-    local icon = GetSpellTexture(spellID)
-    if icon then
+    if showIcon then
+        local icon = GetSpellTexture(spellID) or AF.GetIcon("QuestionMark")
         if not self.icon then
             self:SetupIcon("TOPRIGHT", "TOPLEFT", -1, 0)
         end
         self.icon:SetTexture(icon)
+        self:ShowIcon()
+    else
+        self:HideIcon()
     end
 
     self:Show()
@@ -316,9 +340,9 @@ local function CreateTooltip(name)
     Mixin(tooltip, AF_BaseWidgetMixin)
     Mixin(tooltip, AF_TooltipMixin)
 
-    if AF.isRetail then
+    -- if AF.isRetail then
         tooltip:RegisterEvent("TOOLTIP_DATA_UPDATE", TOOLTIP_DATA_UPDATE)
-    end
+    -- end
 
     -- tooltip:SetScript("OnTooltipSetItem", function()
     --     -- color border with item quality color
@@ -328,7 +352,7 @@ local function CreateTooltip(name)
     tooltip:SetOnHide(tooltip.OnHide)
     tooltip:SetOnShow(tooltip.OnShow)
 
-    AF.AddToPixelUpdater(tooltip)
+    AF.AddToPixelUpdater_OnShow(tooltip)
 
     return tooltip
 end

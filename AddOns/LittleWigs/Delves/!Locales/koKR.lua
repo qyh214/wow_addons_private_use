@@ -2,18 +2,18 @@
 
 local L = BigWigs:NewBossLocale("Captain Nil'hitan", "koKR")
 if L then
-	--L.captain_nilhitan = "Captain Nil'hitan"
+	L.captain_nilhitan = "선장 닐히탄"
 end
 
 L = BigWigs:NewBossLocale("Portalmaster Halsan", "koKR")
 if L then
-	--L.portalmaster_halsan = "Portalmaster Halsan"
+	L.portalmaster_halsan = "차원문장인 할산"
 end
 
 L = BigWigs:NewBossLocale("Voidrider Challnax", "koKR")
 if L then
-	--L.voidripper = "Voidripper"
-	--L.voidrider_challnax= "Voidrider Challnax"
+	L.voidripper = "공허분쇄자"
+	L.voidrider_challnax= "공허기수 챌낙스"
 end
 
 -- Demolition Dome
@@ -49,6 +49,11 @@ end
 
 -- Excavation Site 9
 
+L = BigWigs:NewBossLocale("Beste Glatisant", "koKR")
+if L then
+	L.beste_glatisant = "베스테 글라티산트"
+end
+
 L = BigWigs:NewBossLocale("Craggle Fritzbrains", "koKR")
 if L then
 	L.craggle_fritzbrains = "크래글 프리츠브레인즈"
@@ -78,6 +83,11 @@ if L then
 end
 
 -- Kriegval's Rest
+
+L = BigWigs:NewBossLocale("Faceless One Kriegval's Rest", "koKR")
+if L then
+	L.faceless_one = "얼굴 없는 자"
+end
 
 L = BigWigs:NewBossLocale("Tomb-Raider Drywhisker", "koKR")
 if L then
@@ -230,14 +240,9 @@ end
 
 -- Voidrazor Sanctuary
 
-L = BigWigs:NewBossLocale("Nexus-Princess Ky'veza (Tier 8)", "koKR")
-if L then
-	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza (Tier 8)"
-end
-
 L = BigWigs:NewBossLocale("Nexus-Princess Ky'veza (Tier 11)", "koKR")
 if L then
-	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza (Tier 11)"
+	L.nexus_princess_kyveza = "연합공작 카이베자"
 end
 
 -- Zekvir's Lair
@@ -258,14 +263,15 @@ end
 
 L = BigWigs:NewBossLocale("Ethereal Trash", "koKR")
 if L then
-	--L.ethereal_trash = "Ethereal Trash"
+	L.ethereal_trash = "기록 침공"
 
-	--L.shadeye_observer = "Shadeye Observer"
-	--L.shadowguard_phasecutter = "Shadowguard Phasecutter"
-	--L.shadowguard_arcanotech = "Shadowguard Arcanotech"
-	--L.shadowguard_soulbreaker = "Shadowguard Soulbreaker"
-	--L.shadowguard_steelsoul = "Shadowguard Steelsoul"
-	--L.siphoned_drake = "Siphoned Drake"
+	L.shadeye_observer = "그늘눈 감시자"
+	L.shadowguard_phasecutter = "어둠수호병 위상절단자"
+	L.shadowguard_arcanotech = "어둠수호병 비전기술자"
+	L.shadowguard_soulbreaker = "어둠수호병 영혼파괴자"
+	L.shadowguard_steelsoul = "어둠수호병 영혼탈취자"
+	L.siphoned_drake = "흡수당한 비룡"
+	L.steelsoul_arcanoward = "강철영혼 비전수호물"
 end
 
 L = BigWigs:NewBossLocale("Fungarian Delve Trash", "koKR")
@@ -294,6 +300,7 @@ if L then
 	L.punchy_thug = "주먹패 폭력배"
 	L.flinging_flicker = "반짝임"
 	L.bomb_bot = "폭발로봇"
+	L.rad_rat = "끝내주쥐"
 end
 
 L = BigWigs:NewBossLocale("Kobold Delve Trash", "koKR")
@@ -320,17 +327,21 @@ end
 
 L = BigWigs:NewBossLocale("Ky'veza Rares", "koKR")
 if L then
-	--L.rares = "Ky'veza Rares"
+	L.rares = "카이베자"
 
-	--L.pactsworn_fraycaller = "Pactsworn Fraycaller"
-	--L.pactsworn_dustblade = "Pactsworn Dustblade"
-	--L.pactsworn_sandreaver = "Pactsworn Sandreaver"
-	--L.pactsworn_arcanist = "Pactsworn Arcanist"
-	--L.pactsworn_wildcaller = "Pactsworn Wildcaller"
-	--L.invasive_phasecrawler = "Invasive Phasecrawler"
-	--L.drude = "D'rude"
-	--L.great_devourer = "Great Devourer"
-	--L.nexus_princess_kyveza = "Nexus-Princess Ky'veza (Random Spawn)"
+	L.treasure_wraith = "보물의 망령"
+	L.invasive_phasecrawler = "침략하는 위상포복자"
+	L.drude = "드루드"
+	L.great_devourer = "위대한 포식자"
+	L.mercenary_acquisitionist = "용병 수집가"
+	L.pactsworn_fraycaller = "서약혈맹 전투소환사"
+	L.pactsworn_dustblade = "서약혈맹 먼지칼날"
+	L.pactsworn_sandreaver = "서약혈맹 모래약탈자"
+	L.pactsworn_arcanist = "서약혈맹 비전술사"
+	L.pactsworn_wildcaller = "서약혈맹 야생소환사"
+	L.nexus_princess_kyveza = "연합공작 카이베자 (랜덤 생성)"
+	L.zekvir = "제크비르"
+	L.the_underpin = "대지주"
 end
 
 L = BigWigs:NewBossLocale("Nerubian Delve Trash", "koKR")
@@ -374,22 +385,4 @@ if L then
 	L.deepwalker_guardian = "심연방랑자 수호자"
 	L.crazed_abomination = "광기 어린 흉물"
 	L.web_marauder = "거미줄 약탈자"
-end
-
-L = BigWigs:NewBossLocale("Underpin Rares", "koKR")
-if L then
-	L.rares = "대지주"
-
-	L.treasure_wraith = "보물의 망령"
-	L.treasure_crab = "보물 게"
-	L.hovering_menace = "부유하는 위협"
-	L.malfunctioning_pummeler = "오작동하는 난타기"
-	L.underpins_adoring_fan = "대지주를 흠모하는 추종자"
-	L.underpins_well_connected_friend = "대지주의 마당발 친구"
-	L.underpins_explosive_ally = "대지주의 폭발적인 아군"
-	L.underpins_bodyguards_intern = "대지주의 경호원 수습생"
-	L.aggressively_lost_hobgoblin = "난폭한 길 잃은 밥통고블린"
-	L.the_underpin = "대지주 (무작위 생성)"
-
-	L.underpin_retreat_trigger = "왜 인간들은 늘 완벽하게 합법적으로 내 소유인 땅에서 노는 거냐고!"
 end

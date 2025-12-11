@@ -23,6 +23,7 @@ end
 --
 
 local defendersAlive = 5
+local defenderBuffThrottle = {}
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -121,6 +122,7 @@ end
 
 function mod:OnBossEnable()
 	defendersAlive = 5
+	defenderBuffThrottle = {}
 
 	self:RegisterEvent("PLAYER_TARGET_CHANGED")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
@@ -199,13 +201,14 @@ do
 		if guid ~= prevGUID then
 			local npcId = self:MobId(guid)
 			if npcId == 15264 or npcId == 15277 or npcId == 234830 then -- Anubisath Sentinel, Anubisath Defender, Anubisath Defender (Season of Discovery)
-				if self:Vanilla() and not self:UnitDebuff("target", 2855) then
+				if self:Vanilla() and not self:GetPlayerAura(2855, "target") then
 					if not printed then
 						printed = true
 						BigWigs:Print(L.detect_magic_warning)
 					end
-					if GetTime() - prevMsg > 40 and self:GetHealth("target") > 5 then
-						prevMsg = GetTime()
+					local t = GetTime()
+					if t - prevMsg > 40 and self:GetHealth("target") > 5 then
+						prevMsg = t
 						local icon = self:GetIconTexture(self:GetIcon("target"))
 						if icon then
 							self:Message("target_buffs", "red", icon.. L.detect_magic_missing_message, 2855)
@@ -217,7 +220,7 @@ do
 				end
 				local total = {}
 				for buffId, message in next, buffList do
-					if self:UnitBuff("target", buffId) then
+					if self:GetPlayerAura(buffId, "target") then
 						prevGUID = guid
 						total[#total+1] = message
 					end
@@ -226,9 +229,14 @@ do
 					local msg = self:TableToString(total, #total)
 					local icon = self:GetIconTexture(self:GetIcon("target"))
 					if icon then
-						self:Message("target_buffs", "yellow", icon.. L.target_buffs_message:format(msg), false)
+						msg = icon.. L.target_buffs_message:format(msg)
 					else
-						self:Message("target_buffs", "yellow", L.target_buffs_message:format(msg), false)
+						msg = L.target_buffs_message:format(msg)
+					end
+					local t = GetTime()
+					if not defenderBuffThrottle[guid] or msg ~= defenderBuffThrottle[guid][1] or (t - defenderBuffThrottle[guid][2]) > 4 then
+						defenderBuffThrottle[guid] = {msg, t}
+						self:Message("target_buffs", "yellow", msg, false)
 					end
 				end
 			end

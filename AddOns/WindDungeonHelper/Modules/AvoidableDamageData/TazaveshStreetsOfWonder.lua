@@ -38,11 +38,6 @@ local mistakes = {
 		spell = 349999,
 	},
 	{
-		-- 貪食饗宴 (阿克魯斯)
-		type = AD.MISTAKE.SPELL_DAMAGE,
-		spell = 350013,
-	},
-	{
 		-- 腐蝕靈魄 (亞奇力特)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 350045,
@@ -146,6 +141,6 @@ local mistakes = {
 	},
 }
 
-local mapIds = { 1989, 1990, 1991, 1992 }
+local mapIds = { 1989, 1990, 1991, 1992, 1995, 1997, 1996, 1993 }
 
 AD:AddData("Tazavesh: Streets of Wonder", mistakes, mapIds)

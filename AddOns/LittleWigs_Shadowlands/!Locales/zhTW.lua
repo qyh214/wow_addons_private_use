@@ -28,6 +28,11 @@ end
 
 -- Halls of Atonement
 
+L = BigWigs:NewBossLocale("High Adjudicator Aleez", "zhTW")
+if L then
+	L.empty_anima_vessel = "空的靈魄容器"
+end
+
 L = BigWigs:NewBossLocale("Halls of Atonement Trash", "zhTW")
 if L then
 	L.depraved_houndmaster = "墮落的馴犬者"
@@ -162,7 +167,8 @@ end
 
 L = BigWigs:NewBossLocale("Myza's Oasis", "zhTW")
 if L then
-	L.add_wave_killed = "擊退保安 (%d/%d)"
+	--L.notes = "Notes"
+	--L.notes_desc = "Show a message when the notes are available. Hit the notes with your instrument's ability to gain 'Jazzy'.\n\n|T237554:16|tJazzy\n{348567}"
 end
 
 L = BigWigs:NewBossLocale("So'leah", "zhTW")
@@ -174,9 +180,20 @@ L = BigWigs:NewBossLocale("Tazavesh Trash", "zhTW")
 if L then
 	L.zophex_warmup_trigger = "放下...所有...違禁品..."
 	L.menagerie_warmup_trigger = "接下來，是你們千呼萬喚的東西！據說是被惡魔詛咒的湮滅之鋒！"
+	--L.menagerie_warmup_trigger2 = "Cartel Xy has a profitable venture. Hopefully this inclines them to aid our own."
+	--L.mailroom_door_trigger = "A friend here may be of help in acquiring Zo's signature."
+	--L.vendor_active_trigger = "Myza's Oasis. The most intoxicating establishment in Tazavesh. Gaining the owner's favor will secure Cartel Au's signature."
 	L.soazmi_warmup_trigger = "索利亞，抱歉打擾啦。看來我們來的時機不太對啊。"
 	L.portal_authority = "傳送門管理局隧道法師"
 	L.custom_on_portal_autotalk_desc = "與傳送門NPC對話時立即打開傳送門并使你可以在副本內傳送。"
+	--L.mailroom_door_desc = "Show a bar indicating when the door to the mailroom will open."
+	--L.vendor_active = "Vendor active"
+	--L.vendor_active_desc = "Show a bar indicating when the vendor for the Trading Game will be active."
+	--L.vendor_autopurchase = "Auto-purchase trading game item"
+	--L.vendor_autopurchase_desc = "Automatically purchase the initial trading game item from the vendor."
+	--L.vendor_autopurchase_message = "Purchased %s"
+	--L.tradeable_goods = "Tradeable Goods"
+	--L.tradeable_goods_desc = "Show a message indicating when tradeable goods have been picked up."
 	L.trading_game = "交易游戲"
 	L.trading_game_desc = "在交易游戲期間使用正確的密碼發出警報。"
 	L.custom_on_trading_game_autotalk_desc = "交易游戲結束後，立即選擇正確的密碼。"
@@ -201,6 +218,7 @@ if L then
 	L.tracker_zokorss = "『追蹤者』佐寇司"
 	L.ancient_core_hound = "上古熔核犬"
 	L.enraged_direhorn = "暴怒的恐角龍"
+	L.frenzied_nightclaw = "狂亂的夜爪豹"
 	L.cartel_skulker = "集團潛藏者"
 	L.cartel_wiseguy = "集團幫派"
 	L.cartel_muscle = "集團警衛"
@@ -208,13 +226,16 @@ if L then
 	L.defective_sorter = "故障的分類機"
 	L.overloaded_mailemental = "超載的郵件元素"
 	L.post_worker = "郵務工作員"
+	L.smuggled_creature = "走私的生物"
 	L.bazaar_overseer = "市集監督者"
 	L.market_peacekeeper = "市場保安官"
 	L.veteran_sparkcaster = "老練的火花施放者"
 	L.commerce_enforcer = "貿易執法者"
 	L.commander_zofar = "指揮官佐發"
 
-	L.tazavesh_soleahs_gambit = "塔札維許：索利亞的險招"
+	--L.hylbrande_warmup_trigger = "See how your wisdom fares against the might of the titans."
+	--L.portal_open = "Portal opens"
+	--L.portal_open_desc = "Show a bar indicating when the portal to the next area will open."
 	L.murkbrine_scalebinder = "暗洋縛鱗者"
 	L.murkbrine_fishmancer = "暗洋魚法師"
 	L.murkbrine_shellcrusher = "暗洋碎殼者"

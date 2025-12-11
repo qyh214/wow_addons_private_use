@@ -5,159 +5,82 @@ do
     local L = languageTable
 
 ------------------------------------------------------------
---[[Translation missing --]]
-L["ADDON_MENU_ADDONS_TITLE"] = "Mythic+ Scoreboard"
---[[Translation missing --]]
-L["ADDON_MENU_ADDONS_TOOLTIP_LEFT_CLICK"] = "left click"
---[[Translation missing --]]
-L["ADDON_MENU_ADDONS_TOOLTIP_OPEN_OPTIONS"] = "open options"
---[[Translation missing --]]
-L["ADDON_MENU_ADDONS_TOOLTIP_OPEN_SCOREBOARD"] = "open scoreboard"
---[[Translation missing --]]
-L["ADDON_MENU_ADDONS_TOOLTIP_RIGHT_CLICK"] = "right click"
---[[Translation missing --]]
-L["COMMAND_CLEAR_RUN_HISTORY"] = "Clear recent runs history"
---[[Translation missing --]]
-L["COMMAND_CLEAR_RUN_HISTORY_DONE"] = "Cleared the history of %s run(s)"
---[[Translation missing --]]
-L["COMMAND_HELP"] = "Shows this list of commands"
---[[Translation missing --]]
-L["COMMAND_HELP_PRINT"] = "available commands"
---[[Translation missing --]]
-L["COMMAND_OPEN_LOGS"] = "Show recent logs"
---[[Translation missing --]]
-L["COMMAND_OPEN_OPTIONS"] = "Open the options"
---[[Translation missing --]]
-L["COMMAND_OPEN_OPTIONS_PRINT"] = "Opening Details! Mythic+ scoreboard options, for more information use %s"
---[[Translation missing --]]
-L["COMMAND_OPEN_SCOREBOARD"] = "Open the scoreboard"
---[[Translation missing --]]
-L["COMMAND_SHOW_VERSION"] = "Show the version in a popup"
---[[Translation missing --]]
-L["OPTIONS_AUTO_OPEN_CHOICE_LOOT_CLOSED"] = "When done looting"
---[[Translation missing --]]
-L["OPTIONS_AUTO_OPEN_CHOICE_OVERALL_READY"] = "When the run ends"
---[[Translation missing --]]
-L["OPTIONS_AUTO_OPEN_DESC"] = "Do you want to automatically open the scoreboard when done looting the chest, or when the run itself finishes?"
---[[Translation missing --]]
-L["OPTIONS_AUTO_OPEN_LABEL"] = "Automatically open scoreboard"
---[[Translation missing --]]
-L["OPTIONS_DEBUG"] = "Debug"
---[[Translation missing --]]
-L["OPTIONS_DEBUG_STORE_DEBUG_INFO_DESC"] = "Enabling this option will save more information when reloading for debugging purposes. It is recommended to keep this option off unless you are actually debugging"
---[[Translation missing --]]
-L["OPTIONS_DEBUG_STORE_DEBUG_INFO_LABEL"] = "Save debug info"
---[[Translation missing --]]
-L["OPTIONS_DEBUG_STORE_DEV_MODE_DESC"] = "Enables specific information and features used when developing this addon."
---[[Translation missing --]]
-L["OPTIONS_DEBUG_STORE_DEV_MODE_LABEL"] = "Developer Mode"
---[[Translation missing --]]
-L["OPTIONS_GENERAL_OPTIONS"] = "General Options"
---[[Translation missing --]]
-L["OPTIONS_HISTORY_RUNS_TO_KEEP_AVERAGE_PER_RUN"] = "Average per run"
---[[Translation missing --]]
-L["OPTIONS_HISTORY_RUNS_TO_KEEP_DESC"] = "The amount of runs to save. Existing history larger than this amount will be removed upon next reload or login."
---[[Translation missing --]]
-L["OPTIONS_HISTORY_RUNS_TO_KEEP_LABEL"] = "Runs to keep"
---[[Translation missing --]]
-L["OPTIONS_HISTORY_RUNS_TO_KEEP_SAVED_RUNS"] = "Saved runs"
---[[Translation missing --]]
-L["OPTIONS_HISTORY_RUNS_TO_KEEP_TOTAL_STORAGE"] = "Total storage"
---[[Translation missing --]]
-L["OPTIONS_OPEN_DELAY_DESC"] = "The amount of seconds after which the scoreboard will appear according to the setting above"
---[[Translation missing --]]
-L["OPTIONS_OPEN_DELAY_LABEL"] = "Scoreboard open delay"
---[[Translation missing --]]
-L["OPTIONS_SAVING"] = "Saving"
---[[Translation missing --]]
-L["OPTIONS_SCOREBOARD_SCALE_DESC"] = "Increase or decrease the scale of the scoreboard"
---[[Translation missing --]]
-L["OPTIONS_SCOREBOARD_SCALE_LABEL"] = "Scoreboard scale"
---[[Translation missing --]]
-L["OPTIONS_SECTION_TIMELINE"] = "Timeline"
---[[Translation missing --]]
-L["OPTIONS_SECTION_VISIBLE_COLUMNS"] = "Visible columns"
---[[Translation missing --]]
-L["OPTIONS_SHOW_CC_CAST_TOOLTIP_PERCENTAGE_DESC"] = "The tooltip will also show the percentage of each crowd control cast"
---[[Translation missing --]]
-L["OPTIONS_SHOW_CC_CAST_TOOLTIP_PERCENTAGE_LABEL"] = "Show % for CC casts"
---[[Translation missing --]]
-L["OPTIONS_SHOW_INTERRUPT_TOOLTIP_PERCENTAGE_DESC"] = "The tooltip will also show the percentage of each section"
---[[Translation missing --]]
-L["OPTIONS_SHOW_INTERRUPT_TOOLTIP_PERCENTAGE_LABEL"] = "Show % for interrupts"
---[[Translation missing --]]
-L["OPTIONS_SHOW_MINIMAP_ICON_DESC"] = "The minimap icon lets you quickly open your scoreboard whenever you want"
---[[Translation missing --]]
-L["OPTIONS_SHOW_MINIMAP_ICON_LABEL"] = "Show minimap icon"
---[[Translation missing --]]
-L["OPTIONS_SHOW_REMAINING_TIME_DESC"] = "When a key is timed, an extra section will be added showing the time still remaining"
---[[Translation missing --]]
-L["OPTIONS_SHOW_REMAINING_TIME_LABEL"] = "Show remaining time"
---[[Translation missing --]]
-L["OPTIONS_SHOW_TIME_SECTIONS_DESC"] = "Shows time labels for sections on the timeline as a guide"
---[[Translation missing --]]
-L["OPTIONS_SHOW_TIME_SECTIONS_LABEL"] = "Show time labels for sections"
---[[Translation missing --]]
-L["OPTIONS_SHOW_TOOLTIP_SUMMARY_DESC"] = "When hovering over a column in the scoreboard it will show a summary of the breakdown"
---[[Translation missing --]]
-L["OPTIONS_SHOW_TOOLTIP_SUMMARY_LABEL"] = "Summary in tooltip"
---[[Translation missing --]]
-L["OPTIONS_TOOLTIPS"] = "Tooltips"
---[[Translation missing --]]
-L["OPTIONS_TRANSLIT_DESC"] = "Translit Cyrillic characters to the latin alphabet"
---[[Translation missing --]]
-L["OPTIONS_TRANSLIT_LABEL"] = "Translit"
---[[Translation missing --]]
-L["OPTIONS_WINDOW_TITLE"] = "Details! Mythic+ Options"
---[[Translation missing --]]
-L["SCOREBOARD_NO_SCORE_AVAILABLE"] = "There is currently no score on the board"
---[[Translation missing --]]
-L["SCOREBOARD_NOT_IN_COMBAT_LABEL"] = "Not in combat"
---[[Translation missing --]]
-L["SCOREBOARD_RELOADED_TOOLTIP"] = "This run's data is incomplete, and possibly incorrect because of a reload or relog mid-run"
---[[Translation missing --]]
-L["SCOREBOARD_RELOADED_WARNING"] = "Incomplete Data"
---[[Translation missing --]]
-L["SCOREBOARD_TITLE_CC_CASTS"] = "CC Casts"
---[[Translation missing --]]
-L["SCOREBOARD_TITLE_DAMAGE_TAKEN"] = "Damage Taken"
---[[Translation missing --]]
-L["SCOREBOARD_TITLE_DEATHS"] = "Deaths"
---[[Translation missing --]]
-L["SCOREBOARD_TITLE_DISPELS"] = "Dispels"
---[[Translation missing --]]
+L["ADDON_MENU_ADDONS_TITLE"] = "Tableau des scores Mythique+"
+L["ADDON_MENU_ADDONS_TOOLTIP_LEFT_CLICK"] = "clic gauche"
+L["ADDON_MENU_ADDONS_TOOLTIP_OPEN_OPTIONS"] = "ouvrir les options"
+L["ADDON_MENU_ADDONS_TOOLTIP_OPEN_SCOREBOARD"] = "ouvrir le tableau des scores"
+L["ADDON_MENU_ADDONS_TOOLTIP_RIGHT_CLICK"] = "clic droit"
+L["COMMAND_CLEAR_RUN_HISTORY"] = "Effacer l'historique des clés récentes"
+L["COMMAND_CLEAR_RUN_HISTORY_DONE"] = "Effacer l'historique de %s clé(s)"
+L["COMMAND_HELP"] = "Affiche cette liste de commandes"
+L["COMMAND_HELP_PRINT"] = "commandes disponibles"
+L["COMMAND_OPEN_LOGS"] = "Afficher les journaux récents"
+L["COMMAND_OPEN_OPTIONS"] = "Ouvrir les options"
+L["COMMAND_OPEN_OPTIONS_PRINT"] = "Ouvre les options du tableau des scores de Details! Mythic+, pour plus d'informations utilisez %s."
+L["COMMAND_OPEN_SCOREBOARD"] = "Ouvrir le tableau des scores"
+L["COMMAND_SHOW_VERSION"] = "Afficher la version dans une fenêtre contextuelle"
+L["OPTIONS_AUTO_OPEN_CHOICE_LOOT_CLOSED"] = "Une fois le pillage terminé"
+L["OPTIONS_AUTO_OPEN_CHOICE_OVERALL_READY"] = "Une fois la clé terminée"
+L["OPTIONS_AUTO_OPEN_DESC"] = "Souhaitez-vous ouvrir automatiquement le tableau des scores lorsque vous avez terminé de piller le coffre ou lorsque la clé se termine ?"
+L["OPTIONS_AUTO_OPEN_LABEL"] = "Ouvrir automatiquement le tableau des scores"
+L["OPTIONS_DEBUG"] = "Débogage"
+L["OPTIONS_DEBUG_STORE_DEBUG_INFO_DESC"] = "Activer cette option permettra d'enregistrer davantage d'informations lors du rechargement à des fins de débogage. Il est recommandé de la désactiver, sauf en cas de débogage."
+L["OPTIONS_DEBUG_STORE_DEBUG_INFO_LABEL"] = "Enregistrer les informations de débogage"
+L["OPTIONS_DEBUG_STORE_DEV_MODE_DESC"] = "Active les informations et fonctionnalités spécifiques utilisées lors du développement de cet addon."
+L["OPTIONS_DEBUG_STORE_DEV_MODE_LABEL"] = "Mode développeur"
+L["OPTIONS_GENERAL_OPTIONS"] = "Options générales"
+L["OPTIONS_HISTORY_RUNS_TO_KEEP_AVERAGE_PER_RUN"] = "Moyenne par clé"
+L["OPTIONS_HISTORY_RUNS_TO_KEEP_DESC"] = "Nombre de clé à sauvegarder. Tout historique supérieur à ce nombre sera supprimé lors du prochain rechargement ou de la prochaine connexion."
+L["OPTIONS_HISTORY_RUNS_TO_KEEP_LABEL"] = "Clés à enregistrer"
+L["OPTIONS_HISTORY_RUNS_TO_KEEP_SAVED_RUNS"] = "Clés sauvegarder"
+L["OPTIONS_HISTORY_RUNS_TO_KEEP_TOTAL_STORAGE"] = "Stockage total"
+L["OPTIONS_OPEN_DELAY_DESC"] = "Le nombre de secondes après lesquelles le tableau de bord apparaîtra en fonction du paramètre ci-dessus"
+L["OPTIONS_OPEN_DELAY_LABEL"] = "Retard d'ouverture du tableau des scores"
+L["OPTIONS_SAVING"] = "Sauvegarde"
+L["OPTIONS_SCOREBOARD_SCALE_DESC"] = "Augmenter ou diminuer l'échelle du tableau des scores"
+L["OPTIONS_SCOREBOARD_SCALE_LABEL"] = "Échelle du tableau des scores"
+L["OPTIONS_SECTION_TIMELINE"] = "Chronologie"
+L["OPTIONS_SECTION_VISIBLE_COLUMNS"] = "Colonnes visibles"
+L["OPTIONS_SHOW_CC_CAST_TOOLTIP_PERCENTAGE_DESC"] = "L'infobulle affichera également le pourcentage de chaque contrôle de foule lancé"
+L["OPTIONS_SHOW_CC_CAST_TOOLTIP_PERCENTAGE_LABEL"] = "Afficher le % de CC lancés"
+L["OPTIONS_SHOW_INTERRUPT_TOOLTIP_PERCENTAGE_DESC"] = "L'infobulle affichera également le pourcentage de chaque section"
+L["OPTIONS_SHOW_INTERRUPT_TOOLTIP_PERCENTAGE_LABEL"] = "Afficher le % des interruptions"
+L["OPTIONS_SHOW_MINIMAP_ICON_DESC"] = "L'icône de la mini-carte vous permet d'ouvrir rapidement votre tableau des scores quand vous le souhaitez"
+L["OPTIONS_SHOW_MINIMAP_ICON_LABEL"] = "Afficher l'icône de la mini-carte"
+L["OPTIONS_SHOW_REMAINING_TIME_DESC"] = "Lorsqu'une clé est chronométrée, une section supplémentaire sera ajoutée indiquant le temps restant"
+L["OPTIONS_SHOW_REMAINING_TIME_LABEL"] = "Afficher le temps restant"
+L["OPTIONS_SHOW_TIME_SECTIONS_DESC"] = "Affiche les étiquettes temporelles des sections de la chronologie à titre indicatif"
+L["OPTIONS_SHOW_TIME_SECTIONS_LABEL"] = "Afficher les étiquettes de temps pour les sections"
+L["OPTIONS_SHOW_TOOLTIP_SUMMARY_DESC"] = "Lorsque vous survolez une colonne du tableau des scores, un résumé de la répartition s'affiche."
+L["OPTIONS_SHOW_TOOLTIP_SUMMARY_LABEL"] = "Résumé dans l'infobulle"
+L["OPTIONS_TOOLTIPS"] = "Infobulles"
+L["OPTIONS_TRANSLIT_DESC"] = "Translittération des caractères cyrilliques vers l'alphabet latin"
+L["OPTIONS_TRANSLIT_LABEL"] = "Translittération"
+L["OPTIONS_WINDOW_TITLE"] = "Options de Details! Mythic+"
+L["SCOREBOARD_NO_SCORE_AVAILABLE"] = "Il n'y a actuellement aucun score sur le tableau"
+L["SCOREBOARD_NOT_IN_COMBAT_LABEL"] = "Pas en combat"
+L["SCOREBOARD_RELOADED_TOOLTIP"] = "Les données de cette clé sont incomplètes et peut-être incorrectes en raison d'un rechargement ou d'une reconnexion en milieu de clé"
+L["SCOREBOARD_RELOADED_WARNING"] = "Données incomplètes"
+L["SCOREBOARD_TITLE_CC_CASTS"] = "CC Lancés"
+L["SCOREBOARD_TITLE_DAMAGE_TAKEN"] = "Dégâts subis"
+L["SCOREBOARD_TITLE_DEATHS"] = "Mort(s)"
+L["SCOREBOARD_TITLE_DISPELS"] = "Dissipation(s)"
 L["SCOREBOARD_TITLE_DPS"] = "DPS"
---[[Translation missing --]]
 L["SCOREBOARD_TITLE_HPS"] = "HPS"
---[[Translation missing --]]
-L["SCOREBOARD_TITLE_INTERRUPTS"] = "Interrupts"
---[[Translation missing --]]
-L["SCOREBOARD_TITLE_KEYSTONE"] = "Keystone"
---[[Translation missing --]]
-L["SCOREBOARD_TITLE_LOOT"] = "Loot"
---[[Translation missing --]]
-L["SCOREBOARD_TITLE_PLAYER_NAME"] = "Player Name"
---[[Translation missing --]]
-L["SCOREBOARD_TITLE_SCORE"] = "M+ Score"
---[[Translation missing --]]
-L["SCOREBOARD_TOOLTIP_CC_CAST_HEADER"] = "Amount"
---[[Translation missing --]]
-L["SCOREBOARD_TOOLTIP_DAMAGE_DONE_HEADER"] = "Highest"
---[[Translation missing --]]
-L["SCOREBOARD_TOOLTIP_DAMAGE_TAKEN_HEADER"] = "Highest"
---[[Translation missing --]]
-L["SCOREBOARD_TOOLTIP_HEALING_DONE_HEADER"] = "Highest"
---[[Translation missing --]]
-L["SCOREBOARD_TOOLTIP_INTERRUPT_MISSED_LABEL"] = "Missed"
---[[Translation missing --]]
-L["SCOREBOARD_TOOLTIP_INTERRUPT_OVERLAP_LABEL"] = "Overlap"
---[[Translation missing --]]
-L["SCOREBOARD_TOOLTIP_INTERRUPT_SUCCESS_LABEL"] = "Success"
---[[Translation missing --]]
-L["SCOREBOARD_TOOLTIP_INTERRUPTS_HEADER"] = "Amount"
---[[Translation missing --]]
-L["SCOREBOARD_TOOLTIP_OPEN_BREAKDOWN"] = "Click to open breakdown"
---[[Translation missing --]]
-L["SCOREBOARD_UNKNOWN_DUNGEON_LABEL"] = "Unknown Dungeon"
+L["SCOREBOARD_TITLE_INTERRUPTS"] = "Interruptions"
+L["SCOREBOARD_TITLE_KEYSTONE"] = "Clé"
+L["SCOREBOARD_TITLE_LOOT"] = "Butin"
+L["SCOREBOARD_TITLE_PLAYER_NAME"] = "Nom du joueur"
+L["SCOREBOARD_TITLE_SCORE"] = "Score M+"
+L["SCOREBOARD_TOOLTIP_CC_CAST_HEADER"] = "Montant"
+L["SCOREBOARD_TOOLTIP_DAMAGE_DONE_HEADER"] = "Le plus élevé"
+L["SCOREBOARD_TOOLTIP_DAMAGE_TAKEN_HEADER"] = "Le plus élevé"
+L["SCOREBOARD_TOOLTIP_HEALING_DONE_HEADER"] = "Le plus élevé"
+L["SCOREBOARD_TOOLTIP_INTERRUPT_MISSED_LABEL"] = "Manqué"
+L["SCOREBOARD_TOOLTIP_INTERRUPT_OVERLAP_LABEL"] = "En trop"
+L["SCOREBOARD_TOOLTIP_INTERRUPT_SUCCESS_LABEL"] = "Réussi"
+L["SCOREBOARD_TOOLTIP_INTERRUPTS_HEADER"] = "Total"
+L["SCOREBOARD_TOOLTIP_OPEN_BREAKDOWN"] = "Cliquez pour ouvrir le détail"
+L["SCOREBOARD_UNKNOWN_DUNGEON_LABEL"] = "Donjon inconnu"
 
 end

@@ -464,8 +464,8 @@ function module:OnLogin()
 	end)
 
 	hooksecurefunc("FCFTab_UpdateColors", module.UpdateTabColors)
-	hooksecurefunc("FloatingChatFrame_OnEvent", module.UpdateTabEventColors)
-	hooksecurefunc("ChatFrame_MessageEventHandler", module.PlayWhisperSound)
+	hooksecurefunc("FloatingChatFrameManager_OnEvent", module.UpdateTabEventColors)
+	hooksecurefunc(ChatFrameUtil, "ProcessMessageEventFilters", module.PlayWhisperSound)
 	hooksecurefunc("FCF_MinimizeFrame", module.HandleMinimizedFrame)
 
 	-- Default
@@ -483,7 +483,7 @@ function module:OnLogin()
 	module:ChatCopy()
 	module:UrlCopy()
 	module:WhisperInvite()
-	module:ToggleLanguageFilter()
+	--module:ToggleLanguageFilter()
 
 	-- Lock chatframe
 	if C.db["Chat"]["Lock"] then

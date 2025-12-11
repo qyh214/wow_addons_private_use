@@ -50,7 +50,7 @@ local GetSubZoneText = GetSubZoneText
 local TalkingHeadLineInfo = C_TalkingHead and C_TalkingHead.GetCurrentLineInfo
 local GetNextToastToDisplay = C_EventToastManager and C_EventToastManager.GetNextToastToDisplay
 local RemoveCurrentToast = C_EventToastManager and C_EventToastManager.RemoveCurrentToast
-local IsEncounterInProgress = IsEncounterInProgress
+local IsEncounterInProgress = C_InstanceEncounter and C_InstanceEncounter.IsEncounterInProgress or IsEncounterInProgress -- XXX 12.0 compat
 local SetCVar = C_CVar.SetCVar
 local GetCVar = C_CVar.GetCVar
 local GetTime = GetTime
@@ -72,7 +72,7 @@ plugin.pluginOptions = {
 	desc = L.bossBlockDesc,
 	type = "group",
 	childGroups = "tab",
-	order = 10,
+	order = 13,
 	get = function(info)
 		return plugin.db.profile[info[#info]]
 	end,
@@ -329,17 +329,18 @@ do
 			end
 		end
 
-		for i = 1, #db.blockTalkingHeads do
+		for i = 1, #plugin.defaultDB.blockTalkingHeads do
 			local n = db.blockTalkingHeads[i]
 			if type(n) ~= "boolean" then
-				db.blockTalkingHeads = plugin.defaultDB.blockTalkingHeads
-				break -- If 1 entry is bad, reset the whole table
+				db.blockTalkingHeads[i] = plugin.defaultDB.blockTalkingHeads[i]
 			end
 		end
 		for i = 1, 3 do
 			local n = db.toastsColor[i]
 			if type(n) ~= "number" or n < 0 or n > 1 then
-				db.toastsColor = plugin.defaultDB.toastsColor
+				db.toastsColor[1] = plugin.defaultDB.toastsColor[1]
+				db.toastsColor[2] = plugin.defaultDB.toastsColor[2]
+				db.toastsColor[3] = plugin.defaultDB.toastsColor[3]
 				break -- If 1 entry is bad, reset the whole table
 			end
 		end
@@ -519,10 +520,17 @@ do
 				elseif tbl.eventToastID == 156 or tbl.eventToastID == 200 then -- Talent point, Hero talent point
 					-- tbl.title is "New Talent Point Available" / "New Hero Talent Point Available"
 					-- tbl.subtitle is "Your power increased!"
-					if levelUpTbl then -- We merge this into the level up toast
-						levelUpTbl.subtitle = CL.other:format((levelUpTbl.title):upper(), tbl.title) -- Combine, without uppercase
+					if levelUpTbl then -- We merge this into the level up toast...
+						levelUpTbl.subtitle = CL.other:format(levelUpTbl.title, tbl.title) -- Combine, without uppercase
 						levelUpTbl.title = nil
 						levelUpTbl.iconFileID = tbl.iconFileID
+					else -- ...unless there was no level up toast
+						tbl.bwDuration = 4.5
+						self:SimpleTimer(function()
+							tbl.subtitle = CL.other:format(L.playerLevel:format(UnitLevel("player") or 0), tbl.title) -- Combine, without uppercase
+							tbl.title = nil
+							printMessage(self, tbl)
+						end, 0.5) -- Delay to be sure that UnitLevel is accurate
 					end
 				elseif tbl.eventToastID == 3 then -- New ability
 					-- tbl.title is "Imprison"
@@ -592,7 +600,7 @@ do
 					end
 					tbl.title = nil
 					printMessage(self, tbl)
-				elseif tbl.eventToastID == 288 then -- Discovery: Waystone
+				elseif tbl.eventToastID == 288 or tbl.eventToastID == 290 then -- Discovery: Waystone
 					-- tbl.title is "Discovery", tbl.subtitle is "Waystone"
 					tbl.title = nil
 					tbl.iconFileID = tbl.iconFileID or 3084684 -- inv_hearthstone_aether
@@ -604,6 +612,18 @@ do
 						tbl.subtitle = CL.other:format(L.newRespawnPoint, latestKill[3]) -- New Respawn Point: Boss Name
 						self:SimpleTimer(function() printMessage(self, tbl) end, 1) -- Delay a little after the boss kill
 					end
+				elseif tbl.eventToastID == 339 then -- A Flickergate Has Manifested Within
+					tbl.subtitle = tbl.title
+					tbl.title = nil
+					tbl.bwDuration = 3
+					printMessage(self, tbl)
+				elseif tbl.eventToastID == 337 or tbl.eventToastID == 338 then -- Flickering Spoils
+					-- 337 tbl.title is "Flickering Spoils Will Manifest Upon Delve Completion"
+					-- 338 tbl.title is "Shadowed Flickering Spoils Will Manifest Upon Delve Completion"
+					tbl.subtitle = tbl.title
+					tbl.title = nil
+					tbl.bwDuration = 3
+					printMessage(self, tbl)
 				else -- Something we don't support, pass to Blizz to process
 					return
 				end
@@ -633,117 +653,147 @@ do
 end
 
 do
-	local unregisteredEvents = {}
-	local function KillEvent(frame, event)
-		-- The user might be running an addon that permanently unregisters one of these events.
-		-- Let's check that before we go re-registering that event and screwing with that addon.
-		if bbFrame.IsEventRegistered(frame, event) then
-			bbFrame.UnregisterEvent(frame, event)
-			unregisteredEvents[event] = true
+	local KillEvent, RestoreEvent
+	do
+		local unregisteredEvents = {}
+		function KillEvent(frame, event)
+			-- The user might be running an addon that permanently unregisters one of these events.
+			-- Let's check that before we go re-registering that event and screwing with that addon.
+			if bbFrame.IsEventRegistered(frame, event) then
+				bbFrame.UnregisterEvent(frame, event)
+				unregisteredEvents[event] = true
+			end
 		end
-	end
-	local function RestoreEvent(frame, event)
-		if unregisteredEvents[event] then
-			bbFrame.RegisterEvent(frame, event)
-			unregisteredEvents[event] = nil
+		function RestoreEvent(frame, event)
+			if unregisteredEvents[event] then
+				bbFrame.RegisterEvent(frame, event)
+				unregisteredEvents[event] = nil
+			end
 		end
-	end
-
-	local function EditEmotesOnPTR(event, msg, playerName, _, ...)
-		msg = "BigWigs PTR [E]: ".. msg
-		RaidBossEmoteFrame_OnEvent(RaidBossEmoteFrame, event, msg, playerName, 3, ...) -- We don't need emotes lasting 10 sec, reduce to 3
-	end
-
-	local function EditWhispersOnPTR(event, msg, playerName, _, ...)
-		msg = "BigWigs PTR [W]: ".. msg
-		RaidBossEmoteFrame_OnEvent(RaidBossEmoteFrame, event, msg, playerName, 3, ...)
 	end
 
 	local restoreObjectiveTracker = nil
-	function plugin:OnEngage(_, module)
-		if not module or (not module:GetJournalID() and not module:GetAllowWin()) or module.worldBoss then return end
-		if next(activatedModules) then
-			activatedModules[module] = true
-			return
-		else
-			activatedModules[module] = true
+	do
+		local function EditEmotesOnPTR(event, msg, playerName, _, ...)
+			msg = "BigWigs PTR [E]: ".. msg
+			RaidBossEmoteFrame_OnEvent(RaidBossEmoteFrame, event, msg, playerName, 3, ...) -- We don't need emotes lasting 10 sec, reduce to 3
 		end
 
-		if isTestBuild then -- Don't block emotes on WoW PTR
-			KillEvent(RaidBossEmoteFrame, "RAID_BOSS_EMOTE")
-			KillEvent(RaidBossEmoteFrame, "RAID_BOSS_WHISPER")
-			self:RegisterEvent("RAID_BOSS_EMOTE", EditEmotesOnPTR)
-			self:RegisterEvent("RAID_BOSS_WHISPER", EditWhispersOnPTR)
-		elseif self.db.profile.blockEmotes then
-			KillEvent(RaidBossEmoteFrame, "RAID_BOSS_EMOTE")
-			KillEvent(RaidBossEmoteFrame, "RAID_BOSS_WHISPER")
-		end
-		if self.db.profile.blockGarrison and not isClassic then
-			KillEvent(AlertFrame, "GARRISON_MISSION_FINISHED")
-			KillEvent(AlertFrame, "GARRISON_BUILDING_ACTIVATABLE")
-			KillEvent(AlertFrame, "GARRISON_FOLLOWER_ADDED")
-			KillEvent(AlertFrame, "GARRISON_RANDOM_MISSION_ADDED")
-		end
-		if self.db.profile.blockGuildChallenge and not isClassic then
-			KillEvent(AlertFrame, "GUILD_CHALLENGE_COMPLETED")
-		end
-		if self.db.profile.blockSpellErrors then
-			KillEvent(UIErrorsFrame, "UI_ERROR_MESSAGE")
-		end
-		if self.db.profile.blockZoneChanges then
-			KillEvent(ZoneTextFrame, "ZONE_CHANGED")
-			KillEvent(ZoneTextFrame, "ZONE_CHANGED_INDOORS")
-			KillEvent(ZoneTextFrame, "ZONE_CHANGED_NEW_AREA")
-		end
-		if self.db.profile.blockTooltipQuestText then
-			hideQuestTrackingTooltips = true
-		end
-		if self.db.profile.disableSfx then
-			SetCVar("Sound_EnableSFX", "0")
-		end
-		if self.db.profile.disableMusic then
-			SetCVar("Sound_EnableMusic", "0")
-		end
-		if self.db.profile.disableAmbience then
-			SetCVar("Sound_EnableAmbience", "0")
-		end
-		if self.db.profile.disableErrorSpeech then
-			SetCVar("Sound_EnableErrorSpeech", "0")
+		local function EditWhispersOnPTR(event, msg, playerName, _, ...)
+			msg = "BigWigs PTR [W]: ".. msg
+			RaidBossEmoteFrame_OnEvent(RaidBossEmoteFrame, event, msg, playerName, 3, ...)
 		end
 
-		if not isClassic then
-			local frame = ObjectiveTrackerFrame
-			if type(frame) == "table" and type(frame.GetObjectType) == "function" then
-				-- Never hide when tracking achievements or in Mythic+
-				local _, _, diff = GetInstanceInfo()
-				local trackedAchievements = C_ContentTracking.GetTrackedIDs(2) -- Enum.ContentTrackingType.Achievement = 2
-				if not restoreObjectiveTracker and self.db.profile.blockObjectiveTracker and not next(trackedAchievements) and diff ~= 8 and not bbFrame.IsProtected(frame) then
-					restoreObjectiveTracker = true
-					frame:SetAlpha(0) -- XXX FIXME
-				end
+		local riskyAchievementCategories = {
+			[168] = true, -- Dungeons & Raids
+			[15522] = true, -- Delves
+		}
+		function plugin:OnEngage(_, module)
+			if not module or (not module:GetJournalID() and not module:GetAllowWin()) or module.worldBoss then return end
+			if next(activatedModules) then
+				activatedModules[module] = true
+				return
+			else
+				activatedModules[module] = true
 			end
-		elseif not isVanilla then
-			local frame = Questie_BaseFrame or WatchFrame
-			if type(frame) == "table" and type(frame.GetObjectType) == "function" then
-				local trackedAchievements = GetTrackedAchievements and GetTrackedAchievements()
-				if not restoreObjectiveTracker and self.db.profile.blockObjectiveTracker and not trackedAchievements and not bbFrame.IsProtected(frame) then
-					restoreObjectiveTracker = bbFrame.GetParent(frame)
-					if restoreObjectiveTracker then
-						bbFrame.SetFixedFrameStrata(frame, true) -- Changing parent would change the strata & level, lock it first
-						bbFrame.SetFixedFrameLevel(frame, true)
-						bbFrame.SetParent(frame, bbFrame)
+
+			if isTestBuild then -- Don't block emotes on WoW PTR
+				KillEvent(RaidBossEmoteFrame, "RAID_BOSS_EMOTE")
+				KillEvent(RaidBossEmoteFrame, "RAID_BOSS_WHISPER")
+				self:RegisterEvent("RAID_BOSS_EMOTE", EditEmotesOnPTR)
+				self:RegisterEvent("RAID_BOSS_WHISPER", EditWhispersOnPTR)
+			elseif self.db.profile.blockEmotes then
+				KillEvent(RaidBossEmoteFrame, "RAID_BOSS_EMOTE")
+				KillEvent(RaidBossEmoteFrame, "RAID_BOSS_WHISPER")
+			end
+			if self.db.profile.blockGarrison and not isClassic then
+				KillEvent(AlertFrame, "GARRISON_MISSION_FINISHED")
+				KillEvent(AlertFrame, "GARRISON_BUILDING_ACTIVATABLE")
+				KillEvent(AlertFrame, "GARRISON_FOLLOWER_ADDED")
+				KillEvent(AlertFrame, "GARRISON_RANDOM_MISSION_ADDED")
+			end
+			if self.db.profile.blockGuildChallenge and not isClassic then
+				KillEvent(AlertFrame, "GUILD_CHALLENGE_COMPLETED")
+			end
+			if self.db.profile.blockSpellErrors then
+				KillEvent(UIErrorsFrame, "UI_ERROR_MESSAGE")
+			end
+			if self.db.profile.blockZoneChanges then
+				KillEvent(ZoneTextFrame, "ZONE_CHANGED")
+				KillEvent(ZoneTextFrame, "ZONE_CHANGED_INDOORS")
+				KillEvent(ZoneTextFrame, "ZONE_CHANGED_NEW_AREA")
+			end
+			if self.db.profile.blockTooltipQuestText then
+				hideQuestTrackingTooltips = true
+			end
+			if self.db.profile.disableSfx then
+				SetCVar("Sound_EnableSFX", "0")
+			end
+			if self.db.profile.disableMusic then
+				SetCVar("Sound_EnableMusic", "0")
+			end
+			if self.db.profile.disableAmbience then
+				SetCVar("Sound_EnableAmbience", "0")
+			end
+			if self.db.profile.disableErrorSpeech then
+				SetCVar("Sound_EnableErrorSpeech", "0")
+			end
+
+			if not isClassic then
+				local frame = ObjectiveTrackerFrame
+				if type(frame) == "table" and type(frame.GetObjectType) == "function" then
+					-- Never hide when tracking achievements or in Mythic+
+					local _, _, diff = GetInstanceInfo()
+					local isTrackingAchievements = false
+					local trackedAchievements = C_ContentTracking.GetTrackedIDs(2) -- Enum.ContentTrackingType.Achievement = 2
+					for i = 1, #trackedAchievements do
+						local achievementID = trackedAchievements[i]
+						local category = GetAchievementCategory(achievementID)
+						if riskyAchievementCategories[category] then
+							local _, _, _, completed = GetAchievementInfo(achievementID)
+							if not completed then
+								isTrackingAchievements = true
+								break
+							end
+						elseif category then
+							local _, parentCategory = GetCategoryInfo(category)
+							if riskyAchievementCategories[parentCategory] then
+								local _, _, _, completed = GetAchievementInfo(achievementID)
+								if not completed then
+									isTrackingAchievements = true
+									break
+								end
+							end
+						end
+					end
+					if not restoreObjectiveTracker and self.db.profile.blockObjectiveTracker and not isTrackingAchievements and diff ~= 8 and not bbFrame.IsProtected(frame) then
+						restoreObjectiveTracker = true
+						frame:SetAlpha(0) -- XXX FIXME
 					end
 				end
-			end
-		elseif isVanilla then
-			local frame = Questie_BaseFrame or QuestWatchFrame
-			if type(frame) == "table" and type(frame.GetObjectType) == "function" then
-				if not restoreObjectiveTracker and self.db.profile.blockObjectiveTracker and not bbFrame.IsProtected(frame) then
-					restoreObjectiveTracker = bbFrame.GetParent(frame)
-					if restoreObjectiveTracker then
-						bbFrame.SetFixedFrameStrata(frame, true) -- Changing parent would change the strata & level, lock it first
-						bbFrame.SetFixedFrameLevel(frame, true)
-						bbFrame.SetParent(frame, bbFrame)
+			elseif not isVanilla then
+				local frame = Questie_BaseFrame or WatchFrame
+				if type(frame) == "table" and type(frame.GetObjectType) == "function" then
+					local trackedAchievements = GetTrackedAchievements and GetTrackedAchievements()
+					if not restoreObjectiveTracker and self.db.profile.blockObjectiveTracker and not trackedAchievements and not bbFrame.IsProtected(frame) then
+						restoreObjectiveTracker = bbFrame.GetParent(frame)
+						if restoreObjectiveTracker then
+							bbFrame.SetFixedFrameStrata(frame, true) -- Changing parent would change the strata & level, lock it first
+							bbFrame.SetFixedFrameLevel(frame, true)
+							bbFrame.SetParent(frame, bbFrame)
+						end
+					end
+				end
+			elseif isVanilla then
+				local frame = Questie_BaseFrame or QuestWatchFrame
+				if type(frame) == "table" and type(frame.GetObjectType) == "function" then
+					if not restoreObjectiveTracker and self.db.profile.blockObjectiveTracker and not bbFrame.IsProtected(frame) then
+						restoreObjectiveTracker = bbFrame.GetParent(frame)
+						if restoreObjectiveTracker then
+							bbFrame.SetFixedFrameStrata(frame, true) -- Changing parent would change the strata & level, lock it first
+							bbFrame.SetFixedFrameLevel(frame, true)
+							bbFrame.SetParent(frame, bbFrame)
+						end
 					end
 				end
 			end
@@ -800,14 +850,14 @@ do
 			restoreObjectiveTracker = nil
 		end
 	end
+end
 
-	function plugin:BigWigs_OnBossDisable(_, module)
-		if not module or (not module:GetJournalID() and not module:GetAllowWin()) or module.worldBoss then return end
-		activatedModules[module] = nil
-		if not next(activatedModules) then
-			activatedModules = {}
-			RestoreAll(self)
-		end
+function plugin:BigWigs_OnBossDisable(_, module)
+	if not module or (not module:GetJournalID() and not module:GetAllowWin()) or module.worldBoss then return end
+	activatedModules[module] = nil
+	if not next(activatedModules) then
+		activatedModules = {}
+		RestoreAll(self)
 	end
 end
 
@@ -881,6 +931,8 @@ do
 		[155736]=true,[155737]=true,[155738]=true,[155739]=true,[155740]=true,[155741]=true,[155742]=true,[155743]=true,
 		[155744]=true,[155745]=true,[155746]=true,[155747]=true,[155748]=true,[155749]=true,[155750]=true,[155751]=true,
 		[155752]=true,[155753]=true,[155754]=true,[160654]=true,[155756]=true,[155757]=true,[155758]=true,[155759]=true,
+		-- Tazavesh, the Veiled Market
+		[181561]=true,[181563]=true,[181564]=true,[181565]=true,[180360]=true,[180361]=true,[181547]=true,
 		-- Theater of Pain
 		[152411]=true,[152413]=true,[152417]=true,[152416]=true,[152415]=true,[152414]=true,[152410]=true,[152409]=true,
 		[152408]=true,[152505]=true,[154933]=true,[152533]=true,[154937]=true,[152517]=true,[154942]=true,[154943]=true,
@@ -922,8 +974,8 @@ do
 		[250849]=true,[250850]=true,[250845]=true,[250851]=true,[250852]=true,[250853]=true,[250854]=true,[250855]=true,
 		[250856]=true,[250857]=true,[250858]=true,[250860]=true,[250861]=true,[250862]=true,[250863]=true,
 		-- Operation: Floodgate
-		[269139]=true,[269140]=true,[269141]=true,[269142]=true,[269143]=true,[269145]=true,[269146]=true,[269150]=true,
-		[269152]=true,
+		[269139]=true,[269140]=true,[269141]=true,[269142]=true,[269143]=true,[269144]=true,[269145]=true,[269146]=true,
+		[269150]=true,[269152]=true,
 	}
 
 	local lookup = {
@@ -980,6 +1032,7 @@ do
 		[991] = true, -- Iridikron (DotI) defeat
 		[992] = true, -- Chrono-Lord Deios (DotI) defeat
 		[1003] = true, -- Amirdrassil, Fyrakk defeat
+		[1034] = true, -- [The War Within/Manaforge Omega] clicking the portal after Dimensius defeat
 	}
 
 	function plugin:PLAY_MOVIE(_, id)

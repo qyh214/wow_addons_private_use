@@ -5,7 +5,7 @@ do
     local L = languageTable
 
 ------------------------------------------------------------
-L["ADDON_MENU_ADDONS_TITLE"] = "Mhytisch+ Bildschirm"
+L["ADDON_MENU_ADDONS_TITLE"] = "Mythisch+ Bildschirm"
 L["ADDON_MENU_ADDONS_TOOLTIP_LEFT_CLICK"] = "links klick"
 L["ADDON_MENU_ADDONS_TOOLTIP_OPEN_OPTIONS"] = "öffne Einstellungen"
 L["ADDON_MENU_ADDONS_TOOLTIP_OPEN_SCOREBOARD"] = "öffne Ergebnistafel"

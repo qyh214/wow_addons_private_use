@@ -9,8 +9,8 @@ local _, app = ...;
 -- Encapsulates the functionality for all filtering logic which is used to check if a given Object meets the applicable filters via User Settings
 
 -- Global locals
-local select, pairs, type, rawget, wipe
-	= select, pairs, type, rawget, wipe
+local select, pairs, type, rawget, wipe,math_floor
+	= select, pairs, type, rawget, wipe,math.floor
 
 -- WoW API Cache
 local GetFactionCurrentReputation = app.WOWAPI.GetFactionCurrentReputation;
@@ -118,6 +118,12 @@ end);
 DefineToggleFilter("PvP", AccountFilters,
 function(item)
 	return not item.pvp or false
+end);
+
+-- Challenge Master
+DefineToggleFilter("ChallengeMaster", AccountFilters,
+function(item)
+	return not item.cm or false
 end);
 
 -- PetBattles
@@ -370,10 +376,10 @@ app.MaximumSkillLevel = 99999;
 DefineToggleFilter("SkillLevel", CharacterFilters,
 function(group)
 	if group.learnedAt then
-        return app.MaximumSkillLevel >= group.learnedAt;
-    end
-    -- no skill level requirement on the group, have to include it
-    return true;
+		return app.MaximumSkillLevel >= group.learnedAt;
+	end
+	-- no skill level requirement on the group, have to include it
+	return true;
 end);
 -- SkillLevel doesn't really exclude a character from seeing a given Thing
 RawCharacterFilters.SkillLevel = nil;
@@ -386,6 +392,53 @@ end
 api.Filters.Trackable = FilterTrackable
 api.Set.Trackable = function(active)
 	app.ShowTrackableThings = active and api.Filters.Trackable or Filter;
+end
+
+-- Expansion Filters (Retail Only)
+if app.IsRetail then
+	-- Cache for expansion filter settings (indexed by expansion ID for fast lookup)
+	local ExpansionFilters = {}
+
+	DefineToggleFilter("ExpansionContent", AccountFilters,
+	function(item)
+		-- Check if item has awp (added with patch) field
+		local awp = GetRelativeValue(item, "awp")
+		if awp then
+			-- awp field uses patch format like 10205 for patch 1.2.5
+			-- Extract expansion ID from patch value (e.g., 10205 -> 1)
+			local expansionID = math_floor(awp / 10000)
+			-- Direct lookup: if ExpansionFilters[expansionID] is false, filter it out
+			return ExpansionFilters[expansionID]
+		end
+
+		return true
+	end)
+
+	-- Update expansion filter cache when settings change
+	app.AddEventHandler("OnRecalculate_NewSettings", function()
+		-- Build cache indexed by expansion ID (1-11) for O(1) lookup
+		ExpansionFilters[1] = app.Settings:Get("ExpansionFilter:Classic")
+		ExpansionFilters[2] = app.Settings:Get("ExpansionFilter:TBC")
+		ExpansionFilters[3] = app.Settings:Get("ExpansionFilter:Wrath")
+		ExpansionFilters[4] = app.Settings:Get("ExpansionFilter:Cata")
+		ExpansionFilters[5] = app.Settings:Get("ExpansionFilter:MoP")
+		ExpansionFilters[6] = app.Settings:Get("ExpansionFilter:WoD")
+		ExpansionFilters[7] = app.Settings:Get("ExpansionFilter:Legion")
+		ExpansionFilters[8] = app.Settings:Get("ExpansionFilter:BfA")
+		ExpansionFilters[9] = app.Settings:Get("ExpansionFilter:SL")
+		ExpansionFilters[10] = app.Settings:Get("ExpansionFilter:DF")
+		ExpansionFilters[11] = app.Settings:Get("ExpansionFilter:TWW")
+
+		-- Enable the filter if any expansion is disabled
+		local anyDisabled = false
+		for i = 1, 11 do
+			if ExpansionFilters[i] == false then
+				anyDisabled = true
+				break
+			end
+		end
+		api.Set.ExpansionContent(anyDisabled)
+	end)
 end
 
 -- Visible
@@ -608,9 +661,7 @@ app.AddEventHandler("OnStartup", function()
 	CacheSettingsData();
 end)
 -- Cache filter-related content from Settings here instead of checking in every function call
-app.AddEventHandler("OnRecalculate_NewSettings", function()
-	CacheSettingsData();
-end)
+app.AddEventHandler("OnRecalculate_NewSettings", CacheSettingsData)
 
 -- Maybe need something like this eventually? This hasn't been tested or utilized much
 -- local PreviousFilters = {}

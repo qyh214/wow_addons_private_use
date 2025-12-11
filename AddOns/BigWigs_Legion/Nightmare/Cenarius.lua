@@ -321,7 +321,7 @@ do
 					if self:GetOption("custom_off_multiple_breath_bar") or (mobCount[105494]-drakeDeaths == 1) or (drakeDeaths+1 == getMobNumber(105494, guid)) then
 						self:Bar(211192, 20, CL.count:format(self:SpellName(211192), getMobNumber(mobId, guid))) -- Rotten Breath
 					end
-					self:ScheduleTimer("RegisterUnitEvent", 15, "UNIT_TARGET", "BreathTarget", unit)
+					self:SimpleTimer(function() if self:IsEngaged() then self:RegisterUnitEvent("UNIT_TARGET", "BreathTarget", unit) end end, 15)
 				elseif mobId == 105495 then -- Twisted Sister
 					self:CDBar(211471, 5, CL.count:format(self:SpellName(211471), getMobNumber(mobId, guid))) -- Scorned Touch
 					self:CDBar(211368, 6, CL.count:format(self:SpellName(211368), getMobNumber(mobId, guid))) -- Twisted Touch of Life

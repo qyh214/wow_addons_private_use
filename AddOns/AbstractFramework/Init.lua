@@ -55,12 +55,18 @@ AF.isAsian = LOCALE_zhCN or LOCALE_zhTW or LOCALE_koKR
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
     AF.isRetail = true
     AF.flavor = "retail"
+elseif WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC then
+    AF.isMists = true
+    AF.flavor = "mists"
 elseif WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC then
     AF.isCata = true
     AF.flavor = "cata"
 elseif WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
     AF.isWrath = true
     AF.flavor = "wrath"
+elseif WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then
+    AF.isTBC = true
+    AF.flavor = "tbc"
 elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
     AF.isVanilla = true
     AF.flavor = "vanilla"
@@ -86,16 +92,13 @@ end)
 
 -- update pixels
 local function UpdatePixels()
-    if InCombatLockdown() then
-        AF.UIParent:RegisterEvent("PLAYER_REGEN_ENABLED")
-        return
-    end
-    AF.UIParent:UnregisterEvent("PLAYER_REGEN_ENABLED")
-    AF.UpdatePixels()
+    AF.UpdatePixels_Auto()
+    AF.Fire("AF_PIXEL_UPDATE")
 end
 
 local timer
-local function DelayedUpdatePixels()
+local function DelayedUpdatePixels(_, _, skipPixelsUpdate)
+    if skipPixelsUpdate then return end
     if timer then timer:Cancel() end
     timer = C_Timer.NewTimer(1, UpdatePixels)
 end
@@ -107,6 +110,7 @@ function AF.UIParent:FIRST_FRAME_RENDERED()
     AF.UIParent:UnregisterEvent("FIRST_FRAME_RENDERED")
     AF.UIParent:RegisterEvent("UI_SCALE_CHANGED")
     AF.SetupPopups(AFConfig.popups)
+    AF.Fire("AF_POPUPS_READY")
 end
 
 function AF.UIParent:UI_SCALE_CHANGED()
@@ -123,12 +127,29 @@ function AF.UIParent:ADDON_LOADED(addon)
 
         if type(AFConfig) ~= "table" then AFConfig = {} end
 
+        -- accent color
+        if type(AFConfig.accentColor) ~= "table" then
+            AFConfig.accentColor = {
+                type = "default",
+                color = AF.BuildAccentColorTable("hotpink"),
+            }
+        end
+
+        -- font size offset
+        if type(AFConfig.fontSizeDelta) ~= "number" then AFConfig.fontSizeDelta = 0 end
+        AF.UpdateFontSize(AFConfig.fontSizeDelta)
+
         -- debug
-        if type(AFConfig.debugMode) ~= "boolean" then AFConfig.debugMode = false end
+        if type(AFConfig.debug) ~= "table" then
+            AFConfig.debug = {
+                ["AF"] = false,
+                ["AF_EVENTS"] = false,
+            }
+        end
 
         -- scale
         if type(AFConfig.scale) ~= "number" then AFConfig.scale = 1 end
-        AF.SetScale(AFConfig.scale)
+        AF.SetScale(AFConfig.scale, true)
         -- if type(AFConfig.uiScale) ~= "number" then AFConfig.uiScale = UIParent:GetScale() end
         -- UIParent:SetScale(AFConfig.uiScale)
 
@@ -144,20 +165,23 @@ end
 --! scale should NOT be TOO SMALL
 --! or it will result in abnormal display of borders
 --! since AF has changed SetSnapToPixelGrid / SetTexelSnappingBias
-function AF.SetScale(scale)
+function AF.SetScale(scale, skipPixelsUpdate)
     AFConfig.scale = scale
     AF.scale = scale
     AF.UIParent:SetScale(scale)
-    UpdatePixels()
     AF.Fire("AF_SCALE_CHANGED", scale)
+    if not skipPixelsUpdate then
+        if timer then timer:Cancel() end
+        UpdatePixels()
+    end
 end
 
 function AF.GetScale()
     return AFConfig.scale
 end
 
-function AF.SetUIParentScale(scale)
-    UIParent:SetScale(scale)
+function AF.SetUIParentScale(scale, skipPixelsUpdate)
+    UIParent:SetScale(scale, skipPixelsUpdate)
 end
 
 ---------------------------------------------------------------------

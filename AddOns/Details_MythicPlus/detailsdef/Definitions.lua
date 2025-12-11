@@ -155,8 +155,8 @@ DETAILS_SUBATTRIBUTE_DEBUFFUPTIME = 8
 ---| "DETAILS_SEGMENTTYPE_TRAININGDUMMY"
 
 DETAILS_TOTALS_ONLYGROUP = true
-DETAILS_SEGMENTID_OVERALL = true
-DETAILS_SEGMENTID_CURRENT = true
+DETAILS_SEGMENTID_OVERALL = -1
+DETAILS_SEGMENTID_CURRENT = 0
 DETAILS_COMBAT_AMOUNT_CONTAINERS = true
 DETAILS_SEGMENTTYPE_GENERIC = true
 DETAILS_SEGMENTTYPE_OVERALL = true
@@ -177,6 +177,15 @@ DETAILS_SEGMENTTYPE_PVP_ARENA = true
 DETAILS_SEGMENTTYPE_PVP_BATTLEGROUND = true
 DETAILS_SEGMENTTYPE_EVENT_VALENTINEDAY = true
 DETAILS_SEGMENTTYPE_TRAININGDUMMY = true
+
+---@class interrupt_overlap : table
+---@field time number
+---@field sourceName string
+---@field spellId number
+---@field targetName string
+---@field extraSpellID number
+---@field used boolean
+---@field interrupted boolean
 
 ---@class mythicdungeontrashinfo
 ---@field ZoneName string
@@ -443,6 +452,7 @@ DETAILS_SEGMENTTYPE_TRAININGDUMMY = true
 ---@field PhaseData table
 ---@field player_last_events table<string, table[]> record the latest events of each player, latter used to build the death log
 ---@field
+---@field GetPlayerDeaths fun(self: combat, actorName: string) : table[] return a table with subtable containing the death information of the specified actor
 ---@field GetCrowdControlSpells fun(self: combat, actorName: string) : table<spellid, number> return the amount of casts of crowd control spell by an actor
 ---@field GetCCCastAmount fun(self: combat, actorName: string) : number returns the number of crowd control casts made by the specified actor
 ---@field GetInterruptCastAmount fun(self: combat, actorName: string) : number
@@ -630,6 +640,8 @@ DETAILS_SEGMENTTYPE_TRAININGDUMMY = true
 ---@field damage_from table<actorname, boolean> store the name of the actors which damaged the actor, format: [actorName] = true
 ---@field totalabsorbed number amount of damage dealt by the actor by got absorbed by the target, this is a "ABSORB" type of miss but still counts as damage done
 ---@field augmentedSpellsContainer spellcontainer
+---@field last_dps number
+---@field last_dps_realtime number
 
 ---@class actorheal : actor
 ---@field healing_taken number amount of healing the actor took during the segment
@@ -1044,6 +1056,7 @@ DETAILS_SEGMENTTYPE_TRAININGDUMMY = true
 ---@field PetContainer petcontainer
 ---@field InstanceDifficulty instancedifficulty
 ---@field ContextManager contextmanager
+---@field AllInOneWindow details_allinonewindow
 
 ---@class profile_breakdown_settings : table
 ---@field font_size number

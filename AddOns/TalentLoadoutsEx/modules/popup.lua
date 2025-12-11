@@ -47,6 +47,15 @@ function TalentLoadoutExEditPopupMixin:OnShow()
 	end
 
 	self.IconSelector:SetSelectedCallback(OnIconSelected);
+
+	local talentTextEditBox = self.TalentTextFrame.Main.EditBox;
+	talentTextEditBox:SetText(self.data and self.data.text or "");
+	talentTextEditBox:SetCursorPosition(0);
+
+	local nameEditBox = self.BorderBox.IconSelectorEditBox;
+	nameEditBox:SetText(self.data and self.data.name or "");
+	nameEditBox:HighlightText();
+
 	self:Update();
 end
 
@@ -61,12 +70,6 @@ end
 
 local setAtlasDelay = 0.01;
 function TalentLoadoutExEditPopupMixin:Update()
-	self.TalentTextFrame.Main.EditBox:SetText(self.data and self.data.text or "");
-	self.TalentTextFrame.Main.EditBox:SetCursorPosition(0);
-
-	self.BorderBox.IconSelectorEditBox:SetText(self.data and self.data.name or "");
-	self.BorderBox.IconSelectorEditBox:HighlightText();
-
 	local icon = self.data and self.data.icon or Addon.DEFAULT_ICON;
 	if type(icon) == "string" then
 		self.IconSelector:SetSelectedIndex(nil);
@@ -128,19 +131,23 @@ function TalentLoadoutExEditPopupMixin:OkayButton_OnClick()
 		data.icon = newAtlas or newIcon;
 
 		local specTable = Addon:GetSpecTable();
+		local targetIndex = Addon.selectedIndex and Addon.selectedIndex <= #specTable and Addon.selectedIndex + 1 or nil;
 		if self.addDataType == Addon.addDataType.AddConfig then
 			-- Add Config
-			data.text = newText;
-			local targetIndex = Addon.selectedIndex and (Addon.selectedIndex + 1) or 1;
-			table.insert(specTable, targetIndex, data);
+			targetIndex = targetIndex or 1;
 			Addon.selectedIndex = targetIndex;
+
+			data.text = newText;
+			table.insert(specTable, targetIndex, data);
+
 			Addon:SaveConfig(data.text);
 		else
 			-- Add Group
-			local targetIndex = Addon.selectedIndex and Addon.selectedIndex or 1;
+			targetIndex = targetIndex or #specTable + 1;
 			Addon.selectedIndex = targetIndex;
-			table.insert(specTable, targetIndex, data);
+
 			data.isExpanded = true;
+			table.insert(specTable, targetIndex, data);
 		end
 	end
 

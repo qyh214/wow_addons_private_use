@@ -199,7 +199,7 @@ local function UpdateDataProvider()
 
 	local oldDataProvider = scrollBox:GetDataProvider();
 	if not oldDataProvider then
-		specIndex = GetSpecialization();
+		specIndex = C_SpecializationInfo.GetSpecialization();
 		scrollBox:SetDataProvider(newDataProvider);
 		return;
 	end
@@ -213,7 +213,7 @@ local function UpdateDataProvider()
 
 	scrollBox:SetDataProvider(newDataProvider);
 
-	local newSpecIndex = GetSpecialization();
+	local newSpecIndex = C_SpecializationInfo.GetSpecialization();
 	if specIndex ~= newSpecIndex then
 		specIndex = newSpecIndex;
 	elseif oldScrollSize > 0 and newScrollSize > 0 then
@@ -265,7 +265,6 @@ function Addon:RegisterUpdateEvent()
 		end
 	);
 
-	local parent = Addon.frame:GetParent();
 	Addon.frame:GetParent():HookScript(
 		"OnShow",
 		function()

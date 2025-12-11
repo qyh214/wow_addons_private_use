@@ -179,7 +179,7 @@ function ChartViewer:RefreshGraphic()
             local chartColor = chart[2]
             local lineName = chart[4]
 
-            chartPanel:AddData(chartData, 3, lineName, chartColor)
+            chartPanel:AddData(chartData, nil, 3, lineName, chartColor)
         end
 
         ---@type number[]

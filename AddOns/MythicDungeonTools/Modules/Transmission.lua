@@ -306,7 +306,6 @@ MDT.liveSessionPrefixes = {
   ["free"] = "MDTLiveFree",
   ["bora"] = "MDTLiveBora",
   ["reqPre"] = "MDTLiveReqPre",
-  ["corrupted"] = "MDTLiveCor",
   ["difficulty"] = "MDTLiveLvl",
   ["poiAssignment"] = "MDTPOIAssignment",
 }
@@ -364,12 +363,15 @@ hooksecurefunc("SetItemRef", function(link, text)
     -- to get the displayName (name of the preset) we need to get everything between the starting and closing brackets
     local displayName = text:match("%[(.-)%]")
     sender = name.."-"..realm
-    local preset = MDT.transmissionCache[sender][displayName]
+    local preset = MDT.transmissionCache[sender] and MDT.transmissionCache[sender][displayName]
     if preset and type(preset) == "table" then
       MDT:Async(function()
         MDT:ShowInterfaceInternal(true)
         MDT:ImportPreset(CopyTable(preset))
       end, "showInterfaceChatImport")
+    elseif preset == 0 then --special marker for old dungeon preset
+      local msg = L["WARNING_OLD_DUNGEON_IMPORT"]
+      print("|cFFFF0000MDT:|r "..msg)
     else
       local msg = "\nparsed displayName: "..displayName
       msg = msg.."\nsender: "..sender
@@ -402,8 +404,18 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
   --the user still decides if he wants to click the chat link and add the preset to his db
   if prefix == presetCommPrefix then
     local preset = MDT:StringToTable(message, false)
-    local dungeon = MDT:GetDungeonName(preset.value.currentDungeonIdx, true)
     local presetName = preset.text
+    local dungeon = MDT:GetDungeonName(preset.value.currentDungeonIdx, true)
+    if not dungeon then
+      -- check if it's dungeon that has been in MDT before but is not in the current version
+      local knownDungeon = MDT.knownDungeons[preset.value.currentDungeonIdx]
+      if knownDungeon then
+        local displayName = knownDungeon..": "..presetName
+        MDT.transmissionCache[fullName] = MDT.transmissionCache[fullName] or {}
+        MDT.transmissionCache[fullName][displayName] = 0 --special marker for old dungeon preset
+      end
+      return
+    end
     local displayName = dungeon..": "..presetName
     MDT.transmissionCache[fullName] = MDT.transmissionCache[fullName] or {}
     MDT.transmissionCache[fullName][displayName] = preset
@@ -452,21 +464,7 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
       if preset == MDT:GetCurrentPreset() then
         MDT:ReloadPullButtons()
         MDT:SetSelectionToPull(MDT:GetCurrentPull())
-        MDT:POI_UpdateAll() --for corrupted spires
         MDT:UpdateProgressbar()
-      end
-    end
-  end
-
-  --corrupted
-  if prefix == MDT.liveSessionPrefixes.corrupted then
-    if MDT.liveSessionActive then
-      local preset = MDT:GetCurrentLivePreset()
-      local offsets = MDT:StringToTable(message, false)
-      --only reposition if no blip is currently moving
-      if not MDT.draggedBlip then
-        preset.value.riftOffsets = offsets
-        MDT:UpdateMap()
       end
     end
   end
@@ -477,20 +475,11 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
       local db = MDT:GetDB()
       local difficulty = tonumber(message)
       if difficulty and difficulty ~= db.currentDifficulty then
-        local updateSeasonal
-        if ((difficulty >= 10 and db.currentDifficulty < 10) or (difficulty < 10 and db.currentDifficulty >= 10)) then
-          updateSeasonal = true
-        end
         db.currentDifficulty = difficulty
         MDT.main_frame.sidePanel.DifficultySlider:SetValue(difficulty)
         MDT:UpdateProgressbar()
         if MDT.EnemyInfoFrame and MDT.EnemyInfoFrame.frame:IsShown() then MDT:UpdateEnemyInfoData() end
         MDT:ReloadPullButtons()
-        if updateSeasonal then
-          MDT:POI_UpdateAll()
-          MDT:KillAllAnimatedLines()
-          MDT:DrawAllAnimatedLines()
-        end
       end
     end
   end
@@ -502,16 +491,12 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
       local week = tonumber(message)
       if preset.week ~= week then
         preset.week = week
-        local teeming = MDT:IsPresetTeeming(preset)
-        preset.value.teeming = teeming
         if preset == MDT:GetCurrentPreset() then
           local affixDropdown = MDT.main_frame.sidePanel.affixDropdown
           affixDropdown:SetValue(week)
           MDT:POI_UpdateAll()
           MDT:UpdateProgressbar()
           MDT:ReloadPullButtons()
-          MDT:KillAllAnimatedLines()
-          MDT:DrawAllAnimatedLines()
         end
       end
     end

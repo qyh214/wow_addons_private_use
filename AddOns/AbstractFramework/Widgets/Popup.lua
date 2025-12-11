@@ -2,11 +2,13 @@
 local AF = _G.AbstractFramework
 local L = AF.L
 
+local ceil = math.ceil
+
 local parent, mover
 local popups = {}
 
 local MAX_POPUPS = 5
-local DEFAULT_WIDTH = 220
+local DEFAULT_WIDTH = 227
 local DEFAULT_OFFSET = 10
 local DEFAULT_NOTIFICATION_TIMEOUT = 10
 local DEFAULT_PROGRESS_TIMEOUT = 5
@@ -36,14 +38,21 @@ local function CreateParent()
         AF.ReSize(parent)
     end
 
-    AF.AddToPixelUpdater(parent)
+    AF.AddToPixelUpdater_Auto(parent)
 end
 
 ---------------------------------------------------------------------
 -- show
 ---------------------------------------------------------------------
-local function ShowPopups(stopMoving)
+local function ShowPopups(stopMoving, reparent)
+    if not parent then return end
+
     for i, p in ipairs(popups) do
+        if reparent then
+            p:SetParent(parent)
+            p:UpdatePixels()
+        end
+
         if stopMoving then
             p:StopMoving()
         end
@@ -116,6 +125,11 @@ end
 -- OnShow, OnHide
 ---------------------------------------------------------------------
 local function OnPopupShow(p)
+    -- update text
+    RunNextFrame(function()
+        p.text:SetText(p.msg)
+    end)
+
     -- play sound
     if p.sound then
         PlaySoundFile(p.sound, "Master")
@@ -125,7 +139,7 @@ local function OnPopupShow(p)
 
     -- icon
     if p.icon then
-        p.iconTex:SetTexture(p.icon)
+        p.iconTex:SetTexture(p.icon:gsub("^!", ""))
 
         if type(p.icon) == "number" then
             AF.ApplyDefaultTexCoord(p.iconTex) -- for blizzard item/spell icons
@@ -133,7 +147,7 @@ local function OnPopupShow(p)
             AF.ClearTexCoord(p.iconTex)
         end
 
-        if strmatch(p.icon, "^!") then
+        if p.icon:find("^!") then
             AF.Show(p.iconTex)
         else
             AF.Show(p.iconTex, p.iconBGTex)
@@ -170,13 +184,15 @@ local function OnPopupHide(p)
             else
                 popups[i]:SetOnMoveFinished()
             end
-            popups[i]:Move(Round(p:GetHeight()) + DEFAULT_OFFSET)
+            popups[i]:Move(ceil(p:GetHeight()) + DEFAULT_OFFSET)
         end
 
         if not hooked then
             HandleNext()
         end
     end
+
+    p.text:SetText("")
 
     p.index = nil
     p.sound = nil
@@ -247,9 +263,10 @@ local npCreationFn = function()
     local text = AF.CreateFontString(p)
     p.text = text
     p._textLeftX = 7
-    p._textLeftY = 0
-    AF.SetPoint(p.text, "LEFT", 7, 0)
-    AF.SetPoint(p.text, "RIGHT", -7, 0)
+    p._textLeftY = 2
+    AF.SetPoint(p.text, "RIGHT", -7, 2)
+    text:SetWordWrap(true)
+    text:SetSpacing(3)
 
     -- icon ---------------------------------------------------------
     CreateIcon(p)
@@ -267,13 +284,13 @@ local npCreationFn = function()
     p:SetOnMouseUp(function(_, button)
         if button == "LeftButton" then
             if p.onClick then p:onClick(button, unpack(p.onClickArgs)) end
-        elseif button == "RightButton" then
-            if p.timer then
-                p.timer:Cancel()
-                p.timer = nil
-            end
-            AddToHidingQueue(p)
         end
+
+        if p.timer then
+            p.timer:Cancel()
+            p.timer = nil
+        end
+        AddToHidingQueue(p)
     end)
 
     -- OnHide -------------------------------------------------------
@@ -286,7 +303,7 @@ local npCreationFn = function()
     -- OnUpdate -----------------------------------------------------
     p:SetOnUpdate(function()
         -- update height
-        p:SetHeight(Round(p.text:GetStringHeight()) + 40)
+        p:SetHeight(ceil(p.text:GetHeight()) + 30)
     end)
 
     -- SetTimeout ---------------------------------------------------
@@ -337,8 +354,9 @@ local cpCreationFn = function()
     p.text = text
     p._textLeftX = 7
     p._textLeftY = 5
-    AF.SetPoint(p.text, "LEFT", 7, 5)
     AF.SetPoint(p.text, "RIGHT", -7, 5)
+    text:SetWordWrap(true)
+    text:SetSpacing(3)
 
     -- icon ---------------------------------------------------------
     CreateIcon(p)
@@ -399,7 +417,7 @@ local cpCreationFn = function()
     -- OnUpdate -----------------------------------------------------
     p:SetOnUpdate(function()
         -- update height
-        p:SetHeight(Round(p.text:GetStringHeight()) + 45)
+        p:SetHeight(ceil(p.text:GetHeight()) + 35)
     end)
 
     -- OnClick ------------------------------------------------------
@@ -428,9 +446,10 @@ local ppCreationFn = function()
     local text = AF.CreateFontString(p)
     p.text = text
     p._textLeftX = 7
-    p._textLeftY = 0
-    AF.SetPoint(p.text, "LEFT", 7, 0)
-    AF.SetPoint(p.text, "RIGHT", -7, 0)
+    p._textLeftY = 4
+    AF.SetPoint(p.text, "RIGHT", -7, 4)
+    text:SetWordWrap(true)
+    text:SetSpacing(3)
 
     -- icon ---------------------------------------------------------
     CreateIcon(p)
@@ -477,7 +496,7 @@ local ppCreationFn = function()
     -- OnUpdate -----------------------------------------------------
     p:SetOnUpdate(function()
         -- update height
-        p:SetHeight(Round(p.text:GetStringHeight()) + 40)
+        p:SetHeight(ceil(p.text:GetHeight()) + 30)
     end)
 
     -- OnClick ------------------------------------------------------
@@ -502,12 +521,12 @@ progressPool = CreateObjectPool(ppCreationFn)
 ---@param ... any arguments to pass to the onClick function
 function AF.ShowNotificationPopup(text, timeout, icon, sound, width, justify, onClick, ...)
     local p = notificationPool:Acquire()
-    p.text:SetText(text)
     AF.SetWidth(p, width or DEFAULT_WIDTH)
     p:SetTimeout(timeout or DEFAULT_NOTIFICATION_TIMEOUT)
     p.text:SetJustifyH(justify or "CENTER")
     -- AF.ApplyDefaultBackdropWithColors(p, color, borderColor)
 
+    p.msg = text
     p.icon = icon
     p.sound = sound
     p.onClick = onClick
@@ -532,10 +551,10 @@ end
 ---@param ... any arguments to pass to the onClick function
 function AF.ShowConfirmPopup(text, onConfirm, onCancel, icon, sound, width, justify, onClick, ...)
     local p = confirmPool:Acquire()
-    p.text:SetText(text)
     AF.SetWidth(p, width or DEFAULT_WIDTH)
     p.text:SetJustifyH(justify or "CENTER")
 
+    p.msg = text
     p.onConfirm = onConfirm
     p.onCancel = onCancel
     p.icon = icon
@@ -562,11 +581,11 @@ end
 function AF.ShowProgressPopup(text, maxValue, icon, sound, width, justify, onClick, ...)
     local p = progressPool:Acquire()
     AF.SetWidth(p, width or DEFAULT_WIDTH)
-    p.text:SetText(text)
     p.text:SetJustifyH(justify or "CENTER")
     p.bar:SetMinMaxSmoothedValue(0, maxValue)
     p.bar:SetBarValue(0)
 
+    p.msg = text
     p.icon = icon
     p.sound = sound
     p.onClick = onClick
@@ -597,5 +616,5 @@ function AF.SetupPopups(config)
     AF.LoadPosition(parent, AFConfig.popups.position)
     parent.orientation = AFConfig.popups.orientation
 
-    ShowPopups(true)
+    ShowPopups(true, true)
 end

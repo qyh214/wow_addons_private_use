@@ -1,0 +1,37 @@
+## Interface: 120000
+
+## Title: BigWigs [|cffeda55fMarch on Quel'Danas|r]
+## Title-deDE: BigWigs [|cffeda55fMarsch auf Quel'Danas|r]
+## Title-esES: BigWigs [|cffeda55fMarch on Quel'Danas|r]
+## Title-esMX: BigWigs [|cffeda55fMarch on Quel'Danas|r]
+## Title-frFR: BigWigs [|cffeda55fMarch on Quel'Danas|r]
+## Title-itIT: BigWigs [|cffeda55fMarch on Quel'Danas|r]
+## Title-koKR: BigWigs [|cffeda55f쿠엘다나스 진격로|r]
+## Title-ptBR: BigWigs [|cffeda55fMarch on Quel'Danas|r]
+## Title-ruRU: BigWigs [|cffeda55fMarch on Quel'Danas|r]
+## Title-zhCN: BigWigs [|cffeda55f进军奎尔丹纳斯|r]
+## Title-zhTW: BigWigs [|cffeda55f奎爾達納斯之界|r]
+## Notes: BigWigs March on Quel'Danas Modules
+## Notes-deDE: BigWigs Marsch auf Quel'Danas Module
+## Notes-esES: BigWigs March on Quel'Danas Modules
+## Notes-esMX: BigWigs March on Quel'Danas Modules
+## Notes-frFR: BigWigs March on Quel'Danas Modules
+## Notes-itIT: BigWigs March on Quel'Danas Modules
+## Notes-koKR: BigWigs 쿠엘다나스 진격로 모듈
+## Notes-ptBR: BigWigs March on Quel'Danas Modules
+## Notes-ruRU: BigWigs March on Quel'Danas Modules
+## Notes-zhCN: BigWigs 进军奎尔丹纳斯模块
+## Notes-zhTW: BigWigs 奎爾達納斯之界模組
+## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
+## Version: v402.1
+
+## LoadOnDemand: 1
+## Dependencies: BigWigs
+
+## X-Category: Raid
+## X-BigWigs-LoadOn-InstanceId: 2913
+
+Beloren.lua
+
+# Locales\[TextLocale].lua [AllowLoadTextLocale deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW]
+# !Options.lua

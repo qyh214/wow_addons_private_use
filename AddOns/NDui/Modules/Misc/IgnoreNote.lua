@@ -59,12 +59,12 @@ StaticPopupDialogs["NDUI_IGNORE_NOTE"] = {
 	OnShow = function(self)
 		local savedNote = NDuiADB["IgnoreNotes"][unitName]
 		if savedNote then
-			self.editBox:SetText(savedNote)
-			self.editBox:HighlightText()
+			self.EditBox:SetText(savedNote)
+			self.EditBox:HighlightText()
 		end
 	end,
 	OnAccept = function(self)
-		local text = self.editBox:GetText()
+		local text = self.EditBox:GetText()
 		if text and text ~= "" then
 			NDuiADB["IgnoreNotes"][unitName] = text
 		else
@@ -96,25 +96,29 @@ function M:IgnoreNote()
 		onAcknowledgeCallback = B.HelpInfoAcknowledge,
 		callbackArg = "IgnoreNote",
 	}
-	IgnoreListFrame:HookScript("OnShow", function(frame)
-		if not NDuiADB["Help"]["IgnoreNote"] then
-			HelpTip:Show(frame, ignoreHelpInfo)
-		end
-	end)
 
-	hooksecurefunc(IgnoreListFrame.ScrollBox, "Update", function(self)
-		self:ForEachFrame(M.IgnoreButton_Hook)
-	end)
-
-	FriendsFrameUnsquelchButton:HookScript("OnClick", function()
-		local name = C_FriendList.GetIgnoreName(C_FriendList.GetSelectedIgnore())
-		if name then
-			if not strmatch(name, "-") then
-				name = name.."-"..DB.MyRealm
+	local ignoreWindow = FriendsFrame.IgnoreListWindow
+	if ignoreWindow then
+		ignoreWindow:HookScript("OnShow", function(frame)
+			if not NDuiADB["Help"]["IgnoreNote"] then
+				HelpTip:Show(frame, ignoreHelpInfo)
 			end
-			NDuiADB["IgnoreNotes"][name] = nil
-		end
-	end)
+		end)
+
+		hooksecurefunc(ignoreWindow.ScrollBox, "Update", function(self)
+			self:ForEachFrame(M.IgnoreButton_Hook)
+		end)
+
+		ignoreWindow.UnignorePlayerButton:HookScript("OnClick", function()
+			local name = C_FriendList.GetIgnoreName(C_FriendList.GetSelectedIgnore())
+			if name then
+				if not strmatch(name, "-") then
+					name = name.."-"..DB.MyRealm
+				end
+				NDuiADB["IgnoreNotes"][name] = nil
+			end
+		end)
+	end
 end
 
 M:RegisterMisc("IgnoreNote", M.IgnoreNote)

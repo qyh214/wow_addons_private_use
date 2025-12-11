@@ -24,26 +24,9 @@ function ns.AreaMap()
   ns.AreaMapIcons = AreaMapIcons
   ns.AreaMapIconPool = AreaMapIconPool
 
-  local areaMapTicker
-
-  local function StartAreaMapTicker()
-    if areaMapTicker then return end
-    areaMapTicker = C_Timer.NewTicker(3, function()
-      if ns.AreaMapFrame:IsShown() and WorldMapFrame:IsShown() then
-        ns.UpdateAreaMapIcons()
-      end
-    end)
-  end
-
-  local function StopAreaMapTicker()
-    if areaMapTicker then
-      areaMapTicker:Cancel()
-      areaMapTicker = nil
-    end
-  end
-
-  ns.childMapIDs = {
-    1454, 1456, 1458, 1954, 1947, 1457, 1453, 1455, 1955, 86, 125, 126
+  ns.childMapIDs = { -- Capital IDs
+    88, 84, 87, 89, 103, 85, 90, 86, 110, 111, 125, 126,
+    391, 392, 393, 394, 407, 503, 582, 590, 622, 624, 626
   }
 
   local function LoadAreaMapSetting()
@@ -62,57 +45,62 @@ function ns.AreaMap()
     end
   end
 
-  local lastUpdate = 0
+
 
   local function GetScrollContainer()
-    local mapID = C_Map.GetBestMapForUnit("player")
-    local isChildMap = tContains(ns.childMapIDs, mapID)
-    return ns.AreaMapFrame.ScrollContainer.Child, isChildMap
+    return ns.AreaMapFrame.ScrollContainer.Child
   end
-
+  
+  local lastUpdate = 0
   function ns.UpdateAreaMapIcons()
     local now = GetTime()
     if now - lastUpdate < 0.5 then return end
     lastUpdate = now
+
     if not ns.AreaMapFrame or not ns.AreaMapFrame:IsShown() then return end
 
-    for _, pin in ipairs(AreaMapIcons) do
+    ns.AreaMapIcons = ns.AreaMapIcons or {}
+    ns.AreaMapIconPool = ns.AreaMapIconPool or {}
+
+    for _, pin in ipairs(ns.AreaMapIcons) do
       pin:Hide()
-      table.insert(AreaMapIconPool, pin)
+      table.insert(ns.AreaMapIconPool, pin)
     end
-    wipe(AreaMapIcons)
+    wipe(ns.AreaMapIcons)
 
-    if not ns.showAreaMapDropDownMenu then return end
-    local mapID = BattlefieldMapFrame:GetMapID()
-    if not mapID or not ns.nodes[mapID] then return end
+    local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+    if not (db and db.areaMap and db.areaMap.showAreaMapDropDownMenu) then
+      return
+    end
 
-    local ScrollContainer, isChildMap = GetScrollContainer()
+    local mapID = BattlefieldMapFrame and BattlefieldMapFrame:GetMapID()
+    if not mapID or not ns.nodes or not ns.nodes[mapID] then
+      return
+    end
 
-    if ScrollContainer:GetWidth() == 0 or ScrollContainer:GetHeight() == 0 then
+    local ScrollContainer = GetScrollContainer()
+    local isChildMap = tContains(ns.childMapIDs, mapID) or false
+
+    local width, height = ScrollContainer:GetWidth(), ScrollContainer:GetHeight()
+    if width == 0 or height == 0 then
       C_Timer.After(0.1, ns.UpdateAreaMapIcons)
       return
     end
 
+    local showCapitals = db.areaMap.showAreaMapDropDownMenuCapitalsIcons
+    local showZones = db.areaMap.showAreaMapDropDownMenuZonesIcons
+
     for coord, node in pairs(ns.nodes[mapID]) do
       if node and node.showInZone then
-        local shouldShow = false
-        if isChildMap and ns.Addon.db.profile.areaMap.showAreaMapDropDownMenuCapitalsIcons then
-          shouldShow = true
-        elseif not isChildMap and ns.Addon.db.profile.areaMap.showAreaMapDropDownMenuZonesIcons then
-          shouldShow = true
-        end
-
+        local shouldShow = (isChildMap and showCapitals) or (not isChildMap and showZones)
         if shouldShow then
           local x, y = HandyNotes:getXY(coord)
           if x and y and x >= 0 and x <= 1 and y >= 0 and y <= 1 then
-            local pin = tremove(AreaMapIconPool) or CreateFrame("Button", nil, ScrollContainer)
+            local pin = tremove(ns.AreaMapIconPool) or CreateFrame("Button", nil, ScrollContainer)
             pin:SetParent(ScrollContainer)
             pin:SetFrameStrata("HIGH")
 
-            local width = ScrollContainer:GetWidth()
-            local height = ScrollContainer:GetHeight()
-            local scaleFactor = math.min(width, height)
-            local size = (scaleFactor * 0.05) * (ns.areaMapScale or 1.0)
+            local size = (math.min(width, height) * 0.05) * (ns.areaMapScale or 1.0)
             pin:SetSize(size, size)
 
             local tex = pin.texture
@@ -122,15 +110,13 @@ function ns.AreaMap()
               pin.texture = tex
             end
 
-            local iconPath = ns.icons[node.type] or "Interface\\Icons\\INV_Misc_QuestionMark"
+            local iconPath = (ns.icons and ns.icons[node.type]) or "Interface\\Icons\\INV_Misc_QuestionMark"
             if tex:GetTexture() ~= iconPath then
               tex:SetTexture(iconPath)
             end
 
             tex:Show()
-            tex:SetAlpha(1)
             pin:Show()
-            pin:SetAlpha(1)
 
             pin.coord = coord
             pin.uiMapID = mapID
@@ -151,19 +137,17 @@ function ns.AreaMap()
             end)
 
             pin:SetScript("OnClick", function(self, button)
-              local coord = self.coord
-              local uiMapID = self.uiMapID
-              local node = ns.nodes[uiMapID] and ns.nodes[uiMapID][coord]
-              if not node then return end
-              if node.mnID then
-                BattlefieldMapFrame:SetMapID(node.mnID)
+              local c, id = self.coord, self.uiMapID
+              local n = ns.nodes[id] and ns.nodes[id][c]; if not n then return end
+              if n.mnID then
+                BattlefieldMapFrame:SetMapID(n.mnID)
                 ns.UpdateAreaMapIcons()
               else
-                ns.pluginHandler.OnClick(ns.pluginHandler, button, true, uiMapID, coord)
+                ns.pluginHandler.OnClick(ns.pluginHandler, button, true, id, c)
               end
             end)
 
-            table.insert(AreaMapIcons, pin)
+            table.insert(ns.AreaMapIcons, pin)
           end
         end
       end
@@ -172,54 +156,19 @@ function ns.AreaMap()
 
   local function loadAreaMapMapNotes()
     LoadAreaMapSetting()
+    if not ns.AreaMapFrame then return end
 
     C_Timer.After(1, function()
       if not ns.AreaMapFrame then return end
-    
-      local eventFrame = CreateFrame("Frame")
-      eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-      eventFrame:RegisterEvent("MAP_EXPLORATION_UPDATED")
-      eventFrame:SetScript("OnEvent", function()
-        if ns.AreaMapFrame:IsShown() then
-          ns.ResetAreaMapToPlayerLocation()
-        end
-      end)
-    
-      ns.AreaMapFrame:HookScript("OnShow", function()
-        ns.UpdateAreaMapIcons()
-        ns.UpdateAreaMapFogOfWar()
-      end)
-      
-    
-      hooksecurefunc(ns.AreaMapFrame, "SetMapID", function()
-        ns.UpdateAreaMapIcons()
-        ns.UpdateAreaMapFogOfWar()
-      end)
-    
-      hooksecurefunc(ns.AreaMapFrame.ScrollContainer, "SetPanTarget", ns.UpdateAreaMapIcons)
-    
-      BattlefieldMapFrame:HookScript("OnHide", function()
-        StopAreaMapTicker()
+
+      hooksecurefunc(ns.AreaMapFrame, "SetMapID", function(frame, newMapID)
+        C_Timer.After(0, function()
+          lastUpdate = 0
+          ns.UpdateAreaMapIcons()
+          ns.UpdateAreaMapFogOfWar()
+        end)
       end)
 
-      WorldMapFrame:HookScript("OnHide", function()
-        StopAreaMapTicker()
-      end)
-
-      if ns.AreaMapFrame:IsShown() then
-        ns.UpdateAreaMapIcons()
-      end
-    end)
-
-    WorldMapFrame:HookScript("OnShow", function()
-
-      if ns.AreaMapFrame and ns.AreaMapFrame:IsShown() then
-        StartAreaMapTicker()
-      end
-
-      if ns.AreaMapFrame and ns.AreaMapFrame:IsShown() then
-        C_Timer.After(0.05, ns.UpdateAreaMapIcons)
-      end
     end)
 
   end
@@ -377,27 +326,44 @@ local function CreateAreaMapScaleSliderFrame()
 end
 
 function ns.SetFogOfWarColor(info, r, g, b, a)
-    local db = ns.Addon.db.profile
-    db.FogOfWarColorR = r
-    db.FogOfWarColorG = g
-    db.FogOfWarColorB = b
-    db.FogOfWarColorA = a
-    db.areaMap.areaMapFogOfWarColorR = r
-    db.areaMap.areaMapFogOfWarColorG = g
-    db.areaMap.areaMapFogOfWarColorB = b
-    db.areaMap.areaMapFogOfWarColorA = a
+  local db = ns.Addon.db.profile
 
-    ns.UpdateWorldMapFogOfWar()
-    ns.UpdateAreaMapFogOfWar()
+  db.FogOfWarColor = db.FogOfWarColor or {}
+  db.FogOfWarColor.FogOfWarColorR = r
+  db.FogOfWarColor.FogOfWarColorG = g
+  db.FogOfWarColor.FogOfWarColorB = b
+  db.FogOfWarColor.FogOfWarColorA = a
+
+  db.areaMap.areaMapFogOfWarColorR = r
+  db.areaMap.areaMapFogOfWarColorG = g
+  db.areaMap.areaMapFogOfWarColorB = b
+  db.areaMap.areaMapFogOfWarColorA = a
+
+  HandyNotes:GetModule("FogOfWarButton"):SetFogOfWarColor(nil, r, g, b, a)
+
+  ns.UpdateAreaMapFogOfWar()
 end
 
-
 function ns.UpdateAreaMapFogOfWar()
-  if not ns.Addon.db.profile.areaMap.showAreaMapDropDownMenu then return end
-  if not ns.Addon.db.profile.areaMap.showAreaMapUnexploredAreas then return end
   if not ns.AreaMapFrame or not ns.AreaMapFrame:IsShown() then return end
 
-  ns.AreaMapOverlayPool = ns.AreaMapOverlayPool or CreateTexturePool(ns.AreaMapFrame.ScrollContainer.Child, "ARTWORK")
+  local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+  if not db then return end
+
+  if not (db.areaMap and db.areaMap.showAreaMapDropDownMenu) then
+    if ns.AreaMapOverlayPool then ns.AreaMapOverlayPool:ReleaseAll() end
+    return
+  end
+
+  if not db.areaMap.showAreaMapUnexploredAreas then
+    if ns.AreaMapOverlayPool then ns.AreaMapOverlayPool:ReleaseAll() end
+    return
+  end
+
+  local Parent = ns.AreaMapFrame and ns.AreaMapFrame.ScrollContainer and ns.AreaMapFrame.ScrollContainer.Child
+  if not Parent then return end
+
+  ns.AreaMapOverlayPool = ns.AreaMapOverlayPool or CreateTexturePool(Parent, "ARTWORK")
   ns.AreaMapOverlayPool:ReleaseAll()
 
   local mapID = ns.AreaMapFrame:GetMapID()
@@ -407,14 +373,13 @@ function ns.UpdateAreaMapFogOfWar()
   local mapData = ns.FogOfWarDataMists
   if not artID or not mapData or not mapData[artID] then return end
 
-  local TILE_SIZE_WIDTH = 256
-  local TILE_SIZE_HEIGHT = 256
+  local TILE_SIZE_WIDTH, TILE_SIZE_HEIGHT = 256, 256
 
-  local fogColors = ns.Addon.db.profile.FogOfWarColor or {}
-  local fogR = fogColors.FogOfWarColorR or 1
-  local fogG = fogColors.FogOfWarColorG or 0
-  local fogB = fogColors.FogOfWarColorB or 0
-  local fogA = fogColors.FogOfWarColorA or 1
+  local fog = db.FogOfWarColor or {}
+  local fogR = fog.FogOfWarColorR or 1
+  local fogG = fog.FogOfWarColorG or 0
+  local fogB = fog.FogOfWarColorB or 0
+  local fogA = fog.FogOfWarColorA or 1
 
   local explored = {}
   local exploredTextures = C_MapExplorationInfo.GetExploredMapTextures(mapID)
@@ -431,33 +396,30 @@ function ns.UpdateAreaMapFogOfWar()
       local height = math.fmod(math.floor(key / 2 ^ 26), 2 ^ 13)
       local offsetX = math.fmod(math.floor(key / 2 ^ 13), 2 ^ 13)
       local offsetY = math.fmod(key, 2 ^ 13)
-      local fileDataIDs = { strsplit(",", files) }
 
+      local fileDataIDs = { strsplit(",", files) }
       local numWide = math.ceil(width / TILE_SIZE_WIDTH)
       local numTall = math.ceil(height / TILE_SIZE_HEIGHT)
 
       for j = 1, numTall do
         for k = 1, numWide do
           local tex = ns.AreaMapOverlayPool:Acquire()
-          tex:SetParent(ns.AreaMapFrame.ScrollContainer.Child)
+          tex:SetParent(Parent)
           tex:SetDrawLayer("ARTWORK")
 
-          local textureWidth = (k < numWide) and TILE_SIZE_WIDTH or math.fmod(width, TILE_SIZE_WIDTH)
-          if textureWidth == 0 then textureWidth = TILE_SIZE_WIDTH end
+          local w = (k < numWide) and TILE_SIZE_WIDTH or math.fmod(width, TILE_SIZE_WIDTH); if w == 0 then w = TILE_SIZE_WIDTH  end
+          local h = (j < numTall) and TILE_SIZE_HEIGHT or math.fmod(height, TILE_SIZE_HEIGHT); if h == 0 then h = TILE_SIZE_HEIGHT end
 
-          local textureHeight = (j < numTall) and TILE_SIZE_HEIGHT or math.fmod(height, TILE_SIZE_HEIGHT)
-          if textureHeight == 0 then textureHeight = TILE_SIZE_HEIGHT end
+          local fw, fh = 16, 16
+          while fw < w do fw = fw * 2 end
+          while fh < h do fh = fh * 2 end
 
-          local fileWidth, fileHeight = 16, 16
-          while fileWidth < textureWidth do fileWidth = fileWidth * 2 end
-          while fileHeight < textureHeight do fileHeight = fileHeight * 2 end
-
-          local texIndex = ((j - 1) * numWide) + k
-          local fileDataID = tonumber(fileDataIDs[texIndex])
+          local idx = ((j - 1) * numWide) + k
+          local fileDataID = tonumber(fileDataIDs[idx])
           if fileDataID then
             tex:SetTexture(fileDataID, nil, nil, "TRILINEAR")
-            tex:SetSize(textureWidth, textureHeight)
-            tex:SetTexCoord(0, textureWidth / fileWidth, 0, textureHeight / fileHeight)
+            tex:SetSize(w, h)
+            tex:SetTexCoord(0, w / fw, 0, h / fh)
             tex:SetPoint("TOPLEFT", offsetX + (TILE_SIZE_WIDTH * (k - 1)), -(offsetY + (TILE_SIZE_HEIGHT * (j - 1))))
             tex:SetVertexColor(fogR, fogG, fogB, fogA)
             tex:Show()
@@ -506,22 +468,20 @@ function ns.CreateMapNotesDropdown()
     else
       print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " |cffffff00" .. L["Zones"] .. " " .. L["icons"] .. " |cffff0000" .. L["are hidden"])
     end
-  end  
+  end
 
   function ToggleAreaMapUnexploredAreas()
     local db = ns.Addon.db.profile.areaMap
     db.showAreaMapUnexploredAreas = not db.showAreaMapUnexploredAreas
-  
+
     if not db.showAreaMapUnexploredAreas and ns.AreaMapOverlayPool then
       ns.AreaMapOverlayPool:ReleaseAll()
     else
       ns.UpdateAreaMapFogOfWar()
     end
-  
+
     ns.RefreshDropdown()
   end
-  
-  
 
   function InitializeDropdown(self, level)
 
@@ -580,58 +540,45 @@ function ns.OpenSharedFogOfWarColorPicker()
   local b = fog.FogOfWarColorB or 0
   local a = fog.FogOfWarColorA or 1
 
-  local function applyColor(nr, ng, nb, na)
-    local db = ns.Addon.db.profile
-    db.FogOfWarColor = db.FogOfWarColor or {}
-    db.FogOfWarColor.FogOfWarColorR = nr
-    db.FogOfWarColor.FogOfWarColorG = ng
-    db.FogOfWarColor.FogOfWarColorB = nb
-    db.FogOfWarColor.FogOfWarColorA = na
-  
-    db.areaMap.areaMapFogOfWarColorR = nr
-    db.areaMap.areaMapFogOfWarColorG = ng
-    db.areaMap.areaMapFogOfWarColorB = nb
-    db.areaMap.areaMapFogOfWarColorA = na
-  
-    if ns.UpdateAreaMapFogOfWar then
-      ns.UpdateAreaMapFogOfWar()
+  local function readAlphaDirect()
+    if OpacitySliderFrame and OpacitySliderFrame.GetValue then
+      return OpacitySliderFrame:GetValue()
     end
-  
-    local fog = ns.FogOfWar or HandyNotes:GetModule("FogOfWarButton", true)
-    if fog and type(fog.Refresh) == "function" and (not fog.IsEnabled or fog:IsEnabled()) then
-      fog:Refresh()
-    else
-      for pin in WorldMapFrame:EnumeratePinsByTemplate("MapExplorationPinTemplate") do
-        if pin.RefreshOverlays then
-          pcall(function() pin:RefreshOverlays(true) end)
-        end
-      end
+    if ColorPickerFrame.GetColorAlpha then
+      return ColorPickerFrame:GetColorAlpha()
     end
+    return a
   end
 
-  local function callback()
+  local function applyAll(nr, ng, nb, na)
+    if ns.FogOfWar and ns.FogOfWar.SetFogOfWarColor then
+      ns.FogOfWar:SetFogOfWarColor(nil, nr, ng, nb, na)
+    end
+    if ns.FogOfWar and ns.FogOfWar.SetOverlayColor then
+      ns.FogOfWar:SetOverlayColor(nil, nr, ng, nb, na)
+    end
+    if ns.UpdateAreaMapFogOfWar then ns.UpdateAreaMapFogOfWar() end
+  end
+
+  local function onAnyChange()
     local nr, ng, nb = ColorPickerFrame:GetColorRGB()
-    local na = 1 - (ColorPickerFrame.opacity or 0)
-    applyColor(nr, ng, nb, na)
+    local na = readAlphaDirect()
+    applyAll(nr, ng, nb, na)
   end
 
-  local function cancelCallback(prev)
-    local na = 1 - (prev.opacity or 0)
-    applyColor(prev.r, prev.g, prev.b, na)
+  local function onCancel(prev)
+    applyAll(r, g, b, a)
   end
 
   ColorPickerFrame:SetupColorPickerAndShow({
-    r = r,
-    g = g,
-    b = b,
-    opacity = 1 - a,
-    hasOpacity = false,
-    swatchFunc = callback,
-    opacityFunc = callback,
-    cancelFunc = cancelCallback,
+    r = r, g = g, b = b,
+    opacity = a,
+    hasOpacity = true,
+    swatchFunc = onAnyChange,
+    opacityFunc = onAnyChange,
+    cancelFunc = onCancel,
   })
 end
-
 
 function ns.CreateResetMapIDButton()
   if ns.ResetMapIDButton or not ns.AreaMapFrame or not ns.AreaMapFrame.BorderFrame then return end
@@ -659,12 +606,16 @@ end
 function ns.ResetAreaMapToPlayerLocation()
   ns._autoCorrected = false
   local mapID = C_Map.GetBestMapForUnit("player")
-  if mapID then
-    if BattlefieldMapFrame and BattlefieldMapFrame:IsShown() then
-      BattlefieldMapFrame:SetMapID(mapID)     
-    end
+  if mapID and BattlefieldMapFrame and BattlefieldMapFrame:IsShown() then
+    BattlefieldMapFrame:SetMapID(mapID)
+    C_Timer.After(0, function()
+      lastUpdate = 0
+      ns.UpdateAreaMapIcons()
+      ns.UpdateAreaMapFogOfWar()
+    end)
   end
 end
+
 
 local function InitBattlefieldMapFeatures()
   if not ns.Addon.db.profile.areaMap.showAreaMapDropDownMenu then return end
@@ -890,5 +841,20 @@ function ns.StopFogOfWarColorSyncTicker()
   if ns._fogColorTicker then
     ns._fogColorTicker:Cancel()
     ns._fogColorTicker = nil
+  end
+end
+
+do -- refresh areamap
+  if not ns._hookedHNNotify and HandyNotes and type(HandyNotes.SendMessage) == "function" then
+    hooksecurefunc(HandyNotes, "SendMessage", function(_, msg, who)
+      if msg == "HandyNotes_NotifyUpdate" and who == "MapNotes" then
+        if ns._suppressAreaMapMirror then return end
+
+        if ns.AreaMapFrame and ns.AreaMapFrame:IsShown() and ns.Addon.db.profile.areaMap.showAreaMapDropDownMenu then
+          if ns.UpdateAreaMapIcons then ns.UpdateAreaMapIcons() end
+        end
+      end
+    end)
+    ns._hookedHNNotify = true
   end
 end

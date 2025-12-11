@@ -122,6 +122,7 @@ L["Layout"] = "Layout";
 L["Symmetry"] = "Symmetry";
 L["Asymmetry"] = "Asymmetry";
 L["Copy Texts"] = "Copy Item List";
+L["Toggle Item List"] = "Toggle Item List";
 L["Syntax"] = "Syntax";
 L["Plain Text"] = "Plain Text";
 L["BB Code"] = "BB Code";
@@ -372,6 +373,8 @@ L["Switch Form To Human"] = "Switch to|cffffffff Human|r form";
 L["InGame Command"] = "In-Game Command";
 L["Hide Player Items"] = "Hide Player Items";
 L["Hide Player Items Tooltip"] = "Hide anything that doesn\'t belong to this item set.";
+L["Hide Duplicated Appearance"] = "Hide Duplicates";
+L["Hide Duplicated Appearance Tooltip"] = "Some ensembles may contain items with the same appearances. Enable this option to show the unique ones.";
 
 --NPC Browser--
 NARCI_NPC_BROWSER_TITLE_LEVEL = ".*%?%?.?";      --Level ?? --Use this to check if the second line of the tooltip is NPC's title or unit type
@@ -783,6 +786,9 @@ L["Speed"] = ITEM_MOD_CR_SPEED_SHORT or "Speed";
 L["Format Stat EXP"] = "+%d%% EXP Gain";
 L["Format Rank"] = AZERITE_ESSENCE_RANK or "Rank %d";
 L["Cloak Rank"] = "Cloak Rank";
+
+L["Artifact Ability"] = "Artifact Ability";
+L["Toggle Artifact UI"] = "Click to toggle Artifact UI.";
 
 
 --Gem Manager--

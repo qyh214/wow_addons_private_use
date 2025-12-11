@@ -1,0 +1,9 @@
+﻿## Interface: 110207
+## Title: |cffff0000Jingsi|r Tools SoundPack CN
+## Title-zhCN: |cffff0000静思|r 副本助手 中文语音包
+## Version: 1.00
+## Dependencies: JST
+## Author: Paopao001
+## X-JST-SoundPack-Name: 默认语音包(中文)
+## X-JST-SoundPack-File: Interface\AddOns\JST_SoundPackCN\sounds\
+## IconTexture: Interface\AddOns\JST\media\logo.png

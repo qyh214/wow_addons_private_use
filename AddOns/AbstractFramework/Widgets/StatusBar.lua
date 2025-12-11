@@ -1,14 +1,50 @@
 ---@class AbstractFramework
 local AF = _G.AbstractFramework
+local CreateColor = CreateColor
+
+---------------------------------------------------------------------
+-- status bar countdown
+---------------------------------------------------------------------
+---@param bar table
+---@param totalTime number
+---@param timeRemaining number|nil if nil then countdown will be used
+---@param onFinish? fun(self:AF_BlizzardStatusBar|AF_SimpleStatusBar)
+function AF.StartStatusBarCountdown(bar, totalTime, timeRemaining, onFinish)
+    bar._countdownTime = timeRemaining or totalTime
+
+    bar:SetMinMaxValues(0, totalTime)
+    bar:SetValue(bar._countdownTime)
+
+    bar:SetScript("OnUpdate", function(self, elapsed)
+        self._countdownTime = self._countdownTime - elapsed
+        if self._countdownTime <= 0 then
+            self:SetValue(0)
+            self:SetScript("OnUpdate", nil)
+            if onFinish then onFinish(self) end
+        else
+            self:SetValue(self._countdownTime)
+        end
+    end)
+end
+
+function AF.StopStatusBarCountdown(bar)
+    bar:SetScript("OnUpdate", nil)
+end
 
 ---------------------------------------------------------------------
 -- blizzard
 ---------------------------------------------------------------------
----@class AF_BlizzardStatusBar:AF_SmoothStatusBar
+---@class AF_BlizzardStatusBar:AF_SmoothStatusBar,Frame
 local AF_BlizzardStatusBarMixin = {}
 
 function AF_BlizzardStatusBarMixin:SetBarValue(v)
     AF.SetStatusBarValue(self, v)
+end
+
+function AF_BlizzardStatusBarMixin:SetMinMaxValues(minValue, maxValue)
+    self:_SetMinMaxValues(minValue, maxValue)
+    self.minValue = minValue
+    self.maxValue = maxValue
 end
 
 function AF_BlizzardStatusBarMixin:UpdatePixels()
@@ -20,26 +56,29 @@ function AF_BlizzardStatusBarMixin:UpdatePixels()
     end
 end
 
----@param color string color name defined in Color.lua
----@param borderColor string color name defined in Color.lua
----@param progressTextType string? "percentage" or "current_value" or "current_max".
+---@param minValue number|nil default is 0
+---@param maxValue number|nil default is 100
+---@param width number|nil
+---@param height number|nil
+---@param color string|nil default is addon accent color
+---@param borderColor string|nil default is border color
+---@param progressTextType string|nil "percentage" or "current_value" or "current_max".
 ---@return AF_BlizzardStatusBar bar
 function AF.CreateBlizzardStatusBar(parent, minValue, maxValue, width, height, color, borderColor, progressTextType)
+    color = color or AF.GetAddonAccentColorName()
+    borderColor = borderColor or "border"
+
     local bar = CreateFrame("StatusBar", nil, parent, "BackdropTemplate")
     AF.ApplyDefaultBackdropWithColors(bar, AF.GetColorTable(color, 0.9, 0.1), borderColor)
     AF.SetSize(bar, width, height)
 
-    minValue = minValue or 1
-    maxValue = maxValue or 1
+    minValue = minValue or 0
+    maxValue = maxValue or 100
 
     bar._SetMinMaxValues = bar.SetMinMaxValues
 
-    hooksecurefunc(bar, "SetMinMaxValues", function(self, l, h)
-        self.minValue = l
-        self.maxValue = h
-    end)
-
-    Mixin(bar, SmoothStatusBarMixin) -- SetSmoothedValue/ResetSmoothedValue/SetMinMaxSmoothedValue
+    Mixin(bar, AF_BaseWidgetMixin)
+    Mixin(bar, AF_SmoothStatusBarMixin) -- SetSmoothedValue/ResetSmoothedValue/SetMinMaxSmoothedValue
     Mixin(bar, AF_BlizzardStatusBarMixin)
 
     bar:SetStatusBarTexture(AF.GetPlainTexture())
@@ -72,7 +111,7 @@ function AF.CreateBlizzardStatusBar(parent, minValue, maxValue, width, height, c
     bar:SetMinMaxValues(minValue, maxValue)
     bar:SetValue(minValue)
 
-    AF.AddToPixelUpdater(bar)
+    AF.AddToPixelUpdater_OnShow(bar)
 
     return bar
 end
@@ -98,25 +137,32 @@ local function UpdateValue(self)
     end
 end
 
----@class AF_SimpleStatusBar:Frame
+---@class AF_SimpleStatusBar:AF_SmoothStatusBar,Frame
 local AF_SimpleStatusBarMixin = {}
--- appearance
-function AF_SimpleStatusBarMixin:SetTexture(texture, lossTexture)
-    self.fg:SetTexture(texture)
-    self.loss:SetTexture(lossTexture or texture)
+
+---@param texture string
+---@param lossTexture string|nil if nil then use texture
+---@param wrapModeHorizontal string|nil
+---@param wrapModeVertical string|nil
+---@param filterMode string|nil
+function AF_SimpleStatusBarMixin:SetTexture(texture, lossTexture, wrapModeHorizontal, wrapModeVertical, filterMode)
+    self.fg:SetTexture(texture, wrapModeHorizontal, wrapModeVertical, filterMode)
+    self.loss:SetTexture(lossTexture or texture, wrapModeHorizontal, wrapModeVertical, filterMode)
 end
 
 function AF_SimpleStatusBarMixin:SetColor(r, g, b, a)
     self.fg:SetVertexColor(r, g, b, a)
 end
 
-function AF_SimpleStatusBarMixin:SetGradientColor(...)
+---@param orientation Orientation|nil
+---@param ... number|table (r1, g1, b1, a1, r2, g2, b2, a2) or {startColorTable, endColorTable}
+function AF_SimpleStatusBarMixin:SetGradientColor(orientation, ...)
     if select("#", ...) == 2 then
         local startColor, endColor = ...
-        self.fg:SetGradient("HORIZONTAL", CreateColor(AF.UnpackColor(startColor)), CreateColor(AF.UnpackColor(endColor)))
+        self.fg:SetGradient(orientation or "HORIZONTAL", CreateColor(AF.UnpackColor(startColor)), CreateColor(AF.UnpackColor(endColor)))
     else
         local r1, g1, b1, a1, r2, g2, b2, a2 = ...
-        self.fg:SetGradient("HORIZONTAL", CreateColor(r1, g1, b1, a1), CreateColor(r2, g2, b2, a2))
+        self.fg:SetGradient(orientation or "HORIZONTAL", CreateColor(r1, g1, b1, a1), CreateColor(r2, g2, b2, a2))
     end
 end
 
@@ -124,13 +170,15 @@ function AF_SimpleStatusBarMixin:SetLossColor(r, g, b, a)
     self.loss:SetVertexColor(r, g, b, a)
 end
 
-function AF_SimpleStatusBarMixin:SetGradientLossColor(...)
+----@param orientation Orientation|nil
+---@param ... number|table (r1, g1, b1, a1, r2, g2, b2, a2) or {startColorTable, endColorTable}
+function AF_SimpleStatusBarMixin:SetGradientLossColor(orientation, ...)
     if select("#", ...) == 2 then
         local startColor, endColor = ...
-        self.loss:SetGradient("HORIZONTAL", CreateColor(AF.UnpackColor(startColor)), CreateColor(AF.UnpackColor(endColor)))
+        self.loss:SetGradient(orientation or "HORIZONTAL", CreateColor(AF.UnpackColor(startColor)), CreateColor(AF.UnpackColor(endColor)))
     else
         local r1, g1, b1, a1, r2, g2, b2, a2 = ...
-        self.loss:SetGradient("HORIZONTAL", CreateColor(r1, g1, b1, a1), CreateColor(r2, g2, b2, a2))
+        self.loss:SetGradient(orientation or "HORIZONTAL", CreateColor(r1, g1, b1, a1), CreateColor(r2, g2, b2, a2))
     end
 end
 
@@ -222,8 +270,8 @@ function AF_SimpleStatusBarMixin:SetValue(value)
     UpdateValue(self)
 end
 
--- desaturate
-function AF_SimpleStatusBarMixin:Desaturate(enabled)
+-- dim
+function AF_SimpleStatusBarMixin:Dim(enabled)
     self.mod:SetShown(enabled)
 end
 
@@ -241,6 +289,7 @@ end
 ---@return AF_SimpleStatusBar bar
 function AF.CreateSimpleStatusBar(parent, name, noBackdrop)
     local bar = CreateFrame("Frame", name, parent)
+    Mixin(bar, AF_BaseWidgetMixin)
     Mixin(bar, AF_SimpleStatusBarMixin)
 
     if noBackdrop then
@@ -256,7 +305,7 @@ function AF.CreateSimpleStatusBar(parent, name, noBackdrop)
     bar.value = 0
 
     -- smooth
-    Mixin(bar, AF.SmoothStatusBarMixin)
+    Mixin(bar, AF_SmoothStatusBarMixin)
     bar:SetSmoothing(false)
 
     -- foreground texture
@@ -281,7 +330,7 @@ function AF.CreateSimpleStatusBar(parent, name, noBackdrop)
     local bg = bar:CreateTexture(nil, "BORDER", nil, -2)
     bar.bg = bg
 
-    -- desaturate
+    -- dim
     local mod = bar:CreateTexture(nil, "ARTWORK", nil, 1)
     bar.mod = mod
     mod:SetAllPoints(fg.mask)
@@ -293,7 +342,7 @@ function AF.CreateSimpleStatusBar(parent, name, noBackdrop)
     bar:SnapTextureToEdge(noBackdrop)
 
     -- pixel perfect
-    AF.AddToPixelUpdater(bar, bar.DefaultUpdatePixels)
+    AF.AddToPixelUpdater_Auto(bar, bar.DefaultUpdatePixels)
 
     return bar
 end

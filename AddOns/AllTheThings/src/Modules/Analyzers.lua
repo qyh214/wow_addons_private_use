@@ -46,6 +46,7 @@ local OnUpdate_CheckSymlinks = function(self, force)
 end
 api.CheckSymlinks = function()
 	if not added.CheckSymlinks then
+		added.CheckSymlinks = true
 		app.AddCustomWindowOnUpdate("AnalyzerCheckSymlinks", OnUpdate_CheckSymlinks)
 	end
 
@@ -57,3 +58,18 @@ api.CheckRunners = function()
 		runner.Stats()
 	end
 end
+
+-- Add Analyzer chat commands for simple calls
+app.ChatCommands.Add("analyze-symlinks", function(args)
+	api.CheckSymlinks()
+end, {
+	"Usage : /att analyze-symlinks",
+	"Opens an ATT window with every symlink in ATT to check for symlinks which fail to retrieve expected data",
+})
+
+app.ChatCommands.Add("analyze-runners", function(args)
+	api.CheckRunners()
+end, {
+	"Usage : /att analyze-runners",
+	"Prints stats for every ATT Runner",
+})

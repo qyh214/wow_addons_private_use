@@ -2,6 +2,7 @@
     <Script file="ClassicCreateLinks.lua"/>
     <Script file="ClassicDefaults.lua"/>
     <Script file="ClassicOptions.lua"/>
+    <Script file="ClassicCoordsDisplay.lua"/>
     <Script file="ClassicMmb.lua"/>
     <Script file="ClassicWmb.lua"/>
     <Script file="ClassicFogOfWar.lua"/>

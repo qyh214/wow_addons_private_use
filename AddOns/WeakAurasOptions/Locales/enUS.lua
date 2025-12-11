@@ -194,7 +194,6 @@ Off Screen]=]
 	L["Aura: '%s'"] = "Aura: '%s'"
 	L["Auto-Clone (Show All Matches)"] = "Auto-Clone (Show All Matches)"
 	L["Automatic length"] = "Automatic length"
-	L["Available Voices are system specific"] = "Available Voices are system specific"
 	L["Backdrop Color"] = "Backdrop Color"
 	L["Backdrop in Front"] = "Backdrop in Front"
 	L["Backdrop Style"] = "Backdrop Style"
@@ -234,6 +233,7 @@ Off Screen]=]
 	L["Circular Texture %s"] = "Circular Texture %s"
 	L["Clear Debug Logs"] = "Clear Debug Logs"
 	L["Clear Saved Data"] = "Clear Saved Data"
+	L["Click to replace the name with %s."] = "Click to replace the name with %s."
 	L["Clip Overlays"] = "Clip Overlays"
 	L["Clipped by Foreground"] = "Clipped by Foreground"
 	L["Close"] = "Close"
@@ -468,6 +468,7 @@ If the entered number is a decimal (e.g. 0.5), fraction (e.g. 1/2), or percentag
 	L["Group Settings"] = "Group Settings"
 	L["Hawk"] = "Hawk"
 	L["Help"] = "Help"
+	L["Hide After"] = "Hide After"
 	L["Hide Background"] = "Hide Background"
 	L["Hide Glows applied by this aura"] = "Hide Glows applied by this aura"
 	L["Hide on"] = "Hide on"
@@ -558,6 +559,7 @@ If the entered number is a decimal (e.g. 0.5), fraction (e.g. 1/2), or percentag
 	L["Magnetically Align"] = "Magnetically Align"
 	L["Main"] = "Main"
 	L["Manual with %i/%i"] = "Manual with %i/%i"
+	L["Matches %s spells"] = "Matches %s spells"
 	L["Matches the height setting of a horizontal bar or width for a vertical bar."] = "Matches the height setting of a horizontal bar or width for a vertical bar."
 	L["Max"] = "Max"
 	L["Max Length"] = "Max Length"
@@ -662,6 +664,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Paste Trigger Settings"] = "Paste Trigger Settings"
 	L["Places a tick on the bar"] = "Places a tick on the bar"
 	L["Play Sound"] = "Play Sound"
+	L["Player Spells found:"] = "Player Spells found:"
 	L["Portrait Zoom"] = "Portrait Zoom"
 	L["Position and Size Settings"] = "Position and Size Settings"
 	L["Preferred Match"] = "Preferred Match"
@@ -795,6 +798,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Spark Texture"] = "Spark Texture"
 	L["Specific Currency ID"] = "Specific Currency ID"
 	L["Spell Selection Filters"] = "Spell Selection Filters"
+	L["Spells found:"] = "Spells found:"
 	L["Stack Info"] = "Stack Info"
 	L["Stacks - The number of stacks of an aura (usually)"] = "Stacks - The number of stacks of an aura (usually)"
 	L["Standby"] = "Standby"
@@ -807,6 +811,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Stop Motion %s"] = "Stop Motion %s"
 	L["Stop Motion Settings"] = "Stop Motion Settings"
 	L["Stop Sound"] = "Stop Sound"
+	L["Stretched by Foreground"] = "Stretched by Foreground"
 	L["Sub Elements"] = "Sub Elements"
 	L["Sub Option %i"] = "Sub Option %i"
 	L["Subevent"] = "Subevent"
@@ -830,6 +835,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["The duration of the animation in seconds."] = "The duration of the animation in seconds."
 	L["The duration of the animation in seconds. The finish animation does not start playing until after the display would normally be hidden."] = "The duration of the animation in seconds. The finish animation does not start playing until after the display would normally be hidden."
 	L["The group and all direct children will share the same base frame level."] = "The group and all direct children will share the same base frame level."
+	L["The Multi Target mode is less reliable and not recommended."] = "The Multi Target mode is less reliable and not recommended."
+	L["The Multi Target mode requires a name or spell id filter"] = "The Multi Target mode requires a name or spell id filter"
 	L["The trigger number is optional. When no trigger number is specified, the trigger selected via dynamic information will be used."] = "The trigger number is optional. When no trigger number is specified, the trigger selected via dynamic information will be used."
 	L["The type of trigger"] = "The type of trigger"
 	L["The WeakAuras Options Addon version %s doesn't match the WeakAuras version %s. If you updated the addon while the game was running, try restarting World of Warcraft. Otherwise try reinstalling WeakAuras"] = "The WeakAuras Options Addon version %s doesn't match the WeakAuras version %s. If you updated the addon while the game was running, try restarting World of Warcraft. Otherwise try reinstalling WeakAuras"
@@ -919,9 +926,10 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["Vertical Bar"] = "Vertical Bar"
 	L["View"] = "View"
 	L["View custom code"] = "View custom code"
-	L["Voice"] = "Voice"
+	L["Voice Settings"] = "Voice Settings"
 	L["We thank"] = "We thank"
 	L["WeakAuras %s on WoW %s"] = "WeakAuras %s on WoW %s"
+	L["WeakAuras recommends using spell ids instead of names. Spell ids are automatically localized."] = "WeakAuras recommends using spell ids instead of names. Spell ids are automatically localized."
 	L["What do you want to do?"] = "What do you want to do?"
 	L["Whole Area"] = "Whole Area"
 	L["wrapping"] = "wrapping"
@@ -937,6 +945,15 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["You already have this group/aura. Importing will create a duplicate."] = "You already have this group/aura. Importing will create a duplicate."
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"
 	L["You are about to delete a trigger. |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "You are about to delete a trigger. |cFFFF0000This cannot be undone!|r Would you like to continue?"
+	L[ [=[You are about to Import an Aura with custom Lua code on a Hardcore server.
+
+|cFFFF0000There is a risk the custom code could be used to kill your hardcore character!|r
+
+Would you like to continue?]=] ] = [=[You are about to Import an Aura with custom Lua code on a Hardcore server.
+
+|cFFFF0000There is a risk the custom code could be used to kill your hardcore character!|r
+
+Would you like to continue?]=]
 	L[ [=[You can add a comma-separated list of state values here that (when changed) WeakAuras should also run the Anchor Code on.
 
 WeakAuras will always run custom anchor code if you include 'changed' in this list, or when a region is added, removed, or re-ordered.]=] ] = [=[You can add a comma-separated list of state values here that (when changed) WeakAuras should also run the Anchor Code on.

@@ -210,6 +210,9 @@ app.TryColorizeName = function(group, name)
 	-- locked things
 	elseif group.locked then
 		return Colorize(name, colors.Locked);
+	-- lockable things (use breadcrumb color for similar concept)
+	elseif group.lc then
+		return Colorize(name, colors.Breadcrumb)
 	-- breadcrumbs (should always be covered within Quest lib)
 	-- elseif group.isBreadcrumb then
 	-- 	return Colorize(name, colors.Breadcrumb);

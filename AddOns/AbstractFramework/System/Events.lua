@@ -1,8 +1,6 @@
 ---@class AbstractFramework
 local AF = _G.AbstractFramework
 
-AF.AddEventHandler(AF)
-
 ---------------------------------------------------------------------
 -- login
 ---------------------------------------------------------------------
@@ -31,7 +29,7 @@ setmetatable(instanceInfo, {
     end
 })
 
-local function CheckInstanceStatus(_, event)
+local function CheckInstanceStatus()
     local isIn, iType = IsInInstance()
 
     local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, LfgDungeonID = GetInstanceInfo()
@@ -72,10 +70,10 @@ end
 AF:RegisterEvent("SCENARIO_UPDATE", AF.GetDelayedInvoker(1, CheckInstanceStatus))
 
 local function AF_PLAYER_ENTERING_WORLD(_, _, isInitialLogin, isReloadingUi)
-    AF.Fire("AF_PLAYER_ENTERING_WORLD", isInitialLogin, isReloadingUi)
-    AF.DelayedInvoke(0.5, CheckInstanceStatus)
+    AF.Fire("AF_PLAYER_ENTERING_WORLD_DELAYED", isInitialLogin, isReloadingUi)
+    CheckInstanceStatus()
 end
-AF:RegisterEvent("PLAYER_ENTERING_WORLD", AF_PLAYER_ENTERING_WORLD)
+AF:RegisterEvent("PLAYER_ENTERING_WORLD", AF.GetDelayedInvoker(0.5, AF_PLAYER_ENTERING_WORLD))
 
 function AF.IsInInstance()
     return instanceInfo.isIn
@@ -104,3 +102,94 @@ end
 --* AF_COMBAT_ENTER / AF_COMBAT_LEAVE
 AF:RegisterEvent("PLAYER_REGEN_DISABLED", AF.GetFireFunc("AF_COMBAT_ENTER"))
 AF:RegisterEvent("PLAYER_REGEN_ENABLED", AF.GetFireFunc("AF_COMBAT_LEAVE"))
+
+---------------------------------------------------------------------
+-- group
+---------------------------------------------------------------------
+local IsInRaid = IsInRaid
+local IsInGroup = IsInGroup
+local GetNumGroupMembers = GetNumGroupMembers
+local UnitIsGroupLeader = UnitIsGroupLeader
+local UnitIsGroupAssistant = UnitIsGroupAssistant
+local IterateGroupPlayers = AF.IterateGroupPlayers
+local GetUnitName = GetUnitName
+
+--* AF_GROUP_UPDATE / AF_GROUP_SIZE_CHANGED / AF_GROUP_TYPE_CHANGED
+local groupType, lastGroupType, groupSize, lastGroupSize
+local groupPermission, lastGroupPermission, markerPermission, lastMarkerPermission
+
+local nameToToken = {}
+AF.UnitNameToToken = nameToToken
+
+local function AF_GROUP_UPDATE(_, event)
+    if event == "PLAYER_LOGIN" then
+        AF:UnregisterEvent("PLAYER_LOGIN", AF_GROUP_UPDATE)
+    end
+
+    wipe(nameToToken)
+
+    --! NOTE: for PLAYER_LOGIN/PLAYER_ENTERING_WORLD(initial) event, IsInRaid/IsInGroup always return false
+
+    if IsInRaid() then
+        groupType = "raid"
+        groupPermission = (UnitIsGroupLeader("player") or UnitIsGroupAssistant("player")) and "raid" or false
+        markerPermission = groupPermission
+    elseif IsInGroup() then
+        groupType = "party"
+        groupPermission = UnitIsGroupLeader("player") and "party" or false
+        markerPermission = "party"
+    else
+        groupType = "solo"
+        groupPermission = false
+        markerPermission = "solo"
+    end
+
+    groupSize = GetNumGroupMembers()
+
+    -- build name to unit token map
+    for unit in IterateGroupPlayers() do
+        local name = GetUnitName(unit, true)
+        if name then
+            nameToToken[name] = unit
+            if not name:match(".+-.+") then
+                nameToToken[name .. "-" .. AF.player.normalizedRealm] = unit
+            end
+        end
+    end
+
+    -- group size changed
+    if groupSize ~= lastGroupSize then
+        AF.Fire("AF_GROUP_SIZE_CHANGED", groupSize, lastGroupSize)
+    end
+
+    -- group type changed
+    if groupType ~= lastGroupType then
+        AF.Fire("AF_GROUP_TYPE_CHANGED", groupType, lastGroupType)
+    end
+
+    -- permission changed
+    if groupPermission ~= lastGroupPermission then
+        AF.Fire("AF_GROUP_PERMISSION_CHANGED", groupPermission, lastGroupPermission)
+    end
+
+    -- marker permission changed
+    if markerPermission ~= lastMarkerPermission then
+        AF.Fire("AF_MARKER_PERMISSION_CHANGED", markerPermission, lastMarkerPermission)
+    end
+
+    AF.Fire("AF_GROUP_UPDATE", groupType, groupSize)
+
+    lastGroupType = groupType
+    lastGroupSize = groupSize
+    lastGroupPermission = groupPermission
+    lastMarkerPermission = markerPermission
+end
+AF:RegisterEvent("GROUP_ROSTER_UPDATE", AF.GetDelayedInvoker(1, AF_GROUP_UPDATE))
+AF:RegisterEvent("PLAYER_LOGIN", AF_GROUP_UPDATE)
+
+-- only available for party/raid players
+---@param name string
+---@return string unitID
+function AF.UnitTokenFromName(name)
+    return name and nameToToken[name]
+end

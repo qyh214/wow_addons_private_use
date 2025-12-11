@@ -60,12 +60,6 @@ app.CreateCurrencyClass = app.CreateClass(CLASS, KEY, {
 		return cache.GetCachedField(t, "costCollectibles", default_costCollectibles);
 	end,
 	collectibleAsCost = app.CollectibleAsCost,
-	-- some calculated properties can let fall-through to the merge source of a group instead of needing to re-calculate in every copy
-	isCost = function(t)
-		local merge = t.__merge
-		if not merge then return end
-		return merge.isCost
-	end,
 	statistic = function(t)
 		local info = C_CurrencyInfo_GetCurrencyInfo(t.currencyID)
 		if not info then return end
@@ -78,6 +72,18 @@ app.CreateCurrencyClass = app.CreateClass(CLASS, KEY, {
 	end,
 })
 
+local function OnClickCostItem(row, button)
+	if button ~= "RightButton" then
+		return true
+	end
+
+	local group = row.ref
+	if not group then return true end
+
+	-- perform a search-based popout of the cost item rather than cloning the group
+	app.CreatePopoutForSearch(group.key..":"..group.currencyID)
+	return true
+end
 local CreateCostCurrency = app.CreateClass("CostCurrency", KEY, {
 	IsClassIsolated = true,
 	-- total is the count of the cost currency required
@@ -99,6 +105,7 @@ local CreateCostCurrency = app.CreateClass("CostCurrency", KEY, {
 	costCollectibles = app.EmptyFunction,
 	collectibleAsCost = app.EmptyFunction,
 	costsCount = app.EmptyFunction,
+	OnClick = function() return OnClickCostItem end,
 })
 -- Wraps the given Type Object as a Cost Currency, allowing altered functionality representing this being a calculable 'cost'
 app.CreateCostCurrency = function(t, total)

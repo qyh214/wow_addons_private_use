@@ -387,7 +387,7 @@ app:CreateWindow("ItemFinder", {
 								t.info = info;
 								t.retries = nil;
 								self.HarvestedItemDatabase[itemID] = info;
-								
+
 								if itemLink then
 									ItemHarvester:ClearLines();
 									ItemHarvester:SetOwner(UIParent,"ANCHOR_NONE")
@@ -486,7 +486,7 @@ app:CreateWindow("ItemFinder", {
 					return tostring(itemID);
 				end,
 			});
-			local ClearButton = 
+			local ClearButton =
 			{
 				text = "Clear Harvested Item Database",
 				icon = 133733,
@@ -500,7 +500,7 @@ app:CreateWindow("ItemFinder", {
 					return true;
 				end,
 			};
-			local StartButton = 
+			local StartButton =
 			{
 				text = "Start Search",
 				icon = 133733,
@@ -517,7 +517,7 @@ app:CreateWindow("ItemFinder", {
 								tinsert(data.g, CreateItemHarvester(itemID, {
 									parent = data
 								}));
-								
+
 								count = count + 1;
 								if count > step then
 									count = 0;
@@ -555,7 +555,7 @@ app:CreateWindow("ItemFinder", {
 				progress = 0,
 				total = 0,
 				back = 1,
-				maxItemID = 248753,
+				maxItemID = 256000,
 				minItemID = 1,
 				step = 1000,
 				g = { ClearButton, StartButton }
@@ -574,7 +574,7 @@ app:CreateWindow("ItemFinder", {
 	OnRefresh = function(self, ...)
 		self:DelayedCall("Update", 5);
 		return true;
-								
+
 	end,
 	]]--
 	OnLoad = function(self, settings)
@@ -618,7 +618,7 @@ app:CreateWindow("QuestFinder", {
 					if link and link ~= "" and link ~= " " and not IsRetrieving(link) then
 						return link;
 					end
-					
+
 					t.retries = (t.retries or 0) + 1;
 					if t.retries > 30 then
 						rawset(t, "collected", true);
@@ -696,7 +696,7 @@ app:CreateWindow("SpellFinder", {
 					if link and link ~= "" and link ~= " " then
 						return link;
 					end
-					
+
 					t.retries = (t.retries or 0) + 1;
 					if t.retries > 30 then
 						rawset(t, "collected", true);

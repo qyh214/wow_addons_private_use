@@ -9,8 +9,15 @@ local UnitPowerType = UnitPowerType
 local UnitReaction = UnitReaction
 local UnitIsPlayer = UnitIsPlayer
 local UnitInPartyIsAI = UnitInPartyIsAI
-local UnitClassBase = UnitClassBase
+local UnitClassBase = AF.UnitClassBase
 local UnitGUID = UnitGUID
+local UnitEffectiveLevel = UnitEffectiveLevel
+local UnitIsWildBattlePet = UnitIsWildBattlePet
+local UnitIsBattlePetCompanion = UnitIsBattlePetCompanion
+local GetRelativeDifficultyColor = GetRelativeDifficultyColor
+local GetCreatureDifficultyColor = GetCreatureDifficultyColor
+local QuestDifficultyColors = QuestDifficultyColors
+local GetPetTeamAverageLevel = C_PetJournal and C_PetJournal.GetPetTeamAverageLevel
 
 local ACCENT_COLOR = {["hex"] = "ffff6600", ["t"] = {1, 0.4, 0, 1}, ["normal"] = {1, 0.4, 0, 0.3}, ["hover"] = {1, 0.4, 0, 0.6}}
 local ACCENT_COLOR_ALT = {["hex"] = "ffff0066", ["t"] = {1, 0, 0.4, 1}, ["normal"] = {1, 0, 0.4, 0.3}, ["hover"] = {1, 0, 0.4, 0.6}}
@@ -28,12 +35,14 @@ local COLORS = {
     ["border"] = {["hex"] = "ff000000", ["t"] = {0, 0, 0, 1}},
     ["header"] = {["hex"] = "ff202020", ["t"] = {0.127, 0.127, 0.127, 1}}, -- header background
     ["widget"] = {["hex"] = "ff262626", ["t"] = {0.15, 0.15, 0.15, 1}}, -- widget background
+    ["widget_highlight"] = {["hex"] = "ff333333", ["t"] = {0.2, 0.2, 0.2, 1}},
     ["mask"] = {["hex"] = "b3333333", ["t"] = {0.2, 0.2, 0.2, 0.7}},
     ["combat_mask"] = {["hex"] = "bf332b2b", ["t"] = {0.2, 0.17, 0.17, 0.75}},
     ["disabled"] = {["hex"] = "ff666666", ["t"] = {0.4, 0.4, 0.4, 1}},
     ["none"] = {["hex"] = "00000000", ["t"] = {0, 0, 0, 0}},
     ["yellow_text"] = {["hex"] = "ffffd100", ["t"] = {1, 0.82, 0, 1}},
     ["shadow"] = {["hex"] = "3f000000", ["t"] = {0, 0, 0, 0.25}},
+    ["tip"] = {["hex"] = "ffb2b2b2", ["t"] = {0.7, 0.7, 0.7, 1}},
 
     -- sheet
     ["sheet_normal"] = {["t"] = {0.15, 0.15, 0.15, 0.9}}, -- row/column normal
@@ -128,6 +137,16 @@ local COLORS = {
     ["aura_castbyme"] = {["hex"] = "ff00cc00", ["t"] = {0, 0.8, 0}},
     ["aura_dispellable"] = {["hex"] = "ffffff00", ["t"] = {1, 1, 0}},
 
+    -- markers
+    ["marker1"] = {["hex"] = "ffffff00", ["t"] = {1, 1, 0}},
+    ["marker2"] = {["hex"] = "ffff7f3f", ["t"] = {1, 0.5, 0.25}},
+    ["marker3"] = {["hex"] = "ffa335ee", ["t"] = {0.6, 0.2, 0.8}},
+    ["marker4"] = {["hex"] = "ff1eff00", ["t"] = {0.118, 1, 0}},
+    ["marker5"] = {["hex"] = "ffaaaadd", ["t"] = {0.67, 0.67, 0.87}},
+    ["marker6"] = {["hex"] = "ff0070dd", ["t"] = {0, 0.439, 0.867}},
+    ["marker7"] = {["hex"] = "ffff2020", ["t"] = {1, 0.125, 0.125}},
+    ["marker8"] = {["hex"] = "ffffffff", ["t"] = {1, 1, 1}},
+
     -- power color (color from PowerBarColor & ElvUI)
     ["MANA"] = {["hex"] = "ff007fff", ["t"] = {0, 0.5, 1}}, -- 0, 0, 1
     ["RAGE"] = {["hex"] = "ffff0000", ["t"] = {1, 0, 0}},
@@ -169,6 +188,15 @@ local COLORS = {
     ["WoWToken"] = {["hex"] = "ff00ccff", ["t"] = {0, 0.8000000715255737, 1, 1}}, -- ITEM_QUALITY8_DESC
 }
 
+-- update accent color
+AF.RegisterCallback("AF_LOADED", function()
+    if AFConfig.accentColor.type == "custom" then
+        COLORS["accent"] = AFConfig.accentColor.color
+    elseif AFConfig.accentColor.type == "class" then
+        COLORS["accent"] = AF.BuildAccentColorTable(AF.player.class)
+    end
+end, "high")
+
 ---@param color string
 ---@return boolean
 function AF.HasColor(color)
@@ -177,48 +205,75 @@ end
 
 ---@param color string
 ---@param alpha? number
----@param saturation? number
+---@param factor? number
 ---@return number r
 ---@return number g
 ---@return number b
 ---@return number a
-function AF.GetColorRGB(color, alpha, saturation)
+function AF.GetColorRGB(color, alpha, factor)
+    color = color or "white"
+
     if color:find("^#") then
+        if alpha or factor then
+            color = AF.ScaleColorHex(color, factor, alpha)
+        end
         return AF.ConvertHEXToRGB(color)
     end
 
-    assert(COLORS[color], "no such color:", color)
+    -- assert(COLORS[color], "no such color:", color)
 
-    saturation = saturation or 1
-    alpha = alpha or COLORS[color]["t"][4] or 1
-    return COLORS[color]["t"][1] * saturation, COLORS[color]["t"][2] * saturation, COLORS[color]["t"][3] * saturation, alpha
+    if alpha or factor then
+        factor = factor or 1
+        alpha = alpha or COLORS[color]["t"][4] or 1
+        return COLORS[color]["t"][1] * factor, COLORS[color]["t"][2] * factor, COLORS[color]["t"][3] * factor, alpha
+    end
+
+    return COLORS[color]["t"][1], COLORS[color]["t"][2], COLORS[color]["t"][3], COLORS[color]["t"][4] or 1
 end
 
 ---@param color string
 ---@param alpha? number
----@param saturation? number
----@return table
-function AF.GetColorTable(color, alpha, saturation)
+---@param factor? number
+---@return table colorTable {r, g, b, a}
+function AF.GetColorTable(color, alpha, factor)
+    color = color or "white"
+
     if color:find("^#") then
+        if alpha or factor then
+            color = AF.ScaleColorHex(color, factor, alpha)
+        end
         return {AF.ConvertHEXToRGB(color)}
     end
 
-    assert(COLORS[color], "no such color:", color)
+    -- assert(COLORS[color], "no such color:", color)
 
-    saturation = saturation or 1
-    alpha = alpha or COLORS[color]["t"][4]
+    factor = factor or 1
+    alpha = alpha or COLORS[color]["t"][4] or 1
 
-    return {COLORS[color]["t"][1] * saturation, COLORS[color]["t"][2] * saturation, COLORS[color]["t"][3] * saturation, alpha}
+    return {COLORS[color]["t"][1] * factor, COLORS[color]["t"][2] * factor, COLORS[color]["t"][3] * factor, alpha}
 end
 
 ---@param color string
+---@param alpha? number
+---@param factor? number
 ---@return string hexColor \"rrggbb\" or \"aarrggbb\"
-function AF.GetColorHex(color)
+function AF.GetColorHex(color, alpha, factor)
+    color = color or "white"
+
     if color:find("^#") then
-        return color:gsub("#", "")
+        if alpha or factor then
+            return AF.ScaleColorHex(color, factor, alpha)
+        else
+            return color:gsub("#", "")
+        end
     end
 
-    assert(COLORS[color], "no such color:", color)
+    -- assert(COLORS[color], "no such color:", color)
+
+    if alpha or factor then
+        local r, g, b, a = AF.GetColorRGB(color, alpha, factor)
+        return AF.ConvertRGBToHEX(r, g, b, a)
+    end
 
     if not COLORS[color]["hex"] then
         COLORS[color]["hex"] = AF.ConvertRGB256ToHEX(AF.ConvertToRGB256(unpack(COLORS[color]["t"])))
@@ -227,9 +282,11 @@ function AF.GetColorHex(color)
 end
 
 ---@param color string
+---@param alpha? number
+---@param factor? number
 ---@return string colorStr |caarrggbb
-function AF.GetColorStr(color)
-    local hex = AF.GetColorHex(color)
+function AF.GetColorStr(color, alpha, factor)
+    local hex = AF.GetColorHex(color, alpha, factor)
 
     if #hex == 8 then
         return "|c" .. hex
@@ -258,6 +315,9 @@ local GetItemQualityColor = C_Item.GetItemQualityColor
 ---@return number g
 ---@return number b
 function AF.GetItemQualityColor(quality)
+    if not quality then
+        return 0, 0, 0
+    end
     local r, g, b = GetItemQualityColor(quality)
     return r, g, b
 end
@@ -283,16 +343,10 @@ local function BuildColorTable(color)
     end
 end
 
-AF.RegisterCallback("AF_LOADED", function()
-    if type(AFConfig.customAccentColor) == "table" then
-        COLORS["accent"] = AFConfig.customAccentColor
-    end
-end, "high")
-
 ---@param color string|table colorName, colorHex, colorTable
 ---@param buttonNormalColor? string|table
 ---@param buttonHoverColor? string|table
-function AF.SetAccentColor(color, buttonNormalColor, buttonHoverColor)
+function AF.BuildAccentColorTable(color, buttonNormalColor, buttonHoverColor)
     local t = BuildColorTable(color)
 
     -- normal
@@ -313,37 +367,47 @@ function AF.SetAccentColor(color, buttonNormalColor, buttonHoverColor)
         hover[4] = 0.6
     end
 
-    COLORS["accent"] = {["hex"] = t["hex"], ["t"] = t["t"], ["normal"] = normal, ["hover"] = hover}
-    AFConfig.customAccentColor = COLORS["accent"]
+    return {["hex"] = t["hex"], ["t"] = t["t"], ["normal"] = normal, ["hover"] = hover}
+end
+
+---@param color string|table colorName, colorHex, colorTable
+---@param buttonNormalColor? string|table
+---@param buttonHoverColor? string|table
+function AF.SetAccentColor(color, buttonNormalColor, buttonHoverColor)
+    assert(AFConfig, "AFConfig not loaded")
+    COLORS["accent"] = AF.BuildAccentColorTable(color, buttonNormalColor, buttonHoverColor)
+    AFConfig.accentColor.type = "custom"
+    AFConfig.accentColor.color = COLORS["accent"]
 end
 
 function AF.ResetAccentColor()
+    assert(AFConfig, "AFConfig not loaded")
     COLORS["accent"] = AF.Copy(ACCENT_COLOR)
-    AFConfig.customAccentColor = nil
+    AFConfig.accentColor.type = "default"
 end
 
 ---@param alpha? number
----@param saturation? number
+---@param factor? number
 ---@return number r
 ---@return number g
 ---@return number b
 ---@return number a
-function AF.GetAccentColorRGB(alpha, saturation)
-    return AF.GetColorRGB("accent", alpha, saturation)
+function AF.GetAccentColorRGB(alpha, factor)
+    return AF.GetColorRGB("accent", alpha, factor)
 end
 
 ---@param alpha? number
----@param saturation? number
+---@param factor? number
 ---@return table
-function AF.GetAccentColorTable(alpha, saturation)
-    return AF.GetColorTable("accent", alpha, saturation)
+function AF.GetAccentColorTable(alpha, factor)
+    return AF.GetColorTable("accent", alpha, factor)
 end
 
 ---@param alpha? number
----@param saturation? number
+---@param factor? number
 ---@return string
-function AF.GetAccentColorHex(alpha, saturation)
-    return AF.GetColorHex("accent", alpha, saturation)
+function AF.GetAccentColorHex(alpha, factor)
+    return AF.GetColorHex("accent", alpha, factor)
 end
 
 ---@param color string|table colorName, colorHex, colorTable
@@ -391,46 +455,46 @@ function AF.GetAddonAccentColorName(addon)
 end
 
 ---@param alpha? number
----@param saturation? number
+---@param factor? number
 ---@return table
-function AF.GetAddonAccentColorTable(addon, alpha, saturation)
-    return AF.GetColorTable(AF.GetAddonAccentColorName(addon), alpha, saturation)
+function AF.GetAddonAccentColorTable(addon, alpha, factor)
+    return AF.GetColorTable(AF.GetAddonAccentColorName(addon), alpha, factor)
 end
 
 ---@param alpha? number
----@param saturation? number
+---@param factor? number
 ---@return number r
 ---@return number g
 ---@return number b
 ---@return number a
-function AF.GetAddonAccentColorRGB(addon, alpha, saturation)
-    return AF.GetColorRGB(AF.GetAddonAccentColorName(addon), alpha, saturation)
+function AF.GetAddonAccentColorRGB(addon, alpha, factor)
+    return AF.GetColorRGB(AF.GetAddonAccentColorName(addon), alpha, factor)
 end
 
 ---@param alpha? number
----@param saturation? number
+---@param factor? number
 ---@return string
-function AF.GetAddonAccentColorHex(addon, alpha, saturation)
-    return AF.GetColorHex(AF.GetAddonAccentColorName(addon), alpha, saturation)
+function AF.GetAddonAccentColorHex(addon, alpha, factor)
+    return AF.GetColorHex(AF.GetAddonAccentColorName(addon), alpha, factor)
 end
 
 ---@param class string capitalized class name
 ---@param alpha? number
----@param saturation? number
+---@param factor? number
 ---@return number r
 ---@return number g
 ---@return number b
 ---@return number a
-function AF.GetClassColor(class, alpha, saturation)
-    saturation = saturation or 1
+function AF.GetClassColor(class, alpha, factor)
+    factor = factor or 1
 
-    if COLORS[class] then
-        return AF.GetColorRGB(class, alpha, saturation)
+    if class and COLORS[class] then
+        return AF.GetColorRGB(class, alpha, factor)
     end
 
-    if RAID_CLASS_COLORS[class] then
+    if class and RAID_CLASS_COLORS[class] then
         local r, g, b = RAID_CLASS_COLORS[class]:GetRGB()
-        return r * saturation, g * saturation, b * saturation, alpha or 1
+        return r * factor, g * factor, b * factor, alpha or 1
     end
 
     return AF.GetColorRGB("UNKNOWN")
@@ -440,7 +504,6 @@ end
 ---@return number r
 ---@return number g
 ---@return number b
----@return number a
 function AF.GetUnitClassColor(unit)
     local class
     if UnitIsPlayer(unit) or UnitInPartyIsAI(unit) then -- player
@@ -457,41 +520,96 @@ end
 
 ---@param unit string unitId
 ---@param alpha? number
----@param saturation? number
+---@param factor? number
 ---@return number r
 ---@return number g
 ---@return number b
----@return number a
-function AF.GetReactionColor(unit, alpha, saturation)
+function AF.GetReactionColor(unit, alpha, factor)
     --! reaction to player, MUST use UnitReaction(unit, "player")
     --! NOT UnitReaction("player", unit)
     local reaction = UnitReaction(unit, "player") or 0
     if reaction <= 2 then
-        return AF.GetColorRGB("HOSTILE", alpha, saturation)
+        return AF.GetColorRGB("HOSTILE", alpha, factor)
     elseif reaction <= 4 then
-        return AF.GetColorRGB("NEUTRAL", alpha, saturation)
+        return AF.GetColorRGB("NEUTRAL", alpha, factor)
     else
-        return AF.GetColorRGB("FRIENDLY", alpha, saturation)
+        return AF.GetColorRGB("FRIENDLY", alpha, factor)
     end
+end
+
+-- if unit is player or AI party member, return class color.
+-- if unit is non-player, return reaction color.
+---@param unit string unitId
+---@return number r
+---@return number g
+---@return number b
+function AF.GetUnitColor(unit)
+    if UnitIsPlayer(unit) or UnitInPartyIsAI(unit) then -- player
+        local class = UnitClassBase(unit)
+        return AF.GetClassColor(class)
+    else
+        return AF.GetReactionColor(unit)
+    end
+end
+
+---@param unit string unitId
+---@return string name "FRIENDLY", "NEUTRAL", "HOSTILE" or class name
+function AF.GetUnitColorName(unit)
+    local name
+    if UnitIsPlayer(unit) or UnitInPartyIsAI(unit) then -- player
+        local class = UnitClassBase(unit)
+        name = class
+    else
+        --! reaction to player, MUST use UnitReaction(unit, "player")
+        --! NOT UnitReaction("player", unit)
+        local reaction = UnitReaction(unit, "player") or 0
+        if reaction <= 2 then
+            name = "HOSTILE"
+        elseif reaction <= 4 then
+            name = "NEUTRAL"
+        else
+            name = "FRIENDLY"
+        end
+    end
+    return name
+end
+
+---@param unit string unitId
+---@return number r
+---@return number g
+---@return number b
+function AF.GetLevelColor(unit)
+    if (AF.isRetail or AF.isMists) and (UnitIsWildBattlePet(unit) or UnitIsBattlePetCompanion(unit)) then
+        local teamLevel = GetPetTeamAverageLevel()
+        local level = UnitBattlePetLevel(unit)
+        if teamLevel ~= level then
+            color = GetRelativeDifficultyColor(teamLevel, level)
+        else
+            color = QuestDifficultyColors.difficult
+        end
+    else
+        color = GetCreatureDifficultyColor(UnitEffectiveLevel(unit))
+    end
+    return color.r, color.g, color.b
 end
 
 ---@param power string capitalized power token
 ---@param unit string unitId
 ---@param alpha? number
----@param saturation? number
+---@param factor? number
 ---@return number r
 ---@return number g
 ---@return number b
 ---@return number a
-function AF.GetPowerColor(power, unit, alpha, saturation)
-    saturation = saturation or 1
+function AF.GetPowerColor(power, unit, alpha, factor)
+    factor = factor or 1
 
     if COLORS[power] then
         if COLORS[power]["start"] then -- gradient
-            return COLORS[power]["start"][1] * saturation, COLORS[power]["start"][2] * saturation, COLORS[power]["start"][3] * saturation, alpha,
-                COLORS[power]["end"][1] * saturation, COLORS[power]["end"][2] * saturation, COLORS[power]["end"][3] * saturation, alpha
+            return COLORS[power]["start"][1] * factor, COLORS[power]["start"][2] * factor, COLORS[power]["start"][3] * factor, alpha,
+                COLORS[power]["end"][1] * factor, COLORS[power]["end"][2] * factor, COLORS[power]["end"][3] * factor, alpha
         else
-            return AF.GetColorRGB(power, alpha, saturation)
+            return AF.GetColorRGB(power, alpha, factor)
         end
     end
 
@@ -502,7 +620,7 @@ function AF.GetPowerColor(power, unit, alpha, saturation)
         end
     end
 
-    return AF.GetColorRGB("MANA", alpha, saturation)
+    return AF.GetColorRGB("MANA", alpha, factor)
 end
 
 ---add new COLORS to the color table with specific name
@@ -613,7 +731,7 @@ end
 ---@return string gradientText
 function AF.GetGradientText(text, startColor, endColor)
     local gradient = ""
-    local length = #text
+    local length = string.utf8len(text)
     local r1, g1, b1, r2, g2, b2
 
     if COLORS[startColor] then
@@ -634,7 +752,7 @@ function AF.GetGradientText(text, startColor, endColor)
         g = AF.Interpolate(g1, g2, i, length - 1)
         b = AF.Interpolate(b1, b2, i, length - 1)
         hex = AF.ConvertRGB256ToHEX(r, g, b)
-        gradient = gradient .. "|cff" .. hex .. text:sub(i + 1, i + 1) .. "|r"
+        gradient = gradient .. "|cff" .. hex .. string.utf8sub(text, i + 1, i + 1) .. "|r"
     end
 
     return gradient

@@ -1,5 +1,5 @@
 -- App locals
-local appName,app = ...;
+local _,app = ...;
 
 -- Check to see if Artifact APIs are available for Legion
 local C_ArtifactUI = C_ArtifactUI;
@@ -10,16 +10,26 @@ if not C_ArtifactUI then
 	return
 end
 
+-- Globals
+local C_ArtifactUI_GetAppearanceInfoByID
+	= C_ArtifactUI.GetAppearanceInfoByID
+
 -- WoW API Cache
 local GetItemInfo = app.WOWAPI.GetItemInfo;
+local IsArtifactRelicItem = app.WOWAPI.IsArtifactRelicItem;
 
 local CurrentArtifactRelicItemLevels = {}
 local pairs, select, math_floor,tinsert,tremove
 	= pairs, select, math.floor,tinsert,tremove
-local L, ColorizeRGB, contains = app.L, app.Modules.Color.ColorizeRGB, app.contains
+local L, ColorizeRGB, contains, CloneDictionary
+	= app.L, app.Modules.Color.ColorizeRGB, app.contains, app.CloneDictionary
 local GetRelativeField, GetRelativeValue = app.GetRelativeField, app.GetRelativeValue;
-local GetDetailedItemLevelInfo, IsArtifactRelicItem = GetDetailedItemLevelInfo, IsArtifactRelicItem;
-local C_TransmogCollection_PlayerHasTransmogItemModifiedAppearance = C_TransmogCollection and C_TransmogCollection.PlayerHasTransmogItemModifiedAppearance;
+local GetDetailedItemLevelInfo = GetDetailedItemLevelInfo;
+local ArtifactDB = setmetatable(app.ArtifactDB or {}, { __index = function(t,key)
+	app.PrintDebug("ArtifactID not in DB!",key)
+	t[key] = app.EmptyTable
+	return t[key]
+end})
 
 local function GetArtifactModItemID(itemID, artifactID, isOffHand)
 	return itemID + (isOffHand and 0.0001 or 0) + (artifactID / 1000)
@@ -28,6 +38,29 @@ app.GetArtifactModItemID = GetArtifactModItemID
 
 local KEY, CACHE, SETTING = "artifactID", "Artifacts", "Transmog"
 local CLASSNAME = "Artifact"
+local ArtifactInfoStatic, ArtifactInfoCached
+-- This is for Artifact data which doesn't change while playing
+ArtifactInfoStatic = setmetatable({}, { __index = function(t,key)
+	local info = { C_ArtifactUI_GetAppearanceInfoByID(key) }
+	if info[1] then
+		-- copy our DB data into the info
+		CloneDictionary(ArtifactDB[key], info)
+		t[key] = info
+		ArtifactInfoCached[key] = info
+	end
+	return info
+end})
+-- This is for Artifact data which can change while playing (collection status)
+ArtifactInfoCached = setmetatable({}, { __index = function(t,key)
+	local info = { C_ArtifactUI_GetAppearanceInfoByID(key) }
+	if info[1] then
+		-- copy our DB data into the info
+		CloneDictionary(ArtifactDB[key], info)
+		t[key] = info
+		ArtifactInfoStatic[key] = info
+	end
+	return info
+end})
 -- Artifact Class
 app.CreateArtifact = app.CreateClass(CLASSNAME, KEY, {
 	artifactinfo = function(t)
@@ -36,9 +69,7 @@ app.CreateArtifact = app.CreateClass(CLASSNAME, KEY, {
 			uiCameraID, altHandUICameraID, swatchR, swatchG, swatchB,
 			modelAlpha, modelDesaturation, suppressGlobalAnim = C_ArtifactUI.GetAppearanceInfoByID(t[KEY]);
 		]]--
-		local info = { C_ArtifactUI.GetAppearanceInfoByID(t[KEY]) };
-		t.artifactinfo = info;
-		return info;
+		return ArtifactInfoStatic[t[KEY]]
 	end,
 	-- TODO: Maybe this should move to an Expansion Thing instead of having a FilterID
 	f = function(t) return 11; end,
@@ -47,15 +78,31 @@ app.CreateArtifact = app.CreateClass(CLASSNAME, KEY, {
 	collected = function(t)
 		return app.TypicalCharacterCollected(CACHE, t[KEY], SETTING)
 	end,
-	name = function(t)
+	text = function(t)
 		-- Artifact listing in the Main item sets category just show 'Variant #' but elsewhere show the Item's name
-		if t.parent and t.parent.headerID then
+		local parent = t.parent
+		if parent and parent.headerID then
 			return t.variantText;
 		end
 		return t.appearanceText;
 	end,
+	name = function(t)
+		-- Artifact listing in the Main item sets category just show 'Variant #' but elsewhere show the Item's name
+		local parent = t.parent
+		if parent and parent.headerID then
+			return t.variantName;
+		end
+		return t.appearanceName;
+	end,
 	title = function(t)
 		return t.variantText;
+	end,
+	variantName = function(t)
+		local info = t.artifactinfo
+		local variantName = info[4]
+		if not variantName then return UNKNOWN end
+		t.variantName = variantName
+		return variantName
 	end,
 	variantText = function(t)
 		local info = t.artifactinfo
@@ -68,6 +115,12 @@ app.CreateArtifact = app.CreateClass(CLASSNAME, KEY, {
 		end
 		t.variantText = text;
 		return text;
+	end,
+	appearanceName = function(t)
+		local info = t.artifactinfo
+		local name = info[3] or UNKNOWN
+		t.appearanceName = name
+		return name
 	end,
 	appearanceText = function(t)
 		local info = t.artifactinfo
@@ -91,15 +144,6 @@ app.CreateArtifact = app.CreateClass(CLASSNAME, KEY, {
 		local info = t.artifactinfo
 		return { info[9], info[10], info[11], 1.0 };
 	end,
-	model = function(t)
-		return GetRelativeValue(t.parent, "model");
-	end,
-	modelScale = function(t)
-		return GetRelativeValue(t.parent, "modelScale") or 0.95;
-	end,
-	modelRotation = function(t)
-		return GetRelativeValue(t.parent, "modelRotation") or 45;
-	end,
 	silentLink = function(t)
 		local itemID = t.itemID;
 		if itemID then
@@ -115,12 +159,28 @@ app.CreateArtifact = app.CreateClass(CLASSNAME, KEY, {
 		-- else app.PrintDebug("Artifact with no ItemID?",t.artifactID)
 		end
 	end,
+	-- only used when an artifact is listed without correpsonding itemID
+	itemID = function(t)
+		local info = t.artifactinfo
+		return t.isOffHand and info.itemOffhandID or info.itemID
+	end,
+	-- custom 'nmc' for Artifact since it doesn't use 'c' but rather 'class' from artifactinfo
+	nmc = function(t)
+		local nmc = t.artifactinfo.class ~= app.ClassIndex
+		-- app.PrintDebug("artifact.nmc",nmc,t[KEY])
+		t.nmc = nmc
+		return nmc
+	end,
 	modItemID = function(t)
 		-- Artifacts will use a fake modItemID by way of the ArtifactID and IsOffhand
-		local modItemID = GetArtifactModItemID(t.itemID, t.artifactID, t.isOffHand)
-		-- app.PrintDebug("artifact.modItemID",modItemID,t.itemID,t.artifactID,t.isOffHand)
-		t.modItemID = modItemID;
-		return modItemID;
+		local itemID = t.itemID
+		if itemID then
+			local artifactID = t.artifactID
+			local modItemID = GetArtifactModItemID(itemID, artifactID, t.isOffHand)
+			-- app.PrintDebug("artifact.modItemID",modItemID,itemID,artifactID,t.isOffHand)
+			t.modItemID = modItemID;
+			return modItemID;
+		end
 	end,
 	-- probably never used ever, but just in case an artifact somehow misses it's appearance...
 	sourceID = function(t)
@@ -130,11 +190,7 @@ app.CreateArtifact = app.CreateClass(CLASSNAME, KEY, {
 			-- app.PrintDebug("Artifact Source",sourceID,t.silentLink)
 			if sourceID and sourceID > 0 then
 				t.sourceID = sourceID;
-				app.SaveHarvestSource(t)
-				if app.IsAccountCached("Sources", sourceID) ~= 1 and C_TransmogCollection_PlayerHasTransmogItemModifiedAppearance(sourceID) then
-					-- app.PrintDebug("Saved Known Source",sourceID)
-					app.SetAccountCached("Sources", sourceID, 1)
-				end
+				-- app.SaveHarvestSource(t)	-- only needed if needing to harvest artifact sourceIDs for some reason
 				return sourceID;
 			end
 		end
@@ -142,12 +198,13 @@ app.CreateArtifact = app.CreateClass(CLASSNAME, KEY, {
 });
 app.AddEventHandler("OnRefreshCollections", function()
 	local object
+	wipe(ArtifactInfoCached)
 	local saved, none = {}, {}
 	for id,_ in pairs(app.GetRawFieldContainer(KEY)) do
 		object = app.SearchForObject(KEY, id, "field")
 		-- This artifact is listed for the current class
 		if not GetRelativeField(object, "nmc", true) then
-			if object.artifactinfo[5] then
+			if ArtifactInfoCached[id][5] then
 				saved[id] = true
 			else
 				none[id] = true

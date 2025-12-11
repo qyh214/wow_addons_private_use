@@ -103,6 +103,10 @@ BFC:RegisterEvent("ADDON_LOADED", function(_, _, addon)
             BFC_DB.publish.mode = BFC_DB.publish.enabled and "always" or "disabled"
             BFC_DB.publish.enabled = nil
         end
+
+        if type(BFC_DB.publish.currentServerOnly) ~= "boolean" then
+            BFC_DB.publish.currentServerOnly = true
+        end
         ---------------------------------------------------------------------
 
         ---------------------------------------------------------------------
@@ -129,7 +133,7 @@ BFC:RegisterEvent("ADDON_LOADED", function(_, _, addon)
         -- title container button
         local button1 = AF.CreateButton(ProfessionsCustomerOrdersFrame.TitleContainer, nil, "accent_hover", 20, 20)
         AF.SetPoint(button1, "RIGHT", ProfessionsCustomerOrdersFrameCloseButton, "LEFT", -1, 0)
-        AF.SetTooltips(button1, "TOP", 0, 5, L["BFCraftsman"])
+        AF.SetTooltip(button1, "TOP", 0, 5, L["BFCraftsman"])
         button1:SetTexture("Interface\\AddOns\\BFCraftsman\\BFC")
         button1:SetOnClick(BFC.ToggleMainFrame)
 
@@ -180,7 +184,7 @@ BFC:RegisterEvent("ADDON_LOADED", function(_, _, addon)
     elseif addon == "Blizzard_Professions" then
         -- title container button
         local button = AF.CreateButton(ProfessionsFrame.TitleContainer, nil, "accent_hover", 20, 20)
-        AF.SetTooltips(button, "TOP", 0, 5, L["BFCraftsman"])
+        AF.SetTooltip(button, "TOP", 0, 5, L["BFCraftsman"])
         button:SetTexture("Interface\\AddOns\\BFCraftsman\\BFC")
         button:SetOnClick(BFC.ToggleMainFrame)
 
@@ -219,12 +223,8 @@ BFC:RegisterEvent("PLAYER_LOGIN", function()
 
     -- check BigFootCommonweal
     if C_AddOns.IsAddOnLoaded("BigFootCommonweal") then
-        local dialog = AF.ShowDialog(AF.UIParent,
-            L["BFCraftsman is not compatible with %s.\nDisable it?"]:format(AF.WrapTextInColor(LOCALE_zhCN and "大脚公益助手" or "BigFootCommonweal", "accent")),
-            250)
-        AF.SetDialogPoint("CENTER")
-        AF.ShowNormalGlow(dialog, 2, nil, true)
-        AF.SetDialogOnConfirm(function()
+        local text = L["BFCraftsman is not compatible with %s.\nDisable it?"]:format(AF.WrapTextInColor(LOCALE_zhCN and "大脚公益助手" or "BigFootCommonweal", "accent"))
+        AF.ShowGlobalDialog(text, function()
             C_AddOns.DisableAddOn("BigFootCommonweal")
             ReloadUI()
         end)

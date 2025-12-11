@@ -168,6 +168,7 @@ function module.options:Load()
 		{0,1,.59},
 		{.53,.53,.93},
 		{.64,.19,.79},
+		{0.20,0.58,0.50},
 	}
 
 	local icons_list = {
@@ -683,6 +684,7 @@ function module.options:Load()
 		MONK=22,
 		DRUID=5,
 		DEMONHUNTER=24,
+		EVOKER=25,
 	}
 
 	local function TextAddData_SetValue(_,arg1,arg2)
@@ -1136,10 +1138,36 @@ function module.options:Load()
 		{L.EJInstanceName[317]..": "..L.bossName[1407],{473,0.68,0.82,2.5}},
 		{L.EJInstanceName[330]..": "..L.bossName[1501],{475,0.30,0.74,2}},
 		{L.EJInstanceName[320],{456}},
+		{L.S_ZoneT34..": "..L.bossName[3129],{2460,0.765,0.266,2}},
+		{L.S_ZoneT34..": "..L.bossName[3130],{2461,0.45,0.66,2}},
+		{L.S_ZoneT34..": "..L.bossName[3131],{2462,0.63,0.65,5}},
+		{L.S_ZoneT34..": "..L.bossName[3132],{2464,0.61,0.48,3}},
+		{L.S_ZoneT34..": "..L.bossName[3133],{2465,0.53,0.37,4}},
+
+		--281-290
+		{L.S_ZoneT34..": "..L.bossName[3122],{2465,0.35,0.71,3}},
+		{L.S_ZoneT34..": "..L.bossName[3134],{2466,0.49,0.55,5}},
+		{L.S_ZoneT34..": "..L.bossName[3135],{2467,0.76,0.49,1.5}},
+		{L.S_ZoneT34..": "..L.bossName[3135],{2468,0.43,0.53,1.5}},
+		{L.S_ZoneT34..": "..L.bossName[3135],{2470,0.49,0.50,1.5}},
+		{L.S_ZoneT34..": "..L.bossName[3135],{2471}},
+		{L.EJInstanceName[362]..": "..L.bossName[1575],{509,0.27,0.78,4}},
+		{L.EJInstanceName[362]..": "..L.bossName[1573],{511,0.49,0.41,1.5}},
+		{L.EJInstanceName[362]..": "..L.bossName[1572],{512,0.71,0.33,4}},
+		{L.EJInstanceName[362]..": "..L.bossName[1574],{512,0.57,0.78,4}},
+
+		--291-300
+		{L.EJInstanceName[362]..": "..L.bossName[1576],{512,0.42,0.58,4}},
+		{L.EJInstanceName[362]..": "..L.bossName[1559],{513,0.25,0.60,2}},
+		{L.EJInstanceName[362]..": "..L.bossName[1579],{514,0.50,0.51,2}},
+		{L.EJInstanceName[362]..": "..L.bossName[1580],{515,0.52,0.68,2}},
 	}
+
+
 	local mapsSorted = {
 		1,
 		{L.NoteColor,10,94,95,96,97,98,99},
+		{L.S_ZoneT34,283,284,285,286,282,281,280,279,278,277,276},
 		{L.S_ZoneT33,271,270,269,268,267,266,265,264},
 		{L.S_ZoneT32,263,262,261,260,259,258,257,256},
 		{L.S_ZoneT31,231,230,229,228,227,226,225,224},
@@ -1164,6 +1192,7 @@ function module.options:Load()
 		}
 		if ExRT.isMoP then
 			ExRT.F.table_add(mapsSorted,{
+				{L.EJInstanceName[362],287,288,289,290,291,292,293,294},
 				{(EXPANSION_NAME4 or "MoP").. " T14",272,273,274,275},
 			})
 		end

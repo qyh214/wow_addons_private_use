@@ -8,6 +8,7 @@ if L then
 	L.ixin = "伊克辛"
 	L.nakt = "纳克特"
 	L.atik = "阿提克"
+	L.bloodworker = "血工"
 	L.hulking_bloodguard = "魁梧的血卫"
 	L.sentry_stagshell = "哨兵鹿壳虫"
 	L.bloodstained_assistant = "沾血的助手"
@@ -131,6 +132,7 @@ if L then
 	L.tamed_ruinstalker = "驯服的废墟追猎者"
 	L.wastelander_ritualist = "废土遗民祭师"
 	L.wastelander_pactspeaker = "废土遗民诉契者"
+	L.evoked_spirit = "挑衅之灵"
 	L.karesh_elemental = "卡雷什元素"
 	L.burrowing_creeper = "掘地蠕行者"
 	L.wastes_creeper = "废土蠕行者"
@@ -211,6 +213,42 @@ if L then
 	L.medbot = "医疗机器人"
 	L.nullbot = "空值机器人"
 	L.awakened_phalanx = "觉醒的方阵兵"
+end
+
+L = BigWigs:NewBossLocale("Brawler's Guild", "zhCN")
+if L then
+	--L.brawlers_guild = "Brawler's Guild"
+	--L.rank = "Rank %d"
+	--L.defeated = "%s defeated"
+
+	--L.sunny = "Sunny"
+	--L.doomflipper = "Doomflipper"
+	--L.goredome = "Goredome"
+	--L.dippy = "Dippy"
+	--L.bruce = "Bruce"
+	--L.bill_the_janitor = "Bill the Janitor"
+	--L.oso = "Oso"
+	--L.the_quacken = "The Quacken"
+	--L.razorgrin = "Razorgrin"
+	--L.blat = "Blat"
+	--L.ooliss = "Ooliss"
+	--L.king_kulaka = "King Kulaka"
+	--L.meatball = "Meatball"
+	--L.ash_katzuum = "Ash'katzuum"
+	--L.crush = "Crush"
+	--L.glorp = "Glorp"
+	--L.klunk = "Klunk"
+	--L.stitches = "Stitches"
+	--L.topps = "Topps"
+	--L.carl = "Carl"
+	--L.leper_gnome_quintet = "Leper Gnome Quintet"
+	--L.mecha_bruce = "Mecha-Bruce"
+	--L.gg_engineering = "GG Engineering"
+	--L.doopy = "Doopy"
+	--L.renegade_swabbie = "Renegade Swabbie"
+	--L.ogrewatch = "Ogrewatch"
+	--L.blingtron_3000 = "Blingtron 3000"
+	--L.epicus_maximus = "Epicus Maximus"
 end
 
 -- The Dawnbreaker

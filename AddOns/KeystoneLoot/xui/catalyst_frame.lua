@@ -19,7 +19,7 @@ Border.Bg:SetTexture('Interface\\FrameGeneral\\UI-Background-Marble');
 
 local function OnEnter(self)
 	GameTooltip:SetOwner(self, 'ANCHOR_RIGHT');
-	GameTooltip:SetText(Translate['Revival Catalyst'], HIGHLIGHT_FONT_COLOR:GetRGB());
+	GameTooltip:SetText(Translate['The Catalyst'], HIGHLIGHT_FONT_COLOR:GetRGB());
 	GameTooltip:Show();
 end
 

@@ -1,6 +1,6 @@
-## https://github.com/simulationcraft/simc/blob/thewarwithin/ActionPriorityLists/default/warrior_fury.simc
-## SimulationCraft Commit Sync: 1bb8d5f
-## Date: 2025-08-06
+## Upstream: https://github.com/simulationcraft/simc/blob/thewarwithin/ActionPriorityLists/default/warrior_fury.simc
+## SimulationCraft Commit Sync: 89266d4
+## Date: 2025-09-05
 
 actions.precombat+=/battle_shout
 actions.precombat+=/berserker_stance,toggle=on
@@ -17,32 +17,31 @@ actions.precombat+=/variable,name=trinket_2_manual,value=trinket.2.is.algethar_p
 actions.precombat+=/variable,name=treacherous_transmitter_precombat_cast,value=2
 actions.precombat+=/use_item,name=treacherous_transmitter
 actions.precombat+=/recklessness,if=!equipped.fyralath_the_dreamrender
-actions.precombat+=/avatar
+actions.precombat+=/avatar,if=!equipped.cursed_stone_idol
 
 # Executed every time the actor is available.
-actions=auto_attack
 actions+=/charge,if=time<=0.5|movement.distance>5
 actions+=/heroic_leap,if=movement.distance>25
-actions+=/potion,if=boss&(fight_remains>300|boss&fight_remains<35&buff.recklessness.up|boss&fight_remains<25)
+actions+=/potion,if=fight_remains>300|fight_remains<300&target.health.pct<35&buff.recklessness.up|boss&fight_remains<25
 actions+=/use_item,name=treacherous_transmitter
 actions+=/pummel
 # Trinkets
-## actions.trinkets+=/do_treacherous_transmitter_task
-actions.trinkets+=/use_item,name=cursed_stone_idol,if=cooldown.avatar.remains<1
-actions.trinkets+=/use_item,name=unyielding_netherprism,if=cooldown.avatar.remains<=85
+## actions+=/do_treacherous_transmitter_task
+actions+=/use_item,name=cursed_stone_idol,if=cooldown.avatar.remains<2
+actions+=/use_item,name=unyielding_netherprism,if=cooldown.avatar.remains<=85
 # Trinkets The trinket with the highest estimated value, will be used first and paired with Avatar.
-actions.trinkets+=/use_item,slot=trinket1,if=variable.trinket_1_buffs&!variable.trinket_1_manual&(!buff.avatar.up&trinket.1.cast_time>0|!trinket.1.cast_time>0)&buff.avatar.up&(variable.trinket_2_exclude|!trinket.2.has_cooldown|trinket.2.cooldown.remains|variable.trinket_priority=1)|trinket.1.proc.any_dps.duration>=fight_remains
-actions.trinkets+=/use_item,slot=trinket2,if=variable.trinket_2_buffs&!variable.trinket_2_manual&(!buff.avatar.up&trinket.2.cast_time>0|!trinket.2.cast_time>0)&buff.avatar.up&(variable.trinket_1_exclude|!trinket.1.has_cooldown|trinket.1.cooldown.remains|variable.trinket_priority=2)|trinket.2.proc.any_dps.duration>=fight_remains
+actions+=/use_item,slot=trinket1,if=variable.trinket_1_buffs&!variable.trinket_1_manual&(!buff.avatar.up&trinket.1.cast_time>0|!trinket.1.cast_time>0)&buff.avatar.up&(variable.trinket_2_exclude|!trinket.2.has_cooldown|trinket.2.cooldown.remains|variable.trinket_priority=1)|trinket.1.proc.any_dps.duration>=fight_remains
+actions+=/use_item,slot=trinket2,if=variable.trinket_2_buffs&!variable.trinket_2_manual&(!buff.avatar.up&trinket.2.cast_time>0|!trinket.2.cast_time>0)&buff.avatar.up&(variable.trinket_1_exclude|!trinket.1.has_cooldown|trinket.1.cooldown.remains|variable.trinket_priority=2)|trinket.2.proc.any_dps.duration>=fight_remains
 # If only one on use trinket provides a buff, use the other on cooldown. Or if neither trinket provides a buff, use both on cooldown.
-actions.trinkets+=/use_item,slot=trinket1,if=!variable.trinket_1_buffs&(trinket.1.cast_time>0&!buff.avatar.up|!trinket.1.cast_time>0)&!variable.trinket_1_manual&(!variable.trinket_1_buffs&(trinket.2.cooldown.remains|!variable.trinket_2_buffs)|(trinket.1.cast_time>0&!buff.avatar.up|!trinket.1.cast_time>0)|cooldown.avatar.remains_expected>20)
-actions.trinkets+=/use_item,slot=trinket2,if=!variable.trinket_2_buffs&(trinket.2.cast_time>0&!buff.avatar.up|!trinket.2.cast_time>0)&!variable.trinket_2_manual&(!variable.trinket_2_buffs&(trinket.1.cooldown.remains|!variable.trinket_1_buffs)|(trinket.2.cast_time>0&!buff.avatar.up|!trinket.2.cast_time>0)|cooldown.avatar.remains_expected>20)
-actions.trinkets+=/use_item,slot=main_hand,if=!equipped.fyralath_the_dreamrender&!equipped.bestinslots&(!variable.trinket_1_buffs|trinket.1.cooldown.remains)&(!variable.trinket_2_buffs|trinket.2.cooldown.remains)
-actions.trinkets+=/use_item,name=bestinslots,if=target.time_to_die>120&(cooldown.avatar.remains>20&(trinket.1.cooldown.remains|trinket.2.cooldown.remains)|cooldown.avatar.remains>20&(!trinket.1.has_cooldown|!trinket.2.has_cooldown))|target.time_to_die<=120&target.health.pct<35&cooldown.avatar.remains>85|target.time_to_die<15
+actions+=/use_item,slot=trinket1,if=!variable.trinket_1_buffs&(trinket.1.cast_time>0&!buff.avatar.up|!trinket.1.cast_time>0)&!variable.trinket_1_manual&(!variable.trinket_1_buffs&(trinket.2.cooldown.remains|!variable.trinket_2_buffs)|(trinket.1.cast_time>0&!buff.avatar.up|!trinket.1.cast_time>0)|cooldown.avatar.remains_expected>20)
+actions+=/use_item,slot=trinket2,if=!variable.trinket_2_buffs&(trinket.2.cast_time>0&!buff.avatar.up|!trinket.2.cast_time>0)&!variable.trinket_2_manual&(!variable.trinket_2_buffs&(trinket.1.cooldown.remains|!variable.trinket_1_buffs)|(trinket.2.cast_time>0&!buff.avatar.up|!trinket.2.cast_time>0)|cooldown.avatar.remains_expected>20)
+actions+=/use_item,slot=main_hand,if=!equipped.fyralath_the_dreamrender&!equipped.bestinslots&(!variable.trinket_1_buffs|trinket.1.cooldown.remains)&(!variable.trinket_2_buffs|trinket.2.cooldown.remains)
+actions+=/use_item,name=bestinslots,if=target.time_to_die>120&(cooldown.avatar.remains>20&(trinket.1.cooldown.remains|trinket.2.cooldown.remains)|cooldown.avatar.remains>20&(!trinket.1.has_cooldown|!trinket.2.has_cooldown))|target.time_to_die<=120&target.health.pct<35&cooldown.avatar.remains>85|target.time_to_die<15
 # Variables
-actions.variables+=/variable,name=st_planning,value=active_enemies=1&(raid_event.adds.in>15|!raid_event.adds.exists)
-actions.variables+=/variable,name=adds_remain,value=active_enemies>=2&(!raid_event.adds.exists|raid_event.adds.exists&raid_event.adds.remains>5)
-actions.variables+=/variable,name=execute_phase,value=(talent.massacre.enabled&target.health.pct<35)|target.health.pct<20
-actions.variables+=/variable,name=on_gcd_racials,value=buff.recklessness.down&buff.avatar.down&rage<80&buff.sudden_death.down&!cooldown.bladestorm.ready&(!cooldown.execute.ready|!variable.execute_phase)
+actions+=/variable,name=st_planning,value=active_enemies=1&(raid_event.adds.in>15|!raid_event.adds.exists)
+actions+=/variable,name=adds_remain,value=active_enemies>=2&(!raid_event.adds.exists|raid_event.adds.exists&raid_event.adds.remains>5)
+actions+=/variable,name=execute_phase,value=(talent.massacre.enabled&target.health.pct<35)|target.health.pct<20
+actions+=/variable,name=on_gcd_racials,value=buff.recklessness.down&buff.avatar.down&rage<80&buff.sudden_death.down&!cooldown.bladestorm.ready&(!cooldown.execute.ready|!variable.execute_phase)
 actions+=/lights_judgment,if=variable.on_gcd_racials
 actions+=/bag_of_tricks,if=variable.on_gcd_racials
 actions+=/berserking,if=buff.recklessness.up
@@ -57,21 +56,22 @@ actions.slayer+=/recklessness
 actions.slayer+=/avatar
 actions.slayer+=/execute,if=buff.ashen_juggernaut.up&buff.ashen_juggernaut.remains<=gcd
 actions.slayer+=/execute,if=buff.sudden_death.remains<2&!variable.execute_phase
-actions.slayer+=/thunderous_roar,if=active_enemies>1
+actions.slayer+=/thunderous_roar,if=active_enemies>1&buff.enrage.up
 actions.slayer+=/champions_spear,if=!cooldown.bladestorm.remains&(!cooldown.avatar.remains|!cooldown.recklessness.remains|buff.avatar.up|buff.recklessness.up)&buff.enrage.up
+actions.slayer+=/odyns_fury,if=active_enemies>1&talent.titanic_rage&buff.meat_cleaver.stack=0
 actions.slayer+=/bladestorm,if=buff.enrage.up&(talent.reckless_abandon&cooldown.avatar.remains>=24|talent.anger_management&cooldown.recklessness.remains>=15&(buff.avatar.up|cooldown.avatar.remains>=8))
 actions.slayer+=/whirlwind,if=active_enemies>=2&talent.meat_cleaver&buff.meat_cleaver.stack=0
 actions.slayer+=/onslaught,if=talent.tenderize&buff.brutal_finish.up
 actions.slayer+=/rampage,if=buff.enrage.remains<gcd
 actions.slayer+=/execute,if=buff.sudden_death.stack=2&buff.enrage.up
 actions.slayer+=/execute,if=debuff.marked_for_execution.stack>1&buff.enrage.up
-actions.slayer+=/odyns_fury,if=active_enemies>1&(buff.enrage.up|talent.titanic_rage)
+actions.slayer+=/odyns_fury,if=active_enemies>1&!talent.titanic_rage
 actions.slayer+=/crushing_blow,if=action.raging_blow.charges=2|buff.brutal_finish.up&(!debuff.champions_might.up|debuff.champions_might.up&debuff.champions_might.remains>gcd)
 actions.slayer+=/bloodbath,if=buff.bloodcraze.stack>=1|(talent.uproar&dot.bloodbath_dot.remains<40&talent.bloodborne)|buff.enrage.up&buff.enrage.remains<gcd
 actions.slayer+=/raging_blow,if=buff.brutal_finish.up&buff.slaughtering_strikes.stack<5&(!debuff.champions_might.up|debuff.champions_might.up&debuff.champions_might.remains>gcd)
 actions.slayer+=/rampage,if=rage>115
-actions.slayer+=/execute,if=variable.execute_phase&debuff.marked_for_execution.up&buff.enrage.up
-actions.slayer+=/bloodthirst,if=target.health.pct<35&talent.vicious_contempt&buff.brutal_finish.up&buff.enrage.up&crit_pct_current>=85|active_enemies>=6
+actions.slayer+=/execute,if=variable.execute_phase&debuff.marked_for_execution.up&buff.enrage.up&active_enemies=1
+actions.slayer+=/bloodthirst,if=target.health.pct<35&talent.vicious_contempt&buff.brutal_finish.up&buff.enrage.up&crit_pct_current>=85&active_enemies=1|(!set_bonus.tww3_4pc&active_enemies>4)
 actions.slayer+=/crushing_blow
 actions.slayer+=/bloodbath
 actions.slayer+=/raging_blow,if=buff.opportunist.up
@@ -86,7 +86,8 @@ actions.slayer+=/bloodthirst
 actions.slayer+=/thunderous_roar
 actions.slayer+=/wrecking_throw
 actions.slayer+=/whirlwind
-actions.slayer+=/storm_bolt,if=buff.bladestorm.up
+## [Syrif] - use_off_gcd isn't in SimC, but is needed for the addon to handle storm bolt while bladestorming
+actions.slayer+=/storm_bolt,if=buff.bladestorm.up,use_off_gcd=1
 
 actions.thane+=/recklessness
 actions.thane+=/avatar

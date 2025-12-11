@@ -32,6 +32,7 @@ function E:UpdateSpell(id, isInit, oldClass, oldType)
 
 		if not spellInfo then
 			self.hash_spelldb[id] = v
+			self.spellcast_all[id] = true
 
 		elseif not v.custom and not defaultBackup[id] then
 			defaultBackup[id] = self:DeepCopy(self.hash_spelldb[id])

@@ -1,8 +1,8 @@
---	29.07.2025
+--	09.12.2025
 
 local GlobalAddonName, MRT = ...
 
-MRT.V = 5195
+MRT.V = 5240
 MRT.T = "R"
 
 MRT.Slash = {}			--> функции вызова из коммандной строки
@@ -72,8 +72,8 @@ elseif MRT.clientVersion < 70000 then
 	MRT.isMoP = true
 	MRT.isWoD = true
 	MRT.T = "Draenor"
-elseif MRT.clientVersion >= 110000 then
-	MRT.is11 = true
+elseif MRT.clientVersion >= 120000 then
+	MRT.isMN = true
 end
 -------------> smart DB <-------------
 MRT.SDB = {}
@@ -91,9 +91,10 @@ end
 MRT.GDB = {}
 -------------> upvalues <-------------
 local pcall, unpack, pairs, coroutine, assert, next, type = pcall, unpack, pairs, coroutine, assert, next, type
-local GetTime, IsEncounterInProgress, CombatLogGetCurrentEventInfo = GetTime, IsEncounterInProgress, CombatLogGetCurrentEventInfo
+local GetTime, CombatLogGetCurrentEventInfo = GetTime, CombatLogGetCurrentEventInfo
 local SendAddonMessage, strsplit, tremove, Ambiguate = C_ChatInfo.SendAddonMessage, strsplit, tremove, Ambiguate
 local C_Timer_NewTicker, debugprofilestop, InCombatLockdown = C_Timer.NewTicker, debugprofilestop, InCombatLockdown
+local IsEncounterInProgress = C_InstanceEncounter and C_InstanceEncounter.IsEncounterInProgress or IsEncounterInProgress
 
 if MRT.T == "D" then
 	MRT.isDev = true
@@ -103,8 +104,8 @@ if MRT.T == "D" then
 	end
 end
 
-MRT.NULL = {}
 MRT.NULLfunc = function() end
+MRT.NULL = {}
 ---------------> Modules <---------------
 MRT.mod = {}
 
@@ -138,8 +139,8 @@ do
 		local self = {}
 		for k,v in pairs(MRT.mod) do self[k] = v end
 		
-		if not disableOptions then
-			self.options = MRT.Options:Add(moduleName,localizatedName)
+		if not disableOptions or disableOptions == 2 then
+			self.options = MRT.Options:Add(moduleName,localizatedName,disableOptions == 2 and true or false)
 
 			self.options:Hide()
 			self.options.moduleName = moduleName
@@ -294,6 +295,8 @@ function MRT.mod:RegisterEvents(...)
 			else
 				pcall(self.main.RegisterEvent,self.main,event)
 			end
+		elseif MRT.isMN then
+			--skip
 		elseif self.CLEUNotInList then
 			if not self.CLEU then self.CLEU = CreateFrame("Frame") end
 			self.CLEU:SetScript("OnEvent",self.main.COMBAT_LOG_EVENT_UNFILTERED)

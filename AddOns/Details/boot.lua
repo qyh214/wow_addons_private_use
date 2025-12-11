@@ -17,12 +17,12 @@
 		end
 		local addonName, Details222 = ...
 		local version, build, date, tvs = GetBuildInfo()
-		Details.build_counter = 13652
-		Details.alpha_build_counter = 13652 --if this is higher than the regular counter, use it instead
+		Details.build_counter = 13857
+		Details.alpha_build_counter = 13857 --if this is higher than the regular counter, use it instead
 		Details.dont_open_news = true
 		Details.game_version = version
 		Details.userversion = version .. " " .. Details.build_counter
-		Details.realversion = 165 --core version, this is used to check API version for scripts and plugins (see alias below)
+		Details.realversion = 166 --core version, this is used to check API version for scripts and plugins (see alias below)
 		Details.gametoc = tvs
 		Details.APIVersion = Details.realversion --core version
 		Details.version = Details.userversion .. " (core " .. Details.realversion .. ")" --simple stirng to show to players
@@ -44,7 +44,7 @@
 
 		Details = Details
 
-		local gameVersionPrefix = "VCT" --v1, v4, v11
+		local gameVersionPrefix = "VPT" --v1, v5, v11
 
 		Details.gameVersionPrefix = gameVersionPrefix
 
@@ -145,6 +145,10 @@
 			DebugPlayerPets = false,
 			DebugBuff = false,
 		}
+
+		---@type details_allinonewindow
+		---@diagnostic disable-next-line: missing-fields
+		Details222.AllInOneWindow = {}
 
 		Details222.Tvs = tvs
 		--namespace for pet
@@ -1232,6 +1236,7 @@ do
 		SharedMedia:Register("statusbar", "BantoBar", [[Interface\AddOns\Details\images\BantoBar]])
 		SharedMedia:Register("statusbar", "Skyline Compact", [[Interface\AddOns\Details\images\bar_textures\bar_skyline_compact.png]])
 		SharedMedia:Register("statusbar", "WorldState Score", [[Interface\WorldStateFrame\WORLDSTATEFINALSCORE-HIGHLIGHT]])
+		SharedMedia:Register("statusbar", "AlwaysWork", [[Interface\WorldStateFrame\WORLDSTATEFINALSCORE-HIGHLIGHT]])
 		SharedMedia:Register("statusbar", "DGround", [[Interface\AddOns\Details\images\bar_background]])
 		SharedMedia:Register("statusbar", "Details Flat", [[Interface\AddOns\Details\images\bar_background]])
 		SharedMedia:Register("statusbar", "Splitbar", [[Interface\AddOns\Details\images\bar_textures\split_bar]])

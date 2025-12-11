@@ -57,7 +57,12 @@ local mountFields = {
 		return IsSpellKnown(t.spellID) or (t.questID and app.IsQuestFlaggedCompleted(t.questID)) or (t.itemID and GetItemCount(t.itemID, true) > 0);
 	end,
 	["b"] = function(t)
-		return (t.parent and t.parent.b) or 1;
+		-- Only mark mounts as BoP by default before Wrath, after that the default is account-wide
+		if app.GameBuildVersion < 30000 then
+			return (t.parent and t.parent.b) or 1;
+		else
+			return (t.parent and t.parent.b) or nil;
+		end
 	end,
 	["name"] = function(t)
 		return GetSpellName(t.spellID) or RETRIEVING_DATA;

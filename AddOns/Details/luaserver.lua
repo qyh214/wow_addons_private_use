@@ -862,6 +862,7 @@ BackdropTemplateMixin = {}
 
 ---@class texture : region
 ---@field AddMaskTexture fun(self: texture, maskTexture: texture)
+---@field GetDrawLayer  fun(self: texture) : drawlayer, number
 ---@field SetDrawLayer fun(self: texture, layer: drawlayer, subLayer: number?)
 ---@field GetTexture fun(self: texture) : any
 ---@field SetTexture fun(self: texture, path: textureid|texturepath?, horizontalWrap: texturewrap?, verticalWrap: texturewrap?, filter: texturefilter?)
@@ -5583,8 +5584,9 @@ SpellTargetUnit = function(unit) end
 
 ToggleSpellAutocast = function() end
 
+---@param unit string
 ---@return string, string, number, number, boolean, string
-UnitCastingInfo = function() return "", "", 0, 0, false, "" end
+UnitCastingInfo = function(unit) return "", "", 0, 0, false, "" end
 
 ---@param unit string
 ---@return string, string, number, number, boolean, string

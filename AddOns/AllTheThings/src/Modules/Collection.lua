@@ -325,6 +325,10 @@ app.AddEventHandler("OnSavedVariablesAvailable", function(currentCharacter, acco
 				or SearchForObject(key, id, "field")
 				or app.CreateClassInstance(key, id)
 		local cacheKey = t.CACHE
+		if not cacheKey then
+			app.PrintDebug("STC:NoCACHE",app:SearchLink(t), key, id, accountWide, collected)
+			return
+		end
 		-- app.PrintDebug("STC",app:SearchLink(t),key, id, accountWide, collected, cacheKey)
 		local oldstate = (accountWide and IsAccountCached or IsCached)(cacheKey, id)
 		local accountCache = accountWideData[cacheKey]

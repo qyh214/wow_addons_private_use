@@ -1,6 +1,7 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("AutoPotion")
 local addonName, ham = ...
 local macroName = L["AutoPotion"]
+local bandageMacroName = L["AutoBandage"] or "AutoBandage"
 local isRetail = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE)
 local isClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
 local isWrath = (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC)
@@ -119,7 +120,8 @@ end
 
 function ham.updateHeals()
   ham.itemIdList = {}
-  ham.spellIDs = ham.myPlayer.getHealingSpells()
+  --ham.spellIDs = ham.myPlayer.getHealingSpells()
+  ham.mySpells = ham.myPlayer.getHealingSpells()
 
   -- Priority 1: Add player items, including tinkers
   addPlayerHealingItemIfAvailable()
@@ -156,6 +158,17 @@ local function createMacroIfMissing()
   end
 end
 
+local function createBandageMacroIfMissing()
+  -- dont create macro if MegaMacro is installed and loaded
+  if megaMacro.installed and megaMacro.loaded then
+    return
+  end
+  local name = GetMacroInfo(bandageMacroName)
+  if name == nil then
+    CreateMacro(bandageMacroName, "INV_Misc_QuestionMark")
+  end
+end
+
 local function setShortestSpellCD(newSpell)
   if ham.options.cdReset then
     local cd
@@ -180,25 +193,26 @@ end
 local function buildSpellMacroString()
   spellsMacroString = ''
 
-  if next(ham.spellIDs) ~= nil then
-    for i, spell in ipairs(ham.spellIDs) do
-      local name
-      if isRetail == true then
-        name = C_Spell.GetSpellName(spell)
+  if next(ham.mySpells) ~= nil then
+    local spellCounter = 1
+    for i, spell in ipairs(ham.mySpells) do
+      local name = ''
+      if spell.getId() == ham.recuperate.getId() then
+        --we don't want to add recuperate because even thought its a spell its only usable out of combat
       else
-        name = GetSpellInfo(spell)
-      end
+        name = spell.getName();
+        setShortestSpellCD(spell.getId())
 
-      setShortestSpellCD(spell)
-
-      --TODO HEALING Elixir Twice because it has two charges ?! kinda janky but will work for now
-      if spell == ham.healingElixir then
-        name = name .. ", " .. name
-      end
-      if i == 1 then
-        spellsMacroString = name;
-      else
-        spellsMacroString = spellsMacroString .. ", " .. name;
+        --TODO HEALING Elixir Twice because it has two charges ?! kinda janky but will work for now
+        if spell.getId() == ham.healingElixir.getId() then
+          name = spell.getName() .. ", " .. spell.getName()
+        end
+        if spellCounter == 1 then
+          spellsMacroString = name;
+        else
+          spellsMacroString = spellsMacroString .. ", " .. name;
+        end
+        spellCounter = spellCounter + 1
       end
     end
   end
@@ -236,6 +250,19 @@ local function UpdateMegaMacro(newCode)
     "|cffff0000AutoPotion Error:|r Missing global 'AutoPotion' macro in MegaMacro. Please create it then reload your game.")
 end
 
+local function UpdateMegaMacroByName(name, newCode)
+  for _, macro in pairs(MegaMacroGlobalData.Macros) do
+    if macro.DisplayName == name then
+      MegaMacro.UpdateCode(macro, newCode)
+      log("MegaMacro updated (" .. name .. ") with: " .. newCode)
+      return true
+    end
+  end
+  print("|cffff0000AutoPotion Error:|r Missing global '" ..
+    tostring(name) .. "' macro in MegaMacro. Please create it then reload your game.")
+  return false
+end
+
 local function checkMegaMacroAddon()
   -- MegaMacro is only available for retail
   if not isRetail then
@@ -269,6 +296,23 @@ local function checkMegaMacroAddon()
   end
 end
 
+-- Build bandage macro string (highest available bandage first)
+local function buildBandageMacroString()
+  local sequence = {}
+  local bandages = ham.getBandages()
+  for _, item in ipairs(bandages) do
+    if item.getCount() > 0 then
+      table.insert(sequence, "item:" .. tostring(item.getId()))
+      break
+    end
+  end
+
+  if #sequence == 0 then
+    return "#showtooltip"
+  end
+  return "#showtooltip\n/use [@player] " .. sequence[1]
+end
+
 -- check if player has the engineering tinker: Heartseeking Health Injector
 function ham.checkTinker()
   if not isRetail then return end
@@ -297,7 +341,8 @@ function ham.checkTinker()
 end
 
 function ham.updateMacro()
-  if next(ham.itemIdList) == nil and next(ham.spellIDs) == nil then
+  --if next(ham.itemIdList) == nil and next(ham.spellIDs) == nil then
+  if next(ham.itemIdList) == nil and next(ham.mySpells) == nil then
     macroStr = "#showtooltip"
     if ham.options.stopCast then
       macroStr = macroStr .. "\n/stopcasting \n"
@@ -311,7 +356,15 @@ function ham.updateMacro()
     if ham.options.stopCast then
       macroStr = macroStr .. "/stopcasting \n"
     end
-    macroStr = macroStr .. "/castsequence [@player] reset=" .. resetType .. " "
+    --recuperate
+    --this condition is needed because if not used the castsequence will use off gcd heals direclty after recuperate
+    local combatCondition=''
+    if isRetail and ham.dbContains(ham.recuperate.getId()) and ham.recuperate.isKnown() then
+      combatCondition = ',combat'
+      macroStr = macroStr .. "/cast [nocombat] " .. ham.recuperate.getName() .. "\n"
+    end
+
+    macroStr = macroStr .. "/castsequence [@player"..combatCondition.."] reset=" .. resetType .. " "
     if spellsMacroString ~= "" then
       macroStr = macroStr .. spellsMacroString
     end
@@ -346,6 +399,21 @@ function ham.updateMacro()
   end
 end
 
+function ham.updateBandageMacro()
+  local bandageMacroStr = buildBandageMacroString()
+  if megaMacro.installed and megaMacro.loaded then
+    UpdateMegaMacroByName(bandageMacroName, bandageMacroStr)
+  else
+    createBandageMacroIfMissing()
+    local success, err = pcall(function()
+      EditMacro(bandageMacroName, bandageMacroName, nil, bandageMacroStr)
+    end)
+    if success then
+      log('Bandage macro updated.')
+    end
+  end
+end
+
 local function MakeMacro()
   -- dont attempt to create macro until MegaMacro addon is checked
   if not megaMacro.checked then
@@ -371,7 +439,10 @@ local function MakeMacro()
   ham.checkTinker()
   ham.updateHeals()
   ham.updateMacro()
+  ham.updateBandageMacro()
+
   ham.settingsFrame:updatePrio()
+  ham.settingsFrame:updateBandagePrio()
 end
 
 -- debounce handler for BAG_UPDATE events which can fire very rapidly

@@ -1,7 +1,7 @@
-local NARCI_VERSION_INFO = "1.8.2";
+local NARCI_VERSION_INFO = "1.8.3 e";
 
-local VERSION_DATE = 1753700000;
-local CURRENT_VERSION = 10802;
+local VERSION_DATE = 1763000000;
+local CURRENT_VERSION = 10803;
 local PREVIOUS_VERSION = CURRENT_VERSION;
 local TIME_SINCE_LAST_UPDATE = 0;
 
@@ -74,6 +74,7 @@ local DefaultValues = {
     DressingRoomShowIconSelect = false,         --Display a list of icons when saving a new outfit
     DressingRoomAutoRemoveNonSetItem = false,
     DressingRoomShowSlot = true,                --Show/hide SlotFrame (See SlotToggle)
+    DressingRoomItemSetListHideDupes = true,
 
     -- Minimap Button --
     UseAddonCompartment = true,
@@ -408,35 +409,12 @@ NarciAPI.GetAddOnVersionInfo = GetAddOnVersionInfo;
 do
     local version, _, _, tocVersion = GetBuildInfo();
     local expansionID = string.match(version, "(%d+)%.");
-	local isDF = (tonumber(expansionID) or 1) >= 10;
 
     if not tocVersion then
-        tocVersion = 100000;
+        tocVersion = 110000;
     end
 
     tocVersion = tonumber(tocVersion);
-
-    local function IsDragonflight()
-        return isDF
-    end
-    addon.IsDragonflight = IsDragonflight;
-
-    local tooltipInfoVersion;
-
-    if isDF then
-        if tocVersion >= 100100 then
-            tooltipInfoVersion = 2;
-        else
-            tooltipInfoVersion = 1;
-        end
-    else
-        tooltipInfoVersion = 0;
-    end
-
-    local function GetTooltipInfoVersion()
-        return tooltipInfoVersion
-    end
-    addon.GetTooltipInfoVersion = GetTooltipInfoVersion;
 
 
     local function IsTOCVersionEqualOrNewerThan(v)
@@ -574,4 +552,15 @@ do  --DB Settings
         end
     end
     addon.SetDBValue = SetDBValue;
+end
+
+
+do  --UIParent Visibility Check
+    local f = CreateFrame("Frame", nil, UIParent);
+    f:SetScript("OnShow", function()
+        CallbackRegistry:Trigger("UIParent.OnShow", true);
+    end);
+    f:SetScript("OnHide", function()
+        CallbackRegistry:Trigger("UIParent.OnHide", true);
+    end);
 end

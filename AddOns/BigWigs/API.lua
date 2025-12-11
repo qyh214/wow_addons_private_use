@@ -8,6 +8,36 @@ addonTbl.API = API
 local type, next, error = type, next, error
 
 --------------------------------------------------------------------------------
+-- Addons creating bars
+--
+
+-- Allows addons to show a custom bar to the user
+function API.CreateBarFromAddon(addonName, barText, barIcon, barTime)
+	if type(addonName) ~= "string" or #addonName < 3 then error("Invalid addon name for bar creation.") end
+	if type(barText) ~= "string" or #barText < 3 then error("Invalid text for bar creation.") end
+	local iconType = type(barIcon)
+	if iconType ~= "string" and iconType ~= "number" then error("Invalid icon for bar creation.") end
+	if type(barTime) ~= "number" then error("Invalid bar time for bar creation.") end
+	local L = API:GetLocale("BigWigs")
+	addonTbl.loaderPublic.Print(L.showAddonBar:format(addonName, barText))
+	addonTbl.LoadAndEnableCore()
+	addonTbl.loaderPublic:SendMessage("BigWigs_StartBar", nil, nil, barText, barTime, barIcon)
+	addonTbl.loaderPublic:SendMessage("BigWigs_Timer", nil, nil, barTime, barTime, barText, 0, barIcon, false, true)
+end
+
+-- Allows addons to send custom bars to the group
+function API.SendBarToGroup(addonName, barText, barTime)
+	if type(addonName) ~= "string" or #addonName < 3 then error("Invalid addon name for bar creation.") end
+	if type(barText) ~= "string" or #barText < 3 then error("Invalid text for bar creation.") end
+	if type(barTime) ~= "number" or barTime < 3 then error("Invalid bar time for bar creation.") end
+	addonTbl.LoadAndEnableCore()
+	local bars = BigWigs:GetPlugin("Bars", true)
+	if bars then
+		bars:SendCustomBarToGroup(barText, barTime)
+	end
+end
+
+--------------------------------------------------------------------------------
 -- Bar Styles
 --
 
@@ -105,7 +135,7 @@ do
 end
 
 --------------------------------------------------------------------------------
--- Profile imports
+-- Profile import/export
 --
 
 do
@@ -119,8 +149,17 @@ do
 		if optionalCustomProfileName and (type(optionalCustomProfileName) ~= "string" or #optionalCustomProfileName < 3) then error("Invalid custom profile name for the string you want to import.") end
 		if optionalCallbackFunction and type(optionalCallbackFunction) ~= "function" then error("Invalid custom callback function for the string you want to import.") end
 		addonTbl.LoadCoreAndOptions()
-		BigWigsOptions:SaveImportStringDataFromAddOn(addonName, profileString, optionalCustomProfileName, optionalCallbackFunction)
+		BigWigsOptions.SaveImportStringDataFromAddOn(addonName, profileString, optionalCustomProfileName, optionalCallbackFunction)
 	end
+end
+
+-- Input the name of YOUR addon, i.e. the addon making the profile request
+function API.RequestProfile(addonName)
+	if type(addonName) ~= "string" or #addonName < 3 then error("Invalid addon name for profile request.") end
+	local L = API:GetLocale("BigWigs")
+	addonTbl.loaderPublic.Print(L.requestAddonProfile:format(addonName))
+	addonTbl.LoadCoreAndOptions()
+	return BigWigsOptions.RequestProfile(addonName)
 end
 
 --------------------------------------------------------------------------------
@@ -129,10 +168,11 @@ end
 
 do
 	local slashTable = {}
-	local sub = string.sub
+	local slashNoUpdatesTable = {}
+	local strsub = string.sub
 	-- Registers a slash command
-	function API.RegisterSlashCommand(rawSlashName, slashFunc)
-		local slashName = sub(rawSlashName, 2)
+	function API.RegisterSlashCommand(rawSlashName, slashFunc, noUpdates)
+		local slashName = strsub(rawSlashName, 2)
 		if not slashTable[slashName] then
 			_G["SLASH_"..slashName.."1"] = rawSlashName
 			SlashCmdList[slashName] = function(text)
@@ -143,7 +183,12 @@ do
 				end
 			end
 		end
-		slashTable[slashName] = slashFunc
+		if not slashNoUpdatesTable[slashName] then
+			slashTable[slashName] = slashFunc
+			if noUpdates then
+				slashNoUpdatesTable[slashName] = true
+			end
+		end
 	end
 end
 
@@ -165,7 +210,7 @@ do
 end
 
 --------------------------------------------------------------------------------
--- Tools option tables
+-- Tools/Plugins option tables
 --
 
 do
@@ -180,16 +225,57 @@ do
 		end
 		return copy
 	end
-	local tbl = {}
-	-- Get all AceGUI option tables under the "Tools" category
-	function API.GetToolOptionTables()
-		return CopyTable(tbl)
+
+	-- Tools
+	do
+		local tbl = {}
+		-- Get all AceGUI option tables under the "Tools" category
+		function API.GetToolOptions()
+			return CopyTable(tbl)
+		end
+		-- Register an AceGUI options table for a module under the "Tools" category
+		function API.RegisterToolOptions(key, settingsTable)
+			if type(key) ~= "string" then error("The key needs to be a string.") end
+			if type(settingsTable) ~= "table" then error("The settings table needs to be a table.") end
+			tbl[key] = settingsTable
+		end
 	end
-	-- Register an AceGUI options table for a module under the "Tools" category
-	function API.SetToolOptionsTable(key, settingsTable)
-		if type(key) ~= "string" then error("The key needs to be a string.") end
-		if type(settingsTable) ~= "table" then error("The settings table needs to be a table.") end
-		tbl[key] = settingsTable
+
+	-- Plugins
+	do
+		local tbl = {}
+		-- Get all AceGUI option tables under the "Tools" category
+		function API.GetPluginOptions()
+			return CopyTable(tbl)
+		end
+		-- Register an AceGUI options table for a module under the "Tools" category
+		function API.RegisterPluginOptions(key, settingsTable)
+			if type(key) ~= "string" then error("The key needs to be a string.") end
+			if type(settingsTable) ~= "table" then error("The settings table needs to be a table.") end
+			tbl[key] = settingsTable
+		end
+	end
+end
+
+--------------------------------------------------------------------------------
+-- Validation
+--
+
+do
+	local validFramePoints = {
+		["TOPLEFT"] = true, ["TOPRIGHT"] = true, ["BOTTOMLEFT"] = true, ["BOTTOMRIGHT"] = true,
+		["TOP"] = true, ["BOTTOM"] = true, ["LEFT"] = true, ["RIGHT"] = true, ["CENTER"] = true,
+	}
+	function API.IsValidFramePoint(point)
+		return validFramePoints[point]
+	end
+	function API.GetFramePointList()
+		local list = {}
+		local L = API:GetLocale("BigWigs")
+		for k in next, validFramePoints do
+			list[k] = L[k]
+		end
+		return list
 	end
 end
 

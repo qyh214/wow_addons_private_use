@@ -31,6 +31,7 @@ BigWigs:AddSounds("Portalmaster Halsan", {
 BigWigs:AddColors("Voidrider Challnax", {
 	[1238892] = "red",
 	[1238909] = "yellow",
+	[1238919] = "yellow",
 	[1238930] = "orange",
 	[1239134] = "red",
 	["stages"] = "cyan",
@@ -39,6 +40,7 @@ BigWigs:AddColors("Voidrider Challnax", {
 BigWigs:AddSounds("Voidrider Challnax", {
 	[1238892] = "alarm",
 	[1238909] = "info",
+	[1238919] = "alert",
 	[1238930] = "info",
 	[1239134] = "alert",
 	["stages"] = "long",
@@ -118,6 +120,20 @@ BigWigs:AddSounds("The Biggest Bug", {
 	[448444] = "alert",
 })
 
+BigWigs:AddColors("Beste Glatisant", {
+	[1245667] = "purple",
+	[1245746] = "blue",
+	[1245765] = "red",
+	[1245784] = "orange",
+})
+
+BigWigs:AddSounds("Beste Glatisant", {
+	[1245667] = "alert",
+	[1245746] = "underyou",
+	[1245765] = "alarm",
+	[1245784] = "alarm",
+})
+
 BigWigs:AddColors("Craggle Fritzbrains", {
 	[1214135] = "yellow",
 	[1214504] = {"orange","red"},
@@ -144,14 +160,14 @@ BigWigs:AddColors("Xel'anegh The Many", {
 	[1213275] = "green",
 	[1213425] = "red",
 	[1213426] = "orange",
-	[1213804] = "yellow",
+	[1213791] = "yellow",
 	["stages"] = "cyan",
 })
 
 BigWigs:AddSounds("Xel'anegh The Many", {
 	[1213425] = "warning",
 	[1213426] = "alarm",
-	[1213804] = "long",
+	[1213791] = "long",
 	["stages"] = "info",
 })
 
@@ -183,6 +199,18 @@ BigWigs:AddSounds("Spinshroom", {
 	[415495] = "underyou",
 	[415499] = "info",
 	[425315] = "alarm",
+})
+
+BigWigs:AddColors("Faceless One Kriegval's Rest", {
+	[1213700] = {"blue","red"},
+	[1213776] = {"blue","orange"},
+	[1213785] = "yellow",
+})
+
+BigWigs:AddSounds("Faceless One Kriegval's Rest", {
+	[1213700] = {"alarm","warning"},
+	[1213776] = {"alert","warning"},
+	[1213785] = "info",
 })
 
 BigWigs:AddColors("Tomb-Raider Drywhisker", {
@@ -250,13 +278,11 @@ BigWigs:AddSounds("Speaker Wicke", {
 BigWigs:AddColors("Speaker Halven", {
 	[443837] = "red",
 	[443840] = "yellow",
-	[443908] = "orange",
 })
 
 BigWigs:AddSounds("Speaker Halven", {
 	[443837] = "alarm",
 	[443840] = "long",
-	[443908] = "alarm",
 })
 
 BigWigs:AddColors("Cult Leaders", {
@@ -451,14 +477,12 @@ BigWigs:AddColors("Torque Clankfire and Sprok", {
 	[1215015] = "orange",
 	[1215033] = "yellow",
 	[1215084] = "red",
-	[1215090] = "cyan",
 })
 
 BigWigs:AddSounds("Torque Clankfire and Sprok", {
 	[1215015] = "alarm",
 	[1215033] = "long",
 	[1215084] = "alert",
-	[1215090] = "info",
 })
 
 BigWigs:AddColors("Shroomsprew", {
@@ -492,7 +516,10 @@ BigWigs:AddSounds("Waxface", {
 })
 
 BigWigs:AddColors("Ethereal Trash", {
+	[1230608] = "purple",
 	[1231144] = "red",
+	[1231893] = "yellow",
+	[1231919] = "orange",
 	[1236229] = "yellow",
 	[1236256] = "orange",
 	[1236354] = "red",
@@ -501,7 +528,10 @@ BigWigs:AddColors("Ethereal Trash", {
 })
 
 BigWigs:AddSounds("Ethereal Trash", {
+	[1230608] = "alert",
 	[1231144] = "alarm",
+	[1231893] = "alert",
+	[1231919] = "alarm",
 	[1236229] = "info",
 	[1236256] = "alarm",
 	[1236354] = "alert",
@@ -547,6 +577,7 @@ BigWigs:AddColors("Goblin Delve Trash", {
 	[474001] = "red",
 	[474004] = "orange",
 	[1213656] = "yellow",
+	[1237160] = "blue",
 })
 
 BigWigs:AddSounds("Goblin Delve Trash", {
@@ -561,10 +592,12 @@ BigWigs:AddSounds("Goblin Delve Trash", {
 	[474001] = "alert",
 	[474004] = "alarm",
 	[1213656] = "info",
+	[1237160] = "underyou",
 })
 
 BigWigs:AddColors("Kobold Delve Trash", {
 	[445191] = {"blue","red"},
+	[445193] = "blue",
 	[445210] = "orange",
 	[448399] = {"red","yellow"},
 	[448528] = "orange",
@@ -573,6 +606,7 @@ BigWigs:AddColors("Kobold Delve Trash", {
 
 BigWigs:AddSounds("Kobold Delve Trash", {
 	[445191] = {"alert","info"},
+	[445193] = "underyou",
 	[445210] = "alarm",
 	[448399] = {"alert","info"},
 	[448528] = "alarm",
@@ -687,64 +721,18 @@ BigWigs:AddSounds("The Underkeep Trash", {
 	[453149] = "alert",
 })
 
-BigWigs:AddColors("Underpin Rares", {
+BigWigs:AddColors("Ky'veza Rares", {
 	[418295] = "yellow",
 	[418297] = "red",
-	[433045] = "yellow",
-	[1213497] = "red",
+	[450492] = "yellow",
+	[450505] = {"blue","red"},
+	[450519] = "orange",
 	[1213852] = "orange",
-	[1214147] = {"cyan","yellow"},
-	[1214238] = "red",
-	[1214246] = "purple",
-	[1216790] = "orange",
-	[1216794] = "red",
-	[1216805] = "red",
-	[1216806] = "orange",
-	[1216937] = "cyan",
-	[1217301] = "red",
-	[1217326] = "yellow",
-	[1217361] = "orange",
+	[1214147] = "yellow",
 	[1217371] = "red",
-	[1217418] = "cyan",
-	[1217449] = "cyan",
-	[1217452] = "cyan",
-	[1217510] = "cyan",
-	[1218017] = "orange",
-	[1218039] = "yellow",
-	[1218061] = "red",
-	[1220869] = "purple",
-})
-
-BigWigs:AddSounds("Underpin Rares", {
-	[418295] = "alarm",
-	[418297] = "alert",
-	[433045] = "warning",
-	[1213497] = "info",
-	[1213852] = "alarm",
-	[1214147] = {"info","long"},
-	[1214238] = "alert",
-	[1214246] = "alarm",
-	[1216790] = "alarm",
-	[1216794] = "alert",
-	[1216805] = "alert",
-	[1216806] = "alarm",
-	[1216937] = "warning",
-	[1217301] = "alarm",
-	[1217326] = "alarm",
-	[1217361] = "alert",
-	[1217371] = "alarm",
-	[1217418] = "info",
-	[1217449] = "info",
-	[1217452] = "info",
-	[1217510] = "info",
-	[1218017] = "alarm",
-	[1218039] = "alarm",
-	[1218061] = "alert",
-	[1220869] = "alert",
-})
-
-BigWigs:AddColors("Ky'veza Rares", {
 	[1237258] = "blue",
+	[1237294] = {"blue","red"},
+	[1237381] = "yellow",
 	[1237671] = "yellow",
 	[1238713] = "orange",
 	[1238737] = "red",
@@ -753,17 +741,28 @@ BigWigs:AddColors("Ky'veza Rares", {
 	[1242534] = "cyan",
 	[1242752] = "cyan",
 	[1243017] = "orange",
-	[1243448] = "cyan",
+	[1243656] = "red",
 	[1244108] = "orange",
 	[1244249] = "yellow",
 	[1244313] = "orange",
 	[1245156] = "cyan",
 	[1245203] = "yellow",
 	[1245240] = "orange",
+	[1246124] = "cyan",
 })
 
 BigWigs:AddSounds("Ky'veza Rares", {
+	[418295] = "alarm",
+	[418297] = "alert",
+	[450492] = "alarm",
+	[450505] = {"alert","info"},
+	[450519] = "alarm",
+	[1213852] = "alarm",
+	[1214147] = "info",
+	[1217371] = "alarm",
 	[1237258] = "underyou",
+	[1237294] = "info",
+	[1237381] = "alarm",
 	[1237671] = "alarm",
 	[1238713] = "alarm",
 	[1238737] = "alarm",
@@ -772,31 +771,14 @@ BigWigs:AddSounds("Ky'veza Rares", {
 	[1242534] = "info",
 	[1242752] = "info",
 	[1243017] = "alarm",
-	[1243448] = "info",
+	[1243656] = "alert",
 	[1244108] = "alarm",
 	[1244249] = "alarm",
 	[1244313] = "alarm",
 	[1245156] = "warning",
-	[1245203] = "info",
-	[1245240] = "alarm",
-})
-
-BigWigs:AddColors("Nexus-Princess Ky'veza (Tier 8)", {
-	[1244462] = "cyan",
-	[1244600] = "red",
-	[1245203] = "yellow",
-	[1245240] = "orange",
-	[1245582] = "red",
-	[1250052] = "blue",
-})
-
-BigWigs:AddSounds("Nexus-Princess Ky'veza (Tier 8)", {
-	[1244462] = "info",
-	[1244600] = "warning",
 	[1245203] = {"alert","long"},
 	[1245240] = "alarm",
-	[1245582] = "info",
-	[1250052] = "underyou",
+	[1246124] = "info",
 })
 
 BigWigs:AddColors("Nexus-Princess Ky'veza (Tier 11)", {

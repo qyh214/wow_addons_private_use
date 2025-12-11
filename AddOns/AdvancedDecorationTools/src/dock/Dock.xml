@@ -1,0 +1,234 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Script file="DockCore.lua"/>
+    <Script file="DockList.lua"/>
+    <!-- 左侧面板剥离为独立脚本，需在 DockUI 之前加载 -->
+    <Script file="LeftPanel.lua"/>
+
+    <Frame name="ADTSettingsPanelLayoutTemplate" hidden="true" virtual="true">
+        <Size x="128" y="128"/>
+        <Frames>
+            <Frame parentKey="FrameContainer" setAllPoints="true" useParentLevel="true">
+                <Frames>
+                    <Frame parentKey="LeftSection">
+                        <Size x="8"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
+                            <Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT"/>
+                        </Anchors>
+                    </Frame>
+                    <Frame parentKey="RightSection">
+                        <Size x="8"/>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT"/>
+                            <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
+                        </Anchors>
+                    </Frame>
+                    <Frame parentKey="CentralSection">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeKey="$parent.LeftSection" relativePoint="TOPRIGHT"/>
+                            <Anchor point="BOTTOMRIGHT" relativeKey="$parent.RightSection" relativePoint="BOTTOMLEFT"/>
+                        </Anchors>
+                    </Frame>
+
+                    <Frame parentKey="SideTab"/>
+                    <Frame parentKey="TabButtonContainer" enableMouse="true" enableMouseMotion="true"/>
+
+                    <Frame parentKey="ModuleTab"/>
+                    <Frame parentKey="ChangelogTab" hidden="true"/>
+                </Frames>
+            </Frame>
+        </Frames>
+    </Frame>
+
+    <!-- 自定义搜索框模板已移除，改用暴雪 SearchBoxTemplate -->
+
+    <Button name="ADTSquareButtonArtTemplate" virtual="true">
+        <Size x="28" y="28"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Background" parentArray="SkinnableObjects" snapToPixelGrid="false" texelSnappingBias="0">
+                    <Size x="40" y="40"/>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="ARTWORK">
+                <Texture parentKey="Texture" parentArray="SkinnableObjects" snapToPixelGrid="false" texelSnappingBias="0">
+                    <Size x="24" y="24"/>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="HIGHLIGHT">
+                <Texture parentKey="Highlight" parentArray="SkinnableObjects" alphaMode="ADD">
+                    <Color r="0.4" g="0.2" b="0.1"/>
+                    <Size x="32" y="32"/>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+    </Button>
+
+    <Button name="ADTSettingsPanelEntryTemplate" virtual="true">
+        <Size x="128" y="28"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture parentKey="Box" parentArray="SkinnableObjects" snapToPixelGrid="false" texelSnappingBias="0">
+                    <Size x="24" y="24"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent" relativePoint="LEFT" x="14"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <FontString parentKey="Label" justifyH="LEFT" inherits="GameFontNormal">
+                    <Anchors>
+                        <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="28"/>
+                        <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-28"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button parentKey="OptionToggle" propagateMouseInput="Motion" parentArray="SkinnableObjects" hidden="true">
+                <Size x="28" y="28"/>
+                <HitRectInsets>
+                    <AbsInset left="-14" right="0" top="0" bottom="0"/>
+                </HitRectInsets>
+                <Anchors>
+                    <Anchor point="RIGHT"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <Texture parentKey="Texture" parentArray="SkinnableObjects">
+                            <Size x="20" y="20"/>
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Button>
+        </Frames>
+    </Button>
+
+    <Button name="ADTSettingsPanelHeaderTemplate" virtual="true">
+        <Size x="128" y="28"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture parentKey="Left" parentArray="SkinnableObjects" snapToPixelGrid="false" texelSnappingBias="0">
+                    <Size x="20" y="20"/>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="-8" y="-2"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="Right" parentArray="SkinnableObjects" snapToPixelGrid="false" texelSnappingBias="0">
+                    <Size x="20" y="20"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeKey="$parent.Left" relativePoint="TOPRIGHT" x="0"/>
+                        <Anchor point="BOTTOMLEFT" relativeKey="$parent.Left" relativePoint="BOTTOMRIGHT" x="0"/>
+                        <Anchor point="RIGHT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <FontString parentKey="Label" justifyH="LEFT" inherits="GameFontNormal">
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="LEFT" x="8" y="5"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Button>
+
+    <!-- 装饰项按钮模板：图标 + 名称 + 库存数量 -->
+    <Button name="ADTDecorItemEntryTemplate" virtual="true">
+        <Size x="128" y="36"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Highlight" hidden="true">
+                    <Color r="1" g="1" b="1" a="0.1"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="BOTTOMRIGHT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="ARTWORK">
+                <Texture parentKey="Icon">
+                    <Size x="28" y="28"/>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="4"/>
+                    </Anchors>
+                    <TexCoords left="0.08" right="0.92" top="0.08" bottom="0.92"/>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <FontString parentKey="Name" justifyH="LEFT" inherits="GameFontNormal">
+                    <Anchors>
+                        <Anchor point="LEFT" relativeKey="$parent.Icon" relativePoint="RIGHT" x="8"/>
+                        <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-40"/>
+                    </Anchors>
+                </FontString>
+                <FontString parentKey="Count" justifyH="RIGHT" inherits="GameFontHighlightSmall">
+                    <Size x="32" y="20"/>
+                    <Anchors>
+                        <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-6"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Button>
+
+    <!-- 选中高亮动画模板 -->
+    <Frame name="ADTSettingsAnimSelectionTemplate" virtual="true" useParentLevel="true">
+        <Size x="128" y="28"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Left" parentArray="SkinnableObjects" snapToPixelGrid="false" texelSnappingBias="0">
+                    <Size x="16" y="40"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent" relativePoint="LEFT"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="Right" parentArray="SkinnableObjects" snapToPixelGrid="false" texelSnappingBias="0">
+                    <Size x="16" y="40"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent" relativePoint="RIGHT"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="Center" parentArray="SkinnableObjects" snapToPixelGrid="false" texelSnappingBias="0">
+                    <Size x="40" y="40"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeKey="$parent.Left" relativePoint="TOPRIGHT"/>
+                        <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Right" relativePoint="BOTTOMLEFT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <!-- 已迁移为自研 ListView（不使用参考插件的滚动条/滚动视图实现） -->
+
+    <Button name="ADTTabButtonTemplate" virtual="true">
+        <Size x="100" y="40"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Background" parentArray="SkinnableObjects"/>
+            </Layer>
+            <Layer level="OVERLAY">
+                <FontString parentKey="Label" inherits="GameFontNormal" justifyH="CENTER"/>
+            </Layer>
+        </Layers>
+    </Button>
+
+    <!-- 在所有模板定义完成后再加载主面板脚本 -->
+    <Script file="DockUI.lua"/>
+    <!-- 子面板拆分为独立脚本（依赖 DockUI 暴露的共享构造） -->
+    <Script file="SubPanel.lua"/>
+
+</Ui>

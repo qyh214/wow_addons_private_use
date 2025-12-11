@@ -175,9 +175,7 @@ app.CreateCharacterClass = app.CreateClassWithInfo("CharacterClass", "classID", 
 		t.nmc = nmc
 		return nmc
 	end,
-	["ignoreSourceLookup"] = function(t)
-		return true;
-	end,
+	["ignoreSourceLookup"] = app.ReturnTrue,
 });
 app.CreateUnit = app.CreateClass("Unit", "unit", {
 	["text"] = function(t)
@@ -277,9 +275,7 @@ app.CreateUnit = app.CreateClass("Unit", "unit", {
 		if icon then text = "|T" .. icon .. ":0|t " .. text; end
 		return text;
 	end,
-	["ignoreSourceLookup"] = function(t)
-		return true;
-	end,
+	["ignoreSourceLookup"] = app.ReturnTrue,
 	isHeader = app.ReturnTrue,
 	isMinilistHeader = app.ReturnTrue,
 });

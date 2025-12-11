@@ -164,7 +164,7 @@ local nodes = ns.nodes
 
                     if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
                         nodes[94][56564002] = { mnID = 110, name = "", type = "HIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Silvermoon City"] .. " - " .. FACTION_HORDE  .. "\n" .. "\n" .. L["Portal"] .. "\n" .. " => " .. L["Undercity"] .. "\n" .. " => " .. L["Blasted Lands"] }
-                        nodes[18][61806939] = { mnID = 90, name = "", type = "HIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Undercity"] .. " - " .. FACTION_HORDE }
+                        nodes[18][61806939] = { mnID = 998, name = "", type = "HIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Undercity"] .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Portal"] .. "\n" .. " => " .. L["Silvermoon City"] }
                     end
         
                     if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then

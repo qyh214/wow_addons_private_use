@@ -1,9 +1,9 @@
-## Interface: 110107, 50500, 11507
+## Interface: 110200, 50500, 11507
 ## Title: Lib: LibDropDownMenu
 ## Notes: Library providing downdown menu like blizzards DropDownMenu
 ## Author: Hizuro
 ## IconTexture: 986485
-## Version: r55
+## Version: r56
 
 ## Category-enUS: Libraries
 ## Category-deDE: Bibliotheken

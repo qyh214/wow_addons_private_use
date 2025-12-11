@@ -1,7 +1,7 @@
 ## Interface: 40402
 ## Title: WeakAuras
 ## Author: The WeakAuras Team
-## Version: 5.20.1
+## Version: 5.20.7
 ## X-Flavor: Cata
 ## Notes: A powerful, comprehensive utility for displaying graphics and information based on buffs, debuffs, and other triggers.
 ## Notes-esES: Potente y completa aplicación que te permitirá mostrar por pantalla múltiples diseños, basados en beneficios, perjuicios y otros activadores.
@@ -40,7 +40,6 @@ DefaultOptions.lua
 SubscribableObject.lua
 Features.lua
 TimeMachine.lua
-Atlas_Cata.lua
 Types_Cata.lua
 Types.lua
 Prototypes.lua

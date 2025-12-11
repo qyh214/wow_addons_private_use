@@ -96,8 +96,8 @@ end
 do
 	local guids = {}
 	local nextIcon = 8
+	local prev = 0
 	function mod:CorruptedTotem(args)
-		self:MessageOld("totem", "red", "long", args.spellName, L.totem_icon)
 		if self:GetOption(totemMarker) then
 			if not next(guids) then
 				nextIcon = 8
@@ -107,6 +107,11 @@ do
 				guids[args.destGUID] = nextIcon
 			end
 			self:RegisterTargetEvents("MarkTotem")
+		end
+		if args.time - prev > 2 then
+			prev = args.time
+			self:Message("totem", "red", args.spellName, L.totem_icon)
+			self:PlaySound("totem", "long")
 		end
 	end
 

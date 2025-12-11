@@ -50,6 +50,14 @@ UIParent:UnregisterEvent("EXPERIMENTAL_CVAR_CONFIRMATION_NEEDED");  --Disable EX
 
 local FadeHelper = CreateFrame("Frame");
 addon.UIParentFadeHelper = FadeHelper;
+FadeHelper.isMidnight = addon.IsToCVersionEqualOrNewerThan(120000);
+
+if FadeHelper.isMidnight then
+    SetUIVisibility = function(state)
+        UIParent:SetShown(state);
+    end
+end
+
 
 local OFFSET_INFO = {};
 
@@ -512,7 +520,7 @@ function CameraUtil:InitiateInteraction()
     if self.defaultCameraMode == 0 or (DISABLE_IN_INSTANCE and IsInInstance()) then
         self:Intro_None();
     else
-        if (self.defaultCameraMode == 1) and UnitExists("npc") and (not UnitIsUnit("npc", "player")) then
+        if (self.defaultCameraMode == 1) and API.IsQuestNPCPlayer() then
             self:Intro_FocusNPC();
         else
             self:Intro_PanCamera();

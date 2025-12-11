@@ -1,3 +1,3 @@
-[Full Changelog](https://github.com/BigFootTeam/BFCraftsman/compare/r15...726e88569f07ee0df3879dd9a88ee6ca664b869a)
+[View Full Changelog](https://github.com/BigFootTeam/BFCraftsman/compare/r18...6c7101e820d9ebb1806deeb605289b485c8381d3)
 
-- Bump up toc
+- Add option to filter characters by current server for publishers

@@ -127,7 +127,7 @@ function Private.GetProfileUrl(name, realmNameOrId, projectId)
 		else
 			subdomain = "sod"
 		end
-	elseif projectId == WOW_PROJECT_WRATH_CLASSIC or projectId == WOW_PROJECT_CATACLYSM_CLASSIC then
+	elseif projectId == WOW_PROJECT_WRATH_CLASSIC or projectId == WOW_PROJECT_CATACLYSM_CLASSIC or projectId == WOW_PROJECT_MISTS_CLASSIC then
 		subdomain = "classic"
 	end
 
@@ -239,8 +239,13 @@ local function ShowStaticPopupDialog(...)
 			OnShow = function(self)
 				local editBox = _G[self:GetName() .. "WideEditBox"] or _G[self:GetName() .. "EditBox"]
 
-				lastOnShowText = self.text.text_arg2
-				editBox:SetText(self.text.text_arg2)
+				if editBox.GetOwningDialog then
+					lastOnShowText = editBox:GetOwningDialog().Text.text_arg2
+				else
+					lastOnShowText = self.text.text_arg2
+				end
+
+				editBox:SetText(lastOnShowText)
 				editBox:HighlightText()
 
 				local ctrlDown = false

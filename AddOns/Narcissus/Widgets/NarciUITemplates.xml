@@ -1,4 +1,6 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+	<Frame name="NarciPropagateKeyboardInputTemplate" propagateKeyboardInput="true" virtual="true"/>
+
 	<Script file="FrameBorder.lua"/>
 	<Script file="ItemBorder.lua"/>
 	<Script file="NineSliceUtil.lua"/>
@@ -8,6 +10,7 @@
 	<Script file="FramerateIndicator.lua"/>
 	<Script file="Widgets.lua"/>
 	<Script file="ScrollView.lua"/>
+	<Script file="BlackScreen.lua"/>
 	
 	<Frame name="NarciArtFrameTemplate" frameLevel="20" virtual="true">
 		<Anchors>
@@ -684,7 +687,7 @@
 				local action = self.parentObject.actionName;
 				local key = self.parentObject.key;
 				if action and key then
-					if SetBinding(key, action, 1) then
+					if SetBinding(key, action) then
 						self.parentObject:VerifyKey(true);
 					end
 				end
@@ -692,7 +695,7 @@
 		</Scripts>
 	</Button>
 
-	<Button name="NarciBindingButtonTemplate" virtual="true" registerForClicks="LeftButtonUp, RightButtonUp" mixin="NarciGenericKeyBindingButtonMixin">
+	<Button name="NarciBindingButtonTemplate" virtual="true" registerForClicks="LeftButtonUp, RightButtonUp" mixin="NarciGenericKeyBindingButtonMixin" inherits="NarciPropagateKeyboardInputTemplate">
 		<Size x="120" y="16"/>
 		<HitRectInsets>
 			<AbsInset left="-4" right="-4" top="-4" bottom="-4"/>
@@ -2373,6 +2376,7 @@
 							<OnEditFocusLost method="OnEditFocusLost"/>
 							<OnEscapePressed method="QuitEdit"/>
 							<OnHide method="QuitEdit"/>
+							<OnTextChanged method="OnTextChanged"/>
 							<OnEnter>
 								self:GetParent():GetParent():OnEnter();
 							</OnEnter>

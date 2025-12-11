@@ -1,8 +1,9 @@
+---@diagnostic disable: undefined-global
 --- **AceLocale-3.0** manages localization in addons, allowing for multiple locale to be registered with fallback to the base locale for untranslated strings.
 -- @class file
 -- @name AceLocale-3.0
 -- @release $Id: AceLocale-3.0.lua 1284 2022-09-25 09:15:30Z nevcairiel $
-local MAJOR,MINOR = "AceLocale-3.0", 6
+local MAJOR, MINOR = "AceLocale-3.0", 6
 
 local AceLocale, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
@@ -17,14 +18,15 @@ if gameLocale == "enGB" then
 	gameLocale = "enUS"
 end
 
-AceLocale.apps = AceLocale.apps or {}          -- array of ["AppName"]=localetableref
-AceLocale.appnames = AceLocale.appnames or {}  -- array of [localetableref]="AppName"
+AceLocale.apps = AceLocale.apps or {}         -- array of ["AppName"]=localetableref
+AceLocale.appnames = AceLocale.appnames or {} -- array of [localetableref]="AppName"
 
 -- This metatable is used on all tables returned from GetLocale
 local readmeta = {
 	__index = function(self, key) -- requesting totally unknown entries: fire off a nonbreaking error and return key
-		rawset(self, key, key)      -- only need to see the warning once, really
-		geterrorhandler()(MAJOR..": "..tostring(AceLocale.appnames[self])..": Missing entry for '"..tostring(key).."'")
+		rawset(self, key, key) -- only need to see the warning once, really
+		geterrorhandler()(MAJOR .. ": " ..
+		tostring(AceLocale.appnames[self]) .. ": Missing entry for '" .. tostring(key) .. "'")
 		return key
 	end
 }
@@ -32,7 +34,7 @@ local readmeta = {
 -- This metatable is used on all tables returned from GetLocale if the silent flag is true, it does not issue a warning on unknown keys
 local readmetasilent = {
 	__index = function(self, key) -- requesting totally unknown entries: return key
-		rawset(self, key, key)      -- only need to invoke this function once
+		rawset(self, key, key) -- only need to invoke this function once
 		return key
 	end
 }
@@ -87,18 +89,18 @@ local writedefaultproxy = setmetatable({}, {
 -- L["string1"] = "Zeichenkette1"
 -- @return Locale Table to add localizations to, or nil if the current locale is not required.
 function AceLocale:NewLocale(application, locale, isDefault, silent)
-
 	-- GAME_LOCALE allows translators to test translations of addons without having that wow client installed
 	local activeGameLocale = GAME_LOCALE or gameLocale
 
 	local app = AceLocale.apps[application]
 
 	if silent and app and getmetatable(app) ~= readmetasilent then
-		geterrorhandler()("Usage: NewLocale(application, locale[, isDefault[, silent]]): 'silent' must be specified for the first locale registered")
+		geterrorhandler()(
+		"Usage: NewLocale(application, locale[, isDefault[, silent]]): 'silent' must be specified for the first locale registered")
 	end
 
 	if not app then
-		if silent=="raw" then
+		if silent == "raw" then
 			app = {}
 		else
 			app = setmetatable({}, silent and readmetasilent or readmeta)
@@ -127,7 +129,9 @@ end
 -- @return The locale table for the current language.
 function AceLocale:GetLocale(application, silent)
 	if not silent and not AceLocale.apps[application] then
-		error("Usage: GetLocale(application[, silent]): 'application' - No locales registered for '"..tostring(application).."'", 2)
+		error(
+		"Usage: GetLocale(application[, silent]): 'application' - No locales registered for '" ..
+		tostring(application) .. "'", 2)
 	end
 	return AceLocale.apps[application]
 end

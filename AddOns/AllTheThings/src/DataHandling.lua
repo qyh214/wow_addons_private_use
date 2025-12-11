@@ -58,7 +58,7 @@ local function Visibility_Total_Thing(group)
 	end
 end
 local function Visibility_Cost(group)
-	if (group.costTotal or 0) > 0 then
+	if group.costTotal > 0 then
 		-- app.PrintDebug("SGV.cost",group.hash,visible,group.costTotal)
 		return true
 	end
@@ -152,7 +152,7 @@ BaseSetGroupVisibility = function(parent, group)
 			-- source ignored group which is determined to be visible should ensure the parent is also visible
 			if visible == 2 or group.sourceIgnored then
 				parent.forceShow = true
-				-- app.PrintDebug("SGV:ForceParent",parent.text,"via Source Ignored",group.text)
+				-- app.PrintDebug("SGV:ForceParent",parent.text,group.sourceIgnored and "via Source Ignored" or "via Hierarchy",group.text)
 			end
 			return
 		end
@@ -179,26 +179,24 @@ end
 local function UpdateGroup(group, parent)
 	group.visible = nil
 
-	-- debug = group.itemID and group.factionID == 2045
-	-- if debug then print("UG",group.hash,parent and parent.hash) end
+	-- local debug = group.itemID == 202183
+	-- if debug then app.PrintDebug("UG",group.hash,parent and parent.hash) end
 
 	-- Determine if this user can enter the instance or acquire the item and item is equippable/usable
 	-- Things which are determined to be a cost for something else which meets user filters will
 	-- be shown anyway, so don't need to undergo a filtering pass
 	local isCost = group.isCost
 	local valid = isCost or group.forceShow or group.wasFilled
-	-- if valid then
-	-- 	app.PrintDebug("Pre-valid group as from cost/forceShow/wasFilled/upgrade",group.isCost,group.forceShow,group.wasFilled,group.isUpgrade,app:SearchLink(group))
-	-- end
+	-- if valid and debug then app.PrintDebug("Pre-valid group as from cost/forceShow/wasFilled/upgrade",group.isCost,group.forceShow,group.wasFilled,group.isUpgrade,app:SearchLink(group)) end
 	-- A group with a source parent means it has a different 'real' heirarchy than in the current window
 	-- so need to verify filtering based on that instead of only itself
 	if not valid then
 		if group.sourceParent then
 			valid = RecursiveGroupRequirementsFilter(group)
-			-- if debug then print("UG.RGRF",valid,"=>",group.sourceParent.hash) end
+			-- if debug then app.PrintDebug("UG.RGRF",valid,"=>",group.sourceParent.hash) end
 		else
 			valid = GroupFilter(group)
-			-- if debug then print("UG.GF",valid) end
+			-- if debug then app.PrintDebug("UG.GF",valid) end
 		end
 	end
 
@@ -208,7 +206,7 @@ local function UpdateGroup(group, parent)
 		local customProgress = customTotal > 0 and group.customProgress or 0
 		local total, progress = customTotal, customProgress
 
-		-- if debug then print("UG.Init","custom",customProgress,customTotal,"=>",progress,total) end
+		-- if debug then app.PrintDebug("UG.Init","custom",customProgress,customTotal,"=>",progress,total) end
 
 		-- If this item is collectible, then mark it as such.
 		if group.collectible then
@@ -228,7 +226,7 @@ local function UpdateGroup(group, parent)
 		-- Check if this is a group
 		local g = group.g
 		if g then
-			-- if debug then print("UpdateGroup.g",group.progress,group.total,group.__type) end
+			-- if debug then app.PrintDebug("UpdateGroup.g",group.progress,group.total,group.__type) end
 
 			-- skip Character filtering for sub-groups if this Item meets the Ignore BoE filter logic, since it can be moved to the designated character
 			-- local ItemBindFilter, NoFilter = app.ItemBindFilter, app.NoFilter
@@ -249,7 +247,7 @@ local function UpdateGroup(group, parent)
 				UpdateGroups(group, g)
 			end
 
-			-- app.PrintDebug("UpdateGroup.g.Updated",group.progress,group.total,group.__type)
+			-- if debug then app.PrintDebug("UpdateGroup.g.Updated",group.progress,group.total,group.__type) end
 			SetGroupVisibility(parent, group)
 		else
 			SetThingVisibility(parent, group)
@@ -257,16 +255,16 @@ local function UpdateGroup(group, parent)
 
 		-- Increment the parent group's totals if the group is not ignored for sources
 		if parent and not group.sourceIgnored then
-			parent.total = (parent.total or 0) + group.total
-			parent.progress = (parent.progress or 0) + group.progress
-			parent.costTotal = (parent.costTotal or 0) + (group.costTotal or 0)
-			parent.upgradeTotal = (parent.upgradeTotal or 0) + (group.upgradeTotal or 0)
+			parent.total = parent.total + group.total
+			parent.progress = parent.progress + group.progress
+			parent.costTotal = parent.costTotal + group.costTotal
+			parent.upgradeTotal = parent.upgradeTotal + group.upgradeTotal
 		-- else
 			-- print("Ignoring progress/total",group.progress,"/",group.total,"for group",group.text)
 		end
 	end
 
-	-- if debug then print("UpdateGroup.Done",group.progress,group.total,group.visible,group.__type) end
+	-- if debug then app.PrintDebug("UpdateGroup.Done",group.progress,group.total,group.visible,group.__type) end
 	-- debug = nil
 	-- return group.visible
 end
@@ -297,10 +295,10 @@ local function AdjustParentProgress(group, progChange, totalChange, costChange, 
 	if not parent then return end
 
 	-- app.PrintDebug("APP:",parent.progress,progChange,parent.total,totalChange,costChange,upgradeChange,app:SearchLink(parent))
-	parent.total = (parent.total or 0) + totalChange
-	parent.progress = (parent.progress or 0) + progChange
-	parent.costTotal = (parent.costTotal or 0) + costChange
-	parent.upgradeTotal = (parent.upgradeTotal or 0) + upgradeChange
+	parent.total = parent.total + totalChange
+	parent.progress = parent.progress + progChange
+	parent.costTotal = parent.costTotal + costChange
+	parent.upgradeTotal = parent.upgradeTotal + upgradeChange
 	-- Assign cost cache
 	-- app.PrintDebug("END:",parent.progress,parent.total)
 	-- verify visibility of the group, always a 'group' since it is already a parent of another group, as long as it's not the root window data
@@ -314,16 +312,18 @@ local function AdjustParentVisibility(group)
 	local parent = group and rawget(group, "parent")
 	if not parent then return end
 
-	-- app.PrintDebug("APV:",app:SearchLink(group),"->",app:SearchLink(parent))
 	if not parent.window then
 		group.visible = nil
+	end
+	if not group.window then
 		SetGroupVisibility(parent, group)
 	end
+	-- app.PrintDebug("APV:",app:SearchLink(group),group.visible,"->",app:SearchLink(parent))
 	AdjustParentVisibility(parent)
 end
 
 -- For directly applying the full Update operation for the top-level data group within a window
-local function TopLevelUpdateGroup(group)
+local function TopLevelUpdateGroup(group, forceShow)
 	group.TLUG = GetTimePreciseSec()
 	group.total = nil
 	group.progress = nil
@@ -331,7 +331,8 @@ local function TopLevelUpdateGroup(group)
 	group.upgradeTotal = nil
 	-- app.PrintDebug("TLUG",group.hash)
 	-- Root data in Windows should ALWAYS be visible
-	if group.window then
+	-- Data can also be force-shown externally (i.e. when as a search result)
+	if group.window or forceShow then
 		-- app.PrintDebug("Root Group",group.text)
 		group.forceShow = true
 	end
@@ -373,7 +374,7 @@ local function DirectGroupUpdate(group, got)
 		return
 	end
 	local prevTotal, prevProg, prevCost, prevUpgrade
-		= group.total or 0, group.progress or 0, group.costTotal or 0, group.upgradeTotal or 0
+		= group.total, group.progress, group.costTotal, group.upgradeTotal
 	TopLevelUpdateGroup(group)
 	local progChange, totalChange, costChange, upgradeChange
 		= group.progress - prevProg, group.total - prevTotal, group.costTotal - prevCost, group.upgradeTotal - prevUpgrade
@@ -584,12 +585,11 @@ local SourceSpecificFields = {
 	end,
 -- Returns the 'most obtainable' unobtainable value from the provided set of unobtainable values
 	["u"] = function(...)
-		-- app.PrintDebug("GetMostObtainableValue:")
+		-- app.PrintDebug("GetMostObtainableValue:",...)
 		local max, check, new = -1, nil, nil
 		local phases = L.PHASES
 		local phase, u
 		local vals = select("#", ...)
-		-- app.PrintDebug(...)
 		for i=1,vals do
 			u = select(i, ...)
 			-- missing u value means NOT unobtainable
@@ -802,6 +802,8 @@ local function CreateObject(t, rootOnly)
 		end
 		if t.mapID then
 			t = app.CreateMap(t.mapID, t);
+		elseif t.decorID then
+			t = app.CreateDecor(t.decorID, t);
 		elseif t.explorationID then
 			t = app.CreateExploration(t.explorationID, t);
 		elseif t.sourceID then
@@ -840,6 +842,14 @@ local function CreateObject(t, rootOnly)
 			t = app.CreateHeirloom(t.heirloomID, t);
 		elseif t.azeriteessenceID then
 			t = app.CreateAzeriteEssence(t.azeriteessenceID, t);
+		elseif t.artifactID then
+			t = app.CreateArtifact(t.artifactID, t);
+		elseif t.titleID then
+			t = app.CreateTitle(t.titleID, t);
+		elseif t.runeforgepowerID then
+			t = app.CreateRuneforgeLegendary(t.runeforgepowerID, t);
+		elseif t.conduitID then
+			t = app.CreateConduit(t.conduitID, t);
 		elseif t.itemID or t.modItemID then
 			local itemID, modID, bonusID = app.GetItemIDAndModID(t.modItemID or t.itemID)
 			t.itemID = itemID
@@ -847,10 +857,6 @@ local function CreateObject(t, rootOnly)
 			t.bonusID = bonusID
 			if t.toyID then
 				t = app.CreateToy(itemID, t);
-			elseif t.runeforgepowerID then
-				t = app.CreateRuneforgeLegendary(t.runeforgepowerID, t);
-			elseif t.conduitID then
-				t = app.CreateConduit(t.conduitID, t);
 			else
 				t = app.CreateItem(itemID, t);
 			end
@@ -918,7 +924,7 @@ app.__CreateObject = CreateObject;
 
 local function GetHash(t)
 	local hash = app.CreateHash(t);
-	app.PrintDebug(Colorize("No base .hash for t:",app.Colors.ChatLinkError),hash,t.text);
+	app.PrintDebug(Colorize("No base .hash for t:",app.Colors.ChatLinkError),hash,t.text,t.__type);
 	app.PrintTable(t)
 	return hash;
 end

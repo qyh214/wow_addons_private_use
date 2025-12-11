@@ -659,16 +659,23 @@ L['george_the_big_pinch_note'] = '快速点击所有5个 {npc:238189} 以获得 
 L['options_icons_karesh_lore_hunter'] = '{achievement:60890}'
 L['options_icons_karesh_lore_hunter_desc'] = '显示 {achievement:60890} 成就中剧情物品的位置。'
 
+L['options_icons_phase_lost_and_found'] = '{achievement:61017}'
+L['options_icons_phase_lost_and_found_desc'] = '显示 {achievement:61017} 成就中相位潜行宝珠的位置。'
+L['phaseorb_label'] = '相位潜行宝珠'
+L['phaseorb_note'] = '穿越相位潜行宝珠，即有机会获取其中一款外观。'
+
 L['options_icons_purrkins'] = '{achievement:42729}'
-L['options_icons_purrkins_desc'] = nil
-L['purrkins_note'] = nil
-L['kareshire_sublabel'] = nil
+L['options_icons_purrkins_desc'] = '显示 {achievement:42729} 成就中呼噜猫的位置。'
+L['purrkins_note'] = '向呼噜猫招手（{emote:/亲昵}、{emote:/pet}）。'
+L['kareshire_sublabel'] = '相位切换。'
 L['in_a_tree'] = '在树上。'
-L['little_ms_phaser_sublabel'] = nil
+L['little_ms_phaser_sublabel'] = '相位切换。'
 
-L['mailroom_distribution_note'] = nil
-L['gift_of_the_brothers_note'] = nil
-L['ancient_coffer_note'] = nil
+L['mailroom_distribution_note'] = '与外面的推车互动，然后打开邮件室的门。站在圆圈上并使用额外动作按钮。宝藏将出现在门附近。'
+L['gift_of_the_brothers_note'] = '与 {object:闪烁的提灯} 互动并与 {npc:233881} 对话，然后去找 {npc:234112}（{dot:Red}）、{npc:234113}（{dot:Yellow}）和 {npc:234075}（{dot:Green}），最后回到 {object:闪烁的提灯} 处的 {npc:233881}。'
+L['ancient_coffer_note'] = '收集 {item:233794}（{dot:Red}）和 {item:233799}（{dot:Yellow}），然后回到 {object:上古宝匣} 处领取 {item:245269}。'
 
-L['sthaarbs_note'] = nil
-L['heka_tamos_note'] = nil
+L['sthaarbs_note'] = '使用 {object:相位导管} 附近的传送器前往 {npc:234845} 处。'
+L['heka_tamos_note'] = '从附近的 {object:望露莲}、{object:幽灵提灯}、{object:土生肉质植物} 和 {object:捕风花} 处各收集一层增益效果，然后与 {object:元素团结火盆} 互动召唤稀有。'
+
+L['translocated_gorger_note'] = '每周每个战团可从 {object:吞噬者入侵} 首领收集1个 {item:246240}，组合这些物品即可制作坐骑。'

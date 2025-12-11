@@ -117,9 +117,9 @@ do
 		local unit = mod:GetUnitIdByGUID(14020)
 		if unit then
 			if mod:Vanilla() then
-				if mod:UnitDebuff(unit, 2855) then -- Detect Magic
+				if mod:GetPlayerAura(2855, unit) then -- Detect Magic
 					for buffId, message in next, buffList do
-						if mod:UnitBuff(unit, buffId) then
+						if mod:GetPlayerAura(buffId, unit) then
 							prevWeakness = buffId
 							mod:Message("vulnerability", "green", message, buffId)
 							mod:CDBar("vulnerability", 0.1, message, buffId)
@@ -137,7 +137,7 @@ do
 				end
 			else
 				for buffId, message in next, buffList do
-					if mod:UnitBuff(unit, buffId) then
+					if mod:GetPlayerAura(buffId, unit) then
 						prevWeakness = buffId
 						mod:Message("vulnerability", "green", message, buffId)
 						mod:CDBar("vulnerability", 0.1, message, buffId)

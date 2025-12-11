@@ -19,7 +19,7 @@ local CloseTradeSkill = C_TradeSkillUI.CloseTradeSkill
 local tinsert = tinsert
 
 local publishFrame, progressBar
-local modeDropdown, taglineEditBox, craftingFeeEditBox, charList, addButton
+local modeDropdown, currentServerCheckButton, taglineEditBox, craftingFeeEditBox, charList, addButton
 local LoadCharacters, CreateAddButton
 
 ---------------------------------------------------------------------
@@ -129,15 +129,26 @@ local function CreatePublishFrame()
             end,
         },
     })
-    AF.SetTooltips(modeDropdown, "TOPLEFT", 0, 1,
+    AF.SetTooltip(modeDropdown, "TOPLEFT", 0, 1,
         L["Publish"],
         L["Syncs automatically every few minutes instead of in real time"]
     )
 
+    -- currentServerOnly
+    currentServerCheckButton = AF.CreateCheckButton(publishFrame, L["Show only characters on current server"])
+    AF.SetPoint(currentServerCheckButton, "TOPLEFT", modeDropdown, "BOTTOMLEFT", 0, -8)
+    currentServerCheckButton:SetOnCheck(function(checked)
+        BFC_DB.publish.currentServerOnly = checked
+        BFC.CancelNextSync()
+        BFC.UpdateLearnedProfessions()
+        BFC.UpdateSendingData()
+        BFC.ScheduleNextSync(true)
+    end)
+
     -- tagline
-    local taglinePane = AF.CreateTitledPane(publishFrame, L["Tagline"], nil, 90)
-    AF.SetPoint(taglinePane, "TOPLEFT", publishFrame, 0, -30)
-    AF.SetPoint(taglinePane, "TOPRIGHT", publishFrame, 0, -30)
+    local taglinePane = AF.CreateTitledPane(publishFrame, L["Tagline"], nil, 110)
+    AF.SetPoint(taglinePane, "TOPLEFT", publishFrame, 0, -55)
+    AF.SetPoint(taglinePane, "TOPRIGHT", publishFrame, 0, -55)
 
     taglineEditBox = AF.CreateScrollEditBox(taglinePane)
     taglineEditBox:SetMaxBytes(TAGLINE_MAX_BYTES + 1)
@@ -159,8 +170,8 @@ local function CreatePublishFrame()
 
     -- crafting fee
     local craftingFeePane = AF.CreateTitledPane(publishFrame, L["Crafting Fee"], nil, 45)
-    AF.SetPoint(craftingFeePane, "TOPLEFT", taglinePane, "BOTTOMLEFT", 0, -12)
-    AF.SetPoint(craftingFeePane, "TOPRIGHT", taglinePane, "BOTTOMRIGHT", 0, -12)
+    AF.SetPoint(craftingFeePane, "TOPLEFT", taglinePane, "BOTTOMLEFT", 0, -15)
+    AF.SetPoint(craftingFeePane, "TOPRIGHT", taglinePane, "BOTTOMRIGHT", 0, -15)
 
     craftingFeeEditBox = AF.CreateEditBox(craftingFeePane, nil, nil, 20, "number")
     AF.SetPoint(craftingFeeEditBox, "TOPLEFT", craftingFeePane, 0, -25)
@@ -179,16 +190,17 @@ local function CreatePublishFrame()
 
     -- characters and professions
     local charProfPane = AF.CreateTitledPane(publishFrame, L["Characters and Professions"])
-    AF.SetPoint(charProfPane, "TOPLEFT", craftingFeePane, "BOTTOMLEFT", 0, -13)
+    AF.SetPoint(charProfPane, "TOPLEFT", craftingFeePane, "BOTTOMLEFT", 0, -15)
     AF.SetPoint(charProfPane, "BOTTOMRIGHT")
 
-    charList = AF.CreateScrollList(charProfPane, nil, 10, 10, 6, 40, 10)
+    charList = AF.CreateScrollList(charProfPane, nil, 10, 10, 5, 40, 10)
     AF.SetPoint(charList, "TOPLEFT", charProfPane, 0, -25)
     AF.SetPoint(charList, "TOPRIGHT", charProfPane, 0, -25)
 end
 
 local function LoadConfigs()
     modeDropdown:SetSelectedValue(BFC_DB.publish.mode)
+    currentServerCheckButton:SetChecked(BFC_DB.publish.currentServerOnly)
     taglineEditBox:SetText(BFC_DB.publish.tagline)
     craftingFeeEditBox:SetText(BFC_DB.publish.craftingFee or "")
 
@@ -213,7 +225,7 @@ local function Pane_ShowCacheInfo(button)
     end
     lastScanned = AF.WrapTextInColor(lastScanned, "yellow")
 
-    AF.ShowTooltips(button, "BOTTOMLEFT", 0, -1, {
+    AF.ShowTooltip(button, "BOTTOMLEFT", 0, -1, {
         L["Scan Recipes"],
         L["Click to scan recipes"],
         L["Scan only available for current character"],
@@ -223,7 +235,7 @@ local function Pane_ShowCacheInfo(button)
 end
 
 local function Pane_HideCacheInfo(button)
-    AF.HideTooltips()
+    AF.HideTooltip()
 end
 
 local function Pane_Scan(button)
@@ -340,7 +352,7 @@ local function CreateCharacterPane()
     local delButton = AF.CreateButton(pane, nil, "red_hover", 21, 21)
     delButton:SetTexture(AF.GetIcon("Close"), {16, 16}, {"CENTER", 0, 0})
     AF.SetPoint(delButton, "TOPRIGHT", pane)
-    AF.SetTooltips(delButton, "TOPRIGHT", 0, 1, L["Delete Character"], L["Alt-Click to delete"])
+    AF.SetTooltip(delButton, "TOPRIGHT", 0, 1, L["Delete Character"], L["Alt-Click to delete"])
     delButton:SetOnClick(function()
         if IsAltKeyDown() then
             tremove(BFC_DB.publish.characters, pane.index)

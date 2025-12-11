@@ -62,10 +62,14 @@ do
 	end
 
 	local PerCharacterMountSpells = {
+		[75207] = 1,	-- Vashj'ir Seahorse
 		[148970] = 1,	-- Felsteed (Green)
 		[148972] = 1,	-- Dreadsteed (Green)
 		[241857] = 1,	-- Druid Lunarwing
 		[231437] = 1,	-- Druid Lunarwing (Owl)
+	}
+	local AccountWideMountSpells = {
+		1255451,	-- Feldruid's Scornwing Idol
 	}
 	app.CreateMount = app.CreateClass(CLASSNAME, KEY, {
 		CACHE = function() return CACHE end,
@@ -136,7 +140,11 @@ do
 			-- somehow, randomly, some players have had a spellID value which exists but isn't a number...
 			spellID = tonumber(spellID)
 			if spellID then
-				 -- also used to have a questID check... is that really needed?
+				-- spell check for every mount might not be a necessary fallback anymore
+				-- of all the mounts I don't have, none of them have known spells instead
+				-- if not isCollected and IsSpellKnown(spellID) then
+				-- 	app.print("Mount not collected but spell learned:",spellID,GetSpellName(spellID))
+				-- end
 				if isCollected or IsSpellKnown(spellID) then
 					if PerCharacterMountSpells[spellID] then
 						char[spellID] = true;
@@ -154,7 +162,14 @@ do
 		-- Spell-based Mounts (don't appear in Mount Journal)
 		for spellID,_ in pairs(PerCharacterMountSpells) do
 			if IsSpellKnown(spellID) then
-				char[spellID] = true;
+				char[spellID] = true
+			else
+				none[spellID] = true
+			end
+		end
+		for _,spellID in ipairs(AccountWideMountSpells) do
+			if IsSpellKnown(spellID) then
+				acct[spellID] = true
 			else
 				none[spellID] = true
 			end
@@ -167,7 +182,8 @@ do
 		app.SetBatchCached("Spells", acct)
 		app.SetBatchCached("Spells", char)
 		app.SetBatchCached("Spells", none)
-		-- Account Cache (removals handled by Sync)
+		-- Account Cache
+		app.SetBatchAccountCached(CACHE, none)
 		app.SetBatchAccountCached(CACHE, acct, 1)
 	end);
 	app.AddEventHandler("OnSavedVariablesAvailable", function(currentCharacter, accountWideData)

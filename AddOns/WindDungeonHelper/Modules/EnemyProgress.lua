@@ -5,6 +5,7 @@ local _G = _G
 
 local format = format
 local select = select
+local strsplit = strsplit
 local tonumber = tonumber
 
 local GameTooltip = _G.GameTooltip

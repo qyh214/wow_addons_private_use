@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+    <!-- First Load Libs and Constans -->
+    <Include file="Libs\libs.xml" />
+    <Include file="Locales\locales.xml" />
+    <Include file="Constants\Constants.xml" />
+
+    <!-- Initialize the base Addon -->
+    <script file="Init.lua" />
+
+    <!-- Load Utils -->
+    <Include file="Utils\utils.xml" />
+
+    <!-- Load UI -->
+    <Include file="UI\ui.xml" />
+
+    <!-- Load the Main Addon -->
+    <script file="Core.lua" />
+</Ui>

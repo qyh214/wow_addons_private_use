@@ -1,9 +1,15 @@
 local GlobalAddonName, ExRT = ...
 
+if ExRT.isMN then
+	return
+end
+
 local module = ExRT:New("WAChecker",ExRT.L.WAChecker)
 local ELib,L = ExRT.lib,ExRT.L
 
 local LibDeflate = LibStub:GetLibrary("LibDeflate")
+
+local IsEncounterInProgress = C_InstanceEncounter and C_InstanceEncounter.IsEncounterInProgress or IsEncounterInProgress
 
 module.db.responces = {}
 module.db.responces2 = {}

@@ -2,20 +2,20 @@ local E = select(2,	...):unpack()
 
 local covenant_db = {
 	["DEATHKNIGHT"] = {
-		{ spellID = 315443,	duration = 120,	type = "covenant",	spec = 321078,	talent = 383269	},
+		{ spellID = 315443,	duration = 120,	type = "covenant",	spec = 321078	},
 		{ spellID = 324128,	duration = {[250]=15,default=30},	type = "covenant",	spec = 321077,	parent = 43265,	talent = 152280	},
 		{ spellID = 312202,	duration = 60,	type = "covenant",	spec = 321076	},
 		{ spellID = 311648,	duration = 60,	type = "covenant",	spec = 321079	},
 	},
 	["DEMONHUNTER"] = {
-
+		{ spellID = 306830,	duration = 60,	type = "covenant",	spec = 321076,	talent = 390163	},
 		{ spellID = 329554,	duration = 120,	type = "covenant",	spec = 321078	},
 		{ spellID = 317009,	duration = 45,	type = "covenant",	spec = 321079	},
-
+		{ spellID = 323639,	duration = 90,	type = "covenant",	spec = 321077,	talent = 370965	},
 	},
 	["DRUID"] = {
-
-
+		{ spellID = 325727,	duration = 25,	type = "covenant",	spec = 321078,	talent = 391888	},
+		{ spellID = 323764,	duration = 120,	type = "covenant",	spec = 321077,	talent = 391528	},
 		{ spellID = 338142,	duration = 60,	type = "covenant",	spec = 321076	},
 		--[[ Merged
 		{ spellID = 338035,	duration = 60,	type = "covenant",	spec = 321076	},
@@ -41,35 +41,34 @@ local covenant_db = {
 		{ spellID = 324220,	duration = 180,	type = "covenant",	spec = 321078	},
 		{ spellID = 314793,	duration = 90,	type = "covenant",	spec = 321079	},
 		{ spellID = 307443,	duration = 30,	type = "covenant",	spec = 321076	},
-
+		{ spellID = 314791,	duration = 60,	type = "covenant",	spec = 321077,	talent = 382440	},
 	},
 	["MONK"] = {
 		{ spellID = 325216,	duration = 60,	type = "covenant",	spec = 321078	},
 		{ spellID = 327104,	duration = 30,	type = "covenant",	spec = 321077,	talent = 388193	},
 		{ spellID = 326860,	duration = 180,	type = "covenant",	spec = 321079	},
-
+		{ spellID = 310454,	duration = 120,	type = "covenant",	spec = 321076,	talent = 387184	},
 	},
 	["PALADIN"] = {
 		{ spellID = 316958,	duration = 240,	type = "covenant",	spec = 321079	},
-
+		{ spellID = 328620,	duration = 45,	type = "covenant",	spec = 321077,	talent = 388007	},
 		--[[ Merged
 		{ spellID = 328622,	duration = 45,	type = "covenant",	spec = 321077	},
 		{ spellID = 328282,	duration = 45,	type = "covenant",	spec = 321077	},
-		{ spellID = 328620,	duration = 45,	type = "covenant",	spec = 321077	},
 		{ spellID = 328281,	duration = 45,	type = "covenant",	spec = 321077	},
 		]]
-
+		{ spellID = 304971,	duration = 60,	type = "covenant",	spec = 321076,	talent = 375576	},
 		{ spellID = 328204,	duration = 30,	type = "covenant",	spec = 321078	},
 	},
 	["PRIEST"] = {
 		{ spellID = 325013,	duration = 180,	type = "covenant",	spec = 321076	},
 		{ spellID = 327661,	duration = 90,	type = "covenant",	spec = 321077	},
-
+		{ spellID = 323673,	duration = 45,	type = "covenant",	spec = 321079,	talent = 375901	},
 		{ spellID = 324724,	duration = 60,	type = "covenant",	spec = 321078	},
 	},
 	["ROGUE"] = {
 		{ spellID = 323547,	duration = 45,	type = "covenant",	spec = 321076	},
-
+		{ spellID = 323654,	duration = 90,	type = "covenant",	spec = 321079,	talent = 384631	},
 		{ spellID = 328305,	duration = 90,	type = "covenant",	spec = 321077	},
 		{ spellID = 328547,	duration = 30,	type = "covenant",	spec = 321078,	charges = 3	},
 	},
@@ -83,7 +82,7 @@ local covenant_db = {
 		{ spellID = 325289,	duration = 45,	type = "covenant",	spec = 321078,	},
 		{ spellID = 321792,	duration = 60,	type = "covenant",	spec = 321079,	},
 		{ spellID = 312321,	duration = 40,	type = "covenant",	spec = 321076,	},
-
+		{ spellID = 325640,	duration = 60,	type = "covenant",	spec = 321077,	talent = 386997	},
 	},
 	["WARRIOR"] = {
 		{ spellID = 325886,	duration = 90,	type = "covenant",	spec = 321077	},

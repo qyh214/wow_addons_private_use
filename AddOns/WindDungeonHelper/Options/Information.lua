@@ -4,29 +4,56 @@ local LDBI = LibStub("LibDBIcon-1.0")
 local _G = _G
 
 local format = format
+local tconcat = table.concat
+
 local StaticPopup_Show = StaticPopup_Show
 
 local wowVersion, wowPatch = GetBuildInfo()
+
+local function green(str)
+	return "|cff00d1b2" .. str .. "|r"
+end
+
+local function red(str)
+	return "|cffff3860" .. str .. "|r"
+end
+
+local function grey(str)
+	return "|cffbbbbbb" .. str .. "|r"
+end
+
+local qqGroupNumbers = tconcat({
+	format("%s (%d): %s (%s)", L["QQ Group"], 1, "336069019", grey(L["Almost full"])),
+	format("%s (%d): %s (%s)", L["QQ Group"], 2, "948518444", grey(L["Almost full"])),
+	format("%s (%d): %s (%s)", L["QQ Group"], 3, "687772809", green(L["Recommended"])),
+}, "\n")
+
+local qqGroupDescription = tconcat({
+	L["This the QQ group for Wind Addons users."],
+	red(L["!! No talking about specific UI sets !!"]),
+	"",
+	L["Click [%s] to show the QQ groups."]:format(green(L["I got it!"])),
+}, "\n")
 
 _G.StaticPopupDialogs["WIND_DUNGEON_HELPER_EDITBOX"] = {
 	text = "",
 	button1 = _G.OKAY,
 	hasEditBox = true,
 	OnShow = function(self, data)
-		self.editBox:SetAutoFocus(false)
-		self.editBox.width = self.editBox:GetWidth()
-		self.editBox:SetWidth(250)
-		self.editBox:AddHistoryLine("text")
-		self.editBox.temptxt = data
-		self.editBox:SetText(data)
-		self.editBox:HighlightText()
-		self.editBox:SetJustifyH("CENTER")
+		self.EditBox:SetAutoFocus(false)
+		self.EditBox.width = self.EditBox:GetWidth()
+		self.EditBox:SetWidth(250)
+		self.EditBox:AddHistoryLine("text")
+		self.EditBox.temptxt = data
+		self.EditBox:SetText(data)
+		self.EditBox:HighlightText()
+		self.EditBox:SetJustifyH("CENTER")
 
-		self.text:SetText(self.text.text_arg1)
+		self.Text:SetText(self.Text.text_arg1)
 	end,
 	OnHide = function(self)
-		self.editBox:SetWidth(self.editBox.width or 50)
-		self.editBox.width = nil
+		self.EditBox:SetWidth(self.EditBox.width or 50)
+		self.EditBox.width = nil
 		self.temptxt = nil
 	end,
 	EditBoxOnEnterPressed = function(self)
@@ -48,6 +75,30 @@ _G.StaticPopupDialogs["WIND_DUNGEON_HELPER_EDITBOX"] = {
 	whileDead = true,
 	preferredIndex = 3,
 	hideOnEscape = true,
+}
+
+_G.StaticPopupDialogs["WIND_DUNGEON_HELPER_QQ_GROUP_DIALOG"] = {
+	text = qqGroupDescription,
+	button1 = L["I got it!"],
+	button2 = _G.CANCEL,
+	OnAccept = function(self)
+		self:Hide()
+		StaticPopup_Show("WIND_DUNGEON_HELPER_QQ_GROUP_NUMBER_DIALOG")
+	end,
+	whileDead = 1,
+	preferredIndex = 3,
+	hideOnEscape = 1,
+}
+
+_G.StaticPopupDialogs["WIND_DUNGEON_HELPER_QQ_GROUP_NUMBER_DIALOG"] = {
+	text = qqGroupNumbers,
+	button1 = _G.OKAY,
+	OnAccept = function(self)
+		self:Hide()
+	end,
+	whileDead = 1,
+	preferredIndex = 3,
+	hideOnEscape = 1,
 }
 
 O.information = {
@@ -224,12 +275,7 @@ O.information = {
 					name = L["QQ Group"],
 					image = W.Media.Icons.qq,
 					func = function()
-						StaticPopup_Show(
-							"WIND_DUNGEON_HELPER_EDITBOX",
-							L["Wind Dungeon Helper"] .. " - " .. L["QQ Group"],
-							nil,
-							"948518444"
-						)
+						StaticPopup_Show("WIND_DUNGEON_HELPER_QQ_GROUP_DIALOG")
 					end,
 					width = 0.6,
 				},

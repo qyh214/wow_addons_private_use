@@ -644,7 +644,7 @@ if not db.activate.HideMapNote then
             end
 
             if self.db.profile.showZonePvEVendor then
-                nodes[388][37806460] = { name = "", dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT .. "\n" .. WORLD_QUEST_REWARD_FILTERS_EQUIPMENT .. "\n" .. AUCTION_CATEGORY_WEAPONS, type = "PvEVendor", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[388][37806460] = { name = "", dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT .. "\n" .. WORLD_QUEST_REWARD_FILTERS_EQUIPMENT .. "\n" .. AUCTION_CATEGORY_WEAPONS, type = "ZonePvEVendor", showInZone = true, showOnContinent = false, showOnMinimap = false }
             end
 
             if self.db.profile.showZonePvPVendor then

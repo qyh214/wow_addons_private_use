@@ -12,7 +12,7 @@ if not plugin then return end
 --local GetInstanceInfo = BigWigsLoader.GetInstanceInfo
 --local DoCountdown = BigWigsLoader.DoCountdown
 --local zoneTable = BigWigsLoader.zoneTbl
---local IsEncounterInProgress = IsEncounterInProgress
+local IsEncounterInProgress = C_InstanceEncounter and C_InstanceEncounter.IsEncounterInProgress or IsEncounterInProgress -- XXX 12.0 compat
 --local media = LibStub("LibSharedMedia-3.0")
 --local SOUND = media.MediaType and media.MediaType.SOUND or "sound"
 
@@ -148,7 +148,7 @@ do
 			plugin:SendMessage("BigWigs_Sound", plugin, nil, "Long")
 		end
 		plugin:SendMessage("BigWigs_StartBar", plugin, nil, L.breakBar, seconds, 134062)
-		plugin:SendMessage("BigWigs_StartBreak", plugin, seconds, nick, isDBM, reboot)
+		plugin:SendMessage("BigWigs_StartBreak", plugin, seconds, nick, isDBM, reboot, L.breakBar, 134062)
 	end
 end
 
@@ -173,6 +173,7 @@ end
 local SendAddonMessage = BigWigsLoader.SendAddonMessage
 local dbmPrefix = BigWigsLoader.dbmPrefix
 BigWigsAPI.RegisterSlashCommand("/break", function(input)
+	if BigWigsLoader.isBeta then return end -- XXX 12.0 Needs fixing (not allowed in raids/dungeons atm)
 	if not plugin:IsEnabled() then BigWigs:Enable() end
 	if IsEncounterInProgress() then BigWigs:Print(L.encounterRestricted) return end -- Doesn't make sense to allow this in combat
 	if not IsInGroup() or UnitIsGroupLeader("player") or UnitIsGroupAssistant("player") then -- Solo or leader/assist

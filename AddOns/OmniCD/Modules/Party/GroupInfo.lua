@@ -25,6 +25,7 @@ function GroupInfoMixin:ProcessSpell(spellID)
 		return
 	end
 
+	--[[
 	local covenantID = E.covenant_abilities[spellID]
 	if covenantID and P.isInShadowlands and guid ~= E.userGUID and not CM.syncedGroupMembers[guid] then
 		loginsessionData[guid] = loginsessionData[guid] or {}
@@ -55,6 +56,7 @@ function GroupInfoMixin:ProcessSpell(spellID)
 			end
 		end
 	end
+	]]
 
 	local icon, mergedID
 	if E.spellcast_merged[spellID] then
@@ -187,6 +189,7 @@ function GroupInfoMixin:ProcessSpell(spellID)
 		end
 	end
 
+	--[[
 	if not E.isBFA then
 		return
 	end
@@ -208,6 +211,7 @@ function GroupInfoMixin:ProcessSpell(spellID)
 	if (stiveSpec == true or stiveSpec == self.spec) and guid == E.userGUID and P.isPvP then
 		C_Timer.After(2, function() CM.SendStrivePvpTalentCD(spellID) end)
 	end
+	]]
 end
 
 local wotlkcReadinessExcluded = {

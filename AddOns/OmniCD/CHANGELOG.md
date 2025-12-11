@@ -1,3 +1,4 @@
-### v2.8.22
--   Update for Patch 11.2
--   MoP: add missing pvp set bonus items
+### v2.8.28
+-   Fix Celestial Infusion charges
+-   Disable Shadowlands Covenant/Soulbind abilities in dungeons
+-   Update healing potion name to current

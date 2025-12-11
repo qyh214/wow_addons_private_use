@@ -38,15 +38,17 @@ function AF.Deserialize(encoded, isForAddonChannel)
         decoded = LibDeflate:DecodeForPrint(encoded)
     end
 
+    local success, decompressed, data
+
     -- decompress
-    local decompressed = LibDeflate:DecompressDeflate(decoded)
-    if not decompressed then
+    success, decompressed = pcall(LibDeflate.DecompressDeflate, LibDeflate, decoded)
+    if not success or not decompressed then
         AF.Debug("Error decompressing")
         return
     end
 
     -- deserialize
-    local success, data = LibSerialize:Deserialize(decompressed)
+    success, data = LibSerialize:Deserialize(decompressed)
     if not success then
         AF.Debug("Error deserializing")
         return

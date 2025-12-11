@@ -414,16 +414,16 @@ BigWigs:AddSounds("Thrashbite the Scornful", {
 })
 
 BigWigs:AddColors("Domatrax", {
-	[-15076] = "red",
+	[-15076] = "cyan",
 	[234107] = "orange",
 	[236543] = "yellow",
 	[238410] = {"blue","orange"},
 })
 
 BigWigs:AddSounds("Domatrax", {
-	[-15076] = "alarm",
+	[-15076] = "info",
 	[234107] = "warning",
-	[236543] = "alert",
+	[236543] = "alarm",
 	[238410] = {"alert","warning"},
 })
 
@@ -798,8 +798,8 @@ BigWigs:AddSounds("Eye of Azshara Trash", {
 	[195129] = {"info","warning"},
 	[195284] = "long",
 	[196027] = "alarm",
-	[196127] = "long",
-	[196870] = "long",
+	[196127] = "alarm",
+	[196870] = "info",
 	[197105] = "info",
 	[225089] = "warning",
 })
@@ -1573,7 +1573,6 @@ BigWigs:AddSounds("Inquisitor Tormentorum", {
 })
 
 BigWigs:AddColors("Ashgolm", {
-	[-12727] = "green",
 	[192517] = "green",
 	[192519] = "blue",
 	[192520] = "red",
@@ -1581,7 +1580,6 @@ BigWigs:AddColors("Ashgolm", {
 })
 
 BigWigs:AddSounds("Ashgolm", {
-	[-12727] = "info",
 	[192517] = "info",
 	[192519] = "alert",
 	[192520] = "long",

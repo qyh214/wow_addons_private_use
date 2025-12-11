@@ -1,4 +1,4 @@
-## Interface: 110105, 110107, 110200
+## Interface: 110205, 110207, 110200
 
 ## Title: BigWigs [|cffeda55fWrath of the Lich King|r]
 ## Title-deDE: BigWigs [|cffeda55fWrath of the Lich King|r]
@@ -25,7 +25,7 @@
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
-## Version: v11.1.7
+## Version: v11.2.0
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_legacy.tga
 
 ## X-Category: Raid

@@ -47,6 +47,8 @@ function addon.InitializeEvents()
                 if (addon.profile.when_to_automatically_open_scoreboard == "COMBAT_MYTHICPLUS_OVERALL_READY") then
                     addon.OpenScoreBoardAtEnd()
                 end
+
+                addon.FireEvent("RunFinished", runInfo.runId)
             end
         end)
 
@@ -100,43 +102,53 @@ function addon.InitializeEvents()
     end
 
     function addon.OnMythicDungeonContinue(...)
-        private.log("Detected ongoing run, continue parsing")
+        if (not addon.profile.is_run_ongoing) then
+            private.log("Detected run continue, but the run is not marked as ongoing. Not starting the parser")
+            return
+        end
+
+        private.log("Detected run continue with ongoing run, continue parsing")
         Details.MythicPlus.IsRestoredState = nil
+
         addon.StartParser()
     end
 
     function addon.OnEncounterStart(dungeonEncounterId, encounterName, difficultyId, raidSize)
-        if (addon.profile.is_run_ongoing) then
-            ---@type detailsmythicplus_encounterinfo
-            local currentEncounterInfo = {
-                dungeonEncounterId = dungeonEncounterId,
-                encounterName = encounterName,
-                startTime = time(),
-                endTime = 0,
-                defeated = false,
-            }
-
-            table.insert(addon.profile.last_run_data.encounter_timeline, currentEncounterInfo)
-
-            private.log("Encounter started: ", encounterName)
+        if (not addon.profile.is_run_ongoing) then
+            return
         end
+
+        ---@type detailsmythicplus_encounterinfo
+        local currentEncounterInfo = {
+            dungeonEncounterId = dungeonEncounterId,
+            encounterName = encounterName,
+            startTime = time(),
+            endTime = 0,
+            defeated = false,
+        }
+
+        table.insert(addon.profile.last_run_data.encounter_timeline, currentEncounterInfo)
+
+        private.log("Encounter started: ", encounterName)
     end
 
     function addon.OnEncounterEnd(dungeonEncounterId, encounterName, difficultyId, raidSize, endStatus)
-        if (addon.profile.is_run_ongoing) then
-            ---@type detailsmythicplus_encounterinfo
-            local currentEncounterInfo = addon.profile.last_run_data.encounter_timeline[#addon.profile.last_run_data.encounter_timeline]
-
-            --if the current encounter is nil, then we did miss the encounter start event
-            if (not currentEncounterInfo) then
-                return
-            end
-
-            currentEncounterInfo.endTime = time()
-            currentEncounterInfo.defeated = endStatus == 1
-
-            private.log("Encounter ended: ", encounterName, " defeated: ", endStatus == 1)
+        if (not addon.profile.is_run_ongoing) then
+            return
         end
+
+        ---@type detailsmythicplus_encounterinfo
+        local currentEncounterInfo = addon.profile.last_run_data.encounter_timeline[#addon.profile.last_run_data.encounter_timeline]
+
+        --if the current encounter is nil, then we did miss the encounter start event
+        if (not currentEncounterInfo) then
+            return
+        end
+
+        currentEncounterInfo.endTime = time()
+        currentEncounterInfo.defeated = endStatus == 1
+
+        private.log("Encounter ended: ", encounterName, " defeated: ", endStatus == 1)
     end
 
     function addon.OnPlayerEnterCombat(...)

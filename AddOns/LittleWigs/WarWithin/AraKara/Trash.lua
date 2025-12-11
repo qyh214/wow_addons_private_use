@@ -14,6 +14,7 @@ mod:RegisterEnableMob(
 	217531, -- Ixin
 	218324, -- Nakt
 	217533, -- Atik
+	216337, -- Bloodworker
 	216338, -- Hulking Bloodguard
 	228015, -- Hulking Bloodguard (Sentry Stagshell's summon)
 	216340, -- Sentry Stagshell
@@ -37,6 +38,7 @@ if L then
 	L.ixin = "Ixin"
 	L.nakt = "Nakt"
 	L.atik = "Atik"
+	L.bloodworker = "Bloodworker"
 	L.hulking_bloodguard = "Hulking Bloodguard"
 	L.sentry_stagshell = "Sentry Stagshell"
 	L.bloodstained_assistant = "Bloodstained Assistant"
@@ -64,6 +66,8 @@ function mod:GetOptions()
 		-- Discordant Attendant
 		"custom_on_autotalk",
 		439208, -- Silk Wrap
+		-- Engorged Crawler
+		{438618, "DISPEL", "NAMEPLATE"}, -- Venomous Spit
 		-- Trilling Attendant
 		{434793, "NAMEPLATE"}, -- Resonant Barrage
 		-- Ixin
@@ -73,6 +77,8 @@ function mod:GetOptions()
 		{438877, "NAMEPLATE"}, -- Call of the Brood
 		-- Atik
 		{438826, "NAMEPLATE"}, -- Poisonous Cloud
+		-- Bloodworker
+		{453583, "ME_ONLY", "NAMEPLATE", "OFF"}, -- Charge
 		-- Hulking Bloodguard
 		{453161, "NAMEPLATE"}, -- Impale
 		{1241693, "NAMEPLATE"}, -- Locust Swarm
@@ -90,12 +96,26 @@ function mod:GetOptions()
 		-- Winged Carrier
 		{433821, "NAMEPLATE", "OFF"}, -- Dashing Strike
 	}, {
+		{
+			tabName = self:BossName(2583), -- Avanoxx
+			{434830, 436614, "custom_on_autotalk", 439208, 438618, 434793, 434824, 434802, 438877, 438826},
+		},
+		{
+			tabName = self:BossName(2584), -- Anub'zekt
+			{"custom_on_autotalk", 439208, 453583, 453161, 1241693, 432967, 433002, 448248},
+		},
+		{
+			tabName = self:BossName(2585), -- Ki'katal the Harvester
+			{433845, 433841, 1241785, 433821, 453161, 1241693},
+		},
 		[434830] = L.vile_webbing,
 		["custom_on_autotalk"] = L.discordant_attendant,
+		[438618] = L.engorged_crawler,
 		[434793] = L.trilling_attendant,
 		[434824] = L.ixin,
 		[438877] = L.nakt,
 		[438826] = L.atik,
+		[453583] = L.bloodworker,
 		[453161] = L.hulking_bloodguard,
 		[432967] = L.sentry_stagshell,
 		[433002] = L.bloodstained_assistant,
@@ -119,9 +139,17 @@ function mod:OnBossEnable()
 	self:RegisterEvent("GOSSIP_SHOW")
 	self:Log("SPELL_AURA_APPLIED", "SilkThreadApplied", 439201)
 
+	-- Engorged Crawler
+	self:RegisterEngageMob("EngorgedCrawlerEngaged", 214840)
+	self:Log("SPELL_CAST_SUCCESS", "VenomousSpit", 438618)
+	self:Log("SPELL_AURA_APPLIED", "VenomousSpitApplied", 438618)
+	self:Log("SPELL_AURA_APPLIED_DOSE", "VenomousSpitApplied", 438618)
+	self:Death("EngorgedCrawlerDeath", 214840)
+
 	-- Trilling Attendant
 	self:RegisterEngageMob("TrillingAttendantEngaged", 216293)
 	self:Log("SPELL_CAST_SUCCESS", "ResonantBarrage", 434793)
+	self:Log("SPELL_INTERRUPT", "ResonantBarrageInterrupt", 434793)
 	self:Death("TrillingAttendantDeath", 216293)
 
 	-- Ixin, Nakt, Atik
@@ -145,6 +173,11 @@ function mod:OnBossEnable()
 	self:Log("SPELL_PERIODIC_DAMAGE", "PoisonousCloudDamage", 438825)
 	self:Log("SPELL_PERIODIC_MISSED", "PoisonousCloudDamage", 438825)
 	self:Death("AtikDeath", 217533)
+
+	-- Bloodworker
+	self:RegisterEngageMob("BloodworkerEngaged", 216337)
+	self:Log("SPELL_CAST_SUCCESS", "Charge", 453583)
+	self:Death("BloodworkerDeath", 216337)
 
 	-- Hulking Bloodguard
 	self:RegisterEngageMob("HulkingBloodguardEngaged", 216338, 228015)
@@ -240,23 +273,58 @@ function mod:SilkThreadApplied(args)
 	end
 end
 
+-- Engorged Crawler
+
+function mod:EngorgedCrawlerEngaged(guid)
+	if self:Dispeller("poison", nil, 438618) then
+		self:Nameplate(438618, 5.4, guid) -- Venomous Spit
+	end
+end
+
+function mod:VenomousSpit(args)
+	if self:Dispeller("poison", nil, args.spellId) then
+		self:Nameplate(args.spellId, 17.0, args.sourceGUID)
+	end
+end
+
+do
+	local prev = 0
+	function mod:VenomousSpitApplied(args)
+		if self:Dispeller("poison", nil, args.spellId) then
+			local amount = args.amount or 1
+			if amount % 2 == 0 and args.time - prev > 3 then
+				prev = args.time
+				self:StackMessage(args.spellId, "yellow", args.destName, amount, 2)
+				self:PlaySound(args.spellId, "alert", nil, args.destName)
+			end
+		end
+	end
+end
+
+function mod:EngorgedCrawlerDeath(args)
+	self:ClearNameplate(args.destGUID)
+end
+
 -- Trilling Attendant
 
 function mod:TrillingAttendantEngaged(guid)
-	self:Nameplate(434793, 2.5, guid) -- Resonant Barrage
+	self:Nameplate(434793, 8.5, guid) -- Resonant Barrage
 end
 
 do
 	local prev = 0
 	function mod:ResonantBarrage(args)
-		self:Nameplate(args.spellId, 17.0, args.sourceGUID)
-		local t = args.time
-		if t - prev > 1.5 then
-			prev = t
+		self:Nameplate(args.spellId, 25.3, args.sourceGUID)
+		if args.time - prev > 1.5 then
+			prev = args.time
 			self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 			self:PlaySound(args.spellId, "alert")
 		end
 	end
+end
+
+function mod:ResonantBarrageInterrupt(args)
+	self:Nameplate(434793, 25.3, args.destGUID)
 end
 
 function mod:TrillingAttendantDeath(args)
@@ -426,6 +494,28 @@ do
 	end
 end
 
+-- Bloodworker
+
+function mod:BloodworkerEngaged(guid)
+	self:Nameplate(453583, 3.5, guid) -- Charge
+end
+
+do
+	local prev = 0
+	function mod:Charge(args)
+		self:Nameplate(args.spellId, 3.2, args.sourceGUID)
+		if args.time - prev > 3 then
+			prev = args.time
+			self:TargetMessage(args.spellId, "red", args.destName)
+			self:PlaySound(args.spellId, "alert", nil, args.destName)
+		end
+	end
+end
+
+function mod:BloodworkerDeath(args)
+	self:ClearNameplate(args.destGUID)
+end
+
 -- Hulking Bloodguard
 
 function mod:HulkingBloodguardEngaged(guid)
@@ -454,9 +544,8 @@ end
 do
 	local prev = 0
 	function mod:AlarmShrill(args)
-		local t = args.time
-		if t - prev > 3 then
-			prev = t
+		if args.time - prev > 3 then
+			prev = args.time
 			self:Message(args.spellId, "cyan", CL.casting:format(args.spellName))
 			self:PlaySound(args.spellId, "info")
 		end
@@ -570,9 +659,12 @@ end
 -- Reinforced Drone
 
 function mod:TaintedBloodApplied(args)
-	if (self:Me(args.destGUID) or self:Dispeller("magic", nil, args.spellId) or self:Dispeller("movement", nil, args.spellId)) and args.amount % 5 == 0 then
-		self:StackMessage(args.spellId, "purple", args.destName, args.amount, 10)
-		self:PlaySound(args.spellId, "alert", nil, args.destName)
+	if (self:Me(args.destGUID) or self:Dispeller("magic", nil, args.spellId) or self:Dispeller("movement", nil, args.spellId)) and args.amount % 5 == 0 and args.amount > 5 then
+		-- 4% movement speed reduction per stack
+		self:StackMessage(args.spellId, "purple", args.destName, args.amount, 20)
+		if args.amount >= 20 then
+			self:PlaySound(args.spellId, "alert", nil, args.destName)
+		end
 	end
 end
 

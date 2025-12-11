@@ -41,7 +41,7 @@ L = mod:GetLocale()
 function mod:GetOptions()
 	return {
 		-6550,
-		122752, 122768, 122789, {122777, "PROXIMITY", "FLASH", "SAY"},
+		122752, 122768, 122789, {122777, "SAY"},
 		122855, "unstable_sha", 123011, "embodied_terror",
 		"phases", "berserk",
 	}, {
@@ -75,10 +75,9 @@ function mod:OnBossEnable()
 end
 
 function mod:OnEngage(diff)
-	self:OpenProximity(122777, 8)
 	self:Berserk(self:LFR() and 900 or 490)
 	self:Bar("phases", 121, -6315, "spell_holy_circleofrenewal") -- The Day
-	self:Bar(122777, 15.6) -- Nightmares
+	self:CDBar(122777, 15.6) -- Nightmares
 	self:Bar(122752, 10) -- Shadow Breath
 	bigAddCounter = 0
 end
@@ -140,9 +139,14 @@ end
 
 do
 	local function printTarget(self, name, guid) -- Nightmares
-		self:TargetMessageOld(122777, name, "red", "alert")
+		self:TargetMessage(122777, "red", name)
 		if self:Me(guid) then
-			self:Flash(122777)
+			self:Say(122777, nil, nil, "Nightmares")
+		end
+		self:PlaySound(122777, "alert", nil, name)
+	end
+	local function printTarget25(self, name, guid) -- Nightmares 25 man
+		if self:Me(guid) then
 			self:Say(122777, nil, nil, "Nightmares")
 		end
 	end
@@ -156,7 +160,6 @@ do
 		elseif unitId:find("boss", nil, true) then
 			if spellId == 123252 then -- Dread Shadows Cancel (start of day phase)
 				bigAddCounter = 0
-				self:CloseProximity(122777)
 				self:StopBar(122777) -- Nightmares
 				self:StopBar(122752) -- Shadow Breath
 				self:StopBar(122789) -- Sunbeam
@@ -169,8 +172,7 @@ do
 			elseif spellId == 122767 then -- Dread Shadows (start of night phase)
 				self:StopBar(122953) -- Summon Unstable Sha
 				self:StopBar(122855) -- Sun Breath
-				self:OpenProximity(122777, 8)
-				self:Bar(122777, 15) -- Nightmares
+				self:CDBar(122777, 15) -- Nightmares
 				self:MessageOld("phases", "green", nil, -6310, 122768) -- The Night
 				self:Bar("phases", 121, -6315, "spell_holy_circleofrenewal") -- The Day
 				self:Bar(122752, 10) -- Shadow Breath
@@ -188,11 +190,13 @@ do
 					self:Bar("unstable_sha", 18, self:SpellName(spellId), 122938)
 				end
 			elseif spellId == 122775 then -- Nightmares
-				self:Bar(122777, 15)
+				self:CDBar(122777, 15)
 				if self:Difficulty() == 3 or self:Difficulty() == 5 then -- Only 1 nightmare spawns in 10 man modes
 					self:GetBossTarget(printTarget, 0.7, self:UnitGUID(unitId))
 				else
-					self:MessageOld(122777, "yellow")
+					self:GetBossTarget(printTarget25, 0.7, self:UnitGUID(unitId))
+					self:Message(122777, "red")
+					self:PlaySound(122777, "alert")
 				end
 			elseif spellId == 123813 then -- The Dark of Night (heroic)
 				self:Bar(-6550, 30, 130013)

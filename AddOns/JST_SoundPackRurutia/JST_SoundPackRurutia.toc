@@ -1,0 +1,12 @@
+## Interface: 110105, 110107, 110200, 110205
+## Title: |cffff0000Jingsi|r Tools |cffff559aRurutia|r |cffffffff语音包|r
+## Title-zhCN: |cffff0000静思|r 副本助手 |cffff559a露露语音包|r
+## DefaultState: enabled
+## Dependencies: JST
+## Author: |cffff559a露露緹婭@Bilibili|r
+## Version: 1.1.0
+## IconTexture: Interface\AddOns\JST_SoundPackRurutia\icons\Rurutia_Logo_64R.tga
+## Notes: 静思副本助手，露露语音包。|n支持11.2地心之战团本《法力熔炉：欧米伽》。|n语音录制：|cffff559a露露緹婭@Bilibili|r，抖音：|cffff559a露露缇娅|r。
+
+## X-JST-SoundPack-Name: 露露语音包(中文)
+## X-JST-SoundPack-File: Interface\AddOns\JST_SoundPackRurutia\sounds\

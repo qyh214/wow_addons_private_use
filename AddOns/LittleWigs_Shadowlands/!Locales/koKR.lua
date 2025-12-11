@@ -28,6 +28,11 @@ end
 
 -- Halls of Atonement
 
+L = BigWigs:NewBossLocale("High Adjudicator Aleez", "koKR")
+if L then
+	L.empty_anima_vessel = "빈 령 용기"
+end
+
 L = BigWigs:NewBossLocale("Halls of Atonement Trash", "koKR")
 if L then
 	L.depraved_houndmaster = "타락한 사냥개조련사"
@@ -162,7 +167,8 @@ end
 
 L = BigWigs:NewBossLocale("Myza's Oasis", "koKR")
 if L then
-	L.add_wave_killed = "웨이브 (%d/%d)"
+	L.notes = "음표"
+	L.notes_desc = "음표를 사용할 수 있을 때 메시지를 표시합니다. 악기의 능력으로 음표를 치면 '신바람' 효과를 얻습니다.\n\n|T237554:16|t신바람\n{348567}"
 end
 
 L = BigWigs:NewBossLocale("So'leah", "koKR")
@@ -174,9 +180,20 @@ L = BigWigs:NewBossLocale("Tazavesh Trash", "koKR")
 if L then
 	L.zophex_warmup_trigger = "밀수품을... 전부... 내놓아라..."
 	L.menagerie_warmup_trigger = "여러분 모두가 고대하던 상품 차례입니다! 이른바 악마의 저주를 받은 망각의 서슬도끼입니다!"
+	L.menagerie_warmup_trigger2 = "자이 중개단이 쏠쏠한 수익을 올리고 있군요. 이를 계기로 우리에게 협조해 주면 좋겠는데 말이죠."
+	L.mailroom_door_trigger = "이곳 친구가 조 중개단의 서명 확보를 도와줄 거예요."
+	L.vendor_active_trigger = "마이자의 오아시스. 타자베쉬에서 제일 매혹적인 가계죠. 주인의 호의를 얻으면 아우 중개단의 서명은 자연스레 딸려올 겁니다."
 	L.soazmi_warmup_trigger = "방해해서 참 미안하게 됐습니다, 소레아. 불편할 때 찾아온 거면 좋겠는데 말이죠."
 	L.portal_authority = "타자베쉬 차원문 관리국"
 	L.custom_on_portal_autotalk_desc = "중개자 NPC와 대화하면 입구로 돌아가는 포털이 즉시 열립니다."
+	L.mailroom_door_desc = "우편실 문이 열리는 시간을 알려주는 바를 표시합니다."
+	L.vendor_active = "상인 활성화"
+	L.vendor_active_desc = "거래 게임의 상인이 활성화되는 시점을 나타내는 바를 표시합니다."
+	L.vendor_autopurchase = "거래 게임 아이템 자동 구매"
+	L.vendor_autopurchase_desc = "상인에게서 초기 거래 게임 아이템을 자동으로 구매합니다."
+	L.vendor_autopurchase_message = "%s 구매함"
+	L.tradeable_goods = "거래 가능한 상품"
+	L.tradeable_goods_desc = "거래 가능한 상품이 수거되면 메시지를 표시합니다."
 	L.trading_game = "거래 게임"
 	L.trading_game_desc = "거래 게임 중에 올바른 암호가 입력되면 알림을 받습니다."
 	L.custom_on_trading_game_autotalk_desc = "거래 게임이 완료된 후 즉시 올바른 암호를 선택하세요."
@@ -201,6 +218,7 @@ if L then
 	L.tracker_zokorss = "추적자 조코르스"
 	L.ancient_core_hound = "고대의 심장부 사냥개"
 	L.enraged_direhorn = "격노한 공포뿔"
+	L.frenzied_nightclaw = "광포한 밤표범"
 	L.cartel_skulker = "중개단 잠복꾼"
 	L.cartel_wiseguy = "중개단 폭력단원"
 	L.cartel_muscle = "중개단 불한당"
@@ -208,13 +226,16 @@ if L then
 	L.defective_sorter = "불량 분류기"
 	L.overloaded_mailemental = "과부하된 우편의 정령"
 	L.post_worker = "우.정.국. 직원"
+	L.smuggled_creature = "밀수된 동물"
 	L.bazaar_overseer = "시장 감독관"
 	L.market_peacekeeper = "시장 평화감시단"
 	L.veteran_sparkcaster = "노련한 불꽃술사"
 	L.commerce_enforcer = "상업구 집행자"
 	L.commander_zofar = "사령관 조파르"
 
-	L.tazavesh_soleahs_gambit = "타자베쉬: 소레아의 승부수"
+	L.hylbrande_warmup_trigger = "과연 그 지혜가 티탄의 힘을 상대로 얼마나 선전할 수 있을까?"
+	L.portal_open = "차원문 열림"
+	L.portal_open_desc = "다음 지역으로 가는 차원문이 열릴 시점을 표시하는 바를 표시합니다."
 	L.murkbrine_scalebinder = "진흙소금 비늘결속자"
 	L.murkbrine_fishmancer = "진흙소금 생선술사"
 	L.murkbrine_shellcrusher = "진흙소금 껍질분쇄자"

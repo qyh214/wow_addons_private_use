@@ -1,8 +1,8 @@
-## Interface: 50500
+## Interface: 50501
 ## Title: Premade Groups Filter
-## Version: 6.8.1
+## Version: 6.11.0
 ## IconTexture: 397907
-## X-Flavor: Cata
+## X-Flavor: Mists
 ## Notes: Allows filtering of premade groups using an UI or advanced filter expressions.
 ## Notes-deDE: Ermöglicht das Filtern organisierter Gruppen mithilfe der Benutzeroberfläche oder erweiterter Filterausdrücke.
 ## Notes-frFR: Permet de filtrer des groupes prédéfinis à l'aide d'une interface utilisateur ou d'expressions de filtre avancées.
@@ -28,7 +28,6 @@ Localization\zhTW.lua
 Localization\ruRU.lua
 Localization\esES.lua
 Modules\Logger.lua
-Fixes\FixReportAdvertisement.lua
 UI\StaticPopup.xml
 UI\StaticPopup.lua
 Modules\Util.lua

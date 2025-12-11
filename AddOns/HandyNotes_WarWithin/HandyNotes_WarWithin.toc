@@ -1,8 +1,8 @@
-## Interface: 110107
+## Interface: 110207
 ## Title: HandyNotes: The War Within Treasures and Rares
 ## Notes: Where are the hidden treasures in the War Within?
 ## Author: Kemayo
-## Version: v89
+## Version: v97
 ## IconTexture: Interface\Icons\Ability_Spy
 ## DefaultState: enabled
 ## X-Category: Map

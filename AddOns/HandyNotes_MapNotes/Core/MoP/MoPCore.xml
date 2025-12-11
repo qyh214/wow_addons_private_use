@@ -2,6 +2,7 @@
     <Script file="MoPCreateLinks.lua"/>
     <Script file="MoPDefaults.lua"/>
     <Script file="MoPOptions.lua"/>
+    <Script file="MoPCoordsDisplay.lua"/>
     <Script file="MoPMmb.lua"/>
     <Script file="MoPWmb.lua"/>
     <Script file="MoPFogOfWar.lua"/>

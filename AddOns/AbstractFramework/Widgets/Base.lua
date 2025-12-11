@@ -6,20 +6,39 @@ local AF = _G.AbstractFramework
 ---------------------------------------------------------------------
 do
     local f = CreateFrame("Frame")
-    AF.FrameSetSize = f.SetSize
-    AF.FrameSetHeight = f.SetHeight
-    AF.FrameSetWidth = f.SetWidth
-    AF.FrameGetSize = f.GetSize
-    AF.FrameGetHeight = f.GetHeight
-    AF.FrameGetWidth = f.GetWidth
-    AF.FrameSetPoint = f.SetPoint
-    AF.FrameSetFrameLevel = f.SetFrameLevel
+    -- AF.FrameSetSize = f.SetSize
+    -- AF.FrameSetHeight = f.SetHeight
+    -- AF.FrameSetWidth = f.SetWidth
+    -- AF.FrameGetSize = f.GetSize
+    -- AF.FrameGetHeight = f.GetHeight
+    -- AF.FrameGetWidth = f.GetWidth
+    -- AF.FrameSetPoint = f.SetPoint
+    -- AF.FrameSetFrameLevel = f.SetFrameLevel
     AF.FrameShow = f.Show
     AF.FrameHide = f.Hide
 
     local c = CreateFrame("Cooldown")
     AF.FrameSetCooldown = c.SetCooldown
     AF.FrameSetCooldownDuration = c.SetCooldownDuration
+
+    local t = f:CreateTexture()
+    AF.TextureShow = t.Show
+    AF.TextureHide = t.Hide
+end
+
+---------------------------------------------------------------------
+-- OnEnter/OnLeave
+---------------------------------------------------------------------
+function AF.InvokeOnEnter(region)
+    if region.HasScript and region:HasScript("OnEnter") then
+        region:GetScript("OnEnter")(region)
+    end
+end
+
+function AF.InvokeOnLeave(region)
+    if region.HasScript and region:HasScript("OnLeave") then
+        region:GetScript("OnLeave")(region)
+    end
 end
 
 ---------------------------------------------------------------------
@@ -28,6 +47,7 @@ end
 ---@class AF_BaseWidgetMixin
 AF_BaseWidgetMixin = {}
 
+-- OnShow
 function AF_BaseWidgetMixin:SetOnShow(func)
     self:SetScript("OnShow", func)
 end
@@ -42,6 +62,11 @@ function AF_BaseWidgetMixin:GetOnShow()
     end
 end
 
+function AF_BaseWidgetMixin:InvokeOnShow()
+    self:GetScript("OnShow")(self)
+end
+
+-- OnHide
 function AF_BaseWidgetMixin:SetOnHide(func)
     self:SetScript("OnHide", func)
 end
@@ -56,6 +81,11 @@ function AF_BaseWidgetMixin:GetOnHide()
     end
 end
 
+function AF_BaseWidgetMixin:InvokeOnHide()
+    self:GetScript("OnHide")(self)
+end
+
+-- OnEnter
 function AF_BaseWidgetMixin:SetOnEnter(func)
     self:SetScript("OnEnter", func)
 end
@@ -70,6 +100,11 @@ function AF_BaseWidgetMixin:GetOnEnter()
     end
 end
 
+function AF_BaseWidgetMixin:InvokeOnEnter()
+    self:GetScript("OnEnter")(self)
+end
+
+-- OnLeave
 function AF_BaseWidgetMixin:SetOnLeave(func)
     self:SetScript("OnLeave", func)
 end
@@ -84,6 +119,11 @@ function AF_BaseWidgetMixin:GetOnLeave()
     end
 end
 
+function AF_BaseWidgetMixin:InvokeOnLeave()
+    self:GetScript("OnLeave")(self)
+end
+
+-- OnClick
 function AF_BaseWidgetMixin:SetOnMouseDown(func)
     self:SetScript("OnMouseDown", func)
 end
@@ -98,6 +138,7 @@ function AF_BaseWidgetMixin:GetOnMouseDown()
     end
 end
 
+-- OnMouseUp
 function AF_BaseWidgetMixin:SetOnMouseUp(func)
     self:SetScript("OnMouseUp", func)
 end
@@ -112,6 +153,7 @@ function AF_BaseWidgetMixin:GetOnMouseUp()
     end
 end
 
+-- OnMouseWheel
 function AF_BaseWidgetMixin:SetOnMouseWheel(func)
     self:SetScript("OnMouseWheel", func)
 end
@@ -126,6 +168,7 @@ function AF_BaseWidgetMixin:GetOnMouseWheel()
     end
 end
 
+-- OnLoad
 function AF_BaseWidgetMixin:SetOnLoad(func)
     self:SetScript("OnLoad", func)
 end
@@ -140,6 +183,7 @@ function AF_BaseWidgetMixin:GetOnLoad()
     end
 end
 
+-- OnEnable
 function AF_BaseWidgetMixin:SetOnEnable(func)
     if self:HasScript("OnEnable") then
         self:SetScript("OnEnable", func)
@@ -160,6 +204,7 @@ function AF_BaseWidgetMixin:GetOnEnable()
     end
 end
 
+-- OnDisable
 function AF_BaseWidgetMixin:SetOnDisable(func)
     if self:HasScript("OnDisable") then
         self:SetScript("OnDisable", func)
@@ -180,6 +225,7 @@ function AF_BaseWidgetMixin:GetOnDisable()
     end
 end
 
+-- OnUpdate
 function AF_BaseWidgetMixin:SetOnUpdate(func)
     if self:HasScript("OnUpdate") then
         self:SetScript("OnUpdate", func)
@@ -200,6 +246,7 @@ function AF_BaseWidgetMixin:GetOnUpdate()
     end
 end
 
+-- OnSizeChanged
 function AF_BaseWidgetMixin:SetOnSizeChanged(func)
     if self:HasScript("OnSizeChanged") then
         self:SetScript("OnSizeChanged", func)
@@ -217,6 +264,19 @@ function AF_BaseWidgetMixin:GetOnSizeChanged()
         return function()
             self:GetScript("OnSizeChanged")(self)
         end
+    end
+end
+
+-- BlockMouse
+---@param block boolean
+--- this function uses EnableMouse and SetScript("OnMouseWheel") to block mouse events
+function AF_BaseWidgetMixin:BlockMouse(block)
+    self:EnableMouse(block)
+    -- NOTE: EnableMouseWheel dose not work
+    if block then
+        self:SetScript("OnMouseWheel", AF.noop)
+    else
+        self:SetScript("OnMouseWheel", nil)
     end
 end
 
@@ -305,9 +365,25 @@ function AF.Toggle(...)
 end
 
 ---------------------------------------------------------------------
+-- check
+---------------------------------------------------------------------
+function AF.SetChecked(checked, ...)
+    for i = 1, select("#", ...) do
+        local w = select(i, ...)
+        if w.SetChecked then
+            w:SetChecked(checked)
+        end
+    end
+end
+
+---------------------------------------------------------------------
 -- frame level relative to parent
 ---------------------------------------------------------------------
+---@param frame Frame
+---@param level number|nil default 0
+---@param relativeTo Frame|nil default parent
 function AF.SetFrameLevel(frame, level, relativeTo)
+    level = level or 0
     relativeTo = relativeTo or frame:GetParent()
     frame:SetFrameStrata(relativeTo:GetFrameStrata())
     frame:SetFrameLevel(AF.Clamp(relativeTo:GetFrameLevel() + level, 0, 10000))
@@ -316,6 +392,12 @@ end
 ---------------------------------------------------------------------
 -- backdrops
 ---------------------------------------------------------------------
+function AF.ClearBackdrop(frame)
+    if frame.ClearBackdrop then
+        frame:ClearBackdrop()
+    end
+end
+
 function AF.ApplyDefaultBackdrop(frame, borderSize)
     if not frame.SetBackdrop then
         Mixin(frame, BackdropTemplateMixin)
@@ -329,6 +411,7 @@ function AF.ApplyDefaultBackdrop_NoBackground(frame, borderSize)
         Mixin(frame, BackdropTemplateMixin)
     end
     AF.SetBackdrop(frame, {edgeFile = AF.GetPlainTexture(), edgeSize = borderSize or 1})
+    frame:SetBackdropBorderColor(AF.GetColorRGB("border"))
 end
 
 function AF.ApplyDefaultBackdrop_NoBorder(frame)
@@ -336,6 +419,7 @@ function AF.ApplyDefaultBackdrop_NoBorder(frame)
         Mixin(frame, BackdropTemplateMixin)
     end
     AF.SetBackdrop(frame, {bgFile = AF.GetPlainTexture()})
+    frame:SetBackdropColor(AF.GetColorRGB("background"))
 end
 
 function AF.ApplyDefaultBackdropColors(frame)
@@ -347,8 +431,9 @@ function AF.ApplyDefaultBackdropColors(frame)
 end
 
 ---@param frame Frame
----@param color string|table color name defined in Color.lua or color table
----@param borderColor string|table color name defined in Color.lua or color table
+---@param color string|table|nil color name defined in Color.lua or color table
+---@param borderColor string|table|nil color name defined in Color.lua or color table
+---@param borderSize number|nil size of the border, default 1
 function AF.ApplyDefaultBackdropWithColors(frame, color, borderColor, borderSize)
     color = color or "background"
     borderColor = borderColor or "border"
@@ -369,13 +454,127 @@ end
 ---------------------------------------------------------------------
 -- drag
 ---------------------------------------------------------------------
-function AF.SetDraggable(frame, notUserPlaced)
+---@param frame Frame draggable frame
+---@param target Frame|nil if set then the target will be moved instead of the frame
+---@param notUserPlaced boolean|nil
+---@param onDragStart function|nil
+---@param onDragStop function|nil
+function AF.SetDraggable(frame, target, notUserPlaced, onDragStart, onDragStop)
+    target = target or frame
+    target:SetMovable(true)
     frame:RegisterForDrag("LeftButton")
-    frame:SetMovable(true)
     frame:SetMouseClickEnabled(true)
-    frame:SetScript("OnDragStart", function(self)
-        self:StartMoving()
-        if notUserPlaced then self:SetUserPlaced(false) end
+    frame:SetScript("OnDragStart", function()
+        if onDragStart then onDragStart(target) end
+        target:StartMoving(true) -- set to true to prevent weird behavior?
+        if notUserPlaced then target:SetUserPlaced(false) end
     end)
-    frame:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+    frame:SetScript("OnDragStop", function()
+        target:StopMovingOrSizing()
+        if onDragStop then onDragStop(target) end
+    end)
+end
+
+---------------------------------------------------------------------
+-- attach to cursor
+---------------------------------------------------------------------
+local GetCursorPosition = GetCursorPosition
+
+---@param frame Frame
+---@param anchorPoint string|nil e.g. "CENTER", "TOPLEFT", etc.
+---@param offsetX number|nil
+---@param offsetY number|nil
+function AF.AttachToCursor(frame, anchorPoint, offsetX, offsetY)
+    assert(frame and frame.HasScript and frame:HasScript("OnUpdate"), "AF.AttachToCursor: frame must have 'OnUpdate' script.")
+
+    anchorPoint = anchorPoint or "CENTER"
+    offsetX = offsetX or 0
+    offsetY = offsetY or 0
+
+    local mouseX, mouseY = GetCursorPosition()
+    local lastX, lastY
+
+    local effectiveScale = frame:GetEffectiveScale()
+    local startX = mouseX / effectiveScale
+    local startY = mouseY / effectiveScale
+
+    frame:SetScript("OnUpdate", function()
+        local newMouseX, newMouseY = GetCursorPosition()
+        if newMouseX == lastX and newMouseY == lastY then return end
+
+        lastX = newMouseX
+        lastY = newMouseY
+
+        local newX = startX + (newMouseX - mouseX) / effectiveScale
+
+        local newY = startY + (newMouseY - mouseY) / effectiveScale
+
+        frame:ClearAllPoints()
+        frame:SetPoint(anchorPoint, AF.UIParent, "BOTTOMLEFT", newX + offsetX, newY + offsetY)
+    end)
+
+    frame:Show()
+end
+
+function AF.DetachFromCursor(frame)
+    if frame and frame.HasScript and frame:HasScript("OnUpdate") then
+        frame:SetScript("OnUpdate", nil)
+        frame:ClearAllPoints()
+    end
+end
+
+---------------------------------------------------------------------
+-- mouse focus
+---------------------------------------------------------------------
+function AF.GetMouseFocus()
+    if GetMouseFoci then
+        return GetMouseFoci()[1]
+    else
+        return GetMouseFocus()
+    end
+end
+
+---------------------------------------------------------------------
+-- toggle protected frames
+---------------------------------------------------------------------
+local frames = {}
+
+local function ToggleProtectedFrames()
+    for frame, action in next, frames do
+        if action == "show" then
+            frame:Show()
+        elseif action == "hide" then
+            frame:Hide()
+        end
+        frames[frame] = nil
+    end
+    AF.UnregisterCallback("AF_COMBAT_LEAVE", ToggleProtectedFrames)
+end
+
+function AF.ShowProtectedFrame(frame)
+    if not frame then return end
+    if InCombatLockdown() then
+        frames[frame] = "show"
+        AF.RegisterCallback("AF_COMBAT_LEAVE", ToggleProtectedFrames)
+    else
+        frame:Show()
+    end
+end
+
+function AF.HideProtectedFrame(frame)
+    if not frame then return end
+    if InCombatLockdown() then
+        frames[frame] = "hide"
+        AF.RegisterCallback("AF_COMBAT_LEAVE", ToggleProtectedFrames)
+    else
+        frame:Hide()
+    end
+end
+
+function AF.SetProtectedFrameShown(frame, shown)
+    if shown then
+        AF.ShowProtectedFrame(frame)
+    else
+        AF.HideProtectedFrame(frame)
+    end
 end

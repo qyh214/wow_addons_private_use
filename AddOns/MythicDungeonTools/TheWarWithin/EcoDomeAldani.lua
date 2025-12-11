@@ -32,7 +32,7 @@ MDT.dungeonSubLevels[dungeonIndex] = {
   [1] = L["Eco-Dome Al'dani"]
 }
 
-MDT.dungeonTotalCount[dungeonIndex] = { normal = 540, teeming = 1000, teemingEnabled = true }
+MDT.dungeonTotalCount[dungeonIndex] = { normal = 555 }
 
 MDT.mapPOIs[dungeonIndex] = {
   [1] = {
@@ -95,12 +95,13 @@ MDT.mapPOIs[dungeonIndex] = {
 };
 
 
+
 MDT.dungeonEnemies[dungeonIndex] = {
   [1] = {
     ["name"] = "Ravaging Scavenger",
     ["id"] = 234912,
     ["count"] = 5,
-    ["health"] = 80204883,
+    ["health"] = 92758701,
     ["scale"] = 1.1,
     ["displayId"] = 131383,
     ["creatureType"] = "Aberration",
@@ -109,10 +110,15 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
+      ["Banish"] = true,
       ["Disorient"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
     },
     ["spells"] = {
       [1221130] = {
@@ -159,14 +165,14 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["sublevel"] = 1,
       },
       [7] = {
-        ["x"] = 578.92384619258,
-        ["y"] = -396.94415549251,
+        ["x"] = 575.04772876205,
+        ["y"] = -395.18227786962,
         ["g"] = 10,
         ["sublevel"] = 1,
       },
       [8] = {
-        ["x"] = 586.17112538573,
-        ["y"] = -386.85810549961,
+        ["x"] = 581.41408343643,
+        ["y"] = -387.73903954683,
         ["g"] = 10,
         ["sublevel"] = 1,
       },
@@ -176,13 +182,25 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["g"] = 16,
         ["sublevel"] = 1,
       },
+      [10] = {
+        ["x"] = 588.84880930871,
+        ["y"] = -410.82058392563,
+        ["g"] = 67,
+        ["sublevel"] = 1,
+      },
+      [11] = {
+        ["x"] = 598.18676928566,
+        ["y"] = -410.64442665439,
+        ["g"] = 67,
+        ["sublevel"] = 1,
+      },
     },
   },
   [2] = {
     ["name"] = "Overgorged Mite",
     ["id"] = 242209,
     ["count"] = 5,
-    ["health"] = 64163907,
+    ["health"] = 74206961,
     ["scale"] = 1.1,
     ["displayId"] = 131381,
     ["creatureType"] = "Aberration",
@@ -191,10 +209,15 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
+      ["Banish"] = true,
       ["Disorient"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
     },
     ["spells"] = {
       [1220890] = {
@@ -252,7 +275,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Invading Mite",
     ["id"] = 234870,
     ["count"] = 1,
-    ["health"] = 16040977,
+    ["health"] = 18551740,
     ["scale"] = 0.8,
     ["displayId"] = 131382,
     ["creatureType"] = "Aberration",
@@ -261,10 +284,15 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
+      ["Banish"] = true,
       ["Disorient"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
     },
     ["spells"] = {
       [1220890] = {
@@ -340,32 +368,32 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["sublevel"] = 1,
       },
       [12] = {
-        ["x"] = 605.05680276219,
-        ["y"] = -396.88481785465,
+        ["x"] = 609.28532049128,
+        ["y"] = -390.01348845545,
         ["g"] = 9,
         ["sublevel"] = 1,
       },
       [13] = {
-        ["x"] = 598.41987922943,
-        ["y"] = -396.79374958083,
+        ["x"] = 602.64839695852,
+        ["y"] = -389.92242018163,
         ["g"] = 9,
         ["sublevel"] = 1,
       },
       [14] = {
-        ["x"] = 612.0076471028,
-        ["y"] = -396.70400655152,
+        ["x"] = 616.23616483189,
+        ["y"] = -389.83267715232,
         ["g"] = 9,
         ["sublevel"] = 1,
       },
       [15] = {
-        ["x"] = 601.39227667687,
-        ["y"] = -402.56521077569,
+        ["x"] = 605.62079440596,
+        ["y"] = -395.69388137649,
         ["g"] = 9,
         ["sublevel"] = 1,
       },
       [16] = {
-        ["x"] = 608.57533964321,
-        ["y"] = -402.83709758193,
+        ["x"] = 612.8038573723,
+        ["y"] = -395.96576818273,
         ["g"] = 9,
         ["sublevel"] = 1,
       },
@@ -375,7 +403,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Voracious Gorger",
     ["id"] = 234883,
     ["count"] = 5,
-    ["health"] = 96245860,
+    ["health"] = 111310441,
     ["scale"] = 1.1,
     ["displayId"] = 131385,
     ["creatureType"] = "Aberration",
@@ -384,10 +412,15 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
+      ["Banish"] = true,
       ["Disorient"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
     },
     ["spells"] = {
       [1221130] = {
@@ -417,15 +450,21 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["sublevel"] = 1,
       },
       [4] = {
-        ["x"] = 589.65990632613,
-        ["y"] = -357.76435502916,
+        ["x"] = 583.34126218459,
+        ["y"] = -353.02536288413,
         ["g"] = 12,
         ["sublevel"] = 1,
       },
       [5] = {
-        ["x"] = 595.92833744459,
-        ["y"] = -349.60969265934,
+        ["x"] = 590.5575098098,
+        ["y"] = -358.77175016566,
         ["g"] = 12,
+        ["sublevel"] = 1,
+      },
+      [6] = {
+        ["x"] = 594.31068996894,
+        ["y"] = -403.06834906456,
+        ["g"] = 67,
         ["sublevel"] = 1,
       },
     },
@@ -434,7 +473,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Ravenous Destroyer",
     ["id"] = 236995,
     ["count"] = 10,
-    ["health"] = 128327813,
+    ["health"] = 148413922,
     ["scale"] = 1.4,
     ["displayId"] = 129837,
     ["creatureType"] = "Aberration",
@@ -493,14 +532,14 @@ MDT.dungeonEnemies[dungeonIndex] = {
         },
       },
       [2] = {
-        ["x"] = 586.03119391407,
-        ["y"] = -420.84110545464,
+        ["x"] = 586.20735594954,
+        ["y"] = -430.88379932952,
         ["g"] = 8,
         ["sublevel"] = 1,
       },
       [3] = {
-        ["x"] = 601.27038841825,
-        ["y"] = -421.3116262666,
+        ["x"] = 599.68468235928,
+        ["y"] = -431.35432490571,
         ["g"] = 8,
         ["sublevel"] = 1,
       },
@@ -510,7 +549,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Overcharged Sentinel",
     ["id"] = 242631,
     ["count"] = 12,
-    ["health"] = 128327813,
+    ["health"] = 148413922,
     ["scale"] = 1.4,
     ["displayId"] = 126549,
     ["creatureType"] = "Mechanical",
@@ -548,9 +587,8 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["sublevel"] = 1,
       },
       [3] = {
-        ["x"] = 586.84765340313,
-        ["y"] = -348.88311988737,
-        ["g"] = 12,
+        ["x"] = 594.42996852418,
+        ["y"] = -346.6715962456,
         ["sublevel"] = 1,
       },
       [4] = {
@@ -613,7 +651,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Tamed Ruinstalker",
     ["id"] = 234960,
     ["count"] = 5,
-    ["health"] = 80204883,
+    ["health"] = 92758701,
     ["scale"] = 1.1,
     ["displayId"] = 131397,
     ["creatureType"] = "Beast",
@@ -622,11 +660,20 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
       ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
+      ["Scare Beast"] = true,
+      ["Hibernate"] = true,
     },
     ["spells"] = {
       [1222356] = {
@@ -741,7 +788,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Wastelander Farstalker",
     ["id"] = 234962,
     ["count"] = 5,
-    ["health"] = 80204883,
+    ["health"] = 92758701,
     ["scale"] = 1.1,
     ["displayId"] = 123861,
     ["creatureType"] = "Humanoid",
@@ -750,11 +797,20 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
+      ["Repentance"] = true,
       ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [1221679] = {
@@ -952,7 +1008,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Wastelander Phaseblade",
     ["id"] = 234872,
     ["count"] = 4,
-    ["health"] = 80204883,
+    ["health"] = 92758701,
     ["scale"] = 1.1,
     ["displayId"] = 131410,
     ["creatureType"] = "Humanoid",
@@ -961,11 +1017,20 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
+      ["Repentance"] = true,
       ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [1227250] = {
@@ -1225,7 +1290,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Wastelander Ritualist",
     ["id"] = 234957,
     ["count"] = 7,
-    ["health"] = 64163907,
+    ["health"] = 74206961,
     ["scale"] = 1.3,
     ["displayId"] = 123820,
     ["creatureType"] = "Humanoid",
@@ -1234,11 +1299,20 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Polymorph"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
       ["Disorient"] = true,
+      ["Repentance"] = true,
       ["Imprison"] = true,
+      ["Sap"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [1221483] = {
@@ -1365,13 +1439,14 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Wastelander Pactspeaker",
     ["id"] = 234955,
     ["count"] = 18,
-    ["health"] = 128142894,
+    ["health"] = 148413922,
     ["scale"] = 1.2,
     ["displayId"] = 123884,
     ["creatureType"] = "Humanoid",
     ["level"] = 81,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [1221532] = {
@@ -1380,12 +1455,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
       },
       [1222815] = {
         ["interruptible"] = true,
-      },
-      [1226306] = {
-      },
-      [1226355] = {
-      },
-      [1226436] = {
       },
       [1226492] = {
       },
@@ -1472,7 +1541,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = " K'aresh Elemental",
     ["id"] = 235151,
     ["count"] = 6,
-    ["health"] = 72080378,
+    ["health"] = 83482831,
     ["scale"] = 1.1,
     ["displayId"] = 129736,
     ["creatureType"] = "Elemental",
@@ -1481,14 +1550,19 @@ MDT.dungeonEnemies[dungeonIndex] = {
       ["Taunt"] = true,
       ["Incapacitate"] = true,
       ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Mind Control"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
+      ["Banish"] = true,
       ["Disorient"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
     },
     ["spells"] = {
       [1223000] = {
-        ["interruptible"] = true,
         ["magic"] = true,
       },
     },
@@ -1547,7 +1621,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Wastes Creeper",
     ["id"] = 234918,
     ["count"] = 9,
-    ["health"] = 104116102,
+    ["health"] = 120586312,
     ["scale"] = 1,
     ["displayId"] = 131441,
     ["creatureType"] = "Aberration",
@@ -1627,17 +1701,8 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["displayId"] = 131449,
     ["creatureType"] = "Beast",
     ["level"] = 81,
-    ["spells"] = {
-      [1215850] = {
-      },
-      [1237195] = {
-      },
-      [1237199] = {
-      },
-      [1237220] = {
-      },
-      [1237224] = {
-      },
+    ["characteristics"] = {
+      ["Taunt"] = true,
     },
     ["clones"] = {
       [1] = {
@@ -1811,7 +1876,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Azhiccar",
     ["id"] = 234893,
     ["count"] = 0,
-    ["health"] = 505652853,
+    ["health"] = 584668560,
     ["scale"] = 2,
     ["displayId"] = 131246,
     ["creatureType"] = "Aberration",
@@ -1824,8 +1889,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
     },
     ["spells"] = {
       [1217232] = {
-      },
-      [1217241] = {
       },
       [1217247] = {
       },
@@ -1859,7 +1922,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Taah'bat",
     ["id"] = 234933,
     ["count"] = 0,
-    ["health"] = 561836504,
+    ["health"] = 649631734,
     ["scale"] = 1.5,
     ["displayId"] = 123825,
     ["creatureType"] = "Humanoid",
@@ -1867,6 +1930,10 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["isBoss"] = true,
     ["encounterID"] = 2675,
     ["instanceID"] = 1303,
+    ["characteristics"] = {
+      ["Taunt"] = true,
+      ["Mind Soothe"] = true,
+    },
     ["spells"] = {
       [1219417] = {
       },
@@ -1890,7 +1957,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Soul-Scribe",
     ["id"] = 234935,
     ["count"] = 0,
-    ["health"] = 672625041,
+    ["health"] = 779558080,
     ["scale"] = 2,
     ["displayId"] = 128654,
     ["creatureType"] = "Humanoid",
@@ -1900,6 +1967,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["instanceID"] = 1303,
     ["characteristics"] = {
       ["Taunt"] = true,
+      ["Mind Soothe"] = true,
     },
     ["spells"] = {
       [1224793] = {
@@ -1943,17 +2011,24 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Frenzied Mite",
     ["id"] = 236190,
     ["count"] = 0,
-    ["health"] = 6683740,
+    ["health"] = 7729892,
     ["scale"] = 1.5,
     ["displayId"] = 130695,
     ["creatureType"] = "Aberration",
     ["level"] = 80,
     ["characteristics"] = {
+      ["Taunt"] = true,
       ["Incapacitate"] = true,
+      ["Silence"] = true,
+      ["Knock"] = true,
+      ["Grip"] = true,
+      ["Root"] = true,
       ["Fear"] = true,
+      ["Banish"] = true,
       ["Disorient"] = true,
       ["Stun"] = true,
       ["Slow"] = true,
+      ["Sleep Walk"] = true,
     },
     ["spells"] = {
       [1217381] = {
@@ -1992,7 +2067,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "A'wazj",
     ["id"] = 237514,
     ["count"] = 0,
-    ["health"] = 561836504,
+    ["health"] = 649631734,
     ["scale"] = 1.5,
     ["displayId"] = 126474,
     ["creatureType"] = "Beast",
@@ -2045,11 +2120,14 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Binding Javelin",
     ["id"] = 244302,
     ["count"] = 0,
-    ["health"] = 13367481,
+    ["health"] = 15459785,
     ["scale"] = 1.2,
     ["displayId"] = 131370,
     ["creatureType"] = "Not specified",
     ["level"] = 80,
+    ["characteristics"] = {
+      ["Taunt"] = true,
+    },
     ["spells"] = {
       [1220671] = {
       },

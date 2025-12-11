@@ -16,8 +16,8 @@ mod:RegisterEnableMob(
 	179334, -- Portalmancer Zo'honn
 	179837, -- Tracker Zo'korss
 	180091, -- Ancient Core Hound
-	180567, -- Frenzied Nightclaw
 	180495, -- Enraged Direhorn
+	180567, -- Frenzied Nightclaw
 	179893, -- Cartel Skulker
 	180336, -- Cartel Wiseguy
 	180348, -- Cartel Muscle
@@ -25,6 +25,8 @@ mod:RegisterEnableMob(
 	176396, -- Defective Sorter
 	176395, -- Overloaded Mailemental
 	176394, -- P.O.S.T. Worker
+	175677, -- Smuggled Creature
+	177999, -- Xy'darid
 	246285, -- Bazaar Overseer
 	179840, -- Market Peacekeeper
 	179841, -- Veteran Sparkcaster
@@ -54,11 +56,27 @@ if L then
 	------ Streets of Wonder ------
 	L.zophex_warmup_trigger = "Surrender... all... contraband..."
 	L.menagerie_warmup_trigger = "Now for the item you have all been awaiting! The allegedly demon-cursed Edge of Oblivion!"
+	L.menagerie_warmup_trigger2 = "Cartel Xy has a profitable venture. Hopefully this inclines them to aid our own."
+	L.mailroom_door_trigger = "A friend here may be of help in acquiring Zo's signature."
+	L.vendor_active_trigger = "Myza's Oasis. The most intoxicating establishment in Tazavesh. Gaining the owner's favor will secure Cartel Au's signature."
 	L.soazmi_warmup_trigger = "Excuse our intrusion, So'leah. I hope we caught you at an inconvenient time."
 	L.portal_authority = "Tazavesh Portal Authority"
 	L.custom_on_portal_autotalk = CL.autotalk
 	L.custom_on_portal_autotalk_desc = "Instantly open portals back to the entrance when talking to Broker NPCs."
 	L.custom_on_portal_autotalk_icon = mod:GetMenuIcon("SAY")
+	L.mailroom_door = CL.door_open
+	L.mailroom_door_desc = "Show a bar indicating when the door to the mailroom will open."
+	L.mailroom_door_icon = "inv_misc_paperpackage01a"
+	L.vendor_active = "Vendor active"
+	L.vendor_active_desc = "Show a bar indicating when the vendor for the Trading Game will be active."
+	L.vendor_active_icon = "inv_misc_coin_04"
+	L.vendor_autopurchase = "Auto-purchase trading game item"
+	L.vendor_autopurchase_desc = "Automatically purchase the initial trading game item from the vendor."
+	L.vendor_autopurchase_icon = "inv_misc_coin_04"
+	L.vendor_autopurchase_message = "Purchased %s"
+	L.tradeable_goods = "Tradeable Goods"
+	L.tradeable_goods_desc = "Show a message indicating when tradeable goods have been picked up."
+	L.tradeable_goods_icon = "inv_crate_02"
 	L.trading_game = "Trading Game"
 	L.trading_game_desc = "Alerts with the right password during the Trading Game."
 	L.trading_game_icon = "achievement_dungeon_brokerdungeon"
@@ -86,6 +104,7 @@ if L then
 	L.tracker_zokorss = "Tracker Zo'korss"
 	L.ancient_core_hound = "Ancient Core Hound"
 	L.enraged_direhorn = "Enraged Direhorn"
+	L.frenzied_nightclaw = "Frenzied Nightclaw"
 	L.cartel_skulker = "Cartel Skulker"
 	L.cartel_wiseguy = "Cartel Wiseguy"
 	L.cartel_muscle = "Cartel Muscle"
@@ -93,6 +112,7 @@ if L then
 	L.defective_sorter = "Defective Sorter"
 	L.overloaded_mailemental = "Overloaded Mailemental"
 	L.post_worker = "P.O.S.T. Worker"
+	L.smuggled_creature = "Smuggled Creature"
 	L.bazaar_overseer = "Bazaar Overseer"
 	L.market_peacekeeper = "Market Peacekeeper"
 	L.veteran_sparkcaster = "Veteran Sparkcaster"
@@ -100,7 +120,10 @@ if L then
 	L.commander_zofar = "Commander Zo'far"
 
 	------ So'leah's Gambit ------
-	L.tazavesh_soleahs_gambit = "Tazavesh: So'leah's Gambit"
+	L.hylbrande_warmup_trigger = "See how your wisdom fares against the might of the titans."
+	L.portal_open = "Portal opens"
+	L.portal_open_desc = "Show a bar indicating when the portal to the next area will open."
+	L.portal_open_icon = "spell_arcane_portalironforge"
 	L.murkbrine_scalebinder = "Murkbrine Scalebinder"
 	L.murkbrine_fishmancer = "Murkbrine Fishmancer"
 	L.murkbrine_shellcrusher = "Murkbrine Shellcrusher"
@@ -113,7 +136,8 @@ if L then
 	L.focused_ritualist = "Focused Ritualist"
 	L.devoted_accomplice = "Devoted Accomplice"
 
-	-- TODO Tidal Burst (1244650) has no icon or description, could copy from 356260
+	L["1244650_icon"] = 356260 -- Tidal Burst has no icon
+	L["1244650_desc"] = 356260 -- Tidal Burst has no description
 end
 
 --------------------------------------------------------------------------------
@@ -126,10 +150,15 @@ local passwordId = nil
 -- Initialization
 --
 
+local wanderingPulsarMarker = mod:AddMarkerOption(true, "npc", 8, 357256, 8) -- Wandering Pulsar
 function mod:GetOptions()
 	return {
 		------ Streets of Wonder ------
 		"custom_on_portal_autotalk",
+		"mailroom_door",
+		"vendor_active",
+		"vendor_autopurchase",
+		"tradeable_goods",
 		"trading_game",
 		"custom_on_trading_game_autotalk",
 		-- Gatewarden Zo'mazz
@@ -157,6 +186,8 @@ function mod:GetOptions()
 		-- Enraged Direhorn
 		{357512, "SAY", "NAMEPLATE"}, -- Frenzied Charge
 		{357508, "NAMEPLATE"}, -- Wild Thrash
+		-- Frenzied Nightclaw
+		{357828, "NAMEPLATE"}, -- Frantic Leap
 		-- Cartel Skulker
 		{355830, "NAMEPLATE"}, -- Quickblade
 		-- Cartel Wiseguy
@@ -172,6 +203,8 @@ function mod:GetOptions()
 		{347775, "NAMEPLATE"}, -- Spam Filter
 		-- P.O.S.T. Worker
 		{347716, "TANK", "NAMEPLATE"}, -- Letter Opener
+		-- Smuggled Creature
+		{347842, "NAMEPLATE"}, -- Pounce
 		-- Bazaar Overseer
 		{1240821, "NAMEPLATE"}, -- Energized Slam
 		{1240912, "NAMEPLATE"}, -- Pierce
@@ -188,6 +221,7 @@ function mod:GetOptions()
 		{355473, "NAMEPLATE"}, -- Shock Mines
 		------ So'leah's Gambit ------
 		-- General
+		"portal_open",
 		358443, -- Blood in the Water
 		-- Murkbrine Scalebinder
 		{355132, "NAMEPLATE"}, -- Invigorating Fish Stick
@@ -211,12 +245,46 @@ function mod:GetOptions()
 		-- Adorned Starseer
 		{357226, "NAMEPLATE"}, -- Drifting Star
 		{357238, "NAMEPLATE"}, -- Wandering Pulsar
+		wanderingPulsarMarker,
 		-- Focused Ritualist
 		{357260, "NAMEPLATE"}, -- Unstable Rift
 	}, {
+		{
+			tabName = self:BossName(2437), -- Zo'phex the Sentinel
+			{352796, 356548, 355900, 355888, 355891, 355915, 356001, 355934, 355980, 356537},
+		},
+		{
+			tabName = self:BossName(2454), -- The Grand Menagerie
+			{"custom_on_portal_autotalk", 356929, 356942, 356404, 356407, 357512, 357508, 357828},
+		},
+		{
+			tabName = self:BossName(2436), -- Mailroom Mayhem
+			{"custom_on_portal_autotalk", "mailroom_door", 347721, 347775, 347716, 347842},
+		},
+		{
+			tabName = self:BossName(2452), -- Myza's Oasis
+			{"custom_on_portal_autotalk", "vendor_active", "vendor_autopurchase", "tradeable_goods", "trading_game", "custom_on_trading_game_autotalk", 355830, 357197, 356967, 357229, 357029, 1240821, 1240912},
+		},
+		{
+			tabName = self:BossName(2451), -- So'azmi
+			{355640, 355637, 355642, 1244443, 355477, 355479, 355473},
+		},
+		{
+			tabName = self:BossName(2448), -- Hylbrande
+			{"portal_open", 358443, 355132, 355234, 355057, 355048, 355429, 355464, 355584, 355577},
+		},
+		{
+			tabName = self:BossName(2449), -- Timecap'n Hooktail
+			{"portal_open", 356133, 1244650, 368661},
+		},
+		{
+			tabName = self:BossName(2455), -- So'leah
+			{357226, 357238, wanderingPulsarMarker, 357260},
+		},
 		------ Streets of Wonder ------
 		["custom_on_portal_autotalk"] = L.portal_authority,
-		["trading_game"] = L.trading_game,
+		["mailroom_door"] = CL.general,
+		["vendor_active"] = L.trading_game,
 		[352796] = L.gatewarden_zomazz,
 		[355900] = L.customs_security,
 		[355915] = L.interrogation_specialist,
@@ -226,6 +294,7 @@ function mod:GetOptions()
 		[356929] = L.tracker_zokorss,
 		[356404] = L.ancient_core_hound,
 		[357512] = L.enraged_direhorn,
+		[357828] = L.frenzied_nightclaw,
 		[355830] = L.cartel_skulker,
 		[357197] = L.cartel_wiseguy,
 		[356967] = L.cartel_muscle,
@@ -233,13 +302,14 @@ function mod:GetOptions()
 		[347721] = L.defective_sorter,
 		[347775] = L.overloaded_mailemental,
 		[347716] = L.post_worker,
+		[347842] = L.smuggled_creature,
 		[1240821] = L.bazaar_overseer,
 		[355640] = L.market_peacekeeper,
 		[355642] = L.veteran_sparkcaster,
 		[1244443] = L.commerce_enforcer,
 		[355479] = L.commander_zofar,
 		------ So'leah's Gambit ------
-		[358443] = L.tazavesh_soleahs_gambit,
+		["portal_open"] = CL.general,
 		[355132] = L.murkbrine_scalebinder,
 		[355234] = L.murkbrine_fishmancer,
 		[355057] = L.murkbrine_shellcrusher,
@@ -259,6 +329,8 @@ function mod:OnBossEnable()
 	-- Trading Game, warmups
 	self:RegisterEvent("CHAT_MSG_MONSTER_SAY")
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
+	self:RegisterEvent("MERCHANT_SHOW")
+	self:Log("SPELL_AURA_APPLIED", "TradeableGoods", 358903, 358915, 358917, 358906, 358905, 358910, 351275, 352129, 358911, 352133, 352131, 352130, 358909, 358904, 352125, 352134, 358912, 358914, 358908, 358916, 358918, 358907, 358900, 352128, 352127, 358901, 358913, 352132) -- A History of Maldraxxus, Aromatic Spices, Balanced Sword, Bolt of Kyrian Brightweave, Bolt of Silk, Bones of Mortanis, Carrying Goods, Cheap Spices, Chunk of Jade, Common Drum, Cracked Warhammer, Damaged Flask, Demon Skull, Denathrius' Private Diary, Dull Opal, Dusty Skull, Eye of Valinor, Harp of Marasmius, Kleia's Special Cake, Myza's Special Spice, Perfect Replica of Remornia, Plate of Ripe Purians, Potion of Invisibility, Stale Bread, Threadbare Cloth, Vial of Nurgash's Blood, Vulpera Flute, Worn Journal
 
 	-- Auto-gossip
 	self:RegisterEvent("GOSSIP_SHOW")
@@ -323,6 +395,10 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "WildThrash", 357508)
 	self:Death("EnragedDirehornDeath", 180495)
 
+	-- Frenzied Nightclaw
+	self:RegisterEngageMob("FrenziedNightclawEngaged", 180567)
+	self:Death("FrenziedNightclawDeath", 180567)
+
 	-- Cartel Skulker
 	self:RegisterEngageMob("CartelSkulkerEngaged", 179893)
 	self:Log("SPELL_CAST_START", "Quickblade", 355830)
@@ -361,6 +437,11 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "LetterOpener", 347716)
 	self:Log("SPELL_CAST_SUCCESS", "LetterOpenerSuccess", 347716)
 	self:Death("POSTWorkerDeath", 176394)
+
+	-- Smuggled Creature
+	self:RegisterEngageMob("SmuggledCreatureEngaged", 175677)
+	self:Log("SPELL_CAST_SUCCESS", "Pounce", 347842)
+	self:Death("SmuggledCreatureDeath", 175677)
 
 	-- Bazaar Overseer
 	self:RegisterEngageMob("BazaarOverseerEngaged", 246285)
@@ -408,10 +489,10 @@ function mod:OnBossEnable()
 
 	-- Murkbrine Shellcrusher
 	self:RegisterEngageMob("MurkbrineShellcrusherEngaged", 178139)
-	self:Log("SPELL_CAST_START", "CryofMrrggllrrgg", 355057)
-	self:Log("SPELL_INTERRUPT", "CryofMrrggllrrggInterrupt", 355057)
-	self:Log("SPELL_CAST_SUCCESS", "CryofMrrggllrrggSuccess", 355057)
-	self:Log("SPELL_AURA_APPLIED", "CryofMrrggllrrggApplied", 355057)
+	self:Log("SPELL_CAST_START", "CryOfMrrggllrrgg", 355057)
+	self:Log("SPELL_INTERRUPT", "CryOfMrrggllrrggInterrupt", 355057)
+	self:Log("SPELL_CAST_SUCCESS", "CryOfMrrggllrrggSuccess", 355057)
+	self:Log("SPELL_AURA_APPLIED", "CryOfMrrggllrrggApplied", 355057)
 	self:Log("SPELL_CAST_START", "Shellcracker", 355048)
 	self:Log("SPELL_CAST_SUCCESS", "ShellcrackerSuccess", 355048)
 	self:Death("MurkbrineShellcrusherDeath", 178139)
@@ -451,6 +532,7 @@ function mod:OnBossEnable()
 	self:RegisterEngageMob("AdornedStarseerEngaged", 180429)
 	self:Log("SPELL_CAST_START", "DriftingStar", 357226)
 	self:Log("SPELL_CAST_START", "WanderingPulsar", 357238)
+	self:Log("SPELL_SUMMON", "WanderingPulsarSummon", 357256)
 	self:Death("AdornedStarseerDeath", 180429)
 
 	-- Focused Ritualist
@@ -484,18 +566,36 @@ function mod:CHAT_MSG_MONSTER_SAY(event, msg)
 			self:PlaySound("trading_game", "info")
 		end
 	elseif msg == L.menagerie_warmup_trigger then
-		-- Menagerie warmup
+		-- Menagerie warmup (doesn't occur in Mythic Plus)
 		local menagerieModule = BigWigs:GetBossModule("The Grand Menagerie", true)
 		if menagerieModule then
 			menagerieModule:Enable()
 			menagerieModule:Warmup()
 		end
+	elseif self:MythicPlus() and msg == L.menagerie_warmup_trigger2 then
+		-- Menagerie warmup (Mythic Plus)
+		local menagerieModule = BigWigs:GetBossModule("The Grand Menagerie", true)
+		if menagerieModule then
+			menagerieModule:Enable()
+			menagerieModule:WarmupMythicPlus()
+		end
+	elseif msg == L.mailroom_door_trigger then
+		self:Bar("mailroom_door", 5.4, L.mailroom_door, L.mailroom_door_icon)
+	elseif msg == L.vendor_active_trigger then
+		self:Bar("vendor_active", 26.5, L.vendor_active, L.vendor_active_icon)
 	elseif msg == L.soazmi_warmup_trigger then
 		-- So'azmi warmup
 		local soazmiModule = BigWigs:GetBossModule("So'azmi", true)
 		if soazmiModule then
 			soazmiModule:Enable()
 			soazmiModule:Warmup()
+		end
+	elseif msg == L.hylbrande_warmup_trigger then
+		-- Hylbrande warmup
+		local hylbrandeModule = BigWigs:GetBossModule("Hylbrande", true)
+		if hylbrandeModule then
+			hylbrandeModule:Enable()
+			hylbrandeModule:Warmup()
 		end
 	end
 end
@@ -508,6 +608,33 @@ function mod:CHAT_MSG_MONSTER_YELL(event, msg)
 			zophexModule:Enable()
 			zophexModule:Warmup()
 		end
+	end
+end
+
+function mod:MERCHANT_SHOW()
+	if self:GetOption("vendor_autopurchase") > 0 then
+		local mobId = self:MobId(self:UnitGUID("npc"))
+		if mobId == 177999 then -- Xy'darid
+			local itemName, _, _, _, numAvailable = GetMerchantItemInfo(1)
+			if numAvailable == 1 then
+				if itemName then
+					BuyMerchantItem(1, 1)
+					CloseMerchant()
+					self:Message("vendor_autopurchase", "cyan", L.vendor_autopurchase_message:format(itemName), L.vendor_autopurchase_icon)
+					self:PlaySound("vendor_autopurchase", "info")
+				else
+					-- item info wasn't loaded, try again
+					self:SimpleTimer(function() mod:MERCHANT_SHOW() end, 0.1)
+				end
+			end
+		end
+	end
+end
+
+function mod:TradeableGoods(args)
+	self:TargetMessage("tradeable_goods", "cyan", args.destName, args.spellName, args.spellId)
+	if self:Me(args.destGUID) then
+		self:PlaySound("tradeable_goods", "info")
 	end
 end
 
@@ -575,8 +702,8 @@ do
 		if timer then
 			self:CancelTimer(timer)
 		end
-		self:CDBar(352796, 9.6) -- Proxy Strike
-		self:Nameplate(352796, 9.6, guid) -- Proxy Strike
+		self:CDBar(352796, 8.3) -- Proxy Strike
+		self:Nameplate(352796, 8.3, guid) -- Proxy Strike
 		self:CDBar(356548, 13.2) -- Radiant Pulse
 		self:Nameplate(356548, 13.2, guid) -- Radiant Pulse
 		timer = self:ScheduleTimer("GatewardenZomazzDeath", 20, nil, guid)
@@ -638,7 +765,7 @@ do
 	function mod:HardLightBaton(args)
 		if self:Dispeller("magic", true, args.spellId) then
 			self:Nameplate(args.spellId, 18.1, args.sourceGUID)
-			if args.time - prev > 2 then
+			if args.time - prev > 3 then
 				prev = args.time
 				self:Message(args.spellId, "purple", CL.on:format(args.spellName, args.sourceName))
 				self:PlaySound(args.spellId, "alert")
@@ -733,8 +860,20 @@ end
 
 -- Support Officer
 
-function mod:SupportOfficerEngaged(guid)
-	self:Nameplate(355934, 9.4, guid) -- Hard Light Barrier
+do
+	local prev = 0
+	function mod:SupportOfficerEngaged(guid)
+		self:Nameplate(355934, 9.4, guid) -- Hard Light Barrier
+		local t = GetTime()
+		if self:Dispeller("magic", true, 355980) and t - prev > 2 then -- Refraction Shield
+			prev = t
+			local unit = self:UnitTokenFromGUID(guid)
+			if unit and self:UnitBuff(unit, 355980) then -- Refraction Shield
+				self:Message(355980, "yellow", CL.magic_buff_other:format(self:UnitName(unit), self:SpellName(355980))) -- Refraction Shield
+				self:PlaySound(355980, "info") -- Refraction Shield
+			end
+		end
+	end
 end
 
 do
@@ -1000,6 +1139,16 @@ do
 	end
 end
 
+-- Frenzied Nightclaw
+
+function mod:FrenziedNightclawEngaged(guid)
+	self:Nameplate(357828, 5.5, guid) -- Frantic Leap
+end
+
+function mod:FrenziedNightclawDeath(args)
+	self:ClearNameplate(args.destGUID)
+end
+
 -- Cartel Skulker
 
 function mod:CartelSkulkerEngaged(guid)
@@ -1047,7 +1196,7 @@ end
 -- Cartel Muscle
 
 function mod:CartelMuscleEngaged(guid)
-	self:Nameplate(357229, 9.1, guid) -- Chronolight Enhancer
+	self:Nameplate(357229, 8.1, guid) -- Chronolight Enhancer
 	self:Nameplate(356967, 27.7, guid) -- Hyperlight Backhand
 end
 
@@ -1114,10 +1263,16 @@ function mod:OverloadedMailementalEngaged(guid)
 	self:Nameplate(347775, 13.2, guid) -- Spam Filter
 end
 
-function mod:SpamFilter(args)
-	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
-	self:Nameplate(args.spellId, 0, args.sourceGUID)
-	self:PlaySound(args.spellId, "alert")
+do
+	local prev = 0
+	function mod:SpamFilter(args)
+		self:Nameplate(args.spellId, 0, args.sourceGUID)
+		if args.time - prev > 2 then
+			prev = args.time
+			self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+			self:PlaySound(args.spellId, "alert")
+		end
+	end
 end
 
 function mod:SpamFilterInterrupt(args)
@@ -1135,7 +1290,7 @@ end
 -- P.O.S.T. Worker
 
 function mod:POSTWorkerEngaged(guid)
-	self:Nameplate(347716, 9.2, guid) -- Letter Opener
+	self:Nameplate(347716, 9.1, guid) -- Letter Opener
 end
 
 do
@@ -1155,6 +1310,22 @@ function mod:LetterOpenerSuccess(args)
 end
 
 function mod:POSTWorkerDeath(args)
+	self:ClearNameplate(args.destGUID)
+end
+
+-- Smuggled Creature
+
+function mod:SmuggledCreatureEngaged(guid)
+	self:Nameplate(347842, 6.5, guid) -- Pounce
+end
+
+function mod:Pounce(args)
+	self:Message(args.spellId, "orange")
+	self:Nameplate(args.spellId, 15.8, args.sourceGUID)
+	self:PlaySound(args.spellId, "alarm")
+end
+
+function mod:SmuggledCreatureDeath(args)
 	self:ClearNameplate(args.destGUID)
 end
 
@@ -1320,7 +1491,7 @@ do
 					self:PersonalMessage(355479, false, CL.link_with:format(self:ColorName(args.destName)))
 					self:PlaySound(355479, "warning")
 				elseif #playerList > 1 then
-					self:Message(355479, "red", CL.link_both:format(playerList[1], playerList[2]))
+					self:Message(355479, "red", CL.link_both:format(self:ColorName(playerList[1]), self:ColorName(playerList[2])))
 					self:PlaySound(355479, "alert")
 				end
 			end
@@ -1332,8 +1503,8 @@ do
 			self:CancelTimer(timer)
 		end
 		self:Message(args.spellId, "orange")
-		self:CDBar(args.spellId, 13.3)
-		self:Nameplate(args.spellId, 13.3, args.sourceGUID)
+		self:CDBar(args.spellId, 26.5)
+		self:Nameplate(args.spellId, 26.5, args.sourceGUID)
 		timer = self:ScheduleTimer("CommanderZofarDeath", 30, nil, args.sourceGUID)
 		self:PlaySound(args.spellId, "alarm")
 	end
@@ -1351,6 +1522,22 @@ do
 end
 
 ------ So'leah's Gambit ------
+
+function mod:HylbrandeDefeated()
+	-- 222.90 [ENCOUNTER_END] 2426#Hylbrande
+	-- 223.07 [CHAT_MSG_MONSTER_YELL] That artifact... will... end you all...#Hylbrande
+	-- 232.52 [CHAT_MSG_MONSTER_SAY] So'leah's arrogance will be her downfall.#Al'dalil
+	-- 237.29 [ZONE_CHANGED] Tazavesh, the Veiled Market#Tazavesh, the Veiled Market#Boralus Harbor
+	-- 237.43 [CHAT_MSG_MONSTER_EMOTE] The instance updated the respawn location.#Waystone
+	self:Bar("portal_open", 15.0, L.portal_open, L.portal_open_icon)
+end
+
+function mod:TimecapnHooktailDefeated()
+	-- 27.70 [ENCOUNTER_END] 2419#Timecap'n Hooktail#23#5#1
+	-- 38.71 [CHAT_MSG_MONSTER_SAY] Let us depart before the Kul Tirans ask questions we lack time to answer.#Al'dalil
+	-- 44.01 [ZONE_CHANGED] Tazavesh, the Veiled Market#Tazavesh, the Veiled Market
+	self:Bar("portal_open", 15.0, L.portal_open, L.portal_open_icon)
+end
 
 -- Blood in the Water
 
@@ -1384,23 +1571,29 @@ function mod:MurkbrineShellcrusherEngaged(guid)
 	self:Nameplate(355048, 9.6, guid) -- Shellcracker
 end
 
-function mod:CryofMrrggllrrgg(args)
-	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
-	self:Nameplate(args.spellId, 0, args.sourceGUID)
-	self:PlaySound(args.spellId, "alert")
+do
+	local prev = 0
+	function mod:CryOfMrrggllrrgg(args)
+		self:Nameplate(args.spellId, 0, args.sourceGUID)
+		if args.time - prev > 2 then
+			prev = args.time
+			self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+			self:PlaySound(args.spellId, "alert")
+		end
+	end
 end
 
-function mod:CryofMrrggllrrggInterrupt(args)
+function mod:CryOfMrrggllrrggInterrupt(args)
 	self:Nameplate(355057, 30.9, args.destGUID)
 end
 
-function mod:CryofMrrggllrrggSuccess(args)
+function mod:CryOfMrrggllrrggSuccess(args)
 	self:Nameplate(args.spellId, 30.9, args.sourceGUID)
 end
 
 do
 	local prev = 0
-	function mod:CryofMrrggllrrggApplied(args)
+	function mod:CryOfMrrggllrrggApplied(args)
 		if self:Dispeller("enrage", true, args.spellId) and args.time - prev > 2 then
 			prev = args.time
 			self:Message(args.spellId, "yellow", CL.buff_other:format(args.destName, args.spellName))
@@ -1481,10 +1674,16 @@ function mod:StormforgedGuardianEngaged(guid)
 	self:Nameplate(355584, 9.5, guid) -- Charged Pulse
 end
 
-function mod:ChargedPulse(args)
-	self:Message(args.spellId, "orange")
-	self:Nameplate(args.spellId, 20.5, args.sourceGUID)
-	self:PlaySound(args.spellId, "alarm")
+do
+	local prev = 0
+	function mod:ChargedPulse(args)
+		self:Nameplate(args.spellId, 20.5, args.sourceGUID)
+		if args.time - prev > 1.5 then
+			prev = args.time
+			self:Message(args.spellId, "orange")
+			self:PlaySound(args.spellId, "alarm")
+		end
+	end
 end
 
 do
@@ -1560,7 +1759,7 @@ end
 -- Hourglass Tidesage
 
 function mod:HourglassTidesageEngaged(guid)
-	self:Nameplate(1244650, 8.0, guid) -- Tidal Burst
+	self:Nameplate(1244650, 7.1, guid, 132852) -- Tidal Burst, fileID for L["1244650_icon"]
 end
 
 do
@@ -1570,13 +1769,19 @@ do
 			prevCast = castGUID
 			local sourceGUID = self:UnitGUID(unit)
 			if sourceGUID then
-				self:Nameplate(spellId, 18.2, sourceGUID)
+				self:Nameplate(spellId, 18.2, sourceGUID, 132852) -- fileID for L["1244650_icon"]
 			end
 			local t = GetTime()
 			if t - prev > 2 then
 				prev = t
-				self:Message(spellId, "orange")
+				self:Message(spellId, "orange", nil, L["1244650_icon"])
 				self:PlaySound(spellId, "alarm")
+			end
+		elseif spellId == 357828 and castGUID ~= prevCast then -- Frantic Leap
+			prevCast = castGUID
+			local sourceGUID = self:UnitGUID(unit)
+			if sourceGUID then
+				self:Nameplate(spellId, 16.2, sourceGUID)
 			end
 		end
 	end
@@ -1598,7 +1803,7 @@ do
 		self:Nameplate(args.spellId, 14.5, args.sourceGUID)
 		if args.time - prev > 2 then
 			prev = args.time
-			self:TargetMessage(args.spellId, "yellow", nil, args.destName)
+			self:TargetMessage(args.spellId, "yellow", args.destName)
 			self:PlaySound(args.spellId, "alert", nil, args.destName)
 		end
 	end
@@ -1631,6 +1836,26 @@ function mod:WanderingPulsar(args)
 	self:Message(args.spellId, "cyan", CL.spawning:format(args.spellName))
 	self:Nameplate(args.spellId, 26.6, args.sourceGUID)
 	self:PlaySound(args.spellId, "info")
+end
+
+do
+	local wanderingPulsarGUID = nil
+
+	function mod:WanderingPulsarSummon(args)
+		-- register events to auto-mark Wandering Pulsar
+		if self:GetOption(wanderingPulsarMarker) then
+			wanderingPulsarGUID = args.destGUID
+			self:RegisterTargetEvents("MarkWanderingPulsar")
+		end
+	end
+
+	function mod:MarkWanderingPulsar(_, unit, guid)
+		if wanderingPulsarGUID == guid then
+			wanderingPulsarGUID = nil
+			self:CustomIcon(wanderingPulsarMarker, unit, 8)
+			self:UnregisterTargetEvents()
+		end
+	end
 end
 
 function mod:AdornedStarseerDeath(args)

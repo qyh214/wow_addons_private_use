@@ -1,0 +1,11 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="0_Trash.lua"/>
+	<Script file="1_Vexie.lua"/>
+	<Script file="2_Cauldron.lua"/>
+	<Script file="3_Rik.lua"/>
+	<Script file="4_Stix.lua"/>
+	<Script file="5_Sprocketmonger.lua"/>
+	<Script file="6_Bandit.lua"/>
+	<Script file="7_MugZee.lua"/>
+	<Script file="8_Gallywix.lua"/>
+</Ui>

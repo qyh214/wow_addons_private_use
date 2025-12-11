@@ -107,7 +107,6 @@ function parserFrame.OnEvent(self, event, ...)
     end
 end
 
-
 function addon.CountInterruptOverlaps()
     for _, interruptCastsOnTarget in pairs(addon.profile.last_run_data.interrupt_spells_cast) do
 

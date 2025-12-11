@@ -15,16 +15,18 @@ StaticPopupDialogs["TalentLoadoutEx_COPY"] = {
 		local function HidePopup()
 			dialog:Hide();
 		end
-		dialog.editBox:SetScript("OnEscapePressed", HidePopup);
-		dialog.editBox:SetScript("OnEnterPressed", HidePopup);
-		dialog.editBox:SetScript("OnKeyUp", function(self, key)
+
+		local editBox = dialog.EditBox;
+		editBox:SetScript("OnEscapePressed", HidePopup);
+		editBox:SetScript("OnEnterPressed", HidePopup);
+		editBox:SetScript("OnKeyUp", function(_, key)
 			if IsControlKeyDown() and key == "C" then
 				HidePopup();
 			end
 		end);
-		dialog.editBox:SetMaxLetters(0);
-		dialog.editBox:SetText(data);
-		dialog.editBox:HighlightText();
+		editBox:SetMaxLetters(0);
+		editBox:SetText(data);
+		editBox:HighlightText();
 	end,
 	hasEditBox = true,
 	editBoxWidth = 240,

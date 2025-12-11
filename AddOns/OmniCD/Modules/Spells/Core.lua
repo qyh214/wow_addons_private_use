@@ -94,6 +94,12 @@ function E:ProcessSpellDB()
 				end
 
 
+				if id == 431416 then
+					t.name = C_Spell.GetSpellName(1238009) or ""
+					t.icon = 1385244
+				end
+
+
 				t.buff = t.buff or self.buffFix[id] or id
 				if self.L_HIGHLIGHTS[stype] then
 					spell_highlighted[t.buff] = true

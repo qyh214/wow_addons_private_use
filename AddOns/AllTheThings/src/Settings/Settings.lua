@@ -13,6 +13,7 @@ settings.AccountWide = setmetatable({
 	BattlePets = true,
 	Campsites = true,
 	DeathTracker = true,
+	Decor = true,
 	Exploration = true,
 	FlightPaths = true,
 	Heirlooms = true,
@@ -52,6 +53,7 @@ settings.Collectibles = {
 settings.ForceAccountWide = {
 	BattlePets = true,
 	Campsites = true,
+	Decor = app.GameBuildVersion >= 110207,
 	FlightPaths = app.GameBuildVersion >= 110000,
 	Heirlooms = true,
 	Illusions = true,
@@ -71,6 +73,7 @@ settings.RequiredForInsaneMode = {
 	CharacterUnlocks = app.IsRetail,	-- CRIEVE NOTE: This class might be up to the chopping block with a thing I have on my todo list. I'll leave it for now.
 	Conduits = app.GameBuildVersion >= 100000,
 	DeathTracker = app.IsClassic,
+	Decor = app.GameBuildVersion >= 110207,
 	MountMods = app.GameBuildVersion >= 100000,
 	Exploration = app.IsClassic,	-- CRIEVE NOTE: For now, until Blizzard fixes their broken Retail version of the exploration API.
 	FlightPaths = true,
@@ -86,6 +89,18 @@ settings.RequiredForInsaneMode = {
 	Titles = true,
 	Toys = true,
 	Transmog = app.GameBuildVersion >= 40000,
+	-- Expansion Filters
+	Classic = true,
+	TBC = app.GameBuildVersion >= 20000,
+	Wrath = app.GameBuildVersion >= 30000,
+	Cata = app.GameBuildVersion >= 40000,
+	MoP = app.GameBuildVersion >= 50000,
+	WoD = app.GameBuildVersion >= 60000,
+	Legion = app.GameBuildVersion >= 70000,
+	BfA = app.GameBuildVersion >= 80000,
+	SL = app.GameBuildVersion >= 90000,
+	DF = app.GameBuildVersion >= 100000,
+	TWW = app.GameBuildVersion >= 110000,
 }
 
 -- RANKED MODE
@@ -101,17 +116,42 @@ settings.RequiredForRankedMode = {
 	Titles = true,
 	Toys = true,
 	Transmog = app.GameBuildVersion >= 40000,
+	-- Expansion Filters
+	Classic = true,
+	TBC = app.GameBuildVersion >= 20000,
+	Wrath = app.GameBuildVersion >= 30000,
+	Cata = app.GameBuildVersion >= 40000,
+	MoP = app.GameBuildVersion >= 50000,
+	WoD = app.GameBuildVersion >= 60000,
+	Legion = app.GameBuildVersion >= 70000,
+	BfA = app.GameBuildVersion >= 80000,
+	SL = app.GameBuildVersion >= 90000,
+	DF = app.GameBuildVersion >= 100000,
+	TWW = app.GameBuildVersion >= 110000,
 }
 
 -- CORE MODE
 settings.RequiredForCoreMode = {
 	BattlePets = true,
 	Campsites = app.GameBuildVersion >= 110100,
+	Decor = app.GameBuildVersion >= 110207,
 	Heirlooms = app.GameBuildVersion >= 30000,
 	Illusions = app.GameBuildVersion >= 70000,
 	Mounts = true,
 	Toys = true,
 	Transmog = app.GameBuildVersion >= 40000,
+	-- Expansion Filters
+	Classic = true,
+	TBC = app.GameBuildVersion >= 20000,
+	Wrath = app.GameBuildVersion >= 30000,
+	Cata = app.GameBuildVersion >= 40000,
+	MoP = app.GameBuildVersion >= 50000,
+	WoD = app.GameBuildVersion >= 60000,
+	Legion = app.GameBuildVersion >= 70000,
+	BfA = app.GameBuildVersion >= 80000,
+	SL = app.GameBuildVersion >= 90000,
+	DF = app.GameBuildVersion >= 100000,
+	TWW = app.GameBuildVersion >= 110000,
 }
 
 if app.GameBuildVersion >= 90000 then

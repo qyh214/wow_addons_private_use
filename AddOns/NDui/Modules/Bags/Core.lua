@@ -41,11 +41,7 @@ end
 local anchorCache = {}
 
 local function CheckForBagReagent(name)
-	local pass = true
-	if name == "BagReagent" and GetContainerNumSlots(5) == 0 then
-		pass = false
-	end
-	return pass
+	return not (name == "BagReagent" and GetContainerNumSlots(5) == 0)
 end
 
 function module:UpdateBagsAnchor(parent, bags)
@@ -121,7 +117,7 @@ local BagSmartFilter = {
 		elseif text == "aoe" then
 			return item.bindOn == "accountequip"
 		else
-			return IsItemMatched(item.subType, text) or IsItemMatched(item.equipLoc, text) or IsItemMatched(item.name, text)
+			return IsItemMatched(item.subType, text) or IsItemMatched(item.equipLoc, text) or IsItemMatched(item.name, text) or IsItemMatched((item.expacID or 0) + 1, text)
 		end
 	end,
 	_default = "default",
@@ -227,23 +223,23 @@ function module:CreateBagTab(settings, columns, account)
 	bagTab:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT", 0, -5)
 	B.SetBD(bagTab)
 	bagTab.highlightFunction = highlightFunction
+	bagTab.isGlobal = true
 	bagTab:Hide()
 	bagTab.columns = columns
 	bagTab.UpdateAnchor = updateBagBar
 	bagTab:UpdateAnchor()
 
-	if account then
-		local purchaseButton = CreateFrame("Button", "NDui_BankPurchaseButton", bagTab, "InsecureActionButtonTemplate")
-		purchaseButton:SetSize(120, 22)
-		purchaseButton:SetPoint("TOP", bagTab, "BOTTOM", 0, -5)
-		B.CreateFS(purchaseButton, 14, PURCHASE, "info")
-		B.Reskin(purchaseButton)
-		purchaseButton:Hide()
+	local purchaseButton = CreateFrame("Button", "NDui_"..account.."PurchaseButton", bagTab, "InsecureActionButtonTemplate")
+	purchaseButton:SetSize(120, 22)
+	purchaseButton:SetPoint("TOP", bagTab, "BOTTOM", 0, -5)
+	B.CreateFS(purchaseButton, 14, PURCHASE, "info")
+	B.Reskin(purchaseButton)
+	purchaseButton:Hide()
 
-		purchaseButton:RegisterForClicks("AnyUp", "AnyDown")
-		purchaseButton:SetAttribute("type", "click")
-		purchaseButton:SetAttribute("clickbutton", _G.BankFrame.BankPanel.PurchasePrompt.TabCostFrame.PurchaseButton)
-	end
+	purchaseButton:RegisterForClicks("AnyUp", "AnyDown")
+	purchaseButton:SetAttribute("type", "click")
+	purchaseButton:SetAttribute("clickbutton", _G.BankPanel.PurchasePrompt.TabCostFrame.PurchaseButton)
+	bagTab.purchaseButton = purchaseButton
 
 	self.BagBar = bagTab
 end
@@ -269,7 +265,7 @@ local function CloseOrRestoreBags(self, btn)
 end
 
 function module:CreateCloseButton(f)
-	local bu = B.CreateButton(self, 22, 22, true, "Interface\\RAIDFRAME\\ReadyCheck-NotReady")
+	local bu = B.CreateButton(self, 22, 22, true, "Atlas:common-icon-redx")
 	bu:RegisterForClicks("AnyUp")
 	bu.__owner = f
 	bu:SetScript("OnClick", CloseOrRestoreBags)
@@ -280,9 +276,7 @@ function module:CreateCloseButton(f)
 end
 
 function module:CreateAccountBankButton(f)
-	local bu = B.CreateButton(self, 22, 22, true, 235423)
-	bu.Icon:SetTexCoord(.6, .9, .1, .4)
-	bu.Icon:SetPoint("BOTTOMRIGHT", -C.mult, -C.mult)
+	local bu = B.CreateButton(self, 22, 22, true, "Interface\\Icons\\Factionchange")
 	bu:RegisterForClicks("AnyUp")
 	bu:SetScript("OnClick", function(_, btn)
 		if not C_Bank.CanViewBank(ACCOUNT_BANK_TYPE) then return end
@@ -365,13 +359,31 @@ function module:CreateAccountBankDeposit()
 			local isOn = GetCVarBool("bankAutoDepositReagents")
 			SetCVar("bankAutoDepositReagents", isOn and 0 or 1)
 			updateAccountBankDeposit(bu)
-		else
+		end
+	end)
+	bu:SetScript("OnDoubleClick", function(_, btn)
+		if btn == "LeftButton" then
 			C_Bank.AutoDepositItemsIntoBank(ACCOUNT_BANK_TYPE)
 		end
 	end)
 	bu.title = ACCOUNT_BANK_DEPOSIT_BUTTON_LABEL
-	B.AddTooltip(bu, "ANCHOR_TOP", DB.InfoColor..L["DepositTradeGoodsTip"])
+	B.AddTooltip(bu, "ANCHOR_TOP", DB.InfoColor..L["AccountDepositTip"])
 	updateAccountBankDeposit(bu)
+
+	return bu
+end
+
+function module:CreateBankDeposit()
+	local bu = B.CreateButton(self, 22, 22, true, "Atlas:GreenCross")
+	bu.Icon:SetOutside()
+	bu:RegisterForClicks("AnyUp")
+	bu:SetScript("OnDoubleClick", function(_, btn)
+		if btn == "LeftButton" then
+			C_Bank.AutoDepositItemsIntoBank(CHAR_BANK_TYPE)
+		end
+	end)
+	bu.title = CHARACTER_BANK_DEPOSIT_BUTTON_LABEL
+	B.AddTooltip(bu, "ANCHOR_TOP", DB.InfoColor..L["BankDepositTip"])
 
 	return bu
 end
@@ -390,7 +402,7 @@ local function ToggleBackpacks(self)
 end
 
 function module:CreateBagToggle(click)
-	local bu = B.CreateButton(self, 22, 22, true, "Interface\\Buttons\\Button-Backpack-Up")
+	local bu = B.CreateButton(self, 22, 22, true, "Interface\\Icons\\inv_misc_bag_08")
 	bu.__owner = self
 	bu:SetScript("OnClick", ToggleBackpacks)
 	bu.title = BACKPACK_TOOLTIP
@@ -542,9 +554,7 @@ function module:CreateSplitButton()
 	editbox:SetJustifyH("CENTER")
 	editbox:SetScript("OnTextChanged", saveSplitCount)
 
-	local bu = B.CreateButton(self, 22, 22, true, "Interface\\HELPFRAME\\ReportLagIcon-AuctionHouse")
-	bu.Icon:SetPoint("TOPLEFT", -1, 3)
-	bu.Icon:SetPoint("BOTTOMRIGHT", 1, -3)
+	local bu = B.CreateButton(self, 22, 22, true, "Interface\\Icons\\Ability_Monk_CounteractMagic")
 	bu.__turnOff = function()
 		B.SetBorderColor(bu.bg)
 		bu.text = nil
@@ -605,7 +615,7 @@ StaticPopupDialogs["NDUI_RENAMECUSTOMGROUP"] = {
 	button2 = CANCEL,
 	OnAccept = function(self)
 		local index = module.selectGroupIndex
-		local text = self.editBox:GetText()
+		local text = self.EditBox:GetText()
 		C.db["Bags"]["CustomNames"][index] = text ~= "" and text or nil
 
 		module.CustomMenu[index+2].text = GetCustomGroupTitle(index)
@@ -659,9 +669,7 @@ function module:CreateFavouriteButton()
 
 	local enabledText = DB.InfoColor..L["FavouriteMode Enabled"]
 
-	local bu = B.CreateButton(self, 22, 22, true, "Interface\\Common\\friendship-heart")
-	bu.Icon:SetPoint("TOPLEFT", -5, 2.5)
-	bu.Icon:SetPoint("BOTTOMRIGHT", 5, -1.5)
+	local bu = B.CreateButton(self, 22, 22, true, "Interface\\Icons\\PetBattle_Health")
 	bu.__turnOff = function()
 		B.SetBorderColor(bu.bg)
 		bu.text = nil
@@ -840,6 +848,13 @@ function module:CloseBags()
 	end
 end
 
+function module:GetPurchaseButton()
+	local panel = _G.BankPanel
+	local prompt = panel and panel.PurchasePrompt
+	local cost = prompt and prompt.TabCostFrame
+	return cost and cost.PurchaseButton
+end
+
 function module:OnLogin()
 	if not C.db["Bags"]["Enable"] then return end
 
@@ -875,11 +890,12 @@ function module:OnLogin()
 			AddNewContainer("Bag", i, "BagCustom"..i, filters["bagCustom"..i])
 		end
 		AddNewContainer("Bag", 6, "BagReagent", filters.onlyBagReagent)
-		AddNewContainer("Bag", 18, "Junk", filters.bagsJunk)
+		AddNewContainer("Bag", 19, "Junk", filters.bagsJunk)
 		AddNewContainer("Bag", 9, "EquipSet", filters.bagEquipSet)
 		AddNewContainer("Bag", 10, "BagAOE", filters.bagAOE)
 		AddNewContainer("Bag", 7, "AzeriteItem", filters.bagAzeriteItem)
-		AddNewContainer("Bag", 17, "BagLower", filters.bagLower)
+		AddNewContainer("Bag", 17, "BagLegacy", filters.bagLegacy)
+		AddNewContainer("Bag", 18, "BagLower", filters.bagLower)
 		AddNewContainer("Bag", 8, "Equipment", filters.bagEquipment)
 		AddNewContainer("Bag", 11, "BagCollection", filters.bagCollection)
 		AddNewContainer("Bag", 14, "BagStone", filters.bagStone)
@@ -900,7 +916,8 @@ function module:OnLogin()
 		AddNewContainer("Bank", 9, "BankAOE", filters.bankAOE)
 		AddNewContainer("Bank", 6, "BankAzeriteItem", filters.bankAzeriteItem)
 		AddNewContainer("Bank", 10, "BankLegendary", filters.bankLegendary)
-		AddNewContainer("Bank", 16, "BankLower", filters.bankLower)
+		AddNewContainer("Bank", 16, "BankLegacy", filters.bankLegacy)
+		AddNewContainer("Bank", 17, "BankLower", filters.bankLower)
 		AddNewContainer("Bank", 7, "BankEquipment", filters.bankEquipment)
 		AddNewContainer("Bank", 11, "BankCollection", filters.bankCollection)
 		AddNewContainer("Bank", 14, "BankConsumable", filters.bankConsumable)
@@ -917,10 +934,11 @@ function module:OnLogin()
 		for i = 1, 5 do
 			AddNewContainer("Account", i, "AccountCustom"..i, filters["accountCustom"..i])
 		end
-		AddNewContainer("Account", 7, "AccountAOE", filters.accountAOE)
+		AddNewContainer("Account", 8, "AccountAOE", filters.accountAOE)
+		AddNewContainer("Account", 7, "AccountLegacy", filters.accountLegacy)
 		AddNewContainer("Account", 6, "AccountEquipment", filters.accountEquipment)
-		AddNewContainer("Account", 9, "AccountConsumable", filters.accountConsumable)
-		AddNewContainer("Account", 8, "AccountGoods", filters.accountGoods)
+		AddNewContainer("Account", 10, "AccountConsumable", filters.accountConsumable)
+		AddNewContainer("Account", 9, "AccountGoods", filters.accountGoods)
 
 		f.accountbank = MyContainer:New("Account", {Bags = "accountbank", BagType = "Account"})
 		f.accountbank:SetFilter(filters.accountbank, true)
@@ -939,20 +957,23 @@ function module:OnLogin()
 	local initBagType
 	function Backpack:OnBankOpened()
 		BankFrame:Show()
-		self:GetContainer("Bank"):Show()
+		BankFrame.BankPanel:Show()
 
 		if not initBagType then
-			--module:UpdateAllBags() -- Initialize bagType
 			module:UpdateBagSize()
 			initBagType = true
 		end
 	end
 
 	function Backpack:OnBankClosed()
-		BankFrame.selectedTab = 1
-		BankFrame.activeTabIndex = 1
+		BankFrame.BankPanel:Hide()
 		self:GetContainer("Bank"):Hide()
 		self:GetContainer("Account"):Hide()
+
+		local purchaseButton = module:GetPurchaseButton()
+		if purchaseButton then
+			purchaseButton:SetAttribute("overrideBankType", nil)
+		end
 	end
 
 	local MyButton = Backpack:GetItemButtonClass()
@@ -1257,6 +1278,8 @@ function module:OnLogin()
 			label = ITEM_ACCOUNTBOUND_UNTIL_EQUIP
 		elseif strmatch(name, "Lower") then
 			label = L["LowerItem"]
+		elseif strmatch(name, "Legacy") then
+			label = L["LegacyItem"]
 		end
 		if label then
 			self.label = B.CreateFS(self, 14, label, true, "TOPLEFT", 5, -8)
@@ -1276,11 +1299,12 @@ function module:OnLogin()
 			buttons[6] = module.CreateJunkButton(self)
 			buttons[7] = module.CreateDeleteButton(self)
 		elseif name == "Bank" then
-			module.CreateBagTab(self, settings, 6)
+			module.CreateBagTab(self, settings, 6, "Bank")
 			buttons[3] = module.CreateBagToggle(self)
-			buttons[4] = module.CreateAccountBankButton(self, f)
+			buttons[4] = module.CreateBankDeposit(self)
+			buttons[5] = module.CreateAccountBankButton(self, f)
 		elseif name == "Account" then
-			module.CreateBagTab(self, settings, 5, "account")
+			module.CreateBagTab(self, settings, 5, "Account")
 			buttons[3] = module.CreateBagToggle(self)
 			buttons[4] = module.CreateAccountBankDeposit(self)
 			buttons[5] = module.CreateBankButton(self, f)
@@ -1392,9 +1416,6 @@ function module:OnLogin()
 	end
 
 	-- Fixes
-	BankFrame.GetRight = function() return f.bank:GetRight() end
-	BankFrameItemButton_Update = B.Dummy
-
 	local passedSystems = {
 		["TutorialReagentBag"] = true,
 	}
@@ -1410,11 +1431,21 @@ function module:OnLogin()
 
 	-- Bank frame paging
 	hooksecurefunc(BankFrame.BankPanel, "SetBankType", function(self, bankType)
-		module.Bags:GetContainer("Bank"):SetShown(bankType == CHAR_BANK_TYPE)
-		module.Bags:GetContainer("Account"):SetShown(bankType == ACCOUNT_BANK_TYPE)
-		if _G["NDui_BankPurchaseButton"] then
-			_G["NDui_BankPurchaseButton"]:SetShown(bankType == ACCOUNT_BANK_TYPE and C_Bank.CanPurchaseBankTab(ACCOUNT_BANK_TYPE))
+		local bank = module.Bags:GetContainer("Bank")
+		if bank then
+			bank:SetShown(bankType == CHAR_BANK_TYPE)
+			bank.BagBar.purchaseButton:SetShown(C_Bank.CanPurchaseBankTab(bankType))
 		end
+		local account = module.Bags:GetContainer("Account")
+		if account then
+			account:SetShown(bankType == ACCOUNT_BANK_TYPE)
+			account.BagBar.purchaseButton:SetShown(C_Bank.CanPurchaseBankTab(bankType))
+		end
+		local purchaseButton = module:GetPurchaseButton()
+		if purchaseButton then
+			purchaseButton:SetAttribute("overrideBankType", bankType)
+		end
+		module:UpdateAllBags()
 	end)
 
 	-- Delay updates for data jam

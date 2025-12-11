@@ -75,7 +75,7 @@ function mod:GetOptions()
 		{450756, "DISPEL", "NAMEPLATE"}, -- Abyssal Howl
 		{431491, "TANK", "NAMEPLATE"}, -- Tainted Slash
 		-- Sureki Webmage
-		{451107, "SAY", "NAMEPLATE"}, -- Bursting Cocoon
+		{451107, "SAY", "SAY_COUNTDOWN", "NAMEPLATE"}, -- Bursting Cocoon
 		-- Arathi Bomb
 		451091, -- Plant Arathi Bomb
 		-- Ascendant Vis'coxria
@@ -83,6 +83,7 @@ function mod:GetOptions()
 		{451119, "ME_ONLY", "NAMEPLATE"}, -- Abyssal Blast
 		-- Deathscreamer Iken'tak
 		{450854, "PRIVATE", "NAMEPLATE"}, -- Dark Orb
+		460135, -- Dark Scars
 		-- Ixkreten the Unbreakable
 		{451117, "NAMEPLATE"}, -- Terrifying Slam
 		-- Sureki Militant
@@ -93,14 +94,24 @@ function mod:GetOptions()
 		{451112, "DISPEL", "NAMEPLATE"}, -- Tactician's Rage
 		-- Nightfall Darkcaster
 		{432520, "NAMEPLATE"}, -- Umbral Barrier
-		-- Nightfall Shadowalker
-		{431637, "TANK", "NAMEPLATE", "OFF"}, -- Umbral Rush
 		-- Manifested Shadow
 		{432565, "NAMEPLATE"}, -- Black Hail
 		-- Nightfall Dark Architect
-		{431349, "NAMEPLATE"}, -- Tormenting Eruption
+		{431349, "ME_ONLY_EMPHASIZE", "NAMEPLATE"}, -- Tormenting Eruption
 		446615, -- Usher Reinforcements
 	}, {
+		{
+			tabName = self:BossName(2580), -- Speaker Shadowcrown
+			{449042, 1242074, 431309, 432448, 431364, 450756, 431491, 451107, 451091},
+		},
+		{
+			tabName = self:BossName(2581), -- Anub'ikkaj
+			{451102, 451119, 450854, 460135, 451117, 451098, 451097, 431494, 451112, 432520, 432565, 1242074, 431309, 432448, 431364, 450756, 431491, 451107},
+		},
+		{
+			tabName = self:BossName(2593), -- Rasha'nan
+			{431349, 446615, 1242074, 431309, 432520},
+		},
 		[449042] = L.arathi_lamplighter,
 		[1242074] = L.nightfall_curseblade,
 		[431309] = L.nightfall_shadowmage,
@@ -114,7 +125,6 @@ function mod:GetOptions()
 		[451098] = L.sureki_militant,
 		[431494] = L.nightfall_tactician,
 		[432520] = L.nightfall_darkcaster,
-		[431637] = L.nightfall_shadowalker,
 		[432565] = L.manifested_shadow,
 		[431349] = L.nightfall_dark_architect,
 	}, {
@@ -154,6 +164,7 @@ function mod:OnBossEnable()
 	self:RegisterEngageMob("SurekiWebmageEngaged", 225479, 210966) -- on ship, in town
 	self:Log("SPELL_CAST_SUCCESS", "BurstingCocoon", 451107)
 	self:Log("SPELL_AURA_APPLIED", "BurstingCocoonApplied", 451107)
+	self:Log("SPELL_AURA_REMOVED", "BurstingCocoonRemoved", 451107)
 	self:Death("SurekiWebmageDeath", 225479, 210966) -- on ship, in town
 
 	-- Arathi Bomb
@@ -170,6 +181,8 @@ function mod:OnBossEnable()
 	-- Deathscreamer Iken'tak
 	self:RegisterEngageMob("DeathscreamerIkentakEngaged", 211263)
 	self:Log("SPELL_CAST_START", "DarkOrb", 450854)
+	self:Log("SPELL_AURA_APPLIED", "DarkScarsApplied", 460135)
+	self:Log("SPELL_AURA_APPLIED_DOSE", "DarkScarsApplied", 460135)
 	self:Death("DeathscreamerIkentakDeath", 211263)
 
 	-- Ixkreten the Unbreakable
@@ -198,12 +211,6 @@ function mod:OnBossEnable()
 	self:Log("SPELL_INTERRUPT", "UmbralBarrierInterrupt", 432520)
 	self:Log("SPELL_CAST_SUCCESS", "UmbralBarrierSuccess", 432520)
 	self:Death("NightfallDarkcasterDeath", 213893, 228539) -- regular trash, Nightfall Dark Architect summon
-
-	-- Nightfall Shadowalker
-	self:RegisterEngageMob("NightfallShadowalkerEngaged", 213895, 228537) -- regular trash, Nightfall Dark Architect summon
-	self:Log("SPELL_CAST_START", "UmbralRush", 431637)
-	self:Log("SPELL_CAST_SUCCESS", "UmbralRushSuccess", 431637)
-	self:Death("NightfallShadowalkerDeath", 213895, 228537) -- regular trash, Nightfall Dark Architect summon
 
 	-- Manifested Shadow
 	self:RegisterEngageMob("ManifestedShadowEngaged", 211341)
@@ -358,8 +365,15 @@ function mod:BurstingCocoonApplied(args)
 	self:TargetMessage(args.spellId, "yellow", args.destName)
 	if self:Me(args.destGUID) then
 		self:Say(args.spellId, nil, nil, "Bursting Cocoon")
+		self:SayCountdown(args.spellId, 6)
 	end
 	self:PlaySound(args.spellId, "alarm", nil, args.destName)
+end
+
+function mod:BurstingCocoonRemoved(args)
+	if self:Me(args.destGUID) then
+		self:CancelSayCountdown(args.spellId)
+	end
 end
 
 function mod:SurekiWebmageDeath(args)
@@ -466,6 +480,17 @@ do
 		self:Nameplate(args.spellId, 24.2, args.sourceGUID)
 		timer = self:ScheduleTimer("DeathscreamerIkentakDeath", 30, nil, args.sourceGUID)
 		self:PlaySound(args.spellId, "alarm")
+	end
+
+	do
+		local prev = 0
+		function mod:DarkScarsApplied(args)
+			if self:Me(args.destGUID) and args.time - prev > 1.5 then -- 1s stack rate
+				prev = args.time
+				self:StackMessage(args.spellId, "blue", args.destName, args.amount, 1)
+				self:PlaySound(args.spellId, "underyou")
+			end
+		end
 	end
 
 	function mod:AbyssalBlastDeathscreamerIkentak(guid)
@@ -629,32 +654,6 @@ function mod:UmbralBarrierSuccess(args)
 end
 
 function mod:NightfallDarkcasterDeath(args)
-	self:ClearNameplate(args.destGUID)
-end
-
--- Nightfall Shadowalker
-
-function mod:NightfallShadowalkerEngaged(guid)
-	self:Nameplate(431637, 0, guid) -- Umbral Rush
-end
-
-do
-	local prev = 0
-	function mod:UmbralRush(args)
-		self:Nameplate(args.spellId, 0, args.sourceGUID)
-		if args.time - prev > 1.5 then
-			prev = args.time
-			self:Message(args.spellId, "purple")
-			self:PlaySound(args.spellId, "alert")
-		end
-	end
-end
-
-function mod:UmbralRushSuccess(args)
-	self:Nameplate(args.spellId, 12.2, args.sourceGUID)
-end
-
-function mod:NightfallShadowalkerDeath(args)
 	self:ClearNameplate(args.destGUID)
 end
 

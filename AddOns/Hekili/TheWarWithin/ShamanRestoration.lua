@@ -363,6 +363,7 @@ local recall_totems = {
     healing_stream_totem = 1,
     cloudburst_totem = 1,
     earthen_wall_totem = 1,
+    recall_cloudburst_totem = 1,
     poison_cleansing_totem = 1,
     skyfury_totem = 1,
     stoneskin_totem = 1,
@@ -562,6 +563,27 @@ spec:RegisterAbilities( {
             summonTotem( "cloudburst_totem" )
             applyBuff( "cloudburst_totem" )
         end,
+        bind = "recall_cloudburst_totem"
+    },
+
+    -- Recall your Cloudburst Totem, triggering it to release its stored healing energy.
+    recall_cloudburst_totem = {
+        id = 201764,
+        cast = 0,
+        cooldown = 1,
+        gcd = "off",
+
+        startsCombat = false,
+        texture = 971076,
+
+        usable = function() return totem.cloudburst_totem.up end,
+
+        handler = function ()
+            if totem.cloudburst_totem.up then
+                totem.cloudburst_totem.expires = query_time
+            end
+        end,
+        bind = "cloudburst_totem"
     },
 
     -- A burst of water at your Healing Rain's location heals up to 5 injured allies within 12 yards for (275% of Spell power) and increases their maximum health by 10% for 6 sec.
@@ -771,6 +793,31 @@ spec:RegisterAbilities( {
 
         handler = function ()
             summonTotem( "healing_stream_totem" )
+        end,
+    },
+
+    -- Remove Curse effects from a friendly target.
+    purify_spirit = {
+        id = 77130,
+        cast = 0,
+        cooldown = 8,
+        gcd = "spell",
+        school = "nature",
+
+        spend = 0.06,
+        spendType = "mana",
+
+        startsCombat = false,
+        texture = 236288,
+
+        toggle = "interrupts",
+        usable = function() return debuff.dispellable_magic.up or ( talent.improved_purify_spirit.enabled and debuff.dispellable_curse.up ), "requires a dispellable effect" end,
+
+        handler = function ()
+            removeDebuff( "player", "dispellable_magic" )
+            if talent.improved_purify_spirit.enabled then
+                removeDebuff( "player", "dispellable_curse" )
+            end
         end,
     },
 

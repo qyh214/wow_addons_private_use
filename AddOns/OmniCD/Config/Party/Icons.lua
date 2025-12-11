@@ -83,9 +83,7 @@ local icons = {
 				displayBorder = {
 					disabled = false,
 					name = ENABLE,
-					desc = format("%s\n\n%s: %s", L["Display custom border around icons"],
-						L["Pixel Perfect"],
-						L["Borders retain 1px width regardless of the UI scale"]),
+					desc = L["Display custom border around icons"],
 					order = 0,
 					type = "toggle",
 				},

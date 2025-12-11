@@ -17,7 +17,6 @@ local ItemEventListener = ItemEventListener
 local GetItemInfo = app.WOWAPI.GetItemInfo;
 local GetItemIcon = app.WOWAPI.GetItemIcon;
 local GetItemCount = app.WOWAPI.GetItemCount;
-local GetFactionBonusReputation = app.WOWAPI.GetFactionBonusReputation;
 local IsBoAOverride = C_Item.IsItemBindToAccountUntilEquip
 
 -- Class locals
@@ -30,23 +29,29 @@ local IsBoAOverride = C_Item.IsItemBindToAccountUntilEquip
 -- Ex. 87654 (ModID 23)=> 87654.023
 -- Ex. 102938 (ModID 1) (BonusID 4746) => 102938.00104746
 local function GetGroupItemIDWithModID(t, rawItemID, rawModID, rawBonusID)
-	local i, m, b;
+	local i, m, b, e
 	if t then
-		i = t.itemID or 0;
-		m = t.modID;
-		b = t.bonusID;
+		i = t.itemID or 0
+		m = t.modID
+		b = t.bonusID
+		e = t.extraID
 	else
-		i = rawItemID and tonumber(rawItemID) or 0;
-		m = rawModID and tonumber(rawModID);
-		b = rawBonusID and tonumber(rawBonusID);
+		i = rawItemID and tonumber(rawItemID) or 0
+		m = rawModID and tonumber(rawModID)
+		b = rawBonusID and tonumber(rawBonusID)
+	end
+	-- e can only exist in absence of m and b, but needs to not overlap modID space
+	if e then
+		i = i + (e/1000000)
+		return i
 	end
 	if m then
-		i = i + (m / 1000);
+		i = i + (m / 1000)
 	end
 	if b and b ~= 3524 then
-		i = i + (b / 100000000);
+		i = i + (b / 100000000)
 	end
-	return i;
+	return i
 end
 app.GetGroupItemIDWithModID = GetGroupItemIDWithModID;
 -- Returns the ItemID, ModID, BonusID of the provided ModItemID
@@ -141,34 +146,41 @@ end
 -- Imports the raw information from the rawlink into the specified group
 app.ImportRawLink = function(group, rawlink, ignoreSource)
 	rawlink = rawlink and rawlink:match("item[%-?%d:]+");
-	if rawlink and group then
-		group.rawlink = rawlink;
-		-- importing a rawlink will clear any cached upgrade info for the group
-		group._up = nil;
-		local _, linkItemID, enchantId, gemId1, gemId2, gemId3, gemId4, suffixId, uniqueId, linkLevel, specializationID, upgradeId, modID, bonusCount, bonusID1 = (":"):split(rawlink);
-		if linkItemID then
-			-- app.PrintDebug("IRL+",rawlink,linkItemID,modID,bonusCount,bonusID1);
-			-- set raw fields in the group based on the link
-			group.itemID = tonumber(linkItemID);
-			group.modID = modID and tonumber(modID) or nil;
-			-- only set the bonusID if there is actually bonusIDs indicated
-			if (tonumber(bonusCount) or 0) > 0 then
-				-- Don't use bonusID 3524 as an actual bonusID
-				local b = bonusID1 and tonumber(bonusID1) or nil;
-				if b ~= 3524 and b ~= 0 then
-					group.bonusID = b;
-				end
-			end
-			group.modItemID = nil;
-			if not ignoreSource then
-				-- maybe make this a class method...
-				app.GetGroupSourceID(group)
-			end
+	if not rawlink or not group then return end
+
+	group.rawlink = rawlink;
+	-- specific versions of a given Item can actually be BoA while the base version is typically BoP
+	-- so store the BoA flag for this instance of the Item
+	if IsBoAOverride(rawlink) then
+		group.b = 3
+	end
+	-- importing a rawlink will clear any cached upgrade info for the group
+	group._up = nil;
+	local _, linkItemID, enchantId, gemId1, gemId2, gemId3, gemId4, suffixId, uniqueId, linkLevel, specializationID, upgradeId, modID, bonusCount, bonusID1 = (":"):split(rawlink);
+	if not linkItemID then return end
+
+	-- app.PrintDebug("IRL+",rawlink,linkItemID,modID,bonusCount,bonusID1);
+	-- set raw fields in the group based on the link
+	group.itemID = tonumber(linkItemID);
+	group.modID = modID and tonumber(modID) or nil;
+	-- only set the bonusID if there is actually bonusIDs indicated
+	if (tonumber(bonusCount) or 0) > 0 then
+		-- Don't use bonusID 3524 as an actual bonusID
+		local b = bonusID1 and tonumber(bonusID1) or nil;
+		if b ~= 3524 and b ~= 0 then
+			group.bonusID = b;
 		end
-		-- specific versions of a given Item can actually be BoA while the base version is typically BoP
-		-- so store the BoA flag for this instance of the Item
-		if IsBoAOverride(rawlink) then
-			group.b = 3
+	end
+	group.modItemID = nil;
+	if not ignoreSource then
+		-- maybe make this a class method...
+		app.GetGroupSourceID(group)
+	end
+	-- really weird situations where both modID and bonusID are empty but item has a 'special' extra ID to distinguish (like artifactID)
+	if not group.modID and not group.modID then
+		local extraID = tonumber(rawlink:match(":::1:8:(%d+)"))
+		if extraID then
+			group.extraID = extraID
 		end
 	end
 end
@@ -303,24 +315,26 @@ end
 local function default_costCollectibles(t)
 	local results, id;
 	local modItemID = t.modItemID;
+	local itemID = t.itemID
 	-- Search by modItemID if possible for accuracy
-	if modItemID and modItemID ~= t.itemID then
+	if modItemID and modItemID ~= itemID then
 		id = modItemID;
 		results = GetRawField("itemIDAsCost", id);
 		-- app.PrintDebug("itemIDAsCost.modItemID",id,results and #results)
 	end
 	-- If no results, search by itemID + modID only if different
 	if not results or #results < 1 then
-		id = GetGroupItemIDWithModID(nil, t.itemID, t.modID);
+		id = GetGroupItemIDWithModID(nil, itemID, t.modID);
 		if id ~= modItemID then
 			results = GetRawField("itemIDAsCost", id);
 			-- app.PrintDebug("itemIDAsCost.modID",id,results and #results)
 		end
 	end
 	-- If no results, search by plain itemID only
-	if (not results or #results < 1) and t.itemID then
-		id = t.itemID;
+	if (not results or #results < 1) and itemID then
+		id = itemID;
 		results = GetRawField("itemIDAsCost", id);
+		-- app.PrintDebug("itemIDAsCost.ID",id,results and #results)
 	end
 	-- Spells on Items can also be a Cost for Things
 	local spellID = t.spellID
@@ -330,6 +344,19 @@ local function default_costCollectibles(t)
 			-- app.PrintDebug("Found spell costs on item",#spellResults,spellID,app:SearchLink(spellResults[1]),app:SearchLink(t))
 			results = app.ArrayAppend({}, results, spellResults)
 		end
+	end
+	-- If this Item has a SourceID, then try getting cost results based on the matching SourceID's Source Item costCollectibles
+	-- (some situations where a Sourced Appearance Item as a Cost has other modItemID variants which also effectively provide the Cost [e.g. Lemix Gear Conversion])
+	-- only need to do this extra step if we're on a potentially unusual modItemID
+	if (not results or #results < 1) and modItemID ~= itemID and t.sourceID then
+		id = t.sourceID;
+		local sourcedSource = app.SearchForObject("sourceID", id, "field")
+		if sourcedSource then
+			results = GetRawField("itemIDAsCost", sourcedSource.modItemID);
+			-- app.PrintDebug("sourceID-costs",id,app:RawSearchLink("sourceID",id),"from",app:SearchLink(t),modItemID,itemID)
+		-- else app.PrintDebug("non-sourced SourceID for Item with Cost?",id,app:RawSearchLink("sourceID",id))
+		end
+		-- app.PrintDebug("itemIDAsCost.sourceID",id,sourcedSource.modItemID,results and #results)
 	end
 	if results and #results > 0 then
 		-- not sure we need to copy these into another table
@@ -418,11 +445,6 @@ local itemFields = {
 		return bonuses
 	end,
 	-- some calculated properties can let fall-through to the merge source of a group instead of needing to re-calculate in every copy
-	isCost = function(t)
-		local merge = t.__merge
-		if not merge then return end
-		return merge.isCost
-	end,
 	isUpgrade = function(t)
 		local merge = t.__merge
 		if not merge then return end
@@ -435,21 +457,6 @@ local itemFields = {
 -- Module imports
 itemFields.collectibleAsUpgrade = app.Modules.Upgrade.CollectibleAsUpgrade;
 
--- This is used for the Grand Commendations unlocking Bonus Reputation
-local ItemWithFactionBonus = {
-	__name = "AndFactionBonus",
-	collected = function(t)
-		local factionID = t.factionID;
-		if ATTAccountWideData.FactionBonus[factionID] then return 1; end
-		if GetFactionBonusReputation(factionID) then
-			ATTAccountWideData.FactionBonus[factionID] = 1;
-			return 1;
-		end
-	end,
-	__condition = function(t)
-		return not t.repeatable;
-	end,
-}
 app.CreateItem = app.CreateClass(CLASS, KEY, itemFields,
 "AsHQT", {
 	CollectibleType = function() return "QuestsHidden" end,
@@ -486,21 +493,25 @@ app.CreateItem = app.CreateClass(CLASS, KEY, itemFields,
 		return app.Settings.Collectibles.Reputations;
 	end,
 	collected = function(t)
-		local factionID = t.factionID;
-		-- This is used by reputation tokens. (turn in items)
-		-- quick cache checks
-		if app.CurrentCharacter.Factions[factionID] then return 1; end
-		if app.Settings.AccountWide.Reputations and ATTAccountWideData.Factions[factionID] then return 2; end
-
-		-- use the extended faction logic from the associated Faction for consistency
-		local cachedFaction = app.SearchForObject("factionID", factionID, "key") or app.CreateFaction(factionID);
-		return cachedFaction.collected;
+		return app.TypicalCharacterCollected("Factions", t.factionID, "Reputations")
 	end,
 	variants = {
-		ItemWithFactionBonus,
+		app.GlobalVariants.AndFactionBonus,
 	},
 }, (function(t) return t.factionID; end));
 
+local function OnClickCostItem(row, button)
+	if button ~= "RightButton" then
+		return true
+	end
+
+	local group = row.ref
+	if not group then return true end
+
+	-- perform a search-based popout of the cost item rather than cloning the group
+	app.CreatePopoutForSearch(group.key..":"..group.itemID)
+	return true
+end
 -- Wraps the given Type Object as a Cost Item, allowing altered functionality representing this being a calculable 'cost'
 local CreateCostItem = app.CreateClass("CostItem", KEY, {
 	IsClassIsolated = true,
@@ -525,6 +536,7 @@ local CreateCostItem = app.CreateClass("CostItem", KEY, {
 	costCollectibles = app.EmptyFunction,
 	collectibleAsCost = app.EmptyFunction,
 	costsCount = app.EmptyFunction,
+	OnClick = function() return OnClickCostItem end,
 })
 app.CreateCostItem = function(t, total)
 	local c = app.WrapObject(CreateCostItem(t[KEY]), t);

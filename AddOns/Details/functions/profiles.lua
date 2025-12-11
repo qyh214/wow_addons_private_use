@@ -614,6 +614,8 @@ local default_profile = {
 		[1473] = {384/512, 448/512, 256/512, 320/512}, -- Augmentation
 	},
 
+	window2_data = {},
+
 	--class icons and colors
 	class_icons_small = [[Interface\AddOns\Details\images\classes_small]],
 	class_coords = {
@@ -1403,6 +1405,11 @@ local default_global_data = {
 		encounter_journal_cache = {}, --store a dump of the encounter journal
 		installed_skins_cache = {},
 		last_10days_cache_cleanup = 0,
+		recent_players = {},
+
+		slashk_dnd = false,
+		slashk_addon = "bigwigs",
+		slashk_addon_first = false,
 
 		auto_change_to_standard = true,
 
@@ -1413,6 +1420,8 @@ local default_global_data = {
 
 		boss_wipe_counter = {},
 		boss_wipe_min_time = 20, --minimum time to consider a wipe as a boss wipe
+
+		arena_debug = false,
 
 		user_is_patreon_supporter = false,
 
@@ -1651,7 +1660,6 @@ local default_global_data = {
 		mythic_plus = {
 			merge_boss_trash = true,
 			boss_dedicated_segment = true,
-			make_overall_when_done = true,
 			make_overall_boss_only = false,
 			show_damage_graphic = true,
 
@@ -2074,7 +2082,6 @@ function Details:ImportProfile (profileString, newProfileName, bImportAutoRunCod
 		local mythicPlusSettings = Details.mythic_plus
 		mythicPlusSettings.merge_boss_trash = true
 		mythicPlusSettings.boss_dedicated_segment = true
-		mythicPlusSettings.make_overall_when_done = true
 		mythicPlusSettings.make_overall_boss_only = false
 		mythicPlusSettings.show_damage_graphic = true
 		mythicPlusSettings.reverse_death_log = false

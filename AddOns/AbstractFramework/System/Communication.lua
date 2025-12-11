@@ -97,9 +97,9 @@ end
 ---@param data any
 ---@param channelName string
 ---@param priority string "BULK", "NORMAL", "ALERT".
----@param callbackFn fun(callbackArg: any?, sentBytes: number, totalBytes: number)
----@param callbackArg any? any data you want to pass to the callback function
----@param isSerializedData boolean if true, data is already serialized
+---@param callbackFn? fun(callbackArg: any?, sentBytes: number, totalBytes: number)
+---@param callbackArg? any any data you want to pass to the callback function
+---@param isSerializedData? boolean if true, data is already serialized
 function AF.SendCommMessage_Channel(prefix, data, channelName, priority, callbackFn, callbackArg, isSerializedData)
     local channelId = GetChannelName(channelName)
     if channelId == 0 then

@@ -1,6 +1,6 @@
-## Interface: 110107,110200
+## Interface: 110205,110200
 ## Title: |cff880303[163UI]|r Info
-## Version: r20250625
+## Version: r20251017
 ## Author: NetEase Inc.
 ## IconTexture: Interface\AddOns\!!!163UI!!!\Media\Textures\UI2-logo
 ## SavedVariables: DDPFGlobal

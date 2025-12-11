@@ -1,12 +1,8 @@
 # BigWigs
 
-## [v392.7](https://github.com/BigWigsMods/BigWigs/tree/v392.7) (2025-08-07)
-[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v392.6...v392.7) [Previous Releases](https://github.com/BigWigsMods/BigWigs/releases)
+## [v402.1](https://github.com/BigWigsMods/BigWigs/tree/v402.1) (2025-11-27)
+[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v402...v402.1) [Previous Releases](https://github.com/BigWigsMods/BigWigs/releases)
 
-- Loader: Fix comment  
-- Plugins/BossBlock: Hard mute the emote sounds since Blizz thinks audio should play to users that block the emotes (also deafening people is "fantastic" design)  
-- Tools/Keystones: Cleanup  
-- Tools/Keystones: Add all the dungeon teleports  
-- Tools/Keystones: Cleanups  
-- Update frFR (#2140)  
-- Update koKR (#2139)  
+- Bump version  
+- Bump toc  
+- Loader: Add Deeprun Tram and Brawl'gar Arena (#2297)  

@@ -217,6 +217,10 @@ function Details222.BreakdownWindow.ApplyTextureSettings(statusBar)
 	end
 end
 
+function breakdownWindowFrame:GetCombat()
+	return self.instancia:GetCombat()
+end
+
 ------------------------------------------------------------------------------------------------------------------------------
 --self = instancia
 --jogador = classe_damage ou classe_heal
@@ -769,9 +773,9 @@ function breakdownWindowFrame.SetClassIcon(actorObject, class)
 		breakdownWindowFrame.classIcon:SetTexture(actorObject.spellicon)
 		breakdownWindowFrame.classIcon:SetTexCoord(.1, .9, .1, .9)
 
-	elseif (actorObject.spec) then
+	elseif (actorObject.spec and _detalhes.class_specs_coords[actorObject.spec]) then
 		breakdownWindowFrame.classIcon:SetTexture([[Interface\AddOns\Details\images\spec_icons_normal_alpha]])
-		breakdownWindowFrame.classIcon:SetTexCoord(unpack(_detalhes.class_specs_coords [actorObject.spec]))
+		breakdownWindowFrame.classIcon:SetTexCoord(unpack(_detalhes.class_specs_coords[actorObject.spec]))
 	else
 		local coords = CLASS_ICON_TCOORDS[class]
 		if (coords) then

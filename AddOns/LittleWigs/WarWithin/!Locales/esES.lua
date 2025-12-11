@@ -8,6 +8,7 @@ if L then
 	L.ixin = "Ixin"
 	L.nakt = "Nakt"
 	L.atik = "Atik"
+	L.bloodworker = "Trabajador sanguino"
 	L.hulking_bloodguard = "Guardia de sangre descomunal"
 	L.sentry_stagshell = "Centinela cornaconcha"
 	L.bloodstained_assistant = "Ayudante manchado de sangre"
@@ -121,21 +122,23 @@ end
 
 L = BigWigs:NewBossLocale("Eco-Dome Al'dani Trash", "esES")
 if L then
-	--L.terrified_broker = "Terrified Broker"
-	--L.arcane_siphon = "Arcane Siphon"
-	--L.overgorged_mite = "Overgorged Mite"
-	--L.voracious_gorger = "Voracious Gorger"
-	--L.ravenous_destroyer = "Ravenous Destroyer"
-	--L.overcharged_sentinel = "Overcharged Sentinel"
-	--L.wastelander_farstalker = "Wastelander Farstalker"
-	--L.tamed_ruinstalker = "Tamed Ruinstalker"
-	--L.wastelander_ritualist = "Wastelander Ritualist"
-	--L.wastelander_pactspeaker = "Wastelander Pactspeaker"
-	--L.karesh_elemental = "K'aresh Elemental"
-	--L.burrowing_creeper = "Burrowing Creeper"
-	--L.wastes_creeper = "Wastes Creeper"
+	L.terrified_broker = "Especulador aterrorizado"
+	L.arcane_siphon = "Succión arcana"
+	L.overgorged_mite = "Ácaro empachado"
+	L.voracious_gorger = "Engullidor voraz"
+	L.ravenous_destroyer = "Destructor voraz"
+	L.overcharged_sentinel = "Centinela sobrecargado"
+	L.wastelander_farstalker = "Acechador lejano del páramo"
+	L.tamed_ruinstalker = "Acecharruina domesticado"
+	L.wastelander_ritualist = "Ritualista del páramo"
+	L.wastelander_pactspeaker = "Emitepactos del páramo"
+	L.evoked_spirit = "Espíritu evocado"
+	L.karesh_elemental = "Elemental de K'aresh"
+	L.burrowing_creeper = "Trepador excavador"
+	L.wastes_creeper = "Trepador del páramo"
 
-	--L.taahbat_and_awazj_warmup_trigger = "I have no time for this. Taah'bat! Be certain they follow no further."
+	L.taahbat_and_awazj_warmup_trigger = "No tengo tiempo para esto. ¡Taah'bat! Asegúrate de que no avancen."
+	--azhiccar_warmup_trigger = "¡Cuidado! ¡Algo se acerca!" --from Ve'nari
 end
 
 -- Operation: Floodgate
@@ -162,7 +165,7 @@ if L then
 	L.venture_co_electrician = "Electricista de Ventura y Cía"
 	L.darkfuse_jumpstarter = "Impulsador de Fundisombras"
 
-	L.geezle_gigazap_warmup = "Este proyecto no podrá continuar sin el científico a cargo. ¡Congelen a ese cerebrote!"
+	L.geezle_gigazap_warmup = "Este proyecto no podrá continuar sin su científico al mando. ¡Manda ese cerebrito a la nevera!"
 end
 
 -- Priory of the Sacred Flame
@@ -211,6 +214,42 @@ if L then
 	L.medbot = "Robot médico"
 	L.nullbot = "Anulabot"
 	L.awakened_phalanx = "Falange despertada"
+end
+
+L = BigWigs:NewBossLocale("Brawler's Guild", "esES")
+if L then
+	--L.brawlers_guild = "Brawler's Guild"
+	--L.rank = "Rank %d"
+	--L.defeated = "%s defeated"
+
+	--L.sunny = "Sunny"
+	--L.doomflipper = "Doomflipper"
+	--L.goredome = "Goredome"
+	--L.dippy = "Dippy"
+	--L.bruce = "Bruce"
+	--L.bill_the_janitor = "Bill the Janitor"
+	--L.oso = "Oso"
+	--L.the_quacken = "The Quacken"
+	--L.razorgrin = "Razorgrin"
+	--L.blat = "Blat"
+	--L.ooliss = "Ooliss"
+	--L.king_kulaka = "King Kulaka"
+	--L.meatball = "Meatball"
+	--L.ash_katzuum = "Ash'katzuum"
+	--L.crush = "Crush"
+	--L.glorp = "Glorp"
+	--L.klunk = "Klunk"
+	--L.stitches = "Stitches"
+	--L.topps = "Topps"
+	--L.carl = "Carl"
+	--L.leper_gnome_quintet = "Leper Gnome Quintet"
+	--L.mecha_bruce = "Mecha-Bruce"
+	--L.gg_engineering = "GG Engineering"
+	--L.doopy = "Doopy"
+	--L.renegade_swabbie = "Renegade Swabbie"
+	--L.ogrewatch = "Ogrewatch"
+	--L.blingtron_3000 = "Blingtron 3000"
+	--L.epicus_maximus = "Epicus Maximus"
 end
 
 -- The Dawnbreaker

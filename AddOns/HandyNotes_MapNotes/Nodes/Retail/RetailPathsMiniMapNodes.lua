@@ -4,7 +4,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 function ns.LoadPathsMiniMapLocationinfo(self)
 local db = ns.Addon.db.profile
 local minimap = ns.minimap
-ns._currentSourceFile = "RetailPathsMiniMapNodes.lua"
+ns.currentSourceFile = "RetailPathsMiniMapNodes.lua"
 
 --#####################################################################################################
 --##########################        function to hide all minimap below         ##########################
@@ -142,13 +142,13 @@ ns._currentSourceFile = "RetailPathsMiniMapNodes.lua"
                     minimap[23][93799027] = { name = "", dnID = "|cffffffff" .. L["Path"] .. " (" .. TIME_LEFT_VERY_LONG .. ")", mnID = 26, type = "PathU", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[22][75745008] = { name = "", dnID = "|cffffffff" .. L["Path"], mnID = 23, type = "PathR", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     if ns.Addon.db.profile.activate.SwapButtons then -- Swap Button
-                        minimap[22][22855825] = { name = "", dnID = "|cffffffff" .. L["Path"] .. "\n" .. KEY_BUTTON2 .. " • " .. L["Tirisfal Glades"] .. " " .. ZONE .. " " .. ACTION_SPELL_DAMAGE_MASTER .. "\n" .. KEY_BUTTON3 .. " • " ..L["Tirisfal Glades"] .. " " .. ZONE .. " " .. ACTION_SPELL_CAST_SUCCESS_MASTER, mnID = 18, mnID2 = 2070, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[21][65540646] = { name = "", dnID = "|cffffffff" .. L["Path"] .. "\n" .. KEY_BUTTON2 .. " • " .. L["Tirisfal Glades"] .. " " .. ZONE .. " " .. ACTION_SPELL_DAMAGE_MASTER .. "\n" .. KEY_BUTTON3 .. " • " .. L["Tirisfal Glades"] .. " " .. ZONE .. " " .. ACTION_SPELL_CAST_SUCCESS_MASTER, mnID = 18, mnID2 = 2070, type = "PathRO", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[25][41950592] = { name = "", dnID = "|cffffffff" .. L["Path"] .. "\n" .. KEY_BUTTON2 .. " • " .. L["Tirisfal Glades"] .. " " .. ZONE .. " " .. ACTION_SPELL_DAMAGE_MASTER .. "\n" .. KEY_BUTTON3 .. " • " ..L["Tirisfal Glades"] .. " " .. ZONE .. " " .. ACTION_SPELL_CAST_SUCCESS_MASTER, mnID = 18, mnID2 = 2070, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[22][22855825] = { name = "", dnID = "|cffffffff" .. L["Path"] .. "\n" .. KEY_BUTTON2 .. " • " .. ns.TirisfalGlades .. " " .. ZONE .. " " .. ACTION_SPELL_DAMAGE_MASTER .. "\n" .. KEY_BUTTON3 .. " • " .. ns.TirisfalGlades .. " " .. ZONE .. " " .. ACTION_SPELL_CAST_SUCCESS_MASTER, mnID = 18, mnID2 = 2070, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[21][65540646] = { name = "", dnID = "|cffffffff" .. L["Path"] .. "\n" .. KEY_BUTTON2 .. " • " .. ns.TirisfalGlades .. " " .. ZONE .. " " .. ACTION_SPELL_DAMAGE_MASTER .. "\n" .. KEY_BUTTON3 .. " • " .. ns.TirisfalGlades .. " " .. ZONE .. " " .. ACTION_SPELL_CAST_SUCCESS_MASTER, mnID = 18, mnID2 = 2070, type = "PathRO", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[25][41950592] = { name = "", dnID = "|cffffffff" .. L["Path"] .. "\n" .. KEY_BUTTON2 .. " • " .. ns.TirisfalGlades .. " " .. ZONE .. " " .. ACTION_SPELL_DAMAGE_MASTER .. "\n" .. KEY_BUTTON3 .. " • " .. ns.TirisfalGlades .. " " .. ZONE .. " " .. ACTION_SPELL_CAST_SUCCESS_MASTER, mnID = 18, mnID2 = 2070, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     else -- Original Button
-                        minimap[22][22855825] = { name = "", dnID = "|cffffffff" .. L["Path"] .. "\n" .. KEY_BUTTON1 .. " • " .. L["Tirisfal Glades"] .. " " .. ZONE .. " " .. ACTION_SPELL_DAMAGE_MASTER .. "\n" .. KEY_BUTTON3 .. " • " ..L["Tirisfal Glades"] .. " " .. ZONE .. " " .. ACTION_SPELL_CAST_SUCCESS_MASTER, mnID = 18, mnID2 = 2070, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[21][65540646] = { name = "", dnID = "|cffffffff" .. L["Path"] .. "\n" .. KEY_BUTTON1 .. " • " .. L["Tirisfal Glades"] .. " " .. ZONE .. " " .. ACTION_SPELL_DAMAGE_MASTER .. "\n" .. KEY_BUTTON3 .. " • " .. L["Tirisfal Glades"] .. " " .. ZONE .. " " .. ACTION_SPELL_CAST_SUCCESS_MASTER, mnID = 18, mnID2 = 2070, type = "PathRO", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                        minimap[25][41950592] = { name = "", dnID = "|cffffffff" .. L["Path"] .. "\n" .. KEY_BUTTON1 .. " • " .. L["Tirisfal Glades"] .. " " .. ZONE .. " " .. ACTION_SPELL_DAMAGE_MASTER .. "\n" .. KEY_BUTTON3 .. " • " ..L["Tirisfal Glades"] .. " " .. ZONE .. " " .. ACTION_SPELL_CAST_SUCCESS_MASTER, mnID = 18, mnID2 = 2070, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[22][22855825] = { name = "", dnID = "|cffffffff" .. L["Path"] .. "\n" .. KEY_BUTTON1 .. " • " .. ns.TirisfalGlades .. " " .. ZONE .. " " .. ACTION_SPELL_DAMAGE_MASTER .. "\n" .. KEY_BUTTON3 .. " • " .. ns.TirisfalGlades .. " " .. ZONE .. " " .. ACTION_SPELL_CAST_SUCCESS_MASTER, mnID = 18, mnID2 = 2070, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[21][65540646] = { name = "", dnID = "|cffffffff" .. L["Path"] .. "\n" .. KEY_BUTTON1 .. " • " .. ns.TirisfalGlades .. " " .. ZONE .. " " .. ACTION_SPELL_DAMAGE_MASTER .. "\n" .. KEY_BUTTON3 .. " • " .. ns.TirisfalGlades .. " " .. ZONE .. " " .. ACTION_SPELL_CAST_SUCCESS_MASTER, mnID = 18, mnID2 = 2070, type = "PathRO", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[25][41950592] = { name = "", dnID = "|cffffffff" .. L["Path"] .. "\n" .. KEY_BUTTON1 .. " • " .. ns.TirisfalGlades .. " " .. ZONE .. " " .. ACTION_SPELL_DAMAGE_MASTER .. "\n" .. KEY_BUTTON3 .. " • " .. ns.TirisfalGlades .. " " .. ZONE .. " " .. ACTION_SPELL_CAST_SUCCESS_MASTER, mnID = 18, mnID2 = 2070, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
                     minimap[22][43569122] = { name = "", dnID = "|cffffffff" .. L["Path"], mnID = 25, type = "PathU", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[22][65688550] = { name = "", dnID = "|cffffffff" .. L["Path"], mnID = 26, type = "PathU", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -239,6 +239,7 @@ ns._currentSourceFile = "RetailPathsMiniMapNodes.lua"
                     minimap[47][07936303] = { name = "", dnID = "|cffffffff" .. L["Path"], mnID = 52, type = "PathL", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[47][48431375] = { name = "", dnID = "|cffffffff" .. L["Path"], mnID = 37, type = "PathO", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[47][14212482] = { name = "", dnID = "|cffffffff" .. L["Path"], mnID = 37, mnID2 = 52, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[55][68711872] = { name = "", dnID = "|cffffffff" .. L["Path"], mnID = 52, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[52][67746273] = { name = "", dnID = "|cffffffff" .. L["Path"], mnID = 47, type = "PathR", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[52][61141799] = { name = "", dnID = "|cffffffff" .. L["Path"], mnID = 37, type = "PathRO", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[52][39488987] = { name = "", dnID = "|cffffffff" .. L["Path"], mnID = 50, type = "PathRU", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -541,12 +542,7 @@ ns._currentSourceFile = "RetailPathsMiniMapNodes.lua"
                     minimap[2248][52915233] = { name = "", dnID = "|cffffffff" .. L["Entrance"], mnID = 2339, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[2248][56233921] = { name = "", dnID = "|cffffffff" .. L["Entrance"], mnID = 2339, type = "PathL", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     --minimap[2248][46154704] = { name = "", dnID = "|cffffffff" .. L["Passage"], mnID = 2214, type = "PathU", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[2248][37427287] = { dnID = "|cffffffff" .. L["Passage"], name = "", mnID = 2214, type = "PassageCaveDown", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[2248][67333102] = { dnID = "|cffffffff" .. L["Passage"], name = "", mnID = 2214, type = "PassageCaveDown", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[2214][61547692] = { dnID = "|cffffffff" .. L["Passage"], name = "", mnID = 2248, type = "PassageCaveUp", showInZone = false, showOnContinent = false, showOnMinimap = true } -- only Minimap
-                    minimap[2214][49194459] = { dnID = "|cffffffff" .. L["Passage"], name = "", mnID = 2248, type = "PassageCaveUp", showInZone = false, showOnContinent = false, showOnMinimap = true } -- only Minimap
-                    minimap[2214][63197831] = { name = "", dnID = "|cffffffff" .. L["Path"], mnID = 2346, type = "PathR", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    
+                    minimap[2214][63197831] = { name = "", dnID = "|cffffffff" .. L["Path"], mnID = 2346, type = "PathR", showInZone = false, showOnContinent = false, showOnMinimap = true } 
                 end
 
             end

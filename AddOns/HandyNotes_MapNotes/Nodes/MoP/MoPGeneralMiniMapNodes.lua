@@ -35,7 +35,7 @@ if not db.activate.HideMapNote then
                 minimap[249][26970748] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER, type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[10][67607420] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[1][52004180] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[10][56403980] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[10][49005760] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -55,7 +55,7 @@ if not db.activate.HideMapNote then
                     minimap[207][51205020] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[57][56205200] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[97][49004980] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[106][55005980] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -94,7 +94,7 @@ if not db.activate.HideMapNote then
                 minimap[81][55503570] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[71][52502730] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[66][24806880] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[69][74904400] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[7][47205970] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -117,7 +117,7 @@ if not db.activate.HideMapNote then
                     minimap[64][45905100] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[65][58905590] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[70][65904530] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[65][31806000] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -152,7 +152,7 @@ if not db.activate.HideMapNote then
                 minimap[249][26610725] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[81][55523676] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperN", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[65][66406420] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[199][40806920] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[199][39202000] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -175,7 +175,7 @@ if not db.activate.HideMapNote then
                     minimap[77][44006193] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[65][59005640] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[65][39403280] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[65][31406060] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -212,7 +212,7 @@ if not db.activate.HideMapNote then
                 minimap[205][49404200] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER, type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[22][47203180] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER, type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[18][61805200] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[21][44602080] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[21][46004260] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -240,7 +240,7 @@ if not db.activate.HideMapNote then
                     minimap[2070][59255112] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[37][42806580] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[52][53005300] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[49][26204300] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -280,7 +280,7 @@ if not db.activate.HideMapNote then
                 minimap[122][50003501] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[217][59949211] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[95][47803150] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[2070][60715215] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[18][60705220] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -301,7 +301,7 @@ if not db.activate.HideMapNote then
                     minimap[204][51206070] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[22][43608450] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[26][66004520] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[56][57604010] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -333,7 +333,7 @@ if not db.activate.HideMapNote then
                 minimap[23][75805220] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[122][51003400] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperN", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[95][48803240] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[94][48004760] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[205][51606260] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -361,7 +361,7 @@ if not db.activate.HideMapNote then
                     minimap[18][83007180] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[205][49605740] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[204][54607220] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[241][79407860] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -404,7 +404,7 @@ if not db.activate.HideMapNote then
                 minimap[105][27605260] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER, type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[109][32006480] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER, type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[100][54404100] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[102][31804980] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[108][49404460] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -414,7 +414,7 @@ if not db.activate.HideMapNote then
                     minimap[104][29202940] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[100][54402660] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[102][67604960] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[108][56805380] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -434,7 +434,7 @@ if not db.activate.HideMapNote then
                 minimap[105][62603850] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[105][27605250] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[108][49504490] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[107][56473557] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[102][31905010] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -444,7 +444,7 @@ if not db.activate.HideMapNote then
                     minimap[105][75706080] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[108][57005370] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[107][54507360] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[102][42102710] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -467,7 +467,7 @@ if not db.activate.HideMapNote then
                 minimap[104][56205980] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[105][62803820] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperN", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[107][56603460] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[102][30605080] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[108][48804500] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -478,7 +478,7 @@ if not db.activate.HideMapNote then
                     minimap[105][53205540] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[107][54207600] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[102][67204900] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[102][41802620] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -511,7 +511,7 @@ if not db.activate.HideMapNote then
                 minimap[118][69602200] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER, type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[118][71602260] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER, type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[114][40205500] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[114][49801060] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[114][77003720] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -527,7 +527,7 @@ if not db.activate.HideMapNote then
                     minimap[118][75602360] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[114][56607300] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[114][57001900] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[117][58606300] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -558,7 +558,7 @@ if not db.activate.HideMapNote then
                 minimap[121][40106640] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[119][26905950] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[114][42005480] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[114][77003750] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[114][49401030] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -573,7 +573,7 @@ if not db.activate.HideMapNote then
                     minimap[115][37304670] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[114][58506860] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[114][57001910] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[120][28807430] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -601,7 +601,7 @@ if not db.activate.HideMapNote then
                 minimap[120][48806500] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[120][30903737] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperN", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[114][76203720] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[114][49601000] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[114][41805460] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -617,7 +617,7 @@ if not db.activate.HideMapNote then
                     minimap[120][67605060] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[114][57111864] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[114][58206800] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[144][57001860] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -645,17 +645,17 @@ if not db.activate.HideMapNote then
             end
 
             if self.db.profile.showMiniMapPvEVendor then
-                minimap[388][37806460] = { name = "", dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT .. "\n" .. WORLD_QUEST_REWARD_FILTERS_EQUIPMENT .. "\n" .. AUCTION_CATEGORY_WEAPONS, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                minimap[388][37806460] = { name = "", dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT .. "\n" .. WORLD_QUEST_REWARD_FILTERS_EQUIPMENT .. "\n" .. AUCTION_CATEGORY_WEAPONS, type = "ZonePvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
             end
 
             if self.db.profile.showMiniMapPvPVendor then
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[379][35408340] = { name = "", dnID = TRANSMOG_SET_PVP .. " " .. MERCHANT .. " " .. FACTION_HORDE .. "\n" .. WORLD_QUEST_REWARD_FILTERS_EQUIPMENT .. "\n" .. AUCTION_CATEGORY_WEAPONS, type = "ZonePvPVendorH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[388][77476296] = { name = "", dnID = TRANSMOG_SET_PVP .. " " .. MERCHANT .. " " .. FACTION_HORDE .. "\n" .. WORLD_QUEST_REWARD_FILTERS_EQUIPMENT .. "\n" .. AUCTION_CATEGORY_WEAPONS, type = "ZonePvPVendorH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[376][12003400] = { name = "", dnID = TRANSMOG_SET_PVP .. " " .. MERCHANT .. " " .. FACTION_ALLIANCE .. "\n" .. WORLD_QUEST_REWARD_FILTERS_EQUIPMENT .. "\n" .. AUCTION_CATEGORY_WEAPONS, type = "ZonePvPVendorA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[422][73543407] = { name = "", dnID = TRANSMOG_SET_PVP .. " " .. MERCHANT .. " " .. FACTION_ALLIANCE .. "\n" .. WORLD_QUEST_REWARD_FILTERS_EQUIPMENT .. "\n" .. AUCTION_CATEGORY_WEAPONS, type = "ZonePvPVendorA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
@@ -678,14 +678,14 @@ if not db.activate.HideMapNote then
                 minimap[554][37204680] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER, type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[371][27804680] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[371][28711310] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[418][59202440] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[390][60402260] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[504][32803260] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_HORDE, type = "StablemasterH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[371][44608480] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[418][67203220] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[390][84606320] = { name = "", dnID = MINIMAP_TRACKING_STABLEMASTER .. " - " .. FACTION_ALLIANCE, type = "StablemasterA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -722,7 +722,7 @@ if not db.activate.HideMapNote then
                 minimap[422][55407110] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[433][55907420] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[371][27801500] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[371][28601330] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[379][62708050] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -732,7 +732,7 @@ if not db.activate.HideMapNote then
                     minimap[418][60702500] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[371][59208340] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[371][44908470] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[379][54108290] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxA", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -776,7 +776,7 @@ if not db.activate.HideMapNote then
                 minimap[371][54586322] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperN", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 minimap[371][27994743] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperN", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
-                if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                     minimap[504][33603260] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[418][60802480] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[418][28205060] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -785,7 +785,7 @@ if not db.activate.HideMapNote then
                     minimap[371][28521334] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperH", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
-                if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+                if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
                     minimap[504][64807300] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[418][88803520] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[379][54008280] = { name = "", dnID = MINIMAP_TRACKING_INNKEEPER, type = "InnkeeperA", showInZone = false, showOnContinent = false, showOnMinimap = true }

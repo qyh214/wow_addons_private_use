@@ -162,6 +162,7 @@ C.ROLE_REMAINING_KEYS = {
 }
 
 C.LEADER_ATLAS = "groupfinder-icon-leader"
+C.LEAVER_ATLAS = "groupfinder-icon-leaver"
 
 C.DPS_CLASS_TYPE = {
     ["DEATHKNIGHT"] = { range = false, melee = true,  armor = "plate",   br = true,  bl = false },
@@ -186,7 +187,7 @@ end })
 local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 local flavor = GetAddOnMetadata(PGFAddonName, "X-Flavor")
 function PGF.IsRetail() return flavor == "Retail" end
-function PGF.IsCata() return flavor == "Cata" end
+function PGF.IsMists() return flavor == "Mists" end
 function PGF.SupportsMythicPlus() return PGF.IsRetail() end -- Mythic Plus (as opposed to Challenge Mode with gear scaling) is supported from Legion onwards
 function PGF.SupportsSpecializations() return PGF.IsRetail() end -- Specialization (as opposed to free talent trees) are supported from Mists of Pandaria onwards
 function PGF.SupportsDragonflightUI() return PGF.IsRetail() end -- User Interface has changed drastically in Dragonflight
@@ -287,6 +288,17 @@ function PGF.MigrateStateV7()
     end
 end
 
+function PGF.MigrateStateV8()
+    if PremadeGroupsFilterState.version < 8 then
+        -- Add delves support
+        if not PremadeGroupsFilterState.c121f4 then
+            PremadeGroupsFilterState.c121f4 = { enabled = true }
+        end
+        PremadeGroupsFilterState.version = 8
+        print(string.format(L["message.settingsupgraded"], "8"))
+    end
+end
+
 function PGF.MigrateSettingsV2()
     if not PremadeGroupsFilterSettings.version or PremadeGroupsFilterSettings.version < 2 then
         if PGF.IsRetail() then -- disable features now provided by default
@@ -313,8 +325,9 @@ function PGF.OnAddonLoaded(name)
         -- initialize dialog state and migrate to latest version
         if PremadeGroupsFilterState == nil or PremadeGroupsFilterState.version == nil then
             PremadeGroupsFilterState = {
-                version = 6,
+                version = 8,
                 c2f4 = { enabled = true, }, -- Dungeons
+                c121f4 = { enabled = true, }, -- Delves
                 c3f5 = { enabled = true, }, -- Raids
                 c3f6 = { enabled = true, }, -- Raids
                 c114f4 = { enabled = true, }, -- Raids (Classic)
@@ -327,6 +340,8 @@ function PGF.OnAddonLoaded(name)
         PGF.MigrateStateV4()
         PGF.MigrateStateV5()
         PGF.MigrateStateV6()
+        PGF.MigrateStateV7()
+        PGF.MigrateStateV8()
         -- Note: State might contain unused booleans .c2f4.dungeon.blfit and .c2f4.dungeon.brfit
         -- which I deliberately did not delete if I need to bring back the features
 
@@ -343,7 +358,6 @@ function PGF.OnAddonLoaded(name)
 end
 
 function PGF.OnPlayerLogin()
-    PGF.FixReportAdvertisement()
     PGF.PersistSignUpNote()
 end
 

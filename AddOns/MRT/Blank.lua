@@ -195,3 +195,10 @@ SlashCmdList["covhelpSlash"] = function (arg)
 	SF_Show()
 end
 SLASH_covhelpSlash1 = "/covenanthelper"
+
+--[[
+local frame = CreateFrame("Frame")
+frame:SetScript("OnEvent", function(_, event, addon, ...) if addon == GlobalAddonName then print(...) print(debugstack(2)) end end)
+frame:RegisterEvent("ADDON_ACTION_BLOCKED")
+frame:RegisterEvent("ADDON_ACTION_FORBIDDEN")
+]]

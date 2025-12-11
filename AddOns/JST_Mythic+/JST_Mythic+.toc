@@ -1,0 +1,10 @@
+﻿## Interface: 110207
+## Title: |cffff0000Jingsi|r Tools Mythic+
+## Title-zhCN: |cffff0000静思|r 副本助手 大秘境
+## Version: 1.20
+## Dependencies: JST
+## X-JST-InstanceType: Dungeon
+## Author: Paopao001
+## IconTexture: Interface\AddOns\JST\media\logo.png
+
+load.xml

@@ -3,6 +3,7 @@
 Addon.DEFAULT_ICON = 134400;
 Addon.MYTHICPLUS_ICON = 4352494;
 Addon.HERO_TALENTS_ICON = 5740021;
+Addon.PVP_ICON = 236537;
 
 local heroTalentIcons = {
 	WARRIOR = {
@@ -155,7 +156,7 @@ Addon.icons = {
 		{5899330, "The Dawnbreaker", "DAWN"},
 		{5899331, "Priory of the Sacred Flame", "PSF"},
 		{6422372, "Operation: Floodgate", "FLOOD"},
-		{6921877, "Eco-Dome Al'dani", "ECO"},
+		{6921877, "Eco-Dome Al'dani", "EDA"},
 		{3601526, "Halls of Atonement", "HOA"},
 		{4058847, "Tazavesh: Streets of Wonder", "STRT"},
 		{4062727, "Tazavesh: So'leah's Gambit", "GMBT"},
@@ -201,6 +202,47 @@ Addon.icons = {
 		{6922083, "Dimensius, the All-Devouring"},
 	},
 };
+
+if select(4, GetBuildInfo()) >= 120000 then
+	-- Midnight Beta
+
+	heroTalentIcons.DEMONHUNTER = {
+		{Addon.HERO_TALENTS_ICON, "Aldrachi Reaver", "talents-heroclass-demonhunter-aldrachireaver"},
+		{Addon.HERO_TALENTS_ICON, "Fel-Scarred", "talents-heroclass-demonhunter-felscarred"},
+		{Addon.HERO_TALENTS_ICON, "Fel-Scarred", "talents-heroclass-demonhunter-annihilator"},
+		{5927616, "Aldrachi Reaver", ""},
+		{5927628, "Fel-Scarred", ""},
+		{1041234, "Annihilator", ""},
+	};
+
+	Addon.icons[1] = heroTalentIcons[classFilename];
+
+	Addon.icons[3] = {
+		-- M+: S1
+		{7439625, "Magisters' Terrace", "MT"},
+		{7322719, "Maisara Caverns", "MC"},
+		{7553062, "Nexus-Point Xenas", "NPX"},
+		{7266215, "Windrunner Spire", "WS"},
+		{4578414, "Algeth'ar Academy", "AA"},
+		{343641,  "Pit of Saron", "POS"},
+		{1711340, "Seat of the Triumvirate", "SEAT"},
+		{1002596, "Skyreach", "SKY"},
+	};
+
+	Addon.icons[4] = {
+		-- Raid: S1
+		{7490911, "The Voidspire"},
+		{7448209, "Imperator Averzian"},
+		{7448210, "Vorasius"},
+		{7448212, "Fallen-King Salhadaar"},
+		{7448207, "Vaelgor & Ezzorak"},
+		{7448211, "Lightblinded Vanguard"},
+		{7448205, "Crown of the Cosmos"},
+		{7448202, "Chimaerus the Undreamt God"},
+		{7448203, "Belo'ren, Child of Al'ar"},
+		{7448204, "Midnight Falls"},
+	};
+end
 
 function Addon:AddIconSelectionData()
 	local LargerMacroIconSelectionData = _G["LargerMacroIconSelectionData"];

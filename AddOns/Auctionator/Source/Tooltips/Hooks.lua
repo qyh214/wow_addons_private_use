@@ -28,6 +28,13 @@ TooltipHandlers["SetBuybackItem"] = function(tip, slotIndex)
   Auctionator.Tooltip.ShowTipWithPricing(tip, itemLink, itemCount)
 end
 
+local GetMerchantItemInfo = GetMerchantItemInfo or function(index)
+  local info = C_MerchantFrame.GetItemInfo(index);
+  if info then
+    return info.name, info.texture, info.price, info.stackCount, info.numAvailable, info.isPurchasable, info.isUsable, info.hasExtendedCost, info.currencyID, info.spellID;
+  end
+end
+
 -- This is called when mousing over an item in a merchant window (Merchant Pane)
 TooltipHandlers["SetMerchantItem"] = function(tip, index)
   local itemLink = GetMerchantItemLink(index)
@@ -325,7 +332,7 @@ else
 end
 
 EventUtil.ContinueOnAddOnLoaded("Blizzard_ProfessionsTemplates", function()
-  hooksecurefunc(Professions, "SetupQualityReagentTooltip", function(slot, transaction, noInstruction)
+  local function QualityTooltip(slot, transaction, noInstruction)
     local display = {}
     local quantities = Professions.GetQuantitiesAllocated(transaction, slot:GetReagentSlotSchematic())
     for index, reagentDetails in ipairs(slot:GetReagentSlotSchematic().reagents) do
@@ -340,8 +347,21 @@ EventUtil.ContinueOnAddOnLoaded("Blizzard_ProfessionsTemplates", function()
     end)
 
     Auctionator.Tooltip.AddReagentsAuctionTip(GameTooltip, display)
-  end)
-  hooksecurefunc(Professions, "AddCommonOptionalTooltipInfo", function(item)
-    Auctionator.Tooltip.AddReagentsAuctionTip(GameTooltip, {{itemID = item:GetItemID(), itemCount = 1}})
-  end)
+  end
+  local function OptionalTooltip(item)
+  end
+  if Professions.SetupQualityReagentTooltip then
+    hooksecurefunc(Professions, "SetupQualityReagentTooltip", QualityTooltip)
+    hooksecurefunc(Professions, "AddCommonOptionalTooltipInfo", function(item)
+      Auctionator.Tooltip.AddReagentsAuctionTip(GameTooltip, {{itemID = item:GetItemID(), itemCount = 1}})
+    end)
+  elseif Professions.SetupReagentQualityPickerTooltip then
+    hooksecurefunc(Professions, "SetupReagentQualityPickerTooltip", QualityTooltip)
+    hooksecurefunc(Professions, "SetupOptionalReagentTooltip", function(slot, transaction)
+      local reagent = slot.Button:GetReagent()
+      if reagent and reagent.itemID then
+        Auctionator.Tooltip.AddReagentsAuctionTip(GameTooltip, {{itemID = reagent.itemID, itemCount = 1}})
+      end
+    end)
+  end
 end)

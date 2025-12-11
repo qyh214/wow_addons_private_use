@@ -6,7 +6,7 @@ local AF = _G.AbstractFramework
 ---------------------------------------------------------------------
 -- slider
 ---------------------------------------------------------------------
----@class AF_Slider:Slider
+---@class AF_Slider:Slider,AF_BaseWidgetMixin
 local AF_SliderMixin = {}
 
 function AF_SliderMixin:GetValue()
@@ -22,12 +22,27 @@ function AF_SliderMixin:SetValue(value)
 end
 
 function AF_SliderMixin:SetMinMaxValues(minV, maxV)
-    assert(minV < maxV, "minV must be less than maxV")
+    assert(minV <= maxV, "minV must be less than or equal to maxV")
     self:_SetMinMaxValues(minV, maxV)
     self.low = minV
     self.high = maxV
     self.lowText:SetText(minV * (self.isPercentage and 100 or 1) .. self.unit)
     self.highText:SetText(maxV * (self.isPercentage and 100 or 1) .. self.unit)
+end
+
+function AF_SliderMixin:SetPercentage(isPercentage)
+    self.isPercentage = isPercentage
+    self.unit = isPercentage and "%" or ""
+    -- update display
+    self:SetValue(self.value)
+    self.lowText:SetText(self.low * (self.isPercentage and 100 or 1) .. self.unit)
+    self.highText:SetText(self.high * (self.isPercentage and 100 or 1) .. self.unit)
+end
+
+---@param step number
+function AF_SliderMixin:SetStep(step)
+    self.step = step
+    self:SetValueStep(step)
 end
 
 function AF_SliderMixin:SetLabel(text)
@@ -65,7 +80,39 @@ function AF_SliderMixin:SetAfterValueChanged(func)
 end
 
 ---@private
+function AF_SliderMixin:OnMouseWheel(delta)
+    -- NOTE: OnValueChanged may not be called: value == low
+    self.value = self.value or self.low
+
+    local value
+    if delta == 1 then -- scroll up
+        value = self.value + self.step
+    elseif delta == -1 then -- scroll down
+        value = self.value - self.step
+    end
+    value = AF.Clamp(value, self.low, self.high)
+
+    if value ~= self.value then
+        self:SetValue(value)
+        if self.onValueChanged then self.onValueChanged(value) end
+        if self.afterValueChanged then self.afterValueChanged(value) end
+    end
+    self.valueBeforeClick = self.value
+end
+
+function AF_SliderMixin:EnableMouseWheel(enabled)
+    self:_EnableMouseWheel(enabled)
+
+    if enabled then
+        self:SetScript("OnMouseWheel", AF_SliderMixin.OnMouseWheel)
+    else
+        self:SetScript("OnMouseWheel", nil)
+    end
+end
+
+---@private
 function AF_SliderMixin:OnEnter()
+    if not self:IsEnabled() then return end
     self.thumb:SetColor(self.accentColor)
     self.highlight:Show()
     self.valueBeforeClick = self.value
@@ -73,6 +120,7 @@ end
 
 ---@private
 function AF_SliderMixin:OnLeave()
+    if not self:IsEnabled() then return end
     self.thumb:SetColor(AF.GetColorTable(self.accentColor, 0.7))
     self.highlight:Hide()
 end
@@ -87,8 +135,6 @@ function AF_SliderMixin:OnDisable()
     self.lowText:SetColor("disabled")
     self.highText:SetColor("disabled")
     self.percentSign:SetColor("disabled")
-    self:SetScript("OnEnter", nil)
-    self:SetScript("OnLeave", nil)
     self:SetBackdropBorderColor(AF.GetColorRGB("black", 0.7))
 end
 
@@ -102,9 +148,11 @@ function AF_SliderMixin:OnEnable()
     self.lowText:SetColor("gray")
     self.highText:SetColor("gray")
     self.percentSign:SetColor("gray")
-    self:SetScript("OnEnter", self.OnEnter)
-    self:SetScript("OnLeave", self.OnLeave)
     self:SetBackdropBorderColor(AF.GetColorRGB("black", 1))
+end
+
+function AF_SliderMixin:SetTooltip(...)
+    AF.SetTooltip(self, "TOPLEFT", 0, 20, ...)
 end
 
 ---@param parent Frame
@@ -112,15 +160,17 @@ end
 ---@param width number
 ---@param low number
 ---@param high number
----@param step number
----@param isPercentage boolean
----@param showLowHighText boolean
+---@param step? number defaults to 1
+---@param isPercentage? boolean
+---@param showLowHighText? boolean
 ---@return AF_Slider slider
 function AF.CreateSlider(parent, text, width, low, high, step, isPercentage, showLowHighText)
     local slider = CreateFrame("Slider", nil, parent, "BackdropTemplate")
     AF.ApplyDefaultBackdropWithColors(slider, "widget")
 
     slider.isPercentage = isPercentage
+    slider.low = low
+    slider.high = high
     slider.step = step or 1
 
     slider:SetValueStep(step or 1)
@@ -182,8 +232,8 @@ function AF.CreateSlider(parent, text, width, low, high, step, isPercentage, sho
         local value = eb:GetValue()
 
         if value then
-            value = value / (isPercentage and 100 or 1)
-            value = AF.RoundToNearestMultiple(value, step)
+            value = value / (slider.isPercentage and 100 or 1)
+            value = AF.RoundToNearestMultiple(value, slider.step)
             value = AF.Clamp(value, slider.low, slider.high)
 
             if slider.value ~= value then
@@ -193,14 +243,17 @@ function AF.CreateSlider(parent, text, width, low, high, step, isPercentage, sho
 
             slider.value = value
             slider:_SetValue(value) -- update thumb position
-            eb:SetText(value * (isPercentage and 100 or 1))
+            eb:SetText(value * (slider.isPercentage and 100 or 1))
         else
-            eb:SetText(slider.value * (isPercentage and 100 or 1))
+            eb:SetText(slider.value * (slider.isPercentage and 100 or 1))
         end
     end)
 
     eb:SetScript("OnShow", function(self)
-        if slider.value then self:SetText(slider.value * (isPercentage and 100 or 1)) end
+        if slider.value then
+            self:SetText(slider.value * (slider.isPercentage and 100 or 1))
+            self:SetCursorPosition(0)
+        end
     end)
 
     eb.highlight:SetColor(AF.GetColorTable(slider.accentColor, 0.07))
@@ -213,7 +266,7 @@ function AF.CreateSlider(parent, text, width, low, high, step, isPercentage, sho
     local percentSign = AF.CreateFontString(eb, "%", "gray")
     slider.percentSign = percentSign
     AF.SetPoint(percentSign, "LEFT", eb, "RIGHT", 2, 0)
-    if isPercentage then
+    if isPercentage and not showLowHighText then
         percentSign:Show()
     else
         percentSign:Hide()
@@ -231,7 +284,9 @@ function AF.CreateSlider(parent, text, width, low, high, step, isPercentage, sho
     slider._GetValue = slider.GetValue
     slider._SetValue = slider.SetValue
     slider._SetMinMaxValues = slider.SetMinMaxValues
+    slider._EnableMouseWheel = slider.EnableMouseWheel
 
+    Mixin(slider, AF_BaseWidgetMixin)
     Mixin(slider, AF_SliderMixin)
     slider:SetMinMaxValues(low, high)
 
@@ -242,12 +297,12 @@ function AF.CreateSlider(parent, text, width, low, high, step, isPercentage, sho
 
     -- OnValueChanged -----------------------------------------------
     slider:SetScript("OnValueChanged", function(self, value, userChanged)
-        value = AF.RoundToNearestMultiple(value, step)
+        value = AF.RoundToNearestMultiple(value, slider.step)
         if slider.value == value then return end
 
         if userChanged then -- IsDraggingThumb()
             slider.value = value
-            eb:SetText(value * (isPercentage and 100 or 1))
+            eb:SetText(value * (slider.isPercentage and 100 or 1))
             if slider.onValueChanged then
                 slider.onValueChanged(value)
             end
@@ -267,37 +322,11 @@ function AF.CreateSlider(parent, text, width, low, high, step, isPercentage, sho
     end)
     -----------------------------------------------------------------
 
-    -- REVIEW: OnMouseWheel
-    --[[
-    slider:EnableMouseWheel(true)
-    slider:SetScript("OnMouseWheel", function(self, delta)
-        if not IsShiftKeyDown() then return end
-
-        -- NOTE: OnValueChanged may not be called: value == low
-        slider.value = slider.value and slider.value or low
-
-        local value
-        if delta == 1 then -- scroll up
-            value = slider.value + step
-            value = value > high and high or value
-        elseif delta == -1 then -- scroll down
-            value = slider.value - step
-            value = value < low and low or value
-        end
-
-        if value ~= slider.value then
-            slider:SetValue(value)
-            if slider.onValueChanged then slider.onValueChanged(value) end
-            if slider.afterValueChanged then slider.afterValueChanged(value) end
-        end
-    end)
-    ]]
-
     slider:SetScript("OnEnable", slider.OnEnable)
     slider:SetScript("OnDisable", slider.OnDisable)
 
     slider:SetValue(low)
-    AF.AddToPixelUpdater(slider)
+    AF.AddToPixelUpdater_OnShow(slider)
 
     return slider
 end
@@ -329,6 +358,10 @@ function AF_VerticalSliderMixin:UpdateWordWrap(wordWrapWidth)
             self:SetScript("OnUpdate", nil)
         end
     end)
+end
+
+function AF_VerticalSliderMixin:SetTooltip(...)
+    AF.SetTooltip(self, "RIGHT", 5, 0, ...)
 end
 
 local function VerticalSlider_UpdatePixels(self)
@@ -434,7 +467,7 @@ function AF.CreateVerticalSlider(parent, text, height, low, high, step, isPercen
     end)
     -----------------------------------------------------------------
 
-    AF.AddToPixelUpdater(slider, VerticalSlider_UpdatePixels)
+    AF.AddToPixelUpdater_OnShow(slider, nil, VerticalSlider_UpdatePixels)
 
     return slider
 end
