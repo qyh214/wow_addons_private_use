@@ -12,7 +12,7 @@ tinsert(C.defaultThemes, function()
 	B.StripTextures(frame)
 	B.SetBD(frame)
 	B.ReskinClose(frame.ClosePanelButton)
-	B.ReskinTrimScroll(frame.ScrollBar)
+	B.ReskinTrimScroll(frame.ScrollBar, true)
 	B.ReskinDropDown(frame.EncounterDropdown)
 
 	local bar = frame.Timer
@@ -61,6 +61,7 @@ tinsert(C.defaultThemes, function()
 				item.bg = B.ReskinIcon(item.icon)
 				item.bg:SetFrameLevel(item.bg:GetFrameLevel() + 1)
 				B.ReskinIconBorder(item.IconBorder, true)
+				item.IconOverlay:SetAlpha(0)
 			end
 
 			button.styled = true

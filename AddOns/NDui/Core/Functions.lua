@@ -7,35 +7,55 @@ local type, pairs, tonumber, wipe, next, select, unpack = type, pairs, tonumber,
 local strmatch, gmatch, strfind, format, gsub = string.match, string.gmatch, string.find, string.format, string.gsub
 local min, max, floor, rad = math.min, math.max, math.floor, math.rad
 local CreateColor = CreateColor
+local issecretvalue, issecrettable = issecretvalue, issecrettable
+
+-- Secret
+do
+	function B:IsSecretValue(value)
+		return issecretvalue and issecretvalue(value)
+	end
+
+	function B:NotSecretValue(value)
+		return not issecretvalue or not issecretvalue(value)
+	end
+
+	function B:IsSecretTable(object)
+		return issecrettable and issecrettable(object)
+	end
+
+	function B:NotSecretTable(object)
+		return not issecrettable or not issecrettable(object)
+	end
+
+	function B:SendChatMessage(...)
+		if C_ChatInfo.InChatMessagingLockdown() then return end
+		return C_ChatInfo.SendChatMessage(...)
+	end
+end
 
 -- Math
 do
+	B.NUMBER_ABBR_OPTIONS = {
+		[1] = { config = CreateAbbreviateConfig({
+				{ breakpoint = 1e12, abbreviation = "t", significandDivisor = 1e10, fractionDivisor = 1e2, abbreviationIsGlobal = false },
+				{ breakpoint = 1e9, abbreviation = "b", significandDivisor = 1e7, fractionDivisor = 1e2, abbreviationIsGlobal = false },
+				{ breakpoint = 1e6, abbreviation = "m", significandDivisor = 1e4, fractionDivisor = 1e2, abbreviationIsGlobal = false },
+				{ breakpoint = 1e3, abbreviation = "k", significandDivisor = 1e2, fractionDivisor = 1e1, abbreviationIsGlobal = false },
+		})},
+		[2] = { config = CreateAbbreviateConfig({
+				{ breakpoint = 1e12, abbreviation = L["NumberCap3"], significandDivisor = 1e10, fractionDivisor = 1e2, abbreviationIsGlobal = false },
+				{ breakpoint = 1e8, abbreviation = L["NumberCap2"], significandDivisor = 1e6, fractionDivisor = 1e2, abbreviationIsGlobal = false },
+				{ breakpoint = 1e4, abbreviation = L["NumberCap1"], significandDivisor = 1e3, fractionDivisor = 1e1, abbreviationIsGlobal = false },
+		})},
+	}
+
 	-- Numberize
 	function B.Numb(n)
-		if NDuiADB["NumberFormat"] == 1 then
-			if n >= 1e12 then
-				return format("%.2ft", n / 1e12)
-			elseif n >= 1e9 then
-				return format("%.2fb", n / 1e9)
-			elseif n >= 1e6 then
-				return format("%.2fm", n / 1e6)
-			elseif n >= 1e3 then
-				return format("%.1fk", n / 1e3)
-			else
-				return format("%.0f", n)
-			end
-		elseif NDuiADB["NumberFormat"] == 2 then
-			if n >= 1e12 then
-				return format("%.2f"..L["NumberCap3"], n / 1e12)
-			elseif n >= 1e8 then
-				return format("%.2f"..L["NumberCap2"], n / 1e8)
-			elseif n >= 1e4 then
-				return format("%.1f"..L["NumberCap1"], n / 1e4)
-			else
-				return format("%.0f", n)
-			end
+		local options = B.NUMBER_ABBR_OPTIONS[NDuiADB["NumberFormat"]]
+		if options then
+			return AbbreviateNumbers(n, options)
 		else
-			return format("%.0f", n)
+			return n
 		end
 	end
 
@@ -93,6 +113,7 @@ do
 
 	-- GUID to npcID
 	function B.GetNPCID(guid)
+		if B:IsSecretValue(guid) then return end
 		local id = tonumber(strmatch((guid or ""), "%-(%d-)%-%x-$"))
 		return id
 	end
@@ -166,6 +187,27 @@ do
 			end
 		end
 		return r, g, b
+	end
+
+	local function colorsAndPercent(a, b, ...)
+		if(a <= 0 or b == 0) then
+			return nil, ...
+		elseif(a >= b) then
+			return nil, select(-3, ...)
+		end
+
+		local num = select('#', ...) / 3
+		local segment, relperc = math.modf((a / b) * (num - 1))
+		return relperc, select((segment * 3) + 1, ...)
+	end
+
+	function B:RGBColorGradient(...)
+		local relperc, r1, g1, b1, r2, g2, b2 = colorsAndPercent(...)
+		if(relperc) then
+			return r1 + (r2 - r1) * relperc, g1 + (g2 - g1) * relperc, b1 + (b2 - b1) * relperc
+		else
+			return r1, g1, b1
+		end
 	end
 end
 
@@ -1840,13 +1882,13 @@ end
 -- Add API
 do
 	local function WatchPixelSnap(frame, snap)
-		if (frame and not frame:IsForbidden()) and frame.PixelSnapDisabled and snap then
+		if B:NotSecretTable(frame) and (frame and not frame:IsForbidden()) and frame.PixelSnapDisabled and snap then
 			frame.PixelSnapDisabled = nil
 		end
 	end
 
 	local function DisablePixelSnap(frame)
-		if (frame and not frame:IsForbidden()) and not frame.PixelSnapDisabled then
+		if B:NotSecretTable(frame) and (frame and not frame:IsForbidden()) and not frame.PixelSnapDisabled then
 			if frame.SetSnapToPixelGrid then
 				frame:SetSnapToPixelGrid(false)
 				frame:SetTexelSnappingBias(0)
@@ -1889,17 +1931,11 @@ do
 		if frame.SetBackdrop then frame:SetBackdrop(nil) end
 	end
 
-	local function KillEditMode(object)
-		object.HighlightSystem = B.Dummy
-		object.ClearHighlight = B.Dummy
-	end
-
 	local function addapi(object)
 		local mt = getmetatable(object).__index
 		if not object.SetInside then mt.SetInside = SetInside end
 		if not object.SetOutside then mt.SetOutside = SetOutside end
 		if not object.HideBackdrop then mt.HideBackdrop = HideBackdrop end
-		if not object.KillEditMode then mt.KillEditMode = KillEditMode end
 		if not object.DisabledPixelSnap then
 			if mt.SetTexture then hooksecurefunc(mt, "SetTexture", DisablePixelSnap) end
 			if mt.SetTexCoord then hooksecurefunc(mt, "SetTexCoord", DisablePixelSnap) end

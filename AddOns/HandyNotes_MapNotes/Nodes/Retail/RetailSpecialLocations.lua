@@ -6,6 +6,7 @@ local db = ns.Addon.db.profile
 local nodes = ns.nodes
 local minimap = ns.minimap
 local raceName, raceFile, raceID = UnitRace("player")
+local _, classFile, classID = UnitClass("player")
 local DarkIronDwarf = C_CreatureInfo.GetRaceInfo(34).raceName
 ns.currentSourceFile = "RetailSpecialLocations.lua"
 
@@ -279,6 +280,40 @@ ns.currentSourceFile = "RetailSpecialLocations.lua"
                     if db.activate.showRacesIconsDiscovered or not C_QuestLog.IsQuestFlaggedCompleted(80107) then nodes[947][75581752] = { mnID = 2022, name = L["Mole Machine"], type = "MoleMachineDwarf", dnID = "("..LFG_LIST_REQUIRE.." "..RACE.." "..DarkIronDwarf..")", questID = 80107, wwwLink = L["Travel to this point and click on the mole machine on site to unlock it"], showWWW = true, hideLink = true, showInZone = true } end
                     if db.activate.showRacesIconsDiscovered or not C_QuestLog.IsQuestFlaggedCompleted(80108) then nodes[947][80142576] = { mnID = 2024, name = L["Mole Machine"], type = "MoleMachineDwarf", dnID = "("..LFG_LIST_REQUIRE.." "..RACE.." "..DarkIronDwarf..")", questID = 80108, wwwLink = L["Travel to this point and click on the mole machine on site to unlock it"], showWWW = true, hideLink = true, showInZone = true } end
                     if db.activate.showRacesIconsDiscovered or not C_QuestLog.IsQuestFlaggedCompleted(80109) then nodes[947][84402766] = { mnID = 2133, name = L["Mole Machine"], type = "MoleMachineDwarf", dnID = "("..LFG_LIST_REQUIRE.." "..RACE.." "..DarkIronDwarf..")", questID = 80109, wwwLink = L["Travel to this point and click on the mole machine on site to unlock it"], showWWW = true, hideLink = true, showInZone = true } end
+                end
+            end
+        end
+
+        if classFile == "DRUID" then
+
+            if db.activate.ZoneMap then
+
+                if self.db.profile.showZoneDragonIsles then
+
+                    if db.activate.ZoneTransporting then
+
+                        -- Dragonflight Portals
+                        if self.db.profile.showZonePortals then
+                            nodes[2239][58548501] = { mnID = 715,  name = "", type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Bel'ameth, Amirdrassil to Druid Emerald Dreamway
+                        end
+
+                    end
+                end
+            end
+
+            if db.activate.MiniMap then
+
+                if self.db.profile.showMiniMapBrokenIsles then
+
+                    -- Broken Isles Transporting 
+                    if db.activate.MiniMapTransporting then
+
+                    --Broken Isles Portals
+                        if self.db.profile.showMiniMapPortals then
+                            minimap[2239][58548501] = { mnID = 715,  name = "", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Bel'ameth, Amirdrassil to Druid Emerald Dreamway
+                        end
+
+                    end
                 end
             end
         end

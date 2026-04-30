@@ -1,0 +1,40 @@
+## Interface: 38000
+## X-Curse-Project-ID: 48863
+## X-Wago-ID: BKpq0BGE
+## Title: Myslot
+## Notes: @localization(locale="enUS", key="TOC_NOTES")@
+## Notes-deDE: @localization(locale="deDE", key="TOC_NOTES")@
+## Notes-esES: @localization(locale="esES", key="TOC_NOTES")@
+## Notes-esMX: @localization(locale="esMX", key="TOC_NOTES")@
+## Notes-frFR: @localization(locale="frFR", key="TOC_NOTES")@
+## Notes-itIT: @localization(locale="itIT", key="TOC_NOTES")@
+## Notes-koKR: @localization(locale="koKR", key="TOC_NOTES")@
+## Notes-ptBR: @localization(locale="ptBR", key="TOC_NOTES")@
+## Notes-ruRU: @localization(locale="ruRU", key="TOC_NOTES")@
+## Notes-zhCN: @localization(locale="zhCN", key="TOC_NOTES")@
+## Notes-zhTW: @localization(locale="zhTW", key="TOC_NOTES")@
+## Author: Boshi Lian(farmer1992@gmail.com)
+## Version: v5.25.2
+## SavedVariables: MyslotExports
+## SavedVariablesPerCharacter: MyslotSettings
+## IconTexture: Interface\AddOns\Myslot\Myslot
+
+
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+
+libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+
+libs\base64.lua
+libs\crc32.lua
+libs\lua-pb\lua-pb.xml
+
+protobuf\Myslot.lua
+
+event.lua
+locales.lua
+keys.lua
+Myslot.lua
+gui.lua
+options.lua

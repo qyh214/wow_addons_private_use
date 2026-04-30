@@ -12,12 +12,6 @@ local npcWhitelist = {
 
 local cosRumorNPC = 107486
 
-local function GossipNPCID()
-	local guid = UnitGUID("npc")
-	local npcid = guid and select(6, strsplit("-", guid))
-	return tonumber(npcid)
-end
-
 local function IsStaticPopupShown()
 	local dialog = nil
 	StaticPopup_ForEachShownDialog(function(d)
@@ -58,18 +52,21 @@ function Mod:CoSRumor()
 end
 
 function Mod:GOSSIP_SHOW()
-	local npcId = GossipNPCID()
+	if not IsInActiveChallengeMode() then return end
+
 	local options = C_GossipInfo.GetOptions()
 	local numOptions = #options
-
-	if Addon.Config.cosRumors and Addon.Locale:HasRumors() and npcId == cosRumorNPC and numOptions == 0 then
-		self:CoSRumor()
-		C_GossipInfo.CloseGossip()
-	end
-
 	if numOptions ~= 1 then return end -- only automate one gossip option
 
-	if Addon.Config.autoGossip and IsInActiveChallengeMode() and not npcBlacklist[npcId] then
+	local npcId = UnitCreatureID("npc")
+	if issecretvalue(npcId) then npcId = 0 end -- occasionally the npc is secret, hopefully blizzard fixes that, cause it's silly -.-
+
+	-- if Addon.Config.cosRumors and Addon.Locale:HasRumors() and npcId == cosRumorNPC and numOptions == 0 then
+	-- 	self:CoSRumor()
+	-- 	C_GossipInfo.CloseGossip()
+	-- end
+
+	if Addon.Config.autoGossip and not npcBlacklist[npcId] then
 		if npcWhitelist[npcId] or options[1].icon == 132053 or options[1].icon == 1019848 then -- the gossip icon, prevents auto-opening repair options etc
 			local popupWasShown = IsStaticPopupShown()
 			C_GossipInfo.SelectOption(options[1].gossipOptionID)

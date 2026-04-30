@@ -186,8 +186,7 @@ L["STRING_DODGE"] = "회피"
 L["STRING_DOT"] = " (지속 효과)"
 L["STRING_DPS"] = "Dps"
 L["STRING_EMPTY_SEGMENT"] = "빈 세분화"
---[[Translation missing --]]
-L["STRING_ENABLE_DO_NOT_DISTURB"] = "Enable Do Not Disturb"
+L["STRING_ENABLE_DO_NOT_DISTURB"] = "방해 금지 사용"
 L["STRING_ENABLED"] = "사용"
 L["STRING_ENVIRONMENTAL_DROWNING"] = "환경피해 (호흡 불가)"
 L["STRING_ENVIRONMENTAL_FALLING"] = "환경피해 (낙하 충격)"
@@ -307,27 +306,18 @@ L["STRING_KEYBIND_TOGGLE_WINDOWS"] = "모든 창 표시 전환"
 L["STRING_KEYBIND_WINDOW_CONTROL"] = "창"
 L["STRING_KEYBIND_WINDOW_REPORT"] = "창 #%s에 표시된 데이터를 보고합니다."
 L["STRING_KEYBIND_WINDOW_REPORT_HEADER"] = "데이터 보고하기"
---[[Translation missing --]]
-L["STRING_KEYSTONE_ADD_TO_FRIENDS_TOOLTIP"] = "Add to friends list as character (not battlenet friend request)."
---[[Translation missing --]]
-L["STRING_KEYSTONE_CLICK_TO_VIEW_SCOREBOARD"] = "Click to view the scoreboard."
---[[Translation missing --]]
-L["STRING_KEYSTONE_DND_TOOLTIP"] = "Your key won't be sent to your guild or friends. While in a group, it will still be sent."
---[[Translation missing --]]
-L["STRING_KEYSTONE_LIFETIME_LIKES_YOU_GAVE"] = [=[Life-time likes you gave for this player through the 'GG' button in the |cFFFFFF00Details! Damage Meter Mythic+|r addon.
-
-View run breakdown by selecting a Mythic+ run you did with this player.]=]
---[[Translation missing --]]
-L["STRING_KEYSTONE_NO_MYTHICPLUS_ADDON"] = "Mythic+ addon not found."
---[[Translation missing --]]
-L["STRING_KEYSTONE_REQUEST_FROM_GUILD"] = "Request from Guild"
+L["STRING_KEYSTONE_ADD_TO_FRIENDS_TOOLTIP"] = "캐릭터를 친구 목록에 추가 (배틀넷 친구 요청 아님)"
+L["STRING_KEYSTONE_CLICK_TO_VIEW_SCOREBOARD"] = "점수판을 보려면 클릭하세요."
+L["STRING_KEYSTONE_DND_TOOLTIP"] = "당신의 쐐기돌은 길드나 친구들에게 전송되지 않습니다. 그룹에 있는 동안에만 전송됩니다."
+L["STRING_KEYSTONE_LIFETIME_LIKES_YOU_GAVE"] = "이 플레이어에게 제공한 좋아요는 |cFFFFFF00Details! Damage Meter Mythic+|r 애드온의 'GG' 버튼을 통해 확인할 수 있습니다. 이 플레이어와 함께 한 Mythic+ 실행을 선택하여 실행 내역을 확인하세요."
+L["STRING_KEYSTONE_NO_MYTHICPLUS_ADDON"] = "신화+ 애드온이 없습니다."
+L["STRING_KEYSTONE_REQUEST_FROM_GUILD"] = "길드의 요청"
 L["STRING_KILLED"] = "죽임"
 L["STRING_LAST_COOLDOWN"] = "마지막으로 사용한 생존기"
 L["STRING_LEFT"] = "좌측"
 L["STRING_LEFT_CLICK_SHARE"] = "보고하려면 클릭하세요."
 L["STRING_LEFT_TO_RIGHT"] = "왼쪽에서 오른쪽으로"
---[[Translation missing --]]
-L["STRING_LIKES_YOU_GAVE"] = "Likes you gave"
+L["STRING_LIKES_YOU_GAVE"] = "당신이 누른 좋아요 수"
 L["STRING_LOCK_DESC"] = "창 잠금 또는 잠금해제"
 L["STRING_LOCK_WINDOW"] = "잠금"
 L["STRING_MASTERY"] = "특화"
@@ -395,13 +385,11 @@ L["STRING_NEWS_REINSTALL"] = "업데이트 후에 문제가 생겼나요? '/deta
 L["STRING_NEWS_TITLE"] = "버전 변경 사항"
 L["STRING_NO"] = "아니오"
 L["STRING_NO_DATA"] = "데이터가 이미 지워졌습니다"
---[[Translation missing --]]
-L["STRING_NO_MYTHIC_PLUS_ADDON"] = "To track your Mythic+ runs including loot, score, damage, healing done, and who you played with, install the |cFFFFAA00Details! Damage Meter Mythic+|r addon on |cFFfff1c1Wago AddOns|r or |cFFfff1c1Curse Forge|r."
+L["STRING_NO_MYTHIC_PLUS_ADDON"] = "신화+ 기록에 전리품, 점수, 피해량, 치유량, 같이 한 사람들이 추적됩니다.  |cFFFFAA00Details! Damage Meter Mythic+|r 애드온을 |cFFfff1c1Wago AddOns|r나 |cFFfff1c1Curse Forge|r에서 설치하세요."
 L["STRING_NO_SPELL"] = "사용한 주문 없음"
 L["STRING_NO_TARGET"] = "대상이 없습니다."
 L["STRING_NO_TARGET_BOX"] = "표시할 대상 없음"
---[[Translation missing --]]
-L["STRING_NO_TELEPORTER"] = "You don't have this teleporter"
+L["STRING_NO_TELEPORTER"] = "순간이동 스킬이 없습니다"
 L["STRING_NOCLOSED_INSTANCES"] = [=[닫혀있는 창이 없습니다,
 클릭하면 새 창을 엽니다.]=]
 L["STRING_NOLAST_COOLDOWN"] = "사용한 생존기 없음"
@@ -795,9 +783,7 @@ L["STRING_OPTIONS_MAXINSTANCES_DESC"] = [=[생성할 수 있는 창의 최대 �
 L["STRING_OPTIONS_MAXSEGMENTS"] = "세분화 갯수"
 L["STRING_OPTIONS_MAXSEGMENTS_DESC"] = "몇 개의 세분화를 유지할 지 조절합니다."
 L["STRING_OPTIONS_MENU_ALPHA"] = "마우스 상호작용:"
-L["STRING_OPTIONS_MENU_ALPHAENABLED_DESC"] = [=[활성화하면 창에 마우스 커서를 올릴 때 자동으로 투명도를 변경합니다.
-
-|cFFFFFF00중요|r: 이 설정은 창 설정 항목의 창 색상 옵션에서 설정된 투명도를 덮어씁니다.]=]
+L["STRING_OPTIONS_MENU_ALPHAENABLED_DESC"] = "활성화하면 창에 마우스 커서를 올리고 치울 때 자동으로 투명도를 변경합니다. |cFFFFFF00중요|r: 이 설정은 창 설정 항목의 창 색상 옵션에서 설정된 불투명도(alpha)를 덮어씁니다."
 L["STRING_OPTIONS_MENU_ALPHAENTER"] = "마우스 커서를 올렸을 때"
 L["STRING_OPTIONS_MENU_ALPHAENTER_DESC"] = "창에 마우스 커서를 올리면 투명도가 이 값으로 변경됩니다."
 L["STRING_OPTIONS_MENU_ALPHALEAVE"] = "마우스 커서를 올리지 않았을 때"
@@ -933,6 +919,12 @@ L["STRING_OPTIONS_PERFORMANCECAPTURES_DESC"] = "전투 데이터 수집과 분�
 L["STRING_OPTIONS_PERFORMANCEPROFILES_ANCHOR"] = "성능 프로필:"
 L["STRING_OPTIONS_PICONS_DIRECTION"] = "오른쪽에 플러그인 붙이기"
 L["STRING_OPTIONS_PICONS_DIRECTION_DESC"] = "체크하면 메뉴 버튼의 오른쪽에 플러그인 버튼이 표시됩니다."
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME"] = "Player Name"
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME_AUTO_WIDTH"] = "Length Auto"
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME_WIDTH"] = "Length"
 L["STRING_OPTIONS_PLUGINS"] = "플러그인"
 L["STRING_OPTIONS_PLUGINS_AUTHOR"] = "제작자"
 L["STRING_OPTIONS_PLUGINS_NAME"] = "이름"
@@ -1112,6 +1104,8 @@ L["STRING_OPTIONS_SEGMENTSSAVE"] = "세분화 저장"
 L["STRING_OPTIONS_SEGMENTSSAVE_DESC"] = [=[게임 세션 간에 얼마나 많은 세분화를 저장할 지 설정합니다.
 
 값이 클수록 캐릭터가 접속 종료하는 데 시간이 오래 걸릴 수 있습니다.]=]
+--[[Translation missing --]]
+L["STRING_OPTIONS_SELECT_TEMPLATE"] = "Select Template"
 L["STRING_OPTIONS_SENDFEEDBACK"] = "피드백"
 L["STRING_OPTIONS_SHOW_SIDEBARS"] = "테두리 표시"
 L["STRING_OPTIONS_SHOW_SIDEBARS_DESC"] = "창 테두리를 표시하거나 숨깁니다."
@@ -1199,6 +1193,10 @@ L["STRING_OPTIONS_TEXT_OUTLINE"] = "텍스트 외곽선"
 L["STRING_OPTIONS_TEXT_RIGHT_ANCHOR"] = "우측 문자:"
 L["STRING_OPTIONS_TEXT_ROUTILINE_DESC"] = "우측 문자에 외곽선을 켜거나 끕니다."
 L["STRING_OPTIONS_TEXT_ROWICONS_ANCHOR"] = "아이콘:"
+--[[Translation missing --]]
+L["STRING_OPTIONS_TEXT_SHADOWCOLOR"] = "Shadow Color"
+--[[Translation missing --]]
+L["STRING_OPTIONS_TEXT_SHADOWOFFSET"] = "Shadow Offset %s"
 L["STRING_OPTIONS_TEXT_SHOW_BRACKET"] = "괄호"
 L["STRING_OPTIONS_TEXT_SHOW_BRACKET_DESC"] = "백분율과 초당 수치 영역을 열고 닫을 부호를 선택하세요."
 L["STRING_OPTIONS_TEXT_SHOW_PERCENT"] = "백분율 표시"
@@ -1431,6 +1429,8 @@ L["STRING_OPTIONSMENU_TOOLTIP"] = "툴팁"
 L["STRING_OPTIONSMENU_WALLPAPER"] = "창: 배경화면"
 L["STRING_OPTIONSMENU_WINDOW"] = "창: 일반"
 L["STRING_OPTIONSMENU_WINDOWBODY"] = "창 설정"
+--[[Translation missing --]]
+L["STRING_OR"] = "Or"
 L["STRING_OVERALL"] = "종합"
 L["STRING_OVERHEAL"] = "초과 치유"
 L["STRING_OVERHEALED"] = "초과 치유됨"
@@ -1479,8 +1479,7 @@ L["STRING_QUERY_INSPECT_REFRESH"] = "새로고침 필요"
 L["STRING_RAID_WIDE"] = "[*] 공격대 단위 생존기"
 L["STRING_RAIDCHECK_PLUGIN_DESC"] = "공격대 던전에 있을 때, Details! 제목 바 위에 영약, 음식, 시작물약 사용을 보여주는 아이콘을 표시합니다."
 L["STRING_RAIDCHECK_PLUGIN_NAME"] = "공격대 확인"
---[[Translation missing --]]
-L["STRING_RECENT_PLAYERS"] = "Recent Players:"
+L["STRING_RECENT_PLAYERS"] = "최근 같이 한 플레이어:"
 L["STRING_REPORT"] = ":"
 L["STRING_REPORT_BUTTON_TOOLTIP"] = "보고서 창을 열려면 클릭하세요"
 L["STRING_REPORT_FIGHT"] = "전투"
@@ -1550,6 +1549,23 @@ L["STRING_SEGMENTS_LIST_WASTED_TIME"] = "전투 중이 아님"
 L["STRING_SHIELD_HEAL"] = "막음"
 L["STRING_SHIELD_OVERHEAL"] = "낭비됨"
 L["STRING_SHORTCUT_RIGHTCLICK"] = "오른쪽 클릭으로 닫기"
+L["STRING_SIMPLE_TEXT_FORMAT"] = "단순 텍스트 형식 사용"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED"] = "정렬된 텍스트 사용"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_DESC"] = "텍스트가 열로 정렬됩니다. 열 사이 간격을 설정하세요."
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_SPACE_BETWEEN"] = "열 사이 간격"
+L["STRING_SIMPLE_TEXT_FORMAT_DESC"] = "아래 세 가지 규칙을 사용합니다."
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE2"] = "백분율 표시 안 함"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE3"] = "총합만 표시"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE4"] = "| 기호로 구분"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE5"] = "[대괄호]로 구분"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE6"] = "총합 (DPS) 백분율"
+L["STRING_SIMPLE_TEXT_FORMAT_TITLE"] = "오른쪽 텍스트: 단순 또는 정렬됨"
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE1"] = [=[줄에 총합 및 백분율 정보가 있을 때.
+|cFFAAAAAA%s 순서: 총합, 백분율.]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE2"] = [=[줄에 총합 및 초당 정보가 있을 때.
+|cFFAAAAAA%s 순서: 총합, 초당.]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE3"] = [=[줄에 총합, 초당, 백분율 정보가 있을 때.
+|cFFAAAAAA%s 순서: 총합, 초당, 백분율.]=]
 L["STRING_SLASH_API_DESC"] = "플러그인, 사용자 설정 디스플레이, 오라 등을 만드는 API 창을 엽니다."
 L["STRING_SLASH_CAPTURE_DESC"] = "모든 데이터 수집을 켜거나 끕니다."
 L["STRING_SLASH_CAPTUREOFF"] = "모든 수집 중지."
@@ -1598,16 +1614,15 @@ L["STRING_SWITCH_WARNING"] = "역할 바뀜. 변경: |cFFFFAA00%s|r"
 L["STRING_TARGET"] = "대상"
 L["STRING_TARGETS"] = "대상"
 L["STRING_TARGETS_OTHER1"] = "소환수와 다른 대상들"
---[[Translation missing --]]
-L["STRING_TELEPORT"] = "Teleport"
---[[Translation missing --]]
-L["STRING_TELEPORTERS"] = "Teleporters"
+L["STRING_TELEPORT"] = "순간이동"
+L["STRING_TELEPORTERS"] = "순간이동 스킬"
 L["STRING_TEXTURE"] = "텍스쳐"
 L["STRING_TIME_OF_DEATH"] = "죽음"
 L["STRING_TOOOLD"] = "Details! 버전이 너무 오래되어 설치할 수 없습니다."
 L["STRING_TOP"] = "상단"
 L["STRING_TOP_TO_BOTTOM"] = "위에서 아래"
 L["STRING_TOTAL"] = "총량"
+L["STRING_TRAINING_DUMMY"] = "훈련용 허수아비"
 L["STRING_TRANSLATE_LANGUAGE"] = "Details의 번역을 도와주세요!"
 L["STRING_TUTORIAL_FULLY_DELETE_WINDOW"] = [=[창을 닫았지만 언제든 다시 열수 있습니다.
 창을 완전히 삭제하려면 옵션 -> 창: 일반 -> 삭제 항목을 찾아보세요.]=]

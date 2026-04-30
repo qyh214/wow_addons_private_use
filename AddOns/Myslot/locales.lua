@@ -14,7 +14,7 @@ MySlot.L = L
 
 --
 -- Use http://www.wowace.com/addons/myslot/localization/ to translate thanks
--- 
+--
 local locale = GetLocale()
 
 if locale == 'enUs' then
@@ -652,4 +652,3 @@ L["Unsaved"] = "未保存"
 L["Use random mount instead of an unattained mount"] = "使用隨機坐騎替代未獲得的坐騎"
 
 end
-

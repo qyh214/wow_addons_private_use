@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -64,8 +64,8 @@ function PGF.Dialog_InfoButton_OnEnter(self, motion)
     PGF.GameTooltip_AddDoubleWhite("priests/warriors/...", L["dialog.tooltip.classes"])
     if PGF.IsRetail() then
         PGF.GameTooltip_AddDoubleWhite("np/atdh/asc/voti/...", L["dialog.tooltip.raids"])
-        PGF.GameTooltip_AddDoubleWhite("arak/brew/cot/dawn", L["dialog.tooltip.dungeons"])
-        PGF.GameTooltip_AddWhite("dfc/psf/rook/sv/mists/nw/siege/gb")
+        PGF.GameTooltip_AddDoubleWhite("mai/npx/mt/ws", L["dialog.tooltip.dungeons"])
+        PGF.GameTooltip_AddWhite("aa/seat/sr/pos")
         PGF.GameTooltip_AddDoubleWhite("cos/votw/nl/dht/eoa/brh", L["dialog.tooltip.timewalking"])
         PGF.GameTooltip_AddDoubleWhite("arena2v2/arena3v3", L["dialog.tooltip.arena"])
     end

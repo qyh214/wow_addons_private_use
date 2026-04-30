@@ -7,10 +7,11 @@
 	<Script file='Toolbar.lua'/>
 	<Script file='Transmission.lua'/>
 	<Script file='LiveSession.lua'/>
+	<Script file='FocusMarker.lua'/>
 	<Script file='Maximize.lua'/>
 	<Script file='API.lua'/>
 	<Script file='DungeonSelect.lua'/>
 	<Script file='Conflicts.lua'/>
+	<Script file='PrePatchWarning.lua'/>
 	<Script file='ErrorHandling.lua'/>
 </Ui>
-

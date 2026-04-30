@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -19,16 +19,6 @@
 -------------------------------------------------------------------------------
 
 PremadeGroupsFilterTextButtonMixin = {}
-
-function PremadeGroupsFilterTextButtonMixin:OnLoad()
-    print("mixin OnLoad")
-    self.Label:SetText(self.title or "")
-end
-
-function PremadeGroupsFilterTextButtonMixin:OnShow()
-    print("mixin OnShow")
-    self.Label:SetText(self.title or "")
-end
 
 function PremadeGroupsFilterTextButtonMixin:Init(title, tooltip)
     self.title = title

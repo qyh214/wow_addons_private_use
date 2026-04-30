@@ -1,0 +1,71 @@
+local mod = DBM:NewMod("HoRWaveTimer", "DBM-Party-WotLK", 16)
+local L = mod:GetLocalizedStrings()
+
+mod:SetRevision("20260315034941")
+mod:DisableHardcodedOptions()
+mod:SetCreatureID(30658)
+
+mod:RegisterEvents(
+	"UPDATE_UI_WIDGET",
+	"UNIT_DIED"
+)
+mod.noStatistics = true
+
+local warnNewWaveSoon	= mod:NewAnnounce("WarnNewWaveSoon", 2)
+local warnNewWave		= mod:NewAnnounce("WarnNewWave", 3)
+
+local timerNextWave		= mod:NewTimer(150, "TimerNextWave", 57687, nil, nil, 1)
+
+mod:AddBoolOption("ShowAllWaveWarnings", true, "announce")
+mod:AddBoolOption("ShowAllWaveTimers", false, "timer")
+
+local lastWave = 0
+local FalricDead = false
+
+function mod:UPDATE_UI_WIDGET(table)
+	local id = table.widgetID
+	if id ~= 592 and id ~= 3921 then return end
+	local widgetInfo = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(id)
+	if widgetInfo and widgetInfo.text then
+		local text = widgetInfo.text
+		local wave = text:match("(%d+).+10")
+		if not wave then
+			wave = 0
+		end
+		wave = tonumber(wave) or 0
+		if wave < lastWave then
+			lastWave = 0
+		end
+		if wave > lastWave then
+			warnNewWaveSoon:Cancel()
+			timerNextWave:Cancel()
+			if (wave == 5 and not FalricDead) or wave == 10 then
+				warnNewWave:Show("Boss")
+			elseif wave > 0 then
+				if wave < 5 then
+					FalricDead = false
+				end
+				if self.Options.ShowAllWaveWarnings then
+					warnNewWave:Show("Wave")
+				end
+				if self.Options.ShowAllWaveTimers then
+					timerNextWave:Start()
+					warnNewWaveSoon:Schedule(140)
+				end
+			end
+		elseif wave == 0 then
+			warnNewWaveSoon:Cancel()
+			timerNextWave:Cancel()
+		end
+		lastWave = wave
+	end
+end
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 38112 then--falric
+		timerNextWave:Start(60)
+		warnNewWaveSoon:Schedule(50)
+		FalricDead = true
+	end
+end

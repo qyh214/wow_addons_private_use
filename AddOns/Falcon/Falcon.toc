@@ -1,0 +1,30 @@
+## Interface: 120005
+## Title: |cffEEE4AESkyriding Falcon|r
+## Author: Yuyuli
+## Version: 0.8.6
+## SavedVariables: FalconAddOnDB
+## LoadSavedVariablesFirst: 1
+
+# https://warcraft.wiki.gg/wiki/Addon_Categories
+## Category: User Interface
+## Category-deDE: Benutzerinterface
+## Category-esES: Interfaz de usuario
+## Category-esMX: Interfaz de usuario
+## Category-frFR: Interface utilisateur
+## Category-itIT: Interfaccia utente
+## Category-koKR: 사용자 인터페이스
+## Category-ptBR: Interface do usuário
+## Category-ruRU: Интерфейс пользователя
+## Category-zhCN: 用户界面
+## Category-zhTW: 使用者介面
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibEditMode\namespaced.lua
+Libs\LibEditMode\embed.xml
+Libs\LibSharedMedia-3.0\lib.xml
+
+API.lua
+Flags.lua
+Falcon.lua
+Settings.lua

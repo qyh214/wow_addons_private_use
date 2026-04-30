@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -160,7 +160,7 @@ end
 
 function PGF.String_Tokenize(str, filter)
     -- normalize the string and remove ASCII and CJK punctuation
-    lstr = str:lower():gsub("['＇]", ""):gsub("[:：%-－]", " ")
+    local lstr = str:lower():gsub("['＇]", ""):gsub("[:：%-－]", " ")
     local words = {}
     for w in lstr:gmatch("%S+") do
         if filter == nil or filter(w) then

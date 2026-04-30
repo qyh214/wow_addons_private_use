@@ -1,0 +1,6 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="src\scanner.lua"/>
+	<Script file="src\propDeclaration.lua"/>
+	<Script file="src\parser.lua"/>
+	<Script file="index.lua"/>
+</Ui>

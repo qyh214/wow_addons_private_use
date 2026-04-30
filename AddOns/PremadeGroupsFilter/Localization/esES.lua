@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -30,6 +30,9 @@ L["error.syntax"] = "|cffff0000Error en la sintaxis de la expresión avanzada|r\
 L["error.semantic"] = "|cffff0000Error Semántico en la expresión|r\n\nEsto signuifica que la sintaxis es correcta, pero lo mas seguro es que hayas escrito las variables mal, por ejemplo, tansk en vez de tanks.\n\nError detallado:\n|cffaaaaaa%s|r"
 L["error.semantic.protected"] = "|cffff0000Error Semántico en la expresión|r\n\nLas palabras clave 'name', 'comment' ya no están soportadas. Por favor, elimínalos de tu expresión de filtro avanzada o presiona el botón de reinicio.\n\nComenzando con el Battle for Azeroth Prepatch, esos valores ahora están protegidos por Blizzard y ya no pueden ser leídos por ningún addon.\n\nUtilice la barra de búsqueda predeterminada situada encima de la lista de grupos para filtrar los nombres de los grupos.\n\nError detallado:\n|cffaaaaaa%s|r"
 L["message.settingsupgraded"] = "Premade Groups Filter: Configuración migrada a la versión %s"
+L["message.sortingoverwritten"] = "Premade Groups Filter: El orden de clasificación predeterminado de grupos premade ha sido sobrescrito por el addon %s."
+L["message.sortingrestored"] = "Premade Groups Filter: El orden de clasificación predeterminado de grupos premade ha sido restaurado por el addon %s."
+L["message.taint"] = "Premade Groups Filter: Las restricciones de addons están activas. El buscador de grupos ha sido modificado, lo que puede causar errores Lua. Se recomienda hacer /reload para solucionarlo."
 
 L["dialog.settings"] = GAMEMENU_OPTIONS
 L["dialog.reset"] = "Restablecer"
@@ -150,3 +153,10 @@ L["settings.rioRatingColors.title"] = "Calificación en colores de Raider.IO"
 L["settings.rioRatingColors.tooltip"] = "Usa el esquema de colores de Raider.IO para calificaciones de Míticas+ si el complemento Raider.IO está cargado."
 L["settings.cancelOldestApp.title"] = "Cancelar la aplicación más antigua"
 L["settings.cancelOldestApp.tooltip"] = "Si tienes el máximo de aplicaciones pendientes, haz clic en cualquier grupo para cancelar tu aplicación más antigua primero. Luego haz clic de nuevo para postularte."
+L["settings.compactListEntries.title"] = "Entradas de lista compactas"
+L["settings.compactListEntries.tooltip"] = "Oculta el estilo de juego para que los elementos de la lista de grupos ocupen menos espacio vertical (como antes de la actualización de contenido previa a la expansión de Midnight)."
+L["settings.info.reload"] = "* Los cambios en estas opciones activarán una recarga automática de la interfaz al cerrar los ajustes."
+L["settings.warning.taint"] = "Esta opción puede causar errores Lua en situaciones restringidas como raids o en combate."
+
+L["dialog.restriction.text"] = "Las restricciones del addon están activas. El filtrado puede causar errores Lua."
+L["dialog.restriction.ok"] = "Filtrar de todos modos"

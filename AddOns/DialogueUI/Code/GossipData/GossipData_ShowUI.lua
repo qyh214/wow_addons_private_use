@@ -3,6 +3,7 @@
 
 local _, addon = ...
 local GossipDataProvider = addon.GossipDataProvider;
+local GetInteractType = addon.API.GetInteractType;
 --local IsTargetAdventureMap = addon.API.IsTargetAdventureMap;
 
 local ShowUIGossip = {
@@ -17,6 +18,9 @@ local ShowUIGossip = {
     [124311] = true,    --(Lorewalking) What stories can you tell me?
     [131481] = true,    --Overcharged Titan Console, <View overcharged console discs.>
     [132979] = true,    --I want to empower my Reshii Wraps.
+    [134809] = true,    --(Quest) Saddle me up! Ranger Valsarin [Quest: 91347] Strider Stampede (Avoid taint)
+    [136916] = true,    --Delver's Guide (Show UI immediately otherwise Journey UI won't open Delves)
+    [138824] = true,    --Ritual Site Reports
 };
 
 function GossipDataProvider:DoesOptionOpenUI(gossipOptionID)
@@ -25,4 +29,21 @@ function GossipDataProvider:DoesOptionOpenUI(gossipOptionID)
     --end
 
     return gossipOptionID and ShowUIGossip[gossipOptionID] == true
+end
+
+if PetStableFrame then
+    --Classic: PetStableFrame and ClassTrainerFrame become unresponsive if then are brought up when IsVisible() == false
+    local ShoUIInteractType = {
+        ["Cursor Stablemaster"] = true,
+        ["Cursor Trainer"] = true,
+    };
+
+    function GossipDataProvider:DoesOptionOpenUI(gossipOptionID)
+        local interactType = GetInteractType("npc");
+        if interactType and ShoUIInteractType[interactType] then
+            return true
+        end
+
+        return gossipOptionID and ShowUIGossip[gossipOptionID] == true
+    end
 end

@@ -219,7 +219,7 @@ ns.currentSourceFile = "RetailTaxiMapNodes.lua"
     -- Dragonflight
         -- Dragon Isles
             nodes[2057][43625184] = { id = 1198, type = "Dungeon", showInZone = true } -- The Nokhud Offensive
-            nodes[2057][38896459] = { id = 1203, type = "Dungeon", showInZone = true } -- The Azure Vault
+            nodes[2057][56938392] = { id = 1203, type = "Dungeon", showInZone = true } -- The Azure Vault
             nodes[2057][34667598] = { id = 1196, type = "Dungeon", showInZone = true } -- Brackenhide Hollow
             nodes[2057][63655934] = { id = 1209, type = "Dungeon", showInZone = true } -- Dawn of the Infinite
             nodes[2057][63324926] = { id = 1204, type = "Dungeon", showInZone = true } -- Halls of Infusion
@@ -252,6 +252,46 @@ ns.currentSourceFile = "RetailTaxiMapNodes.lua"
             nodes[2398][63657119] = { id = 1194, type = "Dungeon", showInZone = true } -- Tazavesh, the Veiled Market
             nodes[2398][42402157] = { id = 1302, type = "Raid", showInZone = true } -- Manaforge Omega
 
+     -- Midnight
+        -- Quel'Thalas 
+            nodes[2481][57200563] = { id = 1300, type = "Dungeon", showInZone = true } -- Terrasse der Magister
+            nodes[2481][53482524] = { id = 1299, type = "Dungeon", showInZone = true } -- Windläuferturm
+            nodes[2481][56131116] = { id = 1304, type = "Dungeon", showInZone = true } -- Mördergasse
+            nodes[2481][63002197] = { id = 1315, type = "Dungeon", showInZone = true } -- Maisarakavernen
+            nodes[2481][64001062] = { id = 1316, type = "Dungeon", showInZone = true } -- Nexuspunkt Xenas
+            nodes[2481][63570749] = { id = 1313, type = "Dungeon", showInZone = true } -- Arena der Leerennarbe
+            nodes[2481][67331218] = { id = 1309, type = "Dungeon", showInZone = true } -- Das blendende Tal
+            nodes[2481][61163189] = { id = 1311, type = "Dungeon", showInZone = true } -- Nalorakks Bau
+        
+            nodes[2481][62991170] = { id = 1307, type = "Raid", showInZone = true } -- Leerenspitze
+            nodes[2481][68261100] = { id = 1314, type = "Raid", showInZone = true } -- Der Traumriss
+            nodes[2481][56630799] = { id = 1308, type = "Raid", showInZone = true } -- Marsch auf Quel'Danas
+
+        --Eastern Kingdoms
+            nodes[2481][54756910] = { id = 239, type = "Dungeon", showInZone = true } -- Uldaman (inside cave) 
+            nodes[2481][42058363] = { id = 63, type = "Dungeon", showInZone = true } -- Deadmines
+            nodes[2481][48108683] = { id = 76, type = "Dungeon", showInZone = true } -- Zul'gurub
+            nodes[2481][43557494] = { id = 238, type = "Dungeon", showInZone = true } -- The Stockade
+            nodes[2481][54315912] = { id = 71, type = "Dungeon", showInZone = true } -- Grim Batol
+            nodes[2481][51614029] = { id = 246, type = "Dungeon", showInZone = true } -- Scholomance
+            nodes[2481][40564426] = { id = 64, type = "Dungeon", showInZone = true } -- Shadowfang Keep
+            nodes[2481][54153251] = { id = 236, type = "Dungeon", showInZone = true } -- Stratholme
+            nodes[2481][56043214] = { id = 1292, type = "Dungeon", showInZone = true } -- Stratholme Service Entrance 
+            --nodes[2481][58732817] = { id = 77, type = "Dungeon", dnID = "(" .. EXPANSION_NAME1 .. ")\n", showInZone = true } -- Zul'Aman
+            --nodes[2481][56970333] = { id = 249, type = "Dungeon", dnID = "(" .. EXPANSION_NAME1 .. ")\n", showInZone = true } -- Magisters'Terrace
+            nodes[2481][32926627] = { id = 65, type = "Dungeon", showInZone = true } -- Throne of the Tides
+            nodes[2481][43046006] = { id = 231, type = "Dungeon", showInZone = true } -- Gnomeregan
+            nodes[2481][54898195] = { id = 237, type = "Dungeon", showInZone = true } -- Atal'Hakkar
+            nodes[2481][55206148] = { id = 72, type = "Raid", showInZone = true } -- Bastion of Twilight
+            --nodes[2481][54810415] = { id = 752, type = "Raid", dnID = "(" .. EXPANSION_NAME1 .. ")\n", showInZone = true } -- Sunwell Plateau
+            nodes[2481][36485452] = { id = 75, type = "Raid", showInZone = true } -- Baradin Hold
+            nodes[2481][50178406] = { id = { 745, 860 }, type = "MultipleM", showInZone = true } -- Karazhan, Return to Karazhan
+            nodes[2481][47423391] = { id = { 311, 316 }, type = "MultipleD", showInZone = true } -- Scarlet Halls, Monastery 
+            nodes[2481][53576733] = { id = { 1197, 239 }, type = "MultipleD", showInZone = true } --  Legacy of Tyr Dragonflight Dungeon & Vanilla Uldaman 
+            nodes[2481][48467081] = { id = { 741, 742, 66, 228, 229, 559 }, name = L["Way to the Instance Entrance"], type = "MultipleM", showInZone = true } -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
+            nodes[2481][46853450] = { name = ns.ScarletMonastery .. " - " .. L["Old Version"] .. ":\n" .. L["Graveyard"] .. "\n" .. L["Cathedral"] .. "\n" .. L["Library"] .. "\n" .. L["Armory"] .. "\n\n" .. REQUIRES_LABEL .. " (" .. L["Old Keyring \n You get the Scarlet Key in the \n [Loot-Filled Pumpkin] from [Hallow's End Event] or from the [Auction House] \n now you can activate the [Old Keyring] here \n to activate old dungeonversions from the Scarlet Monastery"] .. ")", type = "MultiVInstanceD", showInZone = true } -- Scarlet Monastery Key for Old dungeons
+            nodes[2481][52003970] = { name = ns.Scholomance .. " - " .. L["Old Version"] .. "\n" .. L["Secret Entrance"] .. "\n\n" .. REQUIRES_LABEL .. " " .. L["(Memory of Scholomance - Achievement)"], type = "VInstanceD", showInZone = true } -- Old Scholomance version - Memory of Scholomance - Secret Entrance Old Scholomance version            
+            nodes[2481][54903391] = { name = ns.Naxxramas .. " - " .. L["Old Version"] .. "\n" .. L["Secret Entrance"] .. "\n\n" .. REQUIRES_LABEL .. " " .. L["(Wards of the Dread Citadel - Achievement)"], type = "VInstanceR", showInZone = true }-- Old Naxxramas version - Secret Entrance - Wards of the Dread Citadel 
         end
     end
 end

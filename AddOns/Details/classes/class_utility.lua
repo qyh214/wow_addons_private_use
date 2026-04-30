@@ -176,8 +176,66 @@ local statusBarBackgroundTable_ForDeathTooltip = {
 --expose in case someone want to customize the death tooltip background
 Details.StatusBarBackgroundTable_ForDeathTooltip = statusBarBackgroundTable_ForDeathTooltip
 
+local damageEventTokens = {
+	SWING_DAMAGE = true,
+	SPELL_DAMAGE = true,
+	SPELL_PERIODIC_DAMAGE = true,
+	SPELL_PERIODIC_HEAL = true,
+	RANGE_DAMAGE = true,
+	ENVIRONMENTAL_DAMAGE = true,
+	DROWNING = true,
+	FALLING = true,
+	FIRE = true,
+	LAVA = true,
+	SLIME = true,
+	FATIGUE = true,
+	SPELL_DRAIN = true,
+	SPELL_INSTAKILL = true,
+	DAMAGE_SPLIT = true,
+}
+
+function Details.ShowDeathTooltip2(instance, lineFrame) --~death
+	Details:FormatCooltipForSpells()
+	local hasRecap, events, maxHealth, link = Details222.Recap.GetRecapInfo(lineFrame.deathRecapId)
+
+	for i = #events, 1, -1 do
+		local ev = events[i]
+		GameCooltip:AddLine(format("%s (%s)", ev.spellName or UNKNOWN, ev.sourceName or UNKNOWN), format("-%d", ev.amount), 1, "white", "white")
+		if ev.spellId then
+			local spellInfo = C_Spell.GetSpellInfo(ev.spellId)
+			GameCooltip:AddIcon(spellInfo.iconID, 1, 1, 18, 18, .1, .9, .1, .9)
+		end
+		if i == 1 then
+			GameCooltip:AddStatusBar(0, 1, 1, 1, 1, 1, false)
+		else
+			GameCooltip:AddStatusBar(ev.currentHP/maxHealth*100, 1, 1, .2, 0, 0.8, false)
+		end
+
+		GameCooltip:SetOption("StatusBarTexture", [[Interface\AddOns\Details\images\bar_hyanda]])
+	end
+
+	local myPoint = Details.tooltip.anchor_point
+	local anchorPoint = Details.tooltip.anchor_relative
+	local xOffset = Details.tooltip.anchor_offset[1]
+	local yOffset = Details.tooltip.anchor_offset[2]
+
+	GameCooltip:SetOption("FixedWidth", 300)
+	if (Details.tooltip.anchored_to == 1) then
+		GameCooltip:SetHost(lineFrame, myPoint, anchorPoint, xOffset, yOffset)
+	else
+		GameCooltip:SetHost(DetailsTooltipAnchor, myPoint, anchorPoint, xOffset, yOffset)
+	end
+
+	GameCooltip:ShowCooltip()
+end
+
 function Details.ShowDeathTooltip(instance, lineFrame, combatObject, deathTable) --~death
 	local events = deathTable[1]
+
+	if detailsFramework.IsAddonApocalypseWow() then
+		events = detailsFramework.table.reverse(events)
+	end
+
 	local timeOfDeath = deathTable[2]
 	local maxHP = max(deathTable[5], 0.001)
 	local battleress = false
@@ -213,7 +271,7 @@ function Details.ShowDeathTooltip(instance, lineFrame, combatObject, deathTable)
 		end
 
 		local evType = event[1]
-		local spellName, _, spellIcon = _GetSpellInfo(event[2])
+		local spellName, _, spellIcon = _GetSpellInfo(event[2] or 1)
 
 		if (not spellName) then
 			spellName = _G.UNKNOWN
@@ -226,10 +284,14 @@ function Details.ShowDeathTooltip(instance, lineFrame, combatObject, deathTable)
 		local amount = event[3]
 		local eventTime = event[4]
 		local source = Details:GetOnlyName(event[6] or "")
-		local eventFrom = event[6]
+		local eventFrom = event[6] or ""
+
+		if detailsFramework.IsAddonApocalypseWow() and not damageEventTokens[evType] then
+			Details:Msg("DeathLog event not registered:", evType, "Please report this to the author.")
+		end
 
 		if (eventTime + 10 > timeOfDeath) then
-			if (type(evType) == "boolean") then
+			if (type(evType) == "boolean" or damageEventTokens[evType]) then
 				--is damage or heal?
 				if (evType) then --bool true
 					--damage
@@ -252,6 +314,7 @@ function Details.ShowDeathTooltip(instance, lineFrame, combatObject, deathTable)
 						gameCooltip:AddLine("" .. format("%.1f", eventTime - timeOfDeath) .. "s |cFFFFFF00" .. spellName .. "|r(|c" .. damageSourceColor .. eventFrom .. "|r)", "|c" .. damageAmountColor .. "-" .. Details:ToK(amount) .. critOrCrush .. overkill .. " (" .. healthPercent .. "%)", 1, "white", "white")
 					else
 						overkill = ""
+						amount = amount or 99999999
 						gameCooltip:AddLine("" .. format("%.1f", eventTime - timeOfDeath) .. "s " .. spellName .. " (|c" .. damageSourceColor .. eventFrom .. "|r)", "|c" .. damageAmountColor .. "-" .. Details:ToK(amount) .. critOrCrush .. overkill .. " (" .. healthPercent .. "%)", 1, "white", "white")
 					end
 
@@ -365,6 +428,7 @@ function Details.ShowDeathTooltip(instance, lineFrame, combatObject, deathTable)
 
 	return true
 end
+Details.ShowDeathTooltipFunction = Details.ShowDeathTooltip
 
 function Details:ToolTipDead(instance, deathTable, barFrame)
 	local gameCooltip = GameCooltip
@@ -381,6 +445,10 @@ function Details:ToolTipDead(instance, deathTable, barFrame)
 		else
 			gameCooltip:SetHost(DetailsTooltipAnchor, myPoint, anchorPoint, xOffset, yOffset)
 		end
+
+		--tooltip width
+		local tooltipWidth = Details.death_tooltip_width
+		gameCooltip:SetOption("FixedWidth",(type(tooltipWidth) == "number" and tooltipWidth) or 300)
 
 		gameCooltip:ShowCooltip()
 	end
@@ -411,11 +479,21 @@ local ReportSingleDeathFunc = function(IsCurrent, IsReverse, AmtLines)
 	Details:SendReportLines(t)
 end
 
-function atributo_misc:ReportSingleDeadLine(morte, instancia)
+function atributo_misc:ReportSingleDeadLine(morte, instancia, bIsShiftDown, bIsControlDown, thisLine)
+	---@cast thisLine detailsline
 	local barra = instancia.barras [morte.minha_barra]
 
 	local max_health = morte [5]
 	local time_of_death = morte [2]
+
+	if detailsFramework.IsAddonApocalypseWow() then
+		if (not C_AddOns.IsAddOnLoaded("Blizzard_DeathRecap")) then
+			C_AddOns.LoadAddOn("Blizzard_DeathRecap")
+		end
+		Details:Msg("Opening Blizzard Death Recap with deathRecapId:", thisLine.deathRecapId)
+		DeathRecapFrame:OpenRecap(thisLine.deathRecapId)
+		return
+	end
 
 	do
 		if (not Details.fontstring_len) then
@@ -431,7 +509,10 @@ function atributo_misc:ReportSingleDeadLine(morte, instancia)
 	end
 	local default_len = Details.fontstring_len:GetStringWidth()
 
-	Details:Destroy(reportTable)
+	if reportTable then
+		Details:Destroy(reportTable)
+	end
+
 	local report_array = reportTable
 	report_array[1] = {"Details! " .. Loc ["STRING_REPORT_SINGLE_DEATH"] .. " " .. morte [3] .. " " .. Loc ["STRING_ACTORFRAME_REPORTAT"] .. " " .. morte [6], "", "", ""}
 
@@ -623,7 +704,7 @@ function atributo_misc:UpdateDeathRow(deathTable, whichRowLine, rankPosition, in
 	end
 
 	local bUseCustomLeftText = instanceObject.row_info.textL_enable_custom_text
-
+	--attempt to index field '_NameIndexTable' (a nil value)
 	local actorObject = instanceObject:GetCombat():GetContainer(DETAILS_ATTRIBUTE_MISC):GetActor(playerName)
 	if (actorObject) then
 		actorObject:SetBarLeftText(thisRow, instanceObject, false, false, false, bUseCustomLeftText)
@@ -690,6 +771,15 @@ function atributo_misc:UpdateDeathRow(deathTable, whichRowLine, rankPosition, in
 end
 
 function atributo_misc:RefreshWindow(instance, combatObject, bIsForceRefresh, bIsExport)
+	if detailsFramework.IsAddonApocalypseWow() then
+		if Details:IsUsingBlizzardAPI(instance) then
+			Details222.BParser.UpdateAppocalypse(instance, bIsForceRefresh)
+			return
+		end
+	end
+
+	--if not Details222.UpdateIsAllowed() then return end --temporary stop updates in th new dlc
+
 	---@type actorcontainer
 	local utilityActorContainer = combatObject[class_type]
 
@@ -699,6 +789,10 @@ function atributo_misc:RefreshWindow(instance, combatObject, bIsForceRefresh, bI
 
 	local total = 0
 	instance.top = 0
+
+	if detailsFramework.IsAddonApocalypseWow() then
+		instance:CheckForSecretsAndAspects()
+	end
 
 	--the main attribute is utility, the sub attribute is the type of utility(cc break, ress, etc)
 	local subAttribute = Details222.OverrideSubAttributeOnNextRefresh or instance.sub_atributo
@@ -918,8 +1012,10 @@ function atributo_misc:RefreshWindow(instance, combatObject, bIsForceRefresh, bI
 
 	end
 
-	if (bUseAnimations) then
-		instance:PerformAnimations(whichRowLine-1)
+	if not detailsFramework.IsAddonApocalypseWow() then
+		if (bUseAnimations) then
+			instance:PerformAnimations(whichRowLine-1)
+		end
 	end
 
 	if (instance.atributo == 5) then --custom
@@ -957,6 +1053,8 @@ function atributo_misc:RefreshLine(instancia, barras_container, whichRowLine, lu
 		return
 	end
 
+	esta_barra.statusbar:SetMinMaxValues(0, 100)
+
 	local tabela_anterior = esta_barra.minha_tabela
 
 	---@cast instancia instance
@@ -975,73 +1073,81 @@ function atributo_misc:RefreshLine(instancia, barras_container, whichRowLine, lu
 		return
 	end
 
-	--local porcentagem = meu_total / total * 100
-	local porcentagem = ""
-	if (not percentage_type or percentage_type == 1) then
-		porcentagem = _cstr("%.1f", meu_total / total * 100)
-	elseif (percentage_type == 2) then
-		porcentagem = _cstr("%.1f", meu_total / instancia.top * 100)
-	end
+	local percentNumber
 
-	local esta_porcentagem = _math_floor((meu_total/instancia.top) * 100)
-
-	if (not bars_show_data [1]) then
-		meu_total = ""
-	end
-	if (not bars_show_data [3]) then
-		porcentagem = ""
+	if detailsFramework.IsAddonApocalypseWow() then
+		local ruleToUse = -1 --show only total
+		Details:SimpleFormat(esta_barra.lineText2, esta_barra.lineText3, esta_barra.lineText4, AbbreviateNumbers(meu_total, Details.abbreviateOptionsDamage), nil, nil, ruleToUse)
+		percentNumber = _math_floor((meu_total/instancia.top) * 100)
 	else
-		porcentagem = porcentagem .. "%"
-	end
+		--local porcentagem = meu_total / total * 100
+		local porcentagem = ""
+		if (not percentage_type or percentage_type == 1) then
+			porcentagem = _cstr("%.1f", meu_total / total * 100)
+		elseif (percentage_type == 2) then
+			porcentagem = _cstr("%.1f", meu_total / instancia.top * 100)
+		end
 
-	if (instancia.show_interrupt_casts) then
-		if (sub_atributo == DETAILS_SUBATTRIBUTE_INTERRUPT) then --interrupts
-			--get the interrupt spell for this actor class from libOpenRaid
-			if (LIB_OPEN_RAID_SPELL_INTERRUPT_BYCLASS) then
-				---@type table<spellname, table>
-				local classInterrupts = LIB_OPEN_RAID_SPELL_INTERRUPT_BYCLASS[self.classe]
-				if (classInterrupts) then
-					---@type table<spellname, number> number is the amount of casts
-					local spellCasts = combatObject.amountCasts[self.nome]
-					local amountOfInterruptsCasted = 0
-					--iterating between the spells that are interrupts for this class
-					for spellNameOrId in pairs(classInterrupts) do
-						--if the actor casted this spell
-						if (spellCasts[spellNameOrId]) then
-							amountOfInterruptsCasted = amountOfInterruptsCasted + spellCasts[spellNameOrId]
+		percentNumber = _math_floor((meu_total/instancia.top) * 100)
+
+		if (not bars_show_data [1]) then
+			meu_total = ""
+		end
+		if (not bars_show_data [3]) then
+			porcentagem = ""
+		else
+			porcentagem = porcentagem .. "%"
+		end
+
+		if (instancia.show_interrupt_casts) then
+			if (sub_atributo == DETAILS_SUBATTRIBUTE_INTERRUPT) then --interrupts
+				--get the interrupt spell for this actor class from libOpenRaid
+				if (LIB_OPEN_RAID_SPELL_INTERRUPT_BYCLASS) then
+					---@type table<spellname, table>
+					local classInterrupts = LIB_OPEN_RAID_SPELL_INTERRUPT_BYCLASS[self.classe]
+					if (classInterrupts) then
+						---@type table<spellname, number> number is the amount of casts
+						local spellCasts = combatObject.amountCasts[self.nome]
+						local amountOfInterruptsCasted = 0
+						--iterating between the spells that are interrupts for this class
+						for spellNameOrId in pairs(classInterrupts) do
+							--if the actor casted this spell
+							if (spellCasts[spellNameOrId]) then
+								amountOfInterruptsCasted = amountOfInterruptsCasted + spellCasts[spellNameOrId]
+							end
 						end
-					end
 
-					if (amountOfInterruptsCasted > 0) then
-						meu_total = meu_total .. " / " .. tostring(amountOfInterruptsCasted) .. ""
+						if (amountOfInterruptsCasted > 0) then
+							meu_total = meu_total .. " / " .. tostring(amountOfInterruptsCasted) .. ""
+						end
 					end
 				end
 			end
 		end
-	end
 
-	instancia.show_interrupt_overlaps = true
+		instancia.show_interrupt_overlaps = true
 
-	if (instancia.show_interrupt_overlaps) then
-		if (sub_atributo == DETAILS_SUBATTRIBUTE_INTERRUPT) then --interrupts
-			--get the amount of overlaps for this actor
-			local overlapsAmount = self.interrupt_cast_overlap
-			if (overlapsAmount and overlapsAmount > 0) then
-				meu_total = meu_total .. " / " .. tostring(overlapsAmount) .. ""
-			else
-				meu_total = meu_total .. " / 0"
+		if (instancia.show_interrupt_overlaps) then
+			if (sub_atributo == DETAILS_SUBATTRIBUTE_INTERRUPT) then --interrupts
+				--get the amount of overlaps for this actor
+				local overlapsAmount = self.interrupt_cast_overlap
+				if (overlapsAmount and overlapsAmount > 0) then
+					meu_total = meu_total .. " / " .. tostring(overlapsAmount) .. ""
+				else
+					meu_total = meu_total .. " / 0"
+				end
 			end
 		end
-	end
 
-	local rightText = meu_total .. bars_brackets[1] .. porcentagem .. bars_brackets[2]
-	if (UsingCustomRightText) then
-		esta_barra.lineText4:SetText(_string_replace(instancia.row_info.textR_custom_text, meu_total, "", porcentagem, self, instancia.showing, instancia, rightText))
-	else
-		if (instancia.use_multi_fontstrings) then
-			instancia:SetInLineTexts(esta_barra, "", meu_total, porcentagem)
+		local rightText = meu_total .. bars_brackets[1] .. porcentagem .. bars_brackets[2]
+		if (UsingCustomRightText) then
+			esta_barra.lineText4:SetText(_string_replace(instancia.row_info.textR_custom_text, meu_total, "", porcentagem, self, instancia.showing, instancia, rightText))
 		else
-			esta_barra.lineText4:SetText(rightText)
+			if (instancia.use_multi_fontstrings) then
+				instancia:SetInLineTexts(esta_barra, "", meu_total, porcentagem)
+			else
+				esta_barra.lineText4:SetText(rightText)
+			end
 		end
 	end
 
@@ -1051,7 +1157,7 @@ function atributo_misc:RefreshLine(instancia, barras_container, whichRowLine, lu
 
 	actor_class_color_r, actor_class_color_g, actor_class_color_b = self:GetBarColor()
 
-	return self:RefreshBarra2(esta_barra, instancia, tabela_anterior, forcar, esta_porcentagem, whichRowLine, barras_container, use_animations)
+	return self:RefreshBarra2(esta_barra, instancia, tabela_anterior, forcar, percentNumber, whichRowLine, barras_container, use_animations)
 end
 
 function atributo_misc:RefreshBarra2(esta_barra, instancia, tabela_anterior, forcar, esta_porcentagem, whichRowLine, barras_container, use_animations)
@@ -2202,10 +2308,12 @@ function atributo_misc:ToolTipInterrupt(instance, numero, barra)
 			---@type table<spellname, number> number is the amount of casts
 			local spellCasts = combatObject.amountCasts[self.nome]
 			--iterating between the spells that are interrupts for this class
-			for spellNameOrId in pairs(classInterrupts) do
-				--if the actor casted this spell
-				if (spellCasts[spellNameOrId]) then
-					amountOfInterruptsCasted = amountOfInterruptsCasted + spellCasts[spellNameOrId]
+			if (spellCasts) then
+				for spellNameOrId in pairs(classInterrupts) do
+					--if the actor casted this spell
+					if (spellCasts[spellNameOrId]) then
+						amountOfInterruptsCasted = amountOfInterruptsCasted + spellCasts[spellNameOrId]
+					end
 				end
 			end
 		end
@@ -2217,6 +2325,8 @@ function atributo_misc:ToolTipInterrupt(instance, numero, barra)
 	Details:AddTooltipBackgroundStatusbar()
 
 	local overlapsAmount = self.interrupt_cast_overlap or 0
+	amountOfInterruptsCasted = detailsFramework.Math.PositiveNonZero(amountOfInterruptsCasted)
+
 	GameCooltip:AddLine("Overlaps", overlapsAmount .. " (" .. _cstr("%.1f", floor(overlapsAmount)/floor(amountOfInterruptsCasted)*100).."%)")
 	GameCooltip:AddIcon("", nil, nil, icon_size.W, icon_size.H, icon_border.L, icon_border.R, icon_border.T, icon_border.B)
 	Details:AddTooltipBackgroundStatusbar()
@@ -3651,4 +3761,20 @@ atributo_misc.__sub = function(tabela1, tabela2)
 	end
 
 	return tabela1
+end
+
+---usage: local hasRecap, events, maxHealth, link = Details222.Recap.GetRecapInfo(12345)
+---@param id number
+---@return boolean
+---@return deathrecapeventinfo[]
+---@return number
+---@return string
+function Details222.Recap.GetRecapInfo(id)
+    local hasDeathRecap = Details.DR.HasRecapEvents(id)
+    if hasDeathRecap then
+        local thisRecap = Details.DR.GetRecapEvents(id)
+        local maxHealth = Details.DR.GetRecapMaxHealth(id)
+        return true, thisRecap, maxHealth, Details.DR.GetRecapLink(id)
+	end
+	return false
 end

@@ -233,6 +233,19 @@ local instanceDifficulties = {
     [2657] = { 220, 17, 14, 15, 16 }, -- Nerub-ar Palace
     [2769] = { 220, 14, 15, 16, 17 }, -- Liberation of Undermine
     [2810] = { 220, 14, 15, 16, 17 }, -- Manaforge Omega
+
+    -- Midnight
+    [2805] = { 1,  2, 23, 205}, -- Windrunner Spire
+    [2813] = { 1,  2, 23, 205}, -- Murder Row
+    [2811] = { 1,  2, 23, 205}, -- Magisters' Terrace
+    [2859] = { 1,  2, 23, 205}, -- The Blinding Vale
+    [2825] = { 1,  2, 23, 205}, -- Den of Nalorakk
+    [2923] = { 1,  2, 23, 205}, -- Voidscar Arena
+    [2874] = { 1,  2, 23, 205}, -- Maisara Caverns
+    [2915] = { 1,  2, 23, 205}, -- Nexus-Point Xenas
+    [2912] = {14, 15, 16, 17, 220}, -- The Voidspire
+    [2913] = {14, 15, 16, 17, 220}, -- March on Quel'Danas
+    [2939] = {14, 15, 16, 17}, -- The Dreamrift
 }
 if Internal.IsDragonflightSeason1 then
     instanceDifficulties[2515] = { 1, 2, 23, 8 } -- The Azure Vault
@@ -301,6 +314,16 @@ elseif Internal.IsTheWarWithinSeason3 then
 
     instanceDifficulties[2287] = { 8 } -- Halls of Atonement
     instanceDifficulties[2441] = { 8 } -- Tazavesh, the Veiled Market
+else--if Internal.IsMidnightSeason1 then
+    instanceDifficulties[2811] = { 1, 2, 23, 8, 205 } -- Magisters' Terrace
+    instanceDifficulties[2874] = { 1, 2, 23, 8, 205 } -- Maisara Caverns
+    instanceDifficulties[2915] = { 1, 2, 23, 8, 205 } -- Nexus-Point Xenas
+    instanceDifficulties[2805] = { 1, 2, 23, 8, 205 } -- Windrunner Spire
+
+    instanceDifficulties[2526] = { 1, 2, 23, 8, 205 } -- Algeth'ar Academy
+    instanceDifficulties[1753] = { 2, 23, 8 } -- Seat of the Triumvirate
+    instanceDifficulties[1209] = { 1, 2, 23, 8 } -- Skyreach
+    instanceDifficulties[ 658] = { 1, 2, 23} -- Pit of Saron
 end
 Internal.dungeonDifficultiesAll = { 205, 1, 2, 23, 8 };
 Internal.raidDifficultiesAll = { 220, 17, 14, 15, 16 };
@@ -311,13 +334,13 @@ local dungeonInfo = {
               48, -- Blackfathom Deeps
              230, -- Blackrock Depths
              229, -- Lower Blackrock Spire
-             429, -- Dire Maul
+             429, -- Dire Maul - Capital Gardens
               90, -- Gnomeregan
              349, -- Maraudon
              389, -- Ragefire Chasm
              129, -- Razorfen Downs
               47, -- Razorfen Kraul
-             329, -- Stratholme
+             329, -- Stratholme - Main Gate
              109, -- The Temple of Atal'hakkar
               34, -- The Stockade
               70, -- Uldaman
@@ -328,6 +351,9 @@ local dungeonInfo = {
             1007, -- Scholomance
               36, -- Deadmines
               33, -- Shadowfang Keep
+             429, -- Dire Maul - Warpwood Quarter
+             429, -- Dire Maul - Gordok Commons
+             329, -- Stratholme - Service Entrance
         }
     },
     {
@@ -495,6 +521,19 @@ local dungeonInfo = {
             2830, -- Eco-Dome Al'dani
         }
     },
+    {
+        name = L["Midnight"],
+        instances = {
+            2805, -- Windrunner Spire
+            2813, -- Murder Row
+            2811, -- Magisters' Terrace
+            2859, -- The Blinding Vale
+            2825, -- Den of Nalorakk
+            2923, -- Voidscar Arena
+            2874, -- Maisara Caverns
+            2915, -- Nexus-Point Xenas
+        }
+    },
 }
 if Internal.IsDragonflightSeason1 then
     local instances = dungeonInfo[10].instances;
@@ -531,6 +570,12 @@ elseif Internal.IsTheWarWithinSeason3 then
     local instances = dungeonInfo[11].instances;
     instances[#instances+1] = 2287 -- Halls of Atonement
     instances[#instances+1] = 2441 -- Tazavesh, the Veiled Market
+else--if Internal.IsMidnightSeason1 then
+    local instances = dungeonInfo[12].instances;
+    instances[#instances+1] = 2526 -- Algeth'ar Academy
+    instances[#instances+1] = 1753 -- Seat of the Triumvirate
+    instances[#instances+1] = 1209 -- Skyreach
+    instances[#instances+1] =  658 -- Pit of Saron
 end
 local raidInfo = {
     {
@@ -643,6 +688,14 @@ local raidInfo = {
             2810, -- Manaforge Omega
         }
     },
+    {
+        name = L["Midnight"],
+        instances = {
+            2912, -- The Voidspire
+            2913, -- March on Quel'Danas
+            2939, -- The Dreamrift
+        }
+    },
 }
 local scenarioInfo = {
 	{
@@ -708,6 +761,12 @@ local scenarioInfo = {
 	},
 	{
 		name = L["The War Within"],
+		instances = {
+			{nil, 208, (function () return GetDifficultyInfo(208) end)()}, -- Delves
+		},
+	},
+	{
+		name = L["Midnight"],
 		instances = {
 			{nil, 208, (function () return GetDifficultyInfo(208) end)()}, -- Delves
 		},
@@ -794,6 +853,25 @@ local battlegroundInfo = {
 	},
 	{
 		name = L["The War Within"],
+		instances = {
+			2106, -- Warsong Gulch
+			2107, -- Arathi Basin
+			30,   -- Alterac Valley
+			566,  -- Eye of the Storm
+            968,  -- Rated Eye of the Storm
+			628,  -- Isle of Conquest
+			761,  -- The Battle for Gilneas
+			2118, -- Battle for Wintergrasp
+			1191, -- Ashran
+			726,  -- Twin Peaks
+			727,  -- Silvershard Mines
+			998,  -- Temple of Kotmogu
+			1803, -- Seething Shore
+			2245, -- Deepwind Gorge
+		},
+	},
+	{
+		name = L["Midnight"],
 		instances = {
 			2106, -- Warsong Gulch
 			2107, -- Arathi Basin
@@ -1245,7 +1323,7 @@ local instanceBosses = {
     },
     [ 658] = { -- Pit of Saron
          608, -- Forgemaster Garfrost
-         609, -- Ick & Krick
+         609, -- Ick and Krick
          610, -- Scourgelord Tyrannus
     },
     [ 595] = { -- The Culling of Stratholme
@@ -2256,6 +2334,67 @@ local instanceBosses = {
         2690, -- Nexus-King Salhadaar
         2691, -- Dimensius, the All-Devouring
     },
+
+    -- Midnight
+    [2805] = { -- Windrunner Spire
+        2655, -- Emberdawn
+        2656, -- Derelict Duo
+        2657, -- Commander Kroluk
+        2658, -- The Restless Heart
+    },
+    [2813] = { -- Murder Row
+        2679, -- Kystia Manaheart
+        2680, -- Zaen Bladesorrow
+        2681, -- Xathuux the Annihilator
+        2682, -- Lithiel Cinderfury
+    },
+    [2811] = { -- Magisters' Terrace
+        2659, -- Arcanotron Custos
+        2661, -- Seranel Sunlash
+        2660, -- Gemellus
+        2662, -- Degentrius
+    },
+    [2859] = { -- The Blinding Vale
+        2769, -- Lightblossom Trinity
+        2770, -- Ikuzz the Light Hunter
+        2771, -- Lightwarden Ruia
+        2772, -- Ziekket
+    },
+    [2825] = { -- Den of Nalorakk
+        2776, -- The Hoardmonger
+        2777, -- Sentinel of Winter
+        2778, -- Nalorakk
+    },
+    [2923] = { -- Voidscar Arena
+        2791, -- Taz'Rah
+        2792, -- Atroxus
+        2793, -- Charonus
+    },
+    [2874] = { -- Maisara Caverns
+        2810, -- Muro'jin and Nekraxx
+        2811, -- Vordaza
+        2812, -- Rak'tul, Vessel of Souls
+    },
+    [2915] = { -- Nexus-Point Xenas
+        2813, -- Chief Corewright Kasreth
+        2814, -- Corewarden Nysarra
+        2815, -- Lothraxion
+    },
+    [2912] = { -- The Voidspire
+        2733, -- Imperator Averzian
+        2734, -- Vorasius
+        2736, -- Fallen-King Salhadaar
+        2735, -- Vaelgor & Ezzorak
+        2737, -- Lightblinded Vanguard
+        2738, -- Crown of the Cosmos
+    },
+    [2913] = { -- March on Quel'Danas
+        2739, -- Belo'ren, Child of Al'ar
+        2740, -- Midnight Falls
+    },
+    [2939] = { -- The Dreamrift
+        2795, -- Chimaerus the Undreamt God
+    },
 }
 -- A map of npc ids to JournalInstanceID, this might not be the bosses npc id,
 -- just something that signifies the boss
@@ -2856,6 +2995,30 @@ local uiMapIDToBossID = {
     [2465] = 2688, -- The Soul Hunters
     [2466] = 2690, -- Nexus-King Salhadaar
     [2467] = 2691, -- Dimensius, the All-Devouring
+
+    -- Midnight
+    -- Windrunner Spire
+    [2494] = 2655, -- Emberdawn
+    [2497] = 2656, -- Derelict Duo
+    [2498] = 2657, -- Commander Kroluk
+    [2499] = 2658, -- The Restless Heart
+    -- Murder Row
+    [2433] = 2679, -- Kystia Manaheart
+    [2435] = 2680, -- Zaen Bladesorrow
+    -- Magisters' Terrace
+    [2516] = 2661, -- Seranel Sunlash
+    [2520] = 2662, -- Degentrius
+    -- Den of Nalorakk
+    [2513] = 2778, -- Nalorakk
+    -- Voidscar Arena
+    [2572] = 2791, -- Taz'Rah
+    -- The Voidspire
+    [2530] = 2738, -- Crown of the Cosmos
+    -- March on Quel'Danas
+    [2533] = 2739, -- Belo'ren, Child of Al'ar
+    [2534] = 2740, -- Midnight Falls
+    -- The Dreamrift
+    [2532] = 2795, -- Chimaerus the Undreamt God
 }
 Internal.instanceDifficulties = instanceDifficulties;
 Internal.dungeonInfo = dungeonInfo;
@@ -3164,6 +3327,13 @@ function Internal.BossAvailable(bossID)
 	return true
 end
 
+local UnitCreatureID = UnitCreatureID or function (unit)
+    local guid = UnitGUID(unit);
+    if not guid then return nil end
+    local _, _, _, _, _, npcID = strsplit("-", guid);
+    return tonumber(npcID);
+end
+
 function Internal.GetCurrentBoss(unitId)
 	local bossID = nil
 	local _, instanceType, difficultyID, _, _, _, _, instanceID = GetInstanceInfo();
@@ -3186,12 +3356,9 @@ function Internal.GetCurrentBoss(unitId)
 			bossID = InstanceAreaIDToBossID[instanceID][areaID] or bossID;
         end
 		if unitId then
-			local unitGUID = UnitGUID(unitId);
-			if unitGUID and not UnitIsDead(unitId) then
-				local type, zero, serverId, instanceId, zone_uid, npcId, spawn_uid = strsplit("-", unitGUID);
-				if (type == "Creature" or type == "Vehicle") and tonumber(npcId) then
-					bossID = npcIDToBossID[tonumber(npcId)] or bossID;
-				end
+            local npcId = UnitCreatureID(unitId)
+			if npcId and not UnitIsDead(unitId) and not issecretvalue(npcId) then
+                bossID = npcIDToBossID[npcId] or bossID;
 			end
 		end
 	end

@@ -1,14 +1,13 @@
 local _, ns = ...
 local oUF = ns.oUF
 
--- sourced from Blizzard_UnitFrame/TargetFrame.lua
+-- sourced from Blizzard_UnitFrame/Mainline/TargetFrame.lua
 local MAX_BOSS_FRAMES = _G.MAX_BOSS_FRAMES or 5
 
 -- sourced from Blizzard_FrameXMLBase/Shared/Constants.lua
 local MEMBERS_PER_RAID_GROUP = _G.MEMBERS_PER_RAID_GROUP or 5
 
 local hookedFrames = {}
-local hookedNameplates = {}
 local isArenaHooked = false
 local isBossHooked = false
 local isPartyHooked = false
@@ -17,13 +16,24 @@ local hiddenParent = CreateFrame('Frame', nil, UIParent)
 hiddenParent:SetAllPoints()
 hiddenParent:Hide()
 
-local function insecureHide(self)
-	self:Hide()
-end
+local looseFrames = {}
+local watcher = CreateFrame('Frame')
+watcher:RegisterEvent('PLAYER_REGEN_ENABLED')
+watcher:SetScript('OnEvent', function()
+	for frame in next, looseFrames do
+		frame:SetParent(hiddenParent)
+	end
+
+	table.wipe(looseFrames)
+end)
 
 local function resetParent(self, parent)
 	if(parent ~= hiddenParent) then
-		self:SetParent(hiddenParent)
+		if(InCombatLockdown() and self:IsProtected()) then
+			looseFrames[self] = true
+		else
+			self:SetParent(hiddenParent)
+		end
 	end
 end
 
@@ -49,7 +59,7 @@ local function handleFrame(baseName, doNotReparent)
 			end
 		end
 
-		local health = frame.healthBar or frame.healthbar or frame.HealthBar
+		local health = frame.healthBar or frame.healthbar or frame.HealthBar or (frame.HealthBarsContainer and frame.HealthBarsContainer.healthBar)
 		if(health) then
 			health:UnregisterAllEvents()
 		end
@@ -59,9 +69,9 @@ local function handleFrame(baseName, doNotReparent)
 			power:UnregisterAllEvents()
 		end
 
-		local spell = frame.castBar or frame.spellbar or frame.CastingBarFrame
-		if(spell) then
-			spell:UnregisterAllEvents()
+		local castbar = frame.castBar or frame.spellbar or frame.CastingBarFrame
+		if(castbar) then
+			castbar:UnregisterAllEvents()
 		end
 
 		local altpowerbar = frame.powerBarAlt or frame.PowerBarAlt
@@ -69,7 +79,7 @@ local function handleFrame(baseName, doNotReparent)
 			altpowerbar:UnregisterAllEvents()
 		end
 
-		local buffFrame = frame.BuffFrame
+		local buffFrame = frame.BuffFrame or frame.AurasFrame
 		if(buffFrame) then
 			buffFrame:UnregisterAllEvents()
 		end
@@ -82,11 +92,6 @@ local function handleFrame(baseName, doNotReparent)
 		local totFrame = frame.totFrame
 		if(totFrame) then
 			totFrame:UnregisterAllEvents()
-		end
-
-		local classPowerBar = frame.classPowerBar
-		if(classPowerBar) then
-			classPowerBar:UnregisterAllEvents()
 		end
 
 		local ccRemoverFrame = frame.CcRemoverFrame
@@ -161,18 +166,8 @@ function oUF:DisableBlizzard(unit)
 				handleFrame(_G['ArenaEnemyPrepFrame'..i], true)
 			end
 		end
+	elseif(unit:match('nameplate%d?%d?%d?$')) then
+		local frame = C_NamePlate.GetNamePlateForUnit(unit)
+		handleFrame(frame.UnitFrame, true)
 	end
-end
-
-function oUF:DisableNamePlate(frame)
-	if(not(frame and frame.UnitFrame)) then return end
-	if(frame.UnitFrame:IsForbidden()) then return end
-
-	if(not hookedNameplates[frame]) then
-		frame.UnitFrame:HookScript('OnShow', insecureHide)
-
-		hookedNameplates[frame] = true
-	end
-
-	handleFrame(frame.UnitFrame, true)
 end

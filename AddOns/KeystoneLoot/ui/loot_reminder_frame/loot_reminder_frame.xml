@@ -1,0 +1,125 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\..\..\..\WoW\Data\Interface\AddOns\Blizzard_SharedXML\UI.xsd">
+    <Button name="KeystoneLootReminderIconTemplate" mixin="KeystoneLootReminderIconMixin" virtual="true">
+        <Size x="32" y="32"/>
+        <Layers>
+            <Layer level="ARTWORK" textureSubLevel="1">
+                <Texture parentKey="Icon" setAllPoints="true">
+                    <TexCoords left="0.08" right="0.92" top="0.08" bottom="0.92"/>
+                </Texture>
+            </Layer>
+            <Layer level="ARTWORK" textureSubLevel="2">
+                <Texture parentKey="IconBorder" file="Interface/Buttons/UI-Quickslot2">
+                    <Size x="58" y="58"/>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+        </Scripts>
+    </Button>
+    <Frame name="KeystoneLootReminderSpecTemplate" inherits="InsetFrameTemplate" mixin="KeystoneLootReminderSpecMixin" virtual="true">
+        <Size x="180" y="90"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="Title" inherits="GameFontHighlightLarge" JustifyH="CENTER">
+                    <Anchors>
+                        <Anchor point="BOTTOM" relativePoint="TOP" y="5"/>
+                    </Anchors>
+                </FontString>
+                <FontString parentKey="ActiveText" inherits="GameFontHighlightLarge" JustifyH="CENTER" text="SPEC_ACTIVE">
+                    <Anchors>
+                        <Anchor point="TOP" relativePoint="BOTTOM" y="-12"/>
+                    </Anchors>
+                    <Color r="0" g="1" b="0" a="1"/>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button parentKey="LootSpecButton" inherits="SharedButtonSmallTemplate" text="TALENT_SPEC_ACTIVATE">
+                <Size x="120" y="22"/>
+                <Anchors>
+                    <Anchor point="TOP" relativePoint="BOTTOM" y="-10"/>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        SetLootSpecialization(self:GetParent().specId);
+                        PlaySound(SOUNDKIT.UI_CLASS_TALENT_SPEC_ACTIVATE);
+                    </OnClick>
+                </Scripts>
+                <Frames>
+                    <Frame parentKey="EfficiencyIcon" mixin="KeystoneLootReminderEfficiencyIconMixin" enableMouse="true" hidden="true">
+                        <Size x="17" y="21"/>
+                        <Anchors>
+                            <Anchor point="RIGHT" relativePoint="LEFT" x="-6" y="0"/>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="ARTWORK">
+                                <Texture atlas="house-reward-green-arrow-up" setAllPoints="true"/>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnEnter method="OnEnter"/>
+                            <OnLeave method="OnLeave"/>
+                        </Scripts>
+                    </Frame>
+                </Frames>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </Frame>
+
+    <Frame name="KeystoneLootReminderFrame" parent="UIParent" mixin="KeystoneLootReminderFrameMixin" inherits="SimplePanelTemplate" frameStrata="DIALOG" toplevel="true" movable="true" enableMouse="true" clampedToScreen="true" hidden="true">
+        <Size x="400" y="217"/>
+        <Anchors>
+            <Anchor point="CENTER" y="150"/>
+        </Anchors>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="HeadlineBg" file="Interface\QuestFrame\UI-QuestLogTitleHighlight" alphaMode="ADD">
+                    <Size y="26"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="40" y="-21"/>
+                        <Anchor point="TOPRIGHT" x="-40" y="-21"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="ARTWORK">
+                <FontString parentKey="Title" inherits="GameFontNormal" JustifyH="CENTER">
+                    <Size y="26"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="12" y="-21"/>
+                        <Anchor point="TOPRIGHT" x="-14" y="-21"/>
+                    </Anchors>
+                </FontString>
+                <FontString parentKey="SharedItemsText" inherits="GameFontDisableSmall" JustifyH="CENTER">
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" x="12" y="14"/>
+                        <Anchor point="BOTTOMRIGHT" x="-14" y="14"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame parentKey="Container">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="20" y="-80"/>
+                </Anchors>
+            </Frame>
+            <Button parentKey="CloseButton" inherits="UIPanelCloseButtonDefaultAnchors"/>
+        </Frames>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnShow method="OnShow"/>
+            <OnHide method="OnHide"/>
+            <OnDragStart method="OnDragStart"/>
+            <OnDragStop method="OnDragStop"/>
+            <OnEvent method="OnEvent"/>
+        </Scripts>
+    </Frame>
+</Ui>

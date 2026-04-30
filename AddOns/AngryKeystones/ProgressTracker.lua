@@ -76,7 +76,7 @@ function Mod:SCENARIO_CRITERIA_UPDATE()
 end
 
 local function StartTime()
-	Mod:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+	-- Mod:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	local numCriteria = select(3, C_Scenario.GetStepInfo())
 	for criteriaIndex = 1, numCriteria do
 		-- local criteriaString, criteriaType, _, quantity, totalQuantity, _, _, quantityString, _, _, _, _, isWeightedProgress = C_Scenario.GetCriteriaInfo(criteriaIndex)
@@ -90,7 +90,7 @@ local function StartTime()
 end
 
 local function StopTime()
-	Mod:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+	-- Mod:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 end
 
 local function CheckTime(...)
@@ -199,7 +199,7 @@ function Mod:CHALLENGE_MODE_START(...) CheckTime(GetWorldElapsedTimers()) end
 function Mod:CHALLENGE_MODE_RESET(...) wipe(Mod.playerDeaths) end
 
 local function ProgressBar_SetValue(self, percent)
-	-- local _, _, _, _, totalQuantity, _, _, quantityString, _, _, _, _, _ = C_Scenario.GetCriteriaInfo(self.criteriaIndex)
+	local _, _, _, _, totalQuantity, _, _, quantityString, _, _, _, _, _ = C_Scenario.GetCriteriaInfo(self.criteriaIndex)
 
 	local scenarioType = select(10, C_Scenario.GetInfo())
 

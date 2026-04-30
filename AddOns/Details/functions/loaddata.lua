@@ -137,6 +137,7 @@ function Details222.LoadSavedVariables.CombatSegments()
 		Details.tabela_overall = Details.combate:NovaTabela()
 		Details.tabela_vigente = Details.combate:NovaTabela(_, Details.tabela_overall)
 		Details222.PetContainer.Reset()
+		Details222.BParser.WipeStoredSessionIds()
 
 		if (currentCharacterData.saved_pet_cache) then
 			Details:Destroy(currentCharacterData.saved_pet_cache) --saved pet data
@@ -152,6 +153,12 @@ function Details222.LoadSavedVariables.CombatSegments()
 			Details:Destroy(currentCharacterData.tabela_historico)
 			currentCharacterData.tabela_historico = nil
 		end
+
+		pcall(function()
+			if C_DamageMeter and C_DamageMeter.ResetAllCombatSessions then
+				C_DamageMeter.ResetAllCombatSessions()
+			end
+		end)
 
 		return
 	else

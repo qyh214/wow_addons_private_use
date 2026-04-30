@@ -11,6 +11,20 @@ end
 
 local PLAYER = NormName((UnitName("player") or "player") .. "-" .. (GetRealmName() or ""))
 
+local function IsDeveloperModeEnabled()
+  return ns and ns.Addon and ns.Addon.db and ns.Addon.db.profile and ns.Addon.db.profile.DeveloperMode
+end
+
+local function DevPrint(...)
+  if IsDeveloperModeEnabled() then
+    if ns and ns.COLORED_ADDON_NAME then
+      print(ns.COLORED_ADDON_NAME, ...)
+    else
+      print(...)
+    end
+  end
+end
+
 local function split3(v)
   v = tostring(v or "")
   local clean = v:match("(%d+%.%d+%.%d+)") or v:match("(%d+%.%d+)") or v:match("(%d+)")
@@ -100,15 +114,32 @@ f:SetScript("OnEvent", function(_, evt, ...)
 
   elseif evt == "GROUP_ROSTER_UPDATE" then
     C_Timer.After(3, SendWithRetry)
+
   elseif evt == "PLAYER_REGEN_ENABLED" then
     EnableReceiving()
+
   elseif evt == "PLAYER_REGEN_DISABLED" then
     DisableReceiving()
+
   elseif evt == "CHAT_MSG_ADDON" then
     if VERSION_FALLBACK then return end
+
     local prefix, msg, channel, senderRaw = ...
     if prefix ~= PREFIX or not msg then return end
     if NormName(senderRaw) == PLAYER then return end
+
+    if msg == "TESTREQ" then
+      WhisperBackVersion(senderRaw)
+
+      if IsDeveloperModeEnabled() then
+        DevPrint("DEBUG: Testanfrage von", tostring(senderRaw), "→ sende Version zurück")
+      end
+      return
+    end
+
+    if IsDeveloperModeEnabled() then
+      DevPrint("DEBUG Empfang:", tostring(senderRaw), "Kanal:", tostring(channel), "Nachricht:", tostring(msg))
+    end
 
     if IsNewer(msg, TOC_VERSION) then
       maxSeen = msg
@@ -121,13 +152,47 @@ f:SetScript("OnEvent", function(_, evt, ...)
           print(string.format("New version |cff00ff00%s|r available, your version |cffffff00%s|r is outdated!", tostring(maxSeen), tostring(TOC_VERSION)))
         end
       end
+
+      if IsDeveloperModeEnabled() then
+        DevPrint("DEBUG: Neuere Version erkannt von", tostring(senderRaw), "→", tostring(msg))
+      end
+
       C_Timer.After(1, function() Broadcast(maxSeen) end)
       return
     end
 
     if IsNewer(TOC_VERSION, msg) then
+      if IsDeveloperModeEnabled() then
+        DevPrint("DEBUG: Meine Version ist neuer als die von", tostring(senderRaw), "→ sende Whisper zurück")
+      end
+
       C_Timer.After(0.5, function() WhisperBackVersion(senderRaw) end)
       return
     end
   end
 end)
+
+SLASH_MNVERTEST1 = "/mnvertest"
+SlashCmdList["MNVERTEST"] = function()
+  if not IsDeveloperModeEnabled() then
+    if ns and ns.COLORED_ADDON_NAME then
+      print(ns.COLORED_ADDON_NAME .. " DeveloperMode ist nicht aktiv!")
+    else
+      print("MapNotes: DeveloperMode ist nicht aktiv!")
+    end
+    return
+  end
+
+  if VERSION_FALLBACK then
+    DevPrint("DEBUG: Kein Test möglich, TOC_VERSION ist 0.0.0")
+    return
+  end
+
+  if not IsInGuild() then
+    DevPrint("DEBUG: Du bist in keiner Gilde")
+    return
+  end
+
+  C_ChatInfo.SendAddonMessage(PREFIX, "TESTREQ", "GUILD")
+  DevPrint("DEBUG: Versionstest gesendet über GUILD")
+end

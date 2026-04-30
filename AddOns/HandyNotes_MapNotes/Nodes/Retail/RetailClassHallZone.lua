@@ -4,6 +4,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 function ns.LoadClassHallZoneLocationinfo(self)
 local db = ns.Addon.db.profile
 local nodes = ns.nodes
+local playerClass, englishClass, classIndex = UnitClass("player");
 ns.currentSourceFile = "RetailClassHallZone.lua"
 
 --#####################################################################################################
@@ -24,7 +25,7 @@ ns.currentSourceFile = "RetailClassHallZone.lua"
             --General Dalaran Legion
                 if self.db.profile.activate.CapitalsClassHall then
 
-                    if self.db.profile.showCapitalsClassHallEntrance then
+                    if self.db.profile.showCapitalsClassHallEntrance and not self.db.profile.showCapitalsClassHallClasses then
                         nodes[627][98096938] = { mnID = 720, name = "", TransportName = ORDER_HALL_DEMONHUNTER .. "\n" .. L["Class Hall"] .. " " .. L["Entrance"] .. " " .. SPLASH_LEGION_BOX_FEATURE1_TITLE, type = "CHDemonhunter", showInZone = true, showOnContinent = false, showOnMinimap = false } -- DH
                         nodes[627][67054820] = { mnID = 726, name = "", TransportName = ORDER_HALL_SHAMAN .. "\n" .. L["Class Hall"] .. " " .. L["Entrance"] .. " " .. L["Shaman"], type = "CHShaman", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Shaman
                         nodes[627][46592575] = { mnID = 626, name = "", TransportName = ORDER_HALL_ROGUE .. "\n" .. L["Class Hall"] .. " " .. L["Entrance"] .. " " .. L["Rogue"] .. "\n\n" .. "(" .. L["talk to"] .. ": " .. ns.Mongar .. ")", type = "CHRogue", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Rogue
@@ -48,9 +49,40 @@ ns.currentSourceFile = "RetailClassHallZone.lua"
 
                     end
 
-                    if self.db.profile.showCapitalsClassHallPortals and self.db.profile.showCapitalsPortals then
+                    if self.db.profile.showCapitalsClassHallEntrance and  self.db.profile.showCapitalsClassHallClasses then
+
+                        if englishClass == "ROGUE" then
+                            nodes[627][46592575] = { mnID = 626, name = "", TransportName = ORDER_HALL_ROGUE .. "\n" .. L["Class Hall"] .. " " .. L["Entrance"] .. " " .. L["Rogue"] .. "\n\n" .. "(" .. L["talk to"] .. ": " .. ns.Mongar .. ")", type = "CHRogue", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Rogue
+                            nodes[627][54323277] = { mnID = 626, name = "", TransportName = ORDER_HALL_ROGUE .. "\n" .. L["Class Hall"] .. " " .. L["Entrance"] .. " " .. L["Rogue"] .. "\n\n" .. "(" .. L["talk to"] .. ": " .. ns.LucianTrias .. ")", type = "CHRogue", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Rogue
+                            nodes[627][52707032] = { mnID = 626, name = "", TransportName = ORDER_HALL_ROGUE .. "\n" .. L["Class Hall"] .. " " .. L["Entrance"] .. " " .. L["Rogue"] .. "\n\n" .. "(" .. L["talk to"] .. ": " .. ns.JackFindel .. ")", type = "CHRogue", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Rogue
+                        end
+
+                        if englishClass == "SHAMAN" then
+                            nodes[627][67054820] = { mnID = 726, name = "", TransportName = ORDER_HALL_SHAMAN .. "\n" .. L["Class Hall"] .. " " .. L["Entrance"] .. " " .. L["Shaman"], type = "CHShaman", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Shaman
+                        end
+
+                        if englishClass == "PALADIN" then
+                            nodes[627][61891355] = { mnID = 24, name = "", TransportName = ORDER_HALL_PALADIN .. "\n" .. L["Class Hall"] .. " " .. L["Entrance"] .. " " .. L["Paladin"], type = "CHPaladin", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Paladin
+                        end
+
+                        if englishClass == "WARRIOR" then
+                            nodes[627][74974754] = { mnID = 695, name = "", TransportName = ORDER_HALL_WARRIOR .. "\n" .. L["Class Hall"] .. " " .. L["Entrance"] .. " " .. L["Warrior"] .. "\n\n" .. ITEM_SPELL_TRIGGER_ONUSE .. " " .. ns.JumpToSkyhold .. "\n(" .. ENCOUNTER_JOURNAL_ABILITY .. ")", type = "CHWarrior", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Warrior
+                        end
+
+                        if englishClass == "WARLOCK" then
+                            nodes[628][27574455] = { mnID = 717, name = "", TransportName = ORDER_HALL_WARLOCK .. "\n" .. L["Class Hall"] .. " " .. L["Entrance"] .. " " .. L["Warlock"], type = "CHWarlock", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Warlock
+                        end
+
+                        if englishClass == "PRIEST" then
+                            nodes[627][62851763] = { mnID = 702, name = "", TransportName = ORDER_HALL_PRIEST .. "\n" .. L["Class Hall"] .. " " .. L["Entrance"] .. " " .. L["Priest"], type = "CHPriest", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Priest
+                        end
+
+                        if englishClass == "DEMONHUNTER" then
+                            nodes[627][98096938] = { mnID = 720, name = "", TransportName = ORDER_HALL_DEMONHUNTER .. "\n" .. L["Class Hall"] .. " " .. L["Entrance"] .. " " .. SPLASH_LEGION_BOX_FEATURE1_TITLE, type = "CHDemonhunter", showInZone = true, showOnContinent = false, showOnMinimap = false } -- DH
+                        end
 
                     end
+
 
                     if self.db.profile.showCapitalsClassHallPortals then
                         nodes[24][37606406] = { mnID = 627, name = "", dnID = L["Portal"], type = "CHPortal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Paladin - Dalaran

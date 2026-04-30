@@ -6,7 +6,12 @@ local PickupInventoryItem = PickupInventoryItem
 local PickupContainerItem = C_Container and C_Container.PickupContainerItem or PickupContainerItem
 local GetContainerFreeSlots = C_Container and C_Container.GetContainerFreeSlots or GetContainerFreeSlots
 local GetContainerItemInfo = C_Container and C_Container.GetContainerItemInfo or GetContainerItemInfo
-local EquipmentManager_UnpackLocation = EquipmentManager_UnpackLocation
+local EquipmentManager_UnpackLocation = EquipmentManager_UnpackLocation or function (packedLocation)
+	local locationData = EquipmentManager_GetLocationData(packedLocation);
+	-- Void Storage is being deprecated in 11.2.0
+	local voidStorage, tab, voidSlot = false, nil, nil;
+	return locationData.isPlayer or false, locationData.isBank or false, locationData.isBags or false, voidStorage, locationData.slot, locationData.bag, tab, voidSlot;
+end
 local GetInventoryItemLink = GetInventoryItemLink
 local GetContainerItemLink = C_Container and C_Container.GetContainerItemLink or GetContainerItemLink
 local GetContainerNumSlots = C_Container and C_Container.GetContainerNumSlots or GetContainerNumSlots
@@ -2912,11 +2917,18 @@ if TooltipDataProcessor then
 			return
 		end
 
+		if issecretvalue(lineData.leftText) then
+			return
+		end
 		if lineData.leftText:match(equipmentSetPattern) then
 			local sets = GetEquipmentSetLine(self.processingInfo)
 			if sets then
-				lineData.leftText = sets
-				added = true
+				-- Updating the equipment set line was causing an issue with the money frame,
+				-- so now we remove the line, and readd it
+				lineData.btwloadouts = true
+				-- lineData.leftText = sets
+				-- added = true
+				return true
 			end
 		end
 	end)
@@ -2928,7 +2940,7 @@ if TooltipDataProcessor then
 
 		local tooltipData = self.processingInfo.tooltipData
 		for _,line in ipairs(tooltipData.lines) do
-			if line.leftText:match(equipmentSetPattern) then
+			if not issecretvalue(line.leftText) and line.leftText:match(equipmentSetPattern) and not line.btwloadouts then
 				return -- Already has equipment set line
 			end
 		end
@@ -2942,6 +2954,9 @@ if TooltipDataProcessor then
 	TooltipDataProcessor.AddLinePreCall(Enum.TooltipDataLineType.SellPrice, AddEquipmentSetLine)
 	TooltipDataProcessor.AddLinePostCall(Enum.TooltipDataLineType.None, function (self, lineData)
 		local leftText = lineData.leftText
+		if issecretvalue(leftText) then
+			return
+		end
 		if leftText == ITEM_SOCKETABLE or leftText == ITEM_ARTIFACT_VIEWABLE or leftText == ITEM_AZERITE_EMPOWERED_VIEWABLE or leftText == ITEM_AZERITE_ESSENCES_VIEWABLE or leftText:match(itemCreatedPattern) or leftText:match(durabilityPattern) then
 			AddEquipmentSetLine(self)
 		end

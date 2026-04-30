@@ -280,6 +280,11 @@ do
 
 		local frameName = self.GetName and self:GetName()
 		local down = self.Button or frameName and (_G[frameName.."Button"] or _G[frameName.."_Button"])
+		if not down then
+			P.Developer_ThrowError("dropdown button is nil")
+			return
+		end
+
 		down:ClearAllPoints()
 		down:SetPoint("RIGHT", -18, 2)
 		B.ReskinArrow(down, "down")
@@ -341,6 +346,17 @@ do
 			self:DisableDrawLayer("BACKGROUND")
 			self.bg = B.SetBD(self, .7)
 			self.bg:SetInside(self)
+
+			local header = self.CompareHeader
+			if header then
+				B.StripTextures(header)
+				local bg = header:CreateTexture(nil, "ARTWORK")
+				bg:SetTexture("Interface\\LFGFrame\\UI-LFG-SEPARATOR")
+				bg:SetTexCoord(0, .66, 0, .31)
+				bg:SetVertexColor(cr, cg, cb, .8)
+				bg:SetPoint("BOTTOM", 0, -4)
+				bg:SetSize(100, 30)
+			end
 
 			self.tipStyled = true
 		end
@@ -441,21 +457,30 @@ do
 	end
 
 	function P:SecureHook(object, method, handler)
+		if not object then
+			P.Developer_ThrowError("Attempting to hook a non existing object")
+			return
+		end
+
 		if not handler then
 			method, handler, object = object, method, nil
 		end
 
+		if object and type(object) == "string" then
+			object = _G[object]
+		end
+
 		if object then
-			if _G[object] and _G[object][method] then
-				hooksecurefunc(_G[object], method, handler)
+			if object[method] then
+				hooksecurefunc(object, method, handler)
 			else
-				P.Developer_ThrowError(format("%s:%s does not exist", object, method))
+				P.Developer_ThrowError(format("Attempting to hook a non existing function %s", method))
 			end
 		else
 			if _G[method] then
 				hooksecurefunc(method, handler)
 			else
-				P.Developer_ThrowError(format("%s does not exist", method))
+				P.Developer_ThrowError(format("Attempting to hook a non existing function %s", method))
 			end
 		end
 	end

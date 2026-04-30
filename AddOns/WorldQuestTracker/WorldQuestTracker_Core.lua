@@ -40,20 +40,22 @@ if (not LibWindow) then
 end
 
 --on hover over an icon on the world map(possivle deprecated on 8.0)
-hooksecurefunc("TaskPOI_OnEnter", function(self)
-	WorldQuestTracker.CurrentHoverQuest = self.questID
-	if (self.Texture and self.IsZoneQuestButton) then
-		self.Texture:SetBlendMode("ADD")
-	end
-end)
+if not DF.IsAddonApocalypseWow() then
+	hooksecurefunc("TaskPOI_OnEnter", function(self)
+		WorldQuestTracker.CurrentHoverQuest = self.questID
+		if (self.Texture and self.IsZoneQuestButton) then
+			self.Texture:SetBlendMode("ADD")
+		end
+	end)
 
---on leave the hover over of an icon in the world map(possivle deprecated on 8.0)
-hooksecurefunc("TaskPOI_OnLeave", function(self)
-	WorldQuestTracker.CurrentHoverQuest = nil
-	if (self.Texture and self.IsZoneQuestButton) then
-		self.Texture:SetBlendMode("BLEND")
-	end
-end)
+	--on leave the hover over of an icon in the world map(possivle deprecated on 8.0)
+	hooksecurefunc("TaskPOI_OnLeave", function(self)
+		WorldQuestTracker.CurrentHoverQuest = nil
+		if (self.Texture and self.IsZoneQuestButton) then
+			self.Texture:SetBlendMode("BLEND")
+		end
+	end)
+end
 
 --update the zone which the player are current placed(possivle deprecated on 8.0)
 function WorldQuestTracker:UpdateCurrentStandingZone()
@@ -85,19 +87,167 @@ end
 
 --~mapchange ~map change ~change map ~changemap
 
+local GetQuestsForPlayerByMapID = C_TaskQuest.GetQuestsForPlayerByMapID or C_TaskQuest.GetQuestsOnMap
+local GetNumQuestLogRewardCurrencies = WorldQuestTrackerAddon.GetNumQuestLogRewardCurrencies
+local GetQuestLogRewardInfo = GetQuestLogRewardInfo
+local GetQuestLogRewardCurrencyInfo = WorldQuestTrackerAddon.GetQuestLogRewardCurrencyInfo
+local IsQuestCriteriaForBounty = C_QuestLog.IsQuestCriteriaForBounty
+
+local hoookClick = function(self, button)
+	local questID = self.questID
+
+	local mapID = WorldQuestTracker.GetCurrentMapAreaID()
+	local bWarband, bWarbandRep = WorldQuestTracker.GetQuestWarbandInfo(questID, factionID)
+	local selected = WorldMap_IsWorldQuestEffectivelyTracked(questID)
+	local bountyQuestId = WorldQuestTracker.GetCurrentBountyQuest()
+	local isCriteria = C_QuestLog.IsQuestCriteriaForBounty(questID, bountyQuestId)
+	--local isCriteria = false
+	local isSpellTarget = SpellCanTargetQuest() and IsQuestIDValidSpellTarget(questID)
+	local taskInfo
+	if (mapID == WorldQuestTracker.MapData.ZoneIDs.DALARAN) then
+		taskInfo = GetQuestsForPlayerByMapID(mapID) --fix from @legowxelab2z8 from curse
+	else
+		taskInfo = GetQuestsForPlayerByMapID(mapID, mapID)
+	end
+
+	local questInfo
+
+	if (taskInfo and #taskInfo > 0) then
+		for i, info  in ipairs(taskInfo) do
+			local infoQuestID = info.questID
+			if (infoQuestID == questID) then
+				questInfo = info
+				break
+			end
+		end
+	end
+
+	local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, allowDisplayPastCritical, gold, goldFormated, rewardName, rewardTexture, numRewardItems, itemName, itemTexture, itemLevel, itemQuantity, itemQuality, isUsable, itemID, isArtifact, artifactPower, isStackable, stackAmount = WorldQuestTracker.GetOrLoadQuestData(questID)
+	local filter, order = WorldQuestTracker.GetQuestFilterTypeAndOrder(worldQuestType, gold, rewardName, itemName, isArtifact, stackAmount, numRewardItems, rewardTexture, tagID)
+	local timeLeft = WorldQuestTracker.GetQuest_TimeLeft(questID)
+
+	self.mapID = mapID
+	self.numObjectives = questInfo and questInfo.numObjectives or 1
+	self.questCounter = 1
+	self.title = title
+	self.x = questInfo and questInfo.x or 0
+	self.y = questInfo and questInfo.y or 0
+	self.filter = filter
+	self.worldQuestType = worldQuestType
+	self.isCriteria = isCriteria
+	self.isNew = false
+	self.timeLeft = timeLeft
+	self.order = order
+	self.rarity = rarity
+	self.isElite = isElite
+	self.tradeskillLineIndex = tradeskillLineIndex
+	self.factionID = factionID
+	self.isWarband = bWarband
+	self.warbandRep = bWarbandRep
+	self.tagID = tagID
+	self.tagName = tagName
+	self.gold = gold
+	self.goldFormated = goldFormated
+	self.rewardName = rewardName
+	self.rewardTexture = rewardTexture
+	self.numRewardItems = numRewardItems
+	self.itemName = itemName
+	self.itemTexture = itemTexture
+	self.itemLevel = itemLevel
+	self.quantity = itemQuantity
+	self.quality = itemQuality
+	self.isUsable = isUsable
+	self.itemID = itemID
+	self.isArtifact = isArtifact
+	self.artifactPower = artifactPower
+	self.isStackable = isStackable
+	self.stackAmount = stackAmount
+	self.inProgress = false
+	self.selected = false
+	self.isSpellTarget = false
+
+	local iconTexture = self.IconTexture
+	local iconText = self.IconText
+	local questType = self.QuestType
+
+	for i = 1, #WorldQuestTracker.Cache_ShownWidgetsOnZoneMap do
+		local widget = WorldQuestTracker.Cache_ShownWidgetsOnZoneMap[i]
+		if widget.questID == questID then
+			self.IconTexture = widget.IconTexture
+			self.IconText = widget.IconText
+			self.QuestType = widget.QuestType
+			break
+		end
+	end
+
+	WorldQuestTracker.OnQuestButtonClick(self, button)
+end
 
 -- default world quest pins from the map
 hooksecurefunc(WorldMap_WorldQuestPinMixin, "RefreshVisuals", function(self)
 	if (self.questID) then
-		WorldQuestTracker.DefaultWorldQuestPin [self.questID] = self
+		WorldQuestTracker.DefaultWorldQuestPin[self.questID] = self
+		self:SetMouseClickEnabled(false)
 
 		if (not WorldQuestTracker.ShowDefaultWorldQuestPin [self.questID]) then
 			if (WorldQuestTracker.db.profile.zone_map_config.show_widgets) then
+				self.IsZoneQuestButton = true
+				if not self.clickHooked then
+					self:SetScript("OnClick", hoookClick)
+					self.clickHooked = true
+				end
+			else
 				self:Hide()
 			end
 		end
 	end
 end)
+
+--[[prey
+
+/dump C_QuestLog.GetActivePreyQuest() --return questID
+C_UIWidgetManager.GetPreyHuntProgressWidgetVisualizationInfo --return "widgetInfo", Type = "PreyHuntProgressWidgetVisualizationInfo"
+
+{
+	Name = "PreyHuntProgressState",
+	Type = "Enumeration",
+	NumValues = 4,
+	MinValue = 0,
+	MaxValue = 3,
+	Fields =
+	{
+		{ Name = "Cold", Type = "PreyHuntProgressState", EnumValue = 0 },
+		{ Name = "Warm", Type = "PreyHuntProgressState", EnumValue = 1 },
+		{ Name = "Hot", Type = "PreyHuntProgressState", EnumValue = 2 },
+		{ Name = "Final", Type = "PreyHuntProgressState", EnumValue = 3 },
+	},
+},
+
+{
+	Name = "PreyHuntProgressWidgetVisualizationInfo",
+	Type = "Structure",
+	Fields =
+	{
+		{ Name = "shownState", Type = "WidgetShownState", Nilable = false },
+		{ Name = "progressState", Type = "PreyHuntProgressState", Nilable = false },
+		{ Name = "tooltip", Type = "string", Nilable = false },
+		{ Name = "tooltipLoc", Type = "UIWidgetTooltipLocation", Nilable = false },
+		{ Name = "widgetSizeSetting", Type = "number", Nilable = false },
+		{ Name = "textureKit", Type = "textureKit", Nilable = false },
+		{ Name = "frameTextureKit", Type = "textureKit", Nilable = false },
+		{ Name = "hasTimer", Type = "bool", Nilable = false },
+		{ Name = "orderIndex", Type = "number", Nilable = false },
+		{ Name = "widgetTag", Type = "string", Nilable = false },
+		{ Name = "inAnimType", Type = "WidgetAnimationType", Nilable = false },
+		{ Name = "outAnimType", Type = "WidgetAnimationType", Nilable = false },
+		{ Name = "widgetScale", Type = "UIWidgetScale", Nilable = false },
+		{ Name = "layoutDirection", Type = "UIWidgetLayoutDirection", Nilable = false },
+		{ Name = "modelSceneLayer", Type = "UIWidgetModelSceneLayer", Nilable = false },
+		{ Name = "scriptedAnimationEffectID", Type = "number", Nilable = false },
+	},
+},
+
+--]]
 
 --OnTick
 local OnUpdateDelay = .5
@@ -259,6 +409,57 @@ WorldQuestTracker.OnToggleWorldMap = function(self)
 			WorldMapFrame.hadItsFirstRunAlready = true
 
 			wqtInternal.CreateSummary()
+
+			EventRegistry:RegisterCallback("MapCanvas.MapSet", function(mapID) do return end
+				--runs on world map
+				if (WorldQuestTracker.GetCurrentZoneType() == "world") then
+					--hide the zone summary frame
+					WorldQuestTracker.SetZoneSummaryEnterFrameVisibility(false)
+
+					local questProvider = WorldQuestTracker.GetWQTProvider()
+
+					if questProvider then
+						WorldQuestTracker.RemoveAllPins()
+
+						local EVERSONG_WOODS = 2395
+						local ZULAMAN = 2437
+						local VOIDSTORM = 2405
+						local HARANDAR = 2413
+
+						local mapIds = {
+							EVERSONG_WOODS,
+							ZULAMAN,
+							VOIDSTORM,
+							HARANDAR,
+						}
+
+						for index, mapID in ipairs(mapIds) do
+							local taskInfo = GetQuestsForPlayerByMapID(mapID, mapID)
+							if (taskInfo and #taskInfo > 0) then
+								for i, info  in ipairs(taskInfo) do
+									if info.questID then
+										if not InCombatLockdown() then
+											if false then
+												if QuestUtils_IsQuestWorldQuest(info.questID) or info.isMapIndicatorQuest then
+													local thisPin = questProvider:AddWorldQuest(info) --cause propagation
+													WorldQuestTracker.DefaultWorldQuestPin[info.questID] = thisPin
+													thisPin:SetAlpha(0)
+													thisPin:SetPosition(1, 1)
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+
+					end
+
+				elseif (WorldQuestTracker.GetCurrentZoneType() == "zone") then
+
+				end
+			end)
+
 
 			--> some addon is adding these words on the global namespace.
 			--> I trully believe that it's not intended at all, so let's just clear.
@@ -1698,13 +1899,14 @@ WorldQuestTracker.OnToggleWorldMap = function(self)
 			local line_onenter = function(self)
 				if (self.questID) then
 					self.numObjectives = 10
-					self.UpdateTooltip = TaskPOI_OnEnter
-					TaskPOI_OnEnter(self)
+					WorldQuestTracker.ShowQuestTooltip(self)
+					--TaskPOI_OnEnter(self)
+
 					self:SetBackdropColor(.5, .50, .50, 0.75)
 				end
 			end
 			local line_onleave = function(self)
-				TaskPOI_OnLeave(self)
+				WorldQuestTracker.HideQuestTooltip(self)
 				self:SetBackdropColor(0, 0, 0, 0.2)
 			end
 			local line_onclick = function()
@@ -3216,7 +3418,7 @@ WorldQuestTracker.OnToggleWorldMap = function(self)
 
 			--anima��o
 			worldFramePOIs:SetScript("OnShow", function()
-				worldFramePOIs.fadeInAnimation:Play()
+				--worldFramePOIs.fadeInAnimation:Play()
 			end)
 		end
 

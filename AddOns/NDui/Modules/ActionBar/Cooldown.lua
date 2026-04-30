@@ -2,221 +2,92 @@ local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local module = B:RegisterModule("Cooldown")
 
-local pairs, format, floor, strfind = pairs, format, floor, strfind
-local GetTime, GetActionCooldown, tonumber = GetTime, GetActionCooldown, tonumber
+local DISABLE_INDEX = 5
+local numberFormatter = C_StringUtil.CreateNumericRuleFormatter()
+local hookedCooldownFrames = {}
 
-local FONT_SIZE = 19
-local MIN_DURATION = 2.5                    -- the minimum duration to show cooldown text for
-local MIN_SCALE = 0.5                       -- the minimum scale we want to show cooldown counts at, anything below this will be hidden
-local ICON_SIZE = 36
-local hideNumbers, active, hooked = {}, {}, {}
+local ROUNDING_UP = Enum.NumericRuleFormatRounding.Up
+local ROUNDING_NEAREST = Enum.NumericRuleFormatRounding.Nearest
+local COLOR_RED = CreateColor(1, 0, 0, 1)
+local COLOR_YELLOW = CreateColor(1, 1, 0, 1)
+local COLOR_DARK = CreateColor(.8, .8, .2, 1)
 
-local day, hour, minute = 86400, 3600, 60
-function module.FormattedTimer(s, modRate)
-	if s >= day then
-		return format("%d"..DB.MyColor.."d", s/day + .5), s%day
-	elseif s > hour then
-		return format("%d"..DB.MyColor.."h", s/hour + .5), s%hour
-	elseif s >= minute then
-		if s < C.db["Actionbar"]["MmssTH"] then
-			return format("%d:%.2d", s/minute, s%minute), s - floor(s)
-		else
-			return format("%d"..DB.MyColor.."m", s/minute + .5), s%minute
-		end
-	else
-		local colorStr = (s < 3 and "|cffff0000") or (s < 10 and "|cffffff00") or "|cffcccc33"
-		if s < C.db["Actionbar"]["TenthTH"] then
-			return format(colorStr.."%.1f|r", s), (s - format("%.1f", s)) / modRate
-		else
-			return format(colorStr.."%d|r", s + .5), (s - floor(s)) / modRate
-		end
+local breakPoints = {
+	[1] = {
+		{ threshold = 0, format = COLOR_RED:WrapTextInColorCode("%.1f"), components = {{step = .1, rounding = ROUNDING_UP}} },
+		{ threshold = 3, format = COLOR_YELLOW:WrapTextInColorCode("%d"), components = {{div = 1, step = 1, rounding = ROUNDING_UP}} },
+		{ threshold = 10, format = COLOR_DARK:WrapTextInColorCode("%d"), components = {{div = 1, step = 1, rounding = ROUNDING_UP}} },
+		{ threshold = 60, format = "%d:%02d", components = {{div = 60}, {mod = 60}} },
+		{ threshold = 60*10, format = "%d"..DB.MyColor.."m", components = {{div = 60, step = 1, rounding = ROUNDING_NEAREST}} }, -- 10 minutes
+		{ threshold = 3600*2, format = "%d"..DB.MyColor.."h", components = {{div = 3600, step = 1, rounding = ROUNDING_NEAREST}} }, -- 2 hour
+		{ threshold = 86400, format = "%d"..DB.MyColor.."d", components = {{div = 86400, step = 1, rounding = ROUNDING_NEAREST}} }, -- 1 day
+	},
+	[2] = {
+		{ threshold = 0, format = COLOR_RED:WrapTextInColorCode("%d"), components = {{div = 1, step = 1, rounding = ROUNDING_UP}} },
+		{ threshold = 3, format = COLOR_YELLOW:WrapTextInColorCode("%d"), components = {{div = 1, step = 1, rounding = ROUNDING_UP}} },
+		{ threshold = 10, format = COLOR_DARK:WrapTextInColorCode("%d"), components = {{div = 1, step = 1, rounding = ROUNDING_UP}} },
+		{ threshold = 60, format = "%d:%02d", components = {{div = 60}, {mod = 60}} },
+		{ threshold = 60*10, format = "%d"..DB.MyColor.."m", components = {{div = 60, step = 1, rounding = ROUNDING_NEAREST}} }, -- 10 minutes
+		{ threshold = 3600*2, format = "%d"..DB.MyColor.."h", components = {{div = 3600, step = 1, rounding = ROUNDING_NEAREST}} }, -- 2 hour
+		{ threshold = 86400, format = "%d"..DB.MyColor.."d", components = {{div = 86400, step = 1, rounding = ROUNDING_NEAREST}} }, -- 1 day
+	},
+	[3] = {
+		{ threshold = 0, format = "%.1f", components = {{step = .1, rounding = ROUNDING_UP}} },
+		{ threshold = 3, format = "%d", components = {{div = 1, step = 1, rounding = ROUNDING_UP}} },
+		{ threshold = 60, format = "%d:%02d", components = {{div = 60}, {mod = 60}} },
+		{ threshold = 60*10, format = "%dm", components = {{div = 60, step = 1, rounding = ROUNDING_NEAREST}} }, -- 10 minutes
+		{ threshold = 3600*2, format = "%dh", components = {{div = 3600, step = 1, rounding = ROUNDING_NEAREST}} }, -- 2 hour
+		{ threshold = 86400, format = "%dd", components = {{div = 86400, step = 1, rounding = ROUNDING_NEAREST}} }, -- 1 day
+	},
+	[4] = {
+		{ threshold = 0, format = "%d", components = {{div = 1, step = 1, rounding = ROUNDING_UP}} },
+		{ threshold = 60, format = "%d:%02d", components = {{div = 60}, {mod = 60}} },
+		{ threshold = 60*10, format = "%dm", components = {{div = 60, step = 1, rounding = ROUNDING_NEAREST}} }, -- 10 minutes
+		{ threshold = 3600*2, format = "%dh", components = {{div = 3600, step = 1, rounding = ROUNDING_NEAREST}} }, -- 2 hour
+		{ threshold = 86400, format = "%dd", components = {{div = 86400, step = 1, rounding = ROUNDING_NEAREST}} }, -- 1 day
+	},
+}
+
+function module:UpdateBreakPoints()
+	local mode = C.db["Actionbar"]["CDFormat"]
+	if mode ~= DISABLE_INDEX then
+		numberFormatter:SetBreakpoints(breakPoints[mode])
 	end
 end
 
-function module:StopTimer()
-	self.enabled = nil
-	self:Hide()
+local function updateCooldown(cooldown)
+	if not cooldown or hookedCooldownFrames[cooldown] then return end
+
+	local isEnable = C.db["Actionbar"]["CDFormat"] ~= DISABLE_INDEX
+	cooldown:SetCountdownFormatter(isEnable and numberFormatter or nil)
+	hookedCooldownFrames[cooldown] = true
 end
 
-function module:ForceUpdate()
-	self.nextUpdate = 0
-	self:Show()
-end
-
-function module:OnSizeChanged(width, height)
-	local fontScale = B:Round((width+height)/2) / ICON_SIZE
-	if fontScale == self.fontScale then return end
-	self.fontScale = fontScale
-
-	if fontScale < MIN_SCALE then
-		self:Hide()
-	else
-		B.SetFontSize(self.text, fontScale * FONT_SIZE)
-		self.text:SetShadowColor(0, 0, 0, 0)
-
-		if self.enabled then
-			module.ForceUpdate(self)
-		end
-	end
-end
-
-function module:TimerOnUpdate(elapsed)
-	if self.nextUpdate > 0 then
-		self.nextUpdate = self.nextUpdate - elapsed
-	else
-		if self.modRate == 0 then self.modRate = 1 end -- prevent divide by zero
-		local passTime = GetTime() - self.start
-		local remain = passTime >= 0 and ((self.duration - passTime) / self.modRate) or self.duration
-		if remain > 0 then
-			local getTime, nextUpdate = module.FormattedTimer(remain, self.modRate)
-			self.text:SetText(getTime)
-			self.nextUpdate = nextUpdate
-		else
-			module.StopTimer(self)
-		end
-	end
-end
-
-function module:ScalerOnSizeChanged(...)
-	module.OnSizeChanged(self.timer, ...)
-end
-
-function module:OnCreate()
-	local scaler = CreateFrame("Frame", nil, self)
-	scaler:SetAllPoints(self)
-
-	local timer = CreateFrame("Frame", nil, scaler)
-	timer:Hide()
-	timer:SetAllPoints(scaler)
-	timer:SetScript("OnUpdate", module.TimerOnUpdate)
-	scaler.timer = timer
-
-	local text = timer:CreateFontString(nil, "BACKGROUND")
-	text:SetPoint("CENTER", 1, 0)
-	text:SetJustifyH("CENTER")
-	timer.text = text
-
-	module.OnSizeChanged(timer, scaler:GetSize())
-	scaler:SetScript("OnSizeChanged", module.ScalerOnSizeChanged)
-
-	self.timer = timer
-	return timer
-end
-
-function module:StartTimer(start, duration, modRate)
-	if self:IsForbidden() then return end
-	if self.noCooldownCount or hideNumbers[self] then return end
-
-	local frameName = self.GetName and self:GetName()
-	if C.db["Actionbar"]["OverrideWA"] and frameName and strfind(frameName, "WeakAuras") then
-		self.noCooldownCount = true
+function module:UpdateCooldownFormat()
+	local mode = C.db["Actionbar"]["CDFormat"]
+	if mode == DISABLE_INDEX then
+		SetCVar("countdownForCooldowns", 0)
 		return
 	end
 
-	local parent = self:GetParent()
-	start = tonumber(start) or 0
-	duration = tonumber(duration) or 0
-	modRate = tonumber(modRate) or 1
+	SetCVar("countdownForCooldowns", 1)
+	numberFormatter:SetBreakpoints(breakPoints[mode])
 
-	if start > 0 and duration > MIN_DURATION then
-		local timer = self.timer or module.OnCreate(self)
-		timer.start = start
-		timer.duration = duration
-		timer.modRate = modRate
-		timer.enabled = true
-		timer.nextUpdate = 0
-
-		-- wait for blizz to fix itself
-		local charge = parent and parent.chargeCooldown
-		local chargeTimer = charge and charge.timer
-		if chargeTimer and chargeTimer ~= timer then
-			module.StopTimer(chargeTimer)
-		end
-
-		if timer.fontScale and timer.fontScale >= MIN_SCALE then
-			timer:Show()
-		end
-	elseif self.timer then
-		module.StopTimer(self.timer)
-	end
-
-	-- hide cooldown flash if barFader enabled
-	if parent and parent.__faderParent then
-		if self:GetEffectiveAlpha() > 0 then
-			self:Show()
-		else
-			self:Hide()
-		end
-	end
-
-	-- Disable blizzard cooldown numbers
-	if self.SetHideCountdownNumbers then
-		self:SetHideCountdownNumbers(true)
+	for cooldown in pairs(hookedCooldownFrames) do
+		cooldown:SetCountdownFormatter(numberFormatter)
 	end
 end
 
-function module:HideCooldownNumbers()
-	hideNumbers[self] = true
-	if self.timer then module.StopTimer(self.timer) end
-end
-
-function module:CooldownOnShow()
-	active[self] = true
-end
-
-function module:CooldownOnHide()
-	active[self] = nil
-end
-
-local function shouldUpdateTimer(self, start)
-	local timer = self.timer
-	if not timer then
-		return true
-	end
-	return timer.start ~= start
-end
-
-function module:CooldownUpdate()
-	local button = self:GetParent()
-	local start, duration, _, modRate = GetActionCooldown(button.action)
-
-	if shouldUpdateTimer(self, start) then
-		module.StartTimer(self, start, duration, modRate)
-	end
-end
-
-function module:ActionbarUpateCooldown()
-	for cooldown in pairs(active) do
-		module.CooldownUpdate(cooldown)
-	end
-end
-
-function module:RegisterActionButton()
-	local cooldown = self.cooldown
-	if not hooked[cooldown] then
-		cooldown:HookScript("OnShow", module.CooldownOnShow)
-		cooldown:HookScript("OnHide", module.CooldownOnHide)
-
-		hooked[cooldown] = true
-	end
-end
-
-function module:OnSetHideCountdownNumbers(hide)
-	local disable = not (hide or self.noCooldownCount or self:IsForbidden())
-	if disable then
-		self:SetHideCountdownNumbers(true)
-	end
-end
 
 function module:OnLogin()
-	if not C.db["Actionbar"]["Cooldown"] then return end
+	module:UpdateBreakPoints()
 
-	local cooldownIndex = getmetatable(ActionButton1Cooldown).__index
-	hooksecurefunc(cooldownIndex, "SetCooldown", module.StartTimer)
-	hooksecurefunc(cooldownIndex, "SetHideCountdownNumbers", module.OnSetHideCountdownNumbers)
-	hooksecurefunc("CooldownFrame_SetDisplayAsPercentage", module.HideCooldownNumbers)
-	B:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN", module.ActionbarUpateCooldown)
+	local cooldown_mt = getmetatable(ActionButton1Cooldown).__index
+	local methods = {"SetCooldown", "SetCooldownDuration", "SetHideCountdownNumbers", "SetCooldownFromDurationObject"}
+	for _, method in pairs(methods) do
+		hooksecurefunc(cooldown_mt, method, updateCooldown)
+	end
+	hooksecurefunc("CooldownFrame_SetDisplayAsPercentage", updateCooldown)
 
-	-- Hide Default Cooldown
-	SetCVar("countdownForCooldowns", 0)
+	SetCVar("countdownForCooldowns", C.db["Actionbar"]["CDFormat"] ~= DISABLE_INDEX and 1 or 0)
 end

@@ -13,15 +13,15 @@ function ns.RestoreStaticPopUpsRetail()
     hideOnEscape = true,
     OnAccept = function()
       if ns.Addon.db.profile.RestoreAllIcons then
-        wipe(ns.dbChar.CapitalsDeletedIcons)
-        wipe(ns.dbChar.MinimapCapitalsDeletedIcons)
-        wipe(ns.dbChar.CapitalsDeletedIcons)
-        wipe(ns.dbChar.MinimapCapitalsDeletedIcons)
-        wipe(ns.dbChar.AzerothDeletedIcons)
-        wipe(ns.dbChar.ContinentDeletedIcons)
-        wipe(ns.dbChar.ZoneDeletedIcons)
-        wipe(ns.dbChar.MinimapZoneDeletedIcons)
-        wipe(ns.dbChar.DungeonDeletedIcons)
+        wipe(ns.dbProfile.CapitalsDeletedIcons)
+        wipe(ns.dbProfile.MinimapCapitalsDeletedIcons)
+        wipe(ns.dbProfile.CapitalsDeletedIcons)
+        wipe(ns.dbProfile.MinimapCapitalsDeletedIcons)
+        wipe(ns.dbProfile.AzerothDeletedIcons)
+        wipe(ns.dbProfile.ContinentDeletedIcons)
+        wipe(ns.dbProfile.ZoneDeletedIcons)
+        wipe(ns.dbProfile.MinimapZoneDeletedIcons)
+        wipe(ns.dbProfile.DungeonDeletedIcons)
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00", L["All deleted icons have been restored"])
       end
       HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
@@ -42,8 +42,8 @@ function ns.RestoreStaticPopUpsRetail()
     hideOnEscape = true,
     OnAccept = function()
       if ns.Addon.db.profile.RestoreCapitalsDeletedIcons then
-        wipe(ns.dbChar.CapitalsDeletedIcons)
-        wipe(ns.dbChar.MinimapCapitalsDeletedIcons)
+        wipe(ns.dbProfile.CapitalsDeletedIcons)
+        wipe(ns.dbProfile.MinimapCapitalsDeletedIcons)
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00",L["Capitals"] .. " & " .. L["Capitals"] .. " - " .. MINIMAP_LABEL .. " - " .. "|cff00ff00" .. L["All deleted icons have been restored"])
       end
       HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
@@ -64,8 +64,8 @@ function ns.RestoreStaticPopUpsRetail()
     hideOnEscape = true,
     OnAccept = function()
       if ns.Addon.db.profile.RestoreZoneDeletedIcons then
-        wipe(ns.dbChar.ZoneDeletedIcons)
-        wipe(ns.dbChar.MinimapZoneDeletedIcons)
+        wipe(ns.dbProfile.ZoneDeletedIcons)
+        wipe(ns.dbProfile.MinimapZoneDeletedIcons)
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00",L["Zones"] .. " & " .. MINIMAP_LABEL .. " - " .. "|cff00ff00" .. L["All deleted icons have been restored"])
       end
       HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
@@ -86,7 +86,7 @@ function ns.RestoreStaticPopUpsRetail()
     hideOnEscape = true,
     OnAccept = function()
       if ns.Addon.db.profile.RestoreContinentDeletedIcons then
-        wipe(ns.dbChar.ContinentDeletedIcons)
+        wipe(ns.dbProfile.ContinentDeletedIcons)
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00",L["Continents"] .. " - " .. "|cff00ff00" .. L["All deleted icons have been restored"])
       end
       HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
@@ -107,7 +107,7 @@ function ns.RestoreStaticPopUpsRetail()
     hideOnEscape = true,
     OnAccept = function()
       if ns.Addon.db.profile.RestoreAzerothDeletedIcons then
-        wipe(ns.dbChar.AzerothDeletedIcons)
+        wipe(ns.dbProfile.AzerothDeletedIcons)
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00",AZEROTH .. " - " .. "|cffff0000" .. "|cff00ff00" .. L["All deleted icons have been restored"])
       end
       HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
@@ -128,7 +128,7 @@ function ns.RestoreStaticPopUpsRetail()
     hideOnEscape = true,
     OnAccept = function()
       if ns.Addon.db.profile.RestoreDungeonDeletedIcons then
-        wipe(ns.dbChar.DungeonDeletedIcons)
+        wipe(ns.dbProfile.DungeonDeletedIcons)
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00",CALENDAR_TYPE_DUNGEON .. " - " .. "|cff00ff00" .. L["All deleted icons have been restored"])
       end
       HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
@@ -171,15 +171,15 @@ function ns.RestoreStaticPopUps()
     hideOnEscape = true,
     OnAccept = function()
       if ns.Addon.db.profile.RestoreAllIcons then
-        wipe(ns.dbChar.CapitalsDeletedIcons)
-        wipe(ns.dbChar.MinimapCapitalsDeletedIcons)
-        wipe(ns.dbChar.CapitalsDeletedIcons)
-        wipe(ns.dbChar.MinimapCapitalsDeletedIcons)
-        wipe(ns.dbChar.AzerothDeletedIcons)
-        wipe(ns.dbChar.ContinentDeletedIcons)
-        wipe(ns.dbChar.ZoneDeletedIcons)
-        wipe(ns.dbChar.MinimapZoneDeletedIcons)
-        wipe(ns.dbChar.DungeonDeletedIcons)
+        wipe(ns.dbProfile.CapitalsDeletedIcons)
+        wipe(ns.dbProfile.MinimapCapitalsDeletedIcons)
+        wipe(ns.dbProfile.CapitalsDeletedIcons)
+        wipe(ns.dbProfile.MinimapCapitalsDeletedIcons)
+        wipe(ns.dbProfile.AzerothDeletedIcons)
+        wipe(ns.dbProfile.ContinentDeletedIcons)
+        wipe(ns.dbProfile.ZoneDeletedIcons)
+        wipe(ns.dbProfile.MinimapZoneDeletedIcons)
+        wipe(ns.dbProfile.DungeonDeletedIcons)
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00", L["All deleted icons have been restored"])
       end
       HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
@@ -200,8 +200,8 @@ function ns.RestoreStaticPopUps()
     hideOnEscape = true,
     OnAccept = function()
       if ns.Addon.db.profile.RestoreCapitalsDeletedIcons then
-        wipe(ns.dbChar.CapitalsDeletedIcons)
-        wipe(ns.dbChar.MinimapCapitalsDeletedIcons)
+        wipe(ns.dbProfile.CapitalsDeletedIcons)
+        wipe(ns.dbProfile.MinimapCapitalsDeletedIcons)
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00",L["Capitals"] .. " & " .. L["Capitals"] .. " - " .. MINIMAP_LABEL .. " - " .. "|cff00ff00" .. L["All deleted icons have been restored"])
       end
       HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
@@ -222,8 +222,8 @@ function ns.RestoreStaticPopUps()
     hideOnEscape = true,
     OnAccept = function()
       if ns.Addon.db.profile.RestoreZoneDeletedIcons then
-        wipe(ns.dbChar.ZoneDeletedIcons)
-        wipe(ns.dbChar.MinimapZoneDeletedIcons)
+        wipe(ns.dbProfile.ZoneDeletedIcons)
+        wipe(ns.dbProfile.MinimapZoneDeletedIcons)
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00",L["Zones"] .. " & " .. MINIMAP_LABEL .. " - " .. "|cff00ff00" .. L["All deleted icons have been restored"])
       end
       HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
@@ -244,7 +244,7 @@ function ns.RestoreStaticPopUps()
     hideOnEscape = true,
     OnAccept = function()
       if ns.Addon.db.profile.RestoreContinentDeletedIcons then
-        wipe(ns.dbChar.ContinentDeletedIcons)
+        wipe(ns.dbProfile.ContinentDeletedIcons)
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00",L["Continents"] .. " - " .. "|cff00ff00" .. L["All deleted icons have been restored"])
       end
       HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
@@ -265,7 +265,7 @@ function ns.RestoreStaticPopUps()
     hideOnEscape = true,
     OnAccept = function()
       if ns.Addon.db.profile.RestoreAzerothDeletedIcons then
-        wipe(ns.dbChar.AzerothDeletedIcons)
+        wipe(ns.dbProfile.AzerothDeletedIcons)
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00",AZEROTH .. " - " .. "|cffff0000" .. "|cff00ff00" .. L["All deleted icons have been restored"])
       end
       HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
@@ -286,7 +286,7 @@ function ns.RestoreStaticPopUps()
     hideOnEscape = true,
     OnAccept = function()
       if ns.Addon.db.profile.RestoreDungeonDeletedIcons then
-        wipe(ns.dbChar.DungeonDeletedIcons)
+        wipe(ns.dbProfile.DungeonDeletedIcons)
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00",CALENDAR_TYPE_DUNGEON .. " - " .. "|cff00ff00" .. L["All deleted icons have been restored"])
       end
       HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")

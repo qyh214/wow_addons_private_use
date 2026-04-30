@@ -22,7 +22,6 @@ eventFrame:SetScript("OnEvent", function(self, event, addonName)
     local playerGUID = UnitGUID("player")
     local loginTime = time()
     local race = UnitRace("player")
-    local gold = GetMoney()
 
     local key = playerGUID
 
@@ -39,7 +38,6 @@ eventFrame:SetScript("OnEvent", function(self, event, addonName)
     WclBoxGlobal[key].playerGUID = playerGUID
     WclBoxGlobal[key].loginTime = loginTime
     WclBoxGlobal[key].race = race
-    WclBoxGlobal[key].gold = gold
 
 
     WclBoxCharacter.version = addon_version
@@ -52,7 +50,6 @@ eventFrame:SetScript("OnEvent", function(self, event, addonName)
     WclBoxCharacter.playerGUID = playerGUID
     WclBoxCharacter.loginTime = loginTime
     WclBoxCharacter.race = race
-    WclBoxCharacter.gold = gold
 
     -- Unregister the PLAYER_LOGIN event after handling it
     eventFrame:UnregisterEvent("PLAYER_LOGIN")

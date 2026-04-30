@@ -1,5 +1,5 @@
-## Interface: 50502
-## Version: 3.1.9
+## Interface: 50503, 50504
+## Version: 3.4.9
 ## Title: HandyNotes: |cffff0000Map|r|cff00ccffNotes|r
 ## Title-esES: HandyNotes: |cffff0000Mapa |r|cff00ccffNotas|r
 ## Title-esMX: HandyNotes: |cffff0000Mapa |r|cff00ccffNotas|r

@@ -1,0 +1,5 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="src\enum.lua"/>
+	<Script file="src\handler.lua"/>
+	<Script file="index.lua"/>
+</Ui>

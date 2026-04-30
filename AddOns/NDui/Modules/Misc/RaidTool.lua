@@ -8,7 +8,7 @@ local IsInGroup, IsInRaid, IsInInstance = IsInGroup, IsInRaid, IsInInstance
 local UnitIsGroupLeader, UnitIsGroupAssistant = UnitIsGroupLeader, UnitIsGroupAssistant
 local IsPartyLFG, IsLFGComplete, HasLFGRestrictions = IsPartyLFG, IsLFGComplete, HasLFGRestrictions
 local GetInstanceInfo, GetNumGroupMembers, GetRaidRosterInfo, GetRaidTargetIndex, SetRaidTarget = GetInstanceInfo, GetNumGroupMembers, GetRaidRosterInfo, GetRaidTargetIndex, SetRaidTarget
-local GetTime, SendChatMessage = GetTime, SendChatMessage
+local GetTime = GetTime
 local IsAltKeyDown, IsControlKeyDown, IsShiftKeyDown, InCombatLockdown = IsAltKeyDown, IsControlKeyDown, IsShiftKeyDown, InCombatLockdown
 local UnitExists, UninviteUnit = UnitExists, UninviteUnit
 local DoReadyCheck, InitiateRolePoll, GetReadyCheckStatus = DoReadyCheck, InitiateRolePoll, GetReadyCheckStatus
@@ -57,7 +57,7 @@ function M:RaidTool_Header()
 		end
 	end)
 	frame:SetScript("OnDoubleClick", function(_, btn)
-		if btn == "RightButton" and (IsPartyLFG() and IsLFGComplete() or not IsInInstance()) then
+		if btn == "RightButton" and (IsShiftKeyDown() or (IsPartyLFG() and IsLFGComplete() or not IsInInstance())) then
 			LeaveParty()
 		end
 	end)
@@ -280,7 +280,7 @@ function M:RaidTool_BuffChecker(parent)
 		if debugMode then
 			print(text)
 		else
-			SendChatMessage(text, M:GetMsgChannel())
+			B:SendChatMessage(text, M:GetMsgChannel())
 		end
 	end
 
@@ -310,16 +310,23 @@ function M:RaidTool_BuffChecker(parent)
 		numPlayer = 0
 
 		local maxgroup = M:GetRaidMaxGroup()
+		local inRaid = IsInRaid()
 		for i = 1, GetNumGroupMembers() do
 			local name, _, subgroup, _, _, _, _, online, isDead = GetRaidRosterInfo(i)
 			if name and online and subgroup <= maxgroup and not isDead then
 				numPlayer = numPlayer + 1
+
+				local unit = "raid"..i
+				if not inRaid and i <= 5 then
+					unit = i == 1 and "player" or "party"..(i-1)
+				end
+
 				for j = 1, numGroups do
 					local HasBuff
 					local buffTable = DB.BuffList[j]
 					for k = 1, #buffTable do
 						local buffName = C_Spell.GetSpellName(buffTable[k])
-						if buffName and C_UnitAuras.GetAuraDataBySpellName(name, buffName) then
+						if buffName and C_UnitAuras.GetAuraDataBySpellName(unit, buffName) then
 							HasBuff = true
 							break
 						end
@@ -356,9 +363,6 @@ function M:RaidTool_BuffChecker(parent)
 		GameTooltip:Show()
 	end)
 	frame:HookScript("OnLeave", B.HideTooltip)
-
-	local reset = true
-	B:RegisterEvent("PLAYER_REGEN_ENABLED", function() reset = true end)
 
 	frame:HookScript("OnMouseDown", function(_, btn)
 		if btn == "LeftButton" then
@@ -463,7 +467,7 @@ function M:RaidTool_CreateMenu(parent)
 		OnAccept = function()
 			if InCombatLockdown() then UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT) return end
 			if IsInRaid() then
-				SendChatMessage(L["Disband Process"], "RAID")
+				B:SendChatMessage(L["Disband Process"], "RAID")
 				for i = 1, GetNumGroupMembers() do
 					local name, _, _, _, _, _, _, online = GetRaidRosterInfo(i)
 					if online and name ~= DB.MyName then
@@ -521,74 +525,6 @@ function M:RaidTool_CreateMenu(parent)
 	parent.buttons = bu
 end
 
-function M:RaidTool_EasyMarker()
-	-- TODO: replace with the newest dropdown template
-	local menuList = {}
-
-	local function GetMenuTitle(text, ...)
-		return (... and B.HexRGB(...) or "")..text
-	end
-
-	local function SetRaidTargetByIndex(_, arg1)
-		SetRaidTarget("target", arg1)
-	end
-
-	local mixins = {
-		UnitPopupRaidTarget8ButtonMixin,
-		UnitPopupRaidTarget7ButtonMixin,
-		UnitPopupRaidTarget6ButtonMixin,
-		UnitPopupRaidTarget5ButtonMixin,
-		UnitPopupRaidTarget4ButtonMixin,
-		UnitPopupRaidTarget3ButtonMixin,
-		UnitPopupRaidTarget2ButtonMixin,
-		UnitPopupRaidTarget1ButtonMixin,
-		UnitPopupRaidTargetNoneButtonMixin
-	}
-	for index, mixin in pairs(mixins) do
-		local t1, t2, t3, t4 = mixin:GetTextureCoords()
-		menuList[index] = {
-			text = GetMenuTitle(mixin:GetText(), mixin:GetColor()),
-			icon = mixin:GetIcon(),
-			tCoordLeft = t1,
-			tCoordRight = t2,
-			tCoordTop = t3,
-			tCoordBottom = t4,
-			arg1 = 9 - index,
-			func = SetRaidTargetByIndex,
-		}
-	end
-
-	local function GetModifiedState()
-		local index = C.db["Misc"]["EasyMarkKey"]
-		if index == 1 then
-			return IsControlKeyDown()
-		elseif index == 2 then
-			return IsAltKeyDown()
-		elseif index == 3 then
-			return IsShiftKeyDown()
-		elseif index == 4 then
-			return false
-		end
-	end
-
-	WorldFrame:HookScript("OnMouseDown", function(_, btn)
-		if btn == "LeftButton" and GetModifiedState() and UnitExists("mouseover") then
-			if not IsInGroup() or (IsInGroup() and not IsInRaid()) or UnitIsGroupLeader("player") or UnitIsGroupAssistant("player") then
-				local index = GetRaidTargetIndex("mouseover")
-				for i = 1, 8 do
-					local menu = menuList[i]
-					if menu.arg1 == index then
-						menu.checked = true
-					else
-						menu.checked = false
-					end
-				end
-				EasyMenu(menuList, B.EasyMenu, "cursor", 0, 0, "MENU", 1)
-			end
-		end
-	end)
-end
-
 function M:RaidTool_WorldMarker()
 	local iconTexture = {
 		"Interface\\TargetingFrame\\UI-RaidTargetingIcon_6",
@@ -614,14 +550,15 @@ function M:RaidTool_WorldMarker()
 		button:SetSize(28, 28)
 		B.PixelIcon(button, iconTexture[i], true)
 		button.Icon:SetTexture(iconTexture[i])
+		button:RegisterForClicks("AnyUp", "AnyDown")
 
 		if i ~= 9 then
-			button:RegisterForClicks("AnyUp", "AnyDown")
 			button:SetAttribute("type", "macro")
 			button:SetAttribute("macrotext1", format("/wm %d", i))
 			button:SetAttribute("macrotext2", format("/cwm %d", i))
 		else
-			button:SetScript("OnClick", ClearRaidMarker)
+			button:SetAttribute("type2", "worldmarker")
+			button:SetAttribute("action2", "clear")
 		end
 		frame.buttons[i] = button
 	end
@@ -682,7 +619,6 @@ function M:RaidTool_Init()
 	M:RaidTool_CreateMenu(frame)
 	M:RaidTool_CountDown(frame)
 
-	M:RaidTool_EasyMarker()
 	M:RaidTool_WorldMarker()
 	M:RaidTool_Misc()
 end

@@ -1,0 +1,5 @@
+<Bindings>
+    <Binding name="InspectRaidFrame" header="TinyInspect - Remake" category="ADDONS">
+        ToggleFrame(TinyInspectRaidFrame)
+    </Binding>
+</Bindings>

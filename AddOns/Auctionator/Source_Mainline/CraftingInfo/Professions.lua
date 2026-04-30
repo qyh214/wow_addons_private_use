@@ -101,14 +101,14 @@ local function CalculateProfitFromCosts(currentAH, toCraft, count)
 end
 
 -- Search through a list of items for the first matching the wantedQuality
-local function GetItemIDByReagentQuality(possibleItemIDs, wantedQuality)
+local function GetItemIDByReagentQuality(possibleItemIDs, wantedQuality, allQualities)
   if #possibleItemIDs == 1 then
     return possibleItemIDs[1]
   end
 
   for _, itemID in ipairs(possibleItemIDs) do
     local quality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(itemID)
-    if quality == wantedQuality then
+    if allQualities[quality] == wantedQuality then
       return itemID
     end
   end
@@ -121,7 +121,6 @@ local function GetEnchantProfit(schematicForm)
   local applyConcentration = schematicForm:GetTransaction():IsApplyingConcentration()
 
   local recipeLevel = schematicForm:GetCurrentRecipeLevel()
-  local recipeInfo = C_TradeSkillUI.GetRecipeInfo(recipeID, recipeLevel)
 
   local possibleOutputItemIDs = Auctionator.CraftingInfo.EnchantSpellsToItems[recipeID] or {}
   local itemID
@@ -132,7 +131,7 @@ local function GetEnchantProfit(schematicForm)
   if recipeSchematic ~= nil and recipeSchematic.hasCraftingOperationInfo then
     local operationInfo = C_TradeSkillUI.GetCraftingOperationInfo(recipeID, reagents, allocationGUID, applyConcentration)
     if operationInfo ~= nil then
-      itemID = GetItemIDByReagentQuality(possibleOutputItemIDs, operationInfo.guaranteedCraftingQualityID)
+      itemID = GetItemIDByReagentQuality(possibleOutputItemIDs, operationInfo.guaranteedCraftingQualityID, C_TradeSkillUI.GetQualitiesForRecipe(recipeID))
     end
   end
   -- Not a dragonflight recipe, or has no quality data, so only one possible
@@ -171,13 +170,21 @@ local function GetAHProfit(schematicForm)
       schematicForm:GetTransaction():IsApplyingConcentration()
     )
     local qualityOverride = operationInfo and recipeInfo.qualityIDs and recipeInfo.qualityIDs[operationInfo.craftingQuality]
-    local outputData = C_TradeSkillUI.GetRecipeOutputItemData(
-      recipeInfo.recipeID,
-      schematicForm:GetTransaction():CreateCraftingReagentInfoTbl(),
-      schematicForm:GetTransaction():GetAllocationItemGUID(),
-      qualityOverride
-    )
-    local recipeLink = outputData and outputData.hyperlink
+    local qualitiesItemIDs = C_TradeSkillUI.GetRecipeQualityItemIDs(recipeInfo.recipeID)
+    local recipeLink
+    if not qualitiesItemIDs or #qualitiesItemIDs == 1 then
+      local outputData = C_TradeSkillUI.GetRecipeOutputItemData(
+        recipeInfo.recipeID,
+        schematicForm:GetTransaction():CreateCraftingReagentInfoTbl(),
+        schematicForm:GetTransaction():GetAllocationItemGUID(),
+        qualityOverride
+      )
+      recipeLink = outputData and outputData.hyperlink
+    else
+      local qualityIDs = C_TradeSkillUI.GetQualitiesForRecipe(recipeInfo.recipeID)
+      local _
+      _, recipeLink = C_Item.GetItemInfo(qualitiesItemIDs[tIndexOf(qualityIDs, qualityOverride)])
+    end
 
     if recipeLink ~= nil then
       local currentAH = Auctionator.API.v1.GetAuctionPriceByItemLink(AUCTIONATOR_L_REAGENT_SEARCH, recipeLink) or 0

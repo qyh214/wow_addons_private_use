@@ -1,0 +1,21 @@
+local mod	= DBM:NewMod(556, "DBM-Party-BC", 2, 256)
+local L		= mod:GetLocalizedStrings()
+
+if mod:IsRetail() then
+	mod.statTypes = "normal,heroic,timewalker,duos"
+end
+
+mod:SetRevision("20260315034941")
+mod:DisableHardcodedOptions()
+mod:SetCreatureID(17380)
+mod:SetEncounterID(1924)
+mod:SetZone(542, 2849)--Blood Furnace, Duos
+
+if not mod:IsRetail() then
+	mod:SetModelID(19372)
+end
+
+mod:RegisterCombat("combat")
+
+mod:RegisterEventsInCombat(
+)

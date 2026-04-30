@@ -85,9 +85,14 @@ function S:WorldQuestTab()
 	if ScrollFrame then
 		ScrollFrame.Background:Hide()
 		S:Proxy("StripTextures", ScrollFrame.BorderFrame)
-		S:Proxy("ReskinFilterButton", ScrollFrame.FilterDropdown)
-		S:Proxy("ReskinDropDown", ScrollFrame.SortDropdown)
 		S:Proxy("ReskinTrimScroll", ScrollFrame.ScrollBar)
+
+		local TopBar = ScrollFrame.TopBar
+		if TopBar then
+			S:Proxy("ReskinFilterButton", TopBar.FilterDropdown)
+			S:Proxy("ReskinDropDown", TopBar.SortDropdown)
+			S:Proxy("ReskinInput", TopBar.SearchBox)
+		end
 	end
 
 	P:SecureHook("WQT_ListButtonMixin", "OnLoad", HandleListButton)
@@ -141,6 +146,22 @@ function S:WorldQuestTab()
 		local bg = B.SetBD(WorldMapContainer, nil, 0, 0, 0, 0)
 		bg:SetFrameLevel(bg:GetFrameLevel() + 1)
 	end
+
+	-- WQT_GameTooltip
+	local WQT_GameTooltip = _G.WQT_GameTooltip
+	if WQT_GameTooltip then
+		P.ReskinTooltip(WQT_GameTooltip)
+
+		local ItemTooltip = WQT_GameTooltip.ItemTooltip
+		if ItemTooltip then
+			ItemTooltip.Icon:SetTexCoord(unpack(DB.TexCoord))
+			ItemTooltip.bg = B.CreateBDFrame(ItemTooltip.Icon, 0)
+			B.ReskinIconBorder(ItemTooltip.IconBorder)
+		end
+
+		P.ReskinTooltip(_G.WQT_ShoppingTooltip1)
+		P.ReskinTooltip(_G.WQT_ShoppingTooltip2)
+	end
 end
 
 S:RegisterSkin("WorldQuestTab", S.WorldQuestTab, true)
@@ -162,8 +183,8 @@ local function ReskinTabs(lib)
 	end
 end
 
-function S:WorldMapTabsLib()
-	local tabLib = _G.LibStub and _G.LibStub("WorldMapTabsLib-1.0", true)
+function S:LibWorldMapTabs()
+	local tabLib = _G.LibStub and _G.LibStub("LibWorldMapTabs", true)
 	if not tabLib then return end
 
 	ReskinTabs(tabLib)
@@ -171,4 +192,4 @@ function S:WorldMapTabsLib()
 	hooksecurefunc(tabLib, "AddCustomTab", ReskinTabs)
 end
 
-S:RegisterSkin("WorldMapTabsLib")
+S:RegisterSkin("LibWorldMapTabs")

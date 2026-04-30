@@ -500,7 +500,16 @@ end
 local function RPAddOn_ReplaceName_Tooltip()
     local addOnName = addon.GetInstalledRPAddOnName();
     if addOnName then
-        return L["Format Functionality Handled By"]:format(addOnName);
+        local desc = L["Format Functionality Handled By"]:format(addOnName);
+
+        if addon.GetRoleplayName then
+            local rpName = addon.GetRoleplayName();
+            if rpName and rpName ~= "" then
+                desc = desc .. "\n\n"..L["Format RP Name Example"]:format(rpName);
+            end
+        end
+
+        return desc
     end
 end
 
@@ -583,7 +592,7 @@ local Schematic = { --Scheme
             {type = "Checkbox", name = L["Simplify Currency Rewards"], description = L["Simplify Currency Rewards Desc"], dbKey = "SimplifyCurrencyReward", preview = "SimplifyCurrencyReward", ratio = 2},
             {type = "Checkbox", name = L["Use Blizzard Tooltip"], description = L["Use Blizzard Tooltip Desc"], dbKey = "UseBlizzardTooltip"},
             {type = "Subheader", name = L["Roleplaying"], validationFunc = RPAddOn_Validation},
-            {type = "Checkbox", name = L["Use RP Name In Dialogues"], description = L["Use RP Name In Dialogues Desc"], tooltip = RPAddOn_ReplaceName_Tooltip, dbKey = "UseRoleplayName", validationFunc = RPAddOn_Validation},
+            {type = "Checkbox", name = L["Use RP Name In Dialogues"], description = L["Use RP Name In Dialogues Desc"], tooltip = RPAddOn_ReplaceName_Tooltip, dbKey = "UseRoleplayName", validationFunc = RPAddOn_Validation, alwaysOn = true},
 
             {type = "Subheader", name = L["Readables"]},    --Book
             {type = "Checkbox", name = L["BookUI Enable"], description = L["BookUI Enable Desc"], preview = "BookUI", ratio = 1, dbKey = "BookUIEnabled"},
@@ -669,7 +678,7 @@ local Schematic = { --Scheme
 
             {type = "Checkbox", name = L["Right Click To Close UI"], description = L["Right Click To Close UI Desc"], dbKey = "RightClickToCloseUI", requiredParentValueAnd = {InputDevice = 1}},
             {type = "Checkbox", name = L["Press Tab To Select Reward"], description = L["Press Tab To Select Reward Desc"], dbKey = "CycleRewardHotkeyEnabled", requiredParentValueAnd = {InputDevice = 1}},
-            {type = "Checkbox", name = L["Disable Hokey For Teleport"], description = L["Disable Hokey For Teleport Desc"], dbKey = "DisableHotkeyForTeleport", requiredParentValueAnd = {InputDevice = 1}},
+            {type = "Checkbox", name = L["Disable Hotkey For Teleport"], description = L["Disable Hotkey For Teleport Desc"], dbKey = "DisableHotkeyForTeleport", requiredParentValueAnd = {InputDevice = 1}},
             {type = "Checkbox", name =L["GamePad Click First Object"], description = L["GamePad Click First Object Desc"], dbKey = "GamePadClickFirstObject", requiredParentValueAnd = {InputDevice = {2, 3, 4}}},
 
             {type = "Subheader", name = L["Quest"]},
@@ -1846,6 +1855,8 @@ do  --Checkbox
     end
 
     function DUIDialogSettingsCheckboxMixin:OnClick()
+        if self.alwaysOn then return end;
+
         self:Toggle();
 
         local optionButton = self:GetParent();
@@ -1866,12 +1877,21 @@ do  --Checkbox
 
     function DUIDialogSettingsCheckboxMixin:SetData(optionData)
         self.dbKey = optionData.dbKey;
+        self.alwaysOn = optionData.alwaysOn;
         self:SetChecked(GetDBValue(optionData.dbKey) == true);
     end
 
     function DUIDialogSettingsCheckboxMixin:SetChecked(state)
+        if self.alwaysOn then
+            self.checked = true;
+            self.Check:Hide();
+            self.Background:SetTexCoord(0.99, 1, 0.99, 1);  --Empty
+            return
+        end
+
         self.checked = state;
         self.Check:SetShown(state);
+
         if state then
             self.Background:SetTexCoord(0.5, 1, 0, 0.5);
         else

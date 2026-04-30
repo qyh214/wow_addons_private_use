@@ -55,6 +55,7 @@ local defaultSizes = {
   ["texture_DragRight"] = 8,
   ["texture_DragUp"] = 8,
   ["texture_OverlayIcon"] = 12,
+  ["mask_PortraitMask"] = 20,
 }
 
 function MDTDungeonEnemyMixin:updateSizes(scale)
@@ -435,7 +436,7 @@ end
 
 function MDT:GetEfficiencyScoreString(count, health)
   local totalCount = MDT.dungeonTotalCount[db.currentDungeonIdx].normal
-  local score = 2.5 * (count / totalCount) * 13000 / (health / 1000000)
+  local score = 2.5 * (count / totalCount) * 13000 / (health / 20000)
   local formattedScore = MDT:Round(score, 1)
   local value = score / 10
   --https://stackoverflow.com/a/7947812/17380548
@@ -655,7 +656,7 @@ function MDTDungeonEnemyMixin:SetUp(data, clone)
     self.texture_Portrait:SetTexture("Interface\\Worldmap\\WorldMapPartyIcon")
   else
     if data.iconTexture then
-      SetPortraitToTexture(self.texture_Portrait, data.iconTexture);
+      self.texture_Portrait:SetTexture(data.iconTexture);
     else
       SetPortraitTextureFromCreatureDisplayID(self.texture_Portrait, data.displayId or 39490)
     end

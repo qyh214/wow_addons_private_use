@@ -258,6 +258,10 @@ ns.currentSourceFile = "RetailGeneralZoneNodes.lua"
         -- Eastern Kingdom
         if self.db.profile.showZoneEasternKingdom then
 
+            if self.db.profile.showZoneDecorExpert then
+                nodes[241][49742958] = { npcID = 253227, name = "", type = "DecorExpert", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            end
+
             if self.db.profile.showZonePvEVendor then
                 nodes[122][50574078] = { npcID = 25046, name = "", type = "PvEVendor", showInZone = true, showOnContinent = false, showOnMinimap = false }
             end
@@ -271,6 +275,7 @@ ns.currentSourceFile = "RetailGeneralZoneNodes.lua"
                 nodes[18][69456280] = { npcID = 141489, mnID = 2070, name = "", dnID = L["Travel through time to another point in the history of"] .. " " .. ns.TirisfalGlades, type = "Zidormi", showInZone = true, showOnContinent = false, showOnMinimap = false }
                 nodes[14][38249009] = { npcID = 141489, name = "", dnID = L["Travel through time to another point in the history of"] .. " " .. ns.ArathiHighlands, type = "Zidormi", showInZone = true, showOnContinent = false, showOnMinimap = false }
                 nodes[17][48160728] = { npcID = 141489, name = "", dnID = L["Travel through time to another point in the history of"] .. " " .. ns.BlastedLands, type = "Zidormi", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[23][53820862] = { npcID = 259326, mnID = 95, name = "", dnID = L["Travel through time to another point in the history of"] .. " " .. ns.Ghostlands, type = "Zidormi", showInZone = true, showOnContinent = false, showOnMinimap = false }
                 nodes[2070][69456280] = { npcID = 141489, mnID = 18, name = "", dnID = L["Travel through time to another point in the history of"] .. " " .. ns.TirisfalGlades, type = "Zidormi", showInZone = true, showOnContinent = false, showOnMinimap = false }
             end
 
@@ -1079,6 +1084,15 @@ ns.currentSourceFile = "RetailGeneralZoneNodes.lua"
         --Broken Isles
         if self.db.profile.showZoneBrokenIsles then
 
+            if self.db.profile.showZoneDecorExpert then
+                nodes[641][54267236] = { npcID = 253387, name = "", type = "DecorExpert", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[641][42095938] = { npcID = 252498, name = "", type = "DecorExpert", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[652][54947800] = { npcID = 108017, name = "", type = "DecorExpert", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[680][49636283] = { npcID = 252969, name = "", type = "DecorExpert", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[680][45586915] = { npcID = 255101, name = "", type = "DecorExpert", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[680][50907779] = { npcID = 248594, name = "", type = "DecorExpert", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            end
+
             if self.db.profile.showZoneStablemaster then
                 nodes[650][52804520] = { npcID = 97862, name = "", type = "StablemasterN", showInZone = true, showOnContinent = false, showOnMinimap = false }
                 nodes[650][53206400] = { npcID = 97874, name = "", type = "StablemasterN", showInZone = true, showOnContinent = false, showOnMinimap = false }
@@ -1162,6 +1176,10 @@ ns.currentSourceFile = "RetailGeneralZoneNodes.lua"
         --Zandalar
         if self.db.profile.showZoneZandalar then
 
+            if self.db.profile.showZoneDecorExpert then
+                nodes[862][58076254] = { npcID = 251921, name = "", type = "DecorExpert", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            end
+
             if self.db.profile.showZoneItemUpgrade then
 
                 if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
@@ -1221,7 +1239,7 @@ ns.currentSourceFile = "RetailGeneralZoneNodes.lua"
                     nodes[862][44507210] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = true, showOnContinent = false, showOnMinimap = false }
                     nodes[862][51305060] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = true, showOnContinent = false, showOnMinimap = false }
                     nodes[862][66704250] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = true, showOnContinent = false, showOnMinimap = false }
-                    nodes[862][58006270] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                    nodes[862][58066270] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = true, showOnContinent = false, showOnMinimap = false }
                     nodes[862][35306670] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = true, showOnContinent = false, showOnMinimap = false }
                     nodes[862][76801630] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = true, showOnContinent = false, showOnMinimap = false }
                     nodes[862][51605830] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxH", showInZone = true, showOnContinent = false, showOnMinimap = false }
@@ -1290,6 +1308,10 @@ ns.currentSourceFile = "RetailGeneralZoneNodes.lua"
 
         --Kul Tiras
         if self.db.profile.showZoneKulTiras then
+
+            if self.db.profile.showZoneDecorExpert then
+                nodes[942][59536963] = { npcID = 252313, name = "", type = "DecorExpert", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            end
 
             if self.db.profile.showZoneStablemaster then
                 nodes[942][40323637] = { npcID = 138451, name = "", type = "StablemasterN", showInZone = true, showOnContinent = false, showOnMinimap = false }
@@ -1653,6 +1675,11 @@ ns.currentSourceFile = "RetailGeneralZoneNodes.lua"
         --Khaz Algar
         if self.db.profile.showZoneKhazAlgar then
 
+            if self.db.profile.showZoneDecorExpert then
+                nodes[2214][43383278] = { npcIDs1 = 252887, npcIDs2 = 256783, name = "", type = "DecorExpert", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2346][43195046] = { npcID = 251911, name = "", type = "DecorExpert", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            end
+
             if self.db.profile.showZoneItemUpgrade then
                 nodes[2472][41102964] = { npcID = 250320, name = "",  type = "ItemUpgrade", questID = 84967, wwwLink = "https://www.wowhead.com/quest=84967", showWWW = true, wwwName = BATTLE_PET_SOURCE_2 .. " " .. REQUIRES_LABEL .. " " .. "The shadowguard shattered", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Tazavesh
             end
@@ -1845,6 +1872,93 @@ ns.currentSourceFile = "RetailGeneralZoneNodes.lua"
 
             if self.db.profile.showZoneAuctioneer then
                 nodes[2346][24554476] = { npcID = 239468, name = "", type = "BlackMarket", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            end
+
+        end
+
+        --Quel'Thalas
+        if self.db.profile.showZoneQuelThalas then
+
+            if self.db.profile.showZoneStablemaster and not self.db.profile.showZoneMapNotesIcons then
+                nodes[2405][52296754] = { npcID = 242658, name = "", type = "StablemasterN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2395][48856679] = { npcID = 245770, name = "", type = "StablemasterN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2395][47054517] = { npcID = 242914, name = "", type = "StablemasterN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2437][47172607] = { npcID = 255187, name = "", type = "StablemasterN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2437][36232463] = { npcID = 253022, name = "", type = "StablemasterN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2437][45176561] = { npcID = 255075, name = "", type = "StablemasterN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2405][35565926] = { npcID = 240489, name = "", type = "StablemasterN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2413][69605204] = { npcID = 258671, name = "", type = "StablemasterN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2413][65822330] = { npcID = 258725, name = "", type = "StablemasterN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2413][52905249] = { npcID = 252679, name = "", type = "StablemasterN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            end
+
+            if self.db.profile.showZoneMailbox then
+                nodes[2395][42821455] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2536][45564607] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            end
+
+            if self.db.profile.showZoneMailbox and not self.db.profile.showZoneMapNotesIcons then
+                nodes[2405][52676884] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2395][46644584] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2395][49006837] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Immersangwald
+                nodes[2395][39296117] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Immersangwald
+                nodes[2437][47102526] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2437][37402370] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2437][45326601] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2405][35615876] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2413][69585155] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2413][35292325] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2413][51125542] = { name = "", dnID = MINIMAP_TRACKING_MAILBOX, type = "MailboxN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            end
+
+            if self.db.profile.showZoneInnkeeper then
+                nodes[2576][65416190] = { npcID = 258499, name = "", type = "InnkeeperN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            end
+
+            if self.db.profile.showZoneInnkeeper and not self.db.profile.showZoneMapNotesIcons then
+                nodes[2405][53166818] = { npcID = 235701, name = "", type = "InnkeeperN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2395][46274594] = { npcID = 242949, name = "", type = "InnkeeperN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2395][48976859] = { npcID = 236149, name = "", type = "InnkeeperN", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Immersangwald
+                nodes[2395][39326138] = { npcID = 249879, name = "", type = "InnkeeperN", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Immersangwald
+                nodes[2437][46542576] = { npcID = 255184, name = "", type = "InnkeeperN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2437][36892354] = { npcID = 253042, name = "", type = "InnkeeperN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2437][45446500] = { npcID = 240274, name = "", type = "InnkeeperN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2405][35685868] = { npcID = 240578, name = "", type = "InnkeeperN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2413][69135150] = { npcID = 251988, name = "", type = "InnkeeperN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2413][35072295] = { npcID = 258354, name = "", type = "InnkeeperN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2413][66292456] = { npcID = 254942, name = "", type = "InnkeeperN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2413][50865561] = { npcID = 240404, name = "", type = "InnkeeperN", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2413][53455428] = { npcID = 258499, name = "", type = "InnkeeperN", dnID = "(" .. L["inside the cave"] .. ")", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            end
+
+            if self.db.profile.showZoneRenownQuartermaster and not self.db.profile.showZoneMapNotesIcons then
+                nodes[2437][45956592] = { npcID = 240279, name = "", dnID = FACTION .. ": " .. ns.Amanistamm, type = "RenownQuartermaster", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Amani'zar
+                nodes[2413][50955073] = { npcID = 240407, name = "", dnID = FACTION .. ": " .. ns.Harati, type = "RenownQuartermaster", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Hara'ti
+            end
+
+            if self.db.profile.showZoneRenownQuartermaster then
+                nodes[2395][43464742] = { npcIDs1 = 240838, npcIDs2 = 242725, npcIDs3 = 242723, name = "", npcIDs1Info = FACTION .. ": " .. ns.SilvermoonCourt, type = "RenownQuartermaster", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Amani'zar
+                nodes[2405][52587290] = { npcID = 248328, name = "", dnID = FACTION .. ": " .. ns.TheSingularity, type = "RenownQuartermaster", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Amani'zar
+            end
+
+            if self.db.profile.showZoneMapNotesIcons then
+                --Innkeeper Mailbox Stabelmaster Merchant
+                nodes[2437][45406603] = { name = ns.Amanizar, dnID = TextIconPvEVendor:GetIconString() .. " " .. L["Merchant for Renown items"] .. "\n" .. TextIconInnkeeperN:GetIconString() .. " " .. ns.InnkeeperM .. "\n" .. TextIconMailbox:GetIconString() .. " " .. MINIMAP_TRACKING_MAILBOX .. "\n" .. TextIconStablemasterN:GetIconString() .. " " .. ns.StablemasterM, type = "MNL", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                --Innkeeper Mailbox Stabelmaster
+                nodes[2437][37392379] = { name = "", dnID = TextIconInnkeeperN:GetIconString() .. " " .. ns.InnkeeperM .. "\n" .. TextIconMailbox:GetIconString() .. " " .. MINIMAP_TRACKING_MAILBOX .. "\n" .. TextIconStablemasterN:GetIconString() .. " " .. ns.StablemasterM, type = "MNL", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2437][47092561] = { name = "", dnID = TextIconInnkeeperN:GetIconString() .. " " .. ns.InnkeeperM .. "\n" .. TextIconMailbox:GetIconString() .. " " .. MINIMAP_TRACKING_MAILBOX .. "\n" .. TextIconStablemasterN:GetIconString() .. " " .. ns.StablemasterM, type = "MNL", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2395][46484558] = { name = "", dnID = TextIconInnkeeperN:GetIconString() .. " " .. ns.InnkeeperM .. "\n" .. TextIconMailbox:GetIconString() .. " " .. MINIMAP_TRACKING_MAILBOX .. "\n" .. TextIconStablemasterN:GetIconString() .. " " .. ns.StablemasterM, type = "MNL", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2395][48946781] = { name = "", dnID = TextIconInnkeeperN:GetIconString() .. " " .. ns.InnkeeperM .. "\n" .. TextIconMailbox:GetIconString() .. " " .. MINIMAP_TRACKING_MAILBOX .. "\n" .. TextIconStablemasterN:GetIconString() .. " " .. ns.StablemasterM, type = "MNL", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2405][35695899] = { name = "", dnID = TextIconInnkeeperN:GetIconString() .. " " .. ns.InnkeeperM .. "\n" .. TextIconMailbox:GetIconString() .. " " .. MINIMAP_TRACKING_MAILBOX .. "\n" .. TextIconStablemasterN:GetIconString() .. " " .. ns.StablemasterM, type = "MNL", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2405][52606882] = { name = "", dnID = TextIconInnkeeperN:GetIconString() .. " " .. ns.InnkeeperM .. "\n" .. TextIconMailbox:GetIconString() .. " " .. MINIMAP_TRACKING_MAILBOX .. "\n" .. TextIconStablemasterN:GetIconString() .. " " .. ns.StablemasterM, type = "MNL", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2413][69795141] = { name = "", dnID = TextIconInnkeeperN:GetIconString() .. " " .. ns.InnkeeperM .. "\n" .. TextIconMailbox:GetIconString() .. " " .. MINIMAP_TRACKING_MAILBOX .. "\n" .. TextIconStablemasterN:GetIconString() .. " " .. ns.StablemasterM, type = "MNL", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2413][35322317] = { name = "", dnID = TextIconInnkeeperN:GetIconString() .. " " .. ns.InnkeeperM .. "\n" .. TextIconMailbox:GetIconString() .. " " .. MINIMAP_TRACKING_MAILBOX .. "\n" .. TextIconStablemasterN:GetIconString() .. " " .. ns.StablemasterM, type = "MNL", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                --Inkkeeper Mailbox
+                nodes[2395][39326138] = { name = "", dnID = TextIconInnkeeperN:GetIconString() .. " " .. ns.InnkeeperM .. "\n" .. TextIconMailbox:GetIconString() .. " " .. MINIMAP_TRACKING_MAILBOX, type = "MNL", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                -- Inkeeper Stablemaster
+                nodes[2413][66342375] = { name = "", dnID = TextIconInnkeeperN:GetIconString() .. " " .. ns.InnkeeperM .. "\n" .. TextIconStablemasterN:GetIconString() .. " " .. ns.StablemasterM, type = "MNL", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                --Innkeeper Mailbox Inscriptiopn Alchemy Herbalism Stablemaster Portal
+                nodes[2413][52275373] = { name = "", dnID = ZONE .. ":\n\n" .. TextIconPvEVendor:GetIconString() .. " " .. L["Merchant for Renown items"] .. " (" .. ns.Harati .. ")\n" .. TextIconInnkeeperN:GetIconString() .. " " .. ns.InnkeeperM .. "\n" .. TextIconMailbox:GetIconString() .. " " .. MINIMAP_TRACKING_MAILBOX .. "\n" .. TextIconAlchemy:GetIconString() .. " " .. L["Alchemy"] .. "\n" .. TextIconHerbalism:GetIconString() .. " " .. L["Herbalism"] .. "\n" .. TextIconStablemasterN:GetIconString() .. " " .. ns.StablemasterM .. "\n\n\n" .. L["inside the cave"] .. ":\n\n" .. TextIconInscription:GetIconString() .. " " .. INSCRIPTION .. "\n" .. TextIconInnkeeperN:GetIconString() .. " " .. ns.InnkeeperM .. "\n" .. TextIconPortalOld:GetIconString() .. " " .. L["Portal"] .. " " .. ns.VoidTempest .. "\n" .. TextIconPortalOld:GetIconString() .. " " .. L["Portal"] .. " " .. ns.SilvermoonMN, type = "MNL", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Immersangwald
             end
 
         end

@@ -308,6 +308,31 @@ ns.currentSourceFile = "RetailInsideDungeonNodesLocation.lua"
             -- K'aresh
             nodes[2484][53808881] = { mnID = 2472, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", leaveDelve = true, showInZone = true } -- Voidscar Cavern
             nodes[2452][39248845] = { mnID = 2371, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", leaveDelve = true, showInZone = true } -- Archival Assault
+
+        --###############################
+        --#### Quel'Thalas Exit Notes ###
+        --###############################
+            nodes[2515][48211614] = { mnID = 2424, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Terrasse der Magister
+            nodes[2492][74435352] = { mnID = 2395, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Windläuferturm
+            nodes[2501][36663369] = { mnID = 2437, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Maisarakavernen
+            nodes[2564][54818522] = { mnID = 2437, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Nalorakks Bau
+            nodes[2556][51249223] = { mnID = 2405, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Nexuspunkt Xenas
+            nodes[2574][49518515] = { mnID = 2405, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Arena der Leerennarbe
+            nodes[2500][08345428] = { mnID = 2413, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Das blendende Tal
+            nodes[2531][42041994] = { mnID = 2413, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Der Traumriss
+            nodes[2533][50799290] = { mnID = 2424, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Marsch auf Quel'Danas      
+            nodes[2529][26698644] = { mnID = 2405, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Die Leerenspitze
+          -- delves            
+            nodes[2510][30902770] = { mnID = 2413, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", leaveDelve = true, showInZone = true } -- Die Grollgrube
+            nodes[2577][70408415] = { mnID = 2393, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", leaveDelve = true, showInZone = true } -- Mördergasse
+            nodes[2505][51510829] = { mnID = 2413, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", leaveDelve = true, showInZone = true } -- Kluft der Erinnerung
+            nodes[2506][47207941] = { mnID = 2405, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", leaveDelve = true, showInZone = true } -- Schattenwachtspitze
+            nodes[2528][64933005] = { mnID = 2405, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", leaveDelve = true, showInZone = true } -- Sonnentötersanktum
+            nodes[2525][47922145] = { mnID = 2393, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", leaveDelve = true, showInZone = true } -- Der Düsterweg
+            nodes[2547][70474532] = { mnID = 2393, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", leaveDelve = true, showInZone = true } -- Akademischer Aufruhr
+            nodes[2502][14985760] = { mnID = 2395, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", leaveDelve = true, showInZone = true } -- Die Schattenenklave
+            nodes[2503][49031152] = { mnID = 2437, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", leaveDelve = true, showInZone = true } -- Gruften der Zwielichtklinge
+            nodes[2535][24824941] = { mnID = 2437, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", leaveDelve = true, showInZone = true } -- Zul'Aman
           end
     
     

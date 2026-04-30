@@ -1638,6 +1638,24 @@ local enchantBySpellID = {
     [1227294] = 7930, -- Greater Rune of the Twisted Appendage
     [1233394] = 7931, -- Lesser Rune of the Void Ritual
     [1227311] = 7933, -- Greater Rune of the Void Ritual
+    [1229437] = 7934, -- Sunfire Silk Spellthread
+    [1229442] = 7935, -- Sunfire Silk Spellthread
+    [1229453] = 7936, -- Arcanoweave Spellthread
+    [1229454] = 7937, -- Arcanoweave Spellthread
+    [1229456] = 7938, -- Bright Linen Spellthread
+    [1229457] = 7939, -- Bright Linen Spellthread
+    [1240130] = 8063, -- Enchant Visual - Test - RONQ
+    [1243975] = 8158, -- Apply Forest Hunter's Armor Kit
+    [1243976] = 8159, -- Apply Forest Hunter's Armor Kit
+    [1243977] = 8160, -- Apply Thalassian Scout Armor Kit
+    [1243978] = 8161, -- Apply Thalassian Scout Armor Kit
+    [1243979] = 8162, -- Apply Blood Knight's Armor Kit
+    [1243980] = 8163, -- Apply Blood Knight's Armor Kit
+    [1262297] = 8612, -- Smuggler's Lynxeye
+    [1262300] = 8613, -- Smuggler's Lynxeye
+    [1262341] = 8614, -- Farstrider's Hawkeye
+    [1262344] = 8615, -- Farstrider's Hawkeye
+    [1269474] = 8638, -- Midnight Angler's Grand Line
 }
 
 local itemChangedData = {}

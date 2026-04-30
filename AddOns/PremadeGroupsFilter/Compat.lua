@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -29,20 +29,28 @@ function PGF.GetSearchResultInfo(resultID)
     if not searchResultInfo then
         return nil
     end
-    if searchResultInfo.activityIDs then
-        searchResultInfo.activityID = searchResultInfo.activityIDs[1]
+    -- Copy the table to avoid tainting the original Blizzard data
+    local info = PGF.Table_Copy_Rec(searchResultInfo)
+    if info.activityIDs then
+        info.activityID = info.activityIDs[1]
     end
-    if searchResultInfo.leaderDungeonScoreInfo then
-        searchResultInfo.leaderDungeonScoreInfo = searchResultInfo.leaderDungeonScoreInfo[1]
+    if info.leaderDungeonScoreInfo then
+        info.leaderDungeonScoreInfo = info.leaderDungeonScoreInfo[1]
     end
-    if searchResultInfo.leaderPvpRatingInfo then
-        searchResultInfo.leaderPvpRatingInfo = searchResultInfo.leaderPvpRatingInfo[1]
+    if info.leaderPvpRatingInfo then
+        info.leaderPvpRatingInfo = info.leaderPvpRatingInfo[1]
     end
-    return searchResultInfo
+    return info
+end
+
+function PGF.GetActivityInfoTable(resultID)
+    -- Copy the table to avoid tainting the original Blizzard data
+    return PGF.Table_Copy_Rec(C_LFGList.GetActivityInfoTable(resultID))
 end
 
 function PGF.GetSearchResultPlayerInfo(...)
-    return C_LFGList.GetSearchResultPlayerInfo(...)
+    -- Copy the table to avoid tainting the original Blizzard data
+    return PGF.Table_Copy_Rec(C_LFGList.GetSearchResultPlayerInfo(...))
 end
 
 function PGF.GetSearchResultMemberInfo(...)
@@ -50,4 +58,12 @@ function PGF.GetSearchResultMemberInfo(...)
     if info then
         return info.assignedRole, info.classFilename, info.className, info.specName, info.isLeader, info.isLeaver
     end
+end
+
+function PGF.GetSearchResultMemberCounts(resultID)
+    return PGF.Table_Copy_Rec(C_LFGList.GetSearchResultMemberCounts(resultID))
+end
+
+function PGF.GetSearchResultEncounterInfo(resultID)
+    return PGF.Table_Copy_Rec(C_LFGList.GetSearchResultEncounterInfo(resultID))
 end

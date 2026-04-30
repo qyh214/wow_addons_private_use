@@ -13,7 +13,11 @@
 
 	local UnitHealthMax = UnitHealthMax
 	Details.HealthMaxFrame = CreateFrame("Frame")
-	Details.HealthMaxFrame:RegisterEvent("UNIT_MAXHEALTH")
+
+	if not detailsFramework.IsMidnightWow() then
+		Details.HealthMaxFrame:RegisterEvent("UNIT_MAXHEALTH")
+	end
+
 	Details.HealthCache = {}
 	Details.HealthMaxCache = {}
 	Details.HealthMaxCalls = 0
@@ -34,7 +38,7 @@
 	local GetTime = GetTime
 	local tonumber = tonumber
 	local tinsert = table.insert
-	local select = select
+	--local select = select
 	local bitBand = bit.band
 	local floor = math.floor
 	local ipairs = ipairs
@@ -45,11 +49,8 @@
 	local _UnitGroupRolesAssigned = detailsFramework.UnitGroupRolesAssigned
 	local _GetSpellInfo = Details.getspellinfo
     local GetSpellInfo = Details222.GetSpellInfo
-	local isWOTLK = detailsFramework.IsWotLKWow()
 	local isERA = detailsFramework.IsClassicWow()
-	local isCATA = detailsFramework.IsCataWow()
-    local isPANDA = detailsFramework.IsPandaWow()
-    local isCLASSIC = isCATA or isPANDA or isERA or isWOTLK
+    local isCLASSIC = detailsFramework.IsCataWow() or detailsFramework.IsPandaWow() or isERA or detailsFramework.IsWotLKWow() or detailsFramework.IsTBCWow()
 	local _tempo = time()
 	_ = nil
 
@@ -306,7 +307,7 @@
 	--spellIds override
 	local override_spellId = {}
 
-	if (isCATA or isPANDA) then
+	if (detailsFramework.IsCataWow() or detailsFramework.IsPandaWow()) then
 		override_spellId = {
 			--Scourge Strike
 			[55265] = 55090,
@@ -3802,8 +3803,12 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 	local alternatePowerEnableFrame = CreateFrame("frame", "DetailsAlternatePowerEventHandler")
 	local alternatePowerMonitorFrame = CreateFrame("frame", "DetailsAlternatePowerMonitor")
-	alternatePowerEnableFrame:RegisterEvent("UNIT_POWER_BAR_SHOW")
-	alternatePowerEnableFrame:RegisterEvent("ENCOUNTER_END")
+
+	if not detailsFramework:IsAddonApocalypseWow() then
+		alternatePowerEnableFrame:RegisterEvent("UNIT_POWER_BAR_SHOW")
+		alternatePowerEnableFrame:RegisterEvent("ENCOUNTER_END")
+	end
+
 	alternatePowerEnableFrame.IsRunning = false
 
 	--alternate power will only run when the encounter has a alternate power bar
@@ -5511,6 +5516,10 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			_current_combat.is_pvp = {name = zoneName, mapid = zoneMapID}
 
 			if (Details.use_battleground_server_parser) then
+				if detailsFramework.IsAddonApocalypseWow() then
+					return
+				end
+
 				if (Details.time_type == 1) then
 					Details.time_type_original = 1
 					Details.time_type = 2
@@ -5589,6 +5598,9 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 	end
 
 	function Details.parser_functions:PLAYER_ENTERING_WORLD ()
+		--refresh title bar for shared media textures
+		Details:InstanceCall(Details.RefreshTitleBar)
+
 		return Details.parser_functions:ZONE_CHANGED_NEW_AREA()
 	end
 
@@ -5599,6 +5611,8 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			Details:Msg("(debug) |cFFFFFF00ENCOUNTER_START|r event triggered.")
 		end
 
+		Details:Destroy(Details.encounter_table)
+
 		Details222.Perf.WindowUpdate = 0
 		Details222.Perf.WindowUpdateC = true
 
@@ -5607,18 +5621,22 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			return
 		end
 
-		--leave the current combat when the encounter start, if is doing a mythic plus dungeons, check if the options allows to create a dedicated segment for the boss fight
-		if ((_in_combat and not Details.tabela_vigente.is_boss) and (not Details.MythicPlus.Started or Details.mythic_plus.boss_dedicated_segment)) then
-			Details:SairDoCombate()
+		if not detailsFramework.IsAddonApocalypseWow() then
+			--leave the current combat when the encounter start, if is doing a mythic plus dungeons, check if the options allows to create a dedicated segment for the boss fight
+			if ((_in_combat and not Details.tabela_vigente.is_boss) and (not Details.MythicPlus.Started or Details.mythic_plus.boss_dedicated_segment)) then
+				Details:SairDoCombate()
+			end
 		end
 
 		local encounterID, encounterName, difficultyID, raidSize = select(1, ...)
 		local zoneName, zoneType, _, _, _, _, _, zoneMapID = GetInstanceInfo()
 
-		if (zoneType == "party") then
-			local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
-			if (openRaidLib) then
-				openRaidLib.KeystoneInfoManager.SendPlayerKeystoneInfoToParty()
+		if not detailsFramework.IsAddonApocalypseWow() then
+			if (zoneType == "party") then
+				local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
+				if (openRaidLib) then
+					openRaidLib.KeystoneInfoManager.SendPlayerKeystoneInfoToParty()
+				end
 			end
 		end
 
@@ -5629,15 +5647,17 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 		Details222.DebugMsg("|cFFFFFF00Who Aggro by UNIT_FLAGS:", Details.LastAggro)
 
-		if (not Details.WhoAggroTimer and Details.announce_firsthit.enabled) then
-			Details.WhoAggroTimer = C_Timer.NewTimer(0.1, whoAggro)
-			for i = 1, 5 do
-				local boss = UnitExists("boss" .. i)
-				if (boss) then
-					local targetName = UnitName("boss" .. i .. "target")
-					if (targetName and type(targetName) == "string") then
-						Details.bossTargetAtPull = targetName
-						break
+		if not detailsFramework.IsAddonApocalypseWow() then
+			if (not Details.WhoAggroTimer and Details.announce_firsthit.enabled) then
+				Details.WhoAggroTimer = C_Timer.NewTimer(0.1, whoAggro)
+				for i = 1, 5 do
+					local boss = UnitExists("boss" .. i)
+					if (boss) then
+						local targetName = UnitName("boss" .. i .. "target")
+						if (targetName and type(targetName) == "string") then
+							Details.bossTargetAtPull = targetName
+							break
+						end
 					end
 				end
 			end
@@ -5720,52 +5740,66 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		if (_in_combat) then
 			if (endStatus == 1) then
 				Details.encounter_table.kill = true
-				Details:SairDoCombate(true, {encounterID, encounterName, difficultyID, raidSize, endStatus}) --killed
+				Details.encounter_table.end_status = 1
+				if not detailsFramework.IsAddonApocalypseWow() then
+					Details:SairDoCombate(true, {encounterID, encounterName, difficultyID, raidSize, endStatus}) --killed
+				end
 			else
 				Details.encounter_table.kill = false
-				Details:SairDoCombate(false, {encounterID, encounterName, difficultyID, raidSize, endStatus}) --wipe
-			end
-		else
-			if ((Details.tabela_vigente:GetEndTime() or 0) + 2 >= Details.encounter_table ["end"]) then
-				Details.tabela_vigente:SetStartTime(Details.encounter_table ["start"])
-				Details.tabela_vigente:SetEndTime(Details.encounter_table ["end"])
-				Details:RefreshMainWindow(-1, true)
-			end
-		end
-
-		petContainer.Reset()
-		C_Timer.After(1, function() petContainer.PetScan("ENCOUNTER_END") end)
-
-		--tag item level of all players
-		local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
-		local allPlayersGear = openRaidLib and openRaidLib.GetAllUnitsGear()
-
-		local status = xpcall(function()
-			for actorIndex, actorObject in Details:GetCurrentCombat():GetContainer(DETAILS_ATTRIBUTE_DAMAGE):ListActors() do
-				local gearInfo = allPlayersGear and allPlayersGear[actorObject:Name()]
-				if (gearInfo) then
-					actorObject.ilvl = gearInfo.ilevel
+				Details.encounter_table.end_status = 0
+				if not detailsFramework.IsAddonApocalypseWow() then
+					Details:SairDoCombate(false, {encounterID, encounterName, difficultyID, raidSize, endStatus}) --wipe
 				end
 			end
-		end, geterrorhandler())
-
-		if (not status) then
-			Details:Msg("ilvl error:", status)
+		else
+			if not detailsFramework.IsAddonApocalypseWow() then
+				if ((Details.tabela_vigente:GetEndTime() or 0) + 2 >= Details.encounter_table ["end"]) then
+					Details.tabela_vigente:SetStartTime(Details.encounter_table ["start"])
+					Details.tabela_vigente:SetEndTime(Details.encounter_table ["end"])
+					Details:RefreshMainWindow(-1, true)
+				end
+			end
 		end
 
-		Details:SendEvent("COMBAT_ENCOUNTER_END", nil, ...)
+		if not detailsFramework.IsAddonApocalypseWow() then
+			petContainer.Reset()
+			C_Timer.After(1, function() petContainer.PetScan("ENCOUNTER_END") end)
 
-		Details222.Cache.ClearAugmentationCache()
+			--tag item level of all players
+			local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
+			local allPlayersGear = openRaidLib and openRaidLib.GetAllUnitsGear()
+	
+			local status = xpcall(function()
+				for actorIndex, actorObject in Details:GetCurrentCombat():GetContainer(DETAILS_ATTRIBUTE_DAMAGE):ListActors() do
+					local gearInfo = allPlayersGear and allPlayersGear[actorObject:Name()]
+					if (gearInfo) then
+						actorObject.ilvl = gearInfo.ilevel
+					end
+				end
+			end, geterrorhandler())
+			
+			if (not status) then
+				Details:Msg("ilvl error:", status)
+			end
+		end
 
-		Details:Destroy(Details.encounter_table)
-		Details:Destroy(dk_pets_cache.army)
-		Details:Destroy(dk_pets_cache.apoc)
-		Details:Destroy(empower_cache)
+		if not detailsFramework.IsAddonApocalypseWow() then
+			Details:SendEvent("COMBAT_ENCOUNTER_END", nil, ...)
+			Details222.Cache.ClearAugmentationCache()
+			Details:Destroy(Details.encounter_table)
+
+			Details:Destroy(dk_pets_cache.army)
+			Details:Destroy(dk_pets_cache.apoc)
+			Details:Destroy(empower_cache)
+		end
 
 		return true
 	end
 
-	function Details.parser_functions:UNIT_PET(unitId)
+	function Details.parser_functions:UNIT_PET(unitId) --unitId is a secret
+		if detailsFramework.IsAddonApocalypseWow() then
+			return
+		end
 		petContainer.UNIT_PET(unitId)
 		Details:SchedulePetUpdate(1)
 	end
@@ -5811,7 +5845,9 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			end
 		end)
 
-		if (detailsFramework.ExpansionHasEvoker()) then
+		Details:InstanceCallMethod("SwapToUserSegment_Apocalypse")
+
+		if (detailsFramework.ExpansionHasEvoker() and not detailsFramework.IsAddonApocalypseWow()) then
 			if (IsInRaid()) then
 				--check if there is only one bombardment evoker in the group
 				local evokerCount = 0
@@ -5927,7 +5963,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 		table.wipe(interruptOverlapCache)
 
-		if (Details.auto_swap_to_dynamic_overall) then
+		if (not detailsFramework:IsAddonApocalypseWow() and Details.auto_swap_to_dynamic_overall) then
 			Details:InstanceCall(autoSwapDynamicOverallData, true)
 		end
 
@@ -5936,7 +5972,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 		_trinket_data_cache = Details:GetTrinketData()
 
-		if (Details.zone_type == "pvp" and not Details.use_battleground_server_parser) then
+		if (Details.zone_type == "pvp" and (not Details.use_battleground_server_parser and not detailsFramework:IsAddonApocalypseWow())) then
 			if (_in_combat) then
 				Details:SairDoCombate()
 			end
@@ -6152,7 +6188,8 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		if (Details.debug) then
 		end
 
-		Details222.MythicPlus.LogStep("CHALLENGE_MODE_START, starting 10 seconds timer.")
+		Details222.BParser.ResetServerDM()
+
 		detailsFramework.Schedules.NewTimer (10, function()
 			Details222.MythicPlus.LogStep("CHALLENGE_MODE_START timer ended, starting the dungeon.")
 			startMythicPlusRun()
@@ -6163,7 +6200,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			Details222.MythicPlus.CHALLENGE_MODE_START_AT = GetTime()
 			Details222.MythicPlus.WorldStateTimerStartAt = nil
 			Details222.MythicPlus.WorldStateTimerEndAt = nil
-			Details222.MythicPlus.LogStep("Event: CHALLENGE_MODE_START")
 
 			local activeKeystoneLevel, activeAffixIDs, wasActiveKeystoneCharged = C_ChallengeMode.GetActiveKeystoneInfo and C_ChallengeMode.GetActiveKeystoneInfo()
 			Details222.MythicPlus.Level = activeKeystoneLevel or 2
@@ -6171,6 +6207,8 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			Details.challengeModeMapId = C_ChallengeMode.GetActiveChallengeMapID()
 
 			Details222.MythicPlus.debug_auras = {}
+
+			Details222.MythicPlus.LogStep("Event: CHALLENGE_MODE_START, starting 10 seconds timer | Level: " .. Details222.MythicPlus.Level)
 		end
 	end
 
@@ -6321,7 +6359,19 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			Details:SendEvent("COMBAT_MYTHICDUNGEON_END")
 		end
 
+		Details:InstanceCallMethod("DoAutomation", "COMBAT_MYTHICDUNGEON_END")
+
 		Details222.MythicPlus.LogStep("===== Mythic+ Finished =====")
+	end
+
+	---@param self frame
+	---@param bIsInCombat boolean
+	function Details.parser_functions:PLAYER_IN_COMBAT_CHANGED(bIsInCombat)
+		if (bIsInCombat) then
+			--or not, let me think.
+		else
+
+		end
 	end
 
 	function Details.parser_functions:PLAYER_REGEN_ENABLED(...)
@@ -6338,7 +6388,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			end
 		end
 
-		if (Details.auto_swap_to_dynamic_overall) then
+		if (not detailsFramework:IsAddonApocalypseWow() and Details.auto_swap_to_dynamic_overall) then
 			Details:InstanceCall(autoSwapDynamicOverallData, false)
 		end
 
@@ -6658,6 +6708,10 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		--load up data from savedvariables for the character
 		Details222.LoadSavedVariables.CharacterData()
 
+		if detailsFramework.IsAddonApocalypseWow() then
+			Details222.BParser.SetSessionCache(Details.damage_meter_sessions)
+		end
+
 		--load up data from saved variables for the account (shared among all the players' characters; this is not the Blizzard account, lol).
 		Details222.LoadSavedVariables.SharedData()
 
@@ -6689,7 +6743,9 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 	local playerLogin = CreateFrame("frame")
 	playerLogin:RegisterEvent("PLAYER_LOGIN")
 	playerLogin:SetScript("OnEvent", function()
-		Details222.StartUp.StartMeUp()
+		C_Timer.After(0, function()
+			Details222.StartUp.StartMeUp()
+		end)
 		crowdControlSpells = Details.CrowdControlSpellIdsCache
 	end)
 
@@ -6983,6 +7039,16 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			return func(nil, token, time, sourceGUID, sourceName, sourceFlags, targetGUID, targetName, targetFlags, targetFlags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)
 		end
 	end
+
+	--[=[
+	local midnightEvents = function()
+		local eventList = {
+			"DAMAGE_METER_RESET",
+			"DAMAGE_METER_COMBAT_SESSION_UPDATED",
+		}
+	end
+	--]=]
+
 
 	--open world out of combat spell damage
 	local outofcombat_spell_damage = function(unused, token, time, whoGUID, whoName, whoFlags, targetGUID, targetName, targetFlags, targetFlags2, ...)
@@ -7392,8 +7458,10 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			else
 				local spec = detailsFramework.GetSpecialization()
 				if (spec and spec ~= 0) then
-					if (detailsFramework.GetSpecializationRole (spec) == "TANK") then
-						tanks_members_cache[playerGUID] = true
+					if not detailsFramework.IsTBCWow() then
+						if (detailsFramework.GetSpecializationRole (spec) == "TANK") then
+							tanks_members_cache[playerGUID] = true
+						end
 					end
 				end
 			end
@@ -7845,3 +7913,5 @@ end
 --]=]
 
 --end
+
+

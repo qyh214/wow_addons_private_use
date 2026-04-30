@@ -38,7 +38,7 @@ end
 
 C.themes["Blizzard_EncounterJournal"] = function()
 	-- Tabs
-	for i = 1, 6 do
+	for i = 1, 7 do
 		local tab = EncounterJournal.Tabs[i]
 		if tab then
 			B.ReskinTab(tab)
@@ -72,6 +72,7 @@ C.themes["Blizzard_EncounterJournal"] = function()
 	EncounterJournalInstanceSelectBG:SetAlpha(0)
 	B.ReskinDropDown(EncounterJournal.instanceSelect.ExpansionDropdown)
 	B.ReskinTrimScroll(EncounterJournal.instanceSelect.ScrollBar)
+	EncounterJournal.instanceSelect.evergreenBg:SetAlpha(0)
 
 	hooksecurefunc(EncounterJournal.instanceSelect.ScrollBox, "Update", function(self)
 		for i = 1, self.ScrollTarget:GetNumChildren() do
@@ -406,11 +407,20 @@ C.themes["Blizzard_EncounterJournal"] = function()
 		end)
 	end
 
-	-- Tutorials, isNewPatch
+	-- Tutorials
 	local frame = EncounterJournal.TutorialsFrame
 	if frame then
 		frame.Contents.Header:SetTextColor(1, .8, 0)
 		frame.Contents.Description:SetTextColor(1, 1, 1)
 		B.Reskin(frame.Contents.StartButton)
+	end
+
+	-- Journeys
+	local frame = EncounterJournal.JourneysFrame
+	if frame then
+		B.ReskinTrimScroll(frame.ScrollBar)
+		B.Reskin(frame.JourneyProgress.OverviewBtn)
+		B.Reskin(frame.JourneyProgress.LevelSkipButton)
+		B.Reskin(frame.JourneyOverview.OverviewBtn)
 	end
 end

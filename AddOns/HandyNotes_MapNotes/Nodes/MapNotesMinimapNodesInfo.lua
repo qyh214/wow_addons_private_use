@@ -739,6 +739,8 @@ minimap[1565] = { } -- Ardenweald
 minimap[1816] = { } -- Klauenkamm
 minimap[1670] = { } -- Oribos
 minimap[1671] = { } -- Oribos Uppder Side
+minimap[1672] = { } -- Oribos Keller
+minimap[1673] = { } -- Schmelztiegel
 minimap[1911] = { } -- Torghast
 minimap[1912] = { } -- Torghast Rune
 minimap[1961] = { } -- Korthia
@@ -844,4 +846,42 @@ minimap[2423] = { } -- Sidestreet Sluice - Inside Dungeon Map
 minimap[2420] = { } -- Sidestreet Sluice - The Pits - Inside Dungeon Map
 minimap[2452] = { } -- Archival Assault - Inside Dungeon Map
 minimap[2484] = { } -- Voidscar Cavern - Inside Dungeon Map
+
+--###############################
+--########### Midnight ##########
+--###############################
+
+minimap[2537] = { } -- Quel'Thalas
+minimap[2395] = { } -- Eversong Woods
+minimap[2437] = { } -- Zul'Aman
+minimap[2424] = { } -- Isle of Quel'Danas
+minimap[2405] = { } -- Leerensturm
+minimap[2413] = { } -- Harandar
+minimap[2536] = { } -- Atal'Aman
+minimap[2393] = { } -- Silvermoon
+minimap[2444] = { } -- Schlächteranhöhe
+minimap[2576] = { } -- Rootlands
+-- Dungeon map nodes
+minimap[2515] = { } -- Terrasse der Magister
+minimap[2492] = { } -- Windläuferturm
+minimap[2501] = { } -- Maisarakavernen
+minimap[2564] = { } -- Nalorakks Bau
+minimap[2556] = { } -- Nexuspunkt Xenas
+minimap[2574] = { } -- Arena der Leerennarbe
+minimap[2500] = { } -- Das blendende Tal
+minimap[2531] = { } -- Der Traumriss
+minimap[2533] = { } -- Marsch auf Quel'Danas      
+minimap[2529] = { } -- Die Leerenspitze
+-- Delves map nodes
+minimap[2505] = { } -- Kluft der Erinnerung - Inside Delves Map
+minimap[2577] = { } -- Die Mördergasse - Inside Delves Map
+minimap[2510] = { } -- Die Grollgrube - Inside Delves Map
+minimap[2505] = { } -- Kluft der Erinnerung - Inside Delves Map
+minimap[2506] = { } -- Schattenwachtspitze - Inside Delves Map
+minimap[2528] = { } -- Sonnentötersanktum - Inside Delves Map
+minimap[2525] = { } -- Der Düsterweg - Inside Delves Map
+minimap[2547] = { } -- Akademischer Aufruhr - Inside Delves Map
+minimap[2502] = { } -- Die Schattenenklave - Inside Delves Map
+minimap[2503] = { } -- Gruften der Zwielichtklinge - Inside Delves Map
+minimap[2535] = { } -- Zul'Aman - Inside Delves Map   
 end

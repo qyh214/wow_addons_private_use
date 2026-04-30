@@ -298,6 +298,15 @@ function IntroMotion:InstantZoomIn()
 end
 
 function IntroMotion:Enter()
+	if not NarcissusDB.CameraAutoZoomIn then
+		After(0.25, function()
+			self:ShowFrame();
+		end);
+		CameraUtil:SmoothShoulderByZoom();
+		UIParentFade:FadeOutUIParent();
+		return
+	end
+
 	SetCVar("test_cameraDynamicPitch", 1);
 
 	if self.useCameraTransition then
@@ -724,6 +733,8 @@ local function GetFormattedSourceText(sourceInfo)
 	local bonusID;
 	local colorizedText, plainText, hyperlink;
 
+	--/dump Enum.TransmogSource
+
 	if sourceType == 1 then	--TRANSMOG_SOURCE_BOSS_DROP = 1
 		local drops = C_TransmogCollection.GetAppearanceSourceDrops(sourceInfo.sourceID);
 		if drops and drops[1] then
@@ -770,20 +781,8 @@ local function GetFormattedSourceText(sourceInfo)
 				hyperlink = "|c"..hex.."|Hitem:"..sourceInfo.itemID.."::::::::120::::2:512".."4"..":1562:|h|r";
 				bonusID = 5124;
 			end
-		elseif sourceType == 3 then --vendor
-			colorizedText = TRANSMOG_SOURCE_3;
-		elseif sourceType == 4 then --world drop
-			colorizedText = TRANSMOG_SOURCE_4;
-		elseif sourceType == 5 then --achievement
-			colorizedText = TRANSMOG_SOURCE_5;
-		elseif sourceType == 6 then	--profession
-			colorizedText = TRANSMOG_SOURCE_6;
-		else
-			if itemQuality == 6 then
-				colorizedText = ITEM_QUALITY6_DESC;
-			elseif itemQuality == 5 then
-				colorizedText = ITEM_QUALITY5_DESC;
-			end
+		elseif sourceType then
+			colorizedText = TransitionAPI.GetTransmogSourceName(sourceType);
 		end
 		plainText = colorizedText;
 	end
@@ -806,6 +805,7 @@ function NarciEquipmentSlotMixin:SetTransmogSourceID(appliedSourceID, secondaryS
 		self.GradientBackground:Show();
 	else
 		self.Icon:SetDesaturated(true);
+		self.Icon:SetTexture(self.emptyTexture);
 		self.Name:SetText(nil);
 		self.ItemLevel:SetText(nil);
 		self.GradientBackground:Hide();	
@@ -837,6 +837,10 @@ function NarciEquipmentSlotMixin:SetTransmogSourceID(appliedSourceID, secondaryS
 		_, _, self.hyperlink = GetFormattedSourceText(sourceInfo);
 	else
 		subText, self.sourcePlainText, self.hyperlink = GetFormattedSourceText(sourceInfo);
+	end
+
+	if not subText then
+		subText = " ";
 	end
 
 	if self.hyperlink then
@@ -892,7 +896,7 @@ function NarciEquipmentSlotMixin:SetTransmogSourceID(appliedSourceID, secondaryS
 
 	if self.slotID == 3 then
 		--shoulder
-		if secondarySourceID and secondarySourceID > 0 then
+		if secondarySourceID and secondarySourceID > 0 and secondarySourceID ~= appliedSourceID then
 			self:DisplayDirectionMark(true, itemQuality);
 			SLOT_TABLE[2]:SetTransmogSourceID(secondarySourceID, secondarySourceID);
 		else
@@ -922,9 +926,15 @@ function NarciEquipmentSlotMixin:Refresh(forceRefresh)
 			self:UntrackTempEnchant();
 			self:ClearOverlay();
 			self:HideVFX();
+			self.GemSlot:HideSlot();
 			self.itemLink = nil;
 			self.isSlotHidden = false;	--Undress an item from player model
 			self.RuneSlot:Hide();
+
+			if TransmogDataProvider.RequestUpdateCharacterUI() then
+				return true
+			end
+
 			self.GradientBackground:Show();
 			local appliedSourceID, appliedVisualID, hasSecondaryAppearance = GetSlotVisualID(slotID);
 			self.sourceID = appliedSourceID;
@@ -1620,6 +1630,20 @@ local function UpdateCharacterInfoFrame(newLevel)
 	ItemLevelFrame:UpdateItemLevel();
 end
 
+
+local function DisplayItemTransmogInfoList(itemTransmogInfoList)
+	if MOG_MODE and Narci_Character:IsVisible() then
+		for slotID, info in ipairs(itemTransmogInfoList) do
+			--print(slotID, info.appearanceID);   --appearanceID, secondaryAppearanceID, illusionID
+			if SLOT_TABLE[slotID] then
+				SLOT_TABLE[slotID]:SetTransmogSourceID(info.appearanceID, info.secondaryAppearanceID);    --SetAppearance
+			end
+		end
+	end
+end
+addon.DisplayItemTransmogInfoList = DisplayItemTransmogInfoList;
+
+
 local SlotController = {};
 SlotController.updateFrame = CreateFrame("Frame");
 SlotController.updateFrame:Hide();
@@ -2186,6 +2210,32 @@ function Narci_SetPlayerName(self)
 	SmartFontType(editBox);
 end
 
+local function Narci_Close()
+	if Narci.showExitConfirm and not InCombatLockdown() then
+		local ExitConfirm = Narci_ExitConfirmationDialog;
+		if not ExitConfirm:IsShown() then
+			FadeFrame(ExitConfirm, 0.25, 1);
+
+			SetUIVisibility(false);
+			MiniButton:Enable();
+			UIParent:SetAlpha(1);
+
+			return
+		else
+			FadeFrame(ExitConfirm, 0.15, 0);
+		end
+	end
+	SlotController:PlayAnimOut();
+	ExitFunc();
+	PlayLetteboxAnimation("OUT");
+	EquipmentFlyoutFrame:Hide();
+	Narci_ModelSettings:Hide();
+
+	Toolbar:HideUI();
+	TakeOutFrames(false);
+
+	Narci.showExitConfirm = false;
+end
 
 function Narci_Open()
 	if not IS_OPENED then
@@ -2225,30 +2275,7 @@ function Narci_Open()
 		Narci.isActive = true;
 		CallbackRegistry:Trigger("NarcissusCharacterUI.ShownState", true);
 	else
-		if Narci.showExitConfirm and not InCombatLockdown() then
-			local ExitConfirm = Narci_ExitConfirmationDialog;
-			if not ExitConfirm:IsShown() then
-				FadeFrame(ExitConfirm, 0.25, 1);
-
-				SetUIVisibility(false);
-				MiniButton:Enable();
-				UIParent:SetAlpha(1);
-
-				return
-			else
-				FadeFrame(ExitConfirm, 0.15, 0);
-			end
-		end
-		SlotController:PlayAnimOut();
-		ExitFunc();
-		PlayLetteboxAnimation("OUT");
-		EquipmentFlyoutFrame:Hide();
-		Narci_ModelSettings:Hide();
-
-		Toolbar:HideUI();
-		TakeOutFrames(false);
-
-		Narci.showExitConfirm = false;
+		Narci_Close();
 	end
 
 	NarciAPI.UpdateSessionTime();
@@ -2291,9 +2318,10 @@ function Narci_OpenGroupPhoto()
 		Narci.isActive = true;
 		CallbackRegistry:Trigger("NarcissusCharacterUI.ShownState", true);
 		MsgAlertContainer:Display();
+		NarciAPI.UpdateSessionTime();
+	else
+		Narci_Close();
 	end
-
-	NarciAPI.UpdateSessionTime();
 end
 
 
@@ -2551,11 +2579,17 @@ local function Narci_XmogButton_OnClick(self)
 		if (not InCombatLockdown()) and (not Narci_Character:IsShown()) then
 			Narci_Character:Show();
 			Narci_Character:SetAlpha(1);
-			StatsUpdator:Gradual();
 		end
+
+		StatsUpdator:Gradual();
 	end
 
-	SlotController:LazyRefresh();
+	if MOG_MODE then
+		SlotController:RefreshAll();
+	else
+		SlotController:LazyRefresh();
+	end
+
 	After(0.1, function()
 		ActivateMogMode();
 	end)
@@ -2622,8 +2656,7 @@ do
 end
 
 
-do
-	--Slash Command
+do	--Slash Command
 	local function callback(msg)
 		if not msg then
 			msg = "";
@@ -2654,43 +2687,7 @@ do
 		end
 	end
 
-	--local commandName = "narci";
-	--local commandAlias = "narcissus";
-	--RegisterNewSlashCommand(callback, commandName, commandAlias);
-
-	---- Alternative method to avoid slash command taint
-
-	if ChatEdit_HandleChatType then
-		local VALID_COMMANDS = {
-			["/NARCI"] = true,
-			["/NARCISSUS"] = true,
-		};
-
-		local c, m;
-
-		hooksecurefunc("ChatEdit_HandleChatType", function(editBox, msg, command, send)
-			c = command;	--Auto capitalized by the game
-			m = msg;
-			if send == 1 then
-				if c then
-					if c == "/NARCISSUSGAMEPAD" then
-						Narci_Open();
-					elseif VALID_COMMANDS[c] then
-						callback(m);
-					end
-				end
-
-				c = nil;
-				m = nil;
-			end
-		end);
-	end
-
-	--local f = CreateFrame("Frame");
-	--f:RegisterEvent("EXECUTE_CHAT_LINE");
-	--f:SetScript("OnEvent", function(self, event, line)
-	--	print(line)
-	--end)
+	NarciAPI.CreateSlashCommand(callback, "narci", "narcissus");
 end
 
 

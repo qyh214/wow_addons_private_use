@@ -1,0 +1,13 @@
+## Interface: 120005, 120001
+## Title: ExwindTools
+## Author: Exwind
+## Version: 1.0
+## Notes: Exwind工具箱 模块
+
+## LoadSavedVariablesFirst: 1
+## RequiredDeps: ExwindCore
+## OptionalDeps: SharedMedia, LibSharedMedia-3.0,MythicDungeonTools
+## IconTexture: Interface\AddOns\ExwindCore\Textures\LOGO\EXUI.jpg
+
+# 业务模块
+Modules\load_modules.xml

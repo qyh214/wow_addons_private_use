@@ -1,0 +1,12 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="src\inlineIcon.lua"/>
+	<Script file="src\blizzard.lua"/>
+	<Script file="src\color.lua"/>
+	<Script file="src\conversion.lua"/>
+	<Script file="src\lazyTable.lua"/>
+	<Script file="src\formatting.lua"/>
+	<Script file="src\general.lua"/>
+	<Script file="src\sort.lua"/>
+	<Script file="src\standard.lua"/>
+	<Script file="src\texture.lua"/>
+</Ui>

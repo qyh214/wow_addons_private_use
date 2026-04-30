@@ -234,7 +234,7 @@ local function IsNodeEntryOnCooldown(nodeEntryID)
         if spellID then
             spellID = FindSpellOverrideByID(spellID);
             local start, duration = GetSpellCooldown(spellID);
-            if start ~= 0 then -- Talent spell on cooldown, we need to wait before switching
+            if canaccessvalue(start) and start ~= 0 then -- Talent spell on cooldown, we need to wait before switching
                 Internal.DirtyAfter((start + duration) - GetTime() + 1);
                 return true;
             end

@@ -1,51 +1,64 @@
 ﻿local Addon = select(2, ...);
 
+TalentLoadoutEx = TalentLoadoutEx or {};
+
 -- https://github.com/peavers/PeaversTalentsData/blob/master/docs/index.md
 
-local groupNames = {
+local peaversTalentsDataGroupNames = {
 	mythic = "Mythic+",
 	heroic_raid = "Raid: Heroic",
 	mythic_raid = "Raid: Mythic",
-	["mm+"] = "Mythic+",
-	solo = "Solo PvP",
 };
 
-local prefixes = {
+local peaversTalentsDataPrefixes = {
 	mythic = "Mythic+:\n",
 	heroic_raid = "Raid(H):\n",
 	mythic_raid = "Raid(M):\n",
 };
 
 local peaversTalentsDataIcons = {
+	-- https://github.com/peavers-warcraft/PeaversTalentsData/blob/master/src/Data/ArchonMythicDB.lua
 	mythic = {
 		[0] = Addon.MYTHICPLUS_ICON,
 		["All Dungeons"] = Addon.MYTHICPLUS_ICON,
-		["Ara Kara City Of Echoes"] = 5899326,
-		["Eco Dome Aldani"] = 6921877,
-		["Halls Of Atonement"] = 3601526,
-		["Operation Floodgate"] = 6422372,
-		["Priory Of The Sacred Flame"] = 5899331,
-		["Tazavesh Soleahs Gambit"] = 4062727,
-		["Tazavesh Streets Of Wonder"] = 4058847,
-		["The Dawnbreaker"] = 5899330,
+
+		-- Midnight: Season 1
+		["Algethar Academy"] = 4578414,
+		["Magisters"] = 7439625,
+		["Maisara Caverns"] = 7322719,
+		["Nexus Point Xenas"] = 7553062,
+		["Pit Of Saron"] = 343641,
+		["Seat"] = 1711340,
+		["Skyreach"] = 1002596,
+		["Windrunner Spire"] = 7266215,
 	},
+
+
+	-- https://github.com/peavers-warcraft/PeaversTalentsData/blob/master/src/Data/ArchonHeroicRaidDB.lua
 	raid = {
-		[0] = 6997112,
-		["All Bosses"] = 6997112,
-		["Plexus Sentinel"] = 6922080,
-		["Loomithar"] = 6922087,
-		["Soulbinder Naazindhri"] = 6922081,
-		["Forgeweaver Araz"] = 6922084,
-		["The Soul Hunters"] = 6922082,
-		["Fractillus"] = 6922085,
-		["Nexus King Salhadaar"] = 6922086,
-		["Dimensius"] = 6922083,
+		-- Midnight: Season 1
+		[0] = 7490911,
+		["All Bosses"] = 7490911,
+		["Imperator"] = 7448209,
+		["Vorasius"] = 7448210,
+		["Salhadaar"] = 7448212,
+		["Vaelgor Ezzorak"] = 7448207,
+		["Vanguard"] = 7448211,
+		["Crown"] = 7448205,
+		["Chimaerus"] = 7448202,
+		["Beloren"] = 7448203,
+		["Midnight Falls"] = 7448204,
 	},
 };
 
+local murlokExportGroupNames = {
+	["m+"]   = "Mythic+",
+	["solo"] = "Solo PvP",
+};
+
 local murlokExportIcons = {
-	["mm+"] = Addon.MYTHICPLUS_ICON,
-	solo = Addon.PVP_ICON,
+	["m+"]   = Addon.MYTHICPLUS_ICON,
+	["solo"] = Addon.PVP_ICON,
 };
 
 local function AddData(dstTable, srcTable)
@@ -101,7 +114,7 @@ local function GetPeaversTalentsDataByCategory(category)
 		if not presetData then
 			presetData = {};
 
-			local prefix = option.isCombineGroups and prefixes[category] or "";
+			local prefix = option.isCombineGroups and peaversTalentsDataPrefixes[category] or "";
 			for _, build in ipairs(API.GetBuilds(classID, specID, "archon")) do
 				if build.category == category then
 					table.insert(
@@ -121,7 +134,7 @@ local function GetPeaversTalentsDataByCategory(category)
 				if not group then
 					group = {
 						isPreset = true,
-						name = "Archon: "..groupNames[category],
+						name = "Archon: "..peaversTalentsDataGroupNames[category],
 						icon = icons[0];
 						isExpanded = false,
 					};
@@ -197,7 +210,7 @@ local function GetMurlokExportDataByCategory(category)
 											local subTreeInfo = C_Traits.GetSubTreeInfo(Constants.TraitConsts.VIEW_TRAIT_CONFIG_ID, subTreeID);
 
 											local prefix = heroContent.rating.."\n";
-											if category == "mm+" then
+											if category == "m+" then
 												prefix = "M+: "..prefix
 											else
 												prefix = "Solo: "..prefix
@@ -229,7 +242,7 @@ local function GetMurlokExportDataByCategory(category)
 				if not group then
 					group = {
 						isPreset = true,
-						name = "Murlok.io: "..groupNames[category],
+						name = "Murlok.io: "..murlokExportGroupNames[category],
 						icon = murlokExportIcons[category],
 						isExpanded = false,
 					};
@@ -280,7 +293,7 @@ end
 
 local function GetMurlokExportData()
 	local presetData = {};
-	AddData(presetData, GetMurlokExportDataByCategory("mm+"));
+	AddData(presetData, GetMurlokExportDataByCategory("m+"));
 	AddData(presetData, GetMurlokExportDataByCategory("solo"));
 
 	if #presetData > 0 and TalentLoadoutEx.Option.Preset.isCombineGroups then

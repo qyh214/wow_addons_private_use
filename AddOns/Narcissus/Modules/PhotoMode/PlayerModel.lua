@@ -20,7 +20,6 @@ local sqrt = math.sqrt;
 local FadeFrame = NarciFadeUI.Fade;
 local FadeIn = NarciFadeUI.FadeIn;
 local After = C_Timer.After;
-local SmartSetActorName = NarciAPI.SmartSetActorName;
 local NarciAnimationInfo = NarciAnimationInfo;
 local NarciSpellVisualUtil = NarciSpellVisualUtil;
 local GetCursorPosition = GetCursorPosition;
@@ -66,6 +65,14 @@ local function HighlightButton(button, state, sound)
 		if sound then
 			PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF);
 		end
+	end
+end
+
+local function SmartSetText_Safe(fontstring, name)
+	if canaccessvalue(name) then
+		NarciAPI.SmartSetActorName(fontstring, name);
+	else
+		fontstring:SetText(name);
 	end
 end
 
@@ -146,6 +153,9 @@ local TranslateValue_Male = {
 
 	[84] = {[1] = {-0.1, 1.02, -0.57},
 				[2] = {-0.6, 1.24, 0.05}},		--84/85 Earthen √
+
+	[86] = {[1] = {-0.25, 1.45, -0.17},
+				[2] = {-0.25, 1.45, -0.17}},		--86 Haranir
 };
 
 local TranslateValue_Female = {
@@ -209,6 +219,9 @@ local TranslateValue_Female = {
 
 	[84] = {[1] = {-0.1, 1.02, -0.57},
 				[2] = {-0.4, 1.15, 0.00}},		--84/85 Earthen √
+
+	[86] = {[1] = {-0.3, 1.46, -0.17},
+				[2] = {-0.3, 1.46, -0.17}},		--86 Haranir
 }
 
 TranslateValue_Female[36] = TranslateValue_Female[2];
@@ -244,6 +257,8 @@ local function ReAssignRaceID(raceID, custom)
 		end
 	elseif raceID == 85 then	--Earthen
 		raceID = 84;
+	elseif raceID == 91 then	--Haranir Horde
+		raceID = 86;
 	end
 
 	return raceID;
@@ -308,7 +323,7 @@ local function GetUnitRaceIDAndSex(unit)
 end
 
 local function InitializePlayerInfo(index, unit)
-	local unit = unit or "player";
+	unit = unit or "player";
 	local name = UnitName(unit);
 	local _, className = UnitClass(unit);
 	local race, gender =  GetUnitRaceIDAndSex(unit);
@@ -321,9 +336,9 @@ local function InitializePlayerInfo(index, unit)
 	--SetGenderIcon(PlayerInfo[index].gender_Original);
 	local r, g, b = GetClassColor(className);
 	local fontstring = ActorPanel.ExtraPanel.buttons[index].Label;	--name tooltip
-	SmartSetActorName(fontstring, name);
+	SmartSetText_Safe(fontstring, name);
 	fontstring:SetTextColor(r, g, b);
-	
+
 	return race, gender;
 end
 
@@ -343,7 +358,7 @@ local function UpdateActorName(index)
 		r, g, b = r + 0.05, g + 0.05, b + 0.05;
 	end
 
-	SmartSetActorName(str, PlayerInfo[index].name or "Unnamed");
+	SmartSetText_Safe(str, PlayerInfo[index].name or "Unnamed");
 	str:SetTextColor(r, g, b);
 end
 
@@ -778,6 +793,7 @@ PMAI:SetScript("OnShow", function(self)		--PlayerModelAnimIn
 	defaultZ = TranslateValue[ZoomMode][3] or -0.275;
 	model:SetPortraitZoom(zoomLevel);
 	model.zoomLevel = zoomLevel;
+	local noAutoFadeIn;
 
 	if (not self.useAlternateEntrance) or not EntranceAnimation then
 		model:SetPosition(0, startY, defaultZ);
@@ -807,14 +823,17 @@ PMAI:SetScript("OnShow", function(self)		--PlayerModelAnimIn
 		model:FreezeAnimation(animStart, 1, 0);
 		model:SetAnimation(animStart);
 		self:SetScript("OnUpdate", EntranceAnimation[5]);
+		noAutoFadeIn = EntranceAnimation.noAutoFadeIn;
 	end
+
 	model:Show();
 	model:SetModelAlpha(0);
 	model:SetAlpha(0);
 	model.isVirtual = false;
 	model:ResetCameraPosition();
-	FadeFrame(model, 0.6, 1);
-	--FadeFrame(ModelContainer, 0, 1);
+	if not noAutoFadeIn  then
+		FadeFrame(model, 0.6, 1);
+	end
 
 	if self.init then	--Initialize settings
 		self.init = nil;
@@ -1151,6 +1170,7 @@ local function SlotLayerButton_OnClick(self)
 			FadeFrame(NarciModel_RightGradient, 0.25, 1);
 		end
 		FadeFrame(Narci_Character, 0.25, 1);
+		Narci.RefreshAllSlots();
 	else
 		FadeFrame(NarciModel_RightGradient, 0.25, 0);
 		FadeFrame(Narci_Character, 0.25, 0);
@@ -2598,7 +2618,7 @@ function Narci_ModelIndexButton_OnClick(self, button)
 	local buttons = self:GetParent().buttons;
 
 	if not self.hasModel then
-		if UnitExists(unit) then
+		if UnitExists(unit) and not C_Secrets.ShouldUnitIdentityBeSecret(unit) then
 			local isPlayer = UnitIsPlayer(unit);
 			local alternateMode = IsAltKeyDown();
 			if isPlayer and not alternateMode then
@@ -2606,7 +2626,7 @@ function Narci_ModelIndexButton_OnClick(self, button)
 			else
 				model = _G["NarciNPCModelFrame"..ID];
 			end
-		
+
 			if not model then
 				if isPlayer and not alternateMode then
 					model = CreateFrame("DressUpModel", "NarciPlayerModelFrame"..ID, ModelContainer, "Narci_CharacterModelFrame_Template");
@@ -2852,7 +2872,7 @@ function NarciGenericModelMixin:OnUpdate()
 			local posY = self.posY + dx;
 			local posZ = self.posZ + dy;
 			self:SetPosition(self.posX, posY, posZ);
-			--print("Y: "..posY.." Z: "..posZ.." Dis: "..self.cameraDistance)
+			--print("Y: "..posY.." Z: "..posZ.." Dis: "..self.cameraDistance)	--debug
 		else
 			if LINK_SCALE then
 				for i = 1, #ModelFrames do
@@ -3267,8 +3287,8 @@ local function OverrideActorInfo(actorIndex, name, hasWeapon, portraitFile)
 	PlayerInfo[actorIndex].name = name;
 	--ActorPanel.ExtraPanel.buttons[actorIndex].Label:SetText(name);
 	--ActorPanel.ActorButton.ActorName:SetText(name);
-	SmartSetActorName(ActorPanel.ExtraPanel.buttons[actorIndex].Label, name);
-	SmartSetActorName(ActorPanel.ActorButton.ActorName, name);
+	SmartSetText_Safe(ActorPanel.ExtraPanel.buttons[actorIndex].Label, name);
+	SmartSetText_Safe(ActorPanel.ActorButton.ActorName, name);
 
 	--Weapon
 
@@ -3355,7 +3375,7 @@ local function CreateAndSelectNewActor(actorIndex, unit, isVirtual)
 
 	if isVirtual then
 		IndexButton:SetModelType("virtual");
-		model:SetModelAlpha(0)
+		model:SetModelAlpha(0);
 		model.isVirtual = true;
 
 		PlayerInfo[ID].name = "|cff0081a9"..VIRTUAL_ACTOR.."|r";
@@ -3367,7 +3387,7 @@ local function CreateAndSelectNewActor(actorIndex, unit, isVirtual)
 		else
 			IndexButton:SetModelType("npc");
 		end
-		model:SetModelAlpha(1)
+		model:SetModelAlpha(1);
 		model.isVirtual = false;
 	end
 
@@ -4093,17 +4113,29 @@ function NarciActorPanelPopUpMixin:OnLeave()
 	end
 end
 
+local function TrySetTargetText(fontstring)
+	local unit = "target";
+	if C_Secrets.ShouldUnitIdentityBeSecret(unit) then
+		fontstring:SetText(L["Unsupported Model Unit Alert"]);
+		fontstring:SetTextColor(1, 0.3137, 0.3137);		--Pastel Red
+		return false
+	else
+		local name = UnitName(unit);
+		local _, className = UnitClass(unit);
+		local r, g, b = GetClassColor(className);
+		fontstring:SetTextColor(r, g, b);
+		SmartSetText_Safe(fontstring, name);
+		return true
+	end
+end
+
 function NarciActorPanelPopUpMixin:OnEvent(event, ...)
 	if event == "PLAYER_TARGET_CHANGED" then	--fire when target's changed
 		local TargetText = self.AddTarget.Text;
-		if UnitExists("target") then
-			local name = UnitName("target");
-			local _, className = UnitClass("target");
-			local r, g, b = GetClassColor(className);
-			TargetText:SetTextColor(r, g, b);
-			SmartSetActorName(TargetText, name);
-
-			local isTargetNPC = not UnitIsPlayer("target");
+		local unit = "target";
+		if UnitExists(unit) then
+			local success = TrySetTargetText(TargetText);
+			local isTargetNPC = not UnitIsPlayer(unit);
 			self.AddTarget.isTypeLocked = isTargetNPC;
 			if self.AddTarget:IsMouseOver() then
 				self:UpdateWidgetTpe(isTargetNPC);
@@ -4189,16 +4221,22 @@ function NarciModelIndexButtonMixin:OnEnter()
 		if not IsMouseButtonDown() then
 			local PopUp = self:GetParent().PopUp;
 			local TargetText = PopUp.AddTarget.Text;
+			local canAddTarget;
 			if UnitExists("target") then
-				local name = UnitName("target");
-				local _, className = UnitClass("target");
-				local r, g, b = GetClassColor(className);
-				TargetText:SetTextColor(r, g, b);
-				SmartSetActorName(TargetText, name);
+				if TrySetTargetText(TargetText) then
+					canAddTarget = true;
+				else
+					canAddTarget = false;
+				end
 			else
-				TargetText:SetTextColor(1, 0.3137, 0.3137);	--Pastel Red
+				canAddTarget = false;
 				TargetText:SetText(ERR_GENERIC_NO_TARGET);
 			end
+
+			if not canAddTarget then
+				TargetText:SetTextColor(1, 0.3137, 0.3137);	--Pastel Red
+			end
+
 			PopUp.parent = self;
 			PopUp.Index = self:GetID();
 			PopUp:SetPoint("CENTER", self, "CENTER", 0, 16);
@@ -4236,7 +4274,7 @@ end
 function NarciModelIndexButtonMixin:OnDragStart()
 	if not self.hasModel then return; end;
 	self:GetFrameLevel(60);
-	self:GetParent().ArtFrame.Label:SetText(L["Move To Font"]);
+	--self:GetParent().ArtFrame.Label:SetText(L["Move To Font"]);	--Disabled because Models are now in the same space. FrameLevel no longer affects front/back
 	self.lockHighlight = true;
 	local UpdateFrame = self:GetParent().UpdateFrame;
 	UpdateFrame.ActiveButton = self:GetID();
@@ -4512,8 +4550,10 @@ end
 
 function Narci:LoadOutfitSlashCommand(msg)
 	msg = string.gsub(msg, "/outfit%s+", "");
+	msg = string.gsub(msg, "/customset%s+", "");
 
-	local itemTransmogInfoList = TransmogUtil.ParseOutfitSlashCommand(msg);
+	local parseFunc = TransmogUtil.ParseOutfitSlashCommand or TransmogUtil.ParseCustomSetSlashCommand;
+	local itemTransmogInfoList = parseFunc(msg);
 	local model = ModelFrames[ACTIVE_MODEL_INDEX];
 
 	if itemTransmogInfoList then

@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@ local L = PGF.L
 local C = PGF.C
 
 local DIFFICULTY_TEXT = {
-    [1] = { key = C.ARENA2V2, title = C_LFGList.GetActivityInfoTable(6).shortName }, -- Arena 2v2
-    [2] = { key = C.ARENA3V3, title = C_LFGList.GetActivityInfoTable(7).shortName }, -- Arena 3v3
+    [1] = { key = C.ARENA2V2, title = PGF.GetActivityInfoTable(6).shortName }, -- Arena 2v2
+    [2] = { key = C.ARENA3V3, title = PGF.GetActivityInfoTable(7).shortName }, -- Arena 3v3
 }
 
 local ArenaPanel = CreateFrame("Frame", "PremadeGroupsFilterArenaPanel", PGF.Dialog, "PremadeGroupsFilterArenaPanelTemplate")

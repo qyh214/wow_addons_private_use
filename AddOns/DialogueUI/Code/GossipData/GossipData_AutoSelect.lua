@@ -4,6 +4,32 @@ local _, addon = ...
 
 local AutoSelectGossip = {
     --[gossipOptionID] = true(always), 1(select when it's the only option)
+    --Midnight
+
+    [136916] = 1,           --Delver's Guide
+    [137576] = 1,           --Research Console <Commune with the Console.>
+	[138824] = 1,			--Ritual Site Reports
+
+    --Den of Nalorakk
+    [135009] = 1,           --Ethereal Pyre, teleport from entrance to the start of the first area
+    [135010] = 1,           --Ethereal Pyre, teleport back to entrance from the first area (sharing the same optionID as the Pyre at the end of the zone)
+    [136086] = 1,           --(Delve) I'll take care of this! Null-Theorist Selune
+    [134949] = 1,           --(Delve) Sounds like a plan. Lysikas
+    [136318] = 1,           --(Delve) I will save them! Fleek
+    [135798] = 1,           --(Delve) I'll stop this invasion!
+    [136275] = 1,           --(Delve) I'll deal with this mess!
+    [137619] = 1,           --(Quest) Looting and killing, understood!
+    [135634] = 1,           --(Quest) I'll take care of it!
+    [135708] = 1,           --(Delve) I'll get rid of these weeds!
+    [136317] = 1,           --(Delve) I'll get rid of these totems!
+    [136446] = 1,           --(Delve) I'll drive back the attackers.
+    [138317] = 1,           --(Quest) Deal with the big ogre. On it!
+    [136385] = 1,           --(Delve) I'll break the hexes and set your kin free.
+    [136279] = 1,           --(Delve) I'll take care of this!
+    [135865] = 1,           --(Delve) I'll deal with this!
+    [137389] = 1,           --(Quest) Deal with the big ones. Got it.
+    [136141] = 1,           --(Quest) I'll help you restore the ley lines... and show these cultists a thing or two!
+
     [48598] = true,         --I'd like to check my mail.   [NPC: 132969] Katy Stampwhistle
     [55193] = true,         --Mail [NPC: 191869] Child of Ohn'ahra
     [109275] = true,        --Reporting to duty (Time Rift)

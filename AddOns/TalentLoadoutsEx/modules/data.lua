@@ -39,26 +39,25 @@ local function GetCompareLoadoutInfo(text, configID)
 	local loadoutEntryInfo = Addon:GetLoadoutEntryInfo(text, configID);
 	if loadoutEntryInfo then
 		for _, entry in pairs(loadoutEntryInfo) do
-			loadoutEntryDictionary[entry.nodeID] = entry;
+			loadoutEntryDictionary[entry.selectionEntryID] = entry;
 		end
 	end
 
 	return loadoutEntryDictionary;
 end
 
-function Addon:IsTextLoaded(text)
-	local current = Addon:GetExportText();
-	if not current or #current == 0 then
+function Addon:IsTextLoaded(targetText, currentText)
+	if not currentText or #currentText == 0 then
 		return false;
-	elseif current == text then
+	elseif currentText == targetText then
 		return true;
 	else
 		local configID = C_ClassTalents.GetActiveConfigID();
-		local loadoutEntryDictionary = GetCompareLoadoutInfo(current, configID);
-		local loadoutEntryInfo = Addon:GetLoadoutEntryInfo(text, configID);
+		local loadoutEntryDictionary = GetCompareLoadoutInfo(currentText, configID);
+		local loadoutEntryInfo = Addon:GetLoadoutEntryInfo(targetText, configID);
 		if loadoutEntryInfo then
 			for _, entry in pairs(loadoutEntryInfo) do
-				local currentEntry = loadoutEntryDictionary[entry.nodeID];
+				local currentEntry = loadoutEntryDictionary[entry.selectionEntryID];
 				if not currentEntry or entry.ranksGranted ~= currentEntry.ranksGranted or entry.selectionEntryID ~= currentEntry.selectionEntryID or entry.ranksPurchased ~= currentEntry.ranksPurchased then
 					return false;
 				end
@@ -71,7 +70,7 @@ function Addon:IsTextLoaded(text)
 	end
 end
 
-function Addon:IsDataLoaded(data)
+function Addon:IsDataLoaded(data, currentText)
 	if TalentLoadoutEx.Option.IsEnabledPvp then
 		for index, current in ipairs(C_SpecializationInfo.GetAllSelectedPvpTalentIDs()) do
 			local pvpTalentID = tonumber(data["pvp"..index]);
@@ -81,12 +80,12 @@ function Addon:IsDataLoaded(data)
 		end
 	end
 
-	return Addon:IsTextLoaded(data.text);
+	return Addon:IsTextLoaded(data.text, currentText);
 end
 
 local function SetPvpTalent(slot, pvpTalentID)
 	if pvpTalentID and (GetPvpTalentInfoByID(pvpTalentID)) then
-		LearnPvpTalent(tonumber(pvpTalentID), slot); ---@diagnostic disable-line: redundant-parameter
+		LearnPvpTalent(tonumber(pvpTalentID), slot);
 	end
 end
 
@@ -119,8 +118,8 @@ function Addon:LoadConfig()
 		if data.isLegacy then
 			Addon:Print("Legacy format text is obsolated.");
 		else
-			Addon:ImportTextAsync(data.text);
 			Addon:SetPvpTalent(data.pvp1, data.pvp2, data.pvp3);
+			Addon:ImportTextAsync(data.text);
 			Addon:SendUpdateMessage();
 		end
 	end
@@ -212,7 +211,7 @@ function Addon:MoveUp()
 			end
 		end
 
-		Addon:RequestUpdate();
+		Addon:UpdateScrollBox(true);
 	end
 end
 
@@ -256,7 +255,7 @@ function Addon:MoveDown()
 			end
 		end
 
-		Addon:RequestUpdate();
+		Addon:UpdateScrollBox(true);
 	end
 end
 
@@ -402,9 +401,11 @@ function Addon:UpdateData()
 	TalentLoadoutEx.Option.Preset = TalentLoadoutEx.Option.Preset or {};
 	TalentLoadoutEx.Option.Preset.isCombineGroups = TalentLoadoutEx.Option.isCombinePresetGroups or false;
 	TalentLoadoutEx.Option.Preset.PeaversTalentsData = TalentLoadoutEx.Option.Preset.PeaversTalentsData or { mythic = true, heroic_raid = true, mythic_raid = true };
-	TalentLoadoutEx.Option.Preset.MurlokExport = TalentLoadoutEx.Option.Preset.MurlokExport or { ["mm+"] = true, solo = true };
+	TalentLoadoutEx.Option.Preset.MurlokExport = TalentLoadoutEx.Option.Preset.MurlokExport or { ["m+"] = true, solo = true };
 
-	-- Delete Old Preset Options
+	-- Fix Old Preset Options
+	TalentLoadoutEx.Option.Preset.MurlokExport["m+"] = TalentLoadoutEx.Option.Preset.MurlokExport["mm+"] or true;
+	TalentLoadoutEx.Option.Preset.MurlokExport["mm+"] = nil;
 	TalentLoadoutEx.Option.PresetDataSourceAddonIndex = nil;
 	TalentLoadoutEx.Option.PeaversTalentsData = nil;
 

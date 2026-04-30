@@ -1,0 +1,12 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="src\preload.lua"/>
+    <Script file="src\button.lua"/>
+    <Script file="src\check-button.lua"/>
+    <Script file="src\color-input.lua"/>
+    <Script file="src\input.lua"/>
+    <Script file="src\range.lua"/>
+    <Script file="src\scroll-bar.lua"/>
+    <Script file="src\selection-menu.lua"/>
+    <Script file="src\prompt.lua"/>
+    <Script file="index.lua"/>
+</Ui>

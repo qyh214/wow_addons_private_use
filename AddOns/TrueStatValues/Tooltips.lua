@@ -64,27 +64,85 @@ local extraStatEventMap = {
 }
 
 local patterns = {
-    [CR_MASTERY] = "%s([,0-9]+) " .. STAT_MASTERY,
-    [CR_CRIT_SPELL] = "%s([,0-9]+) " .. STAT_CRITICAL_STRIKE,
-    [CR_VERSATILITY_DAMAGE_DONE] = "%s([,0-9]+) " .. STAT_VERSATILITY,
-    [CR_HASTE_SPELL] = "%s([,0-9]+) " .. STAT_HASTE,
-    [CR_LIFESTEAL] = "%s([,0-9]+) " .. STAT_LIFESTEAL,
-	[CR_AVOIDANCE] = "%s([,0-9]+) " .. STAT_AVOIDANCE,
-	[CR_SPEED] = "%s([,0-9]+) " .. STAT_SPEED
+    [CR_MASTERY] = {"%s([,0-9]+)%s*" .. STAT_MASTERY, STAT_MASTERY .. " by%s*([,0-9]+)"},
+    [CR_CRIT_SPELL] = {"%s([,0-9]+)%s*" .. STAT_CRITICAL_STRIKE, STAT_CRITICAL_STRIKE .. " by%s*([,0-9]+)"},
+    [CR_VERSATILITY_DAMAGE_DONE] = {"%s([,0-9]+)%s*" .. STAT_VERSATILITY, STAT_VERSATILITY .. " by%s*([,0-9]+)"},
+    [CR_HASTE_SPELL] = {"%s([,0-9]+)%s*" .. STAT_HASTE, STAT_HASTE .. " by%s*([,0-9]+)"},
+    [CR_LIFESTEAL] = {"%s([,0-9]+)%s*" .. STAT_LIFESTEAL, STAT_LIFESTEAL .. " by%s*([,0-9]+)"},
+	[CR_AVOIDANCE] = {"%s([,0-9]+)%s*" .. STAT_AVOIDANCE, STAT_AVOIDANCE .. " by%s*([,0-9]+)"},
+	[CR_SPEED] = {"%s([,0-9]+)%s*" .. STAT_SPEED, STAT_SPEED .. " by%s*([,0-9]+)"}
 }
 
 local blackList = {
     ["Leeching Poison"] = true,
     ["Thief's Versatility"] = true,
-    ["Voodoo Mastery"] = true
+    ["Voodoo Mastery"] = true,
+    ["Alchemical Mastery"] = true,
+    ["Metamorphic Mastery"] = true,
+	["闪避药剂"] = true, -- Delves
+	["预见精通"] = true,
+	["炼金精通"] = true,
+	["转化精通"] = true
 }
+
+-- Custom progress bar to avoid taint from GameTooltip_ShowProgressBar/GameTooltip_InsertFrame
+local tsvBarFrame = nil
+local function TSV_ShowProgressBar(tooltip, min, max, value, barLabel, r, g, b)
+    if not tsvBarFrame then
+        tsvBarFrame = CreateFrame("Frame", "TSVProgressBarFrame", tooltip)
+        tsvBarFrame:SetHeight(18)
+
+        local bar = CreateFrame("StatusBar", nil, tsvBarFrame)
+        bar:SetAllPoints()
+        bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
+        bar:SetStatusBarColor(1, 1, 1, 1)
+        tsvBarFrame.Bar = bar
+
+        local bg = bar:CreateTexture(nil, "BACKGROUND")
+        bg:SetAllPoints()
+        bg:SetColorTexture(0.1, 0.1, 0.1, 0.8)
+
+        local label = bar:CreateFontString(nil, "OVERLAY", "GameTooltipText")
+        label:SetPoint("CENTER", bar, "CENTER", 0, 0)
+        tsvBarFrame.Label = label
+    end
+
+    tsvBarFrame:SetParent(tooltip)
+    tsvBarFrame:SetFrameStrata("TOOLTIP")
+    tsvBarFrame:SetFrameLevel(tooltip:GetFrameLevel() + 1)
+    tsvBarFrame.Bar:SetMinMaxValues(min, max)
+    tsvBarFrame.Bar:SetValue(value)
+    tsvBarFrame.Bar:SetStatusBarColor(r, g, b, 1)
+    tsvBarFrame.Label:SetText(barLabel)
+
+    -- Add a blank line to reserve space, then overlay our bar on top of it
+    tooltip:AddLine(" ")
+    tooltip:Show()
+
+    local numLines = tooltip:NumLines()
+    local lastLine = _G["GameTooltipTextLeft" .. numLines]
+    if lastLine then
+        local padding = 12
+        tsvBarFrame:ClearAllPoints()
+        tsvBarFrame:SetPoint("TOPLEFT", lastLine, "TOPLEFT", 0, 0)
+        tsvBarFrame:SetPoint("RIGHT", tooltip, "RIGHT", -padding, 0)
+        tsvBarFrame:Show()
+    end
+end
+
+-- Hide custom bar when tooltip hides
+GameTooltip:HookScript("OnHide", function()
+    if tsvBarFrame then
+        tsvBarFrame:Hide()
+    end
+end)
 
 function addon.tsv:OnTooltip(ev, tooltip, ...)
     if (addon.tsv.db.global.showStatTooltips) then
         local tt1 = GameTooltipTextLeft1
         if (tt1) then
             local text = tt1:GetText()
-            if (text and not blackList[text]) then
+            if (not issecretvalue(text) and text and not blackList[text]) then
                 for statId, labelGenerator in pairs(statLabelMap) do
                     if (statEventMap[statId] == ev) then
                         local label = labelGenerator()
@@ -110,22 +168,31 @@ function addon.tsv:OnTooltip(ev, tooltip, ...)
                 local textleft = "GameTooltipTextLeft" .. tostring(i)
                 if (_G[textleft] and _G[textleft].GetText) then
                     local text = _G[textleft]:GetText()
-                    if (text and text ~= "") then
-                        for statId, pattern in pairs(patterns) do
-                            local amount = string.match(text, pattern)
-                            if (amount) then
-                                local s, e = string.find(text, pattern)
-                                local trueAmount = self:GetTrueStatRatingAdded(statId, amount)
-                                local r, g, b =
-                                    addon.tsv.db.global.fontColor.r,
-                                    addon.tsv.db.global.fontColor.g,
-                                    addon.tsv.db.global.fontColor.b
-                                local hexStr = RGBPercToHex(r, g, b)
+                    if (text and type(text) == "string" and not issecretvalue(text) and text ~= "") then
+                        -- Skip lines containing percentage signs (exclude percentage values)
+                        if (not string.find(text, "%%")) then
+                            for statId, patternTable in pairs(patterns) do
+                                local patternList = type(patternTable) == "table" and patternTable or {patternTable}
+                                for _, pattern in ipairs(patternList) do
+                                    local amount = string.match(text, pattern)
+                                    if (amount) then
+                                        local trueAmount = self:GetTrueStatRatingAdded(statId, amount)
+                                        if trueAmount ~= nil then
+                                            local s, e = string.find(text, pattern)
+                                            local r, g, b =
+                                                addon.tsv.db.global.fontColor.r,
+                                                addon.tsv.db.global.fontColor.g,
+                                                addon.tsv.db.global.fontColor.b
+                                            local hexStr = RGBPercToHex(r, g, b)
 
-                                local trueText =
-                                    text:sub(1, e) ..
-                                    " |cff" .. hexStr .. "(" .. tostring(trueAmount) .. ")|r" .. text:sub(e + 1)
-                                _G[textleft]:SetText(trueText)
+                                            local trueText =
+                                                text:sub(1, e) ..
+                                                " |cff" .. hexStr .. "(" .. tostring(trueAmount) .. ")|r" .. text:sub(e + 1)
+                                            _G[textleft]:SetText(trueText)
+                                        end
+                                        break
+                                    end
+                                end
                             end
                         end
                     end
@@ -138,7 +205,15 @@ function addon.tsv:OnTooltip(ev, tooltip, ...)
 end
 
 function addon.tsv:AddTrueStatValuesTooltip(tooltip, statId)
-    local statInfo = addon.TrueStatInfo[statId]
+    local statInfo = addon.TrueStatInfo and addon.TrueStatInfo[statId]
+    if not statInfo
+        or statInfo.bracketPenalty   == nil
+        or statInfo.bracketRating    == nil
+        or statInfo.bracketMaxRating == nil
+        or statInfo.baseRating       == nil
+        or statInfo.trueRating       == nil then
+        return
+    end
     local pctLabel = (statInfo.bracketPenalty > 0) and ("-" .. tostring(statInfo.bracketPenalty * 100) .. "%") or ("0%")
     local barLabel =
         tostring(statInfo.bracketRating) ..
@@ -151,15 +226,8 @@ function addon.tsv:AddTrueStatValuesTooltip(tooltip, statId)
 
     tooltip:AddDoubleLine("True Rating:", statInfo.trueRating, r, g, b, r, g, b)
     tooltip:AddDoubleLine("Lost Rating:", lostRating, r, g, b, r, g, b)
-    GameTooltip_ShowProgressBar(tooltip, 0, statInfo.bracketMaxRating, statInfo.bracketRating, barLabel)
 
-    local frames = tooltip.insertedFrames
-    local frames_n = #frames
-    local insertedFrame = frames[frames_n]
-
-    if (insertedFrame and insertedFrame.Bar) then
-        insertedFrame.Bar:SetStatusBarColor(r, g, b, 1)
-    end
+    TSV_ShowProgressBar(tooltip, 0, statInfo.bracketMaxRating, statInfo.bracketRating, barLabel, r, g, b)
 
     tooltip:AddLine("\n")
     tooltip:Show()

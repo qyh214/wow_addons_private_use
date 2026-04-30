@@ -6,7 +6,7 @@ local cr, cg, cb = DB.r, DB.g, DB.b
 local _G = _G
 local pairs, ipairs, strsub, strlower = pairs, ipairs, string.sub, string.lower
 local IsInGroup, IsInRaid, IsInGuild, IsShiftKeyDown, IsControlKeyDown = IsInGroup, IsInRaid, IsInGuild, IsShiftKeyDown, IsControlKeyDown
-local ChatEdit_UpdateHeader, GetCVar, SetCVar, Ambiguate, GetTime = ChatEdit_UpdateHeader, GetCVar, SetCVar, Ambiguate, GetTime
+local ChatEdit_UpdateHeader, SetCVar, Ambiguate, GetTime = ChatEdit_UpdateHeader, SetCVar, Ambiguate, GetTime
 local GetNumGuildMembers, GetGuildRosterInfo, IsGuildMember, UnitIsGroupLeader, UnitIsGroupAssistant = GetNumGuildMembers, GetGuildRosterInfo, IsGuildMember, UnitIsGroupLeader, UnitIsGroupAssistant
 local CanCooperateWithGameAccount, BNInviteFriend, PlaySound = CanCooperateWithGameAccount, BNInviteFriend, PlaySound
 local C_GuildInfo_IsGuildOfficer = C_GuildInfo.IsGuildOfficer
@@ -15,7 +15,6 @@ local InviteToGroup = C_PartyInfo.InviteUnit
 local GeneralDockManager = GeneralDockManager
 local messageSoundID = SOUNDKIT.TELL_MESSAGE
 
-local maxLines = 2048
 local fontFile, fontOutline
 module.MuteCache = {}
 
@@ -113,9 +112,6 @@ function module:SkinChat()
 	end
 	self:SetClampRectInsets(0, 0, 0, 0)
 	self:SetClampedToScreen(false)
-	if self:GetMaxLines() < maxLines then
-		self:SetMaxLines(maxLines)
-	end
 
 	self.__background = BlackBackground(self)
 	self.__gradient = GradientBackground(self)
@@ -243,7 +239,6 @@ function module:UpdateTabChannelSwitch()
 		end
 	end
 end
-hooksecurefunc("ChatEdit_CustomTabPressed", module.UpdateTabChannelSwitch)
 
 -- Quick Scroll
 local chatScrollInfo = {
@@ -296,6 +291,7 @@ end
 
 function module.OnChatWhisper(event, ...)
 	local msg, author, _, _, _, _, _, _, _, _, _, guid, presenceID = ...
+	if B:IsSecretValue(msg) then return end
 	for word in pairs(whisperList) do
 		if (not IsInGroup() or UnitIsGroupLeader("player") or UnitIsGroupAssistant("player")) and strlower(msg) == strlower(word) then
 			if event == "CHAT_MSG_BN_WHISPER" then
@@ -375,6 +371,7 @@ local whisperEvents = {
 function module:PlayWhisperSound(event, _, author)
 	if not C.db["Chat"]["WhisperSound"] then return end
 
+	if B:IsSecretValue(author) then return end
 	if whisperEvents[event] then
 		local name = Ambiguate(author, "none")
 		local currentTime = GetTime()
@@ -384,46 +381,6 @@ function module:PlayWhisperSound(event, _, author)
 			PlaySound(messageSoundID, "master")
 		end
 		self.soundTimer = currentTime + 5
-	end
-end
-
--- ProfanityFilter
-local sideEffectFixed
-local function FixLanguageFilterSideEffects()
-	if sideEffectFixed then return end
-	sideEffectFixed = true
-
-	local OLD_GetFriendGameAccountInfo = C_BattleNet.GetFriendGameAccountInfo
-	function C_BattleNet.GetFriendGameAccountInfo(...)
-		local gameAccountInfo = OLD_GetFriendGameAccountInfo(...)
-		if gameAccountInfo then
-			gameAccountInfo.isInCurrentRegion = true
-		end
-		return gameAccountInfo
-	end
-
-	local OLD_GetFriendAccountInfo = C_BattleNet.GetFriendAccountInfo
-	function C_BattleNet.GetFriendAccountInfo(...)
-		local accountInfo = OLD_GetFriendAccountInfo(...)
-		if accountInfo and accountInfo.gameAccountInfo then
-			accountInfo.gameAccountInfo.isInCurrentRegion = true
-		end
-		return accountInfo
-	end
-end
-
-function module:ToggleLanguageFilter()
-	if C.db["Chat"]["Freedom"] then
-		if GetCVar("portal") == "CN" then
-			ConsoleExec("portal TW")
-			FixLanguageFilterSideEffects()
-		end
-		SetCVar("profanityFilter", 0)
-	else
-		if sideEffectFixed then
-			ConsoleExec("portal CN")
-		end
-		SetCVar("profanityFilter", 1)
 	end
 end
 
@@ -445,6 +402,8 @@ function module:HandleMinimizedFrame()
 end
 
 function module:OnLogin()
+	if C.db["Chat"]["Disable"] then return end
+
 	fontFile = not C.db["Chat"]["SysFont"] and DB.Font[1]
 	fontOutline = C.db["Skins"]["FontOutline"] and "OUTLINE" or ""
 
@@ -467,6 +426,7 @@ function module:OnLogin()
 	hooksecurefunc("FloatingChatFrameManager_OnEvent", module.UpdateTabEventColors)
 	hooksecurefunc(ChatFrameUtil, "ProcessMessageEventFilters", module.PlayWhisperSound)
 	hooksecurefunc("FCF_MinimizeFrame", module.HandleMinimizedFrame)
+	hooksecurefunc("ChatEdit_CustomTabPressed", module.UpdateTabChannelSwitch)
 
 	-- Default
 	if CHAT_OPTIONS then CHAT_OPTIONS.HIDE_FRAME_ALERTS = true end -- only flash whisper
@@ -483,7 +443,6 @@ function module:OnLogin()
 	module:ChatCopy()
 	module:UrlCopy()
 	module:WhisperInvite()
-	--module:ToggleLanguageFilter()
 
 	-- Lock chatframe
 	if C.db["Chat"]["Lock"] then
@@ -505,7 +464,7 @@ function module:OnLogin()
 			FCF_SetChatWindowFontSize(nil, FCF_GetChatFrameByID(CURRENT_CHAT_FRAME_ID), height)
 		end
 
-		Menu.ModifyMenu("MENU_FCF_TAB", function(self, rootDescription, data)
+		Menu.ModifyMenu("MENU_FCF_TAB", function(self, rootDescription)
 			local fontSizeSubmenu = rootDescription:CreateButton(DB.InfoColor..L["MoreFontSize"])
 			for i = 10, 30 do
 				fontSizeSubmenu:CreateRadio((format(FONT_SIZE_TEMPLATE, i)), IsSelected, SetSelected, i)

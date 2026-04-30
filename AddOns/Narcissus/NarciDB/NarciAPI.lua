@@ -96,6 +96,7 @@ local function NarciAPI_GetSlotVisualID(slotID)
         end
         TransitionAPI.SetTransmogLocationData(transmogLocation, slotID, transmogType, modification);
         local baseSourceID, baseVisualID, appliedSourceID, appliedVisualID = TransitionAPI.GetSlotVisualInfo(transmogLocation);
+
         if ( appliedSourceID == 0 ) then
             appliedSourceID = baseSourceID;
             appliedVisualID = baseVisualID;
@@ -105,6 +106,7 @@ local function NarciAPI_GetSlotVisualID(slotID)
         TransitionAPI.SetTransmogLocationData(transmogLocation, slotID, transmogType, modification);
 
         local baseSourceID, baseVisualID, appliedSourceID, appliedVisualID = TransitionAPI.GetSlotVisualInfo(transmogLocation);
+        --print(slotID, baseSourceID, baseVisualID, appliedSourceID, appliedVisualID)
         if ( appliedSourceID == 0 ) then
             appliedSourceID = baseSourceID;
             appliedVisualID = baseVisualID;
@@ -2748,8 +2750,15 @@ NarciAPI.WrapNameWithClassColor = WrapNameWithClassColor;
 local function GetOutfitSlashCommand()
 	local playerActor = DressUpFrame.ModelScene:GetPlayerActor();
 	local itemTransmogInfoList = playerActor and playerActor:GetItemTransmogInfoList();
-    local slashCommand = TransmogUtil.CreateOutfitSlashCommand(itemTransmogInfoList);
-    return slashCommand
+    if itemTransmogInfoList then
+        local slashCommand;
+        if TransmogUtil.CreateCustomSetSlashCommand then
+            slashCommand = TransmogUtil.CreateCustomSetSlashCommand(itemTransmogInfoList);
+        elseif TransmogUtil.CreateOutfitSlashCommand then
+            slashCommand = TransmogUtil.CreateOutfitSlashCommand(itemTransmogInfoList);
+        end
+        return slashCommand or ""
+    end
 end
 
 NarciAPI.GetOutfitSlashCommand = GetOutfitSlashCommand;
@@ -2998,6 +3007,7 @@ do  --11.0 Menu Formatter
         --Currently we only use this function to create a minimap menu.
         --Owner is set to UIParent so when the mini button is hidden by addon manager, the menu won't hide with it.
         ownerRegion = UIParent;
+        contextData = contextData or {};
 
         local menu = MenuUtil.CreateContextMenu(ownerRegion, function(ownerRegion, rootDescription)
             rootDescription:SetTag(schematic.tag, contextData);
@@ -3017,14 +3027,28 @@ do  --11.0 Menu Formatter
                     elementDescription = rootDescription:CreateButton(info.name, info.OnClick);
                 elseif info.type == "Checkbox" then
                     elementDescription = rootDescription:CreateCheckbox(info.name, info.IsSelected, info.ToggleSelected);
+                elseif info.type == "Submenu" then
+                    elementDescription = rootDescription:CreateButton(info.name);
+
+                    for index, text in ipairs(info.widgetNames) do
+                        elementDescription:CreateRadio(text, info.IsSelected, info.SetSelected, index);
+                    end
+                end
+
+                if info.enabled == false or info.disabled then
+                    elementDescription:SetEnabled(false);
                 end
 
                 if info.tooltip then
                     elementDescription:SetTooltip(function(tooltip, elementDescription)
-                        GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
-                        GameTooltip_AddNormalLine(tooltip, info.tooltip);
-                        --GameTooltip_AddInstructionLine(tooltip, "Test Tooltip Instruction");
-                        --GameTooltip_AddErrorLine(tooltip, "Test Tooltip Colored Line");
+                        if type(info.tooltip) == "function" then
+                            info.tooltip(tooltip);
+                        else
+                            GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
+                            GameTooltip_AddNormalLine(tooltip, info.tooltip);
+                            --GameTooltip_AddInstructionLine(tooltip, "Test Tooltip Instruction");
+                            --GameTooltip_AddErrorLine(tooltip, "Test Tooltip Colored Line");
+                        end
                     end);
                 end
 
@@ -3055,6 +3079,7 @@ do  --11.0 Menu Formatter
                         local width = pad + fontString:GetWrappedWidth() + fontString2:GetWrappedWidth();
 
                         local height = 20;
+
                         return width, height;
                     end);
                 end
@@ -3176,7 +3201,7 @@ do  --Show GameTooltip After Delay
                 end
 
                 if (not descAdded) and info.tooltip then
-                    tooltip:AddLine(info.tooltip, info.r or 1, info.g or 0.82, info.b or 0, true);
+                    tooltip:AddLine(info.tooltip, info.r or 1, info.g or 0.82, info.b or 0, 1, true);
                 end
 
                 if info.setupFunc then
@@ -3217,6 +3242,7 @@ do  --Scripts
     local ValidScripts = {
         "OnEnter", "OnLeave", "OnClick", "OnMouseDown", "OnMouseUp", "OnMouseWheel",
         "OnEscapePressed", "OnEnterPressed", "OnTabPressed", "OnEditFocusGained", "OnEditFocusLost", "OnTextChanged",
+        "OnShow", "OnHide", "OnEvent",
     };
 
     function PrivateAPI.MixScripts(object, scripts)
@@ -3250,6 +3276,78 @@ do  --System
                     return
                 end
             end
+        end
+    end
+
+    function NarciAPI.CreateSlashCommand(func, alias1, alias2)
+        local name = "NARCISSUSCMD";
+        if alias1 then
+            _G["SLASH_"..name.."1"] = "/"..alias1;
+        end
+        if alias2 then
+            _G["SLASH_"..name.."2"] = "/"..alias2;
+        end
+        SlashCmdList[name] = func;
+    end
+end
+
+do  --Diacritical Matching
+    local Mapping = {
+        a = "ÀÁÂÃÄÅÆàáâãäåæĀāĂăĄą",
+        c = "ÇçĆćĈĉĊċČč",
+        e = "ÈÉÊËÐèéêëðĒēĔĕĖėĘęĚě",
+        i = "ÌÍÎÏìíîïĨĩĪīĬĭĮįİıĲĳ",
+        n = "ÑñŃńŅņŇňŉŊŋ",
+        o = "ÒÓÔÕÖØòóôõöøŌōŎŏŐőŒœ",
+        u = "ÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲų",
+        y = "ÝýÿŷŸ",
+        p = "Þþ",
+        s = "ßŚśŜŝŞşŠšſ",
+        d = "ĎďĐđ",
+        g = "ĜĝĞğĠġĢģ",
+        h = "ĤĥĦħ",
+        j = "Ĵĵ",
+        k = "Ķķĸ",
+        l = "ĹĺĻļĽľĿŀŁł",
+        r = "ŔŕŖŗŘř",
+        t = "ŢţŤťŦŧ",
+        w = "Ŵŵ",
+        z = "ŹźŻżŽž",
+    };
+
+    local function ReverseMapping()
+        local sub = string.sub;
+        local i, total;
+        local tbl = {};
+        for char, accents in pairs(Mapping) do
+            i = 1;
+            total = #accents;
+            while i <= total do
+                tbl[sub(accents, i, i + 1)] = char;
+                i = i + 2;
+            end
+        end
+        Mapping = tbl;
+    end
+
+    if TEXT_LOCALE == "zhCN" or TEXT_LOCALE == "zhTW" then
+        function NarciAPI.StripAccents(str)
+            return str
+        end
+    else
+        function NarciAPI.StripAccents(str)
+            if ReverseMapping then
+                local func = ReverseMapping;
+                ReverseMapping = nil;
+                func();
+            end
+
+            local gsub = string.gsub;
+            str = string.lower(str);
+            for accent, char in pairs(Mapping) do
+                str = gsub(str, accent, char);
+            end
+            return str
         end
     end
 end

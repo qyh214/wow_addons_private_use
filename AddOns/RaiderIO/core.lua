@@ -528,10 +528,47 @@ local GetItemInfo = GetItemInfo or C_Item.GetItemInfo ---@diagnostic disable-lin
 local GetItemInfoInstant = GetItemInfoInstant or C_Item.GetItemInfoInstant ---@diagnostic disable-line: deprecated
 local GetItemQualityColor = GetItemQualityColor or C_Item.GetItemQualityColor ---@diagnostic disable-line: deprecated
 local ReloadUI = ReloadUI or C_UI.Reload
+local issecretvalue = issecretvalue or function(value) return false end ---@type fun(value: any): boolean
+
+---@param tbl table
+---@param ... string
+local function issecretvaluekey(tbl, ...)
+    if issecretvalue(tbl) then
+        return true
+    end
+    for _, key in ipairs({...}) do
+        local value = tbl[key]
+        if issecretvalue(value) then
+            return true
+        end
+    end
+    return false
+end
+
+---@param tooltip GameTooltip
+---@return nil nil, UnitToken? unit, string? guid
+local function GetTooltipUnit(tooltip)
+    if not tooltip:IsTooltipType(Enum.TooltipDataType.Unit) then
+        return
+    end
+    local tooltipData = tooltip:GetPrimaryTooltipData()
+    local guid = tooltipData.guid ---@type string?
+    if issecretvalue(guid) or not guid then
+        return
+    end
+    local unit = UnitTokenFromGUID(guid)
+    return nil, unit, guid
+end
 
 -- constants.lua (ns)
 -- dependencies: none
 do
+    
+    ---@alias RegionString "us"|"kr"|"eu"|"tw"|"cn" @`us`, `kr`, `eu`, `tw`, `cn`
+
+    ---@alias RegionNumber 1|2|3|4|5 @`1` (us), `2` (kr), `3` (eu), `4` (tw), `5` (cn)
+
+    ---@alias FactionNumber 1|2|3 @`1` (alliance), `2` (horde), `3` (neutral)
 
     ---@class ns
     ---@field public DUNGEONS? Dungeon[]
@@ -565,9 +602,9 @@ do
     ---@field public REPLAYS Replay[]
     ---@field public EXPANSION number @The currently accessible expansion to the playerbase
     ---@field public MAX_LEVEL number @The currently accessible expansion max level to the playerbase
-    ---@field public PLAYER_REGION string @`us`, `kr`, `eu`, `tw`, `cn`
-    ---@field public PLAYER_REGION_ID number @`1` (us), `2` (kr), `3` (eu), `4` (tw), `5` (cn)
-    ---@field public PLAYER_FACTION number @`1` (alliance), `2` (horde), `3` (neutral)
+    ---@field public PLAYER_REGION RegionString
+    ---@field public PLAYER_REGION_ID RegionNumber
+    ---@field public PLAYER_FACTION FactionNumber
     ---@field public PLAYER_FACTION_TEXT string @`Alliance`, `Horde`, `Neutral`
     ---@field public PLAYER_NAME string @The name of the player character
     ---@field public PLAYER_REALM string @The realm of the player character
@@ -619,7 +656,11 @@ do
                 ["Mccaffrey"] = "Killing Keys Since 1977!",
                 ["Oscassey"] = "Master of dis guys",
                 ["Rhoma"] = "Plays an MDI Champion on TV",
-                ["Infoxicated"] = "Pogged out of her mind"
+                ["Infoxicated"] = "Pogged out of her mind",
+                ["Coaa"] = "King of The Bagels"
+            },
+            ["Stonemaul"] = {
+                ["Drexl"] = "The Voice of Raider.IO"
             },
             ["Thrall"] = {
                 ["Firstclass"] = "Author of mythicpl.us",
@@ -627,7 +668,7 @@ do
             },
             ["Tichondrius"] = {
                 ["Johnsamdi"] = "Raider.IO Developer",
-                ["Vitamiinp"] = "Content Manager of Raider.IO"
+                ["Vitamiinp"] = "Raider.IO Multivitamin"
             },
             ["Mal'Ganis"] = {
                 ["Qbgosa"] = "Raider.IO Support Dragon"
@@ -1213,7 +1254,7 @@ do
 
     ---@class DungeonInstance
     ---@field public id number
-    ---@field public instance_map_id number
+    ---@field public instance_map_ids number[]
     ---@field public lfd_activity_ids number[]
     ---@field public name string
     ---@field public shortName string
@@ -1231,6 +1272,7 @@ do
 
     ---@class DungeonRaid : DungeonInstance
     ---@field public type DungeonRaidType
+    ---@field public localizationKey string
 
     ---@type Dungeon[]
     local ALL_DUNGEONS = {}
@@ -1562,7 +1604,7 @@ do
 
     handler:SetScript("OnEvent", function(handler, event, ...)
         if event == "COMBAT_LOG_EVENT_UNFILTERED" or event == "COMBAT_LOG_EVENT" then
-            callback:SendEvent(event, CombatLogGetCurrentEventInfo())
+            callback:SendEvent(event, CombatLogGetCurrentEventInfo()) ---@diagnostic disable-line: undefined-global
         else
             callback:SendEvent(event, ...)
         end
@@ -1704,6 +1746,8 @@ do
     ---|"showMainsScore"
     ---|"showMainBestScore"
     ---|"showWarbandScore"
+    ---|"showMyWarbandScore"
+    ---|"showOtherWarbandScore"
     ---|"showDropDownCopyURL"
     ---|"showSimpleScoreColors"
     ---|"showScoreInCombat"
@@ -1760,7 +1804,9 @@ do
         useEnglishAbbreviations = false,
         showMainsScore = true,
         showMainBestScore = true,
-        showWarbandScore = true,
+        showWarbandScore = true, -- NEW in 11.2.5
+        showMyWarbandScore = false, -- NEW in 11.2.5
+        showOtherWarbandScore = true, -- NEW in 11.2.5
         showDropDownCopyURL = true,
         showSimpleScoreColors = false,
         showScoreInCombat = true,
@@ -1968,7 +2014,14 @@ do
 
     ---@return Dungeon|nil
     function util:GetDungeonByInstanceMapID(id)
-        return util:GetDungeonByKeyValue("instance_map_id", id)
+        for i = 1, #ALL_DUNGEONS do
+            local dungeon = ALL_DUNGEONS[i]
+            for j = 1, #dungeon.instance_map_ids do
+                if dungeon.instance_map_ids[j] == id then
+                    return dungeon
+                end
+            end
+        end
     end
 
     ---@return Dungeon|nil
@@ -2026,7 +2079,14 @@ do
 
     ---@return DungeonRaid|nil
     function util:GetRaidByInstanceMapID(id)
-        return util:GetRaidByKeyValue("instance_map_id", id)
+        for i = 1, #RAIDS do
+            local raid = RAIDS[i]
+            for j = 1, #raid.instance_map_ids do
+                if raid.instance_map_ids[j] == id then
+                    return raid
+                end
+            end
+        end
     end
 
     ---@return DungeonRaid|nil
@@ -2278,8 +2338,8 @@ do
 
     local REGION = ns:GetRegionData()
 
-    ---@return (false|string)? ltd The LTD string, otherwise `nil` for no data, or `false` for unknown server.
-    ---@return number? regionId The RegionID number, otherwise `nil` for no data.
+    ---@return (false|RegionString)? ltd The LTD string, otherwise `nil` for no data, or `false` for unknown server.
+    ---@return RegionNumber? regionId The RegionID number, otherwise `nil` for no data.
     function util:GetRegion()
         local guid = UnitGUID("player")
         if not guid then
@@ -2325,7 +2385,7 @@ do
     end
 
     ---@param unit? string
-    ---@return number? faction, string? localizedFaction
+    ---@return FactionNumber? faction, string? localizedFaction
     function util:GetFaction(unit)
         if not unit or not UnitExists(unit) or not UnitIsPlayer(unit) then
             return
@@ -2338,7 +2398,7 @@ do
     end
 
     ---@param factionName string
-    ---@return number? faction
+    ---@return FactionNumber? faction
     function util:GetFactionFromName(factionName)
         return ns.FACTION_TO_ID[factionName]
     end
@@ -2366,8 +2426,11 @@ do
 
     local REALMS = ns:GetRealmData()
 
+    ---@param realm? string
+    ---@param fallback? string|true
+    ---@return string? realmSlug
     function util:GetRealmSlug(realm, fallback)
-        local realmSlug = REALMS[realm]
+        local realmSlug = realm and REALMS[realm]
         if fallback == true then
             return realmSlug or realm
         elseif fallback then
@@ -2416,30 +2479,44 @@ do
         return type(unit) == "string" and UNIT_TOKENS[unit]
     end
 
-    ---@param arg1 string @"unit", "name", or "name-realm"
-    ---@param arg2 string|any @"realm" or nil
-    ---@return boolean, boolean, boolean @If the args used in the call makes it out to be a proper unit, arg1 is true and only then is arg2 true if unit exists and arg3 is true if unit is a player.
+    ---@param arg1 string|UnitToken @"unit", "name", or "name-realm"
+    ---@param arg2? string|true @"realm" or nil
+    ---@return boolean isUnit
+    ---@return boolean? unitExists
+    ---@return boolean? unitIsPlayer
     function util:IsUnit(arg1, arg2)
+        if issecretvalue(arg1) then
+            return false
+        end
         if not arg2 and type(arg1) == "string" and arg1:find("-", nil, true) then
             arg2 = true
         end
         local isUnit = not arg2 or util:IsUnitToken(arg1)
-        return isUnit, isUnit and UnitExists(arg1), isUnit and UnitIsPlayer(arg1)
+        if not isUnit then
+            return false
+        end
+        return true, UnitExists(arg1), UnitIsPlayer(arg1)
     end
 
-    ---@param arg1 string @"unit", "name", or "name-realm"
+    ---@param arg1 string|UnitToken @"unit", "name", or "name-realm"
     ---@param arg2? string @"realm" or nil
-    ---@return string name, string realm, string unit
+    ---@return string? name, string? realm, string? unit
     function util:GetNameRealm(arg1, arg2)
-        local unit, name, realm
+        if issecretvalue(arg1) then
+            return
+        end
+        local unit, name, realm ---@type UnitToken?, string?, string?
         local _, unitExists, unitIsPlayer = util:IsUnit(arg1, arg2)
         if unitExists then
             unit = arg1
             if unitIsPlayer then
                 name, realm = UnitNameUnmodified(arg1)
+                if issecretvalue(name) or issecretvalue(realm) then
+                    return
+                end
                 realm = realm and realm ~= "" and realm or GetNormalizedRealmName()
             end
-            return name, realm, unit ---@diagnostic disable-line: return-type-mismatch
+            return name, realm, unit
         end
         if type(arg1) == "string" then
             if arg1:find("-", nil, true) then
@@ -2455,7 +2532,7 @@ do
                 end
             end
         end
-        return name, realm, unit ---@diagnostic disable-line: return-type-mismatch
+        return name, realm, unit
     end
 
     ---@param level? number @The level to test
@@ -2478,7 +2555,7 @@ do
 
     ---@param arg1 string @"unit", "name", or "name-realm"
     ---@param arg2? string @"realm" or nil
-    ---@param region? string @Optional "us","kr","eu","tw","cn"
+    ---@param region? RegionString
     ---@return boolean
     function util:IsUnitPlayer(arg1, arg2, region)
         local name, realm = util:GetNameRealm(arg1, arg2)
@@ -2487,14 +2564,14 @@ do
 
     ---@param bnetIDAccount number @BNet Account ID
     ---@return string? fullName `Name-Realm`
-    ---@return number faction `1`|`2`|`3`
-    ---@return number level `80`
+    ---@return FactionNumber? faction
+    ---@return number? level `80`
     function util:GetNameRealmForBNetFriend(bnetIDAccount)
         local index = BNGetFriendIndex(bnetIDAccount)
         if not index then
-            return ---@diagnostic disable-line: missing-return-value
+            return
         end
-        local collection = {} ---@type [string, number, number][]
+        local collection = {} ---@type [string, FactionNumber, number][]
         local collectionIndex = 0
         for i = 1, C_BattleNet.GetFriendNumGameAccounts(index), 1 do
             local accountInfo = C_BattleNet.GetFriendGameAccountInfo(index, i)
@@ -2513,7 +2590,6 @@ do
                 return fullName, faction, level
             end
         end
-        return ---@diagnostic disable-line: missing-return-value
     end
 
     ---@param playerLink string @The player link can be any valid clickable chat link for messaging
@@ -2573,14 +2649,19 @@ do
     ---@return number? activityID
     function util:GetLFDActivityID(data)
         -- TODO `pre-11.0.7`
-        local activityID = data.activityID---@diagnostic disable-line: undefined-field
-        if type(activityID) == "number" then
-            return activityID
-        end
+        ---@diagnostic disable-next-line: undefined-field
+        local activityID = data.activityID ---@type number?
         -- TODO `11.0.7`
-        if type(data.activityIDs) == "table" then
-            return data.activityIDs[1]
+        if type(activityID) ~= "number" and type(data.activityIDs) == "table" and not issecretvalue(data.activityIDs) then
+            activityID = data.activityIDs[1]
         end
+        if issecretvalue(activityID) then
+            return
+        end
+        if type(activityID) ~= "number" then
+            return
+        end
+        return activityID
     end
 
     ---@class LFDStatusResult
@@ -2601,9 +2682,9 @@ do
             queued = false,
         }
         local index = 0
-        local activityInfo = C_LFGList.GetActiveEntryInfo()
-        if activityInfo then
-            local activityID = util:GetLFDActivityID(activityInfo)
+        local entryInfo = C_LFGList.GetActiveEntryInfo()
+        if entryInfo then
+            local activityID = util:GetLFDActivityID(entryInfo)
             if activityID then
                 temp.dungeon = util:GetDungeonByLFDActivityID(activityID) or util:GetRaidByLFDActivityID(activityID)
                 temp.hosting = true
@@ -2612,7 +2693,7 @@ do
         local applications = C_LFGList.GetApplications() ---@type number[]
         for _, resultID in ipairs(applications) do
             local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
-            if searchResultInfo and not searchResultInfo.isDelisted then
+            if searchResultInfo and not issecretvalue(searchResultInfo.isDelisted) and not searchResultInfo.isDelisted then
                 local activityID = util:GetLFDActivityID(searchResultInfo)
                 if activityID then
                     local dungeon = util:GetDungeonByLFDActivityID(activityID) or util:GetRaidByLFDActivityID(activityID)
@@ -2679,14 +2760,13 @@ do
         if not C_ModifiedInstance then
             return
         end
-        local modInfo = C_ModifiedInstance.GetModifiedInstanceInfoFromMapID(raid.instance_map_id)
-        if not modInfo then
-            return
+        local instanceMapIds = raid.instance_map_ids
+        for i = 1, #instanceMapIds do
+            local modInfo = C_ModifiedInstance.GetModifiedInstanceInfoFromMapID(instanceMapIds[i])
+            if modInfo and modInfo.uiTextureKit == "ui-ej-icon-empoweredraid" then
+                return modInfo.uiTextureKit
+            end
         end
-        if modInfo.uiTextureKit ~= "ui-ej-icon-empoweredraid" then
-            return
-        end
-        return modInfo.uiTextureKit
     end
 
     ---@param raid DungeonRaid
@@ -2872,9 +2952,16 @@ do
     end
 
     ---@param ... string
+    ---@return string? url, string? name, string? realm, string? realmSlug
     function util:GetRaiderIOProfileUrl(...)
         local name, realm = util:GetNameRealm(...)
+        if not name then
+            return
+        end
         local realmSlug = util:GetRealmSlug(realm, true)
+        if not realmSlug then
+            return
+        end
         local region = select(3, ...)
         region = region and type(region) == "string" and region:len() > 0 and region or ns.PLAYER_REGION
         return format("https://%s/characters/%s/%s/%s?utm_source=addon", ns.RAIDERIO_DOMAIN, region, realmSlug, name), name, realm, realmSlug
@@ -2882,9 +2969,16 @@ do
 
     ---@param urlSuffix string
     ---@param ... string
+    ---@return string? url, string? name, string? realm, string? realmSlug
     function util:GetRaiderIORecruitmentProfileUrl(urlSuffix, ...)
         local name, realm = util:GetNameRealm(...)
+        if not name then
+            return
+        end
         local realmSlug = util:GetRealmSlug(realm, true)
+        if not realmSlug then
+            return
+        end
         return format("https://%s/characters/%s/%s/%s/%s?utm_source=addon", ns.RAIDERIO_DOMAIN, ns.PLAYER_REGION, realmSlug, name, urlSuffix), name, realm, realmSlug
     end
 
@@ -2969,6 +3063,9 @@ do
 
     function util:ShowCopyRaiderIOProfilePopup(...)
         local url, name, realm = util:GetRaiderIOProfileUrl(...)
+        if not url or not name or not realm then
+            return
+        end
         if IsModifiedClick("CHATLINK") then
             local editBox = ChatFrame_OpenChat(url, DEFAULT_CHAT_FRAME)
             editBox:HighlightText()
@@ -2977,9 +3074,13 @@ do
         end
     end
 
+    ---@param recruitmentEntityType number
     function util:ShowCopyRaiderIORecruitmentProfilePopup(recruitmentEntityType, ...)
         local recruitmentSuffix = ns.RECRUITMENT_ENTITY_TYPE_URL_SUFFIX[recruitmentEntityType]
         local url, name, realm = util:GetRaiderIORecruitmentProfileUrl(recruitmentSuffix, ...)
+        if not url or not name or not realm then
+            return
+        end
         if IsModifiedClick("CHATLINK") then
             local editBox = ChatFrame_OpenChat(url, DEFAULT_CHAT_FRAME)
             editBox:HighlightText()
@@ -3373,7 +3474,7 @@ do
             local unit = i == 0 and "player" or format("%s%d", unitPrefix, i)
             if util:IsUnitMaxLevel(unit) then
                 local name, realm = util:GetNameRealm(unit)
-                if name then
+                if name and realm then
                     index = index + 1
                     group[index] = format("%d-%s-%s", GetUnitRole(unit), name, util:GetRealmSlug(realm, true))
                 end
@@ -3390,24 +3491,26 @@ do
         local applicants = C_LFGList.GetApplicants()
         for i = 1, #applicants do
             local applicantInfo = C_LFGList.GetApplicantInfo(applicants[i])
-            local applicantGroup
-            for j = 1, applicantInfo.numMembers do
-                local fullName, class, localizedClass, level, itemLevel, honorLevel, tank, healer, damage, assignedRole, relationship = C_LFGList.GetApplicantMemberInfo(applicantInfo.applicantID, j)
-                local name, realm = util:GetNameRealm(fullName)
-                if name then
-                    local role = GetQueuedRole(tank, healer, damage)
-                    if not applicantGroup then
-                        applicantGroup = {}
+            if applicantInfo and not issecretvalue(applicantInfo.applicantID) then
+                local applicantGroup
+                for j = 1, applicantInfo.numMembers do
+                    local fullName, class, localizedClass, level, itemLevel, honorLevel, tank, healer, damage, assignedRole, relationship = C_LFGList.GetApplicantMemberInfo(applicantInfo.applicantID, j)
+                    local name, realm = util:GetNameRealm(fullName)
+                    if name and realm then
+                        local role = GetQueuedRole(tank, healer, damage)
+                        if not applicantGroup then
+                            applicantGroup = {}
+                        end
+                        applicantGroup[#applicantGroup + 1] = format("%d-%s-%s", role, name, util:GetRealmSlug(realm, true))
                     end
-                    applicantGroup[#applicantGroup + 1] = format("%d-%s-%s", role, name, util:GetRealmSlug(realm, true))
                 end
-            end
-            if applicantGroup then
-                index = index + 1
-                if applicantGroup[2] then
-                    group[index] = applicantGroup
-                else
-                    group[index] = applicantGroup[1]
+                if applicantGroup then
+                    index = index + 1
+                    if applicantGroup[2] then
+                        group[index] = applicantGroup
+                    else
+                        group[index] = applicantGroup[1]
+                    end
                 end
             end
         end
@@ -3434,9 +3537,9 @@ do
         if unitPrefix then
             data.group = GetGroupData(unitPrefix, startIndex, endIndex)
         end
-        local entry = C_LFGList.GetActiveEntryInfo()
-        if entry then
-            local activityID = util:GetLFDActivityID(entry)
+        local entryInfo = C_LFGList.GetActiveEntryInfo()
+        if entryInfo then
+            local activityID = util:GetLFDActivityID(entryInfo)
             if activityID then
                 data.activity = activityID
                 data.queue = GetApplicantsData()
@@ -3446,10 +3549,16 @@ do
     end
 
     local function CanShowCopyDialog()
+        local entryInfo = C_LFGList.GetActiveEntryInfo()
+        if entryInfo then
+            return true
+        end
         local hasGroupMembers = (IsInRaid() or IsInGroup()) and GetNumGroupMembers() > 1
-        local entry = C_LFGList.GetActiveEntryInfo()
+        if hasGroupMembers then
+            return true
+        end
         local _, numApplicants = C_LFGList.GetNumApplications()
-        return not not (hasGroupMembers or entry or numApplicants > 0)
+        return numApplicants > 0
     end
 
     local function CanShowButton()
@@ -3605,7 +3714,7 @@ do
     ---@class DataProvider : DataProviderRaid
     ---@field public name string
     ---@field public data number @1 (mythic_keystone), 2 (raid), 3 (recruitment), 4 (pvp)
-    ---@field public region string @"eu", "kr", "tw", "us"
+    ---@field public region RegionString
     ---@field public date string @"2017-06-03T00:41:07Z"
     ---@field public db table
     ---@field public lookup table
@@ -3737,6 +3846,8 @@ do
         return providers
     end
 
+    ---@param dataType number @`ns.PROVIDER_DATA_TYPE.`
+    ---@param optionalRegion? RegionString
     function provider:GetProviderByType(dataType, optionalRegion)
         for i = 1, #providers do
             local provider = providers[i]
@@ -4370,7 +4481,7 @@ do
     ---@param providerBlocked number
     ---@param name? string
     ---@param realm? string
-    ---@param region? string
+    ---@param region? RegionString
     local function UnpackMythicKeystoneData(bucket, baseOffset, encodingOrder, keystoneMilestoneLevels, providerOutdated, providerBlocked, name, realm, region)
         ---@type DataProviderMythicKeystoneProfile
         local results = { outdated = providerOutdated, hasRenderableData = false } ---@diagnostic disable-line: missing-fields
@@ -4387,7 +4498,7 @@ do
         for encoderIndex = 1, #encodingOrder do
             local field = encodingOrder[encoderIndex]
             if field == ENCODER_MYTHICPLUS_FIELDS.CURRENT_SCORE then
-                results.currentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
+                results.currentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 13)
                 results.hasRenderableData = results.hasRenderableData or results.currentScore > 0
             elseif field == ENCODER_MYTHICPLUS_FIELDS.CURRENT_ROLES then
                 value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
@@ -4400,7 +4511,7 @@ do
                 value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
                 results.previousRoleOrdinalIndex = 1 + value -- indexes are one-based
             elseif field == ENCODER_MYTHICPLUS_FIELDS.MAIN_CURRENT_SCORE then
-                results.mainCurrentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
+                results.mainCurrentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 13)
                 results.hasRenderableData = results.hasRenderableData or results.mainCurrentScore > 0
             elseif field == ENCODER_MYTHICPLUS_FIELDS.MAIN_CURRENT_ROLES then
                 value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
@@ -4429,7 +4540,7 @@ do
             elseif field == ENCODER_MYTHICPLUS_FIELDS.DUNGEON_BEST_INDEX then
                 bitOffset = ApplyWeeklyAffixForDungeonBest(results, bucket, bitOffset)
             elseif field == ENCODER_MYTHICPLUS_FIELDS.WARBAND_CURRENT_SCORE then
-                results.warbandCurrentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
+                results.warbandCurrentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 13)
                 results.hasRenderableData = results.hasRenderableData or results.warbandCurrentScore > 0
             elseif field == ENCODER_MYTHICPLUS_FIELDS.WARBAND_PREVIOUS_SCORE then
                 results.warbandPreviousScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
@@ -4835,7 +4946,7 @@ do
     ---@field public guid string Unique string `region realm name`
     ---@field public name string
     ---@field public realm string
-    ---@field public region string
+    ---@field public region RegionString
     ---@field public mythicKeystoneProfile DataProviderMythicKeystoneProfile
     ---@field public raidProfile DataProviderRaidProfile
     ---@field public recruitmentProfile DataProviderRecruitmentProfile
@@ -5108,7 +5219,7 @@ do
 
     ---@param name? string
     ---@param realm? string
-    ---@param region? string @Optional, will use players own region if ommited. Include to avoid ambiguity during debug mode.
+    ---@param region? RegionString @Optional, will use players own region if ommited. Include to avoid ambiguity during debug mode.
     ---@return DataProviderCharacterProfile? @Return value is nil if not found
     function provider:GetProfile(name, realm, region)
         if type(name) ~= "string" or type(realm) ~= "string" then
@@ -5247,10 +5358,10 @@ do
     end
 
     local function OnPlayerLogin()
-        ns.PLAYER_FACTION, ns.PLAYER_FACTION_TEXT = util:GetFaction("player") ---@diagnostic disable-line: assign-type-mismatch
+        ns.PLAYER_FACTION, ns.PLAYER_FACTION_TEXT = util:GetFaction("player")
         ns.PLAYER_NAME, ns.PLAYER_REALM = util:GetNameRealm("player")
         ns.PLAYER_REALM_SLUG = util:GetRealmSlug(ns.PLAYER_REALM)
-        ns.PLAYER_REGION, ns.PLAYER_REGION_ID = util:GetRegion() ---@diagnostic disable-line: assign-type-mismatch
+        ns.PLAYER_REGION, ns.PLAYER_REGION_ID = util:GetRegion()
         _G.RaiderIO_LastCharacter = format("%s-%s-%s", ns.PLAYER_REGION, ns.PLAYER_NAME, ns.PLAYER_REALM_SLUG or ns.PLAYER_REALM)
         _G.RaiderIO_MissingCharacters = {}
         _G.RaiderIO_MissingServers = {}
@@ -5300,7 +5411,7 @@ do
     local provider = ns:GetModule("Provider") ---@type ProviderModule
 
     -- Always called as `render.GetQuery(...)`
-    ---@return string unit, string name, string realm, number faction, number options, table args, string region
+    ---@return string unit, string name, string realm, FactionNumber faction, number options, table args, string region
     function render.GetQuery(...)
         local arg1, arg2, arg3, arg4, arg5, arg6 = ...
         local name, realm, unit = util:GetNameRealm(arg1, arg2)
@@ -5428,8 +5539,8 @@ do
     ---@field public unit string
     ---@field public name string
     ---@field public realm string
-    ---@field public faction number @1 (alliance), 2 (horde), 3 (neutral)
-    ---@field public region string @"us","kr","eu","tw","cn"
+    ---@field public faction FactionNumber
+    ---@field public region RegionString
     ---@field public options number @render.Flags
     ---@field public args table @Assigned dynamically and can contain any kind of data, depending on the usage.
     ---@field public success? boolean
@@ -5809,7 +5920,7 @@ do
                     r, g, b = 0, 1, 0
                 end
                 local fatedTexture = fated and format("|A:%s-small:0:0:0:1|a", fated) or ""
-                tooltip:AddLine(format("%s %s", L[format("RAID_%s", raid.shortName)], fatedTexture), r, g, b) -- TODO: raid.dungeon?.nameLocale
+                tooltip:AddLine(format("%s %s", L[format("RAID_%s", raid.dungeon.localizationKey)], fatedTexture), r, g, b) -- TODO: raid.dungeon?.nameLocale
             end
             for j = 1, raid.bossCount do
                 local progressFound = false
@@ -5820,7 +5931,7 @@ do
                         if bossKills > 0 then
                             progressFound = true
                             local difficulty = ns.RAID_DIFFICULTY[progress.difficulty]
-                            tooltip:AddDoubleLine(format("|cff%s%s|r %s", difficulty.color.hex, difficulty.suffix, L[format("RAID_BOSS_%s_%d", raid.shortName, j)]), bossKills, 1, 1, 1, 1, 1, 1)
+                            tooltip:AddDoubleLine(format("|cff%s%s|r %s", difficulty.color.hex, difficulty.suffix, L[format("RAID_BOSS_%s_%d", raid.dungeon.localizationKey, j)]), tostring(bossKills), 1, 1, 1, 1, 1, 1)
                         end
                         if progressFound then
                             break
@@ -5828,7 +5939,7 @@ do
                     end
                 end
                 if not progressFound then
-                    tooltip:AddDoubleLine(L[format("RAID_BOSS_%s_%d", raid.shortName, j)], "-", 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
+                    tooltip:AddDoubleLine(L[format("RAID_BOSS_%s_%d", raid.dungeon.localizationKey, j)], "-", 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
                 end
             end
         end
@@ -6018,27 +6129,23 @@ do
                         end
                     end
                     local hasShownWarbandScore = false
+                    local warbandText = format("%s %s", L.WARBAND_SCORE, ns.PROFILE_TOOLTIP_COLUMN_TEXTURE.WARBAND)
                     if config:Get("showWarbandScore") then
-                        local warbandText = format("%s %s", L.WARBAND_SCORE, ns.PROFILE_TOOLTIP_COLUMN_TEXTURE.WARBAND)
-                        if not config:Get("showWarbandScore") then
-                            if keystoneProfile.mplusWarbandCurrent.score > keystoneProfile.mplusCurrent.score then
-                                tooltip:AddDoubleLine(warbandText, GetScoreText(keystoneProfile.mplusWarbandCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandCurrent.score))
-                                hasShownWarbandScore = true
+                        local warbandPreviousScoreThreshold = (ns.PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD * keystoneProfile.mplusWarbandPrevious.score)
+                        local isWarbandPreviousScoreRelevant = warbandPreviousScoreThreshold > keystoneProfile.mplusWarbandCurrent.score and warbandPreviousScoreThreshold > keystoneProfile.mplusWarbandCurrent.score
+                        local isWarbandCurrentScoreBetter = keystoneProfile.mplusWarbandCurrent.score > keystoneProfile.mplusCurrent.score
+                        if isWarbandCurrentScoreBetter or isWarbandPreviousScoreRelevant then
+                            hasShownWarbandScore = true
+                            if isWarbandPreviousScoreRelevant then
+                                tooltip:AddDoubleLine(GetSeasonLabel(L.WARBAND_BEST_SCORE_BEST_SEASON, keystoneProfile.mplusWarbandPrevious.season), GetScoreText(keystoneProfile.mplusWarbandPrevious, true), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandPrevious.score, true))
                             end
-                        else
-                            local warbandPreviousScoreThreshold = (ns.PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD * keystoneProfile.mplusWarbandPrevious.score)
-                            local isWarbandPreviousScoreRelevant = warbandPreviousScoreThreshold > keystoneProfile.mplusWarbandCurrent.score and warbandPreviousScoreThreshold > keystoneProfile.mplusWarbandCurrent.score
-                            local isWarbandCurrentScoreBetter = keystoneProfile.mplusWarbandCurrent.score > keystoneProfile.mplusCurrent.score
-                            if isWarbandCurrentScoreBetter or isWarbandPreviousScoreRelevant then
-                                hasShownWarbandScore = true
-                                if isWarbandPreviousScoreRelevant then
-                                    tooltip:AddDoubleLine(GetSeasonLabel(L.WARBAND_BEST_SCORE_BEST_SEASON, keystoneProfile.mplusWarbandPrevious.season), GetScoreText(keystoneProfile.mplusWarbandPrevious, true), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandPrevious.score, true))
-                                end
-                                if keystoneProfile.mplusWarbandCurrent.score > 0 or hasMod or hasModSticky then
-                                    tooltip:AddDoubleLine(warbandText, GetScoreText(keystoneProfile.mplusWarbandCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandCurrent.score))
-                                end
+                            if keystoneProfile.mplusWarbandCurrent.score > 0 or hasMod or hasModSticky then
+                                tooltip:AddDoubleLine(warbandText, GetScoreText(keystoneProfile.mplusWarbandCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandCurrent.score))
                             end
                         end
+                    elseif keystoneProfile.mplusWarbandCurrent.score > keystoneProfile.mplusCurrent.score then
+                        hasShownWarbandScore = true
+                        tooltip:AddDoubleLine(warbandText, GetScoreText(keystoneProfile.mplusWarbandCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandCurrent.score))
                     end
                     if not hasShownWarbandScore and config:Get("showMainsScore") then
                         if not config:Get("showMainBestScore") then
@@ -6084,7 +6191,16 @@ do
                         if hasBestDungeons or true then -- HOTFIX: we prefer to always display this in the expanded profile so even empty profiles can display what dungeons there are for the player to complete
                             local focusDungeon = showLFD and util:GetLFDStatusForCurrentActivity(state.args and state.args.activityID)
                             local dungeonLines, dungeonLinesWidth, dungeonLinesMaxWidth = GetSortedDungeonsTooltipText(keystoneProfile.sortedDungeons)
-                            local dungeonLinesWarband, dungeonLinesWarbandWidth, dungeonLinesWarbandMaxWidth = GetSortedDungeonsTooltipText(keystoneProfile.sortedDungeons, true)
+                            local showWarbandScore
+                            if util:IsUnitPlayer(profile.name, profile.realm, profile.region) then
+                                showWarbandScore = config:Get("showMyWarbandScore")
+                            else
+                                showWarbandScore = config:Get("showOtherWarbandScore")
+                            end
+                            local dungeonLinesWarband, dungeonLinesWarbandWidth, dungeonLinesWarbandMaxWidth ---@type string[], number[], number
+                            if showWarbandScore then
+                                dungeonLinesWarband, dungeonLinesWarbandWidth, dungeonLinesWarbandMaxWidth = GetSortedDungeonsTooltipText(keystoneProfile.sortedDungeons, true)
+                            end
                             local paddingBetweenColumns = 15 -- additional column padding in order to avoid the columns from appearing glued together
                             dungeonLinesMaxWidth = dungeonLinesMaxWidth + paddingBetweenColumns
                             if showHeader then
@@ -6092,7 +6208,7 @@ do
                                     tooltip:AddLine(" ")
                                 end
                                 local text ---@type string?
-                                -- if dungeonLinesWarbandMaxWidth > 0 then
+                                -- if showWarbandScoreInfo and dungeonLinesWarbandMaxWidth > 0 then
                                 --     text = table.concat({
                                 --         ns.PROFILE_TOOLTIP_COLUMN_TEXTURE.WARBAND,
                                 --         util:GetTextPaddingTexture(dungeonLinesMaxWidth - util:GetTooltipTextWidth(ns.PROFILE_TOOLTIP_COLUMN_TEXTURE.CHARACTER)),
@@ -6108,11 +6224,13 @@ do
                                     r, g, b = 0, 1, 0
                                 end
                                 if sortedDungeon.level > 0 or sortedDungeon.warbandLevel > 0 then
-                                    local text = {
+                                    local text = showWarbandScore and {
                                         dungeonLinesWarband[i],
                                         " ",
                                         sortedDungeon.warbandLevel > 0 and ns.PROFILE_TOOLTIP_COLUMN_TEXTURE.WARBAND or "",
                                         sortedDungeon.warbandLevel > 0 and util:GetTextPaddingTexture(dungeonLinesMaxWidth - dungeonLinesWidth[i]) or "",
+                                        dungeonLines[i],
+                                    } or {
                                         dungeonLines[i],
                                     }
                                     tooltip:AddDoubleLine(sortedDungeon.dungeon.shortNameLocale, table.concat(text, ""), r, g, b, 0.5, 0.5, 0.5)
@@ -6196,7 +6314,7 @@ do
                         end
                     end
                     if easterEgg then
-                        tooltip:AddLine(easterEgg, 0.9, 0.8, 0.5)
+                        tooltip:AddLine(easterEgg, 0.9, 0.8, 0.5) ---@diagnostic disable-line: param-type-mismatch
                     end
                 end
                 -- profile added to tooltip successfully
@@ -6211,10 +6329,10 @@ do
                 local baseScore = ns.KEYSTONE_LEVEL_TO_SCORE[keystone.level]
                 if baseScore then
                     tooltip:AddLine(" ")
-                    tooltip:AddDoubleLine(L.RAIDERIO_MP_BASE_SCORE, baseScore, 1, 0.85, 0, 1, 1, 1)
+                    tooltip:AddDoubleLine(L.RAIDERIO_MP_BASE_SCORE, tostring(baseScore), 1, 0.85, 0, 1, 1, 1)
                     local avgScore = util:GetKeystoneAverageScoreForLevel(keystone.level)
                     if avgScore and config:Get("showAverageScore") then
-                        tooltip:AddDoubleLine(format(L.RAIDERIO_AVERAGE_PLAYER_SCORE, keystone.level), avgScore, 1, 1, 1, util:GetScoreColor(avgScore))
+                        tooltip:AddDoubleLine(format(L.RAIDERIO_AVERAGE_PLAYER_SCORE, keystone.level), tostring(avgScore), 1, 1, 1, util:GetScoreColor(avgScore))
                     end
                     if keystone.instance then
                         local dungeon = util:GetDungeonByKeystoneID(keystone.instance)
@@ -6235,7 +6353,8 @@ do
     ---@param state TooltipState
     local function UpdateTooltip(tooltip, state)
         -- if unit simply refresh the unit and the original hook will force update the tooltip with the desired behavior
-        local _, tooltipUnit = tooltip:GetUnit()
+        ---@type _, string?
+        local _, tooltipUnit = GetTooltipUnit(tooltip)
         if tooltipUnit then
             ---@diagnostic disable-next-line: undefined-field
             local refreshData = tooltip.RefreshData ---@type fun(self: GameTooltip)?
@@ -6283,7 +6402,7 @@ do
             tooltip:SetOwner(o1, o2, o3, o4) ---@diagnostic disable-line: param-type-mismatch
         end
         if p1 then
-            tooltip:SetPoint(p1, p2, p3, p4, p5)
+            tooltip:SetPoint(p1, p2, p3 or p1, p4 or 0, p5 or 0)
         end
         if not o1 and a1 then
             tooltip:SetAnchorType(a1, a2, a3)
@@ -6326,6 +6445,7 @@ do
     local provider = ns:GetModule("Provider") ---@type ProviderModule
     local render = ns:GetModule("Render") ---@type RenderModule
 
+    ---@param self GameTooltip
     local function OnTooltipSetUnit(self)
         if self ~= GameTooltip or not tooltip:IsEnabled() or not config:Get("enableUnitTooltips") then
             return
@@ -6333,26 +6453,30 @@ do
         if (config:Get("showScoreModifier") and not IsModifierKeyDown()) or (not config:Get("showScoreModifier") and not config:Get("showScoreInCombat") and InCombatLockdown()) then
             return
         end
-        local _, unit = self:GetUnit()
-        if not unit or not UnitIsPlayer(unit) then
+        ---@type _, string?
+        local _, unit = GetTooltipUnit(self)
+        -- HOTFIX: UnitIsPlayer will error if unit is a secret value and tainted (we can't check if it's tainted or not, so this aborts the routine to be on the safe side)
+        if not unit or issecretvalue(unit) or not UnitIsPlayer(unit) or not util:IsUnitMaxLevel(unit) then
             return
         end
-        if util:IsUnitMaxLevel(unit) then
-            if IS_RETAIL then
-                local bioSummary = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(unit)
-                if bioSummary and bioSummary.currentSeasonScore then
-                    local name, realm = util:GetNameRealm(unit)
+        if IS_RETAIL then
+            local bioSummary = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(unit)
+            if bioSummary and bioSummary.currentSeasonScore then
+                local name, realm = util:GetNameRealm(unit)
+                if name and realm then
                     provider:OverrideProfile(name, realm, bioSummary.currentSeasonScore, bioSummary.runs)
                 end
             end
-            render:ShowProfile(self, unit)
         end
+        render:ShowProfile(self, unit)
     end
 
+    ---@param self GameTooltip
     local function OnTooltipCleared(self)
         render:ClearTooltip(self)
     end
 
+    ---@param self GameTooltip
     local function OnHide(self)
         render:HideTooltip(self)
     end
@@ -6389,7 +6513,7 @@ do
             return
         end
         local button = self.button
-        local fullName, faction, level ---@type string?, number, number
+        local fullName, faction, level ---@type string?, FactionNumber?, number?
         if button.buttonType == FRIENDS_BUTTON_TYPE_BNET then
             local bnetIDAccountInfo = C_BattleNet.GetFriendAccountInfo(button.id)
             if bnetIDAccountInfo then
@@ -6609,9 +6733,12 @@ if IS_RETAIL then
             local unit = i == 0 and "player" or format(IsInRaid() and "raid%d" or "party%d", i)
             if UnitExists(unit) then
                 local name, realm = util:GetNameRealm(unit)
-                if name then
-                    index = index + 1
-                    profiles[index] = provider:GetProfile(name, realm) or false ---@diagnostic disable-line: assign-type-mismatch
+                if name and realm then
+                    local profile = provider:GetProfile(name, realm)
+                    if profile then
+                        index = index + 1
+                        profiles[index] = profile
+                    end
                 end
             end
         end
@@ -6770,7 +6897,7 @@ if IS_RETAIL then
         local hasAnyUpgrades
         for i = 1, #members do
             local member = members[i]
-            if member and member.mythicKeystoneProfile and not member.mythicKeystoneProfile.blocked then
+            if member.mythicKeystoneProfile and not member.mythicKeystoneProfile.blocked then
                 local run, upgrade = GetCachedRunAndUpgrade(member, currentRun)
                 hasAnyUpgrades = hasAnyUpgrades or upgrade.isUpgrade
                 upgrade.member = member
@@ -7094,6 +7221,7 @@ do
         return type(widget) == "table" and type(widget.GetObjectType) == "function" and widget
     end
 
+    ---@type table<FrameStrata, number>
     local STRATA_MAP = {
         "TOOLTIP",
         "FULLSCREEN_DIALOG",
@@ -7109,21 +7237,19 @@ do
         STRATA_MAP[v] = k
     end
 
-    local function GetHighestStrata(...)
-        local s, o
-        for _, v in ipairs({...}) do
-            if type(v) == "string" then
-                local c = STRATA_MAP[v]
-                if not o or o > c then
-                    s, o = v, c
-                end
-            end
+    ---@param strata1? FrameStrata
+    ---@param strata2? FrameStrata
+    local function GetHighestStrata(strata1, strata2)
+        local current = STRATA_MAP[(not issecretvalue(strata1) and strata1) or "HIGH"]
+        local other = STRATA_MAP[(not issecretvalue(strata2) and strata2) or "MEDIUM"]
+        if current > other then
+            return strata2
         end
-        return s
+        return strata1
     end
 
     local fallbackFrame = _G.UIParent
-    local fallbackStrata = "LOW"
+    local fallbackStrata = "LOW" ---@type FrameStrata
 
     local tooltipAnchor ---@type RaiderIOProfileTooltipAnchorFrame
     local tooltip ---@type GameTooltip
@@ -7171,6 +7297,7 @@ do
         return o or f
     end
 
+    ---@return FramePoint, FramePoint, number, number, FrameStrata
     local function GetAnchorPoint(anchor, frame)
         return
             Eval(anchor.point, "TOPLEFT", anchor, frame),
@@ -7180,12 +7307,12 @@ do
             Eval(anchor.strata, fallbackStrata, anchor, frame)
     end
 
-    ---@return Frame? frame, string? strata Returns the used frame and strata after logical checks have been performed on the provided frame and strata values.
+    ---@return Frame? frame, FrameStrata? strata Returns the used frame and strata after logical checks have been performed on the provided frame and strata values.
     local function SetAnchor()
         for _, anchor in ipairs(tooltipAnchorPriority) do
             local frame = anchor.name
             if frame then
-                frame = IsFrame(frame) or IsFrame(_G[frame])
+                frame = IsFrame(frame) or IsFrame(_G[frame]) ---@type Frame?
                 if frame then
                     local usable = anchor.usable
                     if usable == nil then
@@ -7213,10 +7340,10 @@ do
     ---@field public x number|nil
     ---@field public y number|nil
 
-    ---@return Frame frame, string strata Returns the used frame and strata after logical checks have been performed on the provided frame and strata values.
+    ---@return Frame frame, string FrameStrata Returns the used frame and strata after logical checks have been performed on the provided frame and strata values.
     local function SetUserAnchor()
         local profilePoint = config:Get("profilePoint") ---@type ConfigProfilePoint
-        local p = profilePoint.point or "CENTER"
+        local p = profilePoint.point or "CENTER" ---@type FramePoint
         local x = profilePoint.x or 0
         local y = profilePoint.y or 0
         tooltipAnchor:SetParent(fallbackFrame)
@@ -7237,7 +7364,7 @@ do
         return isDraggable
     end
 
-    ---@return boolean isAutoPosition, Frame? frame, string? strata @arg1 returns true if position is automatic, otherwise false. `arg2+` are the same as returned from `SetAnchor` or `SetUserAnchor`.
+    ---@return boolean isAutoPosition, Frame? frame, FrameStrata? strata @arg1 returns true if position is automatic, otherwise false. `arg2+` are the same as returned from `SetAnchor` or `SetUserAnchor`.
     local function UpdatePosition(anchor, frame)
         if anchor and frame then
             if frame:IsShown() and anchor.show and type(anchor.show) == "function" then
@@ -7373,9 +7500,17 @@ do
         return true, SetDraggable(tooltipAnchor, not isLocking)
     end
 
+    ---@param unit? UnitToken
+    ---@param name? string
+    ---@param realm? string
+    ---@param region? RegionString
     local function IsPlayer(unit, name, realm, region)
         if unit and UnitExists(unit) then
-            return UnitIsUnit(unit, "player")
+            local isPlayer = UnitIsUnit(unit, "player")
+            if issecretvalue(isPlayer) then
+                return false
+            end
+            return isPlayer
         end
         return name == ns.PLAYER_NAME and realm == ns.PLAYER_REALM and (not region or region == ns.PLAYER_REGION)
     end
@@ -7496,22 +7631,24 @@ if not IS_CLASSIC_ERA then
         if not config:Get("enableLFGTooltips") then
             return
         end
-        local entry = C_LFGList.GetSearchResultInfo(resultID)
-        if not entry or not entry.leaderName then
+        local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
+        if not searchResultInfo or issecretvaluekey(searchResultInfo, "leaderName", "leaderFactionGroup", "isWarMode", "leaderOverallDungeonScore", "name", "comment") or not searchResultInfo.leaderName then
             table.wipe(currentResult)
             return
         end
-        local leaderFaction = util:FactionGroupToFactionId(entry.leaderFactionGroup)
-        local activityID = util:GetLFDActivityID(entry)
-        local activityInfo = activityID and C_LFGList.GetActivityInfoTable(activityID, nil, entry.isWarMode)
-        if activityInfo and activityInfo.isMythicPlusActivity and entry.leaderOverallDungeonScore then
-            local leaderName, leaderRealm = util:GetNameRealm(entry.leaderName)
-            provider:OverrideProfile(leaderName, leaderRealm, entry.leaderOverallDungeonScore)
+        local leaderFaction = util:FactionGroupToFactionId(searchResultInfo.leaderFactionGroup)
+        local activityID = util:GetLFDActivityID(searchResultInfo)
+        local activityInfo = activityID and C_LFGList.GetActivityInfoTable(activityID, nil, searchResultInfo.isWarMode)
+        if activityInfo and activityInfo.isMythicPlusActivity and searchResultInfo.leaderOverallDungeonScore then
+            local leaderName, leaderRealm = util:GetNameRealm(searchResultInfo.leaderName)
+            if leaderName and leaderRealm then
+                provider:OverrideProfile(leaderName, leaderRealm, searchResultInfo.leaderOverallDungeonScore)
+            end
         end
         currentResult.activityID = activityID
-        currentResult.leaderName = entry.leaderName
+        currentResult.leaderName = searchResultInfo.leaderName
         currentResult.leaderFaction = leaderFaction
-        currentResult.keystoneLevel = util:GetKeystoneLevelFromText(entry.name) or util:GetKeystoneLevelFromText(entry.comment) or 0
+        currentResult.keystoneLevel = util:GetKeystoneLevelFromText(searchResultInfo.name) or util:GetKeystoneLevelFromText(searchResultInfo.comment) or 0
         local success1 = render:ShowProfile(tooltip, currentResult.leaderName, render.Preset.Unit(render.Flags.MOD_STICKY), currentResult)
         local success2 = profile:ShowProfile(tooltip, currentResult.leaderName, currentResult)
         if success1 or success2 then
@@ -7550,7 +7687,9 @@ if not IS_CLASSIC_ERA then
         end
         if dungeonScore then
             local name, realm = util:GetNameRealm(fullName)
-            provider:OverrideProfile(name, realm, dungeonScore)
+            if name and realm then
+                provider:OverrideProfile(name, realm, dungeonScore)
+            end
         end
         local ownerSet, ownerExisted, ownerSetSame = util:SetOwnerSafely(GameTooltip, parent, "ANCHOR_NONE", 0, 0)
         if render:ShowProfile(GameTooltip, fullName, render.Preset.Unit(render.Flags.MOD_STICKY), currentResult) then
@@ -7573,11 +7712,14 @@ if not IS_CLASSIC_ERA then
 
     ---@param self LFGListFrameWildcardFrame
     function OnEnter(self)
-        local entry = C_LFGList.GetActiveEntryInfo()
-        if entry then
-            currentResult.activityID = util:GetLFDActivityID(entry)
+        if not config:Get("enableLFGTooltips") then
+            return
         end
-        if not currentResult.activityID or not config:Get("enableLFGTooltips") then
+        local entryInfo = C_LFGList.GetActiveEntryInfo()
+        if entryInfo then
+            currentResult.activityID = util:GetLFDActivityID(entryInfo)
+        end
+        if not currentResult.activityID then
             return
         end
         if self.applicantID and self.Members then
@@ -7722,9 +7864,9 @@ do
         if not config:Get("enableGuildTooltips") then
             return
         end
-        local clubType
-        local nameAndRealm
-        local level
+        local clubType ---@type Enum.ClubType?
+        local nameAndRealm ---@type string?
+        local level ---@type number?
         local faction = ns.PLAYER_FACTION
         if type(self.GetMemberInfo) == "function" then
             local info = self:GetMemberInfo()
@@ -7751,6 +7893,9 @@ do
                     faction = util:GetFactionFromRace(race, faction)
                 end
             end
+        end
+        if issecretvalue(clubType) or issecretvalue(nameAndRealm) or issecretvalue(level) then
+            return
         end
         if (clubType and clubType ~= Enum.ClubType.Guild and clubType ~= Enum.ClubType.Character) or not nameAndRealm or not util:IsMaxLevel(level, true) then
             return
@@ -8014,6 +8159,9 @@ if IS_RETAIL then
         end
         if not guildRealm then
             _, guildRealm = util:GetNameRealm(unit)
+        end
+        if not guildRealm then
+            return
         end
         return format("%s-%s", guildName, guildRealm)
     end
@@ -8411,7 +8559,7 @@ if IS_RETAIL then
         [5] = "watched_replay",
     }
 
-    ---@class ConfigReplayColor : ColorType
+    ---@class ConfigReplayColor
     ---@field public r number
     ---@field public g number
     ---@field public b number
@@ -9164,6 +9312,11 @@ if IS_RETAIL then
             journal_encounter_id = -1,
         }
 
+        ---@type table<number, true?>
+        local IgnoredScenarioCriteriaIDs = {
+            [109242] = true, -- Pit of Saron "Quarry camps liberated"
+        }
+
         ---@param ordinal number
         ---@return ReplayEncounter? encounter
         local function GetEncounterFromReplayByBossOrdinal(ordinal)
@@ -9236,9 +9389,11 @@ if IS_RETAIL then
             local _, _, numCriteria = C_Scenario.GetStepInfo()
             if numCriteria and numCriteria > 1 then
                 local anyBossesInCombat = false
+                local index = 0
                 for i = 1, numCriteria do
                     local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(i)
-                    if criteriaInfo then
+                    local isIgnoreable = criteriaInfo and IgnoredScenarioCriteriaIDs[criteriaInfo.criteriaID]
+                    if criteriaInfo and not isIgnoreable then
                         local completed = criteriaInfo.completed
                         local isTrash = i == numCriteria
                         if isTrash then
@@ -9258,7 +9413,8 @@ if IS_RETAIL then
                                 liveSummary.trash = trash
                             end
                         else
-                            local boss = liveSummary.bosses[i]
+                            index = index + 1
+                            local boss = liveSummary.bosses[index]
                             if not boss then
                                 ---@type ReplayBoss
                                 boss = setmetatable({}, ReplayBossLiveMetatable) ---@diagnostic disable-line: missing-fields
@@ -9267,7 +9423,7 @@ if IS_RETAIL then
                                 boss.combat = false
                                 boss.pulls = 0
                                 boss.dead = false
-                                liveSummary.bosses[i] = boss
+                                liveSummary.bosses[index] = boss
                             end
                             if not completed and not boss.dead then
                                 local encounterID = boss.encounter and boss.encounter.encounter_id or 0
@@ -11028,7 +11184,7 @@ if IS_RETAIL then
         -- if not mapID and config:Get("debugMode") then
         --     local dungeons = ns:GetDungeonData()
         --     local dungeon = dungeons[1]
-        --     mapID, timeLimit = dungeon.instance_map_id, dungeon.timers[3]
+        --     mapID, timeLimit = dungeon.instance_map_ids[1], dungeon.timers[3]
         -- end
         return mapID, timeLimit, mapIDs
     end
@@ -11451,6 +11607,7 @@ do
     local searchNameBox ---@type RaiderIOSearchAutoCompleteEditBox
     local searchTooltip ---@type RaiderIOSearchTooltip
 
+    ---@return RegionString
     local function GetRegionName()
         return (searchRegionBox:GetText() and searchRegionBox:GetText() ~= "") and searchRegionBox:GetText() or ns.PLAYER_REGION
     end
@@ -11782,6 +11939,9 @@ do
         searchFrame, searchRegionBox, searchRealmBox, searchNameBox, searchTooltip = CreateSearchFrame()
     end
 
+    ---@param region? RegionString
+    ---@param realm? string
+    ---@param name? string
     function search:ShowProfile(region, realm, name)
         if not self:IsEnabled() then
             return
@@ -11842,6 +12002,9 @@ do
         return search:ShowProfile(arg3, arg2, arg1)
     end
 
+    ---@param region RegionString
+    ---@param realm string
+    ---@param name string
     function search:SearchAndShowProfile(region, realm, name)
         if not self:IsEnabled() then
             return
@@ -11962,6 +12125,7 @@ do
 
     -- get name and realm from dropdown or nil if it's not applicable
     ---@param bdropdown DropDownListPolyfill
+    ---@return string? name, string? realm, number? level, UnitToken? unit, FactionNumber? faction
     local function GetNameRealmForDropDown(bdropdown)
         local unit = bdropdown.unit
         local bnetIDAccount = bdropdown.bnetIDAccount
@@ -11970,7 +12134,7 @@ do
         local quickJoinButton = bdropdown.quickJoinButton
         local clubMemberInfo = bdropdown.clubMemberInfo
         local tempName, tempRealm = bdropdown.name, bdropdown.server
-        local name, realm, level, faction ---@type string?, string?, number?, number?
+        local name, realm, level, faction ---@type string?, string?, number?, FactionNumber?
         -- unit
         if not name and unit and UnitExists(unit) then
             if UnitIsPlayer(unit) then
@@ -11985,7 +12149,7 @@ do
         if not name and bnetIDAccount then
             local fullName, charFaction, charLevel = util:GetNameRealmForBNetFriend(bnetIDAccount)
             if fullName then
-                name, realm = util:GetNameRealm(fullName) ---@diagnostic disable-line: param-type-mismatch
+                name, realm = util:GetNameRealm(fullName)
                 level = charLevel
                 faction = charFaction
             end
@@ -12166,14 +12330,16 @@ do
     end
 
     ---@param owner any
-    ---@return string? name, string? realm, number? level, string? unit, number? faction
+    ---@return string? name, string? realm, number? level, string? unit, FactionNumber? faction
     local function GetLFGListInfo(owner)
         local resultID = owner.resultID
         if resultID then
             local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
-            local name, realm = util:GetNameRealm(searchResultInfo.leaderName)
-            local faction = searchResultInfo.leaderFactionGroup
-            return name, realm, nil, nil, faction
+            if searchResultInfo and not issecretvaluekey(searchResultInfo, "leaderName", "leaderFactionGroup") then
+                local name, realm = util:GetNameRealm(searchResultInfo.leaderName)
+                local faction = searchResultInfo.leaderFactionGroup
+                return name, realm, nil, nil, faction
+            end
         end
         local memberIdx = owner.memberIdx
         if not memberIdx then
@@ -12193,7 +12359,7 @@ do
     end
 
     ---@param accountInfo BNetAccountInfo
-    ---@return string? name, string? realm, number? level, string? unit, number? faction
+    ---@return string? name, string? realm, number? level, string? unit, FactionNumber? faction
     local function GetBNetAccountInfo(accountInfo)
         local gameAccountInfo = accountInfo.gameAccountInfo
         local characterName = gameAccountInfo.characterName
@@ -12207,7 +12373,7 @@ do
     ---@param owner any
     ---@param rootDescription ModifyMenuCallbackRootDescriptionPolyfill
     ---@param contextData? ModifyMenuCallbackRootDescriptionContextDataPolyfill
-    ---@return string? name, string? realm, number? level, string? unit, number? faction
+    ---@return string? name, string? realm, number? level, UnitToken? unit, FactionNumber? faction
     local function GetNameRealmForMenu(owner, rootDescription, contextData)
         if not contextData then
             local tagType = validTags[rootDescription.tag]
@@ -12217,7 +12383,7 @@ do
             return
         end
         local unit = contextData.unit
-        local name, realm, level, faction ---@type string?, string?, number?, number?
+        local name, realm, level, faction ---@type string?, string?, number?, FactionNumber?
         if unit and UnitExists(unit) then
             name, realm = util:GetNameRealm(unit)
             level = UnitLevel(unit)
@@ -12433,7 +12599,7 @@ if IS_RETAIL then
     ---@class RWFLootEntry
     ---@field public guildName string
     ---@field public guildRealm string
-    ---@field public guildRegion string
+    ---@field public guildRegion RegionString
     ---@field public type number
     ---@field public isNew boolean
     ---@field public timestamp number
@@ -13444,8 +13610,10 @@ do
         local function getLowestMapIdForInstances(instances)
             local mapID
             for _, instance in ipairs(instances) do
-                if not mapID or mapID > instance.instance_map_id then
-                    mapID = instance.instance_map_id
+                for i = 1, #instance.instance_map_ids do
+                    if not mapID or mapID > instance.instance_map_ids[i] then
+                        mapID = instance.instance_map_ids[i]
+                    end
                 end
             end
             return mapID
@@ -14081,17 +14249,21 @@ do
         ---@field public checkButton3 RaiderIOSettingsBaseWidgetCheckButton
         ---@field public tooltip? string
 
-        function configOptions.CreateWidget(self, widgetType, height, parentFrame)
+        ---@param self RaiderIOConfigOptions
+        ---@param widgetType FrameType
+        ---@param parentFrame? Frame
+        function configOptions.CreateWidget(self, widgetType, parentFrame)
 
             ---@class RaiderIOSettingsBaseWidget
             local widget = CreateFrame(widgetType, nil, parentFrame or configFrame, BackdropTemplateMixin and "BackdropTemplate")
 
-            if self.lastWidget then
-                widget:SetPoint("TOPLEFT", self.lastWidget, "BOTTOMLEFT", 0, -24)
-                widget:SetPoint("BOTTOMRIGHT", self.lastWidget, "BOTTOMRIGHT", 0, -4)
+            widget:SetSize(380, 20)
+            widget.lastWidget = self.lastWidget
+
+            if widget.lastWidget then
+                widget:SetPoint("TOPLEFT", widget.lastWidget, "BOTTOMLEFT", 0, 0)
             else
                 widget:SetPoint("TOPLEFT", parentFrame or configFrame, "TOPLEFT", 16, 0)
-                widget:SetPoint("BOTTOMRIGHT", parentFrame or configFrame, "TOPRIGHT", -40, -16)
             end
 
             widget.bg = widget:CreateTexture()
@@ -14149,31 +14321,35 @@ do
             end
 
             if not parentFrame then
-                self.lastWidget = widget ---@diagnostic disable-line: inject-field
+                self.lastWidget = widget
             end
 
             return widget
         end
 
+        ---@param self RaiderIOConfigOptions
         function configOptions.CreatePadding(self)
             local frame = self:CreateWidget("Frame")
-            local _, lastWidget = frame:GetPoint(1)
-            frame:ClearAllPoints()
-            frame:SetPoint("TOPLEFT", lastWidget, "BOTTOMLEFT", 0, -14)
-            frame:SetPoint("BOTTOMRIGHT", lastWidget, "BOTTOMRIGHT", 0, -4)
+            frame:SetHeight(10)
             frame.bg:Hide()
             return frame
         end
 
+        ---@param self RaiderIOConfigOptions
+        ---@param text string
+        ---@param parentFrame? Frame
         function configOptions.CreateHeadline(self, text, parentFrame)
-            local frame = self:CreateWidget("Frame", nil, parentFrame)
+            local frame = self:CreateWidget("Frame", parentFrame)
             frame.bg:Hide()
             frame.text:SetText(text)
             return frame
         end
 
+        ---@param self RaiderIOConfigOptions
+        ---@param text string
+        ---@param parentFrame? Frame
         function configOptions.CreateDescription(self, text, parentFrame)
-            local frame = self:CreateWidget("Frame", nil, parentFrame)
+            local frame = self:CreateWidget("Frame", parentFrame)
             frame.bg:Hide()
             frame.text:SetFontObject("GameFontWhite")
             frame.text:SetText(text)
@@ -14186,6 +14362,9 @@ do
         ---@field public addon2? string
         ---@field public addon3? string
 
+        ---@param self RaiderIOConfigOptions
+        ---@param name string
+        ---@param ... string
         function configOptions.CreateModuleToggle(self, name, ...)
             ---@class RaiderIOSettingsModuleToggleWidget
             local frame = self:CreateWidget("Frame")
@@ -14209,6 +14388,7 @@ do
         ---@field public tooltip? string
         ---@field public cvar? FallbackConfigKey
 
+        ---@param self RaiderIOConfigOptions
         ---@param label string
         ---@param description? string
         ---@param cvar? FallbackConfigKey
@@ -14239,6 +14419,7 @@ do
             return frame
         end
 
+        ---@param self RaiderIOConfigOptions
         ---@param label string
         ---@param description? string
         ---@param cvar? FallbackConfigKey
@@ -14256,6 +14437,7 @@ do
         ---@class RaiderIOSettingsRadioToggleWidget : RaiderIOSettingsToggleWidget
         ---@field public valueRadio any
 
+        ---@param self RaiderIOConfigOptions
         ---@param label string
         ---@param description? string
         ---@param cvar FallbackConfigKey
@@ -14691,6 +14873,8 @@ do
             configOptions:CreateHeadline(L.GENERAL_TOOLTIP_OPTIONS)
             if IS_RETAIL then
                 configOptions:CreateOptionToggle(L.SHOW_WARBAND_SCORE, L.SHOW_WARBAND_SCORE_DESC, "showWarbandScore")
+                configOptions:CreateOptionToggle(L.SHOW_MY_WARBAND_SCORE, L.SHOW_MY_WARBAND_SCORE_DESC, "showMyWarbandScore")
+                configOptions:CreateOptionToggle(L.SHOW_OTHER_WARBAND_SCORE, L.SHOW_OTHER_WARBAND_SCORE_DESC, "showOtherWarbandScore")
                 configOptions:CreateOptionToggle(L.SHOW_MAINS_SCORE, L.SHOW_MAINS_SCORE_DESC, "showMainsScore")
                 configOptions:CreateOptionToggle(L.SHOW_BEST_MAINS_SCORE, L.SHOW_BEST_MAINS_SCORE_DESC, "showMainBestScore")
                 configOptions:CreateOptionToggle(L.SHOW_ROLE_ICONS, L.SHOW_ROLE_ICONS_DESC, "showRoleIcons")
@@ -14866,7 +15050,7 @@ do
                 end,
             })
 
-            ---@alias RaiderIODBModuleRegion "US"|"EU"|"KR"|"TW"
+            ---@alias RaiderIODBModuleRegion "US"|"EU"|"KR"|"CN"|"TW"
             ---@alias RaiderIODBModuleType "M"|"R"|"F"
 
             ---@class RaiderIODBModulesInfo
@@ -14897,18 +15081,19 @@ do
             configOptions:CreateHeadline(L.DB_MODULES)
             local modulesHeader = configOptions:CreateModuleToggle(L.MODULE_AMERICAS, CreateModuleOptionsArgs("US"))
             configOptions:CreateModuleToggle(L.MODULE_EUROPE, CreateModuleOptionsArgs("EU"))
+            configOptions:CreateModuleToggle(L.MODULE_CHINA, CreateModuleOptionsArgs("CN"))
             configOptions:CreateModuleToggle(L.MODULE_KOREA, CreateModuleOptionsArgs("KR"))
             configOptions:CreateModuleToggle(L.MODULE_TAIWAN, CreateModuleOptionsArgs("TW"))
 
             -- add save button and cancel buttons
-            local buttons = configOptions:CreateWidget("Frame", 4, configButtonFrame)
+            local buttons = configOptions:CreateWidget("Frame", configButtonFrame)
             buttons:ClearAllPoints()
             buttons:SetPoint("TOPLEFT", configButtonFrame, "TOPLEFT", 16, 0)
             buttons:SetPoint("BOTTOMRIGHT", configButtonFrame, "TOPRIGHT", -16, -10)
             buttons:Hide()
-            local save = configOptions:CreateWidget("Button", 4, configButtonFrame)
-            local cancel = configOptions:CreateWidget("Button", 4, configButtonFrame)
-            local reset = configOptions:CreateWidget("Button", 4, configButtonFrame)
+            local save = configOptions:CreateWidget("Button", configButtonFrame)
+            local cancel = configOptions:CreateWidget("Button", configButtonFrame)
+            local reset = configOptions:CreateWidget("Button", configButtonFrame)
             save:ClearAllPoints()
             save:SetPoint("LEFT", buttons, "LEFT", 0, -12)
             save:SetSize(96, 28)
@@ -14929,11 +15114,15 @@ do
             reset:SetScript("OnClick", Reset_OnClick)
 
             -- adjust frame height dynamically
-            local children = {configFrame:GetChildren()} ---@type Region[]
-            local height = 0
-            for i = 1, #children do
-                height = height + children[i]:GetHeight() + 3.5
-            end
+            local height = -30
+            local lastWidget = configOptions.lastWidget
+            repeat
+                if not lastWidget then
+                    break
+                end
+                height = height + lastWidget:GetHeight()
+                lastWidget = lastWidget.lastWidget
+            until not lastWidget
 
             configSliderFrame:SetMinMaxValues(1, max(1, height - 440))
             configFrame:SetHeight(height)
@@ -15133,7 +15322,7 @@ do
     local util = ns:GetModule("Util") ---@type UtilModule
 
     local TRACKING_EVENTS = {
-        "COMBAT_LOG_EVENT_UNFILTERED",
+        -- "COMBAT_LOG_EVENT_UNFILTERED", -- TODO: This didn't error on beta, but started to upon 12.0 release
         "UNIT_AURA",
         "UNIT_FLAGS",
         "UNIT_MODEL_CHANGED",
@@ -15168,8 +15357,9 @@ do
     end
 
     ---@return nil @The provided guid is checked if it's a player, and if the serverId is unknown, if that's the case we will log it into the SV and map it to our known regionId.
+    ---@param guid? string
     local function InspectPlayerGUID(guid)
-        if not guid then
+        if issecretvalue(guid) or not guid then
             return
         end
         local guidType, serverId = strsplit("-", guid) ---@type string, string|number
@@ -15206,13 +15396,14 @@ do
             end
         else
             local unit = ...
-            if not unit or not UnitIsPlayer(unit) or UnitIsUnit(unit, "player") then
+            if issecretvalue(unit) or not unit or not UnitIsPlayer(unit) then
                 return
             end
-            local guid = UnitGUID(unit)
-            if guid then
-                InspectPlayerGUID(guid)
+            local isPlayer = UnitIsUnit(unit, "player")
+            if issecretvalue(isPlayer) or isPlayer then
+                return
             end
+            InspectPlayerGUID(UnitGUID(unit))
         end
     end
 
@@ -15260,14 +15451,14 @@ do
         L.MINIMAP_SHORTCUT_HELP_SETTINGS
     )
 
-    ---@return string? name, string realm
+    ---@return string? name, string? realm
     local function GetSearchInfo()
         if not util:IsUnitMaxLevel("target") then
-            return ---@diagnostic disable-line: missing-return-value
+            return
         end
         local name, realm = util:GetNameRealm("target")
-        if not name then
-            return ---@diagnostic disable-line: missing-return-value
+        if not name or not realm then
+            return
         end
         return name, realm
     end
@@ -15314,7 +15505,7 @@ do
                 search:SearchAndShowProfile(ns.PLAYER_REGION, ns.PLAYER_REALM, ns.PLAYER_NAME)
             end
             local name, realm = GetSearchInfo()
-            if name then
+            if name and realm then
                 search:SearchAndShowProfile(ns.PLAYER_REGION, realm, name)
             end
         end
@@ -15418,7 +15609,7 @@ do
 
     ---@class TestData @This can either be a `table` object with the structure as described in the class, or a `function` we call that returns `status` and `explanation` if there is something to report.
     ---@field public skip? boolean @Set `true` to skip this test.
-    ---@field public region string @`eu`, `us`, etc.
+    ---@field public region RegionString
     ---@field public realm string @The character realm same format as the whisper friendly `GetNormalizedRealmName()` format.
     ---@field public name string @The character name.
     ---@field public success? boolean @Set `true` if the profile exists and contains data, otherwise `false` to ensure it is empty or missing.
@@ -15764,6 +15955,9 @@ do
         end,
         GetProfile = function(arg1, arg2, ...)
             if not IsReady() then
+                return
+            end
+            if issecretvalue(arg1) then
                 return
             end
             local name, realm = arg1, arg2

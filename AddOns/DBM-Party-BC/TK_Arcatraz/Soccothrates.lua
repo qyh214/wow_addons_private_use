@@ -1,0 +1,42 @@
+local mod = DBM:NewMod(550, "DBM-Party-BC", 15, 254)
+local L = mod:GetLocalizedStrings()
+
+if mod:IsRetail() then
+	mod.statTypes = "normal,heroic,timewalker"
+end
+
+mod:SetRevision("20260315034941")
+mod:DisableHardcodedOptions()
+
+mod:SetCreatureID(20886)
+mod:SetEncounterID(1915)
+mod:SetZone(552)
+
+if not mod:IsRetail() then
+	mod:SetModelID(19977)
+end
+
+mod:RegisterCombat("combat")
+
+mod:RegisterEventsInCombat(
+	"SPELL_CAST_SUCCESS 36512",
+	"SPELL_AURA_APPLIED 35759 39006"
+)
+
+local warnKnockaway			= mod:NewSpellAnnounce(36512, 2, nil, nil, nil, nil, nil, 2)
+
+local specwarnFelFireShock	= mod:NewSpecialWarningDispel(35759, "RemoveMagic", nil, 2, 1, 2)
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 36512 then
+		warnKnockaway:Show()
+		warnKnockaway:Play("carefly")
+	end
+end
+
+function mod:SPELL_AURA_APPLIED(args)
+	if args:IsSpellID(35759, 39006) and self:CheckDispelFilter("magic") then
+		specwarnFelFireShock:Show(args.destName)
+		specwarnFelFireShock:Play("dispelnow")
+	end
+end

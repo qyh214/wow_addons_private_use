@@ -2,6 +2,8 @@ local ADDON_NAME = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "enUS", true)
 
 
+-- new
+L["to interact with the icon"] = true
 -- blizzard minimap icons
 L["Blizzard Icons"] = true
 L["The Blizzard settings configured by the player are restored"] = true
@@ -28,10 +30,13 @@ L["Artifact Forge"] = true
 L["Class Hall"] = true
 L["The entrance of each class must first be unlocked before they are accessible"] = true
 -- Worldmap
-L["Worldmap player arrow"] = true
+L["Player arrow"] = true
+L["Player arrow highlight"] = true
 L["Changes the size of the display"] = true
 L["Enables the ability to change the size of the player arrow on the world map"] = true
 L["Change zone map"] = true
+L["Unfortunately, scaling this highlight is not possible, as it has a fixed value set by Blizzard"] = true
+L["Allows you to permanently highlight the player's arrow on the world map while the map is open"] = true
 L["This allows you to automatically switch the world map to the map of the new area when you leave one zone and enter a new one"] = true
 -- Npc
 L["NPC database"] = true
@@ -43,6 +48,8 @@ L["Changelog"] = true
 L["Last Changelog"] = true
 L["Show MapNotes Changelog again"] = true
 L["Do not show again until next version"] = true
+L["permanently hide changelog"] = true
+L["Permanently hides the changelog, not just until the next addon update"] = true
 -- SwapButtons
 L["In addition to the Right mouse button, the shift key must now also be pressed to set a waypoint"] = true
 L["In addition to the Left mouse button, the shift key must now also be pressed to set a waypoint"] = true
@@ -241,6 +248,7 @@ L["Starting on the first Sunday of each month for one week"] = true
 L["Enables the display of icons for a specific capital city"] = true
 L["This MapNotes icons shows various icons that are too close to each other together"] = true
 L["Zones"] = true
+L["Zone maps"] = true
 L["Continents"] = true
 --2 Unexplored Areas function
 L["Unexplored Areas"] = true
@@ -275,6 +283,7 @@ L["hide worldmap button"] = true
 L["Hide the MapNotes button on the worldmap"] = true
 L["hide MapNotes!"] = true
 L["Disable MapNotes, all icons will be hidden on each map and all categories will be disabled"] = true
+L["Activate MapNotes, all previously enabled icons will be restored on every map"] = true
 L["Adventure guide"] = true
 L["Adventure guide function is disabled"] = true
 L["Clicking on an instance icon outside of a zone map does not open the adventure guide, but rather the world map where the instance is located"] = true
@@ -347,6 +356,7 @@ L["Show all Kul Tiras MapNotes dungeon, raid, portal, zeppelin and ship icons on
 L["Show all Broken Isles MapNotes dungeon, raid, portal, zeppelin and ship icons on this map"] = true
 L["Show all Dragon Isles MapNotes dungeon, raid, portal, zeppelin and ship icons on this map"] = true
 L["Show all Khaz Algar MapNotes dungeon, raid, portal, zeppelin and ship icons on this map"] = true
+L["Show all Quel'Thalas MapNotes dungeon, raid, portal, zeppelin and ship icons on this map"] = true
 L["Certain icons can be displayed or not displayed. If the option (Activate icons) has been activated in this category"] = true
 L["Show vanilla versions of dungeons and raids such as Naxxramas, Scholomance or Scarlet Monastery, which require achievements or other things"] = true
 L["Individual icons that are too close to other icons on this map are not 100% accurately placed on this map! For more precise coordinates, please use the points on the zone map"] = true
@@ -362,6 +372,7 @@ L["Zandalar"] = true -- in process
 L["Kul Tiras"] = true -- in process
 L["Shadowlands"] = true -- in process
 L["Dragon Isles"] = true -- in process
+L["Quel'Thalas"] = true
 --8 Core specific
 L["-> MiniMapButton <-"] = true
 L["-> WorldMapButton <-"] = true
@@ -401,7 +412,10 @@ L["Secret Entrance"] = true
 L["Ogre Waygate to Garrison"] = true
 L["in the basement"] = true
 L["(on the tower)"] = true
+L["(on the platform)"] = true
+L["to the platform"] = true
 L["(inside building)"] = true
+L["inside the cave"] = true
 L["talk to"] = true
 --10 places
 L["Torghast"] = true -- in process
@@ -413,6 +427,7 @@ L["Un'Goro Crater"] = true -- in process
 L["Auberdine"] = true -- in process areaID
 L["Ratchet"] = true -- in process areaID
 L["Theramore Isle"] = true -- in process areaID
+L["Feathermoon Stronghold"] = true -- in process areaID
 L["Dire Maul"] = true -- in process instance
 L["Blackfathom Deeps"] = true -- in process instance
 L["Stormwind"] = true -- in process
@@ -447,7 +462,6 @@ L["Echo Isles, Durotar"] = true -- in process
 L["Silithus"] = true -- in process
 L["Nazjatar"] = true -- in process
 L["Emerald Dream"] = true -- in process
-L["Thunder Bluff"] = true -- in process
 L["Howling Fjord"] = true -- in process
 L["Ruins of Lordaeron"] = true -- in process
 L["Isle of Thunder"] = true -- in process

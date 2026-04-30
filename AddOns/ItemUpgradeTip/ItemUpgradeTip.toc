@@ -1,4 +1,4 @@
-## Interface: 110205
+## Interface: 120001
 ## Title: ItemUpgradeTip
 ## Notes: Add information to item tooltips for item upgrade costs
 ## OptionalDeps: _DebugLog, GW2_UI
@@ -8,7 +8,7 @@
 ## IconTexture: 463447
 ## SavedVariables: ItemUpgradeTipDB
 ## Author: Belazor
-## Version: v4.0.4
+## Version: v4.2.1
 ## Group: ItemUpgradeTip
 ## Category-enUS: Equipment
 ## Category-deDE: Ausrüstung
@@ -46,9 +46,8 @@ Debug.lua
 
 Manifest.xml
 
+upgradeHandlers\Midnight.lua
 upgradeHandlers\Heirloom.lua
-upgradeHandlers\Flightstones.lua
-upgradeHandlers\Valorstones.lua
 upgradeHandlers\Anima.lua
 upgradeHandlers\Honor.lua
 upgradeHandlers\Conquest.lua

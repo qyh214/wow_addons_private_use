@@ -1,7 +1,7 @@
-## Interface: 110200
+## Interface: 120000
 ## Title: Multishot Fan Update
 ## Notes: Automatically screenshot memorable moments of your journey in World of Warcraft.
-## Version: 11.2.0.1
+## Version: 12.0.0.1
 ## Author: Nukme
 ## X-OriginalAuthors: dlui & dridzt
 ## X-Repository: https://github.com/Nukme/Multishot

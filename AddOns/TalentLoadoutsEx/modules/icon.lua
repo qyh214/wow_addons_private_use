@@ -5,6 +5,7 @@ Addon.MYTHICPLUS_ICON = 4352494;
 Addon.HERO_TALENTS_ICON = 5740021;
 Addon.PVP_ICON = 236537;
 
+-- [classFilename] = { { icon, Name, Atlas }, ... },
 local heroTalentIcons = {
 	WARRIOR = {
 		{Addon.HERO_TALENTS_ICON, "Mountain Thane", "talents-heroclass-warrior-mountainthane"},
@@ -98,9 +99,12 @@ local heroTalentIcons = {
 	},
 	DEMONHUNTER = {
 		{Addon.HERO_TALENTS_ICON, "Aldrachi Reaver", "talents-heroclass-demonhunter-aldrachireaver"},
+		{Addon.HERO_TALENTS_ICON, "Annihilator", "talents-heroclass-demonhunter-annihilator"},
 		{Addon.HERO_TALENTS_ICON, "Fel-Scarred", "talents-heroclass-demonhunter-felscarred"},
+		{Addon.HERO_TALENTS_ICON, "Void-Scarred", "talents-heroclass-demonhunter-felscarred2"},
 		{5927616, "Aldrachi Reaver", ""},
 		{5927628, "Fel-Scarred", ""},
+		{1041234, "Annihilator", ""},
 	},
 	EVOKER = {
 		{Addon.HERO_TALENTS_ICON, "Scalecommander", "talents-heroclass-evoker-scalecommander"},
@@ -117,13 +121,15 @@ Addon.icons = {
 	heroTalentIcons[classFilename],
 	{
 		-- Delve
+		{6025441, "ui_delves", "Delve"},
 		{1786405, "Ability_racial_dungeondelver", "Delve"},
 		{1064187, "Icon_treasuremap", "Delve"},
 		{5453546, "Inv_helm_armor_bronzebeard_b_01", "Delve"},
 	},
+	-- #region M+: TWW
 	--[[
 	{
-		-- M+: TWW Season 1
+		-- 
 		{Addon.MYTHICPLUS_ICON,  "Mythic Keystone", "M+"},
 		{5912507, "Ara-Kara, City of Echoes", "ARAK"},
 		{5912509, "City of Threads", "COT"},
@@ -149,6 +155,7 @@ Addon.icons = {
 		{5912508, "Cinderbrew Meadery", "BREW"},
 	},
 	--]]
+	--[[
 	{
 		-- M+: TWW Season 3
 		{Addon.MYTHICPLUS_ICON,  "Mythic Keystone", "M+"},
@@ -161,6 +168,22 @@ Addon.icons = {
 		{4058847, "Tazavesh: Streets of Wonder", "STRT"},
 		{4062727, "Tazavesh: So'leah's Gambit", "GMBT"},
 	},
+	--]]
+	-- #endregion
+	-- #region M+: Midnight
+	{
+		-- M+: Midnight Season 1
+		{4578414, "Algeth'ar Academy", "AA"},
+		{7322719, "Maisara Caverns", "MC"},
+		{7439625, "Magisters' Terrace", "MT"},
+		{7553062, "Nexus-Point Xenas", "NPX"},
+		{343641,  "Pit of Saron", "POS"},
+		{1711340, "Seat of the Triumvirate", "SEAT"},
+		{1002596, "Skyreach", "SR"},
+		{7266215, "Windrunner Spire", "WS"},
+	};
+	-- #endregion
+	-- #region Raid: TWW 
 	--[[
 	{
 		-- Raid: Nerub-ar Palace
@@ -189,6 +212,7 @@ Addon.icons = {
 		{6392621, "Chrome King Gallywix"},
 	},
 	--]]
+	--[[
 	{
 		-- Raid: Manaforge Omega
 		{6997112, "Manaforge Omega"},
@@ -201,36 +225,11 @@ Addon.icons = {
 		{6922086, "Nexus-King Salhadaar"},
 		{6922083, "Dimensius, the All-Devouring"},
 	},
-};
-
-if select(4, GetBuildInfo()) >= 120000 then
-	-- Midnight Beta
-
-	heroTalentIcons.DEMONHUNTER = {
-		{Addon.HERO_TALENTS_ICON, "Aldrachi Reaver", "talents-heroclass-demonhunter-aldrachireaver"},
-		{Addon.HERO_TALENTS_ICON, "Fel-Scarred", "talents-heroclass-demonhunter-felscarred"},
-		{Addon.HERO_TALENTS_ICON, "Fel-Scarred", "talents-heroclass-demonhunter-annihilator"},
-		{5927616, "Aldrachi Reaver", ""},
-		{5927628, "Fel-Scarred", ""},
-		{1041234, "Annihilator", ""},
-	};
-
-	Addon.icons[1] = heroTalentIcons[classFilename];
-
-	Addon.icons[3] = {
-		-- M+: S1
-		{7439625, "Magisters' Terrace", "MT"},
-		{7322719, "Maisara Caverns", "MC"},
-		{7553062, "Nexus-Point Xenas", "NPX"},
-		{7266215, "Windrunner Spire", "WS"},
-		{4578414, "Algeth'ar Academy", "AA"},
-		{343641,  "Pit of Saron", "POS"},
-		{1711340, "Seat of the Triumvirate", "SEAT"},
-		{1002596, "Skyreach", "SKY"},
-	};
-
-	Addon.icons[4] = {
-		-- Raid: S1
+	--]]
+	-- #endregion
+	-- #region Raid: Midnight
+	{
+		-- Raid: Midnight Season 1
 		{7490911, "The Voidspire"},
 		{7448209, "Imperator Averzian"},
 		{7448210, "Vorasius"},
@@ -242,7 +241,16 @@ if select(4, GetBuildInfo()) >= 120000 then
 		{7448203, "Belo'ren, Child of Al'ar"},
 		{7448204, "Midnight Falls"},
 	};
+	-- #endregion
+};
+
+--[[
+if select(4, GetBuildInfo()) >= 120100 then
+	-- For 12.1
+	Addon.icons[3] = {}; -- M+
+	Addon.icons[4] = {}; -- Raid
 end
+--]]
 
 function Addon:AddIconSelectionData()
 	local LargerMacroIconSelectionData = _G["LargerMacroIconSelectionData"];
@@ -289,7 +297,6 @@ function Addon:InitIconSelector()
 	local parent = Addon.frame.EditPopupFrame.IconListFrame;
 	for groupIndex, group in ipairs(Addon.icons) do
 		for iconIndex, iconInfo in ipairs(group) do
-			--- @type table
 			local iconButton = CreateFrame("Button", nil, parent, "TalentLoadoutExIconButtonTemplate");
 			local iconID = iconInfo[1];
 			local iconName = iconInfo[2];

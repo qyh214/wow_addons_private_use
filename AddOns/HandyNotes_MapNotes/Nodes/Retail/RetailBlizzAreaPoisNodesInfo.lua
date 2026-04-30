@@ -3,16 +3,37 @@ local ADDON_NAME, ns = ...
 ns.BlizzAreaPoisInfo = {
 
     -- Alliance
-    1714, -- Ehrenfeste    
-    2065, -- Telaar
     6014, -- Stormwind Portal Chamber icon
-    2303, -- Valianzfeste
+    8310, -- Portal to Stormwind (silvermoon midnight)
+    5873, -- Dustwallow Ship
+    5874, -- Wetland Ship to Theramore
+    5875, -- Wetland Ship to Howling Fjord
+    5876, -- Howling Fjord Ship to Stormwind
+    5877, -- Borean Tundra Ship to Stormwind
+    5878, -- Stormwind Ship to Vallianz
+    5879, -- Stormwind Ship to Boralus
+    5880, -- Boralus Ship to Stormwind
+    5892, -- Jadeforest to Stormwind Portal
+    7335, -- Stormwind Ship to Dragon Isles
+    8530, -- Housing Portal Alliance to Stormwind
 
     -- Horde
-    1715, -- Thrallmar 
-    2064, -- Garadar    
     6015, -- Orgrimmar Portal Chamber icon
-    2304, -- Kriegshymnenfeste
+    8309, -- Portal to Orgrimmar (silvermoon midnight)
+    5843, -- Drustvar to Zuldazar Travel
+    5844, -- Tiragardesund to Zuldazar Travel
+    5845, -- Stormsong Valley to Zuldazar Travel
+    5883, -- Grom'gol Zeppelin Icon in Starnglethorn
+    5884, -- Zeppelin Grom'gol in OG
+    5885, -- Zeppelin Borean Tundra in OG
+    5886, -- Zeppelin Borean Tundra to OG
+    5888, -- Ship Dazar'Alor / Zuldazar
+    5890, -- Portal Og from Jade Forest
+    6138, -- Mechagon Zuldazar Travel
+    7341, -- Zeppelin Durotar
+    7339, -- Ship Icon The Waking Shores to OG
+    4587, -- Warspear PvP Vendors
+    8529, -- Housing Portal Horde to Orgrimmar
 
     -- Neutral
     39, -- Ratchet
@@ -53,6 +74,14 @@ ns.BlizzAreaPoisInfo = {
     8230, -- Portal from Dornogal to Undermine
     8231, -- Portal from Undermine to Dornogal
     8414, -- Portal from K'arsh to Dornogal
+    8504, -- Amani'Zar
+    8640, -- Portal to Voidstorm
+    8307, -- Portal to Voidstorm
+    8308, -- Portal Eversong Rootway
+    8478, -- Portal Eversong Rootway
+    8545, -- Main Portal Chamber
+    8587, -- Timeways Portal Silvermoon Midnight
+    8642, -- Portal to Silvermoon and Harandar
 
     -- ClassHall
     5102, -- Class Hall Rogue Dalaran
@@ -72,19 +101,14 @@ ns.BlizzAreaPoisInfo = {
     2704, -- Elwynn Forest Darkmoon Icon
     2882, -- Pvp Vendor Valley of the Four Winds
     5793, -- Darnassus Überreste
-    5873, -- Dustwallow Ship
-    5874, -- Wetland Ship to Theramore
-    5875, -- Wetland Ship to Howling Fjord
-    5876, -- Howling Fjord Ship to Stormwind
-    5877, -- Borean Tundra Ship to Stormwind
-    5878, -- Stormwind Ship to Vallianz
-    5879, -- Stormwind Ship to Boralus
-    5880, -- Boralus Ship to Stormwind
-    5892, -- Jadeforest to Stormwind Portal
-    7335, -- Stormwind Ship to Dragon Isles
-    8530, -- Housing Portal Alliance to Stormwind
+    1714, -- Ehrenfeste    
+    2065, -- Telaar
+    2303, -- Valianzfeste
 
     -- City Horde
+    2304, -- Kriegshymnenfeste
+    1715, -- Thrallmar 
+    2064, -- Garadar    
     18, -- Undercity
     29, -- Thunder Bluff Icon
     33, -- Orgrimmar Icon
@@ -93,21 +117,8 @@ ns.BlizzAreaPoisInfo = {
     5887, -- Echo Isles Ship Icon
     2705, -- Mulgore Darkmoon Icon
     2884, -- Pvp Vendor Pandaria
-    5843, -- Drustvar to Zuldazar Travel
-    5844, -- Tiragardesund to Zuldazar Travel
-    5845, -- Stormsong Valley to Zuldazar Travel
     5850, -- Pvp Vendor Zuldazar
-    5883, -- Grom'gol Zeppelin Icon in Starnglethorn
-    5884, -- Zeppelin Grom'gol in OG
-    5885, -- Zeppelin Borean Tundra in OG
-    5886, -- Zeppelin Borean Tundra to OG
-    5888, -- Ship Dazar'Alor / Zuldazar
-    5890, -- Portal Og from Jade Forest
-    6138, -- Mechagon Zuldazar Travel
-    7341, -- Zeppelin Durotar
-    7339, -- Ship Icon The Waking Shores to OG
-    4587, -- Warspear PvP Vendors
-    8529, -- Housing Portal Horde to Orgrimmar
+
 }
 
 ns.BlizzAreaPoisInfoZidormi = {
@@ -118,4 +129,9 @@ ns.BlizzAreaPoisInfoZidormi = {
     6548, -- Uldum
     5989, -- Arathi Highlands
     5562, -- Blasted Lands
+}
+
+ns.HiddenBlizzVignetteIDs = {
+    [7519] = true, -- Rüstmeisterin von Silbermond (Immersangwald)
+    [7522] = true, -- Rüstmeisterin für Eroberungspunkte
 }

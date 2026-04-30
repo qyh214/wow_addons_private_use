@@ -813,6 +813,35 @@ ns.currentSourceFile = "RetailZoneMiniMapDungeonminimapLocation.lua"
 
         end
 
+
+        --#################################
+        --##### Continent Quel'Thalas ####
+        --#################################
+
+        if self.db.profile.showMiniMapQuelThalas then
+
+          -- Quel'Thalas Dungeons
+          if self.db.profile.showMiniMapDungeons then
+            minimap[2424][63461538] = { id = 1300, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Terrasse der Magister
+            minimap[2395][35457882] = { id = 1299, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Windläuferturm
+            minimap[2395][54002432] = { id = 1304, type = "Dungeon", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Mördergasse
+            minimap[2437][43833950] = { id = 1315, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Maisarakavernen
+            minimap[2405][64976178] = { id = 1316, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Nexuspunkt Xenas
+            minimap[2405][51661874] = { id = 1313, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Arena der Leerennarbe
+            minimap[2444][53653339] = { id = 1313, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Arena der Leerennarbe
+            minimap[2413][26467804] = { id = 1309, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Das blendende Tal
+            minimap[2437][29838450] = { id = 1311, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Nalorakks Bau            
+          end
+
+          -- Quela'Thalas Raids
+          if self.db.profile.showMiniMapRaids then
+            minimap[2405][45246483] = { id = 1307, type = "Raid", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Leerenspitze
+            minimap[2413][61386289] = { id = 1314, type = "Raid", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Der Traumriss
+            minimap[2424][52608529] = { id = 1308, type = "Raid", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Marsch auf Quel'Danas
+          end
+
+        end
+
       end
     end
   end

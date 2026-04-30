@@ -1,14 +1,13 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
-..\FrameXML\UI.xsd">
-    <Script file="ContextIcon.lua"/>
-    <Script file="Define.lua"/>
-    <Script file="Enum.lua"/>
-    <Script file="Cache.lua"/>
-    <Script file="DataProvider.lua"/>
-    <Script file="ArrivalTime.lua"/>
-    <Script file="Director.lua"/>
-
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="Waypoint_Preload.lua"/>
+    <Script file="Waypoint_Enum.lua"/>
+    <Script file="Waypoint_Define.lua"/>
+    <Script file="Waypoint_Cache.lua"/>
     <Script file="Waypoint_Templates.lua"/>
     <Script file="Waypoint_UI.lua"/>
-    <Script file="Waypoint_Logic.lua"/>
+    <Script file="Waypoint_ContextIcon.lua"/>
+    <Script file="Waypoint_ArrivalTime.lua"/>
+    <Script file="Waypoint_DataProvider.lua"/>
+    <Script file="Waypoint_Director.lua"/>
+    <Script file="Waypoint.lua"/>
 </Ui>

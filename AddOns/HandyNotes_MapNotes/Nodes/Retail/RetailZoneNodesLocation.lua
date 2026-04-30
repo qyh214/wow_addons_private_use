@@ -24,19 +24,19 @@ ns.currentSourceFile = "RetailZoneNodesLocation.lua"
       if self.db.profile.showZoneKalimdor then
 
         -- Kalimdor MapNotesIcons
-          if self.db.profile.showZoneHordeAllyIcons then
+        if self.db.profile.showZoneHordeAllyIcons then
 
-            if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
-              nodes[1][45780744] = { mnID = 85, name = "", type = "HIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Orgrimmar .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Portalroom"] .. "\n" .. " ==> " .. ns.Silvermoon .. "\n" .. " ==> " .. ns.Valdrakken .. "\n" .. " ==> " .. ns.Oribos .. "\n" .. " ==> " .. ns.Azsuna .. "\n" .. " ==> " .. ns.Zuldazar .. "\n" .. " ==> " .. ns.Shattrath .. "\n" .. " ==> " .. ns.Dalaran .. "\n" .. " ==> " .. ns.CavernsOfTime .. "\n" .. " ==> " .. ns.DarkPortal .. "\n" .. " ==> " .. ns.Dornogal .. "\n" .. "\n" .. L["Portal"] .. "\n" .. " ==> " .. ns.Hyjal .. "\n" .. " ==> " .. ns.TwilightHighlands .. "\n" .. " ==> " .. ARTIFACT_SHAMAN_TITLECARD_DEEPHOLM .. "\n" .. " ==> " .. ns.Vashjir .. "\n" .. " ==> " .. ns.Uldum .. "\n" .. " ==> " .. ns.TolBarad .. "\n" .. "\n" .. L["Zeppelins"] .. "\n" .. " ==> " .. ns.ThunderBluff .. "\n" .. " ==> " .. ns.Gromgol .. "\n" .. " ==> " .. POSTMASTER_LETTER_WARSONGHOLD .. "\n" .. "\n" .. CALENDAR_TYPE_DUNGEON .. "\n" .. " ==> " .. DUNGEON_FLOOR_RAGEFIRE1 } -- Portalroom from Dazar'alor
-              nodes[76][21288964] = { mnID = 85, name = "", type = "HIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Orgrimmar .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Portalroom"] .. "\n" .. " ==> " .. ns.Silvermoon .. "\n" .. " ==> " .. ns.Valdrakken .. "\n" .. " ==> " .. ns.Oribos .. "\n" .. " ==> " .. ns.Azsuna .. "\n" .. " ==> " .. ns.Zuldazar .. "\n" .. " ==> " .. ns.Shattrath .. "\n" .. " ==> " .. ns.Dalaran .. "\n" .. " ==> " .. ns.CavernsOfTime .. "\n" .. " ==> " .. ns.DarkPortal .. "\n" .. " ==> " .. ns.Dornogal .. "\n" .. "\n" .. L["Portal"] .. "\n" .. " ==> " .. ns.Hyjal .. "\n" .. " ==> " .. ns.TwilightHighlands .. "\n" .. " ==> " .. ARTIFACT_SHAMAN_TITLECARD_DEEPHOLM .. "\n" .. " ==> " .. ns.Vashjir .. "\n" .. " ==> " .. ns.Uldum .. "\n" .. " ==> " .. ns.TolBarad .. "\n" .. "\n" .. L["Zeppelins"] .. "\n" .. " ==> " .. ns.ThunderBluff .. "\n" .. " ==> " .. ns.Gromgol .. "\n" .. " ==> " .. POSTMASTER_LETTER_WARSONGHOLD .. "\n" .. "\n" .. CALENDAR_TYPE_DUNGEON .. "\n" .. " ==> " .. DUNGEON_FLOOR_RAGEFIRE1 } -- Portalroom from Dazar'alor
-              nodes[10][80450975] = { mnID = 85, name = "", type = "HIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Orgrimmar .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Portalroom"] .. "\n" .. " ==> " .. ns.Silvermoon .. "\n" .. " ==> " .. ns.Valdrakken .. "\n" .. " ==> " .. ns.Oribos .. "\n" .. " ==> " .. ns.Azsuna .. "\n" .. " ==> " .. ns.Zuldazar .. "\n" .. " ==> " .. ns.Shattrath .. "\n" .. " ==> " .. ns.Dalaran .. "\n" .. " ==> " .. ns.CavernsOfTime .. "\n" .. " ==> " .. ns.DarkPortal .. "\n" .. " ==> " .. ns.Dornogal .. "\n" .. "\n" .. L["Portal"] .. "\n" .. " ==> " .. ns.Hyjal .. "\n" .. " ==> " .. ns.TwilightHighlands .. "\n" .. " ==> " .. ARTIFACT_SHAMAN_TITLECARD_DEEPHOLM .. "\n" .. " ==> " .. ns.Vashjir .. "\n" .. " ==> " .. ns.Uldum .. "\n" .. " ==> " .. ns.TolBarad .. "\n" .. "\n" .. L["Zeppelins"] .. "\n" .. " ==> " .. ns.ThunderBluff .. "\n" .. " ==> " .. ns.Gromgol .. "\n" .. " ==> " .. POSTMASTER_LETTER_WARSONGHOLD .. "\n" .. "\n" .. CALENDAR_TYPE_DUNGEON .. "\n" .. " ==> " .. DUNGEON_FLOOR_RAGEFIRE1 } -- Portalroom from Dazar'alor
-            end
+          if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
+            nodes[1][45780744] = { mnID = 85, name = "", type = "HIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Orgrimmar .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Portalroom"] .. "\n" .. " ==> " .. ns.Silvermoon .. " (" .. EXPANSION_NAME1 ..")" .."\n" .. " ==> " .. ns.Valdrakken .. "\n" .. " ==> " .. ns.Oribos .. "\n" .. " ==> " .. ns.Azsuna .. "\n" .. " ==> " .. ns.Zuldazar .. "\n" .. " ==> " .. ns.Shattrath .. "\n" .. " ==> " .. ns.Dalaran .. "\n" .. " ==> " .. ns.CavernsOfTime .. "\n" .. " ==> " .. ns.DarkPortal .. "\n" .. " ==> " .. ns.Dornogal .. "\n" .. " ==> " .. ns.Silvermoon .. " (" .. EXPANSION_NAME11 ..")" .. "\n" .. " ==> " .. ns.RazorwindShores .. "\n" .. "\n" .. L["Portal"] .. "\n" .. " ==> " .. ns.Hyjal .. "\n" .. " ==> " .. ns.TwilightHighlands .. "\n" .. " ==> " .. ARTIFACT_SHAMAN_TITLECARD_DEEPHOLM .. "\n" .. " ==> " .. ns.Vashjir .. "\n" .. " ==> " .. ns.Uldum .. "\n" .. " ==> " .. ns.TolBarad .. "\n" .. "\n" .. L["Zeppelins"] .. "\n" .. " ==> " .. ns.ThunderBluff .. "\n" .. " ==> " .. ns.Gromgol .. "\n" .. " ==> " .. POSTMASTER_LETTER_WARSONGHOLD .. "\n" .. "\n" .. CALENDAR_TYPE_DUNGEON .. "\n" .. " ==> " .. DUNGEON_FLOOR_RAGEFIRE1 } -- Portalroom from Dazar'alor
+            nodes[76][21288964] = { mnID = 85, name = "", type = "HIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Orgrimmar .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Portalroom"] .. "\n" .. " ==> " .. ns.Silvermoon .. " (" .. EXPANSION_NAME1 ..")" .. "\n" .. " ==> " .. ns.Valdrakken .. "\n" .. " ==> " .. ns.Oribos .. "\n" .. " ==> " .. ns.Azsuna .. "\n" .. " ==> " .. ns.Zuldazar .. "\n" .. " ==> " .. ns.Shattrath .. "\n" .. " ==> " .. ns.Dalaran .. "\n" .. " ==> " .. ns.CavernsOfTime .. "\n" .. " ==> " .. ns.DarkPortal .. "\n" .. " ==> " .. ns.Dornogal .. "\n" .. " ==> " .. ns.Silvermoon .. " (" .. EXPANSION_NAME11 ..")" .. "\n" .. " ==> " .. ns.RazorwindShores .. "\n" .. L["Portal"] .. "\n" .. " ==> " .. ns.Hyjal .. "\n" .. " ==> " .. ns.TwilightHighlands .. "\n" .. " ==> " .. ARTIFACT_SHAMAN_TITLECARD_DEEPHOLM .. "\n" .. " ==> " .. ns.Vashjir .. "\n" .. " ==> " .. ns.Uldum .. "\n" .. " ==> " .. ns.TolBarad .. "\n" .. "\n" .. L["Zeppelins"] .. "\n" .. " ==> " .. ns.ThunderBluff .. "\n" .. " ==> " .. ns.Gromgol .. "\n" .. " ==> " .. POSTMASTER_LETTER_WARSONGHOLD .. "\n" .. "\n" .. CALENDAR_TYPE_DUNGEON .. "\n" .. " ==> " .. DUNGEON_FLOOR_RAGEFIRE1 } -- Portalroom from Dazar'alor
+            nodes[10][80450975] = { mnID = 85, name = "", type = "HIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Orgrimmar .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Portalroom"] .. "\n" .. " ==> " .. ns.Silvermoon .. " (" .. EXPANSION_NAME1 ..")" .. "\n" .. " ==> " .. ns.Valdrakken .. "\n" .. " ==> " .. ns.Oribos .. "\n" .. " ==> " .. ns.Azsuna .. "\n" .. " ==> " .. ns.Zuldazar .. "\n" .. " ==> " .. ns.Shattrath .. "\n" .. " ==> " .. ns.Dalaran .. "\n" .. " ==> " .. ns.CavernsOfTime .. "\n" .. " ==> " .. ns.DarkPortal .. "\n" .. " ==> " .. ns.Dornogal .. "\n" .. " ==> " .. ns.Silvermoon .. " (" .. EXPANSION_NAME11 ..")" .. "\n" .. " ==> " .. ns.RazorwindShores .. "\n" .. L["Portal"] .. "\n" .. " ==> " .. ns.Hyjal .. "\n" .. " ==> " .. ns.TwilightHighlands .. "\n" .. " ==> " .. ARTIFACT_SHAMAN_TITLECARD_DEEPHOLM .. "\n" .. " ==> " .. ns.Vashjir .. "\n" .. " ==> " .. ns.Uldum .. "\n" .. " ==> " .. ns.TolBarad .. "\n" .. "\n" .. L["Zeppelins"] .. "\n" .. " ==> " .. ns.ThunderBluff .. "\n" .. " ==> " .. ns.Gromgol .. "\n" .. " ==> " .. POSTMASTER_LETTER_WARSONGHOLD .. "\n" .. "\n" .. CALENDAR_TYPE_DUNGEON .. "\n" .. " ==> " .. DUNGEON_FLOOR_RAGEFIRE1 } -- Portalroom from Dazar'alor
+          end
 
-            if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
-              nodes[97][27243965] = { mnID = 103, name = "", type = "AIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Exodar .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Portal"] .. "\n" .. " ==> " .. ns.Stormwind } -- Portal Exodar to Teldrassil
-            end
+          if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
+            nodes[97][27243965] = { mnID = 103, name = "", type = "AIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Exodar .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Portal"] .. "\n" .. " ==> " .. ns.Stormwind } -- Portal Exodar to Teldrassil
+          end
 
-          end          
+        end
 
         if db.activate.ZoneTransporting then
 
@@ -79,19 +79,20 @@ ns.currentSourceFile = "RetailZoneNodesLocation.lua"
     
         --Kalimdor Zeppelins
           if self.db.profile.showZoneZeppelins then
-            nodes[1][55941320] = { mnID = 2022, name = "", type = "HZeppelin", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Zeppelin from Orgrimmar to Waking Shores
+            nodes[1][55981320] = { mnID = 2022, name = "", type = "HZeppelin", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Zeppelin from Orgrimmar to Waking Shores
+            nodes[10][89191220] = { mnID = 2022, name = "", type = "HZeppelin", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Zeppelin from Orgrimmar to Waking Shores
             nodes[7][33422231] = { mnID = 85, name = "", type = "HZeppelin", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Zeppelin from Thunder Bluff to Orgrimmar
           end
     
         -- Kalimdor Ships
           if self.db.profile.showZoneShips then
 
-            nodes[1][35217941] = { mnID = 210, name = "", type = "Ship", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = POSTMASTER_LETTER_STRANGLETHORNVALE .. " (" .. L["Ship"] ..")" } -- Ship from Ratchet to Booty Bay Ship
-            nodes[10][70237341] = { mnID = 210, name = "", type = "Ship", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = POSTMASTER_LETTER_STRANGLETHORNVALE .. " (" .. L["Ship"] ..")" } -- Ship from Ratchet to Booty Bay Ship
+            nodes[1][35297954] = { mnID = 210, name = "", type = "Ship", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = POSTMASTER_LETTER_STRANGLETHORNVALE .. " (" .. L["Ship"] ..")" } -- Ship from Ratchet to Booty Bay Ship
+            nodes[10][70157324] = { mnID = 210, name = "", type = "Ship", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = POSTMASTER_LETTER_STRANGLETHORNVALE .. " (" .. L["Ship"] ..")" } -- Ship from Ratchet to Booty Bay Ship
 
             if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
               nodes[463][71903797] = { mnID = 862, name = "", type = "HShip", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Ship from Echo Isles to Zuldazar  
-              nodes[1][72257893] = { mnID = 862, name = "", type = "HShip", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Ship from Echo Isles to Zuldazar            
+              nodes[1][72057924] = { mnID = 862, name = "", type = "HShip", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Ship from Echo Isles to Zuldazar            
             end
     
             if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
@@ -122,7 +123,7 @@ ns.currentSourceFile = "RetailZoneNodesLocation.lua"
             if self.faction == "Alliance" or db.activate.ZoneEnemyFaction then
                 nodes[57][26305072] = { mnID = 89, name = "", type = "AIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Darnassus .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Portals"] .. "\n" .. " ==> " .. ns.Ruttheran .. "\n" .. " ==> " .. ns.Exodar  .. "\n" .. " ==> " .. ns.HellfirePeninsula } -- Portal To Teldrassil from Darnassus
                 nodes[27][59732929] = { mnID = 87, name = "", type = "AIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Ironforge .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. ns.Stormwind .. " " .. ns.Deepruntram  } -- Carriage To Stormwind
-                nodes[37][32894742] = { mnID = 84, name = "", type = "AIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Stormwind .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Portalroom"] .. "\n" .. " ==> " .. ns.Ashran .. "\n" .. " ==> " .. ns.Valdrakken .. "\n" .. " ==> " .. ns.Boralus .. "\n" .. " ==> " .. ns.Oribos .. "\n" .. " ==> " .. ns.Azsuna .. "\n" .. " ==> " .. ns.Shattrath .. "\n" .. " ==> " .. ns.JadeForest .. "\n" .. " ==> " .. ns.Dalaran .. "\n" .. " ==> " .. ns.CavernsOfTime .. "\n" .. " ==> " .. ns.Exodar .. "\n" ..  " ==> " .. ns.Amirdrassil .. "\n" .. " ==> " .. ns.DarkPortal .. "\n" .. " ==> " .. ns.Dornogal .. "\n" .. "\n" .. L["Portals"] .. "\n" ..  "\n" .. " ==> " .. ns.Uldum .. "\n" .. " ==> " .. ns.Vashjir .. "\n" .. " ==> " .. ns.Hyjal .. "\n" .. " ==> " .. ARTIFACT_SHAMAN_TITLECARD_DEEPHOLM .. "\n" .. " ==> " .. ns.TwilightHighlands .. "\n" .. " ==> " .. ns.TolBarad .. "\n" .. "\n" .. L["Ships"] .. "\n" .. " ==> " .. POSTMASTER_LETTER_VALIANCEKEEP .. "\n" .. " ==> " .. ns.Boralus .. "\n" .. " ==> " .. ns.TheWakingShores .. "\n" .. "\n" .. ns.Deepruntram .. "\n" .. " ==> " .. ns.Ironforge .. "\n" .. "\n" .. " ==> " .. CALENDAR_TYPE_DUNGEON .. "\n" .. " ==> " .. DUNGEON_FLOOR_THESTOCKADE1 }
+                nodes[37][32894742] = { mnID = 84, name = "", type = "AIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Stormwind .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Portalroom"] .. "\n" .. " ==> " .. ns.Ashran .. "\n" .. " ==> " .. ns.Valdrakken .. "\n" .. " ==> " .. ns.Boralus .. "\n" .. " ==> " .. ns.Oribos .. "\n" .. " ==> " .. ns.Azsuna .. "\n" .. " ==> " .. ns.Shattrath .. "\n" .. " ==> " .. ns.JadeForest .. "\n" .. " ==> " .. ns.Dalaran .. "\n" .. " ==> " .. ns.CavernsOfTime .. "\n" .. " ==> " .. ns.Exodar .. "\n" ..  " ==> " .. ns.Amirdrassil .. "\n" .. " ==> " .. ns.DarkPortal .. "\n" .. " ==> " .. ns.Dornogal .. "\n" .." ==> " .. ns.Silvermoon .. " (" .. EXPANSION_NAME11 ..")" .. "\n" .. " ==> " .. ns.FoundersPoint .. "\n" .. "\n" .. L["Portals"] .. "\n" ..  "\n" .. " ==> " .. ns.Uldum .. "\n" .. " ==> " .. ns.Vashjir .. "\n" .. " ==> " .. ns.Hyjal .. "\n" .. " ==> " .. ARTIFACT_SHAMAN_TITLECARD_DEEPHOLM .. "\n" .. " ==> " .. ns.TwilightHighlands .. "\n" .. " ==> " .. ns.TolBarad .. "\n" .. "\n" .. L["Ships"] .. "\n" .. " ==> " .. POSTMASTER_LETTER_VALIANCEKEEP .. "\n" .. " ==> " .. ns.Boralus .. "\n" .. " ==> " .. ns.TheWakingShores .. "\n" .. "\n" .. ns.Deepruntram .. "\n" .. " ==> " .. ns.Ironforge .. "\n" .. "\n" .. " ==> " .. CALENDAR_TYPE_DUNGEON .. "\n" .. " ==> " .. DUNGEON_FLOOR_THESTOCKADE1 }
             end
           end
 
@@ -223,7 +224,7 @@ ns.currentSourceFile = "RetailZoneNodesLocation.lua"
 
         -- Outland MapNotesIcons 
           if self.db.profile.showZoneHordeAllyIcons then
-            nodes[108][28652247] = { mnID = 111, name = "", type = "MNL", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Shattrath .. "\n" .. "\n" .. L["Portals"] .. "\n" .. " ==> " .. ns.Orgrimmar .. "\n" .. " ==> " .. ns.Stormwind .. "\n" .. " ==> " .. ns.IsleOfQuelDanas } -- Portal from Shattrath to Orgrimmar
+            nodes[108][28652247] = { mnID = 111, name = "", type = "HAIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Shattrath .. "\n" .. "\n" .. L["Portals"] .. "\n" .. " ==> " .. ns.Orgrimmar .. "\n" .. " ==> " .. ns.Stormwind .. "\n" .. " ==> " .. ns.IsleOfQuelDanas } -- Portal from Shattrath to Orgrimmar
           end
 
         if db.activate.ZoneTransporting then
@@ -587,6 +588,7 @@ ns.currentSourceFile = "RetailZoneNodesLocation.lua"
             nodes[715][31612524] = { mnID = 116, name = "", type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Druid Emerald Dreamway - Grizzly Hills
             nodes[715][22593943] = { mnID = 69, name = "", type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Druid Emerald Dreamway - Feralas
             nodes[715][26168213] = { mnID = 80, name = "", type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Druid Emerald Dreamway - Moonglade
+            nodes[715][19235918] = { mnID = 2239, name = "", type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Druid Emerald Dreamway - Amirdrassil
 
             if self.faction == "Horde" or db.activate.ZoneEnemyFaction then
               nodes[652][46176383] = { mnID = 85, name = "" , type = "HPortal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Thundertotem to Orgrimmar
@@ -820,7 +822,7 @@ ns.currentSourceFile = "RetailZoneNodesLocation.lua"
             nodes[2256][57344184] = { mnID = 2339, name = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=19559", achievementID = 19559, type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Portal from Azj-Kahet to Dornogal if u finished the achievement=19559
             nodes[2367][49953591] = { mnID = 2339, name = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=40725", achievementID = 40725, type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Chamber of Memory
             nodes[2248][53024511] = { mnID = 2339, name = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=19559", achievementID = 19559, type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Portal from Dornogal to Azj-Kahet if u finished the achievement=19559
-            nodes[2248][50554183] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. C_Map.GetMapInfo(2472).name .. "\n" .. " ==> " .. C_Map.GetMapInfo(1525).name } --  Portal from Dornogal to the Timeways
+            nodes[2248][50554183] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. ZONE .. ": " .. ns.SpiresOfArak .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.Skyreach .. "\n\n" .. ZONE .. ": " .. ns.Icecrown .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.PitOfSaron .. "\n\n" .. ZONE .. ": " .. ns.Eredath .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.SeatOfTheTriumvirate .. "\n\n" .. ZONE .. ": " .. ns.Thaldraszus .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.AlgetharAcademy } --  Portal from Dornogal to the Timeways
             nodes[2248][44634679] = { mnID = 2367, name = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=40725", achievementID = 40725, type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Chamber of Memory
             nodes[2346][27805398] = { mnID = 2339, name = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com//quest=86535/test-run", questID = 86535, type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Portal from Undermine to Dornogal
             nodes[2472][62549423] = { mnID = 2339, name = "", type = "Portal", questID = 84957, showWWW = true, wwwName = BATTLE_PET_SOURCE_2 .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/quest=84957/return-to-the-veiled-market", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Portal from Tazavesh to Dornogal
@@ -962,6 +964,96 @@ ns.currentSourceFile = "RetailZoneNodesLocation.lua"
         end
 
       end
+
+
+        --##################################
+        --##### Continent Quel'Thalas ######
+        --##################################
+    
+      if self.db.profile.showZoneQuelThalas then
+
+        -- Quel'Thalas MapNotesIcons
+        if self.db.profile.showZoneHordeAllyIcons then
+          nodes[2395][51782460] = { mnID = 2393, name = "", type = "HAIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = ns.Silvermoon .. " (" .. EXPANSION_NAME11 .. ")\n\n" .. L["Portals"] .. "\n" ..  " ==> " .. ns.Orgrimmar .. "\n" .. " ==> " .. ns.Harandar .. "\n" .. " ==> " .. ns.VoidTempest .. "\n" .. " ==> " .. ns.Stormwind .. "\n\n" .. CALENDAR_TYPE_DUNGEON .. "\n ==> " .. ns.MurderRow .. "\n\n" .. DELVES_LABEL .. "\n ==> " .. ns.TheDarkway .. "\n ==> " .. ns.CollegiateCalamity }
+        end
+
+        if db.activate.ZoneTransporting then
+
+          -- Quel'Thalas Portals
+          if self.db.profile.showZonePortals then
+            nodes[2395][49442489] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. ZONE .. ": " .. ns.SpiresOfArak .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.Skyreach .. "\n\n" .. ZONE .. ": " .. ns.Icecrown .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.PitOfSaron .. "\n\n" .. ZONE .. ": " .. ns.Eredath .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.SeatOfTheTriumvirate .. "\n\n" .. ZONE .. ": " .. ns.Thaldraszus .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.AlgetharAcademy } --  Portal from Dornogal to the Timeways
+            nodes[2576][64687098] = { mnID = 2393, name = "", type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            nodes[2576][61787348] = { mnID = 2405, name = "", type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            --nodes[2424][51925636] = { mnID = 2405, name = "", type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            --nodes[2405][45436377] = { mnID = 2424, name = "", type = "PortalS", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            nodes[2405][51637026] = { mnID = 2393, mnID2 = 2413, name = "", TransportName = L["Portals"] .. "\n " .. ns.SilvermoonMN .. "\n " .. ns.Harandar, type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false }
+          end
+
+          -- Quel'Thalas Portals
+          if self.db.profile.showZonePortals and not self.db.profile.showZoneMapNotesIcons then
+            nodes[2413][53545571] = { mnID = 2576, name = "", TransportName = L["inside the cave"] .. ":\n" .. TextIconPortalOld:GetIconString() .. " " .. L["Portal"] .. " " .. ns.VoidTempest .. "\n" .. TextIconPortalOld:GetIconString() .. " " .. L["Portal"] .. " " .. ns.SilvermoonMN, type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false }
+          end
+
+          -- Quel'Thalas Transport
+          if self.db.profile.showZoneTransport then
+            nodes[2395][45164594] = { name = L["to the platform"], type = "Tport2", showInZone = true, showOnContinent = false, showOnMinimap = false } -- 
+            nodes[2395][40855939] = { name = L["to the platform"], type = "Tport2", showInZone = true, showOnContinent = false, showOnMinimap = false } -- 
+          end
+
+        end
+
+        --Professions
+        if self.db.profile.activate.ZoneProfessions then
+
+          if self.db.profile.showZoneAlchemy and not self.db.profile.showZoneMapNotesIcons then
+            nodes[2413][53464987] = { npcID = 254865, name = "", type = "Alchemy", showInZone = true, showOnContinent = false, showOnMinimap = false }
+          end
+      
+          if self.db.profile.showZoneSkinning then
+            nodes[2437][45226983] = { npcID = 255095, name = "", type = "Skinning", showInZone = true, showOnContinent = false, showOnMinimap = false }
+          end
+
+          if self.db.profile.showZoneBlacksmith then
+            nodes[2405][51536935] = { npcID = 218167, name = "", type = "Blacksmith", showInZone = true, showOnContinent = false, showOnMinimap = false }
+          end
+
+          if self.db.profile.showZoneFishing then
+            nodes[2395][48677610] = { npcID = 247800, name = "", type = "Fishing", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            nodes[2437][38342140] = { npcID = 253039, name = "", type = "Fishing", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            nodes[2437][48682582] = { npcID = 255185, name = "", type = "Fishing", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            nodes[2437][46327042] = { npcID = 255092, name = "", type = "Fishing", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            nodes[2405][50886852] = { npcID = 254707, name = "", type = "Fishing", showInZone = true, showOnContinent = false, showOnMinimap = false }
+          end
+
+          if self.db.profile.showZoneCooking then
+            nodes[2395][47656777] = { npcID = 245741, name = "", type = "Cooking", showInZone = true, showOnContinent = false, showOnMinimap = false }
+            nodes[2437][38142109] = { npcID = 253037, name = "", type = "Cooking", showInZone = true, showOnContinent = false, showOnMinimap = false }
+          end
+
+          if self.db.profile.showZoneEnchanting then
+            nodes[2395][44184628] = { npcID = 242993, name = "", type = "Enchanting", showInZone = true, showOnContinent = false, showOnMinimap = false, dnID = L["(on the platform)"] }
+          end
+
+          if self.db.profile.showZoneHerbalism then            
+            nodes[2405][51646803] = { npcID = 254703, name = "", type = "Herbalism", showInZone = true, showOnContinent = false, showOnMinimap = false }
+          end
+
+          if self.db.profile.showZoneHerbalism and not self.db.profile.showZoneMapNotesIcons then          
+            nodes[2413][52925023] = { npcID = 254855, name = "", type = "Herbalism", showInZone = true, showOnContinent = false, showOnMinimap = false }
+          end
+
+          if self.db.profile.showZoneInscription then
+            nodes[2576][63657391] = { npcID = 254833, name = "", type = "Inscription", showInZone = true, showOnContinent = false, showOnMinimap = false }
+          end
+
+          if self.db.profile.showZoneInscription and not self.db.profile.showZoneMapNotesIcons then
+            nodes[2413][52675626] = { npcID = 254833, name = "", type = "Inscription", dnID = "(" .. L["inside the cave"] .. ")", showInZone = true, showOnContinent = false, showOnMinimap = false }
+          end
+
+        end
+
+      end
+
 
     end
   end

@@ -3,6 +3,7 @@ if not addon.healthCheck then
 	return
 end
 local L = addon.L
+local isRetail = addon.isRetail
 
 -- The sack
 local window = nil
@@ -94,10 +95,10 @@ local function updateSackDisplay(forceRefresh)
 		else
 			source = localFormat:format("error")
 		end
-		if eo.session == BugGrabber:GetSessionId() then
-			sessionLabel:SetText(sessionFormat:format(L["Today"], source, eo.session))
+		if eo.session == BugGrabber:GetSessionId() and type(eo.time) == "number" and date("%d") == date("%d", eo.time) then
+			sessionLabel:SetText(sessionFormat:format(type(eo.time) == "number" and date("%H:%M:%S %p", eo.time) or tostring(eo.time), source, eo.session))
 		else
-			sessionLabel:SetText(sessionFormat:format(eo.time, source, eo.session))
+			sessionLabel:SetText(sessionFormat:format(type(eo.time) == "number" and date("%Y/%m/%d %H:%M:%S", eo.time) or tostring(eo.time), source, eo.session))
 		end
 		countLabel:SetText(countFormat:format(currentErrorIndex, size))
 		textArea:SetText(addon:FormatError(eo))
@@ -195,7 +196,9 @@ local function createBugSack()
 	window = CreateFrame("Frame", "BugSackFrame", UIParent)
 	window:Hide()
 
+	local defaultLevel = 1000
 	window:SetFrameStrata("DIALOG")
+	window:SetFrameLevel(defaultLevel)
 	window:SetWidth(800)
 	window:SetHeight(310)
 	window:SetPoint("CENTER")
@@ -283,7 +286,8 @@ local function createBugSack()
 	right:SetTexCoord(0.1171875, 0.2421875, 0, 1)
 
 	local close = CreateFrame("Button", nil, window, "UIPanelCloseButton")
-	close:SetPoint("TOPRIGHT", C_EditMode and -3 or 2, C_EditMode and -3 or 1)
+	close:SetFrameLevel(defaultLevel+1)
+	close:SetPoint("TOPRIGHT", isRetail and -3 or 2, isRetail and -3 or 1)
 	close:SetScript("OnClick", addon.CloseSack)
 
 	countLabel = window:CreateFontString(nil, "ARTWORK", "GameFontNormal")
@@ -368,7 +372,6 @@ local function createBugSack()
 
 	nextButton = CreateFrame("Button", "BugSackNextButton", window, "UIPanelButtonTemplate")
 	nextButton:SetPoint("BOTTOMRIGHT", window, -11, 16)
-	nextButton:SetFrameStrata("FULLSCREEN")
 	nextButton:SetHeight(40)
 	nextButton:SetWidth(200)
 	nextButton:SetText(L["Next >"])
@@ -383,7 +386,6 @@ local function createBugSack()
 
 	prevButton = CreateFrame("Button", "BugSackPrevButton", window, "UIPanelButtonTemplate")
 	prevButton:SetPoint("BOTTOMLEFT", window, 14, 16)
-	prevButton:SetFrameStrata("FULLSCREEN")
 	prevButton:SetHeight(40)
 	prevButton:SetWidth(200)
 	prevButton:SetText(L["< Previous"])
@@ -400,7 +402,6 @@ local function createBugSack()
 		sendButton = CreateFrame("Button", "BugSackSendButton", window, "UIPanelButtonTemplate")
 		sendButton:SetPoint("LEFT", prevButton, "RIGHT")
 		sendButton:SetPoint("RIGHT", nextButton, "LEFT")
-		sendButton:SetFrameStrata("FULLSCREEN")
 		sendButton:SetHeight(40)
 		sendButton:SetText(L["Send bugs"])
 		sendButton:SetScript("OnClick", function()
@@ -431,10 +432,9 @@ local function createBugSack()
 		"Button",
 		"BugSackTabAll",
 		window,
-		C_EditMode and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate"
+		isRetail and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate"
 	)
-	all:SetFrameStrata("FULLSCREEN")
-	all:SetPoint("TOPLEFT", window, "BOTTOMLEFT", C_EditMode and 10 or 0, C_EditMode and 6 or 8)
+	all:SetPoint("TOPLEFT", window, "BOTTOMLEFT", isRetail and 10 or 0, isRetail and 6 or 8)
 	all:SetText(L["All bugs"])
 	all:SetScript("OnLoad", nil)
 	all:SetScript("OnShow", nil)
@@ -445,9 +445,8 @@ local function createBugSack()
 		"Button",
 		"BugSackTabSession",
 		window,
-		C_EditMode and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate"
+		isRetail and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate"
 	)
-	session:SetFrameStrata("FULLSCREEN")
 	session:SetPoint("LEFT", all, "RIGHT")
 	session:SetText(L["Current session"])
 	session:SetScript("OnLoad", nil)
@@ -459,9 +458,8 @@ local function createBugSack()
 		"Button",
 		"BugSackTabLast",
 		window,
-		C_EditMode and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate"
+		isRetail and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate"
 	)
-	last:SetFrameStrata("FULLSCREEN")
 	last:SetPoint("LEFT", session, "RIGHT")
 	last:SetText(L["Previous session"])
 	last:SetScript("OnLoad", nil)
@@ -470,7 +468,7 @@ local function createBugSack()
 	last.bugs = "previousSession"
 
 	tabs = { all, session, last }
-	local size = (C_EditMode and 480 or 500) / 3
+	local size = (isRetail and 480 or 500) / 3
 	for i, t in next, tabs do
 		PanelTemplates_TabResize(t, nil, size, size)
 		if i == 1 then
@@ -494,7 +492,9 @@ local function show()
 end
 
 function addon:CloseSack()
-	window:Hide()
+	if window and window:IsShown() then
+		window:Hide()
+	end
 end
 
 function addon:OpenSack()

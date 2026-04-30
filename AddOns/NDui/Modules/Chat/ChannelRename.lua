@@ -6,7 +6,10 @@ local gsub, strfind, strmatch = string.gsub, string.find, string.match
 local BetterDate, time, date, GetCVarBool = BetterDate, time, date, GetCVarBool
 local INTERFACE_ACTION_BLOCKED = INTERFACE_ACTION_BLOCKED
 local C_DateAndTime_GetCurrentCalendarTime = C_DateAndTime.GetCurrentCalendarTime
+local colon = HEADER_COLON
+local isCN = strlen(colon) > 1
 
+-- Timestamp
 local timestampFormat = {
 	[2] = "[%I:%M %p] ",
 	[3] = "[%I:%M:%S %p] ",
@@ -27,19 +30,146 @@ local function GetCurrentTime()
 	return locTime, realmTime
 end
 
-function module:UpdateChannelNames(text, ...)
-	if strfind(text, INTERFACE_ACTION_BLOCKED) and not DB.isDeveloper then return end
-
-	local r, g, b = ...
-	if C.db["Chat"]["WhisperColor"] and strfind(text, L["Tell"].." |H[BN]*player.+%]") then
-		r, g, b = r*.7, g*.7, b*.7
-	end
-
-	-- Dev logo
-	local unitName = strmatch(text, "|Hplayer:([^|:]+)")
+-- Author Logo
+local function AddAuthorLogo(link, unitName)
 	if unitName and DB.Devs[unitName] then
-		text = gsub(text, "(|Hplayer.+)", "|T"..DB.chatLogo..":12:24|t%1")
+		return "|T"..DB.chatLogo..":12:24|t"..link
 	end
+end
+
+-- Channel name abbr
+local LEADERSHIP = {
+	PartyLeader = strmatch(CHAT_PARTY_LEADER_GET, "|h%[(.-)%]|h"),
+	PartyGuide = strmatch(CHAT_PARTY_GUIDE_GET, "|h%[(.-)%]|h"),
+	RaidLeader = strmatch(CHAT_RAID_LEADER_GET, "|h%[(.-)%]|h"),
+	InstLeader = strmatch(CHAT_INSTANCE_CHAT_LEADER_GET, "|h%[(.-)%]|h"),
+}
+
+local CHANNEL_ABBR = {
+	PARTY = {
+		abbr = "P",
+		leaders = {
+			[LEADERSHIP.PartyLeader] = "PL",
+			[LEADERSHIP.PartyGuide] = "PG",
+		},
+	},
+	RAID = {
+		abbr = "R",
+		leaders = {
+			[LEADERSHIP.RaidLeader] = "RL",
+		},
+	},
+	INSTANCE_CHAT = {
+		abbr = "I",
+		leaders = {
+			[LEADERSHIP.InstLeader] = "IL",
+		},
+	},
+	GUILD = { abbr = "G" },
+	OFFICER = { abbr = "O" },
+}
+
+local CHANNEL_ABBR_LOCALES = {
+	PARTY = {
+		abbr = L["PartyAbbr"],
+		leaders = {
+			[LEADERSHIP.PartyLeader] = L["PartyLeaderAbbr"],
+			[LEADERSHIP.PartyGuide]  = L["PartyGuideAbbr"],
+		},
+	},
+	RAID = {
+		abbr = L["RaidAbbr"],
+		leaders = {
+			[LEADERSHIP.RaidLeader] = L["RaidLeaderAbbr"],
+		},
+	},
+	INSTANCE_CHAT = {
+		abbr = L["InstAbbr"],
+		leaders = {
+			[LEADERSHIP.InstLeader] = L["InstLeaderAbbr"],
+		},
+	},
+	GUILD = { abbr = L["GuildAbbr"] },
+	OFFICER = { abbr = L["OfficerAbbr"] },
+}
+
+local PARTY_LEADER = strmatch(CHAT_PARTY_LEADER_GET, "|h%[(.-)%]|h")
+local PARTY_GUIDE = strmatch(CHAT_PARTY_GUIDE_GET, "|h%[(.-)%]|h")
+local RAID_LEADER = strmatch(CHAT_RAID_LEADER_GET, "|h%[(.-)%]|h")
+local INSTANCE_LEADER = strmatch(CHAT_INSTANCE_CHAT_LEADER_GET, "|h%[(.-)%]|h")
+
+local matchPattern = "(|H(%w+):?([^:]+):?(%d*)|h)%[(.-)%]|h"
+
+local function AbbrChannelName(prefix, linkType, channel, channelID, channelName)
+	if C.db["Chat"]["ChannelAbbr"] == 1 then return end
+
+	if linkType ~= "channel" then return end
+
+	if channel == "channel" then
+		return prefix.."["..channelID.."]|h"
+	end
+
+	local channels = C.db["Chat"]["ChannelAbbr"] == 2 and CHANNEL_ABBR or CHANNEL_ABBR_LOCALES
+	local data = channels[channel]
+	if not data then
+		return prefix.."["..channelName.."]|h"
+	end
+
+	local abbr = data.abbr
+	local isLeader = data.leaders and data.leaders[channelName]
+	if isLeader then
+		abbr = isLeader
+	end
+
+	return prefix.."["..abbr.."]|h"
+end
+
+-- Kill colon before message
+local channels = {
+	SAY = not isCN,
+	YELL = not isCN,
+	WHISPER = not isCN,
+	GUILD = not isCN,
+	OFFICER = not isCN,
+	CHANNEL = not isCN,
+	PARTY = true,
+	RAID = true,
+	INSTANCE_CHAT = not isCN,
+}
+
+local cnColonChannels = {
+	SAY = true,
+	YELL = true,
+	WHISPER = true,
+	GUILD = true,
+	OFFICER = true,
+	CHANNEL = true,
+	PARTY = true,
+	RAID = true,
+	INSTANCE_CHAT = true,
+}
+
+local cnPattern = "(|Hplayer[^]]*:([^:]+):[^]]*%].-)"..colon.."%s"
+local enPattern = "(|Hplayer[^]]*:([^:]+):[^]]*%].-):%s"
+
+local function KillColon(link, tag)
+	if channels[tag] then
+		return link.." "
+	end
+end
+
+local function KillCNColon(link, tag)
+	if cnColonChannels[tag] then
+		return link.." "
+	end
+end
+
+function module:UpdateChannelNames(text, r, g, b, ...)
+	if not text or B:IsSecretValue(text) then
+		return self:oldAddMsg(text, r, g, b, ...)
+	end
+
+	if strfind(text, INTERFACE_ACTION_BLOCKED) and not DB.isDeveloper then return end
 
 	-- Timestamp
 	if NDuiADB["TimestampFormat"] > 1 then
@@ -54,13 +184,15 @@ function module:UpdateChannelNames(text, ...)
 		text = timeStamp..text
 	end
 
-	if C.db["Chat"]["Oldname"] then
-		text = gsub(text, "|h%[(%d+)%. 大脚世界频道%]|h", "|h%[%1%. 世界%]|h")
-		text = gsub(text, "|h%[(%d+)%. 大腳世界頻道%]|h", "|h%[%1%. 世界%]|h")
-		return self.oldAddMsg(self, text, r, g, b)
-	else
-		return self.oldAddMsg(self, gsub(text, "|h%[(%d+)%..-%]|h", "|h[%1]|h"), r, g, b)
+	text = gsub(text, "(|Hplayer:([^|:]+))", AddAuthorLogo)
+	if isCN then
+		text = gsub(text, cnPattern, KillCNColon) -- 干掉全角冒号
 	end
+	text = gsub(text, enPattern, KillColon) -- 干掉半角冒号
+	--text = gsub(text, "(|Hplayer:.-)%[(.-)%]", "%1%2") -- 干掉名字方括号
+	text = gsub(text, matchPattern, AbbrChannelName)
+
+	return self:oldAddMsg(text, r, g, b, ...)
 end
 
 function module:ChannelRename()
@@ -71,42 +203,4 @@ function module:ChannelRename()
 			chatFrame.AddMessage = module.UpdateChannelNames
 		end
 	end
-
-	--online/offline info
-	ERR_FRIEND_ONLINE_SS = gsub(ERR_FRIEND_ONLINE_SS, "%]%|h", "]|h|cff00c957")
-	ERR_FRIEND_OFFLINE_S = gsub(ERR_FRIEND_OFFLINE_S, "%%s", "%%s|cffff7f50")
-
-	--whisper
-	CHAT_WHISPER_INFORM_GET = L["Tell"].." %s "
-	CHAT_WHISPER_GET = L["From"].." %s "
-	CHAT_BN_WHISPER_INFORM_GET = L["Tell"].." %s "
-	CHAT_BN_WHISPER_GET = L["From"].." %s "
-
-	--say / yell
-	CHAT_SAY_GET = "%s "
-	CHAT_YELL_GET = "%s "
-
-	if C.db["Chat"]["Oldname"] then return end
-	--guild
-	CHAT_GUILD_GET = "|Hchannel:GUILD|h[G]|h %s "
-	CHAT_OFFICER_GET = "|Hchannel:OFFICER|h[O]|h %s "
-
-	--raid
-	CHAT_RAID_GET = "|Hchannel:RAID|h[R]|h %s "
-	CHAT_RAID_WARNING_GET = "[RW] %s "
-	CHAT_RAID_LEADER_GET = "|Hchannel:RAID|h[RL]|h %s "
-
-	--party
-	CHAT_PARTY_GET = "|Hchannel:PARTY|h[P]|h %s "
-	CHAT_PARTY_LEADER_GET = "|Hchannel:PARTY|h[PL]|h %s "
-	CHAT_PARTY_GUIDE_GET = "|Hchannel:PARTY|h[PG]|h %s "
-
-	--instance
-	CHAT_INSTANCE_CHAT_GET = "|Hchannel:INSTANCE|h[I]|h %s "
-	CHAT_INSTANCE_CHAT_LEADER_GET = "|Hchannel:INSTANCE|h[IL]|h %s "
-
-	--flags
-	CHAT_FLAG_AFK = "[AFK] "
-	CHAT_FLAG_DND = "[DND] "
-	CHAT_FLAG_GM = "[GM] "
 end

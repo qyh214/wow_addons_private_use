@@ -1,0 +1,38 @@
+local L = LibStub("AceLocale-3.0"):NewLocale("MurlokExport", "ruRU")
+if ( not L ) then
+    return
+end
+
+-- Translator ZamestoTV
+L["MURLOKEXPORT_CATEGORY_EQUIPMENT"] = "Экипировка"
+L["MURLOKEXPORT_CATEGORY_STATS"] = "Характеристики"
+L["MURLOKEXPORT_CATEGORY_TALENTS"] = "Таланты"
+L["MURLOKEXPORT_CATEGORY_TRAITS"] = "Особенности"
+L["MURLOKEXPORT_DATA_EXPORT_TIME"] = "Время экспорта данных: "
+L["MURLOKEXPORT_EQUIPMENT_ENCHANTS"] = "Чары:"
+L["MURLOKEXPORT_EQUIPMENT_GEMS"] = "Камни:"
+L["MURLOKEXPORT_EQUIPMENT_ITEMS"] = "Предметы:"
+L["MURLOKEXPORT_OPTIONS_COMPACT_VIEW"] = "Показывать MurlokExport в компактном виде."
+L["MURLOKEXPORT_OPTIONS_HIDE_MINIMAP_BUTTON"] = "Hide minimap button."
+L["MURLOKEXPORT_OPTIONS_SHOW_ONLY_CURRENT_CLASS"] = "Показывать только текущий класс персонажа."
+L["MURLOKEXPORT_OPTIONS_SUBTEXT"] = "Эти настройки позволяют изменить поведение MurlokExport."
+L["MURLOKEXPORT_RATING"] = "Рейтинг"
+L["MURLOKEXPORT_STATS_AVOIDANCE"] = "Уклонение"
+L["MURLOKEXPORT_STATS_CRIT"] = "Критический удар"
+L["MURLOKEXPORT_STATS_HASTE"] = "Скорость"
+L["MURLOKEXPORT_STATS_LEECH"] = "Самоисцеление"
+L["MURLOKEXPORT_STATS_MASTERY"] = "Искусность"
+L["MURLOKEXPORT_STATS_MINOR"] = "Второстеп."
+L["MURLOKEXPORT_STATS_SECONDARY"] = "Вторичные"
+L["MURLOKEXPORT_STATS_SPEED"] = "Скорость перед."
+L["MURLOKEXPORT_STATS_VERSATILITY"] = "Универсальность"
+L["MURLOKEXPORT_TAB_MYTHIC_PLUS"] = "Эпох+"
+L["MURLOKEXPORT_TAB_SOLO_PVP"] = "Соло PvP"
+L["MURLOKEXPORT_TAB_2V2_PVP"] = "2v2 PvP"
+L["MURLOKEXPORT_TAB_3V3_PVP"] = "3v3 PvP"
+L["MURLOKEXPORT_TAB_BLITZ_PVP"] = "Blitz PvP"
+L["MURLOKEXPORT_TAB_RBG_PVP"] = "RBG PvP"
+L["MURLOKEXPORT_TRAITS_CLASS"] = "Класс"
+L["MURLOKEXPORT_TRAITS_SPECIALIZATION"] = "Специализация"
+L["MURLOKEXPORT_TRAITS_HERO"] = "Герой"
+L["MURLOKEXPORT_TRAITS_PVP"] = "PvP"

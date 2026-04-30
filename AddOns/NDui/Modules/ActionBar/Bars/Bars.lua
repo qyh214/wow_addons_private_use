@@ -5,7 +5,6 @@ local LAB = LibStub("LibActionButton-1.0-NDui")
 
 local _G = _G
 local tinsert, next = tinsert, next
-local GetActionTexture = GetActionTexture
 local margin, padding = C.Bars.margin, C.Bars.padding
 
 function Bar:UpdateAllSize()
@@ -23,10 +22,34 @@ function Bar:UpdateAllSize()
 	Bar:UpdateVehicleButton()
 end
 
+function Bar:UpdateCastVFX(button)
+	local buttonWidth, buttonHeight = button:GetSize()
+	local maskWidth, maskHeight = buttonWidth * 1.5, buttonHeight * 1.5
+
+	local spellCastAnim = button.SpellCastAnimFrame
+	if spellCastAnim then
+		local endBurst = spellCastAnim.EndBurst
+		if endBurst then
+			endBurst.EndMask:SetSize(maskWidth, maskHeight)
+		end
+
+		local spellCastFill = spellCastAnim.Fill
+		if spellCastFill then
+			spellCastFill.FillMask:SetSize(maskWidth, maskHeight)
+		end
+	end
+	local interruptDisplay = button.InterruptDisplay
+	local interruptHighlight = interruptDisplay and interruptDisplay.Highlight
+	if interruptHighlight then
+		interruptHighlight.Mask:SetSize(maskWidth, maskHeight)
+	end
+end
+
 function Bar:UpdateFontSize(button, fontSize)
 	B.SetFontSize(button.Name, fontSize)
 	B.SetFontSize(button.Count, fontSize)
 	B.SetFontSize(button.HotKey, fontSize)
+	Bar:UpdateCastVFX(button)
 end
 
 function Bar:UpdateActionSize(name)
@@ -348,6 +371,14 @@ function Bar:UpdateOverlays()
 	end
 end
 
+function Bar:UpdateCooldownText()
+	for _, button in pairs(Bar.buttons) do
+		if button.cooldownText then
+			button.cooldownText:SetFont(DB.Font[1], C.db["Actionbar"]["CDFontSize"], DB.Font[3])
+		end
+	end
+end
+
 function Bar:OnLogin()
 	Bar.buttons = {}
 	Bar:MicroMenu()
@@ -366,6 +397,7 @@ function Bar:OnLogin()
 	Bar:UpdateVisibility()
 	Bar:UpdateAllSize()
 	Bar:HideBlizz()
+	Bar:UpdateCooldownText()
 
 	if C_PetBattles.IsInBattle() then
 		Bar:ClearBindings()

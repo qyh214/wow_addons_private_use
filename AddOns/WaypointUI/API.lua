@@ -2,34 +2,31 @@
     WaypointUI API Documentation
 
     `WaypointUIAPI.Navigation`
-        `ClearUserNavigation()`                    -- Clear current /way marker
-        `GetUserNavigation()`                      -- Returns the current /way SessionInfo if available
-        `NewUserNavigation(name, mapID, x, y)`     -- Sets a new /way marker
-        `IsUserNavigation()`                       -- Returns true if a /way marker is set
+        `ClearDestination()`                                                                        -- Clears any active navigation (user waypoint or supertracked content)
+        `ClearUserNavigation()`                                                                     -- Clears the current user-placed waypoint marker
+        `GetUserNavigation()`                                                                       -- Returns the current waypoint session info (name, mapID, x, y, flags, iconTexture, r, g, b, requestRecolor) or nil
+        `NewUserNavigation(name, mapID, x, y, flags?, iconTexture?, r?, g?, b?, requestRecolor?)`   -- Creates and tracks a new user waypoint at the specified coordinates
+        `IsUserNavigationTracked()`                                                                 -- Returns true if a user waypoint is currently being tracked
 
-    `WaypointUIAPI.OpenSettingUI()`
+    `WaypointUIAPI.OpenSettingsUI()`
 ]]
 
 local env = select(2, ...)
-
-
 WaypointUIAPI = WaypointUIAPI or {}
 
-do -- @/MapPin
-    local MapPin = env.WPM:Await("@/MapPin")
-
+do -- @\\MapPin
+    local MapPin = env.modules:Await("@\\MapPin")
     WaypointUIAPI.Navigation = {
-        ClearDestination    = MapPin.ClearDestination,
-        ClearUserNavigation = MapPin.ClearUserNavigation,
-        SetUserNavigation   = MapPin.SetUserNavigation,
-        GetUserNavigation   = MapPin.GetUserNavigation,
-        NewUserNavigation   = MapPin.NewUserNavigation,
-        IsUserNavigation    = MapPin.IsUserNavigation
+        ClearDestination        = MapPin.ClearDestination,
+        ClearUserNavigation     = MapPin.ClearUserNavigation,
+        GetUserNavigation       = MapPin.GetUserNavigation,
+        NewUserNavigation       = MapPin.NewUserNavigation,
+        IsUserNavigationTracked = MapPin.IsUserNavigationTracked
     }
 end
 
-do -- @/Setting
-    local Setting_Logic = env.WPM:Await("@/Setting/Logic")
-
-    WaypointUIAPI_OpenSettingUI = Setting_Logic.OpenSettingUI
+do -- @\\Settings
+    local Setting = env.modules:Await("@\\Settings")
+    WaypointUIAPI_OpenSettingsUI = Setting.OpenSettingsUI
+    WaypointUIAPI.OpenSettingsUI = Setting.OpenSettingsUI
 end

@@ -30,8 +30,6 @@ WIM.AddLocale("koKR", {
     ["state_raid"] = "레이드",
     ["state_other"] = "일반 (기타)",
 
-    ["<Shift-Click> to close window."] = "Shift 클릭으로 창 닫기",
-
     ["A new version of WIM is available!\nYou can download the latest version from curse"] = "새로운 버전의 WIM이 이용 가능합니다!\n최신 버전은 Curse에서 다운로드할 수 있습니다.",
 
     ["Options"] = "옵션",
@@ -229,6 +227,7 @@ WIM.AddLocale("koKR", {
     ["Game"] = "게임",
     ["Realm"] = "서버",
     ["Character"] = "캐릭터",
+	["Copy Name"] = "이름 복사",
 
     -- Tutorials.lua --
     ["Display WIM tips"] = "WIM 팁 보여주기",
@@ -269,6 +268,7 @@ WIM.AddLocale("koKR", {
     ["Resizing Windows"] = "창 크기 조절",
     ["You can resize a window by holding <Shift> and dragging the bottom right corner of the window."] = "<Shift> 키를 누른 상태에서 창의 오른쪽 아래 모서리를 끌어 크기를 조절할 수 있습니다.",
     ["Demo Window"] = "데모 창",
+	["<Shift-Click> to close window."] = "Shift 클릭으로 창 닫기",
     ["Message Window Hidden"] = "메시지 창 숨김",
     ["WIM's message window has been hidden to WIM's Minimap Icon. If you want to end a conversation, you may do so by <Shift-Clicking> the close button."] = "WIM 메시지 창이 미니맵 아이콘으로 숨겨졌습니다. 대화를 종료하려면 Shift 클릭으로 닫기 버튼을 누르세요.",
     ["Default"] = "기본값",
@@ -290,6 +290,7 @@ WIM.AddLocale("koKR", {
     ["Enable WIM"] = "WIM 사용",
     ["Display Minimap Icon"] = "미니맵 아이콘 표시",
     ["<Right-Click> to show unread messages."] = "오른쪽 클릭으로 읽지 않은 메시지를 표시합니다",
+	["Display Addon Compartment Icon"] = "애드온 구획 아이콘 표시",
     ["Display Tutorials"] = "튜토리얼 표시",
     ["Reset Tutorials"] = "튜토리얼 초기화",
     ["Credits"] = "제작자 명단",
@@ -305,7 +306,8 @@ WIM.AddLocale("koKR", {
     ["Window Behavior"] = "창 동작",
     ["You can control how windows behave while you are in different situations."] = "상황에 따라 창이 어떻게 동작할지 설정할 수 있습니다.",
     ["Intercept Slash Commands"] = "/명령어 가로채기",
-    ["Obey autofocus rules when opening frames via the menu. (autofocus if unchecked)"] = "메뉴를 통해 창을 열 때 자동 포커스 규칙을 따릅니다. (미체크 시 자동 포커스)",
+    ["Include sent messages in /REPLY."] = "보낸 메시지를 /r에 포함합니다",
+    ["Obey autofocus rules when opening frames via the menu. (autofocus if unchecked)"] = "메뉴를 통해 창을 열 때 자동 포커스 규칙을 따릅니다",
     ["Use the same rules for all states."] = "모든 상황에서 동일한 규칙을 사용합니다",
     ["Behaviors for state:"] = "상태에 따른 동작:",
     ["Pop-Up window when message is sent."] = "메시지 전송 시 창을 팝업합니다",
@@ -347,7 +349,7 @@ WIM.AddLocale("koKR", {
     ["Thick"] = "굵게",
     ["Use font suggested by skin."] = "스킨에서 제안한 글꼴을 사용합니다",
     ["Chat Font Size"] = "채팅 글꼴 크기",
-    ["Configure general display settings when dealing with whispers."] = "귓속말 표시와 관련된 일반 설정을 구성합니다",
+    ["Configure general display settings when dealing with whispers."] = "귓속말 표시와 관련된 일반 설정을 구성합니다.",
     ["Color: Messages Sent"] = "색상: 보낸 메시지",
     ["Color: Messages Received"] = "색상: 받은 메시지",
     ["Use colors suggested by skin."] = "스킨에서 제안한 색상을 사용합니다",
@@ -377,7 +379,7 @@ WIM.AddLocale("koKR", {
     ["Maintenance"] = "관리하기",
     ["Allowing your history logs to grow too large will affect the game's performance, therefore it is reccomended that you use the following options."] = "대화 기록이 너무 많아지면 게임 성능에 영향을 줄 수 있으므로, 아래 옵션을 사용하는 것을 권장합니다.",
     ["Save a maximum number of messages per person."] = "유저당 최대 저장 메세지 갯수",
-    ["%d |4Week:Weeks;"] = "%d 주;",
+    ["%d |4Week:Weeks;"] = "%d 주",
     ["Automatically delete old messages."] = "오래된 메세지를 자동으로 지웁니다",
     ["WIM-2-WIM is a feature which allows users with WIM to interact in ways that normal whispering can not."] = "WIM-2-WIM은 기본 귓속말로는 사용할 수 없는 확장 기능을 WIM 사용자끼리 이용할 수 있게 해주는 시스템입니다.",
     ["Enable WIM-2-WIM"] = "WIM 사용자간 대화 켜기",
@@ -398,6 +400,12 @@ WIM.AddLocale("koKR", {
     ["Play sound when a whisper is sent."] = "귓속말을 보낼 때 효과음 재생",
     ["Allow others to see my talent spec."] = "다른 사용자가 내 특성을 확인할 수 있도록 허용",
     ["Window Strata:"] = "창 레이어:",
+	["Background"] = BACKGROUND,
+	["Low"] = LOW,
+	["Medium"] = "보통",
+	["High"] = "혼잡",
+	["Dialog"] = ENABLE_DIALOG,
+	["Tooltip"] = "툴팁",
     ["Unlock from Minimap"] = "미니맵에서 위치 잠금 해제",
     ["Press <Tab> to advance to next tell target."] = "<Tab> 키를 눌러 다음 귓속말 대상자로 이동",
     ["Force sounds when game sound is disabled."] = "게임 사운드가 꺼져 있어도 강제 효과음 재생",
@@ -517,6 +525,7 @@ WIM.AddLocale("koKR", {
     ["WIM has detected that you are playing on a private server. Some servers can not process ChatAddonMessages. Would you like to enable them anyway?"] = "WIM이 현재 프라이빗 서버에서 플레이 중임을 감지했습니다. 일부 서버는 ChatAddonMessages를 처리하지 못할 수 있습니다. 그래도 활성화하시겠습니까?",
 
     -- Whisper Mode Warnings
+    ["Whisper Mode: In-line"] = "귓속말 모드: 인라인",
     ["Set whispers to In-line"] = "귓속말을 인라인으로 설정",
     ["Message suppression requires whispers to be set to 'In-line'."] = "메시지 숨김 기능을 사용하려면 귓속말이 '인라인'으로 설정되어 있어야 합니다.",
     ["It is recommended for whispers to be set to in-line in order to handle their behavior properly."] = "귓속말의 동작을 올바르게 처리하려면 인라인 설정을 권장합니다.",

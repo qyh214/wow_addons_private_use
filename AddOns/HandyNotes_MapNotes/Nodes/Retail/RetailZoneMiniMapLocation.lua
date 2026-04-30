@@ -81,20 +81,20 @@ ns.currentSourceFile = "RetailZoneMiniMapLocation.lua"
 
           --Kalimdor Zeppelins
             if self.db.profile.showMiniMapZeppelins then
-              minimap[1][55941320] = { mnID = 2022, name = "", type = "HZeppelin", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Zeppelin from Orgrimmar to Waking Shores
+              minimap[1][55981320] = { mnID = 2022, name = "", type = "HZeppelin", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Zeppelin from Orgrimmar to Waking Shores
               minimap[7][33422231] = { mnID = 85, name = "", type = "HZeppelin", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Zeppelin from Thunder Bluff to Orgrimmar
-              minimap[10][80450975] = { mnID = 85, name = "", type = "HZeppelin", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Zeppelin from Thunder Bluff to Orgrimmar
+              minimap[10][89191220] = { mnID = 2022, name = "", type = "HZeppelin", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Zeppelin from Orgrimmar to Waking Shores
             end
 
           -- Kalimdor Ships
             if self.db.profile.showMiniMapShips then
 
-              minimap[1][35217941] = { mnID = 210, name = "", type = "Ship", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = POSTMASTER_LETTER_STRANGLETHORNVALE .. " (" .. L["Ship"] ..")" } -- Ship from Ratchet to Booty Bay Ship
-              minimap[10][70237341] = { mnID = 210, name = "", type = "Ship", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = POSTMASTER_LETTER_STRANGLETHORNVALE .. " (" .. L["Ship"] ..")" } -- Ship from Ratchet to Booty Bay Ship
+              minimap[1][35297954] = { mnID = 210, name = "", type = "Ship", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = POSTMASTER_LETTER_STRANGLETHORNVALE .. " (" .. L["Ship"] ..")" } -- Ship from Ratchet to Booty Bay Ship
+              minimap[10][70157324] = { mnID = 210, name = "", type = "Ship", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = POSTMASTER_LETTER_STRANGLETHORNVALE .. " (" .. L["Ship"] ..")" } -- Ship from Ratchet to Booty Bay Ship
 
               if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                 minimap[463][71903797] = { mnID = 862, name = "", type = "HShip", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Ship from Echo Isles to Zuldazar  
-                minimap[1][72257893] = { mnID = 862, name = "", type = "HShip", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Ship from Echo Isles to Zuldazar            
+                minimap[1][72057924] = { mnID = 862, name = "", type = "HShip", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Ship from Echo Isles to Zuldazar            
               end
             
               if self.faction == "Alliance" or db.activate.MiniMapEnemyFaction then
@@ -221,7 +221,7 @@ ns.currentSourceFile = "RetailZoneMiniMapLocation.lua"
 
         -- Outland MapNotesIcons 
           if self.db.profile.showMiniMapHordeAllyIcons then
-            minimap[108][28652247] = { mnID = 111, name = "", type = "MNL", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = ns.Shattrath .. "\n" .. "\n" .. L["Portals"] .. "\n" .. " ==> " .. ns.Orgrimmar .. "\n" .. " ==> " .. ns.Stormwind .. "\n" .. " ==> " .. ns.IsleOfQuelDanas } -- Portal from Shattrath to Orgrimmar
+            minimap[108][28652247] = { mnID = 111, name = "", type = "HAIcon", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = ns.Shattrath .. "\n" .. "\n" .. L["Portals"] .. "\n" .. " ==> " .. ns.Orgrimmar .. "\n" .. " ==> " .. ns.Stormwind .. "\n" .. " ==> " .. ns.IsleOfQuelDanas } -- Portal from Shattrath to Orgrimmar
           end
 
         -- Outland Transporting 
@@ -551,6 +551,7 @@ ns.currentSourceFile = "RetailZoneMiniMapLocation.lua"
               minimap[715][31612524] = { mnID = 116, name = L["Portal"], type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Druid Emerald Dreamway -  Grizzly Hills
               minimap[715][22593943] = { mnID = 69, name = L["Portal"], type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Druid Emerald Dreamway - Feralas
               minimap[715][26168213] = { mnID = 80, name = L["Portal"], type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Druid Emerald Dreamway - Moonglade
+              minimap[715][19235918] = { mnID = 2239, name = L["Portal"], type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Druid Emerald Dreamway - Amirdrassil
 
               if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
                 minimap[652][46176383] = { mnID = 85, name = "" , type = "HPortal", showInZone = true, showOnMinimap = true } -- Thundertotem to Ogrimmar
@@ -780,7 +781,7 @@ ns.currentSourceFile = "RetailZoneMiniMapLocation.lua"
               minimap[2256][57344184] = { mnID = 2339, name = "", achievementID = 19559, showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=19559", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dornogal to Azj-Kahet if u finished the achievement=19559
               minimap[2367][49953591] = { mnID = 2339, name = "", achievementID = 40725, showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=40725",  type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Chamber of Memory
               minimap[2248][53024511] = { mnID = 2339, name = "", achievementID = 19559, showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=19559", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dornogal to Azj-Kahet if u finished the achievement=19559
-              minimap[2248][50554183] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. C_Map.GetMapInfo(2472).name .. "\n" .. " ==> " .. C_Map.GetMapInfo(1525).name } --  Portal from Dornogal to the Timeways
+              minimap[2248][50554183] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. ZONE .. ": " .. ns.SpiresOfArak .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.Skyreach .. "\n\n" .. ZONE .. ": " .. ns.Icecrown .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.PitOfSaron .. "\n\n" .. ZONE .. ": " .. ns.Eredath .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.SeatOfTheTriumvirate .. "\n\n" .. ZONE .. ": " .. ns.Thaldraszus .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.AlgetharAcademy } --  Portal from Dornogal to the Timeways
               minimap[2248][44634679] = { mnID = 2367, name = "", achievementID =  40725, showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=40725", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Chamber of Memory
               minimap[2346][27805398] = { mnID = 2339, name = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/quest=86535/test-run", questID = 86535, type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Undermine to Dornogal
               minimap[2472][62549423] = { mnID = 2339, name = "", type = "Portal", questID = 84957, showWWW = true, wwwName = BATTLE_PET_SOURCE_2 .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/quest=84957/return-to-the-veiled-market", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Tazavesh to Dornogal
@@ -910,7 +911,88 @@ ns.currentSourceFile = "RetailZoneMiniMapLocation.lua"
 
         end
 
+
+
+        --##################################
+        --##### Continent Quel'Thalas ######
+        --##################################
+
+        if self.db.profile.showMiniMapQuelThalas then
+
+          -- Quel'Thalas MapNotesIcons
+          if self.db.profile.showMiniMapHordeAllyIcons then
+            minimap[2395][51782460] = { mnID = 2393, name = "", type = "HAIcon", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = ns.Silvermoon .. " (" .. EXPANSION_NAME11 .. ")\n\n" .. L["Portals"] .. "\n" ..  " ==> " .. ns.Orgrimmar .. "\n" .. " ==> " .. ns.Harandar .. "\n" .. " ==> " .. ns.VoidTempest .. "\n" .. " ==> " .. ns.Stormwind .. "\n\n" .. CALENDAR_TYPE_DUNGEON .. "\n ==> " .. ns.MurderRow .. "\n\n" .. DELVES_LABEL .. "\n ==> " .. ns.TheDarkway .. "\n ==> " .. ns.CollegiateCalamity }
+          end
+
+          if db.activate.MiniMapTransporting then
+
+            -- Quel'Thalas Portals
+            if self.db.profile.showMiniMapPortals then
+              minimap[2395][49442489] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. ZONE .. ": " .. ns.SpiresOfArak .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.Skyreach .. "\n\n" .. ZONE .. ": " .. ns.Icecrown .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.PitOfSaron .. "\n\n" .. ZONE .. ": " .. ns.Eredath .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.SeatOfTheTriumvirate .. "\n\n" .. ZONE .. ": " .. ns.Thaldraszus .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.AlgetharAcademy } --  Portal from Dornogal to the Timeways
+              minimap[2576][64687098] = { mnID = 2393, name = "", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              minimap[2576][61787348] = { mnID = 2405, name = "", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              minimap[2405][51717041] = { mnID = 2413, name = "", type = "PortalS", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              minimap[2405][51527029] = { mnID = 2405, name = "", type = "PortalS", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              --minimap[2424][51925636] = { mnID = 2405, name = "", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              --minimap[2405][45436377] = { mnID = 2424, name = "", type = "PortalS", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              minimap[2413][53545571] = { mnID = 2576, name = "", TransportName = L["inside the cave"] .. ":\n" .. TextIconPortalOld:GetIconString() .. " " .. L["Portal"] .. " " .. ns.VoidTempest .. "\n" .. TextIconPortalOld:GetIconString() .. " " .. L["Portal"] .. " " .. ns.SilvermoonMN, type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true }
+            end
+
+             -- Quel'Thalas Transport
+            if self.db.profile.showMiniMapTransport then
+              minimap[2395][45164594] = { name = L["to the platform"], type = "Tport2", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              minimap[2395][40855939] = { name = L["to the platform"], type = "Tport2", showInZone = false, showOnContinent = false, showOnMinimap = true }
+            end
+
+          end
+
+          --Professions
+          if self.db.profile.activate.MiniMapProfessions then
+
+            if self.db.profile.showMiniMapAlchemy then
+              minimap[2413][53464987] = { npcID = 254865, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
+            end
+
+            if self.db.profile.showMiniMapSkinning then
+              minimap[2437][45226983] = { npcID = 255095, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
+            end
+
+            if self.db.profile.showMiniMapBlacksmith then
+              minimap[2405][51536935] = { npcID = 218167, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
+            end
+
+            if self.db.profile.showMiniMapFishing then
+              minimap[2395][48677610] = { npcID = 247800, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              minimap[2437][38342140] = { npcID = 253039, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              minimap[2437][48682582] = { npcID = 255185, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              minimap[2437][46327042] = { npcID = 255092, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              minimap[2405][50886852] = { npcID = 254707, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
+            end
+
+            if self.db.profile.showMiniMapCooking then
+              minimap[2395][47656777] = { npcID = 245741, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              minimap[2437][38142109] = { npcID = 253037, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true }
+            end
+
+            if self.db.profile.showMiniMapEnchanting then
+              minimap[2395][44184628] = { npcID = 242993, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true, dnID = L["(on the platform)"] }
+            end
+
+            if self.db.profile.showMiniMapHerbalism then            
+              minimap[2405][51646803] = { npcID = 254703, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              minimap[2413][52925023] = { npcID = 254855, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
+            end
+
+            if self.db.profile.showMiniMapInscription then
+              minimap[2576][63657391] = { npcID = 254833, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              minimap[2413][52675626] = { npcID = 254833, name = "", type = "Inscription", dnID = "(" .. L["inside the cave"] .. ")", showInZone = false, showOnContinent = false, showOnMinimap = true }
+            end
+
+          end
+
+        end
+
       end
   end
-  
+
 end

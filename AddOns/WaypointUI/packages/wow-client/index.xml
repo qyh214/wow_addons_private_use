@@ -1,0 +1,6 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="src\events.lua"/>
+	<Script file="src\versioning.lua"/>
+	<Script file="src\keybind.lua"/>
+	<Script file="index.lua"/>
+</Ui>

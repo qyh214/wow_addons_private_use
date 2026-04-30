@@ -1,0 +1,490 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\..\..\..\..\WoW\Data\Interface\AddOns\Blizzard_SharedXML\UI.xsd">
+	<Script file="EquipmentsList.lua"/>
+
+  	<ItemButton name="EquipmentsItemSlotButtonTemplate" inherits="EnchantingItemButtonAnimTemplate" mixin="EnchantingItemButtonAnimMixin, EnchantingItemButtonMixin" virtual="true">
+		<Scripts>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnClick method="OnClick"/>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+		</Scripts>
+	</ItemButton>
+	<ItemButton name="EquipmentsItemSlotButtonLeftTemplate" inherits="EquipmentsItemSlotButtonTemplate" virtual="true">
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="-1">
+				<Texture name="$parentFrame" inherits="Char-LeftSlot">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="-4"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</ItemButton>
+	<ItemButton name="EquipmentsItemSlotButtonRightTemplate" inherits="EquipmentsItemSlotButtonTemplate" virtual="true">
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="-1">
+				<Texture name="$parentFrame" inherits="Char-RightSlot">
+					<Anchors>
+						<Anchor point="TOPRIGHT" x="4"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</ItemButton>
+	<ItemButton name="EquipmentsItemSlotButtonBottomTemplate" inherits="EquipmentsItemSlotButtonTemplate" virtual="true">
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="-1">
+				<Texture name="$parentFrame" inherits="Char-BottomSlot">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="-4" y="8"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</ItemButton>
+
+	<Frame name="EquipmentsListTemplate" setAllPoints="true" inherits="TooltipBorderBackdropTemplate" virtual="true">
+		<Size x="450" y="200"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentBackground" file="Interface\AchievementFrame\UI-Achievement-Parchment-Horizontal" parentKey="background">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="3" y="-3"/>
+						<Anchor point="BOTTOMRIGHT" x="-3" y="3"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BORDER">
+				<Texture parentKey="bottomLeftTsunami" file="Interface\AchievementFrame\UI-Achievement-Tsunami-Corners">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" x="-2" y="-2"/>
+					</Anchors>
+					<Color r="1" g="1" b="1" a=".5"/>
+					<TexCoords left="0" right=".5" top="0" bottom="1"/>
+				</Texture>
+				<Texture parentKey="bottomRightTsunami" file="Interface\AchievementFrame\UI-Achievement-Tsunami-Corners">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" x="2" y="-2"/>
+					</Anchors>
+					<Color r="1" g="1" b="1" a=".5"/>
+					<TexCoords left=".5" right="1" top="0" bottom="1"/>
+				</Texture>
+				<Texture parentKey="topLeftTsunami" file="Interface\AchievementFrame\UI-Achievement-Tsunami-Corners">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="-2" y="-20"/>
+					</Anchors>
+					<Color r="1" g="1" b="1" a=".5"/>
+					<TexCoords left="1" right=".5" top="1" bottom="0"/>
+				</Texture>
+				<Texture parentKey="topRightTsunami" file="Interface\AchievementFrame\UI-Achievement-Tsunami-Corners">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="TOPRIGHT" x="2" y="-20"/>
+					</Anchors>
+					<Color r="1" g="1" b="1" a=".5"/>
+					<TexCoords left=".5" right="0" top="1" bottom="0"/>
+				</Texture>
+				<Texture parentKey="bottomTsunami" file="Interface\AchievementFrame\UI-Achievement-Borders">
+					<Size x="370" y="16"/>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativeKey="$parent.bottomLeftTsunami" relativePoint="BOTTOMRIGHT" x="0" y="3"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.bottomRightTsunami" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
+					<Color r="1" g="1" b="1" a=".5"/>
+					<TexCoords left="0" right="0.72265" top="0.51953125" bottom="0.58203125"/>
+				</Texture>
+				<Texture parentKey="topTsunami" file="Interface\AchievementFrame\UI-Achievement-Borders">
+					<Size x="370" y="16"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.topLeftTsunami" relativePoint="TOPRIGHT" x="0" y="-3"/>
+						<Anchor point="TOPRIGHT" relativeKey="$parent.topRightTsunami" relativePoint="TOPLEFT"/>
+					</Anchors>
+					<Color r="1" g="1" b="1" a=".5"/>
+					<TexCoords left="0.72265" right="0" top="0.58203125" bottom="0.51953125"/>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture name="$parentTitleBackground" atlas="UI-Achievement-Border-3" parentKey="titleBar">
+					<Size x="0" y="24"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="5" y="-5"/>
+						<Anchor point="TOPRIGHT" x="-5" y="-5"/>
+					</Anchors>
+					<TexCoords left="0" right="0.9765625" top="0" bottom="0.9"/>
+					<Color r="1" g="1" b="1" a=".8"/>
+				</Texture>
+			</Layer>						
+			<Layer level="OVERLAY">
+				<FontString inherits="GameFontNormal" parentKey="equipmentSlot">
+					<Size x="320" y="20"/>
+					<Anchors>
+						<Anchor point="TOP" relativeKey="$parentTitleBackground" relativePoint="TOP" y="-5"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		
+		<Frames>
+			<Frame name="$parentItemTextFrame" parentKey="itemTextFrame">
+				<Size x="60" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.topLeftTsunami" x="-15" y="-25"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY" textureSubLevel="1">
+						<FontString name="$parentText" inherits="GameFontNormal" parentKey="text" text="MURLOKEXPORT_EQUIPMENT_ITEMS">
+							<Anchors>
+								<Anchor point="LEFT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+            </Frame>
+			<ItemButton parentKey="itemButton1" inherits="EquipmentsItemSlotButtonTemplate">
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.itemTextFrame" x="5"/>
+				</Anchors>
+			</ItemButton>
+			<ItemButton parentKey="itemButton2" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.itemButton1" x="5"/>
+				</Anchors>
+			</ItemButton>
+			<ItemButton parentKey="itemButton3" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.itemButton2" x="5"/>
+				</Anchors>
+			</ItemButton>
+			<ItemButton parentKey="itemButton4" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.itemButton3" x="5"/>
+				</Anchors>
+			</ItemButton>
+			<ItemButton parentKey="itemButton5" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.itemButton4" x="5"/>
+				</Anchors>
+			</ItemButton>
+
+			<Frame name="$parentEnchantTextFrame" parentKey="enchantTextFrame">
+				<Size x="60" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.itemTextFrame" x="0" y="-10"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY" textureSubLevel="1">
+						<FontString name="$parentText" inherits="GameFontNormal" parentKey="text" text="MURLOKEXPORT_EQUIPMENT_ENCHANTS">
+							<Anchors>
+								<Anchor point="LEFT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+            </Frame>			
+			<ItemButton parentKey="enchantButton1" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.enchantTextFrame" x="5"/>
+				</Anchors>
+			</ItemButton>
+			<ItemButton parentKey="enchantButton2" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.enchantButton1" x="5"/>
+				</Anchors>
+			</ItemButton>
+			<ItemButton parentKey="enchantButton3" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.enchantButton2" x="5"/>
+				</Anchors>
+			</ItemButton>
+			<ItemButton parentKey="enchantButton4" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.enchantButton3" x="5"/>
+				</Anchors>
+			</ItemButton>
+			<ItemButton parentKey="enchantButton5" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.enchantButton4" x="5"/>
+				</Anchors>
+			</ItemButton>
+
+			<Frame name="$parentGemTextFrame" parentKey="gemTextFrame">
+				<Size x="60" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.enchantTextFrame" x="0" y="-10"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY" textureSubLevel="1">
+						<FontString name="$parentText" inherits="GameFontNormal" parentKey="text" text="MURLOKEXPORT_EQUIPMENT_GEMS">
+							<Anchors>
+								<Anchor point="LEFT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+            </Frame>		
+			<ItemButton parentKey="gemButton1" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.gemTextFrame" x="5"/>
+				</Anchors>
+			</ItemButton>
+			<ItemButton parentKey="gemButton2" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.gemButton1" x="5"/>
+				</Anchors>
+			</ItemButton>
+			<ItemButton parentKey="gemButton3" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.gemButton2" x="5"/>
+				</Anchors>
+			</ItemButton>
+			<ItemButton parentKey="gemButton4" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.gemButton3" x="5"/>
+				</Anchors>
+			</ItemButton>
+			<ItemButton parentKey="gemButton5" inherits="EquipmentsItemSlotButtonTemplate">		
+				<Size x="37" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.gemButton4" x="5"/>
+				</Anchors>
+			</ItemButton>
+		</Frames>
+	</Frame>
+
+    <Frame name="EquipmentsListFrameTemplate" virtual="true" mixin="EquipmentsListFrameMixin">
+        <Frames>
+			<Frame name="$parentEquipmentsInset" useParentLevel="true" inherits="InsetFrameTemplate" parentKey="EquipmentsInset">
+				<Size x="450" y="520"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                    <Anchor point="BOTTOMRIGHT"/>
+                </Anchors>
+			</Frame>
+
+			<Frame name="$parentEquipmentsBorder" parentKey="equipmentsBorder" frameStrata="HIGH">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentEquipmentsInset" relativePoint="TOPLEFT" x="0" y="0"/>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentEquipmentsInset" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture name="$parentTopLeft" atlas="PetJournal-BattleSlotFrame-Corner" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" x="-1" y="1"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentTopRight" atlas="PetJournal-BattleSlotFrame-Corner" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="TOPRIGHT" x="1" y="1"/>
+							</Anchors>
+							<Size x="17" y="17"/>
+							<TexCoords left="1.0" right="0.0" top="0.0" bottom="1.0"/>
+						</Texture>
+						<Texture name="$parentBottomLeft" atlas="PetJournal-BattleSlotFrame-Corner" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" x="-1" y="-1"/>
+							</Anchors>
+							<Size x="17" y="17"/>
+							<TexCoords left="0.0" right="1.0" top="1.0" bottom="0.0"/>
+						</Texture>
+						<Texture name="$parentBottomRight" atlas="PetJournal-BattleSlotFrame-Corner" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="BOTTOMRIGHT" x="1" y="-1"/>
+							</Anchors>
+							<Size x="17" y="17"/>
+							<TexCoords left="1.0" right="0.0" top="1.0" bottom="0.0"/>
+						</Texture>
+						<Texture name="$parentTop" atlas="_BattleSlotFrame-Top" horizTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentTopLeft" x="0" y="0"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" relativeTo="$parentTopRight" x="0" y="1"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentBottom" atlas="_BattleSlotFrame-Top" horizTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentBottomLeft" x="0" y="-1"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" relativeTo="$parentBottomRight" x="0" y="0"/>
+							</Anchors>
+							<TexCoords left="0.0" right="1.0" top="1.0" bottom="0.0" />
+						</Texture>
+						<Texture name="$parentLeft" file="Interface\PetBattles\!BattleSlotFrame-Left" vertTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentTopLeft" x="0" y="0"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeTo="$parentBottomLeft" x="-1" y="0"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentRight" file="Interface\PetBattles\!BattleSlotFrame-Left" vertTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentTopRight" x="1" y="0"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeTo="$parentBottomRight" x="0" y="0"/>
+							</Anchors>
+							<TexCoords left="1" right="0" top="0" bottom="1"/>
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY">
+						<FontString name="$parentSlotHeaderText" inherits="GameFontNormal" justifyH="CENTER" text="MURLOKEXPORT_CATEGORY_EQUIPMENT">
+							<Size x="0" y="40"/>
+							<Anchors>
+								<Anchor point="CENTER" relativePoint="TOP" relativeTo="$parentTop" x="0" y="-4"/>
+							</Anchors>
+						</FontString>
+						<Texture name="$parentSlotHeaderBG" atlas="_BattleSlotTitle-BG" horizTile="true">
+							<Size y="24"/>
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parentSlotHeaderText" x="-10" y="0"/>
+								<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parentSlotHeaderText" x="10" y="0"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY" textureSubLevel="1">
+						<Texture name="$parentSlotHeaderF" atlas="_BattleSlotTitle-Mid" horizTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parentSlotHeaderText" x="0" y="0"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentSlotHeaderText" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentSlotHeaderLeft" atlas="PetJournal-BattleSlotTitle-Left" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentSlotHeaderF" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentSlotHeaderRight" atlas="PetJournal-BattleSlotTitle-Right" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentSlotHeaderF" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad>
+						self:SetFrameLevel(self:GetFrameLevel()+7);
+					</OnLoad>
+				</Scripts>
+			</Frame> 
+
+			<Frame parentKey="EquipmentsScrollBox" inherits="WowScrollBoxList" frameStrata="HIGH">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.EquipmentsInset" x="3" y="-33"/>
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.EquipmentsInset" x="-2" y="60"/>
+				</Anchors>
+			</Frame>
+
+			<EventFrame parentKey="EquipmentsScrollBar" inherits="MinimalScrollBar" frameStrata="HIGH">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.EquipmentsScrollBox" relativePoint="TOPRIGHT" x="10" y="30"/>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.EquipmentsScrollBox" relativePoint="BOTTOMRIGHT" x="10" y="-60"/>
+				</Anchors>
+			</EventFrame>						
+
+            <ItemButton parentKey="characterHeadSlot" inherits="EquipmentsItemSlotButtonLeftTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="15" y="-35"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterNeckSlot" inherits="EquipmentsItemSlotButtonLeftTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterHeadSlot" relativePoint="BOTTOMLEFT"  x="0" y="-4"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterShoulderSlot" inherits="EquipmentsItemSlotButtonLeftTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterNeckSlot" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterBackSlot" inherits="EquipmentsItemSlotButtonLeftTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterShoulderSlot" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterChestSlot" inherits="EquipmentsItemSlotButtonLeftTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterBackSlot" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterShirtSlot" inherits="EquipmentsItemSlotButtonLeftTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterChestSlot" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterTabardSlot" inherits="EquipmentsItemSlotButtonLeftTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterShirtSlot" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterWristSlot" inherits="EquipmentsItemSlotButtonLeftTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterTabardSlot" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterHandsSlot" inherits="EquipmentsItemSlotButtonRightTemplate">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" x="-12" y="-35"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterWaistSlot" inherits="EquipmentsItemSlotButtonRightTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterHandsSlot" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterLegsSlot" inherits="EquipmentsItemSlotButtonRightTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterWaistSlot" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterFeetSlot" inherits="EquipmentsItemSlotButtonRightTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterLegsSlot" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterFinger0Slot" inherits="EquipmentsItemSlotButtonRightTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterFeetSlot" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterFinger1Slot" inherits="EquipmentsItemSlotButtonRightTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterFinger0Slot" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterTrinket0Slot" inherits="EquipmentsItemSlotButtonRightTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterFinger1Slot" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterTrinket1Slot" inherits="EquipmentsItemSlotButtonRightTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterTrinket0Slot" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterMainHandSlot" inherits="EquipmentsItemSlotButtonBottomTemplate">
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOM" y="10"/>
+                </Anchors>
+            </ItemButton>
+            <ItemButton parentKey="characterSecondaryHandSlot" inherits="EquipmentsItemSlotButtonBottomTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.characterMainHandSlot" relativePoint="TOPRIGHT" x="5" y="0"/>
+                </Anchors>
+            </ItemButton>
+        </Frames>
+    </Frame>		
+
+</Ui>

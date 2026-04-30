@@ -15,7 +15,7 @@ local function SkinContainerFrame(frame)
         IUTView.CraftingFrame,
         IUTView.InfoFrame
     }, -10, true, true)
-    frame.tex:SetTexture("Interface/AddOns/GW2_UI/textures/Auction/windowbg")
+    frame.tex:SetTexture("Interface/AddOns/GW2_UI/textures/Auction/windowbg.png")
 	frame.tex:SetTexCoord(0, 1, 0, 0.74)
     frame.gwHeader.windowIcon:ClearAllPoints()
     frame.gwHeader.windowIcon:SetPoint("CENTER", frame.gwHeader, "LEFT", -20, 3)
@@ -78,7 +78,7 @@ local skinners = {
         frame.tex:SetPoint("TOP", frame, "TOP")
         frame.tex:SetPoint("BOTTOM", frame, "BOTTOM")
         frame.tex:SetPoint("RIGHT", frame, "RIGHT")
-        frame.tex:SetTexture("Interface/AddOns/GW2_UI/textures/uistuff/buttonlightInner")
+        frame.tex:SetTexture("Interface/AddOns/GW2_UI/textures/uistuff/buttonlightInner.png")
         frame.tex:SetAlpha(1)
     end,
     InsetFrame = function(frame)

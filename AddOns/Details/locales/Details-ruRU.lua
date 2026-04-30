@@ -169,7 +169,7 @@ L["STRING_CUSTOM_TARGET_DESC"] = [=[Эта цель источник.
 
 Кнопка справа показывает список нипов из сражений в рейде.]=]
 L["STRING_CUSTOM_TEMPORARILY"] = "(|cFFFFC000временно|r)"
-L["STRING_CUSTOM_TEXTURE_GUIDE"] = "Чтобы загрузить файл текстуры в клиент World of Warcraft, Вам нужен файл в формате .TGA, а также его ширина и высота должны быть кратны 8. Поместите текстуру в папку /место установленного клиента WoW/retail/Interface/"
+L["STRING_CUSTOM_TEXTURE_GUIDE"] = "Чтобы использовать пользовательский файл для иконок: - Файл должен быть в формате .TGA. - Размер файла должен быть 512x512 пикселей. - Для специализаций имя файла должно содержать 'spec_'. - Поместите текстуру в папку /Папка установки WoW /_retail_/Interface/"
 L["STRING_DAMAGE"] = "Урон"
 L["STRING_DAMAGE_DPS_IN"] = "Урон, полученный от "
 L["STRING_DAMAGE_FROM"] = "Получил урон от"
@@ -921,6 +921,9 @@ L["STRING_OPTIONS_PERFORMANCECAPTURES_DESC"] = "Эти параметры отв
 L["STRING_OPTIONS_PERFORMANCEPROFILES_ANCHOR"] = "Профили производительности:"
 L["STRING_OPTIONS_PICONS_DIRECTION"] = "Плагины прикрепляются справа"
 L["STRING_OPTIONS_PICONS_DIRECTION_DESC"] = "Если стоит галочка, кнопки плагина отображаются в правой части кнопок меню."
+L["STRING_OPTIONS_PLAYERNAME"] = "Имя игрока"
+L["STRING_OPTIONS_PLAYERNAME_AUTO_WIDTH"] = "Автоматическая длина"
+L["STRING_OPTIONS_PLAYERNAME_WIDTH"] = "Длина"
 L["STRING_OPTIONS_PLUGINS"] = "Плагины"
 L["STRING_OPTIONS_PLUGINS_AUTHOR"] = "Автор"
 L["STRING_OPTIONS_PLUGINS_NAME"] = "Название"
@@ -1098,6 +1101,7 @@ L["STRING_OPTIONS_SEGMENTSSAVE"] = "Сохраненные сегменты"
 L["STRING_OPTIONS_SEGMENTSSAVE_DESC"] = [=[Сколько сегментов Вы хотите сохранить между игровыми сеансами.
 
 Высокие значения могут увеличить время, затрачиваемое на выход из системы.]=]
+L["STRING_OPTIONS_SELECT_TEMPLATE"] = "Выбрать шаблон"
 L["STRING_OPTIONS_SENDFEEDBACK"] = "Обратная связь"
 L["STRING_OPTIONS_SHOW_SIDEBARS"] = "Показывать границы:"
 L["STRING_OPTIONS_SHOW_SIDEBARS_DESC"] = "Показать или скрыть границы окна."
@@ -1185,6 +1189,8 @@ L["STRING_OPTIONS_TEXT_OUTLINE"] = "Контур текста"
 L["STRING_OPTIONS_TEXT_RIGHT_ANCHOR"] = "Текст справа:"
 L["STRING_OPTIONS_TEXT_ROUTILINE_DESC"] = "Включение или отключение контура для правого текста."
 L["STRING_OPTIONS_TEXT_ROWICONS_ANCHOR"] = "Значки:"
+L["STRING_OPTIONS_TEXT_SHADOWCOLOR"] = "Цвет тени"
+L["STRING_OPTIONS_TEXT_SHADOWOFFSET"] = "Смещение тени %s"
 L["STRING_OPTIONS_TEXT_SHOW_BRACKET"] = "Скобка"
 L["STRING_OPTIONS_TEXT_SHOW_BRACKET_DESC"] = "Выберите символ, используемый для открытия и закрытия блока в секунду и процент."
 L["STRING_OPTIONS_TEXT_SHOW_PERCENT"] = "Показывать процент"
@@ -1419,6 +1425,7 @@ L["STRING_OPTIONSMENU_TOOLTIP"] = "Подсказки"
 L["STRING_OPTIONSMENU_WALLPAPER"] = "Окно: Обои"
 L["STRING_OPTIONSMENU_WINDOW"] = "Окно: Общее"
 L["STRING_OPTIONSMENU_WINDOWBODY"] = "Настройки окон"
+L["STRING_OR"] = "Или"
 L["STRING_OVERALL"] = "Общий"
 L["STRING_OVERHEAL"] = "Избыточное лечение"
 L["STRING_OVERHEALED"] = "Избыточно исцелено"
@@ -1535,6 +1542,26 @@ L["STRING_SEGMENTS_LIST_WASTED_TIME"] = "Не в бою"
 L["STRING_SHIELD_HEAL"] = "Предотвращено"
 L["STRING_SHIELD_OVERHEAL"] = "Впустую"
 L["STRING_SHORTCUT_RIGHTCLICK"] = "ПКМ, чтобы закрыть"
+L["STRING_SIMPLE_TEXT_FORMAT"] = "Использовать простое форматирование текста"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED"] = "Использовать выровненный текст"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_DESC"] = "Текст выравнивается по колонкам, настройте расстояние между колонками."
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_SPACE_BETWEEN"] = "Расстояние между колонками"
+L["STRING_SIMPLE_TEXT_FORMAT_DESC"] = "Включает использование трёх правил ниже."
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE2"] = "Не показывать проценты"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE3"] = "Показывать только сумму"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE4"] = "Разделять с помощью | как разделителя"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE5"] = "Разделять с помощью [квадратных скобок]"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE6"] = "Сумма (DPS) Проценты"
+L["STRING_SIMPLE_TEXT_FORMAT_TITLE"] = "Текст справа: Простой или Выровненный"
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE1"] = [=[Когда строка содержит информацию
+о сумме и процентах.
+|cFFAAAAAA%s порядок: сумма, проценты.]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE2"] = [=[Когда строка содержит информацию
+о сумме и в секунду.
+|cFFAAAAAA%s порядок: сумма, в секунду.]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE3"] = [=[Когда строка содержит информацию
+о сумме, в секунду и процентах.
+|cFFAAAAAA%s порядок: сумма, в секунду, проценты.]=]
 L["STRING_SLASH_API_DESC"] = "открыть панель API для сборки плагинов, своих дисплеев, аур и т.д."
 L["STRING_SLASH_CAPTURE_DESC"] = "вкл. или выкл., всех записанных данных."
 L["STRING_SLASH_CAPTUREOFF"] = "все захваты были откл."
@@ -1588,6 +1615,7 @@ L["STRING_TOOOLD"] = "не может быть установлено, пото�
 L["STRING_TOP"] = "вверх"
 L["STRING_TOP_TO_BOTTOM"] = "Сверху вниз"
 L["STRING_TOTAL"] = "Всего"
+L["STRING_TRAINING_DUMMY"] = "Тренировочный манекен"
 L["STRING_TRANSLATE_LANGUAGE"] = "Помогите перевести Details!"
 L["STRING_TUTORIAL_FULLY_DELETE_WINDOW"] = [=[Вы закрыли окно, и можете возобновить его в любое время.
 Чтобы полностью удалить окно, перейдите к параметрам -> Окно: Общее -> Удалить.]=]

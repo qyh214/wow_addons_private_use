@@ -12,15 +12,25 @@ local function MN_GetUnifiedMouseScale()
 end
 
 local function MN_CurrentMousePos()
-  local dc = ns.Addon.db.profile.displayCoords
-  if MN_IsMapMaximized() then return dc.mouseMax or dc.mouse end
+  local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+  local dc = db and db.displayCoords
+  if not dc then return nil end
+  if MN_IsMapMaximized() then
+    return dc.mouseMax or dc.mouse
+  end
   return dc.mouse or dc.mouseMax
 end
 
 local function MN_ReanchorMouseFrame()
   if not MouseCoordsFrame then return end
-  local pos = MN_CurrentMousePos(); if not pos then return end
-  local anchor = _G[pos.relativeTo]; if not anchor or not anchor:IsVisible() then anchor = UIParent end
+  local pos = MN_CurrentMousePos()
+  if not pos then return end
+
+  local anchor = _G[pos.relativeTo]
+  if not anchor or not anchor:IsVisible() then
+    anchor = UIParent
+  end
+
   MouseCoordsFrame:ClearAllPoints()
   MouseCoordsFrame:SetPoint(pos.point, anchor, pos.relativePoint, pos.x, pos.y)
   MouseCoordsFrame:SetScale(MN_GetUnifiedMouseScale())
@@ -28,11 +38,20 @@ end
 
 function ns.CreatePlayerCoordsFrame()
   local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
-  if not (db and db.displayCoords and db.displayCoords.showPlayerCoords) then return end
+  local dc = db and db.displayCoords
+  if not (dc and dc.showPlayerCoords) then return end
 
-  local pos = ns.Addon.db.profile.displayCoords.player or { point = "TOPRIGHT", relativeTo = "UIParent", relativePoint = "TOPRIGHT", x = -52.68329620361328, y = -250.0940246582031, scale = 1.0 }
-  local dc = ns.Addon.db.profile.displayCoords
-  local pScale = (pos and pos.scale) or (dc and dc.PlayerCoordsSize) or 1.0
+  local pos = dc.player or {
+    point = "TOPRIGHT",
+    relativeTo = "UIParent",
+    relativePoint = "TOPRIGHT",
+    x = -52.68329620361328,
+    y = -250.0940246582031,
+    scale = 1.0
+  }
+
+  local pScale = (pos and pos.scale) or dc.PlayerCoordsSize or 1.0
+
   if PlayerCoordsFrame then
     PlayerCoordsFrame:SetScale(pScale)
     PlayerCoordsFrame:Show()
@@ -59,20 +78,30 @@ function ns.CreatePlayerCoordsFrame()
   playerFrame:SetScript("OnDragStop", function(self)
     self:StopMovingOrSizing()
     local point, relativeTo, relativePoint, x, y = self:GetPoint()
-    ns.Addon.db.profile.displayCoords.player = {
+
+    local db2 = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+    if not db2 then return end
+    db2.displayCoords = db2.displayCoords or {}
+
+    db2.displayCoords.player = {
       point = point,
       relativeTo = relativeTo and relativeTo:GetName() or "UIParent",
       relativePoint = relativePoint,
-      x = x, y = y,
+      x = x,
+      y = y,
       scale = self:GetScale()
     }
-    ns.Addon.db.profile.displayCoords.PlayerCoordsSize = self:GetScale()
+    db2.displayCoords.PlayerCoordsSize = self:GetScale()
   end)
 
   playerFrame:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP")
-    if not ns.Addon.db.profile.activate.HideMapNote then
-      if ns.Addon.db.profile.displayCoords.showCoordTooltip then
+    local db2 = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+    local act = db2 and db2.activate
+    local dc2 = db2 and db2.displayCoords
+
+    if not (act and act.HideMapNote) then
+      if dc2 and dc2.showCoordTooltip then
         GameTooltip:AddLine(ns.COLORED_ADDON_NAME .. " " .. L["Player coordinates"], 1, 1, 1, true)
         GameTooltip:AddLine(TextIconInfo:GetIconString() .. "|cff00ff00< " .. L["Hold down Shift + Left mouse button to move"] .. " >", 1, 1, 1)
       end
@@ -84,7 +113,7 @@ function ns.CreatePlayerCoordsFrame()
     GameTooltip:Hide()
   end)
 
-  local alpha = ns.Addon.db.profile.displayCoords.PlayerCoordsAlpha or 1
+  local alpha = (dc and dc.PlayerCoordsAlpha) or 1
   playerFrame.background = playerFrame:CreateTexture(nil, "BACKGROUND")
   playerFrame.background:SetAllPoints()
   playerFrame.background:SetColorTexture(0, 0, 0, alpha)
@@ -100,12 +129,13 @@ function ns.CreatePlayerCoordsFrame()
   playerFrame.text:SetText(ns.COLORED_ADDON_NAME)
 
   local lastX, lastY = 0, 0
+
   local function UpdateCoords()
     local mapID = C_Map.GetBestMapForUnit("player")
     if mapID then
-      local pos = C_Map.GetPlayerMapPosition(mapID, "player")
-      if pos then
-        local x, y = pos:GetXY()
+      local pos2 = C_Map.GetPlayerMapPosition(mapID, "player")
+      if pos2 then
+        local x, y = pos2:GetXY()
         if x and y and x > 0 and y > 0 then
           x = math.floor(x * 10000 + 0.5) / 100
           y = math.floor(y * 10000 + 0.5) / 100
@@ -132,13 +162,27 @@ end
 
 function ns.CreateMouseCoordsFrame()
   local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
-  if not (db and db.displayCoords and db.displayCoords.showMouseCoords) then return end
-  if not ns.Addon or not ns.Addon.db or not ns.Addon.db.profile.displayCoords.showMouseCoords then return end
+  local dc = db and db.displayCoords
+  if not (dc and dc.showMouseCoords) then return end
   if not WorldMapFrame:IsShown() then return end
 
-  local dc = ns.Addon.db.profile.displayCoords
-  dc.mouse = dc.mouse or { point="TOPLEFT",  relativeTo="UIParent", relativePoint="TOPLEFT", x=19.4, y=-207, scale=dc.MouseCoordsSize or 1.0 }
-  dc.mouseMax = dc.mouseMax or { point="TOPRIGHT", relativeTo="UIParent", relativePoint="TOPRIGHT", x=-370.415771484375, y=-1.976189851760864, scale=dc.MouseCoordsSize or 0.7 }
+  dc.mouse = dc.mouse or {
+    point = "TOPLEFT",
+    relativeTo = "UIParent",
+    relativePoint = "TOPLEFT",
+    x = 19.4,
+    y = -207,
+    scale = dc.MouseCoordsSize or 1.0
+  }
+
+  dc.mouseMax = dc.mouseMax or {
+    point = "TOPRIGHT",
+    relativeTo = "UIParent",
+    relativePoint = "TOPRIGHT",
+    x = -370.415771484375,
+    y = -1.976189851760864,
+    scale = dc.MouseCoordsSize or 0.7
+  }
 
   if MouseCoordsFrame then
     MN_ReanchorMouseFrame()
@@ -163,24 +207,37 @@ function ns.CreateMouseCoordsFrame()
   mouseFrame:SetScript("OnDragStop", function(self)
     self:StopMovingOrSizing()
     local point, relativeTo, relativePoint, x, y = self:GetPoint()
-    local dc = ns.Addon.db.profile.displayCoords
+
+    local db2 = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+    if not db2 then return end
+    db2.displayCoords = db2.displayCoords or {}
+    local dc2 = db2.displayCoords
+
     local slot = MN_IsMapMaximized() and "mouseMax" or "mouse"
-    dc[slot] = dc[slot] or {}
-    dc[slot].point, dc[slot].relativePoint, dc[slot].x, dc[slot].y = point, relativePoint, x, y
-    dc[slot].relativeTo = (relativeTo and relativeTo.GetName and relativeTo:GetName()) or "UIParent"
+    dc2[slot] = dc2[slot] or {}
+    dc2[slot].point = point
+    dc2[slot].relativePoint = relativePoint
+    dc2[slot].x = x
+    dc2[slot].y = y
+    dc2[slot].relativeTo = (relativeTo and relativeTo.GetName and relativeTo:GetName()) or "UIParent"
+
     local s = self:GetScale()
-    dc.MouseCoordsSize = s
-    dc.mouse = dc.mouse or {}
-    dc.mouseMax = dc.mouseMax or {}
-    dc.mouse.scale = s
-    dc.mouseMax.scale = s
+    dc2.MouseCoordsSize = s
+    dc2.mouse = dc2.mouse or {}
+    dc2.mouseMax = dc2.mouseMax or {}
+    dc2.mouse.scale = s
+    dc2.mouseMax.scale = s
   end)
 
   mouseFrame:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP")
-    if not ns.Addon.db.profile.activate.HideMapNote then
-      if ns.Addon.db.profile.displayCoords.showCoordTooltip then
-        GameTooltip:AddLine(ns.COLORED_ADDON_NAME .. " " .. L["Mouse coordinates"], 1, 1, 1, true)        
+    local db2 = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+    local act = db2 and db2.activate
+    local dc2 = db2 and db2.displayCoords
+
+    if not (act and act.HideMapNote) then
+      if dc2 and dc2.showCoordTooltip then
+        GameTooltip:AddLine(ns.COLORED_ADDON_NAME .. " " .. L["Mouse coordinates"], 1, 1, 1, true)
         GameTooltip:AddLine(TextIconInfo:GetIconString() .. "|cff00ff00< " .. L["Hold down Shift + Left mouse button to move"] .. " >", 1, 1, 1)
       end
     end
@@ -191,7 +248,7 @@ function ns.CreateMouseCoordsFrame()
     GameTooltip:Hide()
   end)
 
-  local alpha = ns.Addon.db.profile.displayCoords.MouseCoordsAlpha or 1
+  local alpha = (dc and dc.MouseCoordsAlpha) or 1
   mouseFrame.background = mouseFrame:CreateTexture(nil, "BACKGROUND")
   mouseFrame.background:SetAllPoints()
   mouseFrame.background:SetColorTexture(0, 0, 0, alpha)
@@ -199,7 +256,11 @@ function ns.CreateMouseCoordsFrame()
 
   mouseFrame.border = CreateFrame("Frame", nil, mouseFrame, "BackdropTemplate")
   mouseFrame.border:SetAllPoints()
-  mouseFrame.border:SetBackdrop({edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 12, insets = { left = 4, right = 4, top = 4, bottom = 4 },})
+  mouseFrame.border:SetBackdrop({
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    edgeSize = 12,
+    insets = { left = 4, right = 4, top = 4, bottom = 4 },
+  })
   mouseFrame.border:SetBackdropBorderColor(1, 0.8, 0)
   mouseFrame.border:SetAlpha(alpha)
 
@@ -218,6 +279,7 @@ function ns.CreateMouseCoordsFrame()
       end
       return
     end
+
     local x, y
     if WorldMapFrame.ScrollContainer and WorldMapFrame.ScrollContainer.GetNormalizedCursorPosition then
       x, y = WorldMapFrame.ScrollContainer:GetNormalizedCursorPosition()
@@ -226,6 +288,7 @@ function ns.CreateMouseCoordsFrame()
       local scale = WorldMapFrame:GetEffectiveScale()
       cursorX = cursorX / scale
       cursorY = cursorY / scale
+
       if WorldMapDetailFrame and WorldMapDetailFrame:IsVisible() then
         local left = WorldMapDetailFrame:GetLeft()
         local top = WorldMapDetailFrame:GetTop()
@@ -236,6 +299,7 @@ function ns.CreateMouseCoordsFrame()
           y = (top - cursorY) / height
         end
       end
+
       if (not x or not y) and WorldMapFrame.ScrollContainer and WorldMapFrame.ScrollContainer.NormalizeUIPosition then
         x, y = WorldMapFrame.ScrollContainer:NormalizeUIPosition(cursorX, cursorY)
       end
@@ -267,7 +331,6 @@ function ns.CreateMouseCoordsFrame()
 
   MouseCoordsFrame = mouseFrame
   mouseFrame.lastX, mouseFrame.lastY = 0, 0
-
 end
 
 function ns.HidePlayerCoordsFrame()
@@ -289,10 +352,12 @@ function ns.HideMouseCoordsFrame()
 end
 
 C_Timer.After(1, function()
-  if ns.Addon and ns.Addon.db then
+  local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+  local dc = db and db.displayCoords
+  if db then
     ns.CreatePlayerCoordsFrame()
 
-    if WorldMapFrame:IsShown() and ns.Addon.db.profile.displayCoords.showMouseCoords then
+    if WorldMapFrame:IsShown() and dc and dc.showMouseCoords then
       ns.CreateMouseCoordsFrame()
     end
   end
@@ -334,8 +399,11 @@ function ns.DefaultPlayerCoords()
     scale = 0.8
   }
 
-  ns.Addon.db.profile.displayCoords.player = CopyTable(data)
-  ns.Addon.db.profile.displayCoords.PlayerCoordsSize = data.scale
+  local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+  if not db then return end
+  db.displayCoords = db.displayCoords or {}
+  db.displayCoords.player = CopyTable(data)
+  db.displayCoords.PlayerCoordsSize = data.scale
 
   if PlayerCoordsFrame then
     PlayerCoordsFrame:SetScale(data.scale)
@@ -345,7 +413,10 @@ function ns.DefaultPlayerCoords()
 end
 
 function ns.DefaultMouseCoords()
-  local dc = ns.Addon.db.profile.displayCoords
+  local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+  if not db then return end
+  db.displayCoords = db.displayCoords or {}
+  local dc = db.displayCoords
 
   local dataMin = {
     point = "TOP",
@@ -377,7 +448,11 @@ function ns.DefaultMouseCoords()
 end
 
 function ns.DefaultPlayerAlpha()
-  ns.Addon.db.profile.displayCoords.PlayerCoordsAlpha = 1
+  local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+  if not db then return end
+  db.displayCoords = db.displayCoords or {}
+  db.displayCoords.PlayerCoordsAlpha = 1
+
   if PlayerCoordsFrame then
     if PlayerCoordsFrame.background then
       PlayerCoordsFrame.background:SetColorTexture(0, 0, 0, 1)
@@ -389,7 +464,11 @@ function ns.DefaultPlayerAlpha()
 end
 
 function ns.DefaultMouseAlpha()
-  ns.Addon.db.profile.displayCoords.MouseCoordsAlpha = 0
+  local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+  if not db then return end
+  db.displayCoords = db.displayCoords or {}
+  db.displayCoords.MouseCoordsAlpha = 0
+
   if MouseCoordsFrame then
     if MouseCoordsFrame.background then
       MouseCoordsFrame.background:SetColorTexture(0, 0, 0, 0)
@@ -401,31 +480,43 @@ function ns.DefaultMouseAlpha()
 end
 
 function ns.showPlayerCoordsFrame()
-  ns.Addon.db.profile.displayCoords.showPlayerCoords = true
+  local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+  if not db then return end
+  db.displayCoords = db.displayCoords or {}
+  db.displayCoords.showPlayerCoords = true
   ns.CreatePlayerCoordsFrame()
 end
 
 function ns.showMouseCoordsFrame()
-  ns.Addon.db.profile.displayCoords.showMouseCoords = true
+  local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+  if not db then return end
+  db.displayCoords = db.displayCoords or {}
+  db.displayCoords.showMouseCoords = true
   ns.CreateMouseCoordsFrame()
 end
 
 function ns.ApplySavedCoords()
-  local db = ns.Addon.db.profile
+  local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+  if not db then return end
+
   db.displayCoords = db.displayCoords or CopyTable(ns.defaults.profile.displayCoords or {})
   local player = db.displayCoords.player
   local mouse = db.displayCoords.mouse
   local dc = db.displayCoords
 
   if db.displayCoords.showPlayerCoords and player then
-    if PlayerCoordsFrame then PlayerCoordsFrame:Hide() end
+    if PlayerCoordsFrame then
+      PlayerCoordsFrame:Hide()
+    end
     ns.CreatePlayerCoordsFrame()
     local anchor = _G[player.relativeTo] or UIParent
     local pScale = (player and player.scale) or (dc and dc.PlayerCoordsSize) or 1.0
-    PlayerCoordsFrame:SetScale(pScale)
-    PlayerCoordsFrame:ClearAllPoints()
-    PlayerCoordsFrame:SetPoint(player.point, anchor, player.relativePoint, player.x, player.y)
-    PlayerCoordsFrame:Show()
+    if PlayerCoordsFrame then
+      PlayerCoordsFrame:SetScale(pScale)
+      PlayerCoordsFrame:ClearAllPoints()
+      PlayerCoordsFrame:SetPoint(player.point, anchor, player.relativePoint, player.x, player.y)
+      PlayerCoordsFrame:Show()
+    end
   else
     ns.HidePlayerCoordsFrame()
   end
@@ -445,8 +536,10 @@ function ns.ApplySavedCoords()
 end
 
 function ns.ApplySavedAlpha()
-  local pAlpha = ns.Addon.db.profile.displayCoords.PlayerCoordsAlpha or 1
-  local mAlpha = ns.Addon.db.profile.displayCoords.MouseCoordsAlpha or 1
+  local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+  local dc = db and db.displayCoords
+  local pAlpha = (dc and dc.PlayerCoordsAlpha) or 1
+  local mAlpha = (dc and dc.MouseCoordsAlpha) or 1
 
   if PlayerCoordsFrame then
     if PlayerCoordsFrame.background then
@@ -470,9 +563,13 @@ end
 if not ns.MN_MouseOnShowHook then
   ns.MN_MouseOnShowHook = true
   WorldMapFrame:HookScript("OnShow", function()
-    if ns.Addon and ns.Addon.db and ns.Addon.db.profile.displayCoords.showMouseCoords then
+    local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+    local dc = db and db.displayCoords
+    if dc and dc.showMouseCoords then
       C_Timer.After(0.05, function()
-        if not MouseCoordsFrame then ns.CreateMouseCoordsFrame() end
+        if not MouseCoordsFrame then
+          ns.CreateMouseCoordsFrame()
+        end
         if MouseCoordsFrame then
           MN_ReanchorMouseFrame()
           MouseCoordsFrame:Show()

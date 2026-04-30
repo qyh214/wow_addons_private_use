@@ -34,9 +34,8 @@ function P:ReplaceTexture()
 	end
 end
 
-do
-	-- Before NDui module loaded
-	hooksecurefunc(B, "SetSmoothingAmount", function()
+if B.SetupUIScale then
+	hooksecurefunc(B, "SetupUIScale", function()
 		if not P.Initialized then
 			P:BuildTextureTable()
 			P:ReplaceTexture()

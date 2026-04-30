@@ -2,45 +2,51 @@
 
 local _, addon = ...
 
-local tRP3_RPNameInQuests_Installed = false;
 local INSTALLED_RP_ADDON;
 
-do
-    local ADDON_NAME = "TotalRP3";
 
-    local function OnAddOnLoaded()
-        INSTALLED_RP_ADDON = ADDON_NAME;
-    end
-
-    --addon.AddSupportedAddOn(ADDON_NAME, OnAddOnLoaded);
+local function EnableUseRoleplayName()
+    addon.CallbackRegistry:Trigger("UseRoleplayName", true);
 end
 
 
-do
-    local ADDON_NAME = "MyRolePlay";
+do  --Eavesdropper
+    local ADDON_NAME = "Eavesdropper";
+    --https://www.curseforge.com/wow/addons/eavesdropper
 
     local function OnAddOnLoaded()
-        INSTALLED_RP_ADDON = ADDON_NAME;
+        local questModifier = addon.API.GetGlobalObject("ED.QuestText.SubstitutePlayerPreferredName");
+        if questModifier then
+            local testRun = questModifier("Test");
+            if testRun and testRun ~= "" then
+                INSTALLED_RP_ADDON = ADDON_NAME;
+                addon.SetDialogueTextModifier(questModifier);
+                local chatModifier = addon.API.GetGlobalObject("ED.NPCDialogue.SubstitutePlayerPreferredName");
+                addon.SetChatTextModifier(chatModifier or questModifier);
+                EnableUseRoleplayName();
+            end
+
+            addon.GetRoleplayName = addon.API.GetGlobalObject("ED.QuestText.GetPlayerPreferredName");
+        end
     end
 
-    --addon.AddSupportedAddOn(ADDON_NAME, OnAddOnLoaded);
+    addon.AddSupportedAddOn(ADDON_NAME, OnAddOnLoaded);
 end
 
 
-do
+do  --Total RP 3: RP Name in Quest Text
     local ADDON_NAME = "tRP3_RPNameInQuests";
-    --Call their method if installed
-    --Also set DialogueUI_DB.UseRoleplayName to "true"
     --https://www.curseforge.com/wow/addons/trp3-rpnameinquests
 
     local function OnAddOnLoaded()
-        if TRP3_RPNameInQuests_CompleteRename then
-            local textRun = TRP3_RPNameInQuests_CompleteRename("Test");     --In case something went wrong
-            if textRun and textRun ~= "" then
-                tRP3_RPNameInQuests_Installed = true;
+        local questModifier = TRP3_RPNameInQuests_CompleteRename;
+        if questModifier then
+            local testRun = questModifier("Test");     --In case something went wrong
+            if testRun and testRun ~= "" then
                 INSTALLED_RP_ADDON = ADDON_NAME;
-                addon.SetDialogueTextModifier(TRP3_RPNameInQuests_CompleteRename);
-                addon.SetDBValue("UseRoleplayName", true);
+                addon.SetDialogueTextModifier(questModifier);
+                addon.SetChatTextModifier(questModifier);
+                EnableUseRoleplayName();
             end
         end
     end

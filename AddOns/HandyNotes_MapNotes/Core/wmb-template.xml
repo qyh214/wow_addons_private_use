@@ -11,6 +11,7 @@
           <Color r="1" g="1" b="1" a="1"/>
         </Texture>
       </Layer>
+
       <Layer level="ARTWORK">
         <Texture parentKey="Icon" file="Interface\AddOns\HandyNotes_MapNotes\Images\MNL4">
           <Size x="20" y="20"/>
@@ -19,15 +20,16 @@
           </Anchors>
         </Texture>
       </Layer>
+
       <Layer level="OVERLAY">
-        <Texture parentKey="IconOverlay" hidden="true">
+        <Texture parentKey="IconOverlay" file="Interface\AddOns\HandyNotes_MapNotes\Images\Exit" hidden="true"> 
+          <Size x="28" y="28"/>
           <Anchors>
-            <Anchor point="TOPLEFT" relativeKey="$parent.Icon"/>
-            <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon"/>
+            <Anchor point="CENTER" relativeKey="$parent.Icon"/>
           </Anchors>
-          <Color r="0.0" g="0.0" b="0.0" a="0.5"/>
         </Texture>
       </Layer>
+
       <Layer level="OVERLAY" textureSubLevel="1">
         <Texture parentKey="Border" file="Interface\Minimap\MiniMap-TrackingBorder">
           <Size x="54" y="54"/>
@@ -36,15 +38,19 @@
           </Anchors>
         </Texture>
       </Layer>
+
     </Layers>
+
     <HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+
     <Scripts>
       <OnLoad method="OnLoad"/>
-			<OnMouseDown method="OnMouseDown"/>
-			<OnMouseUp method="OnMouseUp"/>
-			<OnClick method="OnClick"/>
-			<OnEnter method="OnEnter"/>
+      <OnMouseDown method="OnMouseDown"/>
+      <OnMouseUp method="OnMouseUp"/>
+      <OnClick method="OnClick"/>
+      <OnEnter method="OnEnter"/>
       <OnLeave function="GameTooltip_Hide"/>
     </Scripts>
+
   </Button>
 </Ui>

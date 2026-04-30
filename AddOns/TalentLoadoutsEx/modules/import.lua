@@ -113,7 +113,7 @@ function Addon:ImportText(importText)
 		return false;
 	end
 
-	if Addon:IsTextLoaded(importText) then
+	if Addon:IsTextLoaded(importText, Addon:GetExportText()) then
 		CommitTalent(configID);
 		return false;
 	end
@@ -123,13 +123,14 @@ function Addon:ImportText(importText)
 		return;
 	end
 
-	local hasError = false;
-	Addon.isLocked = true;
-
+	Addon:SetTrackNode(false);
 	if not ResetTree() then
+		Addon:SetTrackNode(true);
 		return;
 	end
 
+	Addon.isLocked = true;
+	local hasError = false;
 	local errorNames = {};
 	for _, entry in ipairs(loadoutEntryInfo) do
 		local result = true;
@@ -180,6 +181,7 @@ function Addon:ImportText(importText)
 		Addon:Print(string.format("Cannot Learn: %s.", errorNames[1]));
 	end
 
+	Addon:SetTrackNode(true);
 	Addon.isLocked = false;
 
 	return not hasError;
@@ -190,6 +192,7 @@ function Addon:ImportTextAsync(importText)
 		0,
 		function()
 			Addon:ImportText(importText);
+			Addon:UpdateScrollBox(true);
 		end
 	);
 end

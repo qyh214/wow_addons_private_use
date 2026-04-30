@@ -21,6 +21,10 @@ local petContainer = Details222.PetContainer
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --API
 
+function Details:GetSavedSegments()
+	return Details.apocalypse_savedsegments
+end
+
 --reset only the overall data
 function Details:ResetSegmentOverallData()
 	return segmentClass:ResetOverallData()
@@ -246,7 +250,7 @@ function segmentClass:AddToOverallData(combatObject)
 	for id, instance in Details:ListInstances() do
 		if (instance:IsEnabled()) then
 			if (instance:GetSegment() == DETAILS_SEGMENTID_OVERALL) then
-				instance:ForceRefresh()
+				instance:ForceRefresh() -- 0 0 0 0 2  (only map is enforcing secret)
 			end
 		end
 	end
@@ -1164,6 +1168,10 @@ function segmentClass:ResetAllCombatData()
 
 	Details:RefreshMainWindow(-1) --atualiza todas as instancias
 
+	if detailsFramework.IsAddonApocalypseWow() then
+		Details222.BParser.ResetServerDM()
+	end
+
 	Details:SendEvent("DETAILS_DATA_RESET", nil, nil)
 	Details:SendEvent("DETAILS_DATA_SEGMENTREMOVED")
 end
@@ -1171,4 +1179,8 @@ end
 function Details.refresh:r_historico(este_historico)
 	setmetatable(este_historico, segmentClass)
 	--este_historico.__index = historico
+end
+
+function Details222.Segments.Compress(combatObject)
+	
 end

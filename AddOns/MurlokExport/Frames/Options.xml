@@ -1,0 +1,57 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\..\..\..\..\WoW\Data\Interface\AddOns\Blizzard_SharedXML\UI.xsd">
+
+  <Script file="Options.lua"/>
+
+  <Frame name="OptionsPanelTemplate" virtual="true" mixin="OptionsPanelTemplateMixin">
+    <Layers>
+      <Layer level="ARTWORK">
+        <FontString parentKey="Title" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
+          <Anchors>
+            <Anchor point="TOPLEFT" x="16" y="-16" />
+          </Anchors>
+        </FontString>
+        <FontString parentKey="SubText" inherits="GameFontHighlightSmall" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+          <Size>
+            <AbsDimension y="32" x="0" />
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeKey="$parent.Title" relativePoint="BOTTOMLEFT" y="-8" />
+            <Anchor point="RIGHT" x="-32" />
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Frames>
+      <CheckButton parentKey="CompactViewCheckButton" inherits="InterfaceOptionsCheckButtonTemplate" mixin="OptionsPanelTemplateMixin">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.SubText" relativePoint="BOTTOMLEFT" x="-2" y="-8" />
+        </Anchors>
+        <Scripts>
+          <OnShow method="CompactViewCheckButtonOnShow"/>
+          <OnClick method="CompactViewCheckButtonOnClick" />
+        </Scripts>
+      </CheckButton>
+      <CheckButton parentKey="ShowOnlyCurrentClassCheckButton" inherits="InterfaceOptionsCheckButtonTemplate" mixin="OptionsPanelTemplateMixin">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.CompactViewCheckButton" relativePoint="BOTTOMLEFT" x="-2" y="-8" />
+        </Anchors>
+        <Scripts>
+          <OnShow method="ShowOnlyCurrentClassCheckButtonOnShow"/>
+          <OnClick method="ShowOnlyCurrentClassCheckButtonOnClick" />
+        </Scripts>
+      </CheckButton>
+      <CheckButton parentKey="HideMinimapButtonCheckButton" inherits="InterfaceOptionsCheckButtonTemplate" mixin="OptionsPanelTemplateMixin">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeKey="$parent.ShowOnlyCurrentClassCheckButton" relativePoint="BOTTOMLEFT" x="-2" y="-8" />
+        </Anchors>
+        <Scripts>
+          <OnShow method="HideMinimapButtonCheckButtonOnShow"/>
+          <OnClick method="HideMinimapButtonCheckButtonOnClick"/>
+        </Scripts>
+      </CheckButton>            
+    </Frames>
+    <Scripts>
+      <OnLoad method="OnLoad"/>
+    </Scripts>
+  </Frame>
+</Ui>

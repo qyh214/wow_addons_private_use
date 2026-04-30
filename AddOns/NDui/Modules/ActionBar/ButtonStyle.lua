@@ -4,6 +4,8 @@ local Bar = B:GetModule("Actionbar")
 
 local keyButton = gsub(KEY_BUTTON4, "%d", "")
 local keyNumpad = gsub(KEY_NUMPAD1, "%d", "")
+local GetProfessionQualityInfo = C_ActionBar.GetProfessionQualityInfo
+local IsItemAction = C_ActionBar.IsItemAction
 
 local replaces = {
 	{"("..keyButton..")", "M"},
@@ -43,14 +45,40 @@ function Bar:UpdateHotKey()
 	self:SetFormattedText("%s", text)
 end
 
-function Bar:UpdateEquipedColor(button)
-	if not button.__bg then return end
-
-	if button.Border:IsShown() then
-		button.__bg:SetBackdropBorderColor(0, .7, .1)
-	else
-		button.__bg:SetBackdropBorderColor(0, 0, 0)
+local function ClearProfessionQuality(self)
+	if self.ProfessionQualityOverlayFrame then
+		self.ProfessionQualityOverlayFrame:Hide()
 	end
+end
+
+local function UpdateProfessionQuality(self)
+	if self._state_type == "custom" then return end
+
+	local action = self._state_action
+	if action and IsItemAction(action) then
+		local qualityInfo = GetProfessionQualityInfo(action)
+		if qualityInfo then
+			if not self.ProfessionQualityOverlayFrame then
+				self.ProfessionQualityOverlayFrame = CreateFrame("Frame", nil, self, "ActionButtonTextureOverlayTemplate")
+				self.ProfessionQualityOverlayFrame:SetPoint("TOPLEFT", 14, -14)
+			end
+			self.ProfessionQualityOverlayFrame:Show()
+			self.ProfessionQualityOverlayFrame.Texture:SetAtlas(qualityInfo.iconInventory, TextureKitConstants.UseAtlasSize)
+			return
+		end
+	end
+	ClearProfessionQuality(self)
+end
+
+function Bar:UpdateEquipedColor(button)
+	if button.__bg then
+		if button.Border:IsShown() then
+			button.__bg:SetBackdropBorderColor(0, .7, .1)
+		else
+			button.__bg:SetBackdropBorderColor(0, 0, 0)
+		end
+	end
+	UpdateProfessionQuality(button)
 end
 
 function Bar:StyleActionButton(button)
@@ -61,8 +89,6 @@ function Bar:StyleActionButton(button)
 	local icon = button.icon
 	local cooldown = button.cooldown
 	local hotkey = button.HotKey
-	local count = button.Count
-	local name = button.Name
 	local flash = button.Flash
 	local border = button.Border
 	local normal = button.NormalTexture
@@ -76,6 +102,7 @@ function Bar:StyleActionButton(button)
 	local iconMask = button.IconMask
 	local petShine = _G[buttonName.."Shine"]
 	local autoCastable = button.AutoCastable
+	local autoCastOverlay = button.AutoCastOverlay
 
 	if normal then normal:SetAlpha(0) end
 	if normal2 then normal2:SetAlpha(0) end
@@ -90,6 +117,9 @@ function Bar:StyleActionButton(button)
 		autoCastable:SetTexCoord(.217, .765, .217, .765)
 		autoCastable:SetInside()
 	end
+	if autoCastOverlay then
+		autoCastOverlay:SetOutside()
+	end
 
 	if icon then
 		icon:SetInside()
@@ -100,6 +130,8 @@ function Bar:StyleActionButton(button)
 	end
 	if cooldown then
 		cooldown:SetAllPoints()
+		button.cooldownText = cooldown:GetRegions()
+		button.cooldownText:SetFontObject(Game16Font)
 	end
 	if pushed then
 		pushed:SetInside()
@@ -119,6 +151,16 @@ function Bar:StyleActionButton(button)
 	if hotkey then
 		Bar.UpdateHotKey(hotkey)
 		hooksecurefunc(hotkey, "SetText", Bar.UpdateHotKey)
+	end
+	-- Cast VFX
+	local spellCastAnim = button.SpellCastAnimFrame
+	local spellCastFill = spellCastAnim and spellCastAnim.Fill
+	if spellCastFill then
+		spellCastFill.InnerGlowTexture:SetAllPoints(icon)
+		spellCastFill.InnerGlowTexture:SetTexCoord(unpack(DB.TexCoord))
+	end
+	if button.lossOfControlCooldown then
+		button.lossOfControlCooldown:SetInside()
 	end
 
 	button.__styled = true

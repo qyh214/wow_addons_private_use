@@ -1,0 +1,27 @@
+local env = select(2, ...)
+local UICCommonButton = env.modules:Import("packages\\uic-common\\button")
+local UICCommonCheckButton = env.modules:Import("packages\\uic-common\\check-button")
+local UICCommonRange = env.modules:Import("packages\\uic-common\\range")
+local UICCommonScrollBar = env.modules:Import("packages\\uic-common\\scroll-bar")
+local UICCommonInput = env.modules:Import("packages\\uic-common\\input")
+local UICCommonSelectionMenu = env.modules:Import("packages\\uic-common\\selection-menu")
+local UICCommonColorInput = env.modules:Import("packages\\uic-common\\color-input")
+local UICCommonPrompt = env.modules:Import("packages\\uic-common\\prompt")
+local UICCommon = env.modules:New("packages\\uic-common")
+
+UICCommon.RedButton = UICCommonButton.RedButton
+UICCommon.GrayButton = UICCommonButton.GrayButton
+UICCommon.RedCompactButton = UICCommonButton.RedCompactButton
+UICCommon.GrayCompactButton = UICCommonButton.GrayCompactButton
+UICCommon.RedTextButton = UICCommonButton.RedTextButton
+UICCommon.GrayTextButton = UICCommonButton.GrayTextButton
+UICCommon.RedCloseButton = UICCommonButton.RedCloseButton
+UICCommon.SelectionMenuButton = UICCommonButton.SelectionMenuButton
+UICCommon.CheckButton = UICCommonCheckButton.New
+UICCommon.ScrollBar = UICCommonScrollBar.New
+UICCommon.Input = UICCommonInput.New
+UICCommon.Range = UICCommonRange.New
+UICCommon.RangeWithText = UICCommonRange.NewWithText
+UICCommon.SelectionMenu = UICCommonSelectionMenu.New
+UICCommon.ColorInput = UICCommonColorInput.New
+UICCommon.Prompt = UICCommonPrompt.New

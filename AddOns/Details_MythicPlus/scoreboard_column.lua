@@ -78,7 +78,9 @@ end
 
 function ScoreboardColumnMixin:BindToLine(line)
     local frame = self.Constructor(line)
+    if private.buildVersion >= 50000 then
     frame.ColumnDefinition = self
     self.FrameObject = frame
     return frame
+    end
 end

@@ -9,8 +9,8 @@ local _, app = ...;
 -- Encapsulates the functionality for all filtering logic which is used to check if a given Object meets the applicable filters via User Settings
 
 -- Global locals
-local select, pairs, type, rawget, wipe,math_floor
-	= select, pairs, type, rawget, wipe,math.floor
+local select, next, type, rawget, wipe,math_floor
+	= select, next, type, rawget, wipe,math.floor
 
 -- WoW API Cache
 local GetFactionCurrentReputation = app.WOWAPI.GetFactionCurrentReputation;
@@ -101,7 +101,8 @@ local function FilterBind(group)
 end
 api.Filters.Bind = FilterBind;
 local function FilterInGame(item)
-	return not item.u or item.u > 2;
+	local u = item.u
+	return not u or u > 2
 end
 api.Filters.InGame = FilterInGame;
 -- manually track InGame in CurrentCharacterFilters
@@ -236,8 +237,18 @@ function(item)
 			return true;
 		end
 		-- don't filter Types by their FilterID in some cases
-		if FilterFilterID_IgnoredTypes[item.__type or 0] then
+		if FilterFilterID_IgnoredTypes[item.__type] then
 			return true;
+		end
+		local itemg = item.g
+		if itemg then
+			for i=1,#itemg do
+				if itemg[i].visible then
+					-- app.PrintDebug("filterID ignored",f,app:SearchLink(item))
+					return true
+				end
+			end
+			-- app.PrintDebug("filterID included after",#itemg,f,app:SearchLink(item))
 		end
 	else
 		return true;
@@ -272,9 +283,9 @@ end or function(item)
 		return true;
 	end
 end);
-app.AddEventHandler("OnStartup", function()
-	Professions = app.CurrentCharacter.Professions
-	ActiveSkills = app.CurrentCharacter.ActiveSkills
+app.AddEventHandler("OnAfterSavedVariablesAvailable", function(currentCharacter)
+	Professions = currentCharacter.Professions
+	ActiveSkills = currentCharacter.ActiveSkills
 end)
 
 -- Class
@@ -371,7 +382,8 @@ end);
 -- we actually don't "really" care to have level filter in the RawCharacterFilters... just causes more inaccurate quest reports since level req on every expac changes all the time
 RawCharacterFilters.Level = nil;
 
--- SkillLevel
+-- SkillLevel (Classic only)
+if app.IsClassic then
 app.MaximumSkillLevel = 99999;
 DefineToggleFilter("SkillLevel", CharacterFilters,
 function(group)
@@ -383,6 +395,7 @@ function(group)
 end);
 -- SkillLevel doesn't really exclude a character from seeing a given Thing
 RawCharacterFilters.SkillLevel = nil;
+end
 
 -- Trackable
 -- Whether this group can be 'tracked'
@@ -428,10 +441,12 @@ if app.IsRetail then
 		ExpansionFilters[9] = app.Settings:Get("ExpansionFilter:SL")
 		ExpansionFilters[10] = app.Settings:Get("ExpansionFilter:DF")
 		ExpansionFilters[11] = app.Settings:Get("ExpansionFilter:TWW")
+		ExpansionFilters[12] = app.Settings:Get("ExpansionFilter:MID")
+		ExpansionFilters[13] = app.Settings:Get("ExpansionFilter:TLT")
 
 		-- Enable the filter if any expansion is disabled
 		local anyDisabled = false
-		for i = 1, 11 do
+		for i = 1, 12 do
 			if ExpansionFilters[i] == false then
 				anyDisabled = true
 				break
@@ -463,7 +478,7 @@ local function PrintExclusionCause(name, o)
 	app.PrintDebug("F-EX",name,o.hash,o.link or o.name)
 end
 local function ApplySettingsFilters(o, filters)
-	for name,filter in pairs(filters) do
+	for _,filter in next, filters do
 		-- if not filter(o) then PrintExclusionCause(name, o) return end
 		if not filter(o) then return end
 	end
@@ -484,9 +499,10 @@ end
 local function SettingsExtraFilters(item, extraFilters)
 	if SettingsFilters(item) then
 		if extraFilters then
+			local filters = api.Filters
 			local filter
-			for name,_ in pairs(extraFilters) do
-				filter = api.Filters[name]
+			for name in next, extraFilters do
+				filter = filters[name]
 				if filter then
 					-- if not filter(item) then PrintExclusionCause(name, item) return end
 					if not filter(item) then return end
@@ -504,7 +520,7 @@ local function SettingsFilters_IgnoreBoEFilter(item)
 end
 api.SettingsFilters.IgnoreBoEFilter = SettingsFilters_IgnoreBoEFilter
 local function CurrentCharacterFilters(o)
-	for name,filter in pairs(RawCharacterFilters) do
+	for _,filter in next, RawCharacterFilters do
 		-- if not filter(o) then PrintExclusionCause(name, o) return end
 		if not filter(o) then return end
 	end
@@ -633,12 +649,13 @@ local function CacheSettingsData()
 	SettingsUnobtainable = app.Settings:GetRawSettings("Unobtainable");
 	wipe(SettingsFilterIDs)
 	local rawFilters = app.Settings:GetRawFilters();
-	for k,v in pairs(rawFilters) do
+	for k,v in next, rawFilters do
 		-- app.PrintDebug("f:user",k,v)
 		SettingsFilterIDs[k] = v;
 	end
 	-- settings uses a meta-table to default filters... let's push those up for our local use
-	for k,v in pairs(getmetatable(rawFilters).__index) do
+	local rawFiltersIndex = getmetatable(rawFilters).__index
+	for k,v in next, rawFiltersIndex do
 		if SettingsFilterIDs[k] == nil then
 			-- app.PrintDebug("f:default",k,v)
 			SettingsFilterIDs[k] = v;

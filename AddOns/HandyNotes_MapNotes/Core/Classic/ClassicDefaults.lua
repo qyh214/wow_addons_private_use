@@ -467,29 +467,15 @@ ns.defaults = {
         MinimapCapitalsGeneral = true,
       },
 
+    -- 11 DeleteIcons
     deletedIcons = {
-
-      AzerothDeletedIcons = {
-        ['*'] = {},
-      },
-      ContinentDeletedIcons = {
-        ['*'] = {},
-      },
-      ZoneDeletedIcons = {
-        ['*'] = {},
-      },
-      MinimapZoneDeletedIcons = {
-        ['*'] = {},
-      },
-      DungeonDeletedIcons = {
-        ['*'] = {},
-      },
-      CapitalsDeletedIcons = {
-        ['*'] = {},
-      },
-      MinimapCapitalsDeletedIcons = {
-        ['*'] = {},
-      },
+      AzerothDeletedIcons = { ['*'] = {} },
+      ContinentDeletedIcons = { ['*'] = {} },
+      ZoneDeletedIcons = { ['*'] = {} },
+      MinimapZoneDeletedIcons = { ['*'] = {} },
+      DungeonDeletedIcons = { ['*'] = {} },
+      CapitalsDeletedIcons = { ['*'] = {} },
+      MinimapCapitalsDeletedIcons = { ['*'] = {} },
     },
 
     --12 FogOfWarColor

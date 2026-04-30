@@ -25,6 +25,7 @@ function ns.SyncSingleScaleAlpha()
   db.MiniMapScaleZidormi = db.ZoneScaleZidormi
   db.MiniMapScaleTransmogger = db.ZoneScaleTransmogger
   db.MiniMapScaleItemUpgrade = db.ZoneScaleItemUpgrade
+  db.MiniMapScaleDecorExpert = db.ZoneScaleDecorExpert
   db.MiniMapScalePaths = db.ZoneScalePaths
   -- Zone Alpha
   db.MiniMapAlphaMapNotesIcons = db.ZoneAlphaMapNotesIcons
@@ -40,6 +41,7 @@ function ns.SyncSingleScaleAlpha()
   db.MiniMapAlphaZidormi = db.ZoneAlphaZidormi
   db.MiniMapAlphaTransmogger = db.ZoneAlphaTransmogger
   db.MiniMapAlphaItemUpgrade = db.ZoneAlphaItemUpgrade
+  db.MiniMapAlphaDecorExpert = db.ZoneAlphaDecorExpert
   db.MiniMapAlphaPaths = db.ZoneAlphaPaths
 
   if db.activate.ZoneGeneralSyncScaleAlpha then
@@ -57,6 +59,7 @@ function ns.SyncSingleScaleAlpha()
     db.ZoneScaleZidormi = db.ZonesGeneralScale
     db.ZoneScaleTransmogger = db.ZonesGeneralScale
     db.ZoneScaleItemUpgrade = db.ZonesGeneralScale
+    db.ZoneScaleDecorExpert = db.ZonesGeneralScale
     db.ZoneScalePaths = db.ZonesGeneralScale
     -- Alpha
     db.ZoneAlphaMapNotesIcons = db.ZonesGeneralAlpha
@@ -72,6 +75,7 @@ function ns.SyncSingleScaleAlpha()
     db.ZoneAlphaZidormi = db.ZonesGeneralAlpha
     db.ZoneAlphaTransmogger = db.ZonesGeneralAlpha
     db.ZoneAlphaItemUpgrade = db.ZonesGeneralAlpha
+    db.ZoneAlphaDecorExpert = db.ZonesGeneralAlpha
     db.ZoneAlphaPaths = db.ZonesGeneralAlpha
   end
 
@@ -90,6 +94,7 @@ function ns.SyncSingleScaleAlpha()
       db.MiniMapScaleZidormi = db.MiniMapGeneralScale
       db.MiniMapScaleTransmogger = db.MiniMapGeneralScale
       db.MiniMapScaleItemUpgrade = db.MiniMapGeneralScale
+      db.MiniMapScaleDecorExpert = db.MiniMapGeneralScale
       db.MiniMapScalePaths = db.MiniMapGeneralScale
       -- Alpha
       db.MiniMapAlphaMapNotesIcons = db.MiniMapGeneralAlpha
@@ -105,6 +110,7 @@ function ns.SyncSingleScaleAlpha()
       db.MiniMapAlphaZidormi = db.MiniMapGeneralAlpha
       db.MiniMapAlphaTransmogger = db.MiniMapGeneralAlpha
       db.MiniMapAlphaItemUpgrade = db.MiniMapGeneralAlpha
+      db.MiniMapAlphaDecorExpert = db.MiniMapGeneralAlpha
       db.MiniMapAlphaPaths = db.MiniMapGeneralAlpha
   end
 end

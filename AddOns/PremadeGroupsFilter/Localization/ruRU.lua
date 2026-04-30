@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ L["error.semantic.protected"] = "|cffff0000Семантическая ошибк
 L["message.settingsupgraded"] = "Premade Groups Filter: Настройки перенесены в версию %s"
 L["message.sortingoverwritten"] = "Premade Groups Filter: Порядок сортировки групп по умолчанию был изменен аддоном %s."
 L["message.sortingrestored"] = "Premade Groups Filter: Порядок сортировки групп по умолчанию был восстановлен аддоном %s."
+L["message.taint"] = "Premade Groups Filter: Ограничения аддонов сейчас активны. Поиск групп был изменён, что может вызвать ошибки Lua. Рекомендуется выполнить /reload для устранения проблемы."
 
 L["dialog.settings"] = GAMEMENU_OPTIONS
 L["dialog.reset"] = "Сброс"
@@ -55,7 +56,7 @@ L["dialog.dps"]        = "Боец"
 L["dialog.mprating"]   = "М+ рейтинг"
 L["dialog.pvprating"]  = "PvP рейтинг"
 L["dialog.delvetier"]  = "Уровень Вылазок"
-L["dialog.delvetier.tooltip"] = "Некоторые игроки неправильно указывают уровень Вылазок и пишут его только в названии группы. Аддоны не могут прочитать название. Используйте стандартное поле поиска для лучших результатов."
+L["dialog.delvetier.tooltip"] = "Некоторые игроки неправильно указывают уровень Вылазок и пишут его только в названии группы. Аддоны не могут прочитать название. Используйте стандартное поле поиска для точных результатов."
 L["dialog.defeated"]   = "Боссы убиты (для рейда)"
 L["dialog.sorting"] = "Сортировка"
 L["dialog.usepgf.tooltip"] = "Включить/отключить Premade Groups Filter"
@@ -136,23 +137,30 @@ L["settings.leaderCrown.title"] = "Лидер группы"
 L["settings.leaderCrown.tooltip"] = "Показать маленькую корону над ролью лидера группы в списке готовых групп подземелий."
 L["settings.ratingInfo.title"] = "Рейтинг лидера группы"
 L["settings.ratingInfo.tooltip"] = "Показать М+ или PvP-рейтинг лидера группы в готовом списке групп."
-L["settings.oneClickSignUp.title"] = "Подписаться в один клик"
-L["settings.oneClickSignUp.tooltip"] = "Подписаться в группу напрямую, нажав на нее, вместо того, чтобы сначала выбрать ее, а затем нажать «Подписаться»."
+L["settings.oneClickSignUp.title"] = "Присоединиться в один клик"
+L["settings.oneClickSignUp.tooltip"] = "Присоединиться в группу напрямую, нажав на нее, вместо того, чтобы сначала выбрать ее, а затем нажать «Присоединиться»."
 L["settings.persistSignUpNote.title"] = "Сохранить заметку о подписке"
 L["settings.persistSignUpNote.tooltip"] = "Сохраняет «заметку лидеру группы» при регистрации на разные группы. По умолчанию заметка удаляется при выборе новой группы."
-L["settings.signupOnEnter.title"] = "Подписаться с помощью Enter"
+L["settings.signupOnEnter.title"] = "Присоединиться с помощью Enter"
 L["settings.signupOnEnter.tooltip"] = "Автоматически выделить текстовое поле «заметка лидеру группы» при регистрации в новой группе и подтвердить свою заявку нажатием Enter."
 L["settings.skipSignUpDialog.title"] = "Пропустить диалог регистрации"
-L["settings.skipSignUpDialog.tooltip"] = "По возможности пропустить подсказку о роли и примечании и сразу зарегистрироваться в группе. Удерживайте Shift, чтобы всегда показывать диалог."
+L["settings.skipSignUpDialog.tooltip"] = "По возможности пропустить подсказку о роли и примечании и сразу присоединяться к группе. Удерживайте Shift, чтобы всегда показывать диалог."
 L["settings.specIcon.title"] = "Показать специализацию"
 L["settings.specIcon.tooltip"] = "Показать значок с классовой специализацией каждого игрока в готовом списке группы."
 L["settings.missingRoles.title"] = "Отсутствующие роли"
 L["settings.missingRoles.tooltip"] = "Показать значок роли каждого отсутствующего слота в списке готовых групп."
 L["settings.signUpDeclined.title"] = "Применить к отклоненным группам"
-L["settings.signUpDeclined.tooltip"] = "Восстановить старый режим до TWW и разрешить регистрироваться в группы, которые ранее Вам отказали."
+L["settings.signUpDeclined.tooltip"] = "Восстановить старый режим до TWW и разрешить присоединяться в группы, в которых ранее Вам отказали."
 L["settings.section.mythicplus.title"] = "М+"
-L["settings.section.signup.title"] = "Подписаться"
+L["settings.section.signup.title"] = "Присоединиться"
 L["settings.rioRatingColors.title"] = "Рейтинг по цвету Raider.IO"
 L["settings.rioRatingColors.tooltip"] = "Использовать цветовую схему Raider.IO для рейтинга M+, если загружен аддон Raider.IO."
 L["settings.cancelOldestApp.title"] = "Отмена старой заявки в группу"
 L["settings.cancelOldestApp.tooltip"] = "Если у Вас максимальное количество ожидающих заявок, нажмите на любую группу, чтобы сначала отменить самую старую заявку. Затем нажмите снова, чтобы подать заявку в группу."
+L["settings.compactListEntries.title"] = "Компактные элементы списка"
+L["settings.compactListEntries.tooltip"] = "Скрывает строку стиля игры, чтобы элементы в списке групп занимали меньше места по высоте (как в версиях до предварительного обновления 'Полночи')."
+L["settings.info.reload"] = "* Изменение этих параметров автоматически перезагрузит интерфейс после закрытия настроек."
+L["settings.warning.taint"] = "Эта опция может вызывать ошибки Lua в ограниченных ситуациях, например в рейдах или в бою."
+
+L["dialog.restriction.text"] = "Ограничения аддона активны. Фильтрация может вызвать ошибки Lua."
+L["dialog.restriction.ok"] = "Всё равно фильтровать"

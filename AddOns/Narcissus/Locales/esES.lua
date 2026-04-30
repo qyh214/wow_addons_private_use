@@ -1,4 +1,4 @@
---Coutesy of Romanv. Thank you!    --Translator: Romanv as of 1.6.2
+--Coutesy of Romanv. Thank you!    --Translator: Romanv as of 1.8.4
 
 if not (GetLocale() == "esES") then
     return;
@@ -51,6 +51,7 @@ L["Day Plural"] = "días";
 L["Day Singular"] = "día";
 L["Hour Plural"] = "horas";
 L["Hour Singular"] = "hora";
+L["Last Visit"] = "Última visita: ";
 
 L["Swap items"] = "Intercambiar items";
 L["Press Copy"] = NARCI_COLOR_GREY_70.. "Presiona |r".. NARCI_SHORTCUTS_COPY.. NARCI_COLOR_GREY_70 .." para copiar";
@@ -115,6 +116,8 @@ L["MinimapButton Reenabled"] = "|cffffd100Has activado el botón del minimapa de
 L["MinimapButton LibDBIcon"] = "Utilizar LibDBIcon";
 L["MinimapButton LibDBIcon Desc"] = "Utilizar LibDBIcon para crear nuestro botón del minimapa.\nEstás viendo esta opción porque has instalado LibDBIcon-1.0 o un complemento que integra esta biblioteca.";
 L["MinimapButton LibDBIcon Hide"] = "Ocultar botón";
+L["MinimapButton Click Behavior"] = "Comportamiento del click";
+L["MinimapButton Click Behavior tooltip"] = "Controla qué interfaz de usuario de Narcissus se abre al hacer click en el botón del minimapa.";
 L["Corrupted Item Parser"] = "|cffffffffToggle Corrupted Item Parser|r";
 L["Toggle Dressing Room"] = "|cffffffffToggle "..DRESSUP_FRAME.."|r";
 L["Reset Camera"] = "Restablecer cámara";
@@ -125,6 +128,7 @@ L["Layout"] = "Diseño";
 L["Symmetry"] = "Simetrico";
 L["Asymmetry"] = "Asimetrico";
 L["Copy Texts"] = "Copiar textos";
+L["Toggle Item List"] = "Alternar lista de items";
 L["Syntax"] = "Sintaxis";
 L["Plain Text"] = "Texto sin formato";
 L["BB Code"] = "BB Code";
@@ -375,6 +379,8 @@ L["Switch Form To Human"] = "Cambiar a la forma|cffffffff Humana|r";
 L["InGame Command"] = "Comando en el juego";
 L["Hide Player Items"] = "Ocultar items del jugador";
 L["Hide Player Items Tooltip"] = "Ocultar todo lo que no pertenezca a este conjunto de items.";
+L["Hide Duplicated Appearance"] = "Ocultar duplicados";
+L["Hide Duplicated Appearance Tooltip"] = "Algunos conjuntos pueden contener items con la misma apariencia. Activa esta opción para mostrar los items únicos.";
 
 --NPC Browser--
 NARCI_NPC_BROWSER_TITLE_LEVEL = ".*%?%?.?";      --Level ?? --Use this to check if the second line of the tooltip is NPC's title or unit type
@@ -747,6 +753,7 @@ L["Item Type Teleportation"] = TUTORIAL_TITLE35 or "Viajes";
 L["Item Type Gems"] = AUCTION_CATEGORY_GEMS or "Gemas";
 L["Item Type Reagent"] = PROFESSIONS_MODIFIED_CRAFTING_REAGENT_BASIC or "Componente de profesión";
 
+
 --Perks Program--
 L["Perks Program Unclaimed Tender Format"] = "- Tienes |cffffffff%s|r cupones sin recoger en el alijo de recolector.";     --PERKS_PROGRAM_UNCOLLECTED_TENDER
 L["Perks Program Unearned Tender Format"] = "- Tienes |cffffffff%s|r  cupones sin ganar del registro de viajero.";     --PERKS_PROGRAM_ACTIVITIES_UNEARNED
@@ -845,3 +852,37 @@ L["GamePad Select"] = "Seleccionar";
 L["GamePad Cancel"] = "Cancelar";
 L["GamePad Use"] = "Usar";
 L["GamePad Equip"] = "Equipar";
+
+
+--TransmogUI--
+L["Transmog UI"] = "Transfiguración";
+L["Transmog UI Description"] = "Crea conjuntos personalizados a los que pueden acceder todos tus personajes.";
+L["OutfitSource Default"] = "Personaje actual";
+L["OutfitSource Default Tooltip"] = "Los datos se almacenan en el servidor.";
+L["OutfitSource Shared"] = "Lista compartida";
+L["OutfitSource Shared Tooltip"] = "Todos tus personajes pueden acceder a esta lista.\n\nLos datos se almacenan localmente en el addon Narcissus.";
+L["OutfitSource Alts"] = "Otros personajes";
+L["OutfitSource Alts Tooltip"] = "Puedes ver los conjuntos personalizados de otro personaje si has iniciado sesión con él y el addon Narcissus activado.\n\nNo podrás modificar los conjuntos en tu personaje actual.";
+L["Cannot Delete On Alts"] = "No puedes modificar este conjunto porque pertenece a otro personaje";
+L["Your Money Amount"] = "Tu saldo";
+L["TransmogSet No Valid Items"] = "No hay objetos válidos.";
+L["Copy To Shared List"] = "Copiar a la lista compartida";
+L["Insturction Delete Without Confirm"] = "Haz clic con Shift para eliminar sin confirmación.";
+L["Press Key To Copy Format"] = "Pulsa |cffffd100%s|r para copiar";
+L["Added To Shared List"] = "Añadido a la lista compartida";
+L["Added To Shared List Alert Format"] = "Ya has añadido este conjunto a la lista compartida como \"%s\"";
+L["New Set Location Default"] = "Este conjunto personalizado se guardará en tu personaje actual.";
+L["New Set Location Shared"] = "Este conjunto personalizado se añadirá a la lista compartida.";
+L["Save Custom Set Location"] = "Guardar en:";
+L["Save Slots Colon"] = "Guardar ranuras: ";
+L["Error View Outfit In Combat"] = "No puedes ver conjuntos personalizados durante el combate";
+L["Profile Management"] = "Gestión de perfiles";
+L["Delete Character Data"] = "Borrar personaje";
+L["Delete Character Data Tooltip"] = "Esta opción sirve para limpiar tus personajes inactivos o borrados.\n\nElimina los datos de conjuntos personalizados almacenados localmente en este personaje. El complemento Narcissus volverá a almacenar los datos cuando inicies sesión con este personaje.";
+
+
+--WardrobeCollection--
+L["ModuleName WardrobeCollection"] = "Pestaña Apariencias";
+L["ModuleDescription WardrobeCollection"] = "Se ha añadido una casilla de verificación para ocultar las ranuras no conocidas en el modelo de vista previa al ver un conjunto en la pestaña Apariencias."
+L["Hide Uncollected Slots"] = "Ocultar no conocido";
+L["Hide Uncollected Slots Tooltip"] = "Ocultar ranuras no conocidas |cffffd100(%s)|r";

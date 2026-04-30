@@ -1,8 +1,0 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="data.lua"/>
-	<Script file="0_Trash.lua"/>
-	<Script file="1_BigMOMMA.lua"/>
-	<Script file="2_DemolitionDuo.lua"/>	
-	<Script file="3_Swampface.lua"/>
-	<Script file="4_GeezleGigazap.lua"/>
-</Ui>

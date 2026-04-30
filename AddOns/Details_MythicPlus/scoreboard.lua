@@ -15,7 +15,7 @@ local addonName, private = ...
 local addon = private.addon
 local _ = nil
 local L = detailsFramework.Language.GetLanguageTable(addonName)
-local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
+local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
 
 ---@class scoreboard_object : table
 ---@field lines scoreboard_line[]
@@ -80,6 +80,7 @@ local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
 ---@field scoreColor table
 ---@field deaths number
 ---@field damageTaken number
+---@field avoidableDamageTaken number
 ---@field dps number
 ---@field hps number
 ---@field interrupts number
@@ -91,6 +92,7 @@ local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
 ---@field activityTimeDamage number
 ---@field activityTimeHeal number
 ---@field damageTakenFromSpells spell_hit_player[]
+---@field avoidableDamageTakenFromSpells avoidable_spell_hit_player[]
 ---@field loot string|nil
 ---@field keystoneLevel number
 ---@field keystoneIcon string|number
@@ -197,7 +199,9 @@ function addon.OpenScoreBoardAtEnd()
     if (not addon.profile.has_last_run) then
         -- workaround for the event not firing if reloaded in-between
         -- this change should be removed when COMBAT_MYTHICPLUS_OVERALL_READY is being triggered in reloaded runs
-        addon.OnMythicPlusOverallReady()
+        if not detailsFramework.IsAddonApocalypseWow() then
+            addon.OnMythicPlusOverallReady()
+        end
     end
     if (not addon.profile.has_last_run) then
         private.log("No last run found while trying to open the scoreboard.")
@@ -230,7 +234,7 @@ local SaveLoot = function(itemLink, unitName)
 
     local effectiveILvl, _, baseItemLevel = C_Item.GetDetailedItemLevelInfo(itemLink)
     local averageItemLevel = addon.GetRunAverageItemLevel(lastRun)
-    if (effectiveILvl < averageItemLevel * 0.75 or baseItemLevel < 6) then
+    if (effectiveILvl < averageItemLevel * 0.69 or baseItemLevel < 6) then
         return
     end
 
@@ -296,7 +300,13 @@ function mythicPlusBreakdown.CreateScoreboardFrame()
 
     readyFrame:SetBackdropColor(.1, .1, .1, 0)
     readyFrame:SetBackdropBorderColor(.1, .1, .1, 0)
-    detailsFramework:AddRoundedCornersToFrame(readyFrame, Details.PlayerBreakdown.RoundedCornerPreset)
+
+    local roundedCornerPreset = {
+        roundness = 12,
+        color = {.1, .1, .1, 0.834},
+    }
+
+    detailsFramework:AddRoundedCornersToFrame(readyFrame, roundedCornerPreset)
 
     local backgroundDungeonTexture = readyFrame:CreateTexture("$parentDungeonBackdropTexture", "background")
     backgroundDungeonTexture:SetPoint("topleft", readyFrame, "topleft", 3, -3)
@@ -320,12 +330,12 @@ function mythicPlusBreakdown.CreateScoreboardFrame()
     addon.CreateRunSelectorDropdown(readyFrame)
 
     local normalTexture = configButton:CreateTexture(nil, "overlay")
-    normalTexture:SetTexture([[Interface\AddOns\Details\images\end_of_mplus.png]], nil, nil, "TRILINEAR")
+    normalTexture:SetTexture([[Interface\AddOns\Details_MythicPlus\Assets\Textures\end_of_mplus.png]], nil, nil, "TRILINEAR")
     normalTexture:SetTexCoord(79/512, 113/512, 0/512, 36/512)
     normalTexture:SetDesaturated(true)
 
     local pushedTexture = configButton:CreateTexture(nil, "overlay")
-    pushedTexture:SetTexture([[Interface\AddOns\Details\images\end_of_mplus.png]], nil, nil, "TRILINEAR")
+    pushedTexture:SetTexture([[Interface\AddOns\Details_MythicPlus\Assets\Textures\end_of_mplus.png]], nil, nil, "TRILINEAR")
     pushedTexture:SetTexCoord(114/512, 148/512, 0/512, 36/512)
     pushedTexture:SetDesaturated(true)
 
@@ -430,7 +440,7 @@ function mythicPlusBreakdown.CreateScoreboardFrame()
     do --mythic+ run data
         --clock texture and icon to show the wasted time (time out of combat)
         local outOfCombatIcon = readyFrame:CreateTexture("$parentOutOfCombatIcon", "artwork", nil, 2)
-        outOfCombatIcon:SetTexture([[Interface\AddOns\Details\images\end_of_mplus.png]], nil, nil, "TRILINEAR")
+        outOfCombatIcon:SetTexture([[Interface\AddOns\Details_MythicPlus\Assets\Textures\end_of_mplus.png]], nil, nil, "TRILINEAR")
         outOfCombatIcon:SetTexCoord(172/512, 235/512, 84/512, 147/512)
         outOfCombatIcon:SetVertexColor(detailsFramework:ParseColors("silver"))
         outOfCombatIcon:SetSize(24, 24)
@@ -446,7 +456,7 @@ function mythicPlusBreakdown.CreateScoreboardFrame()
         readyFrame.OutOfCombatText = outOfCombatText
 
         local itemLevelIcon = readyFrame:CreateTexture("$parentItemLevelIcon", "artwork", nil, 2)
-        itemLevelIcon:SetTexture([[Interface\AddOns\Details\images\end_of_mplus.png]], nil, nil, "TRILINEAR")
+        itemLevelIcon:SetTexture([[Interface\AddOns\Details_MythicPlus\Assets\Textures\end_of_mplus.png]], nil, nil, "TRILINEAR")
         itemLevelIcon:SetPoint("left", outOfCombatIcon, "right", 260, 0)
         do
             local left, right, top, bottom = 79, 131, 229, 271
@@ -460,7 +470,7 @@ function mythicPlusBreakdown.CreateScoreboardFrame()
         local itemLevelText = readyFrame:CreateFontString("$parentItemLevelText", "artwork", "GameFontNormal")
         detailsFramework:SetFontSize(itemLevelText, 11)
         detailsFramework:SetFontColor(itemLevelText, "silver")
-        itemLevelText:SetText("0.0")
+        itemLevelText:SetText("0")
         itemLevelText:SetPoint("left", itemLevelIcon, "right", 6, -3)
         readyFrame.ItemLevelText = itemLevelText
 
@@ -501,6 +511,8 @@ function mythicPlusBreakdown.CreateScoreboardFrame()
 
     return readyFrame
 end
+
+mythicPlusBreakdown.partyCache = {"player", "party1", "party2", "party3", "party4"}
 
 --this function get the overall mythic+ segment created after a mythic+ run has finished
 --then it fill the lines with data from the overall segment
@@ -561,9 +573,9 @@ function mythicPlusBreakdown.RefreshScoreboardFrame(mainFrame, runData)
     do --code for filling the 5 player lines
         for playerName, playerInfo in pairs(runPlayerData) do
             local unitId
-            for i = 1, #Details.PartyUnits do
-                if (Details:GetFullName(Details.PartyUnits[i]) == playerName) then
-                    unitId = Details.PartyUnits[i]
+            for i = 1, #mythicPlusBreakdown.partyCache do
+                if (private.Details:GetFullName(mythicPlusBreakdown.partyCache[i]) == playerName) then
+                    unitId = mythicPlusBreakdown.partyCache[i]
                 end
             end
             unitId = unitId or playerName
@@ -573,6 +585,12 @@ function mythicPlusBreakdown.RefreshScoreboardFrame(mainFrame, runData)
             if (not ratingColor) then
                 ratingColor = _G["HIGHLIGHT_FONT_COLOR"]
             end
+
+			if (playerInfo.scorePrevious == 0 and score > 450) then
+				-- in case there's an issue and the actual score is incorrectly set to 0
+				-- it'll show "1530" instead of "1530 (+1530)"
+				playerInfo.scorePrevious = score
+			end
 
             ---@type scoreboard_playerdata
             local thisPlayerData = {
@@ -587,11 +605,13 @@ function mythicPlusBreakdown.RefreshScoreboardFrame(mainFrame, runData)
                 previousScore = playerInfo.scorePrevious or score or 0,
                 scoreColor = ratingColor,
                 damageTaken = playerInfo.totalDamageTaken or 0,
+                avoidableDamageTaken = playerInfo.totalAvoidableDamageTaken or 0,
                 damageTakenFromSpells = playerInfo.damageTakenFromSpells,
+                avoidableDamageTakenFromSpells = playerInfo.avoidableDamageTakenFromSpells,
                 damageDoneBySpells = playerInfo.damageDoneBySpells,
                 healDoneBySpells = playerInfo.healDoneBySpells,
-                dps = playerInfo.totalDamage / combatTime,
-                hps = playerInfo.totalHeal / combatTime,
+                dps = (playerInfo.totalDamage or 0) / combatTime,
+                hps = (playerInfo.totalHeal or 0) / combatTime,
                 activityTimeDamage = playerInfo.activityTimeDamage or combatTime,
                 activityTimeHeal = playerInfo.activityTimeHeal or combatTime,
                 interrupts = playerInfo.totalInterrupts or 0,
@@ -614,18 +634,10 @@ function mythicPlusBreakdown.RefreshScoreboardFrame(mainFrame, runData)
                 thisPlayerData.role = "DAMAGER"
             end
 
-            local playerKeystoneInfo = openRaidLib.GetKeystoneInfo(unitId)
-            if (playerKeystoneInfo) then
-                thisPlayerData.keystoneLevel = playerKeystoneInfo.level or thisPlayerData.keystoneLevel --default zero
-                thisPlayerData.keystoneMapId = playerKeystoneInfo.challengeMapID or thisPlayerData.keystoneMapId
-
-                ---@type details_instanceinfo
-                local instanceInfo = Details:GetInstanceInfo(playerKeystoneInfo.mapID)
-
-                if (instanceInfo) then
-                    thisPlayerData.keystoneIcon = instanceInfo.iconLore
-                end
-            end
+            local kInfo = private.GetKeystoneInfo(playerName)
+            thisPlayerData.keystoneLevel = kInfo.keystoneLevel
+            thisPlayerData.keystoneMapId = kInfo.keystoneMapId
+            thisPlayerData.keystoneIcon = kInfo.keystoneIcon
 
             --to render the event for deaths, it is required 'playerInfo' into the playerInfo.deathEvents[x].arguments.'playerData' field
             --as the scoreboard cannot change the database (in this case assigning thisPlayerData to playerInfo.deathEvents[x].arguments.'playerData')
@@ -716,20 +728,7 @@ function mythicPlusBreakdown.RefreshScoreboardFrame(mainFrame, runData)
         local timeLimitToCompletion = runData.timeLimit
 
         --mainFrame.ItemLevelText:SetText(runData.completionInfo.itemLevel or 0.0)
-        --get the item level of all player in the run and sum all of them, and then divide by the total of players found, item level is stored here: runInfo.combatData.groupMembers[unitName].ilevel
-        local totalItemLevel = 0
-        local totalPlayers = 0
-        for playerName, playerInfo in pairs(runData.combatData.groupMembers) do
-            if (playerInfo.ilevel) then
-                totalItemLevel = totalItemLevel + playerInfo.ilevel
-                totalPlayers = totalPlayers + 1
-            end
-        end
-        if (totalPlayers > 0) then
-            mainFrame.ItemLevelText:SetText(math.floor(totalItemLevel / totalPlayers))
-        else
-            mainFrame.ItemLevelText:SetText("0.0")
-        end
+        mainFrame.ItemLevelText:SetText(math.floor(addon.GetRunAverageItemLevel(runData)))
 
         if (detailsFramework.Math.IsNearlyEqual(timeLimitToCompletion, flooredRunTime, 2)) then
             mainFrame.ElapsedTimeText:SetText(detailsFramework:IntegerToTimer(flooredRunTime) .. WrapTextInColorCode("." .. math.floor((runTime - flooredRunTime) * 1000), "FFBA8E23"))
@@ -752,7 +751,7 @@ function mythicPlusBreakdown.RefreshScoreboardFrame(mainFrame, runData)
     end
 
     ---@type details_instanceinfo
-    local instanceInfo = runData and Details:GetInstanceInfo(runData.mapId)
+    local instanceInfo = runData and private.Details:GetInstanceInfo(runData.mapId)
     if (instanceInfo) then
         mainFrame.DungeonBackdropTexture:SetTexture(instanceInfo.iconLore)
     else
@@ -762,6 +761,23 @@ function mythicPlusBreakdown.RefreshScoreboardFrame(mainFrame, runData)
     mainFrame.DungeonBackdropTexture:SetDesaturation(backdropDungeonTextureDesaturation)
     mainFrame.DungeonBackdropTexture:SetTexCoord(35/512, 291/512, 49/512, 289/512)
 
+    --print("runData.mapId", runData.mapId)
+
+    local wallpapaers = {
+        [161] = true, --skyreach
+        [239] = true, --seat of the triumvirate
+        [402] = true, --algeth'ar academy
+        [556] = true, --pit of saron
+        [557] = true, --windrunner spire
+        [558] = true, --magister's terrace
+        [559] = true, --nexus-point xenas
+        [560] = true, --maisara caverns
+    }
+
+    if wallpapaers[runData.mapId] then
+        mainFrame.DungeonBackdropTexture:SetTexture("Interface\\AddOns\\Details_MythicPlus\\Assets\\Backgrounds\\" .. runData.mapId .. ".jpg")
+        mainFrame.DungeonBackdropTexture:SetTexCoord(0, 1, 0, 1)
+    end
     return true
 end
 
@@ -835,6 +851,12 @@ function mythicPlusBreakdown.CreateActivityPanel(mainFrame)
     activityFrame:SetHeight(4)
     activityFrame:SetPoint("topleft", mainFrame, "topleft", lineOffset * 2, activityFrameY)
     activityFrame:SetPoint("topright", mainFrame, "topright", -lineOffset * 2 - 1, activityFrameY)
+
+    local gradientAboveTheLine = detailsFramework:CreateTexture(activityFrame, {gradient = "vertical", fromColor = {0, 0, 0, 0.65}, toColor = "transparent"}, 1, 65, "artwork", {0, 1, 0, 1}, "gradient1")
+    gradientAboveTheLine:SetPoint("bottoms")
+
+    local gradientBelowTheLine = detailsFramework:CreateTexture(activityFrame, {gradient = "vertical", fromColor = "transparent", toColor = {0, 0, 0, 0.40}}, 1, 60, "artwork", {0, 1, 0, 1}, "gradient2")
+    gradientBelowTheLine:SetPoint("tops")
 
     local backgroundTexture = activityFrame:CreateTexture("$parentBackgroundTexture", "border")
     backgroundTexture:SetColorTexture(0, 0, 0, 0.834)
@@ -923,56 +945,65 @@ function mythicPlusBreakdown.CreateActivityPanel(mainFrame)
         ---@field Portrait texture
         ---@field RoleIcon texture
 
-        local reservedUntil = -100
-        local up = true
+        local allEvents = {}
+        --arrange the events in the order they should be rendered
         for event, marker in addon.activityTimeline.PrepareEventFrames(self, events) do
-            local relativeTimestamp = event.timestamp - runData.startTime
-            local pointOnBar = relativeTimestamp * multiplier
+            local timestamp = event.timestamp
+            allEvents[#allEvents+1] = {eventInfo = event, markerFrame = marker, timestamp = timestamp}
+        end
+        table.sort(allEvents, function(t1, t2) return t1.timestamp < t2.timestamp end)
 
+        local lastTimestamp = 0
+        local markerYOffset = 0
+        for _, eventTable in ipairs(allEvents) do
+            local eventData = eventTable.eventInfo
+            local marker = eventTable.markerFrame
+            local timestamp = eventTable.timestamp
+            local originalTimestamp = timestamp
+
+            --calculate if this timestamp is too close from the previous one, if it is, we need to alternate the position of the marker to avoid overlapping
+            if detailsFramework.Math.IsNearlyEqual(timestamp, lastTimestamp, 15) then
+                timestamp = lastTimestamp + 7
+                if markerYOffset == 0 then
+                    markerYOffset = -17
+                else
+                    markerYOffset = 0
+                end
+            else
+                markerYOffset = 0
+            end
+            lastTimestamp = timestamp
+
+            local relativeTimestamp = timestamp - runData.startTime
+            local originalRelativeTimestamp = originalTimestamp - runData.startTime
+            local pointOnBar = relativeTimestamp * multiplier
+            local originalPointOnBar = originalRelativeTimestamp * multiplier
+
+            --timestamp label
             detailsFramework:SetFontColor(marker.TimestampLabel, 1, 1, 1)
             detailsFramework:SetFontSize(marker.TimestampLabel, 12)
-            marker.TimestampLabel:SetText(detailsFramework:IntegerToTimer(relativeTimestamp))
+            marker.TimestampLabel:SetText(detailsFramework:IntegerToTimer(originalRelativeTimestamp))
 
             ---@type activitytimeline_marker_data
-            local markerData = {}
-            if (event.type == addon.Enum.ScoreboardEventType.Death) then
-                markerData = addon.activityTimeline.RenderDeathMarker(self, event, marker, runData)
+            if (eventData.type == addon.Enum.ScoreboardEventType.Death) then
+                addon.activityTimeline.RenderDeathMarker(self, eventData, marker, runData)
 
-            elseif (event.type == addon.Enum.ScoreboardEventType.KeyFinished) then
-                markerData = addon.activityTimeline.RenderKeyFinishedMarker(self, event, marker, runData)
+            elseif (eventData.type == addon.Enum.ScoreboardEventType.KeyFinished) then
+                addon.activityTimeline.RenderKeyFinishedMarker(self, eventData, marker, runData)
             end
 
-            local offset = marker:GetWidth() * 0.4
-            local before = pointOnBar - offset
-            local after = pointOnBar + offset
-
-            if (markerData.forceDirection) then
-                up = markerData.forceDirection == "up" and true or false
-            elseif (before < reservedUntil) then
-                up = not up
-            else
-                up = markerData.preferUp and true or false
-            end
-
-            if (after > reservedUntil) then
-                reservedUntil = after
-            end
+            local CONST_ACTIVITYFRAME_LINE_HEIGHT = 22
 
             marker:Show()
             marker:ClearAllPoints()
             marker.TimestampLabel:ClearAllPoints()
             marker.LineTexture:ClearAllPoints()
-            if (up) then
-                marker:SetPoint("bottom", activityFrame, "topleft", pointOnBar, 15)
-                marker.LineTexture:SetPoint("top", marker, "bottom", 0, 0)
-                marker.LineTexture:SetPoint("bottom", activityFrame, "top", 0, 0)
-                marker.TimestampLabel:SetPoint("bottom", marker, "top", 0, 5)
-            else
-                marker:SetPoint("top", activityFrame, "bottomleft", pointOnBar, -15)
-                marker.LineTexture:SetPoint("top", marker, "top", 0, 0)
-                marker.LineTexture:SetPoint("bottom", activityFrame, "bottom", 0, 0)
-                marker.TimestampLabel:SetPoint("top", marker, "bottom", 0, -5)
-            end
+
+            marker:SetPoint("top", activityFrame, "bottomleft", pointOnBar, -CONST_ACTIVITYFRAME_LINE_HEIGHT + markerYOffset + 15)
+            marker.LineTexture:SetPoint("top", activityFrame, "bottomleft", originalPointOnBar, 15  -CONST_ACTIVITYFRAME_LINE_HEIGHT + markerYOffset)
+            marker.LineTexture:SetHeight(CONST_ACTIVITYFRAME_LINE_HEIGHT + (markerYOffset*-1))
+            marker.LineTexture:Hide()
+            marker.TimestampLabel:SetPoint("top", marker, "bottom", 0, -5)
         end
 
     end

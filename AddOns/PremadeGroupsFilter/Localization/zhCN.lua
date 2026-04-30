@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -31,6 +31,9 @@ L["error.semantic"] = "|cffff0000过滤语法的语义错误|r\n\n表示过滤�
 L["error.semantic.protected"] = "|cffff0000过滤语法的语义错误|r\n\n不再支持关键字 'name' 和 'comment'。 请从高级过滤器表达方式中删除他们或者点击重置按钮。\n\n从争霸艾泽拉斯开始，这些都受到暴雪的保护，任何插件都无法读取。\n\n使用列表上方的确认搜索栏过滤队伍副本名称。\n\n详细错误信息：\n|cffaaaaaa%s|r"
 L["message.noplaystylefix"] = "Premade Groups Filter: 不会修复“接口操作因AddOn而失败”错误，因为您似乎没有完全安全的帐户，否则无法创建预制队伍。请参阅插件常见问题解答以获取更多信息以及如何解决此问题。"
 L["message.settingsupgraded"] = "Premade Groups Filter: 设置迁移到版本 %s"
+L["message.sortingoverwritten"] = "Premade Groups Filter: 默认预组队伍排序顺序已被插件 %s 覆盖。"
+L["message.sortingrestored"] = "Premade Groups Filter: 默认预组队伍排序顺序已被插件 %s 恢复。"
+L["message.taint"] = "Premade Groups Filter: 插件限制现已生效。队伍查找器已被修改，可能会导致Lua错误。建议执行/reload来修复此问题。"
 
 L["dialog.settings"] = GAMEMENU_OPTIONS
 L["dialog.reset"] = "重置"
@@ -155,3 +158,10 @@ L["settings.rioRatingColors.title"] = "使用Raider.IO颜色评分"
 L["settings.rioRatingColors.tooltip"] = "如果加载了Raider.IO插件，则使用Raider.IO的颜色方案进行史诗+评分。"
 L["settings.cancelOldestApp.title"] = "取消最早的申请"
 L["settings.cancelOldestApp.tooltip"] = "如果你的待处理申请达到上限，点击任意小组可以优先取消最早的申请。然后再点击一次进行新的申请。"
+L["settings.compactListEntries.title"] = "紧凑列表条目"
+L["settings.compactListEntries.tooltip"] = "隐藏游戏风格，使队伍列表条目占用更少的垂直空间（如同“至暗之夜”前夕内容更新之前）。"
+L["settings.info.reload"] = "* 更改这些选项将在关闭设置后自动重新加载界面。"
+L["settings.warning.taint"] = "此选项在受限情况下（如团队副本或战斗中）可能导致Lua错误。"
+
+L["dialog.restriction.text"] = "插件限制已激活。过滤可能导致Lua错误。"
+L["dialog.restriction.ok"] = "仍然过滤"

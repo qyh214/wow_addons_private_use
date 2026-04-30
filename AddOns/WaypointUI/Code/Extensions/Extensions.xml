@@ -1,0 +1,5 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="AutoTrackPlacedPin.lua"/>
+    <Script file="AutoTrackChatLinkPin.lua"/>
+    <Script file="GuidePinAssistant.lua"/>
+</Ui>

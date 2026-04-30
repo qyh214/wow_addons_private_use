@@ -113,7 +113,7 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsTransporting then
 
                     if self.db.profile.showMinimapCapitalsPortals then
-                        minimap[85][54589038] = { mnID = 110, name = "", TransportName = ns.Silvermoon .. " (" .. L["Portal"] .. ")\n(" .. L["in the basement"] .. ")", type = "HPortalSGray", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Silvermoon City
+                        minimap[85][54589038] = { mnID = 110, name = "", TransportName = ns.Silvermoon .. " (" .. EXPANSION_NAME1 ..")" .. " (" .. L["Portal"] .. ")\n(" .. L["in the basement"] .. ")", type = "HPortalSGray", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Silvermoon City
                         minimap[85][57268817] = { mnID = 630, name = "", TransportName = ns.Azsuna .. " (" .. L["Portal"] .. ")\n(" .. L["in the basement"] .. ")", type = "HPortalSGray", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Azsuna 
                         minimap[85][57878982] = { mnID = 862, name = "", TransportName = ns.Zuldazar .. " (" .. L["Portal"] .. ")\n(" .. L["in the basement"] .. ")", type = "HPortalSGray", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Zuldazar  
                         minimap[85][57519166] = { mnID = 111, name = "", TransportName = ns.Shattrath .. " (" .. L["Portal"] .. ")\n(" .. L["in the basement"] .. ")", type = "HPortalSGray", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Shattrath 
@@ -121,6 +121,7 @@ if not db.activate.HideMapNote then
                         minimap[85][55189204] = { mnID = 624, name = "", TransportName = ns.Warspear .. " (" .. L["Portal"] .. ")\n(" .. L["in the basement"] .. ")", type = "HPortalSGray", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Warspear - Ashran 
                         minimap[85][57179070] = { npcID = 150131, mnID = 17, name = "", TransportName = ns.DarkPortal .. " (" .. L["Portal"] .. ")\n(" .. L["in the basement"] .. ")", type = "HPortalSGray", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blasted Lands
 
+                        minimap[85][55988821] = { mnID = 2393, name = "", TransportName = ns.Silvermoon .. " (" .. EXPANSION_NAME11 ..") (" .. L["Portal"] ..")", type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } --  Silvermoon Midnight 
                         minimap[85][57108729] = { mnID = 2112, name = "", type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } --  Valdrakken 
                         minimap[85][58308788] = { mnID = 1670, name = "", type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Oribos 
                         minimap[85][58968953] = { mnID = 2351, name = "", type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Razorwind 
@@ -142,9 +143,9 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsZeppelins then
-                        minimap[85][44496228] = { mnID = 114, name = "", TransportName = POSTMASTER_LETTER_WARSONGHOLD .. " (" .. L["Zeppelin"] ..")", type = "HZeppelin", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Zeppelin from OG to Borean Tundra - Northrend
+                        minimap[85][44676239] = { mnID = 114, name = "", TransportName = POSTMASTER_LETTER_WARSONGHOLD .. " (" .. L["Zeppelin"] ..")", type = "HZeppelin", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Zeppelin from OG to Borean Tundra - Northrend
                         minimap[85][42796534] = { mnID = 88, name = "", type = "HZeppelin", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Zeppelin from OG to Thunder Bluff
-                        minimap[85][52275315] = { mnID = 50, name = "", TransportName = ns.Gromgol .. " (" .. L["Zeppelin"] ..")", type = "HZeppelin", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Zeppelin from OG to Stranglethorn
+                        minimap[85][52375330] = { mnID = 50, name = "", TransportName = ns.Gromgol .. " (" .. L["Zeppelin"] ..")", type = "HZeppelin", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Zeppelin from OG to Stranglethorn
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
@@ -234,6 +235,10 @@ if not db.activate.HideMapNote then
                         minimap[85][55905180] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[85][45006830] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[85][42106050] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsDecorExpert then
+                        minimap[85][52948894] = { npcID = 252312, name = "", type = "DecorExpert", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
                     if self.db.profile.showMinimapCapitalsPvPVendor then
@@ -945,7 +950,11 @@ if not db.activate.HideMapNote then
 
             --General DazarAlor
                 if self.db.profile.activate.MinimapCapitalsGeneral then
-    
+
+                    if self.db.profile.showMinimapCapitalsDecorExpert then
+                        minimap[1164][36445977] = { npcID = 252326, name = "", type = "DecorExpert", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    end
+   
                     if self.db.profile.showMinimapCapitalsPaths then
                         minimap[1165][49934095] = { name = L["Entrance"], mnID = 1163, type = "PathU", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit 
                         minimap[1163][48591752] = { dnID = L["Exit"], name = "", mnID = 1165, type = "PathO", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit 
@@ -1170,7 +1179,8 @@ if not db.activate.HideMapNote then
                         minimap[84][43269759] = { mnID = 2239, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal to Bel'ameth, Amirdrassil
                         minimap[84][48119195] = { mnID = 2339, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal to Dornogal                        
                         minimap[84][48849344] = { mnID = 2112, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal to Valdrakken                         
-                        minimap[84][48759519] = { mnID = 1161, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal to Boralus 
+                        minimap[84][48759519] = { mnID = 2393, name = "", TransportName = ns.Silvermoon .. " (" .. EXPANSION_NAME11 .. ") (" .. L["Portal"] ..")", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal to Silvermoon Midnight 
+                        minimap[84][40869279] = { mnID = 1161, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal to Boralus 
                         minimap[84][47579495] = { mnID = 1670, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal to Oribos 
                         minimap[84][46909335] = { mnID = 2352, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal to Founder's Point Housing
                         minimap[84][43748538] = { mnID = 74, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal to Caverns of Time 
@@ -1437,6 +1447,10 @@ if not db.activate.HideMapNote then
 
             --General Ironforge
                 if self.db.profile.activate.MinimapCapitalsGeneral then
+
+                    if self.db.profile.showMinimapCapitalsDecorExpert then
+                        minimap[87][24804397] = { npcID = 253235, name = "", type = "DecorExpert", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    end
     
                     if self.db.profile.showMinimapCapitalsPaths then
                         minimap[87][14218604] = { dnID = L["Exit"], name = "", mnID = 27, type = "PathLU", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit 
@@ -1916,6 +1930,10 @@ if not db.activate.HideMapNote then
 
             --General Boralus
                 if self.db.profile.activate.MinimapCapitalsGeneral then
+
+                    if self.db.profile.showMinimapCapitalsDecorExpert then
+                        minimap[1161][70741567] = { npcID = 252345, name = "", type = "DecorExpert", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    end
     
                     if self.db.profile.showMinimapCapitalsPaths then
                         minimap[1161][81239058] = { dnID = L["Exit"], name = "", mnID = 895, type = "PathRU", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit
@@ -2266,7 +2284,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsSkinning then
-                        minimap[407][48197805] = { npcID = 14833, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Skinning"] .. " " .. TUTORIAL_TITLE1 }
+                        minimap[407][54967113] = { npcID = 14833, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Skinning"] .. " " .. TUTORIAL_TITLE1 }
                     end                    
 
                     if self.db.profile.showMinimapCapitalsJewelcrafting then
@@ -2274,7 +2292,7 @@ if not db.activate.HideMapNote then
                     end   
 
                     if self.db.profile.showMinimapCapitalsHerbalism then
-                        minimap[407][55017052] = { npcID = 14833, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Herbalism"] .. " " .. TUTORIAL_TITLE1 }
+                        minimap[407][54787068] = { npcID = 14833, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Herbalism"] .. " " .. TUTORIAL_TITLE1 }
                     end    
                 
                     if self.db.profile.showMinimapCapitalsCooking then
@@ -2719,6 +2737,12 @@ if not db.activate.HideMapNote then
 
         --General Dalaran Legion
             if self.db.profile.activate.MinimapCapitalsGeneral then
+
+                if self.db.profile.showMinimapCapitalsDecorExpert then
+                    if self.faction == "Horde" or db.activate.MinimapCapitalsEnemyFaction then 
+                        minimap[627][67493389] = { npcID = 252043, name = "", type = "DecorExpert", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    end
+                end
     
                 if self.db.profile.showMinimapCapitalsInnkeeper then
                     minimap[627][49784006] = { npcID = 96806, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
@@ -3072,9 +3096,14 @@ if not db.activate.HideMapNote then
 
         --General Valdrakken
             if self.db.profile.activate.MinimapCapitalsGeneral then
+
+                if self.db.profile.showMinimapCapitalsDecorExpert then
+                    minimap[2112][71524963] = { npcID = 253067, name = "", type = "DecorExpert", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
     
                 if self.db.profile.showMinimapCapitalsInnkeeper then
                     minimap[2112][47714635] = { npcID = 210817, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2112][72484717] = { npcID = 210817, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsAuctioneer then
@@ -3105,7 +3134,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsTransmogger then
-                    minimap[2112][74575782] = { npcID = 185570, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2112][74465606] = { npcID = 185570, name = "", type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsItemUpgrade then
@@ -3229,6 +3258,11 @@ if not db.activate.HideMapNote then
         --General Dornogal
             if self.db.profile.activate.MinimapCapitalsGeneral then
 
+                if self.db.profile.showMinimapCapitalsDecorExpert then
+                    minimap[2339][54675722] = { npcID = 252910, name = "", type = "DecorExpert", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][52856796] = { npcID = 252312, name = "", type = "DecorExpert", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
                 if self.db.profile.showMinimapCapitalsPaths then
                     minimap[2339][81782819] = { dnID = L["Exit"], name = "", mnID = 2248, type = "PathR", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit 
                     minimap[2339][68588953] = { dnID = L["Exit"], name = "", mnID = 2248, type = "PathRU", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit 
@@ -3309,13 +3343,7 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsTransporting then
     
                 if self.db.profile.showMinimapCapitalsPortals then
-                    minimap[2266][43564994] = { mnID = 2339, name = "", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } --  Timeways Portal to Dornogal
-                    --minimap[2266][64534340] = { mnID = 1565, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true } --  Timeways Portal to 
-                    minimap[2266][74524703] = { mnID = 2472, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true } --  Timeways Portal to Tazavesh
-                    --minimap[2266][77536180] = { mnID = 1536, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true } --  Timeways Portal to 
-                    minimap[2266][70537306] = { mnID = 1525, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true } --  Timeways Portal to Revendreth
-                    --minimap[2266][60506950] = { mnID = 241, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true } --  Timeways Portal to 
-                    minimap[2339][53563873] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. ns.Tazavesh .. "\n" .. " ==> " .. ns.Revendreth  } --  Portal from Dornogal to the Timeways
+                    minimap[2339][53563873] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. ZONE .. ": " .. ns.SpiresOfArak .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.Skyreach .. "\n\n" .. ZONE .. ": " .. ns.Icecrown .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.PitOfSaron .. "\n\n" .. ZONE .. ": " .. ns.Eredath .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.SeatOfTheTriumvirate .. "\n\n" .. ZONE .. ": " .. ns.Thaldraszus .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.AlgetharAcademy } --  Portal from Dornogal to the Timeways
                     minimap[2339][63615205] = { mnID = 2255, name = "", dnID = "", achievementID = 19559, showWWW = true, wwwLink = "https://www.wowhead.com/achievement=19559", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dornogal to Azj-Kahet if u finished the achievement=19559
                     minimap[2339][29775967] = { mnID = 2367, name = "", dnID = "", achievementID = 40725, showWWW = true, wwwLink = "https://wowhead.com/achievement=40725", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Chamber of Memory
                     minimap[2339][52465047] = { mnID = 2346, name = "", dnID = "", questID = 86535, showWWW = true, wwwLink = "https://wowhead.com/quest=86535/test-run", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dornogal to Undermine
@@ -3425,6 +3453,232 @@ if not db.activate.HideMapNote then
                     if self.faction == "Alliance" or db.activate.MinimapCapitalsEnemyFaction then
                         minimap[2352][57432664] = { mnID = 84, name = "", type = "APortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal Founder's Point to Stormwind (Housing map)
                     end
+                end
+
+            end
+
+        end
+
+    --###########################
+    --### Silvermoon Midnight ###
+    --###########################
+        if self.db.profile.showMinimapCapitalsSilvermoonMN then
+
+        --Instance Silvermoon Midnight
+            if self.db.profile.activate.MinimapCapitalsInstances then
+
+                if self.db.profile.showMinimapCapitalsDungeons then
+                    minimap[2393][57226104] = { id = 1304, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Mördergasse
+                end
+
+            end
+
+        --General Silvermoon Midnight
+            if self.db.profile.activate.MinimapCapitalsGeneral then
+
+                if self.db.profile.showMinimapCapitalsPaths then
+                    minimap[2393][45730648] = { dnID = L["Exit"], name = "", mnID = 2424, type = "PathO", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit 
+                    minimap[2393][37449041] = { dnID = L["Exit"], name = "", mnID = 2395, type = "PathU", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit
+                    minimap[2393][45669145] = { dnID = L["Exit"], name = "", mnID = 2395, type = "PathU", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit
+                    minimap[2393][60989177] = { dnID = L["Exit"], name = "", mnID = 2395, type = "PathU", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit
+                    minimap[2393][17874455] = { dnID = L["Exit"], name = "", mnID = 2395, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit
+                end
+    
+                if self.db.profile.showMinimapCapitalsAuctioneer then
+                    minimap[2393][51337595] = { npcIDs1 = 239625, npcIDs2 = 239621, npcIDs3 = 239628, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][67607250] = { npcIDs1 = 243113, npcIDs2 = 243111, npcIDs3 = 243114, name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][64975294] = { npcID = 219055, name = "", dnID = BLACK_MARKET_AUCTION_HOUSE, type = "BlackMarket", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsBank then
+                    minimap[2393][50606552] = { dnID = BANK .. " / " .. GUILD_BANK , name = "", type = "Bank", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][72606450] = { dnID = BANK .. " / " .. GUILD_BANK , name = "", type = "Bank", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsBarber then
+                    minimap[2393][42247852] = { name = MINIMAP_TRACKING_BARBER, type = "Barber", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsMailbox then
+                    minimap[2393][49506593] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][54867093] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][52676119] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][47905305] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][45005659] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][28666693] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][34318019] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][66767046] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][71766569] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][69278174] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][72347433] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][49497555] = { dnID = MINIMAP_TRACKING_MAILBOX, name = "", type = "Mailbox", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsDecorExpert then
+                    minimap[2393][51185645] = { npcID = 256828, name = "", type = "DecorExpert", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsPvPVendor then
+                    minimap[2393][34098172] = { npcIDs1 = 243224, npcIDs2 = 243225, npcIDs3 = 243221, npcIDs4 = 255844, npcIDs5 = 243220, name = TRANSMOG_SET_PVP .. " " .. MERCHANT, type = "PvPVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsRenownQuartermaster then
+                    --minimap[2339][44965540] = { npcID = 243286, name = "", dnID = L["Council of Dornogal"], type = "RenownQuartermaster", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    --minimap[2339][39092418] = { dnID = L["Merchant for Renown items"], name = "", TransportName = L["Council of Dornogal"] .. "\n" .. L["The Assembly of the Deeps"] .. "\n" .. L["Hallowfall Arathi"], type = "RenownQuartermaster", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsPvEVendor then
+                    minimap[2393][52897830] = { npcIDs1 = 242398, npcIDs2 = 248341, npcIDs3 = 242399, name = TRANSMOG_SET_PVE .. " " .. MERCHANT, type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][45005484] = { npcID = 243286, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][55726598] = { npcIDs1 = 252956, npcIDs2 = 258181, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsTransmogger then
+                    minimap[2393][52865742] = { npcID = 243242, name = "", TransportName = MERCHANT, type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][49267738] = { npcID = 249050, name = "", TransportName = MERCHANT, type = "Transmogger", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsItemUpgrade then
+                    minimap[2393][48656204] = { npcID = 239675, name = "", type = "ItemUpgrade", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsDragonFlyTransmog then
+                    minimap[2393][52187369] = { dnID = MINIMAP_TRACKING_TRANSMOGRIFIER .. " " .. MOUNT_JOURNAL_FILTER_DRAGONRIDING, name = "",  type = "DragonFlyTransmog", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsCatalyst then
+                    minimap[2393][39776581] = { dnID = L["Catalyst"], name = "",  type = "Catalyst", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][70648412] = { dnID = L["Catalyst"], name = "",  type = "Catalyst", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsTradingPost then
+                    minimap[2393][48987817] = { npcIDs1 = 249042, npcIDs2 = 249041, name = "", type = "TradingPost", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsStablemaster then
+                    minimap[2393][46355556] = { npcID = 243161, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][27267738] = { npcID = 251302, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][67096610] = { npcID = 254366, name = "", type = "StablemasterN", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsInnkeeper and not self.db.profile.showMinimapCapitalsMapNotes then
+                    minimap[2393][56477035] = { npcID = 239630, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsInnkeeper then
+                    minimap[2393][66906204] = { npcID = 247804, name = "", type = "Innkeeper", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsMapNotes then
+                    minimap[2393][56267032] = { npcIDs1 = 239630, icon1 = TextIconInnkeeperN:GetIconString(), npcIDs2 = 257913, icon2 = TextIconCooking:GetIconString(), name = "", type = "MNL", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+            end
+
+        --Transports Silvermoon Midnight
+            if self.db.profile.activate.MinimapCapitalsTransporting then
+    
+                if self.db.profile.showMinimapCapitalsPortals then
+                    minimap[2393][36746821] = { mnID = 2413, name = "", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Wurzelpfad nach Harandar
+                    minimap[2393][35286607] = { mnID = 2405, name = "", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal zum Leerensturm
+                    minimap[2393][42105830] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. ZONE .. ": " .. ns.SpiresOfArak .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.Skyreach .. "\n\n" .. ZONE .. ": " .. ns.Icecrown .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.PitOfSaron .. "\n\n" .. ZONE .. ": " .. ns.Eredath .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.SeatOfTheTriumvirate .. "\n\n" .. ZONE .. ": " .. ns.Thaldraszus .. "\n" .. CALENDAR_TYPE_DUNGEON .. ": " .. ns.AlgetharAcademy } --  Portal from Dornogal to the Timeways
+                    minimap[2266][43564994] = { mnID = 2393, name = "", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Timeways Portal to Silvermoon
+                    minimap[2266][64534340] = { mnID = 542, name =  CALENDAR_TYPE_DUNGEON .. ": " .. ns.Skyreach, type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Timeways Portal to spitzen von arak
+                    minimap[2266][74524703] = { mnID = 118, name = CALENDAR_TYPE_DUNGEON .. ": " .. ns.PitOfSaron, type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Timeways Portal to eiskronenzitadelle
+                    --minimap[2266][77536180] = { mnID = 1536, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Timeways Portal to 
+                    minimap[2266][70537306] = { mnID = 2025, name = CALENDAR_TYPE_DUNGEON .. ": " .. ns.AlgetharAcademy, type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Timeways Portal to thaldrszus
+                    minimap[2266][60506950] = { mnID = 882, name = CALENDAR_TYPE_DUNGEON .. ": " .. ns.SeatOfTheTriumvirate, type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Timeways Portal to Eredath
+
+                    if self.faction == "Horde" or db.activate.CapitalsEnemyFaction then
+                        minimap[2393][52176519] = { mnID = 85, name = "", type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal to Orgrimmar
+                    end
+
+                    if self.faction == "Alliance" or db.activate.CapitalsEnemyFaction then
+                        minimap[2393][52636450] = { mnID = 84, name = "", dnID = "", type = "APortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal to Stormwind
+                    end
+                end
+
+                if self.db.profile.showMinimapCapitalsFP then
+                    minimap[2393][69366356] = { npcID = 246564, name = "", type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][50967101] = { npcID = 251265, name = "", type = "TravelL", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+            end
+
+        --Professions Silvermoon Midnight
+            if self.db.profile.activate.MinimapCapitalsProfessions then
+
+                if self.db.profile.showMinimapCapitalsProfessionOrders then
+                    minimap[2393][45125564] = { npcID = 243279, name = "", type = "ProfessionOrders", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsArchaeology then
+                    minimap[2393][52107887] = { npcID = 254592, name = "", type = "Archaeology", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsAlchemy then
+                    minimap[2393][47035198] = { npcID = 243357, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][73317356] = { npcID = 247556, name = "", type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+            
+                if self.db.profile.showMinimapCapitalsLeatherworking then
+                    minimap[2393][43095598] = { npcID = 243500, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][69688140] = { npcID = 247623, name = "", type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsEngineer then
+                    minimap[2393][43525409] = { npcID = 241452, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][69308421] = { npcID = 247791, name = "", type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsSkinning then
+                    minimap[2393][43275531] = { npcID = 243527, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][69968088] = { npcID = 247626, name = "", type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsTailoring then
+                    minimap[2393][48245402] = { npcID = 243352, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][30457701] = { npcID = 251431, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][73367277] = { npcID = 247560, name = "", type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsJewelcrafting then
+                    minimap[2393][48185511] = { npcID = 243345, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][48885417] = { npcID = 243347, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][73777122] = { npcID = 247627, name = "", type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsBlacksmith then
+                    minimap[2393][43645178] = { npcID = 241450, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][69848448] = { npcID = 247618, name = "", type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsMining then
+                    minimap[2393][42595285] = {  npcID = 241455, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][70718256] = {  npcID = 247803, name = "", type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsFishing then
+                    minimap[2393][44836036] = { npcID = 253468, name = "", type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsHerbalism then
+                    minimap[2393][48305142] = { npcID = 243355, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][72687382] = { npcID = 247564, name = "", type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsInscription then
+                    minimap[2393][46925160] = { npcID = 243553, name = "", type = "Inscription", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsEnchanting then
+                    minimap[2393][47985376] = { npcID = 243349, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][72917162] = { npcID = 243349, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2393][39555099] = { npcID = 254051, name = "", type = "Enchanting", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                end
+
+                if self.db.profile.showMinimapCapitalsCooking and not self.db.profile.showMinimapCapitalsMapNotes then
+                    minimap[2393][56386983] = { npcID = 257913, name = "", type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, }
                 end
 
             end

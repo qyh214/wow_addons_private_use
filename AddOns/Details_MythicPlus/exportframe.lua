@@ -1,6 +1,5 @@
 ---@type details
 ---@diagnostic disable-next-line: undefined-field
-local Details = _G.Details
 ---@type detailsframework
 local detailsFramework = _G.DetailsFramework
 local addonName, private = ...

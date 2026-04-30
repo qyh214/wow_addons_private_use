@@ -1,6 +1,6 @@
 # Auctionator
 
-## [305](https://github.com/TheMouseNest/Auctionator/tree/305) (2025-12-03)
-[Full Changelog](https://github.com/TheMouseNest/Auctionator/compare/304...305) 
+## [321](https://github.com/TheMouseNest/Auctionator/tree/321) (2026-04-21)
+[Full Changelog](https://github.com/TheMouseNest/Auctionator/compare/320...321) 
 
-- Selling: Add "Housing", and fix durations on TBC/Wrath  
+- Update toc for 12.0.5  

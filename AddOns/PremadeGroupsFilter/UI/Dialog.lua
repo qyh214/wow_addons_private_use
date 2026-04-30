@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 -- 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 -------------------------------------------------------------------------------
 
-local PGF = select(2, ...)
+local PGFAddonName, PGF = ...
 local L = PGF.L
 local C = PGF.C
 
@@ -76,6 +76,11 @@ function PGFDialog:OnLoad()
 
     self.RefreshButton:SetText(L["dialog.refresh"])
     self.RefreshButton:SetScript("OnClick", function () self:OnRefreshButtonClick() end)
+
+    if C_EventUtils and C_EventUtils.IsEventValid and C_EventUtils.IsEventValid("ADDON_RESTRICTION_STATE_CHANGED") then
+        self:RegisterEvent("ADDON_RESTRICTION_STATE_CHANGED")
+    end
+    self:SetScript("OnEvent", self.OnEvent)
 end
 
 function PGFDialog:OnShow()

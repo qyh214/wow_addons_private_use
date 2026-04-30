@@ -17,17 +17,22 @@ end
 local function processMessage(text)
     local result, pos, textLen = "", 1, #text
     while pos <= textLen do
+
         local s, e, link
         s, e, link = text:find("(%a[%w+.-]+://%S+)", pos) -- protocol
+        
         if not s then
             s, e, link = text:find("(www%S+)", pos) -- www
         end
+
         if not s then
             s, e, link = text:find("(%S+@[%w_.%-]+%.%a%a+)", pos) --  email
         end
+
         if not s then
             s, e, link = text:find("([-%w_%.]+%.%a%a+%S*)", pos) -- short
         end
+
         if s then
             result = result .. text:sub(pos, s - 1) .. formatURL(link)
             pos = e + 1
@@ -39,48 +44,89 @@ local function processMessage(text)
     return result
 end
 
+function ns.MN_FormatChatURLs(text)
+    if type(text) ~= "string" then return text end
+    if not (ns.Addon and ns.Addon.db and ns.Addon.db.profile and ns.Addon.db.profile.CreateAndCopyLinks) then
+        return text
+    end
+    if text:find("|Hurl:") then
+        return text
+    end
+
+    local t = text
+    if ns.questID then
+        t = t:gsub("(https://www%.wowhead%.com/quest=" .. ns.questID .. ")", formatURL("%1"))
+    end
+
+    if ns.questIDs and ns.questIDs ~= ns.questID then
+        t = t:gsub("(https://www%.wowhead%.com/quest=" .. ns.questIDs .. ")", formatURL("%1"))
+    end
+
+    if ns.achievementID then
+        t = t:gsub("(https://www%.wowhead%.com/achievement=" .. ns.achievementID .. ")", formatURL("%1"))
+    end
+
+    if hasPotentialLink(t) then
+        t = processMessage(t)
+    end
+
+  return t
+end
+
+function ns.MN_ChatPrint(...)
+    local n = select("#", ...)
+    if n == 0 then return end
+
+    local msg
+    if n == 1 then
+        msg = tostring((...))
+    else
+        local t = {}
+        for i = 1, n do
+            t[#t+1] = tostring(select(i, ...))
+        end
+        msg = table.concat(t, " ")
+    end
+
+    if ns.Addon and ns.Addon.db and ns.Addon.db.profile and ns.Addon.db.profile.CreateAndCopyLinks and hasPotentialLink(msg) then
+        msg = processMessage(msg)
+    end
+
+    local cf = DEFAULT_CHAT_FRAME or _G.ChatFrame1
+    if cf and cf.AddMessage then
+        cf:AddMessage(msg)
+    else
+        print(msg)
+    end
+end
+
 local function makeClickable(self, event, msg, ...)
+    if type(msg) ~= "string" then
+        return false, msg, ...
+    end
+
+    if msg:find("|Hurl:") then
+        return false, msg, ...
+    end
+
     if event == "CHAT_MSG_CHANNEL" then
         local channelName = select(4, ...)
         if type(channelName) == "string" and channelName:lower():find("dienste") then
             return false, msg, ...
         end
     end
+
     if ns.Addon and ns.Addon.db and ns.Addon.db.profile and ns.Addon.db.profile.CreateAndCopyLinks and hasPotentialLink(msg) then
         msg = processMessage(msg)
     end
+
     return false, msg, ...
 end
 
+local filtersRegistered = false
 local function RegisterAllChatFilters()
-    local skip = {
-        COMBAT_LOG = true,
-        BG_SYSTEM_ALLIANCE = true,
-        BG_SYSTEM_HORDE = true,
-        BG_SYSTEM_NEUTRAL = true,
-
-        MONSTER_SAY = true,
-        MONSTER_YELL = true,
-        MONSTER_EMOTE = true,
-        MONSTER_WHISPER = true,
-
-        SYSTEM = true,
-        ACHIEVEMENT = true,
-        LOOT = true,
-        CURRENCY = true,
-        MONEY = true,
-        SKILL = true,
-        IGNORED = true,
-        TARGETICONS = true,
-    }
-
-    if ChatTypeInfo then
-        for chatType in pairs(ChatTypeInfo) do
-            if not skip[chatType] then
-                ChatFrame_AddMessageEventFilter("CHAT_MSG_" .. chatType, makeClickable)
-            end
-        end
-    end
+    if filtersRegistered then return end
+    filtersRegistered = true
 
     local must = {
         "CHAT_MSG_SAY",
@@ -93,17 +139,16 @@ local function RegisterAllChatFilters()
         "CHAT_MSG_CHANNEL",
         "CHAT_MSG_COMMUNITIES_CHANNEL",
     }
+
     for _, ev in ipairs(must) do
         ChatFrame_AddMessageEventFilter(ev, makeClickable)
     end
 end
 
 local function UnregisterAllChatFilters()
-    if ChatTypeInfo then
-        for chatType in pairs(ChatTypeInfo) do
-            ChatFrame_RemoveMessageEventFilter("CHAT_MSG_" .. chatType, makeClickable)
-        end
-    end
+    if not filtersRegistered then return end
+    filtersRegistered = false
+
     local must = {
         "CHAT_MSG_SAY",
         "CHAT_MSG_PARTY", "CHAT_MSG_PARTY_LEADER",
@@ -115,46 +160,22 @@ local function UnregisterAllChatFilters()
         "CHAT_MSG_CHANNEL",
         "CHAT_MSG_COMMUNITIES_CHANNEL",
     }
+
     for _, ev in ipairs(must) do
         ChatFrame_RemoveMessageEventFilter(ev, makeClickable)
     end
 end
 
-local function AddMessage(self, text, ...)
-  if not self._OriginalAddMessage then return end
+local function URLClicker_OnHyperlinkClick(self, link, text, button)
+  if type(link) ~= "string" then return end
+  if not (ns.Addon and ns.Addon.db and ns.Addon.db.profile and ns.Addon.db.profile.CreateAndCopyLinks) then return end
+  if link:sub(1, 3) ~= "url" then return end
 
-  if ns.Addon and ns.Addon.db and ns.Addon.db.profile and ns.Addon.db.profile.CreateAndCopyLinks then
-    if text and not text:find("|Hurl:") then
-        if ns.questID then
-            local pat = "(https://www%.wowhead%.com/quest=" .. ns.questID .. ")"
-            text = text:gsub(pat, "|cff00ccff|Hurl:%1|h%1|h|r")
-        end
-    
-        if ns.questIDs and ns.questIDs ~= ns.questID then
-            local pat = "(https://www%.wowhead%.com/quest=" .. ns.questIDs .. ")"
-            text = text:gsub(pat, "|cff00ccff|Hurl:%1|h%1|h|r")
-        end
-    
-        if ns.achievementID then
-            local pat = "(https://www%.wowhead%.com/achievement=" .. ns.achievementID .. ")"
-            text = text:gsub(pat, "|cff00ccff|Hurl:%1|h%1|h|r")
-        end
-    end
+  if CaCLFrame then
+    CaCLFrame:Show()
+    CaCLFrame.editBox:SetText(link:sub(5))
+    CaCLFrame.editBox:HighlightText()
   end
-
-  return self._OriginalAddMessage(self, text, ...)
-end
-
-
-
-local function URLClicker_OnHyperlinkShow(self, link)
-    if ns.Addon and ns.Addon.db and ns.Addon.db.profile and ns.Addon.db.profile.CreateAndCopyLinks and link:sub(1, 3) == "url" then
-        if CaCLFrame then
-            CaCLFrame:Show()
-            CaCLFrame.editBox:SetText(link:sub(5))
-            CaCLFrame.editBox:HighlightText()
-        end
-    end
 end
 
 function ns.CreateAndCopyLink()
@@ -196,29 +217,13 @@ function ns.CreateAndCopyLink()
 
     for i = 1, NUM_CHAT_WINDOWS do
         local chatframe = _G["ChatFrame" .. i]
-        if not chatframe._OriginalAddMessage then
-            chatframe._OriginalAddMessage = chatframe.AddMessage
-            chatframe.AddMessage = AddMessage
-        end
-    end
-
-    local hookedAny = false
-    for i = 1, NUM_CHAT_WINDOWS do
-        local chatframe = _G["ChatFrame" .. i]
         if chatframe and not chatframe._MN_UrlHooked then
             chatframe._MN_UrlHooked = true
             if chatframe.SetHyperlinksEnabled then
                 chatframe:SetHyperlinksEnabled(true)
             end
-            chatframe:HookScript("OnHyperlinkClick", function(self, link, text, button)
-                URLClicker_OnHyperlinkShow(self, link)
-            end)
-            hookedAny = true
+            chatframe:HookScript("OnHyperlinkClick", URLClicker_OnHyperlinkClick)
         end
-    end
-
-    if not hookedAny and type(_G.ChatFrame_OnHyperlinkShow) == "function" then
-        hooksecurefunc("ChatFrame_OnHyperlinkShow", URLClicker_OnHyperlinkShow)
     end
 
     ns.CreateAndCopyLinkEnabled = true
@@ -228,14 +233,6 @@ function ns.DisableCreateAndCopyLink()
     if not ns.CreateAndCopyLinkEnabled then return end
 
     UnregisterAllChatFilters()
-
-    for i = 1, NUM_CHAT_WINDOWS do
-        local chatframe = _G["ChatFrame" .. i]
-        if chatframe._OriginalAddMessage then
-            chatframe.AddMessage = chatframe._OriginalAddMessage
-            chatframe._OriginalAddMessage = nil
-        end
-    end
 
     if CaCLFrame then
         CaCLFrame:Hide()

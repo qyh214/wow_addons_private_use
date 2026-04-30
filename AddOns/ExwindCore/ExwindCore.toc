@@ -1,0 +1,46 @@
+## Interface: 120001,120005
+## Title: |cffff0000Exwind|r |cff00ffffCore|r
+## Notes: ExwindTools 核心引擎
+## Version: 6.0.0
+## Author: Exwind
+## LoadSavedVariablesFirst: 1
+## OptionalDeps: SharedMedia, LibSharedMedia-3.0,MythicDungeonTools
+## DefaultState: Enabled
+## SavedVariables: ExwindToolsDB
+## IconTexture: Interface\AddOns\ExwindCore\Textures\LOGO\EXUI.jpg
+
+# 核心依赖库
+libs\load_libs.xml
+
+# 本地化
+Locale\Init.lua
+Locale\zhCN.lua
+Locale\enUS.lua
+
+# 1. 主引擎
+Core\ExwindTools_Metadata.lua
+Core\ExwindTools.lua
+Core\ExwindEvent.lua
+Core\ExwindTools_Changelog.lua
+
+
+# 2. 数据库与状态引擎
+Core\ExwindDB.lua
+Core\ExwindCDDB.lua
+Core\ExwindState.lua
+Core\ExwindEditMode.lua
+
+# 3. GRID引擎
+Core\ExwindFramePool.lua
+Core\ExwindGUI.lua
+Core\ExwindGrid.lua
+Core\ExwindToolsUI.lua
+
+# 4. 配置/队伍专精
+Core\ExwindExport.lua
+Core\PartySync.lua
+Core\PartySpec.lua
+
+# 5. UI 皮肤集成（可选，检测到对应插件时自动生效）
+Core\ExwindElvUISkin.lua
+Core\ExwindNDuiSkin.lua

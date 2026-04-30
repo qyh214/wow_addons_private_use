@@ -1,6 +1,5 @@
 ﻿local _, ns = ...
 local B, C, L, DB = unpack(ns)
-local oUF = ns.oUF
 if not C.Infobar.System then return end
 
 local module = B:GetModule("Infobar")
@@ -45,7 +44,7 @@ end
 
 local usageColor = {0, 1, 0, 1, 1, 0, 1, 0, 0}
 local function smoothColor(cur, max)
-	local r, g, b = oUF:RGBColorGradient(cur, max, unpack(usageColor))
+	local r, g, b = B:RGBColorGradient(cur, max, unpack(usageColor))
 	return r, g, b
 end
 

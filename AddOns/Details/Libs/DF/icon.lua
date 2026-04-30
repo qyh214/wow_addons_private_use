@@ -5,6 +5,8 @@ if (not detailsFramework or not DetailsFrameworkCanLoad) then
 	return
 end
 
+if detailsFramework.IsMidnightWow() then return end
+
 local unpack = unpack
 local G_CreateFrame = _G.CreateFrame
 local CreateFrame = function (frameType , name, parent, template, id)

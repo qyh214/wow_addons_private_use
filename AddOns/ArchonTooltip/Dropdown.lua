@@ -40,6 +40,8 @@ local function ExtractCharacterInformation(context)
 	-- via party or target frames
 	if UnitExists(unit) then
 		if not UnitIsPlayer(unit) then
+			currentDropDownSelection.name = nil
+			currentDropDownSelection.realm = nil
 			return
 		end
 

@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -19,32 +19,23 @@
 -------------------------------------------------------------------------------
 
 local PGF = select(2, ...)
-local L = PGF.L
-local C = PGF.C
 
-local didApplyPatch = false
-local originalFunc = LFGListApplicationDialog_Show
+-- The patched function equals the original `LFGListApplicationDialog_Show` except commented code.
+-- Working with a PreClick-Handler and manipulating self.activityID did not work reliably.
 local patchedFunc = function(self, resultID)
-    if resultID then
-        local searchResultInfo = PGF.GetSearchResultInfo(resultID);
-        --if ( searchResultInfo.activityID ~= self.activityID ) then
-        --    C_LFGList.ClearApplicationTextFields();
-        --end
+    local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID);
+    --if ( searchResultInfo.activityIDs[1] ~= self.activityID ) then
+    --	C_LFGList.ClearApplicationTextFields();
+    --end
 
-        self.resultID = resultID;
-        self.activityID = searchResultInfo and searchResultInfo.activityID or 0;
-    end
+    self.resultID = resultID;
+    self.activityID = searchResultInfo.activityIDs[1];
     LFGListApplicationDialog_UpdateRoles(self);
     StaticPopupSpecial_Show(self);
 end
 
-function PGF.PersistSignUpNote()
-    if PremadeGroupsFilterSettings.persistSignUpNote then
-        -- overwrite function with patched func missing the call to ClearApplicationTextFields
-        LFGListApplicationDialog_Show = patchedFunc
-        didApplyPatch = true
-    elseif didApplyPatch then
-        -- restore previously overwritten function
-        LFGListApplicationDialog_Show = originalFunc
-    end
+function PGF.InitPersistSignUpNote()
+    if not PremadeGroupsFilterSettings.persistSignUpNote then return end
+
+    LFGListApplicationDialog_Show = patchedFunc
 end

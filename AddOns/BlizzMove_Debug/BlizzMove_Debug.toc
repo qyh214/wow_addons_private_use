@@ -1,15 +1,12 @@
-## Interface: 110207,120000,120000
+## Interface: 120005, 120005, 50503,50504, 40402, 30403, 20505, 11508
 ## Title: BlizzMove - Debugging plugin
 ## Notes: This Load-On-Demand plugin allows for retrieving debugging information.
 ## Author: Numy - github.com/Kiatra/BlizzMove/
 ## IconTexture: interface/cursor/ui-cursor-move.blp
-## Version: v3.7.17
+## Version: v3.7.32
 ## X-License: GNU General Public License version 3 (GPLv3)
 ## RequiredDeps: BlizzMove
 ## LoadOnDemand: 1
-
-# Libraries
-Libs\json.lua
 
 # Plugin
 BlizzMoveDebug.lua

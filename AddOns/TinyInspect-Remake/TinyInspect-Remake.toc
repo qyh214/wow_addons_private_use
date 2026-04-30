@@ -1,0 +1,30 @@
+## Interface: 120000, 120001, 120005,110002
+## Title: TinyInspect-Remake
+## Version: v1.3.2
+## LastUpdated: 2025-04-24
+## Notes: Show ItemLevel For Inspect & Party & Raid & Mouse & Bag & Bank ...
+## Notes-zhCN: 装等观察,装等显示
+## Notes-zhTW: 裝等觀察,裝等顯示
+## Author: 星野绫-罗宁 CN
+## SavedVariables: TinyInspectRemakeDB
+## SavedVariablesPerCharacter: TinyInspectRemakeCharacterDB
+
+libs\lib.xml
+
+locales\locales.xml
+Options.lua
+
+ItemBorder.lua
+ItemLevel.lua
+
+InspectCore.lua
+
+InspectUnit.lua
+InspectUnitStats.lua
+InspectUnitGemAndEnchant.lua
+InspectUnitSpecialization.lua
+InspectMouse.lua
+##InspectGroupMember.lua
+InspectParty.lua
+InspectRaid.lua
+PluginGreenState.lua

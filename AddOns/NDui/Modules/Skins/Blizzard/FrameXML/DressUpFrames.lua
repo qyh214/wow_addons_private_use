@@ -13,24 +13,23 @@ end
 tinsert(C.defaultThemes, function()
 	if not C.db["Skins"]["BlizzardSkins"] then return end
 
-	local r, g, b = DB.r, DB.g, DB.b
-
 	-- Dressup Frame
 
 	B.ReskinPortraitFrame(DressUpFrame)
 	B.Reskin(DressUpFrameCancelButton)
 	B.Reskin(DressUpFrameResetButton)
 	B.ReskinMinMax(DressUpFrame.MaximizeMinimizeFrame)
+	DressUpFrameResetButton:SetPoint("RIGHT", DressUpFrameCancelButton, "LEFT", -1, 0)
 
 	B.Reskin(DressUpFrame.LinkButton)
-	B.Reskin(DressUpFrame.ToggleOutfitDetailsButton)
-	ResetToggleTexture(DressUpFrame.ToggleOutfitDetailsButton, 1392954) -- 70_professions_scroll_01
+	B.Reskin(DressUpFrame.ToggleCustomSetDetailsButton)
+	ResetToggleTexture(DressUpFrame.ToggleCustomSetDetailsButton, 1392954) -- 70_professions_scroll_01
 
-	B.StripTextures(DressUpFrame.OutfitDetailsPanel)
-	local bg = B.SetBD(DressUpFrame.OutfitDetailsPanel)
+	B.StripTextures(DressUpFrame.CustomSetDetailsPanel)
+	local bg = B.SetBD(DressUpFrame.CustomSetDetailsPanel)
 	bg:SetInside(nil, 11, 11)
 
-	hooksecurefunc(DressUpFrame.OutfitDetailsPanel, "Refresh", function(self)
+	hooksecurefunc(DressUpFrame.CustomSetDetailsPanel, "Refresh", function(self)
 		if self.slotPool then
 			for slot in self.slotPool:EnumerateActive() do
 				if not slot.bg then
@@ -40,8 +39,6 @@ tinsert(C.defaultThemes, function()
 			end
 		end
 	end)
-
-	DressUpFrameResetButton:SetPoint("RIGHT", DressUpFrameCancelButton, "LEFT", -1, 0)
 
 	B.ReskinCheck(TransmogAndMountDressupFrame.ShowMountCheckButton)
 	B.ReskinModelControl(DressUpFrame.ModelScene)
@@ -66,8 +63,8 @@ tinsert(C.defaultThemes, function()
 		end)
 	end
 
-	B.ReskinDropDown(DressUpFrameOutfitDropdown)
-	B.Reskin(DressUpFrameOutfitDropdown.SaveButton)
+	B.ReskinDropDown(DressUpFrameCustomSetDropdown)
+	B.Reskin(DressUpFrameCustomSetDropdown.SaveButton)
 
 	-- SideDressUp
 
@@ -83,13 +80,16 @@ tinsert(C.defaultThemes, function()
 
 	-- Outfit frame
 
-	B.StripTextures(WardrobeOutfitEditFrame)
-	WardrobeOutfitEditFrame.EditBox:DisableDrawLayer("BACKGROUND")
-	B.SetBD(WardrobeOutfitEditFrame)
-	local bg = B.CreateBDFrame(WardrobeOutfitEditFrame.EditBox, .25, true)
-	bg:SetPoint("TOPLEFT", -5, -3)
-	bg:SetPoint("BOTTOMRIGHT", 5, 3)
-	B.Reskin(WardrobeOutfitEditFrame.AcceptButton)
-	B.Reskin(WardrobeOutfitEditFrame.CancelButton)
-	B.Reskin(WardrobeOutfitEditFrame.DeleteButton)
+	local editFrame = WardrobeCustomSetEditFrame
+	if editFrame then
+		B.StripTextures(editFrame)
+		editFrame.EditBox:DisableDrawLayer("BACKGROUND")
+		B.SetBD(editFrame)
+		local bg = B.CreateBDFrame(editFrame.EditBox, .25, true)
+		bg:SetPoint("TOPLEFT", -5, -3)
+		bg:SetPoint("BOTTOMRIGHT", 5, 3)
+		B.Reskin(editFrame.AcceptButton)
+		B.Reskin(editFrame.CancelButton)
+		B.Reskin(editFrame.DeleteButton)
+	end
 end)

@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -29,9 +29,9 @@ function PGF.IsMatchingInstance(lockoutName, activityName, lockoutDifficulty, ac
 end
 
 function PGF.GetLockoutInfo(activity, resultID)
-    local activityInfo = C_LFGList.GetActivityInfoTable(activity)
+    local activityInfo = PGF.GetActivityInfoTable(activity)
     local difficulty = C.ACTIVITY[activity].difficulty
-    local encounterInfo = C_LFGList.GetSearchResultEncounterInfo(resultID)
+    local encounterInfo = PGF.GetSearchResultEncounterInfo(resultID)
     local groupDefeatedBossNames = PGF.Table_ValuesAsKeys(encounterInfo)
     local numGroupDefeated = PGF.Table_Count(encounterInfo)
 

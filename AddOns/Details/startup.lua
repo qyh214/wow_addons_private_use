@@ -9,10 +9,14 @@ GetSpecializationInfo
 
 --start funtion
 function Details222.StartUp.StartMeUp()
+	---@type details
+	local Details = Details
 	if (Details.AndIWillNeverStop) then
 		return
 	end
 	Details.AndIWillNeverStop = true
+
+	Details.damage_meter_type = 0 --disable blizzard toggle
 
 	--note: this runs after profile loaded
 
@@ -60,6 +64,28 @@ function Details222.StartUp.StartMeUp()
 	if (Details.slashk_dnd) then
 		LIB_OPEN_RAID_MYTHIC_PLUS_DND = true
 	end
+
+	if detailsFramework.IsAddonApocalypseWow() then
+		Details.auto_swap_to_dynamic_overall = false
+
+		if (Details.breakdown_spell_tab.spellcontainer_headers["casts"]) then
+			Details.breakdown_spell_tab.spellcontainer_headers["casts"].enabled = false
+		end
+		if (Details.breakdown_spell_tab.spellcontainer_headers["critpercent"]) then
+			Details.breakdown_spell_tab.spellcontainer_headers["critpercent"].enabled = false
+		end
+		if (Details.breakdown_spell_tab.spellcontainer_headers["hits"]) then
+			Details.breakdown_spell_tab.spellcontainer_headers["hits"].enabled = false
+		end
+		if (Details.breakdown_spell_tab.spellcontainer_headers["castavg"]) then
+			Details.breakdown_spell_tab.spellcontainer_headers["castavg"].enabled = false
+		end
+		if (Details.breakdown_spell_tab.spellcontainer_headers["uptime"]) then
+			Details.breakdown_spell_tab.spellcontainer_headers["uptime"].enabled = false
+		end
+	end
+
+	Details.disable_lock_ungroup_buttons = false
 
 	-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	--row single click, this determines what happen when the user click on a bar
@@ -149,7 +175,9 @@ function Details222.StartUp.StartMeUp()
 
 	--Details222.LoadCommentatorFunctions()
 
-	Details222.AuraScan.FindAndIgnoreWorldAuras()
+	if not detailsFramework.IsAddonApocalypseWow() then
+		Details222.AuraScan.FindAndIgnoreWorldAuras()
+	end
 
 	Details222.Notes.RegisterForOpenRaidNotes()
 
@@ -161,6 +189,7 @@ function Details222.StartUp.StartMeUp()
 	--/run Details.ocd_tracker.show_options = true; ReloadUI()
 	--custom window
 	Details.custom = Details.custom or {}
+
 	--Details222.InitRecap()
 
 	--micro button alert
@@ -210,8 +239,7 @@ function Details222.StartUp.StartMeUp()
 			Details.Schedules.Cancel(Details.scheduled_window_update)
 			Details.scheduled_window_update = nil
 		end
-		Details.scheduled_window_update = Details.Schedules.NewTimer(time or 1, Details.ScheduledWindowUpdate, Details,
-			bIsForced)
+		Details.scheduled_window_update = Details.Schedules.NewTimer(time or 1, Details.ScheduledWindowUpdate, Details, bIsForced)
 	end
 
 	--do the first refresh here, not waiting for the regular refresh schedule to kick in
@@ -222,9 +250,18 @@ function Details222.StartUp.StartMeUp()
 	for instanceId = 1, Details:GetNumInstances() do
 		local instance = Details:GetInstance(instanceId)
 		if (instance:IsEnabled()) then
-			Details.Schedules.NewTimer(1, Details.RefreshBars, Details, instance)
-			Details.Schedules.NewTimer(1, Details.InstanceReset, Details, instance)
-			Details.Schedules.NewTimer(1, Details.InstanceRefreshRows, Details, instance)
+			local r = 5
+
+			local refresh = function()
+				instance:RefreshBars()
+				instance:InstanceReset()
+				instance:InstanceRefreshRows()
+
+				Details:RefreshMainWindow(-1, bForceRefresh)
+				Details:RefreshUpdater()
+			end
+
+			C_Timer.After(r, refresh)
 		end
 	end
 
@@ -271,7 +308,8 @@ function Details222.StartUp.StartMeUp()
 		end
 
 		--after plugins are loaded and they have registered their icons, reorganize them after the start
-		Details.ToolBar:ReorganizeIcons()
+		local justRefreshIcons = true
+		Details.ToolBar:ReorganizeIcons(justRefreshIcons)
 
 		--refresh skin for other windows
 		if (lowerInstanceId) then
@@ -289,7 +327,7 @@ function Details222.StartUp.StartMeUp()
 		--need to refresh wallpaper a few frames or seconds after the game starts
 		function Details:CheckWallpaperAfterStartup()
 			if (not Details.profile_loaded) then
-				Details.Schedules.NewTimer(5, Details.CheckWallpaperAfterStartup, Details)
+				Details.Schedules.NewTimer(2, Details.CheckWallpaperAfterStartup, Details)
 			end
 
 			for instanceId = 1, Details.instances_amount do
@@ -310,10 +348,10 @@ function Details222.StartUp.StartMeUp()
 			Details.profile_loaded = nil
 		end
 
-		Details.Schedules.NewTimer(5, Details.CheckWallpaperAfterStartup, Details)
+		Details.Schedules.NewTimer(2, Details.CheckWallpaperAfterStartup, Details)
 	end
 
-	Details.Schedules.NewTimer(5, Details.RefreshAfterStartup, Details)
+	Details.Schedules.NewTimer(1, function() DetailsSwitchPanel:Hide() Details.RefreshAfterStartup(Details) end)
 
 	--start garbage collector
 	Details222.GarbageCollector.lastCollectTime = 0
@@ -341,6 +379,10 @@ function Details222.StartUp.StartMeUp()
 
 	if (C_EventUtils.IsEventValid("SCENARIO_COMPLETED")) then
 		Details.listener:RegisterEvent("SCENARIO_COMPLETED")
+	end
+
+	if (detailsFramework.IsAddonApocalypseWow()) then
+		Details.listener:RegisterEvent("PLAYER_IN_COMBAT_CHANGED")
 	end
 
 	Details.listener:RegisterEvent("ENCOUNTER_START")
@@ -385,9 +427,10 @@ function Details222.StartUp.StartMeUp()
 	Details.Schedules.NewTimer(10, Details.ShowDelayMsg, Details)
 
 	--send instance open event for each instance opened
-	for id, instancia in Details:ListInstances() do
-		if (instancia.ativa) then
-			Details:SendEvent("DETAILS_INSTANCE_OPEN", nil, instancia)
+	for id, instance in Details:ListInstances() do
+		---@cast instance instance
+		if (instance.ativa) then
+			Details:SendEvent("DETAILS_INSTANCE_OPEN", nil, instance)
 		end
 	end
 
@@ -414,9 +457,10 @@ function Details222.StartUp.StartMeUp()
 
 	--display the version right after the startup, this will fade out after a few seconds
 	function Details:AnnounceVersion()
-		for index, instancia in Details:ListInstances() do
-			if (instancia.ativa) then
-				Details.FadeHandler.Fader(instancia._version, "in", 0.1)
+		for index, instance in Details:ListInstances() do
+			---@cast instance instance
+			if (instance.ativa) then
+				Details.FadeHandler.Fader(instance._version, "in", 0.1)
 			end
 		end
 	end
@@ -440,23 +484,53 @@ function Details222.StartUp.StartMeUp()
 			end
 		end
 	end
-
 	--check is this is the first run of this version
 	if (Details.is_version_first_run) then
 		if (Details.build_counter == 13096) then
 			Details.mythic_plus.autoclose_time = 90
 		end
 
+		if detailsFramework.IsAddonApocalypseWow() then
+			--remove all custom displays from the previous version of the addon, because they are not compatible with 12.x.x and can cause errors.
+			for i = #Details.custom, 1, -1 do
+				table.remove(Details.custom, i)
+			end
+		end
+
 		local lowerInstanceId = Details:GetLowerInstanceNumber()
 		if (lowerInstanceId) then
 			lowerInstanceId = Details:GetInstance(lowerInstanceId)
 			if (lowerInstanceId) then
+				if Details.build_counter >= 14356 then
+					if not Details.righttext_simple_formatting.first_run then
+						Details:Msg("The right text has been converted to a new formatting system. You can customize it in the options window -> Bar Texts.")
+						if lowerInstanceId.use_multi_fontstrings then
+							Details.righttext_simple_formatting.enabled = false
+							Details.righttext_simple_formatting.use_alignment = true
+						else
+							Details.righttext_simple_formatting.enabled = true
+							Details.righttext_simple_formatting.use_alignment = false
+
+							local bars_show_data = lowerInstanceId.row_info.textR_show_data
+							if (not bars_show_data [3]) then --no percent
+								local template = {"%s (%s)", "%s (%s)", "%s"}
+								local profileTable = Details.righttext_simple_formatting
+								profileTable.format_tsp = template[1]
+								profileTable.format_ts = template[2]
+								profileTable.format_tp = template[3]
+							end
+						end
+
+						Details.righttext_simple_formatting.first_run = true
+					end
+				end
+
 				--check if there's changes in the size of the news string
 				if (false and Details.last_changelog_size ~= #Loc["STRING_VERSION_LOG"]) then
 					Details.last_changelog_size = #Loc["STRING_VERSION_LOG"]
 
 					if (Details.auto_open_news_window) then
-						C_Timer.After(5, function()
+						C_Timer.After(1, function()
 							Details.OpenNewsWindow()
 						end)
 					end
@@ -544,11 +618,13 @@ function Details222.StartUp.StartMeUp()
 	--store the names of all interrupt spells
 	---@type table<string, boolean>
 	Details.InterruptSpellNamesCache = {}
-	for spellId, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
-		if (spellData.type == 6) then
-			local spellInfo = C_Spell.GetSpellInfo(spellId)
-			if (spellInfo) then
-				Details.InterruptSpellNamesCache[spellInfo.name] = true
+	if LIB_OPEN_RAID_COOLDOWNS_INFO then
+		for spellId, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
+			if (spellData.type == 6) then
+				local spellInfo = C_Spell.GetSpellInfo(spellId)
+				if (spellInfo) then
+					Details.InterruptSpellNamesCache[spellInfo.name] = true
+				end
 			end
 		end
 	end
@@ -565,20 +641,25 @@ function Details222.StartUp.StartMeUp()
 	---@type table<unitname, table<spellname, boolean>>
 	Details.CrowdControlSpellsByUnitCache = {}
 
-	for spellId, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
-		if (spellData.type == 8) then
-			local spellInfo = C_Spell.GetSpellInfo(spellId)
-			if (spellInfo) then
-				Details.CrowdControlSpellIdsCache[spellId] = spellInfo.name
-				Details.CrowdControlSpellNamesCache[spellInfo.name] = true
+	if LIB_OPEN_RAID_COOLDOWNS_INFO then
+		for spellId, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
+			if (spellData.type == 8) then
+				local spellInfo = C_Spell.GetSpellInfo(spellId)
+				if (spellInfo) then
+					Details.CrowdControlSpellIdsCache[spellId] = spellInfo.name
+					Details.CrowdControlSpellNamesCache[spellInfo.name] = true
+				end
 			end
 		end
 	end
-	for spellId, spellData in pairs(LIB_OPEN_RAID_CROWDCONTROL) do
-		local spellInfo = C_Spell.GetSpellInfo(spellId)
-		if (spellInfo and not Details.CrowdControlSpellNamesCache[spellInfo.name]) then
-			Details.CrowdControlSpellIdsCache[spellId] = spellInfo.name
-			Details.CrowdControlSpellNamesCache[spellInfo.name] = true
+
+	if LIB_OPEN_RAID_CROWDCONTROL then
+		for spellId, spellData in pairs(LIB_OPEN_RAID_CROWDCONTROL) do
+			local spellInfo = C_Spell.GetSpellInfo(spellId)
+			if (spellInfo and not Details.CrowdControlSpellNamesCache[spellInfo.name]) then
+				Details.CrowdControlSpellIdsCache[spellId] = spellInfo.name
+				Details.CrowdControlSpellNamesCache[spellInfo.name] = true
+			end
 		end
 	end
 
@@ -773,6 +854,24 @@ function Details222.StartUp.StartMeUp()
 		end
 	end
 
+	if detailsFramework.IsAddonApocalypseWow() then
+		if not Details.switch_post_apoc then
+			Details.switch_post_apoc = true
+
+			Details.switch.slots = 6
+			Details.switch.table = {
+				{["atributo"] = 1, ["sub_atributo"] = 1}, --damage done
+				{["atributo"] = 2, ["sub_atributo"] = 1}, --healing done
+				{["atributo"] = 4, ["sub_atributo"] = 3}, --interrupts
+				{["atributo"] = 4, ["sub_atributo"] = 4}, --dispels
+				{["atributo"] = 1, ["sub_atributo"] = 3}, --damage taken
+				{["atributo"] = 2, ["sub_atributo"] = 3}, --overhealing
+			}
+
+			Details:Msg("Bookmarks has been reset.")
+		end
+	end
+
 	if (not DetailsFramework.IsTimewalkWoW()) then
 		Details.cached_specs[UnitGUID("player")] = GetSpecializationInfo(GetSpecialization() or 0)
 	end
@@ -860,16 +959,9 @@ function Details222.StartUp.StartMeUp()
 	end
 
 	Details.InitializeSpellBreakdownTab()
-
 	pcall(Details222.ClassCache.MakeCache)
 
-	if (time() > 1740761826 + 31622400) then
-		wipe(Details)
-		return
-	end
-
 	Details:BuildSpecsNameCache()
-
 	Details222.Cache.DoMaintenance()
 
 	function Details:InstallOkey()
@@ -878,6 +970,10 @@ function Details222.StartUp.StartMeUp()
 
 	if (DetailsFramework:IsNearlyEqual(Details.class_coords.ROGUE[4], 0.25)) then
 		DetailsFramework.table.copy(Details.class_coords, Details.default_profile.class_coords)
+	end
+
+	if detailsFramework.IsAddonApocalypseWow() then
+		Details222.BParser.UpdateDamageMeterSwap()
 	end
 
 	if (DetailsFramework.IsWarWow()) then
@@ -902,6 +998,8 @@ function Details222.StartUp.StartMeUp()
 
 	--all in one window
 	Details222.AllInOneWindow:Initialize()
+
+	Details.__initialized = true
 end
 
 Details.AddOnLoadFilesTime = _G.GetTime()

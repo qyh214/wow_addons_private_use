@@ -1,43 +1,28 @@
-## Interface: 110207, 120000
+## Interface: 120005
+## Version: 1.4.4
 ## Title: Waypoint UI
-## Notes: This is the way.
+## Notes: An in-world waypoint and pinpoint to show relevant information directly in world-space.
+## Notes-zhCN: 魔兽世界中的路径点和标记点，用于在虚拟空间中直接显示相关信息。
 ## Author: AdaptiveX
-## IconTexture: Interface/AddOns/WaypointUI/Art/Icon/IconAltLight.png
-## Version: 1.2.3
+## Category-deDE: Karte
+## IconTexture: Interface\AddOns\WaypointUI\Art\Icons\Logo-White
 ## SavedVariables: WaypointDB_Global, WaypointDB_Global_Persistent
 ## SavedVariablesPerCharacter: WaypointDB_Local, WaypointDB_Local_Persistent
-## AddonCompartmentFunc: WaypointUIAPI_OpenSettingUI
+## AddonCompartmentFunc: WaypointUIAPI_OpenSettingsUI
 
-# ------------------------
-# WPM
-# ------------------------
 
-wpm_modules/packages.xml
+packages\packages.xml
 
-# ------------------------
-# Initalize
-# ------------------------
-
+Fonts.lua
 Preload.lua
-Locales/Locales.xml
+Locales\Locales.xml
 
-# ------------------------
-# Main
-# ------------------------
-
-Code/LocalUtil.lua
-Code/SharedUI.lua
-
-Code/MapPin/MapPin.xml
-Code/Waypoint/Waypoint.xml
-
-Code/Setting/Setting.xml
-Code/Support/Support.xml
-
-Code/ExtraFeature/ExtraFeature.xml
-
-# ------------------------
-# API
-# ------------------------
+Code\SharedUtil.lua
+Code\SharedUI.lua
+Code\MapPin\MapPin.xml
+Code\Waypoint\Waypoint.xml
+Code\Settings\Settings.xml
+Code\SupportedAddons\SupportedAddons.xml
+Code\Extensions\Extensions.xml
 
 API.lua

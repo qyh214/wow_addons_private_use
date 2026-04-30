@@ -1,0 +1,11 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Include file="src\definitions\index.xml"/>
+	<Include file="src\cache\index.xml"/>
+	<Include file="src\tag-manager\index.xml"/>
+	<Include file="src\utils\index.xml"/>
+	<Include file="src\primitives\index.xml"/>
+	<Include file="src\renderer\index.xml"/>
+	<Include file="src\ui\index.xml"/>
+	<Include file="src\template\index.xml"/>
+	<Script file="index.lua"/>
+</Ui>

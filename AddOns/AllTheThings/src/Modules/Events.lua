@@ -407,7 +407,7 @@ end
 local GetTimerunningSeason;
 local PlayerGetTimerunningSeasonID = PlayerGetTimerunningSeasonID;
 -- Don't add the Timerunning Filter if there's no Season active!
-local IsTimerunningActive = true
+local IsTimerunningActive = false
 if PlayerGetTimerunningSeasonID and IsTimerunningActive then
 	-- Timerunning API is available.
 	local timerunningSeasons = L.EVENT_TIMERUNNING_SEASONS;
@@ -490,7 +490,7 @@ events.FilterIsEventActive = FilterIsEventActive;
 events.GetEventActive = function(eventID)
 	return ActiveEvents[eventID];
 end;
-events.GetEventCache = GetEventCache;	-- This should be executed before GetDataCache, or at the start of GetDataCache.
+events.GetEventCache = GetEventCache;	-- This should be executed before GetDatabaseRoot, or at the start of GetDatabaseRoot.
 events.GetEventName = GetEventName;
 events.GetEventInformation = function(eventID)
 	return EventInformation[eventID];

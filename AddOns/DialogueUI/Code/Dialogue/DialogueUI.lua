@@ -1504,6 +1504,14 @@ function DUIDialogBaseMixin:HandleGossip()
 end
 
 function DUIDialogBaseMixin:HandleQuestDetail(playFadeIn)
+    local questID = GetQuestID();
+    if GossipDataProvider:ShouldAutoAcceptQuest(questID) then
+        if not API.IsPlayerOnQuest(questID) then
+            self:ScrollDownOrAcceptQuest(true);
+        end
+        return false;
+    end
+
     self:ReleaseAllObjects();
     local isQuestChanged = self:UseQuestLayout(true);
     playFadeIn = playFadeIn or isQuestChanged;
@@ -1791,7 +1799,9 @@ function DUIDialogBaseMixin:HandleQuestComplete(playFadeIn)
     if GetDBBool("AutoCompleteQuest") and (not self.chooseItems) then
         local questID = GetQuestID();
         local title = GetQuestTitle();
-        if GossipDataProvider:ShouldAutoCompleteQuest(questID, title) then
+        local preyQuestID = C_QuestLog.GetActivePreyQuest and C_QuestLog.GetActivePreyQuest();
+
+        if (preyQuestID and preyQuestID == questID) or GossipDataProvider:ShouldAutoCompleteQuest(questID, title) then
             local completionText = GetQuestText("Complete");
             local questData = {
                 questID = questID,
@@ -1903,7 +1913,7 @@ function DUIDialogBaseMixin:HandleQuestGreeting()
         local questID = GetActiveQuestID(i);
 
         if GetDBBool("AutoCompleteQuest") then
-            if GossipDataProvider:ShouldAutoCompleteQuest(questID) and SelectActiveQuest then
+            if GossipDataProvider:ShouldAutoCompleteQuest(questID) and SelectActiveQuest and API.ReadyForTurnIn(questID) then
                 SelectActiveQuest(i);
                 return false
             end
@@ -2361,7 +2371,43 @@ function DUIDialogBaseMixin:HideUI(cancelPopupFirst, fromPressingKey)
     self:Hide();
 end
 
+
+local GhostCatcher = CreateFrame("Frame");
+do  --GhostCatcher
+    --How does one catch a ghost?
+    --C Stack Overflow reported by https://legacy.curseforge.com/members/kaanumay
+
+    function GhostCatcher:MainFrameStartHiding()
+        if self.isHiding then
+            return true
+        end
+
+        MainFrame:SetScript("OnHide", nil);
+        self.isHiding = true;
+        self.t = 0;
+        self:SetScript("OnUpdate", self.OnUpdate);
+
+        return false
+    end
+
+    function GhostCatcher:MainFrameOnShow()
+        self.isHiding = nil;
+        self.t = 0;
+        self:SetScript("OnUpdate", nil);
+        MainFrame:SetScript("OnHide", DUIDialogBaseMixin.OnHide);
+    end
+
+    function GhostCatcher:OnUpdate(elapsed)
+        self.isHiding = nil;
+        self.t = 0;
+        self:SetScript("OnUpdate", nil);
+    end
+end
+
+
 function DUIDialogBaseMixin:OnShow()
+    GhostCatcher:MainFrameOnShow();
+
     KeyboardControl:SetParentFrame(self);
 
     self:RegisterEvent("GOSSIP_SHOW");
@@ -2398,6 +2444,9 @@ function DUIDialogBaseMixin:CloseDialogInteraction()
 end
 
 function DUIDialogBaseMixin:OnHide()
+    if GhostCatcher:MainFrameStartHiding() then return end;
+
+    self:Hide();
     CameraUtil:Restore();
 
     self:CloseDialogInteraction();
@@ -2452,7 +2501,6 @@ end
 function DUIDialogBaseMixin:OnMouseUp(button)
     if button == "RightButton" and GetDBBool("RightClickToCloseUI") and self:IsMouseMotionFocus() then
         self:Hide();
-        --self:CloseDialogInteraction();
     end
 end
 
@@ -2508,7 +2556,7 @@ function DUIDialogBaseMixin:UpdateRewards()
             if f.t > 0.5 then
                 f.t = nil;
                 f:SetScript("OnUpdate", nil);
-                if self.questLayout and self.handler then
+                if self.questLayout and self.handler and self:IsShown() then
                     self[self.handler](self);
                 end
             end
@@ -2562,7 +2610,7 @@ function DUIDialogBaseMixin:OnEvent(event, ...)
         CallbackRegistry:Trigger("PlayerInteraction.ShowUI", true);
     elseif event == "LOADING_SCREEN_DISABLED" then  --not reliable on the intial login
         self:UnregisterEvent(event);
-        C_Timer.After(4, function()
+        After(4, function()
             self.isGameLoading = nil;
             self:HandleInitialLoadingComplete();
         end);
@@ -2788,9 +2836,6 @@ do  --Clipboard
                 content.body = body;
                 content.objective = objective;
             else
-                local GetGossipText = API.GetGossipText;
-                local GetQuestText = API.GetQuestText;
-
                 local questID = GetQuestID();
                 if questID and questID ~= 0 then
                     content.title = GetQuestTitle();
@@ -2833,6 +2878,7 @@ do  --Clipboard
     function DUIDialogBaseMixin:GetContentForClipboard()
         local str;
 
+        --Use unmodified APIs
         local GetGossipText = API.GetGossipText;
         local GetQuestText = API.GetQuestText;
 
@@ -2955,11 +3001,11 @@ do  --Clipboard
         local str = self:GetContentForClipboard();
 
         if str then
-            if StripHyperlinks then
+            if API.StripHyperlinks then
                 --We remove the atlas/texture since it messes up spacing
                 local maintainColor = true;
                 local maintainBrackets = true;
-                str = StripHyperlinks(str, true, true);
+                str = API.StripHyperlinks(str, true, true);
             end
             addon.Clipboard:ShowContent(str, self.CopyTextButton);
         end
@@ -3047,10 +3093,11 @@ do  --Quest Rewards
                 offsetY = fromOffsetY + (itemButtonHeight + ITEM_BUTTON_SPACING) * numRows - ITEM_BUTTON_SPACING;
                 offsetY = offsetY + PARAGRAPH_SPACING;
 
-                if #rewardList > 1 then
-                    offsetY = self:InsertText(offsetY, REWARD_ITEMS);	--You will also receive
-                    offsetY = offsetY + ITEM_BUTTON_SPACING;
-                end
+                --Title is already added to the rewardList
+                --if #rewardList > 1 then
+                    --offsetY = self:InsertText(offsetY, REWARD_ITEMS);	--You will also receive
+                    --offsetY = offsetY + ITEM_BUTTON_SPACING;
+                --end
 
                 if isChoosingReward then
                     self:RequestSellPrice();
@@ -3500,7 +3547,7 @@ do  --Generic Settings Registry
         end
         MainFrame:OnSettingsChanged();
     end
-    CallbackRegistry:Register("SettingChanged.UseRoleplayName", Settings_UseRoleplayName);
+    CallbackRegistry:Register("UseRoleplayName", Settings_UseRoleplayName);
 
     local function GenericOnSettingsChanged(dbValue)
         MainFrame:OnSettingsChanged();

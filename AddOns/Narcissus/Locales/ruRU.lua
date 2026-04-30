@@ -1,4 +1,4 @@
---Coutesy of ZamestoTV. Thank you!    --Translator: ZamestoTV as of 1.8.2 b
+--Coutesy of ZamestoTV. Thank you!    --Translator: ZamestoTV as of 1.8.4
 
 if not (GetLocale() == "ruRU") then
     return;
@@ -107,6 +107,8 @@ L["MinimapButton Reenabled"] = "|cffffd100Вы включили кнопку м�
 L["MinimapButton LibDBIcon"] = "Использовать LibDBIcon";
 L["MinimapButton LibDBIcon Desc"] = "Используйте LibDBIcon для создания кнопки мини-карты.\nВы видите эту опцию, потому что у вас установлена ​​библиотека LibDBIcon-1.0 или дополнение, интегрирующее эту библиотеку.";
 L["MinimapButton LibDBIcon Hide"] = "Скрыть кнопку";
+L["MinimapButton Click Behavior"] = "Поведение кликов";
+L["MinimapButton Click Behavior tooltip"] = "Измените, какой интерфейс Narcissus будет открываться при нажатии ЛКМ на кнопку мини-карты.";
 L["Corrupted Item Parser"] = "|cffffffffПереключить парсер порченого предмета|r";
 L["Toggle Dressing Room"] = "|cffffffffПереключить на "..DRESSUP_FRAME.."|r";
 L["Reset Camera"] = "Сбросить камеру";
@@ -117,6 +119,7 @@ L["Layout"] = "Место";
 L["Symmetry"] = "Симметрия";
 L["Asymmetry"] = "Асимметрия";
 L["Copy Texts"] = "Скопировать Текст";
+L["Toggle Item List"] = "Переключить список предметов";
 L["Syntax"] = "Синтаксис";
 L["Plain Text"] = "Обычный Текст";
 L["BB Code"] = "BB Code";
@@ -366,7 +369,9 @@ L["Switch Form To Worgen"] = "Переключить на форму |cffffffff 
 L["Switch Form To Human"] = "Переключить на форму |cffffffff Человек|r";
 L["InGame Command"] = "Внутриигровая команда";	
 L["Hide Player Items"] = "Скрыть предметы игрока";
-L["Hide Player Items Tooltip"] = "Скрыть все, что не относится к этому набору предметов.";															 
+L["Hide Player Items Tooltip"] = "Скрыть все, что не относится к этому набору предметов.";
+L["Hide Duplicated Appearance"] = "Скрыть дубликаты";
+L["Hide Duplicated Appearance Tooltip"] = "Некоторые комплекты могут содержать предметы с одинаковым внешним видом. Включите эту опцию, чтобы отображать уникальные предметы.";															 
 
 --NPC Browser--
 NARCI_NPC_BROWSER_TITLE_LEVEL = ".*%?%?.?";      --Level ?? --Use this to check if the second line of the tooltip is NPC's title or unit type
@@ -779,6 +784,9 @@ L["Format Stat EXP"] = "+%d%% EXP Прирост";
 L["Format Rank"] = AZERITE_ESSENCE_RANK or "Ранг %d";
 L["Cloak Rank"] = "Ранг плаща";
 
+L["Artifact Ability"] = "Способность артефакта";
+L["Toggle Artifact UI"] = "Нажмите, чтобы переключить интерфейс артефактов.";
+
 
 --Gem Manager--
 L["Gem Manager"] = "Управлять камнями";
@@ -835,3 +843,27 @@ L["GamePad Select"] = "Выбрать";
 L["GamePad Cancel"] = "Отмена";
 L["GamePad Use"] = "Использовать";
 L["GamePad Equip"] = "Экипировка";
+
+
+--TransmogUI--
+L["Transmog UI"] = "Трансмогрификация";
+L["Transmog UI Description"] = "Создавайте собственные комплекты, доступные всем вашим персонажам.";
+L["OutfitSource Default"] = "Текущий персонаж";
+L["OutfitSource Default Tooltip"] = "Данные хранятся на сервере.";
+L["OutfitSource Shared"] = "Общий список";
+L["OutfitSource Shared Tooltip"] = "Все ваши персонажи имеют доступ к этому списку.\n\nДанные хранятся локально в аддоне Narcissus.";
+L["OutfitSource Alts"] = "Другие персонажи";
+L["OutfitSource Alts Tooltip"] = "Вы можете просматривать собственные комплекты другого персонажа, если вы входили на него с включенным аддоном Narcissus.\n\nВы не сможете изменять комплекты на вашем текущем персонаже.";
+L["Cannot Delete On Alts"] = "Вы не можете изменить этот комплект, так как он принадлежит другому персонажу";
+L["Your Money Amount"] = "Ваш баланс";
+L["TransmogSet No Valid Items"] = "Нет подходящих предметов.";
+L["Copy To Shared List"] = "Скопировать в Общий список";
+L["Insturction Delete Without Confirm"] = "Shift+клик для удаления без подтверждения.";
+L["Press Key To Copy Format"] = "Нажмите |cffffd100%s|r для копирования";
+L["Added To Shared List"] = "Добавлено в Общий список";
+L["Added To Shared List Alert Format"] = "Вы уже добавили этот комплект в Общий список под названием \"%s\"";
+L["New Set Location Default"] = "Этот собственный комплект будет сохранён на вашем текущем персонаже.";
+L["New Set Location Shared"] = "Этот собственный комплект будет добавлен в Общий список.";
+L["Save Custom Set Location"] = "Сохранить в:";
+L["Save Slots Colon"] = "Сохраняемые слоты: ";
+L["Error View Outfit In Combat"] = "Вы не можете просматривать собственные комплекты в режиме боя";

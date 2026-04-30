@@ -8,7 +8,7 @@ ham.defaults = {
     cavedwellerDelight = true,
     heartseekingInjector = false,
     activatedSpells = { ham.recuperate.getId(), ham.crimsonVialSpell.getId(), ham.renewal.getId(),
-        ham.exhilaration.getId(), ham.fortitudeOfTheBear.getId(), ham.lastStand.getId(), ham.bitterImmunity.getId(),
+        ham.exhilaration.getId(), ham.lastStand.getId(), ham.bitterImmunity.getId(),
         ham.desperatePrayer.getId(), ham.healingElixir.getId(), ham.darkPact.getId(), ham.giftOfTheNaaruDK.getId(),
         ham.giftOfTheNaaruHunter.getId(), ham.giftOfTheNaaruMage.getId(), ham.giftOfTheNaaruMageWarlock.getId(),
         ham.giftOfTheNaaruMonk.getId(), ham.giftOfTheNaaruPaladin.getId(), ham.giftOfTheNaaruPriest.getId(),

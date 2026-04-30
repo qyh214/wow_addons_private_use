@@ -19,7 +19,6 @@ local UpdateUIPanelPositions = UpdateUIPanelPositions;
 local MouseIsOver = MouseIsOver;
 local xpcall = xpcall;
 local CallErrorHandler = CallErrorHandler;
-local Settings_OpenToCategory = Settings and Settings.OpenToCategory or InterfaceOptionsFrame_OpenToCategory;
 local strsplit = strsplit;
 local GetBuildInfo = GetBuildInfo;
 local tinsert = tinsert;
@@ -32,8 +31,8 @@ local abs = abs;
 local GetMouseFoci = GetMouseFoci or function() return { GetMouseFocus() }; end;
 
 local name = ... or "BlizzMove";
---- @class BlizzMove: AceAddon,AceConsole-3.0,AceEvent-3.0,AceHook-3.0
-local BlizzMove = LibStub("AceAddon-3.0"):NewAddon(name, "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0");
+--- @class BlizzMove: AceAddon,AceConsole-3.0,NumyAceEvent-3.0,AceHook-3.0
+local BlizzMove = LibStub("AceAddon-3.0"):NewAddon(name, "AceConsole-3.0", "NumyAceEvent-3.0", "AceHook-3.0");
 if not BlizzMove then return; end
 
 local L = LibStub("AceLocale-3.0"):GetLocale(name);
@@ -51,6 +50,11 @@ BlizzMove.MoveHandles = {};
 BlizzMove.CombatLockdownQueue = {};
 --- @type table<Frame, true>
 BlizzMove.CurrentMouseoverFrames = {};
+--- @type table<string, number> # [frameName] = scale
+BlizzMove.SessionScales = {}
+
+BlizzMove.FakeUIParent = CreateFrame("Frame", "BlizzMove_FakeUIParent", nil, "SecureFrameTemplate");
+BlizzMove.FakeUIParent:SetAllPoints(UIParent);
 
 local MAX_SCALE = 2.5;
 local MIN_SCALE = 0.3; -- steps are in 0.1 increments, and we'd like to stay above 0.25
@@ -135,6 +139,7 @@ do
                 or key == "SilenceCompatabilityWarnings"
                 or key == "IgnoreSavedPositionWhenMaximized"
                 or key == "ForcePosition"
+                or key == "ForceUseSecureMoveHandle"
             then
                 if type(value) ~= "boolean" then validationError = true; end
             elseif key == "FrameReference" then
@@ -452,6 +457,8 @@ do
         return nil;
     end
 
+    --- @param frame Frame
+    --- @return nil|{ [1]: { anchorPoint: FramePoint, relativeFrame: "BlizzMove_FakeUIParent", relativePoint: FramePoint, offX: number, offY: number } }
     function GetAbsoluteFramePosition(frame)
         -- inspired by LibWindow-1.1 (https://www.wowace.com/projects/libwindow-1-1)
 
@@ -522,13 +529,15 @@ do
         return {
             {
                 ["anchorPoint"] = point,
-                ["relativeFrame"] = "UIParent",
+                ["relativeFrame"] = "BlizzMove_FakeUIParent",
                 ["relativePoint"] = point,
                 ["offX"] = x,
                 ["offY"] = y,
             },
         };
     end
+
+    local secureFrame = CreateFrame("Frame", nil, nil, "SecureHandlerBaseTemplate");
 
     --- @param frame Frame
     --- @param framePoints BlizzMove_FramePoint[]
@@ -542,16 +551,49 @@ do
             local SetPoint = frame.SetPointBase or frame.SetPoint;
             local scale = raw and 1 or frame:GetScale();
 
-            for curPoint = 1, #framePoints do
+            for _, point in ipairs(framePoints) do
                 ignoreSetPointHook = true;
-                SetPoint(
-                    frame,
-                    framePoints[curPoint].anchorPoint,
-                    framePoints[curPoint].relativeFrame,
-                    framePoints[curPoint].relativePoint,
-                    framePoints[curPoint].offX / scale,
-                    framePoints[curPoint].offY / scale
-                );
+                local relativeFrame = point.relativeFrame;
+                if type(relativeFrame) == "string" then
+                    relativeFrame = _G[relativeFrame];
+                end
+                if point.relativeFrame == UIParent then
+                    relativeFrame = BlizzMove.FakeUIParent;
+                end
+
+                if not InCombatLockdown() and (not relativeFrame or select(2, relativeFrame:IsProtected())) then
+                    secureFrame:SetFrameRef('frame', frame);
+                    if relativeFrame then
+                        secureFrame:SetFrameRef('relativeFrame', relativeFrame);
+                    end
+                    secureFrame:SetAttribute('hasRelativeFrame', relativeFrame and true or false);
+                    secureFrame:SetAttribute('anchorPoint', point.anchorPoint);
+                    secureFrame:SetAttribute('relativePoint', point.relativePoint);
+                    secureFrame:SetAttribute('offX', point.offX / scale);
+                    secureFrame:SetAttribute('offY', point.offY / scale);
+                    secureFrame:Execute([[
+                        local frame = self:GetFrameRef('frame');
+                        local relativeFrame;
+                        if self:GetAttribute('hasRelativeFrame') then
+                            relativeFrame = self:GetFrameRef('relativeFrame');
+                        end
+                        local anchorPoint = self:GetAttribute('anchorPoint');
+                        local relativePoint = self:GetAttribute('relativePoint');
+                        local offX = self:GetAttribute('offX');
+                        local offY = self:GetAttribute('offY');
+
+                        frame:SetPoint(anchorPoint, relativeFrame, relativePoint, offX, offY);
+                    ]]);
+                else
+                    SetPoint(
+                        frame,
+                        point.anchorPoint,
+                        relativeFrame,
+                        point.relativePoint,
+                        point.offX / scale,
+                        point.offY / scale
+                    );
+                end
                 ignoreSetPointHook = false;
             end
         end
@@ -598,7 +640,7 @@ do
     end
 
     function SetFrameScale(frame, frameScale)
-        if InCombatLockdown() and frame:IsProtected() then return false; end
+        if InCombatLockdown() and frame:IsProtected() then return true; end
         local frameData = BlizzMove.FrameData[frame];
         local oldScale = GetFrameScale(frame);
         local newScale = frameScale;
@@ -613,6 +655,7 @@ do
         end
 
         BlizzMove.DB.scales[frameData.storage.frameName] = newScale;
+        BlizzMove.SessionScales[frameData.storage.frameName] = newScale;
         frame:SetScale(newScale);
         BlizzMove:DebugPrint("SetFrameScale:", frameData.storage.frameName, string__format("%.2f %.2f %.2f", frameScale, frame:GetScale(), GetFrameScale(frame)));
 
@@ -663,7 +706,7 @@ local StartMoving;
 local StopMoving;
 do
     local function setNil(table, key)
-        TextureLoadingGroupMixin.RemoveTexture({ textures = table, }, key);
+        TextureLoadingGroupMixin.RemoveTexture({ textures = table }, key);
     end
     local function returnFalse() return false; end
 
@@ -682,7 +725,7 @@ do
 
             return;
         end
-        frame:StopMovingOrSizing()
+        frame:StopMovingOrSizing();
     end
 end
 
@@ -778,6 +821,8 @@ do
                 frameData.storage.isMoving = nil;
                 returnValue = true;
 
+                SetFramePoints(frame, frameData.storage.points.dragPoints);
+
             elseif button == "RightButton" then
                 local fullReset = false;
 
@@ -857,8 +902,11 @@ do
 
         SetFrameParent(frame);
 
-        if BlizzMove.DB.saveScaleStrategy == 'permanent' and BlizzMove.DB.scales[BlizzMove:GetFrameName(frame)] then
-            SetFrameScale(frame, BlizzMove.DB.scales[BlizzMove:GetFrameName(frame)]);
+        local frameName = BlizzMove:GetFrameName(frame);
+        if BlizzMove.DB.saveScaleStrategy == 'permanent' and BlizzMove.DB.scales[frameName] then
+            SetFrameScale(frame, BlizzMove.DB.scales[frameName]);
+        elseif BlizzMove.SessionScales[frameName] then
+            SetFrameScale(frame, BlizzMove.SessionScales[frameName]);
         end
 
         if not skipAdditionalRunNextFrame then
@@ -922,7 +970,7 @@ do
         captureFrame:SetScript("OnEvent", function() self:CheckMouseWheelCapture(); end);
         captureFrame:RegisterEvent("MODIFIER_STATE_CHANGED")
         captureFrame:SetScript("OnMouseWheel", function(_, delta)
-            for i, frame in ipairs(GetMouseFoci()) do
+            for _, frame in ipairs(GetMouseFoci()) do
                 --- @type BlizzMoveAPI_FrameData?
                 local frameData = self.FrameData[frame];
 
@@ -959,6 +1007,7 @@ do
                 not shouldHandleMouseWheel
                 and (
                     frame:IsForbidden()
+                    or (frame.HasSecretValues and frame:HasSecretValues())
                     or (not self.MoveHandles[frame] and (frame:IsMouseWheelEnabled() or frame:IsMouseClickEnabled()))
                 )
             then
@@ -1040,8 +1089,11 @@ do
             return;
         end
 
-        if BlizzMove.DB.scales[BlizzMove:GetFrameName(frame)] then
-            SetFrameScale(frame, BlizzMove.DB.scales[BlizzMove:GetFrameName(frame)]);
+        local frameName = BlizzMove:GetFrameName(frame);
+        if BlizzMove.DB.saveScaleStrategy == 'permanent' and BlizzMove.DB.scales[frameName] then
+            SetFrameScale(frame, BlizzMove.DB.scales[frameName]);
+        elseif BlizzMove.SessionScales[frameName] then
+            SetFrameScale(frame, BlizzMove.SessionScales[frameName]);
         end
     end
 end
@@ -1077,6 +1129,7 @@ do
         handle:SetAllPoints(frame);
         handle:SetFrameLevel(frame:GetFrameLevel() + 1);
         handle:SetPropagateMouseMotion(true);
+        handle:SetPropagateMouseClicks(true);
         handle.onDragStartCallback = function() return false end;
         handle:HookScript('OnMouseDown', OnMouseDown);
         handle:HookScript('OnMouseUp', OnMouseUp);
@@ -1135,7 +1188,7 @@ do
     local function MakeFrameMovable(frame, addOnName, frameName, frameData, frameParent)
         if not frame then return false; end
 
-        if InCombatLockdown() and frame:IsProtected() then return false; end
+        if InCombatLockdown() and (frameData.ForceUseSecureMoveHandle or frame:IsProtected()) then return false; end
 
         local clampFrame = false;
         if not frameParent or frameData.Detachable then
@@ -1165,7 +1218,7 @@ do
                     while rootFrameData.parentData do
                         rootFrameData = rootFrameData.parentData;
                     end
-                    if frame:IsProtected() or rootFrameData.storage.frame:IsProtected() then
+                    if frameData.ForceUseSecureMoveHandle or frame:IsProtected() or rootFrameData.storage.frame:IsProtected() then
                         MakeMoveHandles(frame, frameData);
                     else
                         frame:EnableMouse(true);
@@ -1205,7 +1258,7 @@ do
                 while rootFrameData.parentData do
                     rootFrameData = rootFrameData.parentData;
                 end
-                if frame:IsProtected() or rootFrameData.storage.frame:IsProtected() then
+                if frameData.ForceUseSecureMoveHandle or frame:IsProtected() or rootFrameData.storage.frame:IsProtected() then
                     MakeMoveHandles(frame, frameData);
                 else
                     frame:EnableMouse(true);
@@ -1623,17 +1676,8 @@ do
             end
         end
         -- fix another anchor family connection issue caused by blizzard being blizzard
-        if addOnName == "Blizzard_EncounterJournal" and _G.AdventureJournal_Reward_OnEnter and _G.EncounterJournalTooltip then
-            local replacement = function(rewardFrame)
-                if rewardFrame.data then
-                    _G.EncounterJournalTooltip:ClearAllPoints();
-                end
-                self.hooks.AdventureJournal_Reward_OnEnter(rewardFrame);
-            end
-            self:RawHook("AdventureJournal_Reward_OnEnter", replacement, true);
-            self:RawHookScript(_G.EncounterJournal.suggestFrame.Suggestion1.reward, "OnEnter", replacement);
-            self:RawHookScript(_G.EncounterJournal.suggestFrame.Suggestion2.reward, "OnEnter", replacement);
-            self:RawHookScript(_G.EncounterJournal.suggestFrame.Suggestion3.reward, "OnEnter", replacement);
+        if addOnName == "Blizzard_EncounterJournal" and _G.EncounterJournalTooltip then
+            EncounterJournalTooltip:HookScript("OnHide", function() EncounterJournalTooltip:ClearAllPoints() end);
         end
         -- fix yet another anchor family connection issue, added in 10.0
         if addOnName == "Blizzard_Communities" and _G.CommunitiesFrame.NotificationSettingsDialog then
@@ -1645,36 +1689,40 @@ do
         end
         -- fix anchor family connection issues when opening PlayerChoiceFrame after moving it
         if addOnName == "Blizzard_PlayerChoice" and _G.PlayerChoiceFrame then
+            local function startStopMoving(frame)
+                if InCombatLockdown() and frame:IsProtected() then
+                    return;
+                end
+                local wasMovable = frame:IsMovable();
+                local userPlaced = frame:IsUserPlaced();
+
+                frame:SetMovable(true);
+                StartMoving(frame);
+                frame:SetUserPlaced(userPlaced);
+                StopMoving(frame);
+                frame:SetMovable(wasMovable);
+            end
+            local toggleButtons = {
+                [_G.TorghastPlayerChoiceToggleButton] = true,
+                [_G.CypherPlayerChoiceToggleButton] = true,
+                [_G.GenericPlayerChoiceToggleButton] = true,
+            };
             _G.PlayerChoiceFrame:HookScript("OnHide", function()
+                for toggleButton in pairs(toggleButtons) do
+                    startStopMoving(toggleButton);
+                end
                 if not InCombatLockdown() or not _G.PlayerChoiceFrame:IsProtected() then
                     _G.PlayerChoiceFrame:ClearAllPoints();
                 end
             end);
-        end
-
-        -- fix anchor family connection issues when opening/closing the hero talents dialog
-        if addOnName == "Blizzard_PlayerSpells" and _G.HeroTalentsSelectionDialog and _G.PlayerSpellsFrame then
-            local skipHook = false;
-            hooksecurefunc(TalentFrameUtil, "GetNormalizedSubTreeNodePosition", function(talentFrame)
-                if skipHook then return; end
-                if
-                    (
-                        debugstack(3):find("in function .UpdateContainerVisibility.")
-                        or debugstack(3):find("in function .UpdateHeroTalentButtonPosition.")
-                        or debugstack(3):find("in function .PlaceHeroTalentButton.")
-                    )
-                    and not (debugstack(3):find("in function .InstantiateTalentButton."))
-                then
-                    skipHook = true
-                    for talentButton in talentFrame:EnumerateAllTalentButtons() do
-                        local nodeInfo = talentButton:GetNodeInfo();
-                        if nodeInfo.subTreeID then
-                            talentButton:ClearAllPoints();
-                        end
+            for toggleButton in pairs(toggleButtons) do
+                toggleButton:HookScript("OnHide", function()
+                    if not InCombatLockdown() or not toggleButton:IsProtected() then
+                        toggleButton:ClearAllPoints();
+                        toggleButton:SetPoint("TOP", _G.PlayerChoiceFrame, "BOTTOM", 0, 0);
                     end
-                    RunNextFrame(function() skipHook = false; end);
-                end
-            end);
+                end);
+            end
         end
 
         if addOnName == self.name then
@@ -1697,6 +1745,13 @@ do
                     end
                     skipHook = false
                 end);
+            end
+            if self.gameVersion >= 120000 then
+                -- workaround for secret errors with the MoneyFrame
+                TooltipDataProcessor.AddLinePreCall(Enum.TooltipDataLineType.SellPrice, function(tooltip, lineData)
+                    tooltip:AddLine(SELL_PRICE .. ': ' .. GetMoneyString(lineData.price), WHITE_FONT_COLOR:GetRGB());
+                    return true;
+                end)
             end
         end
     end

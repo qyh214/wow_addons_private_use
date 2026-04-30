@@ -2,12 +2,20 @@
 local addonName, ham = ...
 local isRetail = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE)
 local isClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
+local isTBC = (WOW_PROJECT_ID == 5) -- TBC Anniversary / BCC
 local isWrath = (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC)
 local isCata = (WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC)
 local isMop = (WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC)
 
 ham.healthstone = ham.Item.new(5512, "Healthstone")
 ham.demonicHealthstone = ham.Item.new(224464, "Demonic Healthstone") ---1 Minute CD due to Pact of Gluttony
+--Midnight
+ham.silvermoonPotion2 = ham.Item.new(241304, "Silvermoon Health Potion")
+ham.silvermoonPotion1 = ham.Item.new(241305, "Silvermoon Health Potion")
+ham.refreshingSerumR2 = ham.Item.new(241306, "Refreshing Serum")
+ham.refreshingSerumR1 = ham.Item.new(241307, "Refreshing Serum")
+ham.potent = ham.Item.new(258138, "Potent Healing Potion") -- 50% -healing
+--The War Within
 ham.invigoratingHealingPotionR3 = ham.Item.new(244839, "Invigorating Healing Potion")
 ham.invigoratingHealingPotionR2 = ham.Item.new(244838, "Invigorating Healing Potion")
 ham.invigoratingHealingPotionR1 = ham.Item.new(244835, "Invigorating Healing Potion")
@@ -58,11 +66,12 @@ ham.mythical = ham.Item.new(57191, "Mythical Healing Potion")
 ham.crazy_alch = ham.Item.new(40077, "Crazy Alchemist's Potion")
 ham.runic_inject = ham.Item.new(41166, "Runic Healing Injector")
 ham.runic = ham.Item.new(33447, "Runic Healing Potion")
-ham.superreju = ham.Item.new(22850, "Super Rejuvenation Potion")
 ham.endless = ham.Item.new(43569, "Endless Healing Potion")
-ham.injector = ham.Item.new(33092, "Healing Potion Injector")
 ham.resurgent = ham.Item.new(39671, "Resurgent Healing Potion")
 ham.argent = ham.Item.new(43531, "Argent Healing Potion")
+--TBC/Classic
+ham.injector = ham.Item.new(33092, "Healing Potion Injector")
+ham.superreju = ham.Item.new(22850, "Super Rejuvenation Potion")
 ham.auchenai = ham.Item.new(32947, "Auchenai Healing Potion")
 ham.super = ham.Item.new(22829, "Super Healing Potion")
 ham.major = ham.Item.new(13446, "Major Healing Potion")
@@ -96,10 +105,11 @@ ham.greater2 = ham.Item.new(19011, "Greater Healthstone")
 ham.major0 = ham.Item.new(9421, "Major Healthstone")
 ham.major1 = ham.Item.new(19012, "Major Healthstone")
 ham.major2 = ham.Item.new(19013, "Major Healthstone")
-------Healthstones for WotLK------
+------Healthstones for TBC------
 ham.master0 = ham.Item.new(22103, "Master Healthstone")
 ham.master1 = ham.Item.new(22104, "Master Healthstone")
 ham.master2 = ham.Item.new(22105, "Master Healthstone")
+------Healthstones for WotLK------
 ham.demonicWotLK0 = ham.Item.new(36889, "Demonic Healthstone")
 ham.demonicWotLK1 = ham.Item.new(36890, "Demonic Healthstone")
 ham.demonicWotLK2 = ham.Item.new(36891, "Demonic Healthstone")
@@ -119,6 +129,8 @@ end
 function ham.getDelightPots()
   if isRetail then
     return {
+      ham.refreshingSerumR2,
+      ham.refreshingSerumR1,
       ham.cavedwellersDelightR3,
       ham.cavedwellersDelightR2,
       ham.cavedwellersDelightR1,
@@ -133,6 +145,9 @@ end
 function ham.getPots()
   if isRetail then
     local pots = {
+      ham.silvermoonPotion2,
+      ham.silvermoonPotion1,
+      ham.potent,
       ham.fleetingInvigoratingHealingPotionR3,
       ham.invigoratingHealingPotionR3,
       ham.fleetingInvigoratingHealingPotionR2,
@@ -226,6 +241,33 @@ function ham.getPots()
     return pots
   end
 
+  if isTBC then
+    local pots = {
+      ham.injector,
+      ham.superreju,
+      ham.auchenai,
+      ham.super,
+      ham.major,
+      ham.combat,
+      ham.superior,
+      ham.greater,
+      ham.healingPotion,
+      ham.lesser,
+      ham.minor
+    }
+
+    -- If in a PvP battleground, prioritize battleground draughts
+    local inInstance, instanceType = IsInInstance()
+    local isInBattleground = inInstance and instanceType == "pvp"
+    if isInBattleground then
+      -- Insert in reverse order so final priority is Major then Superior
+      table.insert(pots, 1, ham.superiorHealingDraught)
+      table.insert(pots, 1, ham.majorHealingDraught)
+    end
+
+    return pots
+  end
+
   if isWrath then
     return {
       ham.crazy_alch,
@@ -293,11 +335,40 @@ function ham.getPots()
       ham.minor
     }
   end
+
+  -- Fallback: return empty table if no version matches
+  return {}
 end
 
 function ham.getHealthstonesClassic()
   if isClassic then
     return {
+      ham.major2,
+      ham.major1,
+      ham.major0,
+      ham.greater2,
+      ham.greater1,
+      ham.greater0,
+      ham.wipperRootTuber,
+      ham.healtsthone2,
+      ham.healtsthone1,
+      ham.lilyRoot,
+      ham.healtsthone0,
+      ham.crystalFlakeThroatLozenge,
+      ham.lesser2,
+      ham.lesser1,
+      ham.lesser0,
+      ham.minor2,
+      ham.minor1,
+      ham.minor0
+    }
+  end
+
+  if isTBC then
+    return {
+      ham.master2,
+      ham.master1,
+      ham.master0,
       ham.major2,
       ham.major1,
       ham.major0,
@@ -407,4 +478,7 @@ function ham.getHealthstonesClassic()
       ham.minor0
     }
   end
+
+  -- Fallback: return empty table if no version matches
+  return {}
 end

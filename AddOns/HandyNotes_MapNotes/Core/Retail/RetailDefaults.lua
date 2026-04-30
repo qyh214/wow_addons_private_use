@@ -8,21 +8,25 @@ ns.defaults = {
       showTaxiMapNodes = true,
       
     -- Instance single Zone icon scale and alpha
-      ZoneInstanceScale = 2,
+      ZoneInstanceScale = 1,
       ZoneInstanceAlpha = 1,
-      ZoneScaleRaids = 2,
+      ZoneScaleRaids = 1,
       ZoneAlphaRaids = 1,
-      ZoneScaleDungeons = 2,
+      ZoneScaleDungeons = 1,
       ZoneAlphaDungeons = 1,
-      ZoneScalePassage = 2,
+      ZoneScalePassage = 1,
       ZoneAlphaPassage = 1,
-      ZoneScaleMultiple = 2,
+      ZoneScaleMultiple = 1,
       ZoneAlphaMultiple = 1,
-      ZoneScaleOldVanilla = 2,
+      ZoneScaleOldVanilla = 1,
       ZoneAlphaOldVanilla = 1,
-      ZoneScaleLFR = 2,
+      ZoneScaleDelve = 1,
+      ZoneAlphaDelve = 1,
+      ZoneScaleBountyDelve = 1,
+      ZoneAlphaBountyDelve = 1,
+      ZoneScaleLFR = 1,
       ZoneAlphaLFR = 1,
-      ZoneScalePetBattleDungeons = 2,
+      ZoneScalePetBattleDungeons = 1,
       ZoneAlphaPetBattleDungeons = 1,
       
       -- Instance single MiniMap icon scale and alpha
@@ -124,6 +128,8 @@ ns.defaults = {
       ZoneAlphaTransmogger = 1,
       ZoneScaleItemUpgrade = 1.5,
       ZoneAlphaItemUpgrade = 1,
+      ZoneScaleDecorExpert = 1.5,
+      ZoneAlphaDecorExpert = 1,
       ZoneScalePaths = 1.5,
       ZoneAlphaPaths = 1,
 
@@ -158,6 +164,8 @@ ns.defaults = {
       MiniMapAlphaTransmogger = 1,
       MiniMapScaleItemUpgrade = 1.5,
       MiniMapAlphaItemUpgrade = 1,
+      MiniMapScaleDecorExpert = 1.5,
+      MiniMapAlphaDecorExpert = 1,
       MiniMapScalePaths = 1.5,
       MiniMapAlphaPaths = 1,
 
@@ -223,6 +231,7 @@ ns.defaults = {
       showMiniMapShadowlands = true,
       showMiniMapDragonIsles = true,
       showMiniMapKhazAlgar = true,
+      showMiniMapQuelThalas = true,
     -- MiniMap Instance
       showMiniMapRaids = true,
       showMiniMapDungeons = true,
@@ -277,6 +286,7 @@ ns.defaults = {
       showMiniMapTransmogger = true,
       showMiniMapStablemaster = true,
       showMiniMapItemUpgrade = true,
+      showMiniMapDecorExpert = true,
       showMiniMapCatalyst = true,
       showMiniMapZidormi = true,
     -- MiniMap Paths
@@ -298,12 +308,15 @@ ns.defaults = {
       showZoneShadowlands = true,
       showZoneDragonIsles = true,
       showZoneKhazAlgar = true,
+      showZoneQuelThalas = true,
     -- Zone Instance
       showZoneRaids = true,
       showZoneDungeons = true,
       showZoneMultiple = true,      
       showZonePassage = true,
       showZoneOldVanilla = true,
+      showZoneDelve = true,
+      showZoneBountyDelve = true,
       showZoneLFR = true,
       showZonePetBattleDungeons = true,
     -- Zone Transport
@@ -353,12 +366,13 @@ ns.defaults = {
       showZoneTransmogger = true,
       showZoneStablemaster = true,
       showZoneItemUpgrade = true,
+      showZoneDecorExpert = true,
       showZoneCatalyst = true,
       showZoneZidormi = true,
       showZonePaths = true,
       
     --3 Continent map tab
-      continentScale = 1.5,
+      continentScale = 1,
       continentAlpha = 1,
       showContinentMapNotes = true,
       showContinentRaids = true,
@@ -373,6 +387,7 @@ ns.defaults = {
       showContinentLFR = true,
       showContinentProfessions = true,
       showContinentDelves = true,
+      showContinentBountyDelves = true,
       showContinentPaths = true,
       showContinentRaces = true,
       showContinentPetBattleDungeons = true,
@@ -391,6 +406,7 @@ ns.defaults = {
       showContinentShadowlands = true,
       showContinentDragonIsles = true,
       showContinentKhazAlgar = true,
+      showContinentQuelThalas = true,
 
       --4 Azeroth map tab
       azerothScale = 1.5,
@@ -435,6 +451,7 @@ ns.defaults = {
       showCosmosShadowlands = true,
       showCosmosDragonIsles = true,
       showCosmosKhazAlgar = true,
+      showCosmosQuelThalas = true,
 
     --6 Inside Dungeon Map tab
       showDungeonExit = true,
@@ -468,14 +485,19 @@ ns.defaults = {
       showCapitalsDornogal = true,
       showCapitalsDarkmoon = true,
       showCapitalsRaces = true,
+      showCapitalsSilvermoonMN = true,
 
     --Capital Instances
-      CapitalsInstanceScale = 2,
+      CapitalsInstanceScale = 1,
       CapitalsInstanceAlpha = 1,
       showCapitalsRaids = true,
       showCapitalsDungeons = true,
       showCapitalsInstancePassage = true,
       showCapitalsMultiple = true,
+      showCapitalsOldVanilla = true,      
+      showCapitalsLFR = true,      
+      showCapitalsDelve = true,
+      showCapitalsBountyDelve = true,
 
     --Capital Transport
       CapitalsTransportScale = 1.5,
@@ -484,8 +506,6 @@ ns.defaults = {
       showCapitalsZeppelins = true,
       showCapitalsShips = true,
       showCapitalsTransport = true,
-      showCapitalsOldVanilla = true,
-      showCapitalsLFR = true,
       showCapitalsFP = true,
 
     -- Capital Professions
@@ -531,6 +551,7 @@ ns.defaults = {
       showCapitalsStablemaster = true,
       showCapitalsTradingPost = true,
       showCapitalsMountMerchent = true,
+      showCapitalsDecorExpert = true,
 
     -- Capital Class Hall
       CapitalsClassHallScale = 1.5,
@@ -574,6 +595,7 @@ ns.defaults = {
       showMinimapCapitalsDornogal = true,
       showMinimapCapitalsDarkmoon = true,
       showMinimapCapitalsRaces = true,
+      showMinimapCapitalsSilvermoonMN = true,
 
     --Capital Minimap Instances
       MinimapCapitalsInstanceScale = 1.5,
@@ -637,6 +659,7 @@ ns.defaults = {
       showMinimapCapitalsStablemaster = true,
       showMinimapCapitalsTradingPost = true,
       showMinimapCapitalsMountMerchent = true,
+      showMinimapCapitalsDecorExpert = true,
 
     -- Capital Class Hall
       MinimapCapitalsClassHallScale = 1.5,
@@ -667,7 +690,6 @@ ns.defaults = {
         ToggleMapInfo = true,
         ToggleMapAfterCombat = false,
         InfoBlockedInCombat = true,
-        UseInBattle = false,
         SwapButtons = false,
         FlightmapButton = true,
         showRacesIconsDiscovered = false,
@@ -677,6 +699,7 @@ ns.defaults = {
         MinimapArrowOnEnterTime = 3,
         WorldMapArrow = false,
         WorldMapArrowScale = 1,
+        WorldMapArrowHighlight = false,
         noPassages = false,
         ClassicPortals = true,
         ClassicShips = true,
@@ -688,7 +711,7 @@ ns.defaults = {
         RemoveBlizzPOIs = true,
         RemoveBlizzPOIsZidormi = true,
         RemoveBlizzInstances = true,
-        HideBlizzDelves = false,
+        HideBlizzDelves = true,
         HideBlizzAuctioneer = false,
         HideBlizzBanker = false,
         HideBlizzBarber = false,
@@ -752,30 +775,15 @@ ns.defaults = {
         MinimapCapitalsClassHall = true,
       },
 
-    --11 deleted icons function
+    -- 11 DeleteIcons
       deletedIcons = {
-
-        AzerothDeletedIcons = {
-          ['*'] = {},
-        },
-        ContinentDeletedIcons = {
-          ['*'] = {},
-        },
-        ZoneDeletedIcons = {
-          ['*'] = {},
-        },
-        MinimapZoneDeletedIcons = {
-          ['*'] = {},
-        },
-        DungeonDeletedIcons = {
-          ['*'] = {},
-        },
-        CapitalsDeletedIcons = {
-          ['*'] = {},
-        },
-        MinimapCapitalsDeletedIcons = {
-          ['*'] = {},
-        },
+        AzerothDeletedIcons = { ['*'] = {} },
+        ContinentDeletedIcons = { ['*'] = {} },
+        ZoneDeletedIcons = { ['*'] = {} },
+        MinimapZoneDeletedIcons = { ['*'] = {} },
+        DungeonDeletedIcons = { ['*'] = {} },
+        CapitalsDeletedIcons = { ['*'] = {} },
+        MinimapCapitalsDeletedIcons = { ['*'] = {} },
       },
 
     --12 FogOfWarColor
@@ -818,6 +826,11 @@ ns.defaults = {
         areaMapFogOfWarColorB = 0,
         areaMapFogOfWarColorA = 1,
       },
+  },
 
+  global = {
+    useSharedProfile = false,
+    sharedProfileName = "MapNotes",
+    hideChangeLogPermanently = false,
   },
 }

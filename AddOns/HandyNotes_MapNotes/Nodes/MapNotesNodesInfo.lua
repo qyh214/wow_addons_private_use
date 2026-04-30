@@ -737,6 +737,8 @@ nodes[1565] = { } -- Ardenweald
 nodes[1816] = { } -- Klauenkamm
 nodes[1670] = { } -- Oribos
 nodes[1671] = { } -- Oribos Uppder Side
+nodes[1672] = { } -- Oribos Keller
+nodes[1673] = { } -- Schmelztiegel
 nodes[1911] = { } -- Torghast
 nodes[1912] = { } -- Torghast Rune
 nodes[1961] = { } -- Korthia
@@ -834,7 +836,7 @@ nodes[2301] = { } -- The Sinkhole - Inside Dungeon Map
 nodes[2277] = { } -- Nightfall Sanctum - Inside Dungeon Map
 nodes[2251] = { } -- The Waterworks - Inside Dungeon Map
 nodes[2302] = { } -- The Waterworks - Inside Dungeon Map
-nodes[2269] = { } -- Earthcrawl Mines - Inside Dungeon Map
+nodes[2269] = { } -- Earthcrawl Mines - Inside Dungeon Map[]
 nodes[2249] = { } -- Fungal Folly - Inside Dungeon Map
 nodes[2250] = { } -- Kriegval's Rest - Inside Dungeon Map
 nodes[2396] = { } -- Rowdy Rifts - Inside Dungeon Map
@@ -842,4 +844,42 @@ nodes[2423] = { } -- Sidestreet Sluice - Inside Dungeon Map
 nodes[2420] = { } -- Sidestreet Sluice - The Pits - Inside Dungeon Map
 nodes[2452] = { } -- Archival Assault - Inside Dungeon Map
 nodes[2484] = { } -- Voidscar Cavern - Inside Dungeon Map
+
+--###############################
+--########### Midnight ##########
+--###############################
+
+nodes[2537] = { } -- Quel'Thalas
+nodes[2395] = { } -- Eversong Woods
+nodes[2437] = { } -- Zul'Aman
+nodes[2424] = { } -- Isle of Quel'Danas
+nodes[2405] = { } -- Void Tempest
+nodes[2413] = { } -- Harandar
+nodes[2536] = { } -- Atal'Aman
+nodes[2393] = { } -- Silvermoon
+nodes[2444] = { } -- Schlächteranhöhe
+nodes[2576] = { } -- Rootlands
+-- Dungeon map nodes
+nodes[2515] = { } -- Terrasse der Magister - Inside Dungeon Map
+nodes[2492] = { } -- Windläuferturm - Inside Dungeon Map
+nodes[2501] = { } -- Maisarakavernen - Inside Dungeon Map
+nodes[2564] = { } -- Nalorakks Bau - Inside Dungeon Map
+nodes[2556] = { } -- Nexuspunkt Xenas - Inside Dungeon Map
+nodes[2574] = { } -- Arena der Leerennarbe - Inside Dungeon Map
+nodes[2500] = { } -- Das blendende Tal - Inside Dungeon Map
+nodes[2531] = { } -- Der Traumriss - Inside Dungeon Map
+nodes[2533] = { } -- Marsch auf Quel'Danas - Inside Dungeon Map      
+nodes[2529] = { } -- Die Leerenspitze - Inside Dungeon Map
+-- Delves map nodes
+nodes[2505] = { } -- Kluft der Erinnerung - Inside Delves Map
+nodes[2577] = { } -- Die Mördergasse - Inside Delves Map
+nodes[2510] = { } -- Die Grollgrube - Inside Delves Map
+nodes[2505] = { } -- Kluft der Erinnerung - Inside Delves Map
+nodes[2506] = { } -- Schattenwachtspitze - Inside Delves Map
+nodes[2528] = { } -- Sonnentötersanktum - Inside Delves Map
+nodes[2525] = { } -- Der Düsterweg - Inside Delves Map
+nodes[2547] = { } -- Akademischer Aufruhr - Inside Delves Map
+nodes[2502] = { } -- Die Schattenenklave - Inside Delves Map
+nodes[2503] = { } -- Gruften der Zwielichtklinge - Inside Delves Map
+nodes[2535] = { } -- Zul'Aman - Inside Delves Map
 end

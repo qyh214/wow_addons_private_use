@@ -2,7 +2,6 @@
 
 --mythic+ extension for Details! Damage Meter
 ---@diagnostic disable-next-line: undefined-global
-local Details = Details
 local detailsFramework = DetailsFramework
 local _
 

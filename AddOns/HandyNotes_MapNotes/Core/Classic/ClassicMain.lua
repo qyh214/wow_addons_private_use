@@ -16,30 +16,31 @@ local minimap = { }
 
 ns.RestoreStaticPopUps()
 
-function ns.deleteCharacterSavedVariables() -- delete only activ profile
+function ns.deleteCharacterSavedVariables() -- delete only active profile
   local db = ns.Addon and ns.Addon.db
   if not db then return end
 
+  local current = db:GetCurrentProfile()
+  local charKey = UnitName("player") .. " - " .. GetRealmName()
+
   db:SetProfile("Default")
 
-  local current = db:GetCurrentProfile()
   if current and current ~= "Default" then
     db:DeleteProfile(current, true)
   else
     db:ResetProfile()
   end
 
-  if HandyNotes_MapNotesClassicEraDB
-    and HandyNotes_MapNotesClassicEraDB.char then
-    HandyNotes_MapNotesClassicEraDB.char[current] = nil
+  if HandyNotes_MapNotesClassicEraDB and HandyNotes_MapNotesClassicEraDB.char then
+    HandyNotes_MapNotesClassicEraDB.char[charKey] = nil
   end
 
   local mmButton = _G["MNMiniMapButtonClassicDB"]
   if type(mmButton) == "table" then
     if mmButton.profileKeys then
-      mmButton.profileKeys[current] = nil
+      mmButton.profileKeys[charKey] = nil
     end
-    if mmButton.profiles then
+    if mmButton.profiles and current and current ~= "Default" then
       mmButton.profiles[current] = nil
     end
   end
@@ -225,8 +226,11 @@ function ns.pluginHandler:OnEnter(uiMapId, coord)
     self.highlight:SetAllPoints()
   end
 
-  if self.highlight:GetTexture() ~= self.texture:GetTexture() then
-    self.highlight:SetTexture(self.texture:GetTexture())
+  if self.texture and self.texture.GetTexture then
+    local tex = self.texture:GetTexture()
+    if tex and self.highlight:GetTexture() ~= tex then
+      self.highlight:SetTexture(tex)
+    end
   end
 
   self.highlight:Show()
@@ -640,13 +644,13 @@ do
 
       if t.uiMapId == 948 -- Mahlstrom Continent 
         or GetCurrentMapID == 2274 -- PTR: Khaz Algar - The War Within. Continent Scale atm on Beta a Zone not a Continent!!
-        or (mapInfo.mapType == 0 and (ns.dbChar.AzerothDeletedIcons[t.uiMapId] and not ns.dbChar.AzerothDeletedIcons[t.uiMapId][state])) -- Cosmos
-        or (mapInfo.mapType == 1 and (ns.dbChar.AzerothDeletedIcons[t.uiMapId] and not ns.dbChar.AzerothDeletedIcons[t.uiMapId][state])) -- Azeroth
-        or (not ns.CapitalIDs and (mapInfo.mapType == 4 or mapInfo.mapType == 6) and (ns.dbChar.DungeonDeletedIcons[t.uiMapId] and not ns.dbChar.DungeonDeletedIcons[t.uiMapId][state])) -- Dungeon
-        or (not ns.CapitalIDs and (ns.dbChar.ZoneDeletedIcons[t.uiMapId] and not ns.dbChar.ZoneDeletedIcons[t.uiMapId][state] and value.showInZone) and (mapInfo.mapType == 3 or mapInfo.mapType == 5 )) -- Zone without Capitals
-        or (ns.CapitalIDs and (ns.dbChar.CapitalsDeletedIcons[t.uiMapId] and not ns.dbChar.CapitalsDeletedIcons[t.uiMapId][state] and value.showInZone)) -- Capitals
-        or (ns.CapitalIDs and ns.dbChar.MinimapCapitalsDeletedIcons[t.minimapId] and not ns.dbChar.MinimapCapitalsDeletedIcons[t.minimapId][state] and value.showOnMinimap) -- Minimap Capitals
-        or (not ns.CapitalIDs and mapInfo.mapType == 3 and ns.dbChar.MinimapZoneDeletedIcons[t.minimapId] and not ns.dbChar.MinimapZoneDeletedIcons[t.minimapId][state] and value.showOnMinimap) -- Minimap Zones
+        or (mapInfo.mapType == 0 and (ns.dbProfile.AzerothDeletedIcons[t.uiMapId] and not ns.dbProfile.AzerothDeletedIcons[t.uiMapId][state])) -- Cosmos
+        or (mapInfo.mapType == 1 and (ns.dbProfile.AzerothDeletedIcons[t.uiMapId] and not ns.dbProfile.AzerothDeletedIcons[t.uiMapId][state])) -- Azeroth
+        or (not ns.CapitalIDs and (mapInfo.mapType == 4 or mapInfo.mapType == 6) and (ns.dbProfile.DungeonDeletedIcons[t.uiMapId] and not ns.dbProfile.DungeonDeletedIcons[t.uiMapId][state])) -- Dungeon
+        or (not ns.CapitalIDs and (ns.dbProfile.ZoneDeletedIcons[t.uiMapId] and not ns.dbProfile.ZoneDeletedIcons[t.uiMapId][state] and value.showInZone) and (mapInfo.mapType == 3 or mapInfo.mapType == 5 )) -- Zone without Capitals
+        or (ns.CapitalIDs and (ns.dbProfile.CapitalsDeletedIcons[t.uiMapId] and not ns.dbProfile.CapitalsDeletedIcons[t.uiMapId][state] and value.showInZone)) -- Capitals
+        or (ns.CapitalIDs and ns.dbProfile.MinimapCapitalsDeletedIcons[t.minimapId] and not ns.dbProfile.MinimapCapitalsDeletedIcons[t.minimapId][state] and value.showOnMinimap) -- Minimap Capitals
+        or (not ns.CapitalIDs and mapInfo.mapType == 3 and ns.dbProfile.MinimapZoneDeletedIcons[t.minimapId] and not ns.dbProfile.MinimapZoneDeletedIcons[t.minimapId][state] and value.showOnMinimap) -- Minimap Zones
       then
         return state, nil, icon, scale, alpha
       end
@@ -700,7 +704,7 @@ do
             alpha = db.continentAlpha
           end
               
-          if (mapInfo.mapType == 2 and (ns.dbChar.ContinentDeletedIcons[t.contId] and not ns.dbChar.ContinentDeletedIcons[t.contId][state]) and value.showOnContinent) then -- Continent
+          if (mapInfo.mapType == 2 and (ns.dbProfile.ContinentDeletedIcons[t.contId] and not ns.dbProfile.ContinentDeletedIcons[t.contId][state]) and value.showOnContinent) then -- Continent
             return state, continent, icon, db.continentScale, alpha
           end
 
@@ -816,29 +820,29 @@ local CapitalIDs = GetCurrentMapID == 1454 or GetCurrentMapID == 1456 or GetCurr
     hideOnEscape = true,
     OnAccept = function()
       if CapitalIDs then
-        ns.dbChar.CapitalsDeletedIcons[uiMapId][coord] = true
-        ns.dbChar.MinimapCapitalsDeletedIcons[uiMapId][coord] = true
+        ns.dbProfile.CapitalsDeletedIcons[uiMapId][coord] = true
+        ns.dbProfile.MinimapCapitalsDeletedIcons[uiMapId][coord] = true
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00", L["Capitals"] .. " & " .. L["Capitals"] .. " - " .. MINIMAP_LABEL .. " - " .. "|cff00ff00" .. L["A icon has been deleted"])
       end
     
       if mapInfo.mapType == 1 then -- Azeroth
-        ns.dbChar.AzerothDeletedIcons[uiMapId][coord] = true
+        ns.dbProfile.AzerothDeletedIcons[uiMapId][coord] = true
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00", AZEROTH .. " - " .. "|cff00ff00" .. L["A icon has been deleted"])
       end
     
       if mapInfo.mapType == 2 then -- Continent
-        ns.dbChar.ContinentDeletedIcons[uiMapId][coord] = true
+        ns.dbProfile.ContinentDeletedIcons[uiMapId][coord] = true
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00", L["Continents"] .. " - " .. "|cff00ff00" .. L["A icon has been deleted"])
       end
     
       if not CapitalIDs and mapInfo.mapType == 3 then -- Zone
-        ns.dbChar.ZoneDeletedIcons[uiMapId][coord] = true
-        ns.dbChar.MinimapZoneDeletedIcons[uiMapId][coord] = true
+        ns.dbProfile.ZoneDeletedIcons[uiMapId][coord] = true
+        ns.dbProfile.MinimapZoneDeletedIcons[uiMapId][coord] = true
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00", L["Zones"] .. " & " .. MINIMAP_LABEL .. " - " .. "|cff00ff00" .. L["A icon has been deleted"])
       end
     
       if not CapitalIDs and (mapInfo.mapType == 4 or mapInfo.mapType == 6) then -- Dungeon
-        ns.dbChar.DungeonDeletedIcons[uiMapId][coord] = true
+        ns.dbProfile.DungeonDeletedIcons[uiMapId][coord] = true
         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00", DUNGEONS .. " - " .. "|cff00ff00" .. L["A icon has been deleted"])
       end
       HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
@@ -856,8 +860,10 @@ local CapitalIDs = GetCurrentMapID == 1454 or GetCurrentMapID == 1456 or GetCurr
       return
   end
 
-  if (button == "LeftButton") and IsAltKeyDown() then
-    StaticPopup_Show ("Delete_Icon?")
+  if (button == "RightButton") and IsAltKeyDown() then
+    if ns.Addon.db.profile.DeleteIcons then
+      StaticPopup_Show("Delete_Icon?")
+    end
   end
 
   if (button == "LeftButton" and mnID and mnID2 or mnID3 and not IsShiftKeyDown() and not IsAltKeyDown()) then
@@ -913,6 +919,45 @@ local Addon = CreateFrame("Frame")
 Addon:RegisterEvent("PLAYER_LOGIN")
 Addon:SetScript("OnEvent", function(self, event, ...) return self[event](self, ...)end)
 
+local function EnsureDeletedIconsSchema(t)
+  if type(t) ~= "table" then t = {} end
+
+  local function AutoSubTables(tbl)
+    if type(tbl) ~= "table" then tbl = {} end
+    if getmetatable(tbl) == nil then
+      setmetatable(tbl, {
+        __index = function(self, k)
+          local sub = {}
+          rawset(self, k, sub)
+          return sub
+        end
+      })
+    end
+    return tbl
+  end
+
+  t.CapitalsDeletedIcons = AutoSubTables(t.CapitalsDeletedIcons)
+  t.MinimapCapitalsDeletedIcons = AutoSubTables(t.MinimapCapitalsDeletedIcons)
+
+  t.AzerothDeletedIcons = AutoSubTables(t.AzerothDeletedIcons)
+  t.ContinentDeletedIcons = AutoSubTables(t.ContinentDeletedIcons)
+
+  t.ZoneDeletedIcons = AutoSubTables(t.ZoneDeletedIcons)
+  t.MinimapZoneDeletedIcons = AutoSubTables(t.MinimapZoneDeletedIcons)
+
+  t.DungeonDeletedIcons = AutoSubTables(t.DungeonDeletedIcons)
+
+  return t
+end
+
+function ns:GetDeletedIconsDB()
+  local adb = ns.Addon and ns.Addon.db
+  if not adb then return nil end
+
+  adb.profile.deletedIcons = EnsureDeletedIconsSchema(adb.profile.deletedIcons)
+  return adb.profile.deletedIcons
+end
+
 local function updateStuff()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
 end
@@ -944,7 +989,7 @@ end
 
 function Addon:OnProfileChanged(event, database, profileKeys)
   db = database.profile
-  ns.dbChar = database.profile.deletedIcons
+  ns.dbProfile = ns:GetDeletedIconsDB()
   HandyNotes:GetModule("FogOfWarButton"):SyncColorsFromDB(true)
 
   ns.ApplySavedCoords()
@@ -965,7 +1010,7 @@ end
 
 function Addon:OnProfileReset(event, database, profileKeys)
 	db = database.profile
-  ns.dbChar = database.profile.deletedIcons
+  ns.dbProfile = ns:GetDeletedIconsDB()
   HandyNotes:GetModule("FogOfWarButton"):SyncColorsFromDB(true)
 
   ns.DefaultPlayerCoords() -- MoPCoordsDisplay.lua
@@ -982,15 +1027,15 @@ function Addon:OnProfileReset(event, database, profileKeys)
     ns.SetAreaMapMenuVisibility(ns.Addon.db.profile.areaMap.showAreaMapDropDownMenu)
   end
 
-  wipe(ns.dbChar.CapitalsDeletedIcons)
-  wipe(ns.dbChar.MinimapCapitalsDeletedIcons)
-  wipe(ns.dbChar.CapitalsDeletedIcons)
-  wipe(ns.dbChar.MinimapCapitalsDeletedIcons)
-  wipe(ns.dbChar.AzerothDeletedIcons)
-  wipe(ns.dbChar.ContinentDeletedIcons)
-  wipe(ns.dbChar.ZoneDeletedIcons)
-  wipe(ns.dbChar.MinimapZoneDeletedIcons)
-  wipe(ns.dbChar.DungeonDeletedIcons)
+  wipe(ns.dbProfile.CapitalsDeletedIcons)
+  wipe(ns.dbProfile.MinimapCapitalsDeletedIcons)
+  wipe(ns.dbProfile.CapitalsDeletedIcons)
+  wipe(ns.dbProfile.MinimapCapitalsDeletedIcons)
+  wipe(ns.dbProfile.AzerothDeletedIcons)
+  wipe(ns.dbProfile.ContinentDeletedIcons)
+  wipe(ns.dbProfile.ZoneDeletedIcons)
+  wipe(ns.dbProfile.MinimapZoneDeletedIcons)
+  wipe(ns.dbProfile.DungeonDeletedIcons)
 
   if ns.Addon.db.profile.CoreChatMassage then
     print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been reset to default"])
@@ -1002,7 +1047,7 @@ end
 
 function Addon:OnProfileCopied(event, database, profileKeys)
 	db = database.profile
-  ns.dbChar = database.profile.deletedIcons
+  ns.dbProfile = ns:GetDeletedIconsDB()
   HandyNotes:GetModule("FogOfWarButton"):SyncColorsFromDB(true)
 
   ns.ApplySavedCoords()
@@ -1022,7 +1067,7 @@ end
 
 function Addon:OnProfileDeleted(event, database, profileKeys)
 	db = database.profile
-  ns.dbChar = database.profile.deletedIcons
+  ns.dbProfile = ns:GetDeletedIconsDB()
   HandyNotes:GetModule("FogOfWarButton"):SyncColorsFromDB(true)
 
   if ns.Addon.db.profile.CoreChatMassage then
@@ -1056,7 +1101,7 @@ function Addon:PLAYER_LOGIN()
   -- default profile database
   db = self.db.profile
   -- deleted icons database
-  ns.dbChar = self.db.profile.deletedIcons
+  ns.dbProfile = ns:GetDeletedIconsDB()
   -- FogOfWar color database
   HandyNotes:GetModule("FogOfWarButton"):SyncColorsFromDB(true)
 

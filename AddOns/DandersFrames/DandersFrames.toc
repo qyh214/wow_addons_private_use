@@ -1,0 +1,144 @@
+## Interface: 120000, 120001, 120005
+## Title: DandersFrames
+## Notes: Custom party/raid frames for WoW Midnight 12.0
+## X-Credits: Some optimization patterns informed by studying Grid2 and other community addons. Secret aura tracking techniques from Harrek's Advanced Raid Frames (used with permission).
+## Author: Danders
+## Version: v4.3.6
+## X-Curse-Project-ID: 1389690
+## X-Wago-ID: RNL9B46o
+## IconTexture: Interface\AddOns\DandersFrames\Media\DF_Icon
+## SavedVariables: DandersFramesDB_v2, DandersFramesClickCastingDB
+## SavedVariablesPerCharacter: DandersFramesCharDB
+## AllowAddOnTableAccess: 1
+## OptionalDeps: Masque, LibSharedMedia-3.0, SharedMedia, SharedMedia_MyMedia, SharedMediaAdditionalFonts, FrameSort
+
+# Libraries
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\AceLocale-3.0\AceLocale-3.0.lua
+Libs\AceSerializer-3.0\AceSerializer-3.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
+Libs\LibDeflate\LibDeflate.lua
+Libs\LibSerialize\LibSerialize.lua
+
+# Localization (must load before code that uses L)
+Locales\enUS.lua
+Locales\deDE.lua
+Locales\esES.lua
+Locales\esMX.lua
+Locales\frFR.lua
+Locales\itIT.lua
+Locales\koKR.lua
+Locales\ptBR.lua
+Locales\ruRU.lua
+Locales\zhCN.lua
+Locales\zhTW.lua
+
+# XML Templates (must load before Lua that uses them)
+DandersFrames.xml
+
+# Core
+Config.lua
+Changelog.lua
+Profile.lua
+ExportCategories.lua
+Core.lua
+RosterEvents.lua
+
+# Debug Console (loads early so all modules can use DF:Debug)
+Debug\DebugConsole.lua
+
+# Profiler (loads early so its SetScript hook is in place before any
+# feature file binds an OnUpdate handler — this is what gives the
+# OnUpdate registry full coverage of all DF every-frame handlers)
+Debug\Profiler.lua
+
+# GUI System
+GUI\IconLib.lua
+GUI\GUI.lua
+GUI\DFFonts.lua
+GUI\ColorPickerTest.lua
+Features\Search.lua
+Options\Options.lua
+Options\AutoProfiles.lua
+
+# Popup System (generic wizard & alert popups)
+Popup.lua
+WizardBuilder.lua
+
+# Frame System
+Frames\Core.lua
+Frames\Colors.lua
+Frames\Create.lua
+Frames\Headers.lua
+Frames\Update.lua
+Frames\Bars.lua
+Frames\Icons.lua
+Frames\StatusIcons.lua
+Frames\Init.lua
+Frames\Position.lua
+Frames\Pets.lua
+
+# Test Mode
+TestMode\TestFramePool.lua
+TestMode\TestMode.lua
+
+# Features
+Features\Auras.lua
+Features\PrivateAuras.lua
+Features\Highlights.lua
+Features\ElementAppearance.lua
+Features\Range.lua
+Features\HealthFade.lua
+Features\ClassPower.lua
+Features\Sort.lua
+Features\SecureSort.lua
+Features\FrameSort.lua
+Features\Dispel.lua
+Features\MyBuffIndicators.lua
+
+# Aura Designer
+AuraDesigner\Config.lua
+AuraDesigner\SecretAuras.lua
+# AuraDesigner\LinkedAuras.lua - DISABLED: WoW 12.0.5 marks UnitIsUnit results
+#   secret in some cases, which floods the error log via the UNIT_AURA guard.
+#   Only consumer is Symbiotic Relationship target inference for Resto Druid;
+#   minor functionality loss. Re-enable once Blizzard provides a non-secret
+#   path or after the guard is rewritten to use string comparison.
+AuraDesigner\AuraAdapter.lua
+AuraDesigner\Engine.lua
+AuraDesigner\Indicators.lua
+AuraDesigner\SoundEngine.lua
+AuraDesigner\Options.lua
+
+# Aura Blacklist
+AuraBlacklist\Config.lua
+AuraBlacklist\Options.lua
+
+Features\TargetedSpells.lua
+Features\VersionCheck.lua
+Features\PinnedFrames.lua
+Features\FlatRaidFrames.lua
+
+# Debug (Profiler.lua is loaded earlier so its SetScript hook is in place)
+Debug\DebugAuras.lua
+Debug\AtlasBrowser.lua
+Debug\Performance.lua
+Debug\PerformanceTest.lua
+
+# Click-Casting System
+ClickCasting\Core.lua
+ClickCasting\Constants.lua
+ClickCasting\Profiles.lua
+ClickCasting\Frames.lua
+ClickCasting\Bindings.lua
+ClickCasting\Events.lua
+ClickCasting\UI\Main.lua
+ClickCasting\UI\ProfilesPanel.lua
+ClickCasting\UI\BindingEditor.lua
+ClickCasting\UI\Dialogs.lua
+
+# External API (for Wago UI Packs, etc.)
+API.lua

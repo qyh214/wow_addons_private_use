@@ -65,6 +65,7 @@ function ns.SyncSingleScaleAlpha()
     db.MiniMapScaleZidormi = db.ZoneScaleZidormi
     db.MiniMapScaleTransmogger = db.ZoneScaleTransmogger
     db.MiniMapScaleItemUpgrade = db.ZoneScaleItemUpgrade
+    db.MiniMapScaleDecorExpert = db.ZoneScaleDecorExpert
     db.MiniMapScalePaths = db.ZoneScalePaths
     -- General Minimap to Zone single Alpha
     db.MiniMapAlphaInnkeeper = db.ZoneAlphaInnkeeper
@@ -80,6 +81,7 @@ function ns.SyncSingleScaleAlpha()
     db.MiniMapAlphaZidormi = db.ZoneAlphaZidormi
     db.MiniMapAlphaTransmogger = db.ZoneAlphaTransmogger
     db.MiniMapAlphaItemUpgrade = db.ZoneAlphaItemUpgrade
+    db.MiniMapAlphaDecorExpert = db.ZoneAlphaDecorExpert
     db.MiniMapAlphaPaths = db.ZoneAlphaPaths
 
   end
@@ -93,6 +95,8 @@ function ns.SyncSingleScaleAlpha()
     db.ZoneScalePassage = db.ZoneInstanceScale
     db.ZoneScaleMultiple = db.ZoneInstanceScale
     db.ZoneScaleOldVanilla = db.ZoneInstanceScale
+    db.ZoneScaleDelve = db.ZoneInstanceScale 
+    db.ZoneScaleBountyDelve = db.ZoneInstanceScale
     db.ZoneScaleLFR = db.ZoneInstanceScale
     db.ZoneScalePetBattleDungeons = db.ZoneInstanceScale
     -- Alpha
@@ -101,6 +105,8 @@ function ns.SyncSingleScaleAlpha()
     db.ZoneAlphaPassage = db.ZoneInstanceAlpha
     db.ZoneAlphaMultiple = db.ZoneInstanceAlpha
     db.ZoneAlphaOldVanilla = db.ZoneInstanceAlpha
+    db.ZoneAlphaDelve = db.ZoneInstanceAlpha
+    db.ZoneAlphaBountyDelve = db.ZoneInstanceAlpha
     db.ZoneAlphaLFR = db.ZoneInstanceAlpha
     db.ZoneAlphaPetBattleDungeons = db.ZoneInstanceAlpha
 
@@ -153,6 +159,7 @@ function ns.SyncSingleScaleAlpha()
     db.ZoneScaleZidormi = db.ZoneGeneralScale
     db.ZoneScaleTransmogger = db.ZoneGeneralScale
     db.ZoneScaleItemUpgrade = db.ZoneGeneralScale
+    db.ZoneScaleDecorExpert = db.ZoneGeneralScale
     db.ZoneScalePaths = db.ZoneGeneralScale
     -- Alpha
     db.ZoneAlphaMapNotesIcons = db.ZoneGeneralAlpha
@@ -170,6 +177,7 @@ function ns.SyncSingleScaleAlpha()
     db.ZoneAlphaZidormi = db.ZoneGeneralAlpha
     db.ZoneAlphaTransmogger = db.ZoneGeneralAlpha
     db.ZoneAlphaItemUpgrade = db.ZoneGeneralAlpha
+    db.ZoneAlphaDecorExpert = db.ZoneGeneralAlpha
     db.ZoneAlphaPaths = db.ZoneGeneralAlpha
 
   end
@@ -260,6 +268,7 @@ function ns.SyncSingleScaleAlpha()
     db.MiniMapScaleZidormi = db.MiniMapGeneralScale
     db.MiniMapScaleTransmogger = db.MiniMapGeneralScale
     db.MiniMapScaleItemUpgrade = db.MiniMapGeneralScale
+    db.MiniMapScaleDecorExpert = db.MiniMapGeneralScale
     db.MiniMapScalePaths = db.MiniMapGeneralScale
     -- Alpha
     db.MiniMapAlphaMapNotesIcons = db.MiniMapGeneralAlpha
@@ -277,6 +286,7 @@ function ns.SyncSingleScaleAlpha()
     db.MiniMapAlphaZidormi = db.MiniMapGeneralAlpha
     db.MiniMapAlphaTransmogger = db.MiniMapGeneralAlpha
     db.MiniMapAlphaItemUpgrade = db.MiniMapGeneralAlpha
+    db.MiniMapAlphaDecorExpert = db.MiniMapGeneralAlpha
     db.MiniMapAlphaPaths = db.MiniMapGeneralAlpha
 
   end

@@ -1,5 +1,5 @@
 
-local dversion = 628
+local dversion = 723
 local major, minor = "DetailsFramework-1.0", dversion
 local DF, oldminor = LibStub:NewLibrary(major, minor)
 
@@ -69,6 +69,7 @@ DF.GamePatch = g --string "10.2.7"
 DF.BuildId = b --string "55000"
 DF.Toc = t --number 100000
 DF.Exp = floor(DF.Toc/10000)
+DF.typeF = "function"
 
 local buildInfo = DF.Toc
 
@@ -111,6 +112,17 @@ if (not PixelUtil) then
 		}
 	end
 end
+
+DF.FrameStrataLevels = {
+	"BACKGROUND",
+	"LOW",
+	"MEDIUM",
+	"HIGH",
+	"DIALOG",
+	"FULLSCREEN",
+	"FULLSCREEN_DIALOG",
+	"TOOLTIP",
+}
 
 ---return r, g, b, a for the default backdrop color used in addons
 ---@return number
@@ -241,12 +253,16 @@ function DF.IsMidnightWow()
 	return false
 end
 
+function DF.IsAddonApocalypseWow()
+	return buildInfo >= 120000
+end
+
 
 ---return true if the player is playing in the WotLK version of wow with the retail api
 ---@return boolean
 function DF.IsNonRetailWowWithRetailAPI()
     local _, _, _, buildInfo = GetBuildInfo()
-    if (buildInfo < 60000 and buildInfo >= 30401) or (buildInfo < 20000 and buildInfo >= 11404) then
+    if (buildInfo < 60000 and buildInfo >= 20000) or (buildInfo < 20000 and buildInfo >= 11404) then
         return true
     end
 	return false
@@ -258,7 +274,7 @@ function DF.ExpansionHasAugEvoker()
 end
 
 
-local GetSpecializationRole = not DF.IsClassicWow() and GetSpecializationRole or C_SpecializationInfo.GetSpecializationRole
+local GetSpecializationRole = not DF.IsClassicWow() and not DF.IsTBCWow() and GetSpecializationRole or C_SpecializationInfo.GetSpecializationRole
 
 ---for classic wow, get the role using the texture from the talents frame
 local roleBySpecTextureName = {
@@ -334,7 +350,9 @@ function DF:GetRoleByClassicTalentTree()
 	local MIN_SPECS = 4
 
 	--put the spec with more talent point to the top
-	table.sort(pointsPerSpec, function(t1, t2) return t1[2] > t2[2] end)
+	table.sort(pointsPerSpec, function(t1, t2)
+		return t1[2] > t2[2]
+	end)
 
 	--get the spec with more points spent
 	local spec = pointsPerSpec[1]
@@ -680,6 +698,7 @@ end
 ------------------------------------------------------------------------------------------------------------
 --table
 
+---@diagnostic disable-next-line: missing-fields
 DF.table = {}
 
 ---find a value inside a table and return the index
@@ -762,6 +781,9 @@ function DF:GetParentNamePath(object)
 		end
 
 		if (parentName) then
+			if (type(parentName) == "table") then
+				parentName = tostring(parentName)
+			end
 			path = parentName .. "." .. path
 		else
 			local result = path:gsub("%.$", "")
@@ -828,7 +850,12 @@ function DF.table.setfrompath(t, path, value)
 		end
 
 		if (lastTable and lastKey) then
-			lastTable[lastKey] = value
+			local numericKey = tonumber(lastKey)
+			if (numericKey) then
+				lastTable[numericKey] = value
+			else
+				lastTable[lastKey] = value
+			end
 			return true
 		end
 	else
@@ -1078,9 +1105,15 @@ local function tableToString(t, resultString, deep, seenTables)
             resultString = resultString .. space .. "|cFFa9ffa9},|r\n"
 
 		elseif (valueType == "string") then
+			if issecretvalue(value) then
+				value = "#secret-string#"
+			end
 			resultString = resultString .. space .. "[\"" .. key .. "\"] = \"|cFFfff1c1" .. value .. "|r\",\n"
 
 		elseif (valueType == "number") then
+			if issecretvalue(value) then
+				value = "#secret-number#"
+			end
 			if (type(key) == "number") then
 				resultString = resultString .. space .. "[" .. key .. "] = |cFFffc1f4" .. value .. "|r,\n"
 			else
@@ -1091,7 +1124,12 @@ local function tableToString(t, resultString, deep, seenTables)
 			resultString = resultString .. space .. "[\"" .. key .. "\"] = |cFFC586C0function|r,\n"
 
 		elseif (valueType == "boolean") then
-			resultString = resultString .. space .. "[\"" .. key .. "\"] = |cFF99d0ff" .. (value and "true" or "false") .. "|r,\n"
+			if issecretvalue(value) then
+				value = "#secret-boolean#"
+				resultString = resultString .. space .. "[\"" .. key .. "\"] = |cFF99d0ff" .. value .. "|r,\n"
+			else
+				resultString = resultString .. space .. "[\"" .. key .. "\"] = |cFF99d0ff" .. (value and "true" or "false") .. "|r,\n"
+			end
 		end
     end
 
@@ -1395,6 +1433,23 @@ function DF:RemoveRealName(name)
 	return name:gsub(("%-.*"), "")
 end
 
+---set the font face, size and flags of a font
+---@param fontString fontstring
+---@param fontface string?
+---@param size number?
+---@param flags string?
+function DF:SetFont(fontString, fontface, size, flags)
+	if fontface then
+		DF:SetFontFace(fontString, fontface)
+	end
+	if size then
+		DF:SetFontSize(fontString, size)
+	end
+	if flags then
+		DF:SetFontOutline(fontString, flags)
+	end
+end
+
 ---get the UIObject of type 'FontString' named fontString and set the font size to the maximum value of the arguments
 ---@param self table
 ---@param fontString fontstring
@@ -1419,8 +1474,12 @@ function DF:SetFontFace(fontString, fontface)
 		fontface = font
 	end
 
-	local _, size, flags = fontString:GetFont()
-	return fontString:SetFont(fontface, size, flags)
+	if _G[fontface] then
+		fontface = _G[fontface]:GetFont()
+	end
+
+	local origFont, size, flags = fontString:GetFont()
+	local ok = pcall(fontString.SetFont, fontString, fontface, size, flags) -- silently fail this one
 end
 
 local dummyFontString = UIParent:CreateFontString(nil, "background", "GameFontNormal")
@@ -1493,6 +1552,22 @@ function DF:SetFontRotation(fontString, degrees) --deprecated, use fontString:Se
 		fontString.__rotationAnimation:Play()
 		fontString.__rotationAnimation:Pause()
 	end
+end
+
+function DF:RemoveColorCodes(text)
+    --remove color code: |cFFFFFFFF
+    text = string.gsub(text, "%|c%w+", "")
+    --remove the end code: |r
+    text = string.gsub(text, "%|r", "")
+    return text
+end
+
+--function to remove |T...|t style codes from text
+--removes portions starting with |T and ending with |t, including both delimiters
+function DF:RemoveTextureCodes(text)
+	--remove |T...|t style codes
+	text = string.gsub(text, "%|T.-%|t", "")
+	return text
 end
 
 ---receives a string and a color and return the string wrapped with the color using |c and |r scape codes
@@ -1678,7 +1753,7 @@ function DF:CreateTextureInfo(texture, textureWidth, textureHeight, left, right,
 	return textureInfo
 end
 
----add a texture to the start or end of a string
+---add a texture to the start or end of a string using scape sequence
 ---@param text string
 ---@param textureInfo table
 ---@param bAddSpace any
@@ -1697,15 +1772,16 @@ function DF:AddTextureToText(text, textureInfo, bAddSpace, bAddAfterText)
 	bottom = bottom or 1
 
 	if (bAddAfterText) then
-		local newString = text .. (bAddSpace and " " or "") .. "|T" .. texture .. ":" .. textureWidth .. ":" .. textureHeight .. ":0:0:" .. imageWidth .. ":" .. imageHeight .. ":" .. (left * imageWidth) .. ":" .. (right * imageWidth) .. ":" .. (top * imageHeight) .. ":" .. (bottom * imageHeight) .. "|t"
+		local newString = text .. (bAddSpace and " " or "") .. "|T" .. texture .. ":" .. textureHeight .. ":" .. textureWidth .. ":0:0:" .. imageWidth .. ":" .. imageHeight .. ":" .. (left * imageWidth) .. ":" .. (right * imageWidth) .. ":" .. (top * imageHeight) .. ":" .. (bottom * imageHeight) .. "|t"
 		return newString
 	else
-		local newString = "|T" .. texture .. ":" .. textureWidth .. ":" .. textureHeight .. ":0:0:" .. imageWidth .. ":" .. imageHeight .. ":" .. (left * imageWidth) .. ":" .. (right * imageWidth) .. ":" .. (top * imageHeight) .. ":" .. (bottom * imageHeight) .. "|t" .. (bAddSpace and " " or "") .. text
+		local newString = "|T" .. texture .. ":" .. textureHeight .. ":" .. textureWidth .. ":0:0:" .. imageWidth .. ":" .. imageHeight .. ":" .. (left * imageWidth) .. ":" .. (right * imageWidth) .. ":" .. (top * imageHeight) .. ":" .. (bottom * imageHeight) .. "|t" .. (bAddSpace and " " or "") .. text
 		return newString
 	end
 end
 
 ---return the size of a fontstring
+---usage: local fontsize = DF:GetFontSize(myFontString)
 ---@param fontString table
 ---@return number
 function DF:GetFontSize(fontString)
@@ -1714,6 +1790,7 @@ function DF:GetFontSize(fontString)
 end
 
 ---return the font of a fontstring
+---usage: local fontface = DF:GetFontFace(myFontString), fontface can also be called fontFile.
 ---@param fontString table
 ---@return string
 function DF:GetFontFace(fontString)
@@ -1722,16 +1799,27 @@ function DF:GetFontFace(fontString)
 end
 
 local ValidOutlines = {
-	["NONE"] = true,
+	[""] = true,
+	["SLUG"] = true,
+	["OUTLINE, SLUG"] = true, -- compatibility for existing slug values
+	["SLUG,OUTLINE"] = true, -- order does not matter here
+	["OUTLINE,SLUG"] = true,
 	["MONOCHROME"] = true,
 	["OUTLINE"] = true,
 	["THICKOUTLINE"] = true,
 	["OUTLINEMONOCHROME"] = true,
 	["THICKOUTLINEMONOCHROME"] = true,
+	["MONOCHROME, OUTLINE"] = true, -- backwards compatibility
+	["MONOCHROME, THICKOUTLINE"] = true
 }
 
+--outline flags are used with the function SetFont on fontstrings, signiture: fontString:SetFont(fontFile, size, outlineFlags) -> outlineFlags are usually just called 'flags', 'size' can also be found named as 'height'.
+--in the first index of the sub table there is the value to be used on SetFont, in the second index there is a user friendly name
 DF.FontOutlineFlags = {
 	{"", "None"},
+	{"NONE", "None"}, -- backwards compatibility
+	{"SLUG", "Slug"},
+	{"SLUG,OUTLINE", "Outline Slug"},
 	{"MONOCHROME", "Monochrome"},
 	{"OUTLINE", "Outline"},
 	{"THICKOUTLINE", "Thick Outline"},
@@ -1740,6 +1828,7 @@ DF.FontOutlineFlags = {
 }
 
 ---set the outline of a fontstring, outline is a black border around the text, can be "NONE", "MONOCHROME", "OUTLINE" or "THICKOUTLINE"
+---usage: DF:SetFontOutline(fontString, "OUTLINE")
 ---@param fontString table
 ---@param outline outline
 function DF:SetFontOutline(fontString, outline)
@@ -1766,12 +1855,17 @@ function DF:SetFontOutline(fontString, outline)
         end
     end
 
-    outline = (not outline or outline == "NONE") and "" or outline
+	outline = (not outline or outline == "NONE") and "" or outline
+
+	if not ValidOutlines[outline] then
+		outline = ""
+	end
 
     fontString:SetFont(font, fontSize, outline)
 end
 
 ---remove spaces from the start and end of the string
+---usage: DF:Trim("   Hello World   ") --> "Hello World"
 ---@param string string
 ---@return string
 function DF:Trim(string)
@@ -1783,6 +1877,7 @@ function DF:trim(string)
 end
 
 ---truncate removing at a maximum of 10 character from the string
+---usage: local fontString:SetText("Hello WorldState Timer Start At") -> DF:TruncateTextSafe(fontString, 100) -> "Hello WorldState Time" -> the result is still above the maxWidth after removing 10 characters, the loop stops
 ---@param fontString table
 ---@param maxWidth number
 function DF:TruncateTextSafe(fontString, maxWidth)
@@ -1807,6 +1902,7 @@ function DF:TruncateTextSafe(fontString, maxWidth)
 end
 
 ---truncate removing characters from the string until the maxWidth is reach
+---usage: local fontString:SetText("Hello WorldState Timer Start At") -> DF:TruncateText(fontString, 100) -> "Hello WorldStat" -> the result is exactly the maxWidth or below
 ---@param fontString table
 ---@param maxWidth number
 function DF:TruncateText(fontString, maxWidth)
@@ -1908,6 +2004,7 @@ function DF:CleanTruncateUTF8String(text)
 end
 
 ---truncate the amount of numbers used to show the fraction part of a number
+---usage: DF:TruncateNumber(3.14159265, 2) -> 3.14
 ---@param number number
 ---@param fractionDigits number
 ---@return number
@@ -1927,6 +2024,10 @@ function DF:TruncateNumber(number, fractionDigits)
 	return truncatedNumber
 end
 
+---return the x and y position of the mouse (cursor) position scaled by the UIParent scale
+---@param self table
+---@return number xScaled
+---@return number yScaled
 function DF:GetCursorPosition()
 	local x, y = GetCursorPosition()
 	local scale = UIParent:GetEffectiveScale()
@@ -2078,123 +2179,123 @@ function DF:GetAllTalents()
 	return allTalents
 end
 
----return a table where keys are spellIds (number) and the value is true
----@return table<number, boolean>
-function DF:GetAvailableSpells()
-    local completeListOfSpells = {}
+	---return a table where keys are spellIds (number) and the value is true
+	---@return table<number, boolean>
+	function DF:GetAvailableSpells()
+		local completeListOfSpells = {}
 
-    --this line might not be compatible with classic
-    local specId, specName, _, specIconTexture = GetSpecializationInfo(GetSpecialization())
-    --local classNameLoc, className, classId = UnitClass("player") --not in use
-    local locPlayerRace, playerRace, playerRaceId = UnitRace("player")
+		--this line might not be compatible with classic
+		local specId, specName, _, specIconTexture = GetSpecializationInfo(GetSpecialization())
+		--local classNameLoc, className, classId = UnitClass("player") --not in use
+		local locPlayerRace, playerRace, playerRaceId = UnitRace("player")
 
-    --get racials from the general tab
-	local generalTabIndex = 1
-    local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(generalTabIndex)
-    offset = offset + 1
-    local tabEnd = offset + numSpells
-    for entryOffset = offset, tabEnd - 1 do
-        local spellType, spellId = GetSpellBookItemInfo(entryOffset, SPELLBOOK_BANK_PLAYER)
-        local spellData = LIB_OPEN_RAID_COOLDOWNS_INFO[spellId]
-        if (spellData) then
-            local raceId = spellData.raceid
-            if (raceId) then
-                if (type(raceId) == "table") then
-                    if (raceId[playerRaceId]) then
-                        spellId = GetOverrideSpell(spellId)
-                        local spellName = GetSpellInfo(spellId)
-                        local bIsPassive = IsPassiveSpell(spellId, SPELLBOOK_BANK_PLAYER)
-                        if (spellName and not bIsPassive) then
-                            completeListOfSpells[spellId] = true
-                        end
-                    end
+		--get racials from the general tab
+		local generalTabIndex = 1
+		local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(generalTabIndex)
+		offset = offset + 1
+		local tabEnd = offset + numSpells
+		for entryOffset = offset, tabEnd - 1 do
+			local spellType, spellId = GetSpellBookItemInfo(entryOffset, SPELLBOOK_BANK_PLAYER)
+			local spellData = LIB_OPEN_RAID_COOLDOWNS_INFO[spellId]
+			if (spellData) then
+				local raceId = spellData.raceid
+				if (raceId) then
+					if (type(raceId) == "table") then
+						if (raceId[playerRaceId]) then
+							spellId = GetOverrideSpell(spellId)
+							local spellName = GetSpellInfo(spellId)
+							local bIsPassive = IsPassiveSpell(spellId, SPELLBOOK_BANK_PLAYER)
+							if (spellName and not bIsPassive) then
+								completeListOfSpells[spellId] = true
+							end
+						end
 
-                elseif (type(raceId) == "number") then
-                    if (raceId == playerRaceId) then
-                        spellId = GetOverrideSpell(spellId)
-                        local spellName = GetSpellInfo(spellId)
-                        local bIsPassive = IsPassiveSpell(spellId, SPELLBOOK_BANK_PLAYER)
-                        if (spellName and not bIsPassive) then
-                            completeListOfSpells[spellId] = true
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-	local spellBookPlayerEnum = Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player or "player"
-
-	--get spells from the Spec spellbook
-	for i = 1, GetNumSpellTabs() do --called "lines" in new v11 api
-        local tabName, tabTexture, offset, numSpells, isGuild, offSpecId, shouldHide, specID = GetSpellTabInfo(i)
-		if (tabTexture == specIconTexture) then
-			offset = offset + 1
-			local tabEnd = offset + numSpells
-			--local bIsOffSpec = offSpecId ~= 0
-			for entryOffset = offset, tabEnd - 1 do
-				local spellType, spellId = GetSpellBookItemInfo(entryOffset, spellBookPlayerEnum)
-				if (spellId) then
-					if (spellType == "SPELL" or spellType == 1) then
-						spellId = GetOverrideSpell(spellId)
-						local spellName = GetSpellInfo(spellId)
-						local bIsPassive = IsPassiveSpell(entryOffset, spellBookPlayerEnum)
-						if (spellName and not bIsPassive) then
-							completeListOfSpells[spellId] = true --bIsOffSpec == false
+					elseif (type(raceId) == "number") then
+						if (raceId == playerRaceId) then
+							spellId = GetOverrideSpell(spellId)
+							local spellName = GetSpellInfo(spellId)
+							local bIsPassive = IsPassiveSpell(spellId, SPELLBOOK_BANK_PLAYER)
+							if (spellName and not bIsPassive) then
+								completeListOfSpells[spellId] = true
+							end
 						end
 					end
 				end
 			end
 		end
-    end
 
-	local CONST_SPELLBOOK_CLASSSPELLS_TABID = 2
-	local CONST_SPELLBOOK_GENERAL_TABID = 1
+		local spellBookPlayerEnum = Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player or "player"
 
-    --get class shared spells from the spell book
-	--[=
-    local tabName, tabTexture, offset, numSpells, isGuild, offSpecId = GetSpellTabInfo(CONST_SPELLBOOK_CLASSSPELLS_TABID)
-    offset = offset + 1
-    local tabEnd = offset + numSpells
-	--local bIsOffSpec = offSpecId ~= 0
-    for entryOffset = offset, tabEnd - 1 do
-        local spellType, spellId = GetSpellBookItemInfo(entryOffset, spellBookPlayerEnum)
-        if (spellId) then
-            if (spellType == "SPELL" or spellType == 1) then
-                spellId = GetOverrideSpell(spellId)
-                local spellName = GetSpellInfo(spellId)
-                local bIsPassive = IsPassiveSpell(spellId, spellBookPlayerEnum)
+		--get spells from the Spec spellbook
+		for i = 1, GetNumSpellTabs() do --called "lines" in new v11 api
+			local tabName, tabTexture, offset, numSpells, isGuild, offSpecId, shouldHide, specID = GetSpellTabInfo(i)
+			if (tabTexture == specIconTexture) then
+				offset = offset + 1
+				local tabEnd = offset + numSpells
+				--local bIsOffSpec = offSpecId ~= 0
+				for entryOffset = offset, tabEnd - 1 do
+					local spellType, spellId = GetSpellBookItemInfo(entryOffset, spellBookPlayerEnum)
+					if (spellId) then
+						if (spellType == "SPELL" or spellType == 1) then
+							spellId = GetOverrideSpell(spellId)
+							local spellName = GetSpellInfo(spellId)
+							local bIsPassive = IsPassiveSpell(entryOffset, spellBookPlayerEnum)
+							if (spellName and not bIsPassive) then
+								completeListOfSpells[spellId] = true --bIsOffSpec == false
+							end
+						end
+					end
+				end
+			end
+		end
 
-				if (spellName and not bIsPassive) then
-                    completeListOfSpells[spellId] = true --bIsOffSpec == false
-                end
-            end
-        end
-    end
-	--]=]
+		local CONST_SPELLBOOK_CLASSSPELLS_TABID = 2
+		local CONST_SPELLBOOK_GENERAL_TABID = 1
 
-    local getNumPetSpells = function()
-        --'HasPetSpells' contradicts the name and return the amount of pet spells available instead of a boolean
-        return HasPetSpells()
-    end
+		--get class shared spells from the spell book
+		--[=
+		local tabName, tabTexture, offset, numSpells, isGuild, offSpecId = GetSpellTabInfo(CONST_SPELLBOOK_CLASSSPELLS_TABID)
+		offset = offset + 1
+		local tabEnd = offset + numSpells
+		--local bIsOffSpec = offSpecId ~= 0
+		for entryOffset = offset, tabEnd - 1 do
+			local spellType, spellId = GetSpellBookItemInfo(entryOffset, spellBookPlayerEnum)
+			if (spellId) then
+				if (spellType == "SPELL" or spellType == 1) then
+					spellId = GetOverrideSpell(spellId)
+					local spellName = GetSpellInfo(spellId)
+					local bIsPassive = IsPassiveSpell(spellId, spellBookPlayerEnum)
 
-    --get pet spells from the pet spellbook
-    local numPetSpells = getNumPetSpells()
-    if (numPetSpells) then
-        for i = 1, numPetSpells do
-            local spellName, _, unmaskedSpellId = GetSpellBookItemName(i, spellBookPetEnum)
-            if (unmaskedSpellId) then
-                unmaskedSpellId = GetOverrideSpell(unmaskedSpellId)
-                local bIsPassive = IsPassiveSpell(i, spellBookPetEnum)
-                if (spellName and not bIsPassive) then
-                    completeListOfSpells[unmaskedSpellId] = true
-                end
-            end
-        end
-    end
+					if (spellName and not bIsPassive) then
+						completeListOfSpells[spellId] = true --bIsOffSpec == false
+					end
+				end
+			end
+		end
+		--]=]
 
-    return completeListOfSpells
-end
+		local getNumPetSpells = function()
+			--'HasPetSpells' contradicts the name and return the amount of pet spells available instead of a boolean
+			return HasPetSpells()
+		end
+
+		--get pet spells from the pet spellbook
+		local numPetSpells = getNumPetSpells()
+		if (numPetSpells) then
+			for i = 1, numPetSpells do
+				local spellName, _, unmaskedSpellId = GetSpellBookItemName(i, spellBookPetEnum)
+				if (unmaskedSpellId) then
+					unmaskedSpellId = GetOverrideSpell(unmaskedSpellId)
+					local bIsPassive = IsPassiveSpell(i, spellBookPetEnum)
+					if (spellName and not bIsPassive) then
+						completeListOfSpells[unmaskedSpellId] = true
+					end
+				end
+			end
+		end
+
+		return completeListOfSpells
+	end
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -2345,7 +2446,7 @@ end
 ---@field x number
 ---@field y number
 
-
+---@type string[]
 DF.AnchorPoints = {
 	"Top Left",
 	"Left",
@@ -2366,6 +2467,7 @@ DF.AnchorPoints = {
 	"Inside Top Right", --17
 }
 
+---@type string[]
 DF.AnchorPointsByIndex = {
 	"topleft", --1
 	"left", --2
@@ -2378,6 +2480,7 @@ DF.AnchorPointsByIndex = {
 	"center", --9
 }
 
+---@type table<number, number>
 DF.AnchorPointsToInside = {
 	[9] = 9,
 	[8] = 12,
@@ -2390,6 +2493,7 @@ DF.AnchorPointsToInside = {
 	[1] = 14,
 }
 
+---@type table<number, number>
 DF.InsidePointsToAnchor = {
 	[9] = 9,
 	[12] = 8,
@@ -3618,6 +3722,38 @@ end
 function DF:Mixin(object, ...)
 	return Mixin(object, ...)
 end
+function DF:MixinX(object, ...)
+	for i = 1, select("#", ...) do
+		local kv = select(i, ...)
+		for k, v in pairs(kv) do
+			if (_G[k] and type(k) == "string") then
+				if (type(_G[k]) == DF.typeF) then
+					if (type(v) ~= "userdata") then
+						object[k] = _G[k]() or v
+						if (type(object[k]) == "string") then
+							--check if this is a hex color
+							if (object[k]:match("^0x")) then
+								local r, g, b, a = DF:ParseColors(object[k])
+								if (r) then
+									--r, g, b, a
+									object[k] = {r, g, b, a}
+								end
+							end
+						end
+						object[k:sub(1, 1)] = object[k]
+						if (type(v) == "table") then
+							DF:MixinX(v, {})
+						end
+					end
+				else
+					object[k] = v
+				end
+			else
+				object[k] = v
+			end
+		end
+	end
+end
 
 -----------------------------
 --animations
@@ -4172,7 +4308,7 @@ function DF:CreateGlowOverlay(parent, antsColor, glowColor)
 	end
 
 	local glowFrame
-	if (buildInfo >= 110107) then --24-05-2025: in the 11.1.7 patch, the template used here does not exist anymore, replacement used
+	if (buildInfo >= 110107 or DF.IsTBCWow()) then --24-05-2025: in the 11.1.7 patch, the template used here does not exist anymore, replacement used
 		glowFrame = CreateFrame("frame", frameName, parent, "ActionButtonSpellAlertTemplate")
 	else
 		glowFrame = CreateFrame("frame", frameName, parent, "ActionBarButtonSpellActivationAlert")
@@ -5423,16 +5559,15 @@ end
 
 -- TODO: maybe make this auto-generaded some day?...
 DF.CLEncounterID = {
-	{ID = 2423, Name = "The Tarragrue"},
-	{ID = 2433, Name = "The Eye of the Jailer"},
-	{ID = 2429, Name = "The Nine"},
-	{ID = 2432, Name = "Remnant of Ner'zhul"},
-	{ID = 2434, Name = "Soulrender Dormazain"},
-	{ID = 2430, Name = "Painsmith Raznal"},
-	{ID = 2436, Name = "Guardian of the First Ones"},
-	{ID = 2431, Name = "Fatescribe Roh-Kalo"},
-	{ID = 2422, Name = "Kel'Thuzad"},
-	{ID = 2435, Name = "Sylvanas Windrunner"},
+	{ID = 3176, Name = "Imperator Averzian"},
+	{ID = 3177, Name = "Vorasius"},
+	{ID = 3179, Name = "Fallen-King Salhadaar"},
+	{ID = 3178, Name = "Vaelgor & Ezzorak"},
+	{ID = 3180, Name = "Lightblinded Vanguard"},
+	{ID = 3181, Name = "Crown of the Cosmos"},
+	{ID = 3306, Name = "Chimaerus the Undreamt God"},
+	{ID = 3182, Name = "Belo'ren, Child of Al'ar"},
+	{ID = 3183, Name = "Midnight Falls"},
 }
 
 function DF:GetPlayerRole()
@@ -5583,6 +5718,111 @@ DF.SpecListByClass = {
 		1473,
 	},
 }
+
+---> https://wago.tools/db2/ChrSpecialization?page=1&sort%5BID%5D=asc
+local specInformation = {
+	[62] = {specId = 62, name = "Arcane", specIcon = 135932, role = "DAMAGER", classId = 8, className = "MAGE", specIndex = 0, flags = 0x3, primaryStatPriority = 0},
+	[63] = {specId = 63, name = "Fire", specIcon = 135810, role = "DAMAGER", classId = 8, className = "MAGE", specIndex = 1, flags = 0x3, primaryStatPriority = 0},
+	[64] = {specId = 64, name = "Frost", specIcon = 135846, role = "DAMAGER", classId = 8, className = "MAGE", specIndex = 2, flags = 0x3, primaryStatPriority = 0},
+	[65] = {specId = 65, name = "Holy", specIcon = 135920, role = "HEALER", classId = 2, className = "PALADIN", specIndex = 0, flags = 0x5, primaryStatPriority = 1},
+	[66] = {specId = 66, name = "Protection", specIcon = 236264, role = "TANK", classId = 2, className = "PALADIN", specIndex = 1, flags = 0x4, primaryStatPriority = 0},
+	[70] = {specId = 70, name = "Retribution", specIcon = 135873, role = "DAMAGER", classId = 2, className = "PALADIN", specIndex = 2, flags = 0x4, primaryStatPriority = 0},
+	[71] = {specId = 71, name = "Arms", specIcon = 132355, role = "DAMAGER", classId = 1, className = "WARRIOR", specIndex = 0, flags = 0x4, primaryStatPriority = 0},
+	[72] = {specId = 72, name = "Fury", specIcon = 132347, role = "DAMAGER", classId = 1, className = "WARRIOR", specIndex = 1, flags = 0x4, primaryStatPriority = 0},
+	[73] = {specId = 73, name = "Protection", specIcon = 132341, role = "TANK", classId = 1, className = "WARRIOR", specIndex = 2, flags = 0x4, primaryStatPriority = 0},
+	[102] = {specId = 102, name = "Balance", specIcon = 136096, role = "DAMAGER", classId = 11, className = "DRUID", specIndex = 0, flags = 0x3, primaryStatPriority = 0},
+	[103] = {specId = 103, name = "Feral", specIcon = 132115, role = "DAMAGER", classId = 11, className = "DRUID", specIndex = 1, flags = 0x4, primaryStatPriority = 3},
+	[104] = {specId = 104, name = "Guardian", specIcon = 132276, role = "TANK", classId = 11, className = "DRUID", specIndex = 2, flags = 0x4, primaryStatPriority = 3},
+	[105] = {specId = 105, name = "Restoration", specIcon = 136041, role = "HEALER", classId = 11, className = "DRUID", specIndex = 3, flags = 0x3, primaryStatPriority = 0},
+	[250] = {specId = 250, name = "Blood", specIcon = 135770, role = "TANK", classId = 6, className = "DEATHKNIGHT", specIndex = 0, flags = 0x4, primaryStatPriority = 5},
+	[251] = {specId = 251, name = "Frost", specIcon = 135773, role = "DAMAGER", classId = 6, className = "DEATHKNIGHT", specIndex = 1, flags = 0x4, primaryStatPriority = 5},
+	[252] = {specId = 252, name = "Unholy", specIcon = 135775, role = "DAMAGER", classId = 6, className = "DEATHKNIGHT", specIndex = 2, flags = 0x4, primaryStatPriority = 5},
+	[253] = {specId = 253, name = "Beast Mastery", specIcon = 461112, role = "DAMAGER", classId = 3, className = "HUNTER", specIndex = 0, flags = 0x2, primaryStatPriority = 2},
+	[254] = {specId = 254, name = "Marksmanship", specIcon = 236179, role = "DAMAGER", classId = 3, className = "HUNTER", specIndex = 1, flags = 0x2, primaryStatPriority = 2},
+	[255] = {specId = 255, name = "Survival", specIcon = 461113, role = "DAMAGER", classId = 3, className = "HUNTER", specIndex = 2, flags = 0x4, primaryStatPriority = 2},
+	[256] = {specId = 256, name = "Discipline", specIcon = 135940, role = "HEALER", classId = 5, className = "PRIEST", specIndex = 0, flags = 0x3, primaryStatPriority = 0},
+	[257] = {specId = 257, name = "Holy", specIcon = 237542, role = "HEALER", classId = 5, className = "PRIEST", specIndex = 1, flags = 0x3, primaryStatPriority = 0},
+	[258] = {specId = 258, name = "Shadow", specIcon = 136207, role = "DAMAGER", classId = 5, className = "PRIEST", specIndex = 2, flags = 0x3, primaryStatPriority = 0},
+	[259] = {specId = 259, name = "Assassination", specIcon = 236270, role = "DAMAGER", classId = 4, className = "ROGUE", specIndex = 0, flags = 0x4, primaryStatPriority = 3},
+	[260] = {specId = 260, name = "Outlaw", specIcon = 236286, role = "DAMAGER", classId = 4, className = "ROGUE", specIndex = 1, flags = 0x4, primaryStatPriority = 3},
+	[261] = {specId = 261, name = "Subtlety", specIcon = 132320, role = "DAMAGER", classId = 4, className = "ROGUE", specIndex = 2, flags = 0x4, primaryStatPriority = 3},
+	[262] = {specId = 262, name = "Elemental", specIcon = 136048, role = "DAMAGER", classId = 7, className = "SHAMAN", specIndex = 0, flags = 0x4b, primaryStatPriority = 0},
+	[263] = {specId = 263, name = "Enhancement", specIcon = 237581, role = "DAMAGER", classId = 7, className = "SHAMAN", specIndex = 1, flags = 0x104, primaryStatPriority = 2},
+	[264] = {specId = 264, name = "Restoration", specIcon = 136052, role = "HEALER", classId = 7, className = "SHAMAN", specIndex = 2, flags = 0x3, primaryStatPriority = 0},
+	[265] = {specId = 265, name = "Affliction", specIcon = 136145, role = "DAMAGER", classId = 9, className = "WARLOCK", specIndex = 0, flags = 0x43, primaryStatPriority = 0},
+	[266] = {specId = 266, name = "Demonology", specIcon = 136172, role = "DAMAGER", classId = 9, className = "WARLOCK", specIndex = 1, flags = 0x3, primaryStatPriority = 0},
+	[267] = {specId = 267, name = "Destruction", specIcon = 136186, role = "DAMAGER", classId = 9, className = "WARLOCK", specIndex = 2, flags = 0x3, primaryStatPriority = 0},
+	[268] = {specId = 268, name = "Brewmaster", specIcon = 608951, role = "TANK", classId = 10, className = "MONK", specIndex = 0, flags = 0x4, primaryStatPriority = 2},
+	[269] = {specId = 269, name = "Windwalker", specIcon = 608953, role = "DAMAGER", classId = 10, className = "MONK", specIndex = 2, flags = 0x44, primaryStatPriority = 2},
+	[270] = {specId = 270, name = "Mistweaver", specIcon = 608952, role = "HEALER", classId = 10, className = "MONK", specIndex = 1, flags = 0x5, primaryStatPriority = 0},
+	[535] = {specId = 535, name = "Ferocity", specIcon = 236159, role = "DAMAGER", classId = 0, className = "WARRIOR", specIndex = 0, flags = 0x20, primaryStatPriority = 0},
+	[536] = {specId = 536, name = "Cunning", specIcon = 132150, role = "DAMAGER", classId = 0, className = "WARRIOR", specIndex = 2, flags = 0x20, primaryStatPriority = 0},
+	[537] = {specId = 537, name = "Tenacity", specIcon = 132121, role = "TANK", classId = 0, className = "WARRIOR", specIndex = 1, flags = 0x20, primaryStatPriority = 0},
+	[577] = {specId = 577, name = "Havoc", specIcon = 1247264, role = "DAMAGER", classId = 12, className = "DEMONHUNTER", specIndex = 0, flags = 0x44, primaryStatPriority = 3},
+	[581] = {specId = 581, name = "Vengeance", specIcon = 1247265, role = "TANK", classId = 12, className = "DEMONHUNTER", specIndex = 1, flags = 0x4, primaryStatPriority = 3},
+	[1480] = {specId = 1480, name = "Devourer", specIcon = 7455386, role = "TANK", classId = 12, className = "DEMONHUNTER", specIndex = 1, flags = 0x4, primaryStatPriority = 3},
+	--[1480] = {specId = 1480, name = "Devourer", specIcon = 7455385, role = "DAMAGER", classId = 12, className = "DEMONHUNTER", specIndex = 2, flags = 0x3, primaryStatPriority = 3},
+	[1444] = {specId = 1444, name = "Initial", specIcon = 136048, role = "DAMAGER", classId = 7, className = "SHAMAN", specIndex = 4, flags = 0x3, primaryStatPriority = 0},
+	[1446] = {specId = 1446, name = "Initial", specIcon = 132355, role = "DAMAGER", classId = 1, className = "WARRIOR", specIndex = 4, flags = 0x44, primaryStatPriority = 5},
+	[1447] = {specId = 1447, name = "Initial", specIcon = 136096, role = "DAMAGER", classId = 11, className = "DRUID", specIndex = 4, flags = 0x14b, primaryStatPriority = 0},
+	[1448] = {specId = 1448, name = "Initial", specIcon = 461112, role = "DAMAGER", classId = 3, className = "HUNTER", specIndex = 4, flags = 0x42, primaryStatPriority = 2},
+	[1449] = {specId = 1449, name = "Initial", specIcon = 135846, role = "DAMAGER", classId = 8, className = "MAGE", specIndex = 4, flags = 0x43, primaryStatPriority = 0},
+	[1450] = {specId = 1450, name = "Initial", specIcon = 608953, role = "DAMAGER", classId = 10, className = "MONK", specIndex = 4, flags = 0x44, primaryStatPriority = 2},
+	[1451] = {specId = 1451, name = "Initial", specIcon = 135873, role = "DAMAGER", classId = 2, className = "PALADIN", specIndex = 4, flags = 0x44, primaryStatPriority = 5},
+	[1452] = {specId = 1452, name = "Initial", specIcon = 135940, role = "HEALER", classId = 5, className = "PRIEST", specIndex = 4, flags = 0x43, primaryStatPriority = 0},
+	[1453] = {specId = 1453, name = "Initial", specIcon = 236270, role = "DAMAGER", classId = 4, className = "ROGUE", specIndex = 4, flags = 0x44, primaryStatPriority = 3},
+	[1454] = {specId = 1454, name = "Initial", specIcon = 136145, role = "DAMAGER", classId = 9, className = "WARLOCK", specIndex = 4, flags = 0x43, primaryStatPriority = 0},
+	[1455] = {specId = 1455, name = "Initial", specIcon = 135775, role = "DAMAGER", classId = 6, className = "DEATHKNIGHT", specIndex = 4, flags = 0x44, primaryStatPriority = 5},
+	[1456] = {specId = 1456, name = "Initial", specIcon = 1247264, role = "DAMAGER", classId = 12, className = "DEMONHUNTER", specIndex = 4, flags = 0x44, primaryStatPriority = 3},
+	[1465] = {specId = 1465, name = "Initial", specIcon = 4574311, role = "DAMAGER", classId = 13, className = "EVOKER", specIndex = 4, flags = 0x3, primaryStatPriority = 0},
+	[1467] = {specId = 1467, name = "Devastation", specIcon = 4511811, role = "DAMAGER", classId = 13, className = "EVOKER", specIndex = 0, flags = 0x43, primaryStatPriority = 0},
+	[1468] = {specId = 1468, name = "Preservation", specIcon = 4511812, role = "HEALER", classId = 13, className = "EVOKER", specIndex = 1, flags = 0x3, primaryStatPriority = 0},
+	[1473] = {specId = 1473, name = "Augmentation", specIcon = 5198700, role = "DAMAGER", classId = 13, className = "EVOKER", specIndex = 2, flags = 0x3, primaryStatPriority = 0},
+	[1478] = {specId = 1478, name = "Adventurer", specIcon = 2055034, role = "DAMAGER", classId = 14, className = "ROGUE", specIndex = 4, flags = 0x2, primaryStatPriority = 4},
+}
+
+local specIconToSpecInformation = {
+	[7455385] = specInformation[1480], --Devourer
+	[7455386] = specInformation[1480], --Devourer
+}
+
+--make a table where the key is the specIcon and the value is the table from specInformation
+local specIconToInfo = {}
+for specId, info in pairs(specInformation) do
+	specIconToInfo[info.specIcon] = info
+end
+
+---@class specinfo : table
+---@field specId number
+---@field name string
+---@field specIcon number
+---@field role string
+---@field classId number
+---@field className string
+---@field specIndex number
+---@field flags number
+---@field primaryStatPriority number
+
+function DF:GetSpecInfoFromSpecId(specId)
+	return specInformation[specId]
+end
+
+--~spec
+function DF:GetSpecInfoFromSpecIcon(specIcon)
+	local specInfo = specIconToInfo[specIcon]
+	if (not specInfo) then
+		specInfo = specIconToSpecInformation[specIcon]
+		if specInfo then
+			return specInfo
+		end
+	end
+	return specIconToInfo[specIcon]
+end
+
+function DF:GetSpecIdFromSpecIcon(specIcon)
+	local info = specIconToInfo[specIcon]
+	return info and info.specId
+end
 
 ---return if the specId is a valid spec, it'll return false for specIds from the tutorial area
 ---@param self table
@@ -5911,7 +6151,7 @@ do
             --need to create the new object
             local newObject = self.newObjectFunc(self, unpack(self.payload))
             if (newObject) then
-				self.objectsCreated = self.objectsCreated + 0
+				self.objectsCreated = self.objectsCreated + 1
 				table.insert(self.inUse, newObject)
 				if (self.onAcquire) then
 					DF:QuickDispatch(self.onAcquire, newObject)

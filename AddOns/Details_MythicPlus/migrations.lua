@@ -70,7 +70,7 @@ addon.Migrations = {
 
                 for spellName, casts in pairs(playerInfo.crowdControlSpells) do
                     local spellInfo = C_Spell.GetSpellInfo(spellName)
-                    local spellId = spellInfo and spellInfo.spellID or openRaidLib.GetCCSpellIdBySpellName(spellName)
+                    local spellId = (spellInfo and spellInfo.spellID) or (openRaidLib and openRaidLib.GetCCSpellIdBySpellName(spellName))
                     if (spellId ~= 197214) then
                         ccUsed[spellName] = casts
                         ccTotal = ccTotal + casts

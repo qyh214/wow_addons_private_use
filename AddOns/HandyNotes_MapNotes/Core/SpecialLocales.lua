@@ -1,6 +1,30 @@
 local ADDON_NAME, ns = ...
 ns.locale = GetLocale()
 
+-- RetailDelves.lua + RetailOptions.lua
+ns.BountifulDelves = (ns.LOCALE_BOUNTIFUL_DELVES and (ns.LOCALE_BOUNTIFUL_DELVES[ns.locale] or ns.LOCALE_BOUNTIFUL_DELVES.enUS)) or "Bountiful Delves"
+ns.AfterCombatDelvesInfo = (ns.LOCALE_AFTER_COMBAT_DELVES_INFO and (ns.LOCALE_AFTER_COMBAT_DELVES_INFO[ns.locale] or ns.LOCALE_AFTER_COMBAT_DELVES_INFO.enUS)) or "Delve icons will automatically reappear on the continent map after combat"
+ns.AfterCombatDelves = (ns.LOCALE_AFTER_COMBAT_DELVES and (ns.LOCALE_AFTER_COMBAT_DELVES[ns.locale] or ns.LOCALE_AFTER_COMBAT_DELVES.enUS)) or "Delve icons will automatically reappear on the continent map after combat"
+
+-- RetailChangeMap.lua
+ns.CombatLocked = (ns.LOCALE_COMBAT_LOCKED and (ns.LOCALE_COMBAT_LOCKED[ns.locale] or ns.LOCALE_COMBAT_LOCKED.enUS)) or "Map switching is blocked during combat"
+ns.AfterCombatAllowed = (ns.LOCALE_AFTER_COMBAT_ALLOWED and (ns.LOCALE_AFTER_COMBAT_ALLOWED[ns.locale] or ns.LOCALE_AFTER_COMBAT_ALLOWED.enUS)) or "Map switching blocked in combat – will be executed after combat"
+ns.OpenAfterCombat = (ns.LOCALE_OPEN_AFTER_COMBAT and (ns.LOCALE_OPEN_AFTER_COMBAT[ns.locale] or ns.LOCALE_OPEN_AFTER_COMBAT.enUS)) or "> Map switching executed after combat <"
+
+ns.ACCOUNT_WIDE = { -- RetailOptions.lua
+  deDE = "Diese Funktion ist accountweit",
+  enUS = "This function is account-wide",
+  frFR = "Cette fonction s'applique à l'ensemble du compte",
+  esES = "Esta función es para toda la cuenta",
+  esMX = "Esta función es para toda la cuenta",
+  itIT = "Questa funzione è valida per tutto l'account",
+  ptBR = "Esta função é válida para toda a conta",
+  ruRU = "Эта функция действует для всей учетной записи",
+  zhCN = "此功能适用于整个账号",
+  zhTW = "此功能適用於整個帳號",
+  koKR = "이 기능은 계정 전체에 적용됩니다",
+}
+
 ns.ABOUT = { -- RetailOptions.lua
   deDE = "Über",
   enUS = "About",
@@ -13,6 +37,20 @@ ns.ABOUT = { -- RetailOptions.lua
   zhCN = "关于",
   zhTW = "關於",
   koKR = "정보",
+}
+
+ns.PROFFESSION_DETECTION = { -- RetailOptions.lua
+  deDE = "Ist diese Funktion aktiviert und es wurden noch keine 2 Hauptberufe erlernt, werden alle möglichen Hauptberufssymbole angezeigt.\n\nDasselbe gilt für die Nebenberufe, wurden weniger als 2 Nebenberufe erlernt, werden alle möglichen Nebenberufssymbole angezeigt",
+  enUS = "If this feature is enabled and fewer than 2 primary professions are learned, all possible primary profession icons will be shown.\n\nThe same applies to secondary professions: if fewer than 2 secondary professions are learned, all possible secondary profession icons will be shown.",
+  frFR = "Si cette fonction est activée et que moins de 2 métiers principaux sont appris, toutes les icônes possibles des métiers principaux seront affichées.\n\nIl en va de même pour les métiers secondaires : si moins de 2 métiers secondaires sont appris, toutes les icônes possibles des métiers secondaires seront affichées.",
+  esES = "Si esta función está activada y se han aprendido menos de 2 profesiones principales, se mostrarán todos los iconos posibles de profesiones principales.\n\nLo mismo se aplica a las profesiones secundarias: si se han aprendido menos de 2 profesiones secundarias, se mostrarán todos los iconos posibles de profesiones secundarias.",
+  esMX = "Si esta función está activada y se han aprendido menos de 2 profesiones principales, se mostrarán todos los íconos posibles de profesiones principales.\n\nLo mismo aplica para las profesiones secundarias: si se han aprendido menos de 2 profesiones secundarias, se mostrarán todos los íconos posibles de profesiones secundarias.",
+  itIT = "Se questa funzione è attiva e sono state apprese meno di 2 professioni principali, verranno mostrate tutte le icone possibili delle professioni principali.\n\nLo stesso vale per le professioni secondarie: se sono state apprese meno di 2 professioni secondarie, verranno mostrate tutte le icone possibili delle professioni secondarie.",
+  ptBR = "Se esta função estiver ativada e menos de 2 profissões principais forem aprendidas, todos os ícones possíveis de profissões principais serão exibidos.\n\nO mesmo se aplica às profissões secundárias: se menos de 2 profissões secundárias forem aprendidas, todos os ícones possíveis de profissões secundárias serão exibidos.",
+  ruRU = "Если функция включена и изучено менее 2 основных профессий, будут отображаться все возможные значки основных профессий.\n\nТо же самое относится к дополнительным профессиям: если изучено менее 2 дополнительных профессий, будут отображаться все возможные значки дополнительных профессий.",
+  zhCN = "如果启用此功能且学习的主专业少于2个，则会显示所有可能的主专业图标。\n\n副专业也是如此：如果学习的副专业少于2个，则会显示所有可能的副专业图标。",
+  zhTW = "如果啟用此功能且學會的主要專業少於2個，將顯示所有可能的主要專業圖示。\n\n次要專業也是如此：如果學會的次要專業少於2個，將顯示所有可能的次要專業圖示。",
+  koKR = "이 기능이 활성화되어 있고 주요 전문 기술을 2개 미만으로 배운 경우 모든 가능한 주요 전문 기술 아이콘이 표시됩니다.\n\n보조 전문 기술도 동일하게, 2개 미만으로 배운 경우 모든 가능한 보조 전문 기술 아이콘이 표시됩니다.",
 }
 
 ns.CHANGE_VERSIONS_CHECK = { -- RetailVersionsCheck.lua
@@ -97,48 +135,6 @@ ns.LOCALE_SUPPRESS_ERRORS_DESC_1 = { -- RetailOptions.lua
   koKR = "MapNotes로 세계 지도를 전환할 때 발생할 수 있는 모든 오류를 억제하고 숨기려고 시도하여, /reload로만 해결 가능한 매우 드물고 특정한 오류만 표시되도록 합니다",
   zhCN = "尝试抑制并隐藏通过 MapNotes 切换世界地图时可能产生的所有错误，使只有极少数特定错误会显示，这些错误只能通过 /reload 用户界面来解决",
   zhTW = "嘗試抑制並隱藏透過 MapNotes 切換世界地圖時可能產生的所有錯誤，僅讓極少數特定錯誤顯示，而這些錯誤只能透過 /reload 使用者介面來解決",
-}
-
-ns.LOCALE_SUPPRESS_ERRORS_DESC_2 = { -- RetailOptions.lua
-  enUS = "In these cases, MapNotes creates a separate window with the option to quickly reload the user interface so that the error is resolved",
-  deDE = "In diesen speziellen Fällen erstellt MapNotes ein Fenster mit der Option, die Benutzeroberfläche neu zu laden, sodass der Fehler bereinigt wird",
-  frFR = "Dans ces cas, MapNotes crée une fenêtre distincte avec l’option de recharger rapidement l’interface utilisateur afin que l’erreur soit résolue",
-  esES = "En estos casos, MapNotes crea una ventana separada con la opción de recargar rápidamente la interfaz de usuario para que el error quede resuelto",
-  esMX = "En estos casos, MapNotes crea una ventana separada con la opción de recargar rápidamente la interfaz de usuario para que el error quede resuelto",
-  itIT = "In questi casi, MapNotes crea una finestra separata con l’opzione di ricaricare rapidamente l’interfaccia utente, così che l’errore venga risolto",
-  ptBR = "Nesses casos, o MapNotes cria uma janela separada com a opção de recarregar rapidamente a interface do usuário, resolvendo o erro",
-  ruRU = "В этих случаях MapNotes создаёт отдельное окно с возможностью быстро перезагрузить интерфейс пользователя, чтобы ошибка была устранена",
-  koKR = "이러한 경우, MapNotes는 사용자 인터페이스를 빠르게 다시 불러올 수 있는 별도의 창을 만들어 오류를 해결합니다",
-  zhCN = "在这些情况下，MapNotes 会创建一个单独的窗口，提供快速重载用户界面的选项，从而解决错误",
-  zhTW = "在這些情況下，MapNotes 會建立一個單獨的視窗，提供快速重新載入使用者介面的選項，從而解決錯誤",
-}
-
-ns.LOCALE_SUPPRESS_ERRORS_DESC_3 = { -- RetailOptions.lua
-  enUS = "If you don't mind a short /reload in these rare cases, this option can be used",
-  deDE = "Wenn dich ein kurzer /reload in diesen seltenen Fällen nicht stört, kann diese Variante verwendet werden",
-  frFR = "Si un court /reload dans ces cas rares ne vous dérange pas, vous pouvez utiliser cette option",
-  esES = "Si no te molesta hacer un breve /reload en estos casos poco frecuentes, puedes usar esta opción",
-  esMX = "Si no te molesta hacer un breve /reload en estos casos poco frecuentes, puedes usar esta opción",
-  itIT = "Se non ti disturba fare un breve /reload in questi casi rari, puoi usare questa opzione",
-  ptBR = "Se não se importar em fazer um breve /reload nesses casos raros, pode usar esta opção",
-  ruRU = "Если вас не беспокоит короткий /reload в этих редких случаях, можно использовать эту опцию",
-  koKR = "이러한 드문 경우에 짧은 /reload이 괜찮다면 이 옵션을 사용할 수 있습니다",
-  zhCN = "如果你不介意在这些少见情况下执行一次简短的 /reload，就可以使用此选项",
-  zhTW = "如果你不介意在這些少見情況下執行一次簡短的 /reload，就可以使用此選項",
-}
-
-ns.LOCALE_SUPPRESS_ERRORS_NAME = { -- RetailOptions.lua
-  enUS = "Suppress Errors",
-  deDE = "Fehler unterdrücken",
-  frFR = "Supprimer les erreurs",
-  esES = "Suprimir errores",
-  esMX = "Suprimir errores",
-  itIT = "Sopprimi errori",
-  ptBR = "Suprimir erros",
-  ruRU = "Подавление ошибок",
-  koKR = "오류 억제",
-  zhCN = "抑制错误",
-  zhTW = "抑制錯誤",
 }
 
 ns.LOCALE_ERRORS_CURSEFORGE = { -- RetailOptions.lua
@@ -395,6 +391,48 @@ ns.LOCALE_OPEN_AFTER_COMBAT = { -- RetailErrorMessage.lua
   zhTW = "> 戰鬥結束後已執行地圖切換 <",
 }
 
+ns.LOCALE_BOUNTIFUL_DELVES = { -- RetailOptions.lua
+  enUS = "Bountiful Delves",
+  deDE = "Großzügige Tiefen",
+  frFR = "Gouffres fructueux",
+  esES = "Abismos abundantes",
+  esMX = "Abismos abundantes",
+  itIT = "Spedizioni abbondanti",
+  ptBR = "Explorações abundantes",
+  ruRU = "Обильные вылазки",
+  koKR = "풍성한 탐험",
+  zhCN = "丰饶探究",
+  zhTW = "豐饒探究",
+}
+
+ns.LOCALE_AFTER_COMBAT_DELVES = { -- RetailDelves.lua
+  enUS = "> Delve icons will automatically reappear on the continent map after combat <",
+  deDE = "> Die Tiefensymbole werden nach dem Kampf automatisch auf der Kontinentkarte wieder angezeigt <",
+  frFR = "> Les icônes de Gouffre réapparaîtront automatiquement sur la carte du continent après le combat <",
+  esES = "> Los iconos de Abismo volverán a aparecer automáticamente en el mapa del continente después del combate <",
+  esMX = "> Los iconos de Abismo volverán a aparecer automáticamente en el mapa del continente después del combate <",
+  itIT = "> Le icone delle Spedizioni riappariranno automaticamente sulla mappa del continente dopo il combattimento <",
+  ptBR = "> Os ícones de Exploração reaparecerão automaticamente no mapa do continente após o combate <",
+  ruRU = "> Значки вылазок автоматически снова появятся на карте континента после боя <",
+  koKR = "> 전투가 끝나면 대륙 지도에 탐험 아이콘이 자동으로 다시 표시됩니다 <",
+  zhCN = "> 战斗结束后，探险图标将自动重新显示在大陆地图上 <",
+  zhTW = "> 戰鬥結束後，探險圖示將自動重新顯示在大陸地圖上 <",
+}
+
+ns.LOCALE_AFTER_COMBAT_DELVES_INFO = { -- RetailOptions.lua
+  enUS = "Displays an on-screen message that the delve icons will automatically reappear on the continent map after combat",
+  deDE = "Zeigt eine Meldung auf dem Bildschirm an, dass die Tiefensymbole nach dem Kampf automatisch auf der Kontinentkarte wieder angezeigt werden",
+  frFR = "Affiche un message à l’écran indiquant que les icônes de Gouffre réapparaîtront automatiquement sur la carte du continent après le combat",
+  esES = "Muestra un mensaje en pantalla indicando que los iconos de Abismo volverán a aparecer automáticamente en el mapa del continente después del combate",
+  esMX = "Muestra un mensaje en pantalla indicando que los iconos de Abismo volverán a aparecer automáticamente en el mapa del continente después del combate",
+  itIT = "Mostra un messaggio sullo schermo che indica che le icone delle Spedizioni riappariranno automaticamente sulla mappa del continente dopo il combattimento",
+  ptBR = "Exibe uma mensagem na tela informando que os ícones de Exploração reaparecerão automaticamente no mapa do continente após o combate",
+  ruRU = "Отображает сообщение на экране о том, что значки вылазок автоматически снова появятся на карте континента после боя",
+  koKR = "전투 후 탐험 아이콘이 대륙 지도에 자동으로 다시 표시된다는 화면 메시지를 표시합니다",
+  zhCN = "在屏幕上显示一条消息，提示战斗结束后探险图标将自动重新显示在大陆地图上",
+  zhTW = "在畫面上顯示一則訊息，提示戰鬥結束後探險圖示將自動重新顯示在大陸地圖上",
+}
+
 ns.LOCALE_BLOCKPANEL_MSG = { -- RetailErrorMessage.lua
   deDE = [[Bitte einmal die Benutzeroberfläche erneuern, um die Funktion an Blizzard zurückzugeben.]],
   enUS = [[Please reload the UI to return this function to the Blizzard UI.]],
@@ -506,6 +544,62 @@ ns.LOCALE_FOUND_MISSING = { -- RetailNpc.lua
   koKR = "%s %s - %d 발견됨, %d 누락됨",
   zhCN = "%s %s - 已找到 %d 个，缺少 %d 个",
   zhTW = "%s %s - 已找到 %d 個，缺少 %d 個",
+}
+
+ns.LOCALE_BLOCKED_DATABASE_UPDATE = { -- RetailNpc.lua
+  enUS = [[Update not possible in instanced areas. Leave this area and update manually via the addon menu "MapNotes NPC Database -> Update"]],
+  deDE = [[Aktualisierung in instanzierten Bereichen nicht möglich. Verlasse diesen Bereich und aktualisiere manuell über das Addon-Menü "MapNotes NPC Datenbank -> Aktualisieren"]],
+  frFR = [[Mise à jour impossible dans les zones instanciées. Quittez cette zone et mettez à jour manuellement via le menu de l’addon "Base de données PNJ MapNotes -> Mettre à jour"]],
+  esES = [[No es posible actualizar en zonas de instancia. Sal de esta zona y actualiza manualmente desde el menú del addon "Base de datos de PNJ de MapNotes -> Actualizar"]],
+  esMX = [[No es posible actualizar en zonas de instancia. Sal de esta zona y actualiza manualmente desde el menú del addon "Base de datos de PNJ de MapNotes -> Actualizar"]],
+  itIT = [[Aggiornamento non possibile nelle aree istanziate. Esci da quest’area e aggiorna manualmente tramite il menu dell’addon "Database NPC MapNotes -> Aggiorna"]],
+  ptBR = [[A atualização não é possível em áreas instanciadas. Saia dessa área e atualize manualmente pelo menu do addon "Banco de dados de NPC do MapNotes -> Atualizar"]],
+  ruRU = [[Обновление невозможно в инстансных зонах. Покиньте эту зону и обновите вручную через меню аддона "База данных NPC MapNotes -> Обновить"]],
+  koKR = [[인스턴스 지역에서는 업데이트할 수 없습니다. 해당 지역을 떠난 후 애드온 메뉴 "MapNotes NPC 데이터베이스 -> 업데이트"에서 수동으로 업데이트하세요]],
+  zhCN = [[在副本区域中无法更新。请离开该区域并通过插件菜单“MapNotes NPC 数据库 -> 更新”手动更新]],
+  zhTW = [[在副本區域中無法更新。請離開該區域並透過插件選單「MapNotes NPC 資料庫 -> 更新」手動更新]],
+}
+
+ns.LOCALE_PROFILE_SWITCH_BLOCKED = {
+  deDE = "Profilwechsel nicht möglich, da „Verwende Profil „%s“ aktiviert ist.",
+  enUS = "Profile switching is not possible because “Use profile “%s” is enabled.",
+  frFR = "Changement de profil impossible, car « Utiliser le profil « %s » » est activé.",
+  esES = "No es posible cambiar de perfil porque “Usar perfil “%s” está activado.",
+  esMX = "No es posible cambiar de perfil porque “Usar perfil “%s” está activado.",
+  itIT = "Impossibile cambiare profilo perché “Usa profilo “%s” è attivo.",
+  ptBR = "Não é possível trocar de perfil porque “Usar perfil “%s” está ativado.",
+  ruRU = "Переключение профиля невозможно, так как включено «Использовать профиль «%s»».",
+  zhCN = "无法切换配置文件，因为已启用“使用配置文件“%s””。",
+  zhTW = "無法切換設定檔，因為已啟用「使用設定檔「%s」」。",
+  koKR = "“프로필 “%s” 사용”이 활성화되어 있어 프로필을 전환할 수 없습니다.",
+}
+
+ns.LOCALE_USE_PROFILE_NAME = {
+  deDE = "Geteiltes Profil „%s“",
+  enUS = "Shared profile “%s”",
+  frFR = "Profil partagé « %s »",
+  esES = "Perfil compartido “%s”",
+  esMX = "Perfil compartido “%s”",
+  itIT = "Profilo condiviso “%s”",
+  ptBR = "Perfil compartilhado “%s”",
+  ruRU = "Общий профиль «%s»",
+  zhCN = "共享配置文件“%s”",
+  zhTW = "共用設定檔「%s」",
+  koKR = "공유 프로필 “%s”",
+}
+
+ns.LOCALE_USE_PROFILE_DESC = {
+  deDE = "Wenn aktiviert, benutzen alle Charaktere automatisch ein gemeinsames Profil mit dem Namen „MapNotes“.\n\nDiese Funktion ist Accountweit.\n\nDieses Profil muss nur einmalig so eingerichtet werden, wie ihr es haben wollt.\nAlternativ könnt ihr die Einstellungen einfach von einem anderen Profil kopieren und auf das Profil „MapNotes“ übernehmen.\n\nWird diese Funktion deaktiviert, wird automatisch wieder auf das charakterspezifische Profil gewechselt.",
+  enUS = "When enabled, all characters automatically use a shared profile named “MapNotes”.\n\nThis feature is account-wide.\n\nThis profile only needs to be configured once the way you want it. Alternatively, you can copy the settings from another profile and apply them to the “MapNotes” profile.\n\nWhen this option is disabled, the character-specific profile is automatically restored.",
+  frFR = "Lorsqu’elle est activée, tous les personnages utilisent automatiquement un profil partagé nommé « MapNotes ».\n\nCette fonctionnalité est valable pour tout le compte.\n\nCe profil ne doit être configuré qu’une seule fois selon vos préférences. Vous pouvez également copier les paramètres d’un autre profil et les appliquer au profil « MapNotes ».\n\nLorsque cette option est désactivée, le profil spécifique au personnage est automatiquement rétabli.",
+  esES = "Cuando está activado, todos los personajes usan automáticamente un perfil compartido llamado “MapNotes”.\n\nEsta función es válida para toda la cuenta.\n\nEste perfil solo necesita configurarse una vez según tus preferencias. Alternativamente, puedes copiar la configuración de otro perfil y aplicarla al perfil “MapNotes”.\n\nAl desactivar esta opción, se restaura automáticamente el perfil específico del personaje.",
+  esMX = "Cuando está activado, todos los personajes usan automáticamente un perfil compartido llamado “MapNotes”.\n\nEsta función es válida para toda la cuenta.\n\nEste perfil solo necesita configurarse una vez según tus preferencias. Alternativamente, puedes copiar la configuración de otro perfil y aplicarla al perfil “MapNotes”.\n\nAl desactivar esta opción, se restaura automáticamente el perfil específico del personaje.",
+  itIT = "Quando attivata, tutti i personaggi utilizzano automaticamente un profilo condiviso chiamato “MapNotes”.\n\nQuesta funzione è valida per l’intero account.\n\nQuesto profilo deve essere configurato una sola volta secondo le tue preferenze. In alternativa, puoi copiare le impostazioni da un altro profilo e applicarle al profilo “MapNotes”.\n\nQuando questa opzione viene disattivata, il profilo specifico del personaggio viene ripristinato automaticamente.",
+  ptBR = "Quando ativado, todos os personagens usam automaticamente um perfil compartilhado chamado “MapNotes”.\n\nEsta função é válida para toda a conta.\n\nEste perfil precisa ser configurado apenas uma vez da forma que você desejar. Como alternativa, você pode copiar as configurações de outro perfil e aplicá-las ao perfil “MapNotes”.\n\nQuando essa opção é desativada, o perfil específico do personagem é restaurado automaticamente.",
+  ruRU = "При включении все персонажи автоматически используют общий профиль с названием « MapNotes ».\n\nЭта функция действует для всей учетной записи.\n\nЭтот профиль нужно настроить только один раз по вашему усмотрению. Также вы можете скопировать настройки из другого профиля и применить их к профилю « MapNotes ».\n\nПри отключении этой функции автоматически восстанавливается профиль конкретного персонажа.",
+  zhCN = "启用后，所有角色将自动使用名为“MapNotes”的共享配置文件。\n\n此功能为账号范围内生效。\n\n该配置文件只需按照你的需求设置一次。你也可以从其他配置文件复制设置并应用到“MapNotes”配置文件。\n\n禁用该选项后，将自动切换回角色专属配置文件。",
+  zhTW = "啟用後，所有角色會自動使用名為「MapNotes」的共用設定檔。\n\n此功能為帳號範圍內生效。\n\n此設定檔只需依照你的需求設定一次。你也可以從其他設定檔複製設定並套用至「MapNotes」設定檔。\n\n停用此選項後，將自動切換回角色專屬設定檔。",
+  koKR = "활성화하면 모든 캐릭터가 “MapNotes”라는 공유 프로필을 자동으로 사용합니다.\n\n이 기능은 계정 전체에 적용됩니다.\n\n이 프로필은 한 번만 원하는 방식으로 설정하면 됩니다. 또는 다른 프로필의 설정을 복사하여 “MapNotes” 프로필에 적용할 수도 있습니다.\n\n이 옵션을 비활성화하면 캐릭터별 프로필로 자동 복원됩니다.",
 }
 
 ns.reset_Character_SavedVariables_Text = {

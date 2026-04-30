@@ -1,0 +1,8 @@
+## Interface: 120001,120005
+## Title: [神秘地瓜] 副本语音助手
+## Notes: 根据战斗时间轴播放自定义音频
+## Author: 神秘地瓜
+## Version: 1.3.4
+
+Core.lua
+Countdown.lua

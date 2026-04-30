@@ -1,4 +1,4 @@
-local appName, app = ...;
+local _, app = ...;
 
 local GetSpellName = app.WOWAPI.GetSpellName;
 
@@ -42,13 +42,15 @@ local L = {
 		["Ingénierie"] = 4036,	-- Engineering
 		["Secourisme"] = 3273,	-- First Aid
 
-		-- Spanish (Classic Era)
+		-- Spanish-EU (Classic Era)
+		["Botánica"] = 2366,	-- Herbalism
 		["Costura"] = 3908,	-- Tailoring
+		["Desollar"] = 8613,	-- Skinning
+		["Ganzúa"] = 1809,	-- Lock Pick
 		["Marroquinería"] = 2108,	-- Leatherworking
 
-		["Ganzúa"] = 1809,        -- Lock Pick    -- Required for ES (EU)
-		["Desollar"] = 8613,    -- Skinning        -- Required for ES (EU)
-		["Cнятие шкур"] = 8613,    -- Skinning        -- Required for RU
+		-- Russian
+		["Cнятие шкур"] = 8613,	-- Skinning
 	},
 
 	EXPANSION_DATA = {
@@ -137,6 +139,7 @@ local ABBREVIATIONS = {
 	["The Burning Crusade"] = "BC",
 	["Burning Crusade"] = "BC",
 	["The BC"] = "BC",
+	["The TBC"] = "BC",							-- German locale issue
 	["Wrath of the Lich King"] = "WotLK",
 	["Cataclysm %>"] = "Cata >",
 	["Cataclysm "] = "Cata ",
@@ -193,6 +196,7 @@ local ABBREVIATIONS = {
 	["Sikran, Captain of the Sureki"] = "Sikran",
 	["Vexie and the Geargrinders"] = "Vexie & the Geargrinders",
 	-- Outdoor Zones
+	["One Does Not Simply Walk Into Harandar"] = "One Does Not Simply...",
 	["Quartermaster Miranda Breechlock"] = "Quartermaster Miranda",
 	["Season "] = "S",
 	["Sanctum Upgrades %> "] = "",

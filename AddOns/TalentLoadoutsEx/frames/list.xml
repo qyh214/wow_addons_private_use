@@ -167,6 +167,14 @@
 						GameTooltip:AddDoubleLine("Double Click", "Load/Apply", 0, 1, 0, 1, 1, 1);
 						GameTooltip:AddDoubleLine("Shift + Left-Click", "Post in Chat", 0, 1, 0, 1, 1, 1);
 						GameTooltip:AddDoubleLine("Shift + Right-Click", "Copy", 0, 1, 0, 1, 1, 1);
+
+						-- Mini Tree in Tooltips by Talent Tree Tweaks
+						local miniTreeInTooltip = TalentTreeTweaksDB and TalentTreeTweaksDB.modules and TalentTreeTweaksDB.modules.MiniTreeInTooltip;
+						if miniTreeInTooltip and type(TalentTreeTweaks_EmbedMiniTreeIntoTooltip) == "function" then
+							GameTooltip:AddLine(" ");
+							GameTooltip:AddLine("Mini Tree in Tooltips by |cFF00AEEFTalent Tree Tweaks|r", 1, 1, 1);
+							pcall(TalentTreeTweaks_EmbedMiniTreeIntoTooltip, GameTooltip, self.data.text);
+						end
 					else
 						GameTooltip:AddDoubleLine(self.data.name, self.data.isPreset and "Group(Preset)" or "Group");
 						GameTooltip:AddDoubleLine("Double Click", "Expand/Collapse", 0, 1, 0, 1, 1, 1);

@@ -5,10 +5,19 @@ local L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 local WorldMapOptionsButtonMixin = {}
 _G[ADDON_NAME .. 'WorldMapOptionsButtonMixin'] = WorldMapOptionsButtonMixin
 
-function WorldMapOptionsButtonMixin:OnLoad()
-
+function WorldMapOptionsButtonMixin:UpdateIconOverlay()
+    if self.IconOverlay then
+        if ns.Addon.db.profile.activate.HideMapNote then
+            self.IconOverlay:Show()
+        else
+            self.IconOverlay:Hide()
+        end
+    end
 end
 
+function WorldMapOptionsButtonMixin:OnLoad()
+    self:UpdateIconOverlay()
+end
 
 function WorldMapOptionsButtonMixin:OnClick(button)
 local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
@@ -30,6 +39,7 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             ns.Addon.db.profile.activate.HideMapNote = true
             if ns.ApplyWorldMapArrowSize then ns.ApplyWorldMapArrowSize() end -- deactivation of the worldmap player arrow changes
             if ns.RefreshContinentDelvesPins then ns.RefreshContinentDelvesPins({ remove = true }) end -- hide delves
+            if ns.UpdateMiniMapButtonIcon then ns.UpdateMiniMapButtonIcon() end -- minimap button icon
             if ns.Addon.db.profile.MmbWmbChatMessage then
                 print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffff0000", L["All MapNotes icons have been hidden"])
             end
@@ -37,11 +47,18 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             ns.Addon.db.profile.activate.HideMapNote = false
             if ns.ApplyWorldMapArrowSize then ns.ApplyWorldMapArrowSize() end -- deactivation of the worldmap player arrow changes
             if ns.RefreshContinentDelvesPins then ns.RefreshContinentDelvesPins() end -- rebuild delves if activated
+            if ns.UpdateMiniMapButtonIcon then ns.UpdateMiniMapButtonIcon() end -- minimap button icon
             if ns.Addon.db.profile.MmbWmbChatMessage then
                 print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cff00ff00", L["All set icons have been restored"])
             end
         end
 
+        self:UpdateIconOverlay()
+
+        if GameTooltip and GameTooltip:GetOwner() == self then
+            GameTooltip:Hide()
+            self:OnEnter()
+        end
     end
 
     if button == "RightButton" then 
@@ -98,11 +115,15 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             elseif CurrentMapID == 13 then
                 if ns.Addon.db.profile.showContinentEasternKingdom then
                     ns.Addon.db.profile.showContinentEasternKingdom = false
+                    if ns.Addon.db.profile.showContinentDelves then ns.RefreshContinentDelvesPins() end
+                    if not ns.Addon.db.profile.showContinentDelves then ns.RefreshContinentDelvesPins({ remove = true }) end
                     if ns.Addon.db.profile.MmbWmbChatMessage then
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Eastern Kingdom"], L["icons"], "|cffff0000" .. L["are hidden"])
                     end
                 else
                     ns.Addon.db.profile.showContinentEasternKingdom = true
+                    if ns.Addon.db.profile.showContinentDelves then ns.RefreshContinentDelvesPins() end
+                    if not ns.Addon.db.profile.showContinentDelves then ns.RefreshContinentDelvesPins({ remove = true }) end
                     if ns.Addon.db.profile.MmbWmbChatMessage then
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Eastern Kingdom"], L["icons"], "|cff00ff00" .. L["are shown"])
                     end
@@ -229,6 +250,22 @@ local CurrentMapID = WorldMapFrame:GetMapID()
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Khaz Algar"], L["icons"], "|cff00ff00" .. L["are shown"])
                     end
                 end
+            elseif CurrentMapID == 2537 then
+                if ns.Addon.db.profile.showContinentQuelThalas then
+                    ns.Addon.db.profile.showContinentQuelThalas = false
+                    if ns.Addon.db.profile.showContinentDelves then ns.RefreshContinentDelvesPins() end
+                    if not ns.Addon.db.profile.showContinentDelves then ns.RefreshContinentDelvesPins({ remove = true }) end
+                    if ns.Addon.db.profile.MmbWmbChatMessage then
+                        print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Quel'Thalas"], L["icons"], "|cffff0000" .. L["are hidden"])
+                    end
+                else
+                    ns.Addon.db.profile.showContinentQuelThalas = true
+                    if ns.Addon.db.profile.showContinentDelves then ns.RefreshContinentDelvesPins() end
+                    if not ns.Addon.db.profile.showContinentDelves then ns.RefreshContinentDelvesPins({ remove = true }) end
+                    if ns.Addon.db.profile.MmbWmbChatMessage then
+                        print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Quel'Thalas"], L["icons"], "|cff00ff00" .. L["are shown"])
+                    end
+                end
             end
 
         end
@@ -247,7 +284,8 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             or CurrentMapID == 627 or CurrentMapID == 628 or CurrentMapID == 629 or CurrentMapID == 831 or CurrentMapID == 832 
             or CurrentMapID == 1161 or CurrentMapID == 1163 or CurrentMapID == 1164 or CurrentMapID == 1165 or CurrentMapID == 1670 
             or CurrentMapID == 1671 or CurrentMapID == 1672 or CurrentMapID == 1673 or CurrentMapID == 2112 or CurrentMapID == 407 
-            or CurrentMapID == 2339 or CurrentMapID == 503 or CurrentMapID == 499 or CurrentMapID == 500 or CurrentMapID == 2322)
+            or CurrentMapID == 2339 or CurrentMapID == 503 or CurrentMapID == 499 or CurrentMapID == 500 or CurrentMapID == 2322
+            or CurrentMapID == 2393) -- midnight)
         then
         
             if not ns.Addon.db.profile.activate.DungeonMap then
@@ -272,7 +310,7 @@ local CurrentMapID = WorldMapFrame:GetMapID()
                 or CurrentMapID == 69 or CurrentMapID == 70 or CurrentMapID == 71 or CurrentMapID == 74 or CurrentMapID == 75 or CurrentMapID == 76 
                 or CurrentMapID == 77 or CurrentMapID == 78 or CurrentMapID == 80 or CurrentMapID == 81 or CurrentMapID == 83 or CurrentMapID == 97 
                 or CurrentMapID == 106 or CurrentMapID == 199 or CurrentMapID == 327 or CurrentMapID == 460 or CurrentMapID == 461 or CurrentMapID == 462 
-                or CurrentMapID == 468 or CurrentMapID == 1527 or CurrentMapID == 198 or CurrentMapID == 249)
+                or CurrentMapID == 463 or CurrentMapID == 468 or CurrentMapID == 1527 or CurrentMapID == 198 or CurrentMapID == 249)
             then
                 if not ns.Addon.db.profile.showZoneKalimdor then
                     ns.Addon.db.profile.showZoneKalimdor = true
@@ -448,13 +486,31 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             then
                 if not ns.Addon.db.profile.showZoneKhazAlgar then
                     ns.Addon.db.profile.showZoneKhazAlgar = true
+                    if ns.RefreshZoneDelvesOnly then ns.RefreshZoneDelvesOnly() end
                     if ns.Addon.db.profile.MmbWmbChatMessage then
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Khaz Algar"] ..  " " .. L["Zones"] .. " " .. L["icons"], "|cff00ff00" .. L["are shown"])
                     end
                 else
                     ns.Addon.db.profile.showZoneKhazAlgar = false
+                    if ns.RefreshZoneDelvesOnly then ns.RefreshZoneDelvesOnly({ remove = true }) end
                     if ns.Addon.db.profile.MmbWmbChatMessage then
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Khaz Algar"] .. " " .. L["Zones"] .. " " .. L["icons"], "|cffff0000" .. L["are hidden"])
+                    end
+                end
+            --Quel'Thalas
+            elseif (CurrentMapID == 2395 or CurrentMapID == 2437 or CurrentMapID == 2424 or CurrentMapID == 2405 or CurrentMapID == 2444 or CurrentMapID == 2413 or CurrentMapID == 2536 or CurrentMapID == 2576)
+            then
+                if not ns.Addon.db.profile.showZoneQuelThalas then
+                    ns.Addon.db.profile.showZoneQuelThalas = true
+                    if ns.RefreshZoneDelvesOnly then ns.RefreshZoneDelvesOnly() end
+                    if ns.Addon.db.profile.MmbWmbChatMessage then
+                        print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Quel'Thalas"] ..  " " .. L["Zones"] .. " " .. L["icons"], "|cff00ff00" .. L["are shown"])
+                    end
+                else
+                    ns.Addon.db.profile.showZoneQuelThalas = false
+                    if ns.RefreshZoneDelvesOnly then ns.RefreshZoneDelvesOnly({ remove = true }) end
+                    if ns.Addon.db.profile.MmbWmbChatMessage then
+                        print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Quel'Thalas"] .. " " .. L["Zones"] .. " " .. L["icons"], "|cffff0000" .. L["are hidden"])
                     end
                 end
             end
@@ -468,7 +524,7 @@ local CurrentMapID = WorldMapFrame:GetMapID()
                 or CurrentMapID == 69 or CurrentMapID == 70 or CurrentMapID == 71 or CurrentMapID == 74 or CurrentMapID == 75 or CurrentMapID == 76 
                 or CurrentMapID == 77 or CurrentMapID == 78 or CurrentMapID == 80 or CurrentMapID == 81 or CurrentMapID == 83 or CurrentMapID == 97 
                 or CurrentMapID == 106 or CurrentMapID == 199 or CurrentMapID == 327 or CurrentMapID == 460 or CurrentMapID == 461 or CurrentMapID == 462 
-                or CurrentMapID == 468 or CurrentMapID == 1527 or CurrentMapID == 198 or CurrentMapID == 249)
+                or CurrentMapID == 463 or CurrentMapID == 468 or CurrentMapID == 1527 or CurrentMapID == 198 or CurrentMapID == 249)
             then
                 if not ns.Addon.db.profile.showZoneKalimdor then
                     ns.Addon.db.profile.showZoneKalimdor = true
@@ -490,7 +546,7 @@ local CurrentMapID = WorldMapFrame:GetMapID()
                 or CurrentMapID == 94 or CurrentMapID == 210 or CurrentMapID == 224 or CurrentMapID == 245 or CurrentMapID == 425 or CurrentMapID == 427 
                 or CurrentMapID == 465 or CurrentMapID == 467 or CurrentMapID == 469 or CurrentMapID == 2070 
                 or CurrentMapID == 241 or CurrentMapID == 203 or CurrentMapID == 204 or CurrentMapID == 205 or CurrentMapID == 241 or CurrentMapID == 244 
-                or CurrentMapID == 245 or CurrentMapID == 201 or CurrentMapID == 95 or CurrentMapID == 122 or CurrentMapID == 217  or CurrentMapID == 226) 
+                or CurrentMapID == 245 or CurrentMapID == 201 or CurrentMapID == 95 or CurrentMapID == 122 or CurrentMapID == 217  or CurrentMapID == 226)
             then
                 if not ns.Addon.db.profile.showZoneEasternKingdom then
                     ns.Addon.db.profile.showZoneEasternKingdom = true
@@ -653,6 +709,20 @@ local CurrentMapID = WorldMapFrame:GetMapID()
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Khaz Algar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. " " .. L["icons"], "|cffff0000" .. L["are hidden"])
                     end
                 end
+            --Quel'Thalas
+            elseif (CurrentMapID == 2395 or CurrentMapID == 2437 or CurrentMapID == 2424 or CurrentMapID == 2405 or CurrentMapID == 2444 or CurrentMapID == 2413 or CurrentMapID == 2536 or CurrentMapID == 2576)
+            then
+                if not ns.Addon.db.profile.showZoneQuelThalas then
+                    ns.Addon.db.profile.showZoneQuelThalas = true
+                    if ns.Addon.db.profile.MmbWmbChatMessage then
+                        print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Quel'Thalas"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. " " .. L["icons"], "|cff00ff00" .. L["are shown"])
+                    end
+                else
+                    ns.Addon.db.profile.showZoneQuelThalas = false
+                    if ns.Addon.db.profile.MmbWmbChatMessage then
+                        print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Quel'Thalas"]  .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. " " .. L["icons"], "|cffff0000" .. L["are hidden"])
+                    end
+                end
             end
         end
 
@@ -669,16 +739,19 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             or CurrentMapID == 627 or CurrentMapID == 628 or CurrentMapID == 629 or CurrentMapID == 831 or CurrentMapID == 832 
             or CurrentMapID == 1161 or CurrentMapID == 1163 or CurrentMapID == 1164 or CurrentMapID == 1165 or CurrentMapID == 1670 
             or CurrentMapID == 1671 or CurrentMapID == 1672 or CurrentMapID == 1673 or CurrentMapID == 2112 or CurrentMapID == 407 
-            or CurrentMapID == 2339 or CurrentMapID == 503 or CurrentMapID == 499 or CurrentMapID == 500 or CurrentMapID == 2322)
+            or CurrentMapID == 2339 or CurrentMapID == 503 or CurrentMapID == 499 or CurrentMapID == 500 or CurrentMapID == 2322
+            or CurrentMapID == 2393) -- midnight)
         then
         
             if not ns.Addon.db.profile.activate.Capitals then
                 ns.Addon.db.profile.activate.Capitals = true
+                if ns.RefreshCapitalsDelvesOnly then ns.RefreshCapitalsDelvesOnly() end
                 if ns.Addon.db.profile.MmbWmbChatMessage then
                     print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Capitals"], L["icons"], "|cff00ff00" .. L["are shown"])
                 end
             else
                 ns.Addon.db.profile.activate.Capitals = false
+                if ns.RefreshCapitalsDelvesOnly then ns.RefreshCapitalsDelvesOnly({ remove = true }) end
                 if ns.Addon.db.profile.MmbWmbChatMessage then
                     print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Capitals"], L["icons"], "|cffff0000" .. L["are hidden"])
                 end
@@ -698,16 +771,19 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             or CurrentMapID == 627 or CurrentMapID == 628 or CurrentMapID == 629 or CurrentMapID == 831 or CurrentMapID == 832 
             or CurrentMapID == 1161 or CurrentMapID == 1163 or CurrentMapID == 1164 or CurrentMapID == 1165 or CurrentMapID == 1670 
             or CurrentMapID == 1671 or CurrentMapID == 1672 or CurrentMapID == 1673 or CurrentMapID == 2112 or CurrentMapID == 407 
-            or CurrentMapID == 2339 or CurrentMapID == 503 or CurrentMapID == 499 or CurrentMapID == 500 or CurrentMapID == 2322)
+            or CurrentMapID == 2339 or CurrentMapID == 503 or CurrentMapID == 499 or CurrentMapID == 500 or CurrentMapID == 2322
+            or CurrentMapID == 2393) -- midnight)
         then
         
             if not ns.Addon.db.profile.activate.Capitals then
                 ns.Addon.db.profile.activate.Capitals = true
+                if ns.RefreshCapitalsDelvesOnly then ns.RefreshCapitalsDelvesOnly() end
                 if ns.Addon.db.profile.MmbWmbChatMessage then
                     print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Capitals"] .. " & " ..  L["Capitals"] .. " - " .. MINIMAP_LABEL .. " " .. L["icons"], "|cff00ff00" .. L["are shown"])
                 end
             else
                 ns.Addon.db.profile.activate.Capitals = false
+                if ns.RefreshCapitalsDelvesOnly then ns.RefreshCapitalsDelvesOnly({ remove = true }) end
                 if ns.Addon.db.profile.MmbWmbChatMessage then
                     print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Capitals"] .. " & " ..  L["Capitals"] .. " - " .. MINIMAP_LABEL .. " " .. L["icons"], "|cffff0000" .. L["are hidden"])
                 end
@@ -728,18 +804,22 @@ local CurrentMapID = WorldMapFrame:GetMapID()
     GameTooltip_SetTitle(GameTooltip, ns.COLORED_ADDON_NAME)
     GameTooltip:AddLine(L["Left-click => Open/Close"] .. "|cffffcc00" .. " " .. ns.COLORED_ADDON_NAME,1,1,1)
     GameTooltip:AddLine(" ",1,1,1)
-    GameTooltip:AddLine(KEY_BUTTON3 .. " => " .. "|cffffcc00" .. L["Disable MapNotes, all icons will be hidden on each map and all categories will be disabled"] .. " " .. SHOW .. " / " .. HIDE,1,1,1,1)
+    if not ns.Addon.db.profile.activate.HideMapNote then
+        GameTooltip:AddLine(KEY_BUTTON3 .. ":\n" .. "|cffff0000" .. L["Disable MapNotes, all icons will be hidden on each map and all categories will be disabled"],1,1,1,1)
+    else
+        GameTooltip:AddLine(KEY_BUTTON3 .. ":\n" .. "|cff00ff00" .. L["Activate MapNotes, all previously enabled icons will be restored on every map"],1,1,1,1)
+    end
     GameTooltip:AddLine(" ",1,1,1)
     
     -- Cosmos Map
     if info.mapType == 0 then 
-        GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. WORLDMAP_BUTTON .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+        GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. WORLDMAP_BUTTON .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
         GameTooltip:Show()
     end
 
     -- Azeroth World Map
     if info.mapType == 1 then
-        GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. AZEROTH .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+        GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. AZEROTH .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
         GameTooltip:Show()
     end    
 
@@ -747,40 +827,43 @@ local CurrentMapID = WorldMapFrame:GetMapID()
     if info.mapType == 2 then 
 
         if CurrentMapID == 12 or CurrentMapID == 948 then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Kalimdor"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. L["Continent map"] .. " " .. L["Kalimdor"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         elseif CurrentMapID == 13 then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Eastern Kingdom"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. L["Continent map"] .. " " .. L["Eastern Kingdom"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         elseif CurrentMapID == 101 then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Outland"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. L["Continent map"] .. " " .. L["Outland"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         elseif CurrentMapID == 113 then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Northrend"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. L["Continent map"] .. " " .. L["Northrend"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         elseif CurrentMapID == 424 then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Pandaria"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. L["Continent map"] .. " " .. L["Pandaria"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         elseif CurrentMapID == 572 then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Draenor"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. L["Continent map"] .. " " .. L["Draenor"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         elseif CurrentMapID == 619 or CurrentMapID == 905 then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Broken Isles"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. L["Continent map"] .. " " .. L["Broken Isles"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         elseif CurrentMapID == 875 then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Zandalar"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. L["Continent map"] .. " " .. L["Zandalar"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         elseif CurrentMapID == 876 then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Kul Tiras"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. L["Continent map"] .. " " .. L["Kul Tiras"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         elseif CurrentMapID == 1550 then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Shadowlands"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. L["Continent map"] .. " " .. L["Shadowlands"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         elseif CurrentMapID == 1978 then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Dragon Isles"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. L["Continent map"] .. " " .. L["Dragon Isles"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         elseif CurrentMapID == 2274 then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000" .. L["Continent map"] .. " " .. L["Khaz Algar"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. L["Continent map"] .. " " .. L["Khaz Algar"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:Show()
+        elseif CurrentMapID == 2537 then
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00" .. L["Continent map"] .. " " .. L["Quel'Thalas"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         end
 
@@ -794,9 +877,9 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             or CurrentMapID == 69 or CurrentMapID == 70 or CurrentMapID == 71 or CurrentMapID == 74 or CurrentMapID == 75 or CurrentMapID == 76 
             or CurrentMapID == 77 or CurrentMapID == 78 or CurrentMapID == 80 or CurrentMapID == 81 or CurrentMapID == 83 or CurrentMapID == 97 
             or CurrentMapID == 106 or CurrentMapID == 199 or CurrentMapID == 327 or CurrentMapID == 460 or CurrentMapID == 461 or CurrentMapID == 462 
-            or CurrentMapID == 468 or CurrentMapID == 1527 or CurrentMapID == 198 or CurrentMapID == 249)
+            or CurrentMapID == 463 or CurrentMapID == 468 or CurrentMapID == 1527 or CurrentMapID == 198 or CurrentMapID == 249)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Kalimdor"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Kalimdor"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Eastern Kingdom
         elseif (CurrentMapID == 13 or CurrentMapID == 14 or CurrentMapID == 15 or CurrentMapID == 16 or CurrentMapID == 17 or CurrentMapID == 18 
@@ -809,67 +892,72 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             or CurrentMapID == 241 or CurrentMapID == 203 or CurrentMapID == 204 or CurrentMapID == 205 or CurrentMapID == 241 or CurrentMapID == 244 
             or CurrentMapID == 245 or CurrentMapID == 201 or CurrentMapID == 95 or CurrentMapID == 122 or CurrentMapID == 217  or CurrentMapID == 226)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Eastern Kingdom"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Eastern Kingdom"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()            
         --Outland
         elseif (CurrentMapID == 100 or CurrentMapID == 102 or CurrentMapID == 104 or CurrentMapID == 105 or CurrentMapID == 107 or CurrentMapID == 108
             or CurrentMapID == 109)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Outland"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Outland"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()  
         --Northrend
         elseif (CurrentMapID == 114 or CurrentMapID == 115 or CurrentMapID == 116 or CurrentMapID == 117 or CurrentMapID == 118 or CurrentMapID == 119
             or CurrentMapID == 120 or CurrentMapID == 121 or CurrentMapID == 123 or CurrentMapID == 127 or CurrentMapID == 170)
         then 
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Northrend"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Northrend"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Pandaria
         elseif (CurrentMapID == 371 or CurrentMapID == 376 or CurrentMapID == 379 or CurrentMapID == 388 or CurrentMapID == 390 or CurrentMapID == 418
             or CurrentMapID == 422 or CurrentMapID == 433 or CurrentMapID == 434 or CurrentMapID == 504 or CurrentMapID == 554  or CurrentMapID == 1530
             or CurrentMapID == 507)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Pandaria"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Pandaria"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Draenor
         elseif (CurrentMapID == 525 or CurrentMapID == 534 or CurrentMapID == 535 or CurrentMapID == 539 or CurrentMapID == 542 or CurrentMapID == 543
             or CurrentMapID == 550 or CurrentMapID == 588)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Draenor"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Draenor"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Broken Isles
         elseif (CurrentMapID == 630 or CurrentMapID == 634 or CurrentMapID == 641 or CurrentMapID == 646 or CurrentMapID == 650 or CurrentMapID == 652 or CurrentMapID == 659
             or CurrentMapID == 750 or CurrentMapID == 680 or CurrentMapID == 830 or CurrentMapID == 882 or CurrentMapID == 885 or CurrentMapID == 941 
             or CurrentMapID == 790 or CurrentMapID == 971 or CurrentMapID == 715 or CurrentMapID == 719)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Broken Isles"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Broken Isles"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Zandalar
         elseif (CurrentMapID == 862 or CurrentMapID == 863 or CurrentMapID == 864 or CurrentMapID == 1355 or CurrentMapID == 1528)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Zandalar"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Zandalar"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --KulTiras
         elseif (CurrentMapID == 895 or CurrentMapID == 896 or CurrentMapID == 942 or CurrentMapID == 1462 or CurrentMapID == 1169)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Kul Tiras"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Kul Tiras"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Shadowlands
         elseif (CurrentMapID == 1525 or CurrentMapID == 1533 or CurrentMapID == 1536 or CurrentMapID == 1543 or CurrentMapID == 1565 or CurrentMapID == 1816 or CurrentMapID == 1961
             or CurrentMapID == 1970 or CurrentMapID == 2016)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Shadowlands"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Shadowlands"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Dragon Isle
         elseif (CurrentMapID == 2022 or CurrentMapID == 2023 or CurrentMapID == 2024 or CurrentMapID == 2025 or CurrentMapID == 2026 or CurrentMapID == 2133
             or CurrentMapID == 2151 or CurrentMapID == 2200 or CurrentMapID == 2239)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Dragon Isles"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Dragon Isles"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Khaz Algar
         elseif (CurrentMapID == 2248 or CurrentMapID == 2214 or CurrentMapID == 2215 or CurrentMapID == 2255 or CurrentMapID == 2256 or CurrentMapID == 2213 
             or CurrentMapID == 2216 or CurrentMapID == 2369 or CurrentMapID == 2322 or CurrentMapID == 2346 or CurrentMapID == 2371 or CurrentMapID == 2472)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Khaz Algar"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Khaz Algar"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:Show()
+        --QuelThalas
+        elseif (CurrentMapID == 2395 or CurrentMapID == 2437 or CurrentMapID == 2424 or CurrentMapID == 2405 or CurrentMapID == 2444 or CurrentMapID == 2413 or CurrentMapID == 2536 or CurrentMapID == 2576)
+        then
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Quel'Thalas"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         end
     end
@@ -882,9 +970,9 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             or CurrentMapID == 69 or CurrentMapID == 70 or CurrentMapID == 71 or CurrentMapID == 74 or CurrentMapID == 75 or CurrentMapID == 76 
             or CurrentMapID == 77 or CurrentMapID == 78 or CurrentMapID == 80 or CurrentMapID == 81 or CurrentMapID == 83 or CurrentMapID == 97 
             or CurrentMapID == 106 or CurrentMapID == 199 or CurrentMapID == 327 or CurrentMapID == 460 or CurrentMapID == 461 or CurrentMapID == 462 
-            or CurrentMapID == 468 or CurrentMapID == 1527 or CurrentMapID == 198 or CurrentMapID == 249)
+            or CurrentMapID == 463 or CurrentMapID == 468 or CurrentMapID == 1527 or CurrentMapID == 198 or CurrentMapID == 249)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Kalimdor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["synchronizes"] .. " " .. L["Kalimdor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Eastern Kingdom
         elseif (CurrentMapID == 13 or CurrentMapID == 14 or CurrentMapID == 15 or CurrentMapID == 16 or CurrentMapID == 17 or CurrentMapID == 18 
@@ -897,67 +985,72 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             or CurrentMapID == 241 or CurrentMapID == 203 or CurrentMapID == 204 or CurrentMapID == 205 or CurrentMapID == 241 or CurrentMapID == 244 
             or CurrentMapID == 245 or CurrentMapID == 201 or CurrentMapID == 95 or CurrentMapID == 122 or CurrentMapID == 217  or CurrentMapID == 226)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Eastern Kingdom"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["synchronizes"] .. " " .. L["Eastern Kingdom"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()        
         --Outland
         elseif (CurrentMapID == 100 or CurrentMapID == 102 or CurrentMapID == 104 or CurrentMapID == 105 or CurrentMapID == 107 or CurrentMapID == 108
             or CurrentMapID == 109)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Outland"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["synchronizes"] .. " " .. L["Outland"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Northrend
         elseif (CurrentMapID == 114 or CurrentMapID == 115 or CurrentMapID == 116 or CurrentMapID == 117 or CurrentMapID == 118 or CurrentMapID == 119
             or CurrentMapID == 120 or CurrentMapID == 121 or CurrentMapID == 123 or CurrentMapID == 127 or CurrentMapID == 170)
         then 
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Northrend"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["synchronizes"] .. " " .. L["Northrend"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Pandaria
         elseif (CurrentMapID == 371 or CurrentMapID == 376 or CurrentMapID == 379 or CurrentMapID == 388 or CurrentMapID == 390 or CurrentMapID == 418
             or CurrentMapID == 422 or CurrentMapID == 433 or CurrentMapID == 434 or CurrentMapID == 504 or CurrentMapID == 554  or CurrentMapID == 1530
             or CurrentMapID == 507)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Pandaria"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["synchronizes"] .. " " .. L["Pandaria"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Draenor
         elseif (CurrentMapID == 525 or CurrentMapID == 534 or CurrentMapID == 535 or CurrentMapID == 539 or CurrentMapID == 542 or CurrentMapID == 543
             or CurrentMapID == 550 or CurrentMapID == 588)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Draenor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["synchronizes"] .. " " .. L["Draenor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Broken Isles
         elseif (CurrentMapID == 630 or CurrentMapID == 634 or CurrentMapID == 641 or CurrentMapID == 646 or CurrentMapID == 650 or CurrentMapID == 652 or CurrentMapID == 659
             or CurrentMapID == 750 or CurrentMapID == 680 or CurrentMapID == 830 or CurrentMapID == 882 or CurrentMapID == 885 or CurrentMapID == 941 
             or CurrentMapID == 790 or CurrentMapID == 971 or CurrentMapID == 715 or CurrentMapID == 719)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Broken Isles"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["synchronizes"] .. " " .. L["Broken Isles"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Zandalar
         elseif (CurrentMapID == 862 or CurrentMapID == 863 or CurrentMapID == 864 or CurrentMapID == 1355 or CurrentMapID == 1528)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Zandalar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["synchronizes"] .. " " .. L["Zandalar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --KulTiras
         elseif (CurrentMapID == 895 or CurrentMapID == 896 or CurrentMapID == 942 or CurrentMapID == 1462 or CurrentMapID == 1169)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Kul Tiras"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["synchronizes"] .. " " .. L["Kul Tiras"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Shadowlands
         elseif (CurrentMapID == 1525 or CurrentMapID == 1533 or CurrentMapID == 1536 or CurrentMapID == 1543 or CurrentMapID == 1565 or CurrentMapID == 1816 or CurrentMapID == 1961
             or CurrentMapID == 1970 or CurrentMapID == 2016)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Shadowlands"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["synchronizes"] .. " " .. L["Shadowlands"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Dragon Isle
         elseif (CurrentMapID == 2022 or CurrentMapID == 2023 or CurrentMapID == 2024 or CurrentMapID == 2025 or CurrentMapID == 2026 or CurrentMapID == 2133
             or CurrentMapID == 2151 or CurrentMapID == 2200 or CurrentMapID == 2239)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Dragon Isles"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["synchronizes"] .. " " .. L["Dragon Isles"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Khaz Algar
         elseif (CurrentMapID == 2248 or CurrentMapID == 2214 or CurrentMapID == 2215 or CurrentMapID == 2255 or CurrentMapID == 2256 or CurrentMapID == 2213 
             or CurrentMapID == 2216 or CurrentMapID == 2369 or CurrentMapID == 2322 or CurrentMapID == 2346 or CurrentMapID == 2371 or CurrentMapID == 2472)
         then
-            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Khaz Algar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["synchronizes"] .. " " .. L["Khaz Algar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+            GameTooltip:Show()
+        --QuelThalas
+        elseif (CurrentMapID == 2395 or CurrentMapID == 2437 or CurrentMapID == 2424 or CurrentMapID == 2405 or CurrentMapID == 2444 or CurrentMapID == 2413 or CurrentMapID == 2536 or CurrentMapID == 2576)
+        then
+            GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Quel'Thalas"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         end
     end
@@ -976,9 +1069,10 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             or CurrentMapID == 627 or CurrentMapID == 628 or CurrentMapID == 629 or CurrentMapID == 831 or CurrentMapID == 832 
             or CurrentMapID == 1161 or CurrentMapID == 1163 or CurrentMapID == 1164 or CurrentMapID == 1165 or CurrentMapID == 1670 
             or CurrentMapID == 1671 or CurrentMapID == 1672 or CurrentMapID == 1673 or CurrentMapID == 2112 or CurrentMapID == 407 
-            or CurrentMapID == 2339 or CurrentMapID == 503 or CurrentMapID == 499 or CurrentMapID == 500 or CurrentMapID == 2322)
+            or CurrentMapID == 2339 or CurrentMapID == 503 or CurrentMapID == 499 or CurrentMapID == 500 or CurrentMapID == 2322
+            or CurrentMapID == 2393) -- midnight)
     then
-        GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. DUNGEONS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+        GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. DUNGEONS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
         GameTooltip:Show()
     end
 
@@ -996,9 +1090,10 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             or CurrentMapID == 627 or CurrentMapID == 628 or CurrentMapID == 629 or CurrentMapID == 831 or CurrentMapID == 832 
             or CurrentMapID == 1161 or CurrentMapID == 1163 or CurrentMapID == 1164 or CurrentMapID == 1165 or CurrentMapID == 1670 
             or CurrentMapID == 1671 or CurrentMapID == 1672 or CurrentMapID == 1673 or CurrentMapID == 2112 or CurrentMapID == 407 
-            or CurrentMapID == 2339 or CurrentMapID == 503 or CurrentMapID == 499 or CurrentMapID == 500 or CurrentMapID == 2322)
+            or CurrentMapID == 2339 or CurrentMapID == 503 or CurrentMapID == 499 or CurrentMapID == 500 or CurrentMapID == 2322 
+            or CurrentMapID == 2393) -- midnight)
     then
-        GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Capitals"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+        GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Capitals"] .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
         GameTooltip:Show()
     end
 
@@ -1016,9 +1111,10 @@ local CurrentMapID = WorldMapFrame:GetMapID()
             or CurrentMapID == 627 or CurrentMapID == 628 or CurrentMapID == 629 or CurrentMapID == 831 or CurrentMapID == 832 
             or CurrentMapID == 1161 or CurrentMapID == 1163 or CurrentMapID == 1164 or CurrentMapID == 1165 or CurrentMapID == 1670 
             or CurrentMapID == 1671 or CurrentMapID == 1672 or CurrentMapID == 1673 or CurrentMapID == 2112 or CurrentMapID == 407 
-            or CurrentMapID == 2339 or CurrentMapID == 503 or CurrentMapID == 499 or CurrentMapID == 500 or CurrentMapID == 2322)
+            or CurrentMapID == 2339 or CurrentMapID == 503 or CurrentMapID == 499 or CurrentMapID == 500 or CurrentMapID == 2322
+            or CurrentMapID == 2393) -- midnight)
     then
-        GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Capitals"] .. " & " ..  L["Capitals"] .. " - " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
+        GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. ":\n" .. "|cff00ff00".. L["Capitals"] .. " & " ..  L["Capitals"] .. " - " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
         GameTooltip:Show()
     end
 end

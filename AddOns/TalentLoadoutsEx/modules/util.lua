@@ -49,3 +49,11 @@ function Addon:GetNewName(name, isGroup, specTable)
 	end
 end
 
+function Addon:SetTrackNode(isEnabled)
+	local frame = Addon.frame;
+	if isEnabled then
+		frame:RegisterEvent("TRAIT_NODE_CHANGED");
+	else
+		frame:UnregisterEvent("TRAIT_NODE_CHANGED");
+	end
+end

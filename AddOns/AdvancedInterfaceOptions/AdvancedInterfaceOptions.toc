@@ -1,7 +1,7 @@
-## Interface: 110200, 50500, 40402, 30404, 11506
+## Interface: 120000, 110200, 50503, 40402, 30404, 20505, 11508
 ## Title: Advanced Interface Options
 ## Author: Stanzilla, Semlar
-## Version: 2.1.4
+## Version: 2.1.10-1-g2e946df
 ## IconTexture: 134521
 ## Notes: Restores access to removed interface options in Legion
 ## X-Category: Interface Enhancements

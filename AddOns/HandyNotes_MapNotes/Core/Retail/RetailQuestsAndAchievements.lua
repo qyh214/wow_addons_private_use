@@ -53,9 +53,8 @@ end
 
 function ns.printQuestWithName(questID, explicitName, fromCallback)
     local name = explicitName or C_QuestLog.GetTitleForQuestID(questID)
-    if name then
-        print("|cffff0000Map|r|cff00ccffNotes|r",  "|cffffff00"..LOOT_JOURNAL_LEGENDARIES_SOURCE_QUEST, COMMUNITIES_INVITE_MANAGER_COLUMN_TITLE_LINK..":".."|r", "https://www.wowhead.com/quest="..questID.." ("..name..")")
-    elseif not fromCallback then
+    if name then ns.MN_ChatPrint( "|cffff0000Map|r|cff00ccffNotes|r " .. "|cffffff00" .. LOOT_JOURNAL_LEGENDARIES_SOURCE_QUEST .. " " .. COMMUNITIES_INVITE_MANAGER_COLUMN_TITLE_LINK .. ":|r " .. "https://www.wowhead.com/quest=" .. questID .. " (" .. name .. ")"
+)    elseif not fromCallback then
         MN_PendingQuestPrint[questID] = true
         C_QuestLog.RequestLoadQuestByID(questID)
     end
@@ -68,9 +67,8 @@ function ns.printAchievement(achievementID, explicitName)
         name = n
     end
 
-    local suffix = name and (" ("..name..")") or ""
-    print("|cffff0000Map|r|cff00ccffNotes|r", "|cffffff00"..LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT, COMMUNITIES_INVITE_MANAGER_COLUMN_TITLE_LINK..":".."|r", "https://www.wowhead.com/achievement="..achievementID..suffix)
-end
+    local suffix = name and (" ("..name..")") or "" ns.MN_ChatPrint( "|cffff0000Map|r|cff00ccffNotes|r " .. "|cffffff00" .. LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. COMMUNITIES_INVITE_MANAGER_COLUMN_TITLE_LINK .. ":|r " .. "https://www.wowhead.com/achievement=" .. achievementID .. suffix
+)end
 
 function ns.mnIDsANDquestIDsTooltip(tooltip, nodeData)
   --local IsCompleted = C_QuestLog.IsQuestFlaggedCompleted

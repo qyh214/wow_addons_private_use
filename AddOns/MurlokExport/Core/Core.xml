@@ -1,0 +1,79 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\..\..\..\..\WoW\Data\Interface\AddOns\Blizzard_SharedXML\UI.xsd">
+	<Script file="Core.lua"/>
+	
+    <Frame name="UIMurlokExport" inherits="PortraitFrameTemplate" frameStrata="HIGH" movable="true" enableMouse="true" parent="UIParent" hidden="true" mixin="PortraitFrameMixin, UIMurlokExportMixin">
+		<Size x="1640" y="600"/>
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="0"/>
+		</Anchors>
+		<Layers>
+			<Layer>
+				<FontString inherits="GameFontNormalSmall" justifyH="LEFT" parentKey="DataExportTime">
+					<Size x="300" y="15"/>
+					<FontHeight val="9"/>
+					<Color r="1" g="1" b="1"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="60" y="-35"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+        <Frames>
+			<Frame parentKey="MaximizeMinimizeButton" inherits="MaximizeMinimizeButtonFrameTemplate" frameLevel="5510">
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="$parentCloseButton" relativePoint="LEFT" x="0" y="0"/>
+				</Anchors>
+			</Frame>
+
+			<Frame name="$parentClassListFrame" parentKey="ClassListFrame" inherits="ClassListFrameTemplate">
+				<Size x="250" y="520"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="10" y="-60"/>
+					<Anchor point="BOTTOMLEFT" x="10" y="15"/>
+				</Anchors>
+			</Frame>
+
+			<Frame name="$parentStatsFrame" parentKey="StatsFrame" inherits="StatsFrameTemplate">
+				<Size x="450" y="225"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentClassListFrame" relativePoint="TOPRIGHT" x="25" y="0"/>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentClassListFrame" relativePoint="BOTTOMRIGHT" x="450" y="275"/>
+				</Anchors>
+			</Frame>			
+
+			<Frame name="$parentTalentsListFrame" parentKey="TalentsListFrame" inherits="TalentsListFrameTemplate">
+				<Size x="450" y="250"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentStatsFrame" relativePoint="BOTTOMLEFT" x="0" y="-25"/>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentClassListFrame" relativePoint="BOTTOMRIGHT" x="450" y="0"/>
+				</Anchors>
+			</Frame>
+
+			<Frame name="$parentTraitsTreeFrame" parentKey="TraitsTreeFrame" inherits="TraitsTreeFrameTemplate">
+				<Size x="450" y="520"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentStatsFrame" relativePoint="TOPRIGHT" x="25" y="0"/>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentTalentsListFrame" relativePoint="BOTTOMRIGHT" x="450" y="0"/>
+				</Anchors>
+			</Frame>				
+			
+			<Frame name="$parentEquipmentsListFrame" parentKey="EquipmentsListFrame" inherits="EquipmentsListFrameTemplate">
+				<Size x="450" y="520"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentTraitsTreeFrame" relativePoint="TOPRIGHT" x="25" y="0"/>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentTraitsTreeFrame" relativePoint="BOTTOMRIGHT" x="450" y="0"/>
+				</Anchors>
+			</Frame>
+        </Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+			<OnDragStart>
+				self:StartMoving()
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing()
+			</OnDragStop>
+		</Scripts>
+	</Frame>
+</Ui>

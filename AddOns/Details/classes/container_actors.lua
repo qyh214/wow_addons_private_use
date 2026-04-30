@@ -3,6 +3,7 @@
 
 	local Details = _G.Details
 	local DF = _G.DetailsFramework
+	local detailsFramework = DF
 	local _
 	local addonName, Details222 = ...
 
@@ -639,16 +640,17 @@ unitNameTitles[#unitNameTitles+1] = unitNameTitles[1]:gsub(PET_TYPE_PET, PET_TYP
 
 			--if the actor is a player
 			if (bitBand(actorFlags, OBJECT_TYPE_PLAYER) ~= 0) then
-
-                    if (not Details.ignore_nicktag) then
-                        local actorNameAmbiguated = Ambiguate(actorName, "none")
-                        local nickname = Details:GetNickname(actorNameAmbiguated, false, true)
-                        if nickname then
-                            if checkValidNickname(nickname, actorName) then
-                                actorObject.displayName = nickname --defaults to player name
-                            end
-                        end
-                    end
+					if not detailsFramework.IsAddonApocalypseWow() then
+						if (not Details.ignore_nicktag) then
+							local actorNameAmbiguated = Ambiguate(actorName, "none")
+							local nickname = Details:GetNickname(actorNameAmbiguated, false, true)
+							if nickname then
+								if checkValidNickname(nickname, actorName) then
+									actorObject.displayName = nickname --defaults to player name
+								end
+							end
+						end
+					end
 
 					--the actor does not have a nickname, use the character name instead
 					if (not actorObject.displayName) then
@@ -730,7 +732,9 @@ unitNameTitles[#unitNameTitles+1] = unitNameTitles[1]:gsub(PET_TYPE_PET, PET_TYP
 							actorObject.arena_enemy = true
 							actorObject.arena_team = 1 -- former my_team_color
 
-							Details:GuessArenaEnemyUnitId(actorName)
+							if not DF.IsAddonApocalypseWow() then
+								Details:GuessArenaEnemyUnitId(actorName)
+							end
 						end
 
 						local playerArenaInfo = Details.arena_table[actorName]
@@ -748,15 +752,17 @@ unitNameTitles[#unitNameTitles+1] = unitNameTitles[1]:gsub(PET_TYPE_PET, PET_TYP
 							local found = false
 							for i = 1, amountOpponents do
 								local name = Details:GetFullName("arena" .. i)
-								if (name == actorName) then
-									local spec = GetArenaOpponentSpec and GetArenaOpponentSpec(i)
-									if (spec) then
-										local id, name, description, icon, role, class = DetailsFramework.GetSpecializationInfoByID(spec) --thanks pas06
-										actorObject.role = role
-										actorObject.classe = class
-										actorObject.enemy = true
-										actorObject.arena_enemy = true
-										found = true
+								if not detailsFramework.IsAddonApocalypseWow() or not issecretvalue(name) then
+									if (name == actorName) then --will error here?
+										local spec = GetArenaOpponentSpec and GetArenaOpponentSpec(i)
+										if (spec) then
+											local id, name, description, icon, role, class = DetailsFramework.GetSpecializationInfoByID(spec) --thanks pas06
+											actorObject.role = role
+											actorObject.classe = class
+											actorObject.enemy = true
+											actorObject.arena_enemy = true
+											found = true
+										end
 									end
 								end
 							end
@@ -886,42 +892,44 @@ unitNameTitles[#unitNameTitles+1] = unitNameTitles[1]:gsub(PET_TYPE_PET, PET_TYP
 		local petOwnerObject
 		actorSerial = actorSerial or "ns"
 
-		--check if this actor is a pet and the pet is in the pet cache
-		if (petContainer.IsPetInCache(actorSerial)) then --this is a registered pet
-			--hashName is "petName <ownerName>"
-			--actorSerial: petGuid, actorName: petName
-			local hashName, ownerName, ownerGuid, ownerFlag = petContainer.GetOwner(actorSerial, actorName) --hashName, ownerName, ownerGuid, ownerFlags
-
-			if (hashName and ownerName and ownerGuid and ownerGuid ~= actorSerial and ownerFlag) then
-				actorName = hashName
-				petOwnerObject = self:PegarCombatente(ownerGuid, ownerName, ownerFlag, true)
-			end
-
-			if (Details222.Debug.DebugPets or Details222.Debug.DebugPlayerPets) then
-				Details:Msg("DebugPets|ActorContainer|petContainer.IsPetInCache(actorSerial) = true")
-				if (hashName) then
-					Details:Msg("DebugPets|ActorContainer|Owner Found In Pet Cache|OwnerName:", ownerName, "Actor Hash:", hashName, "petOwnerObject:", petOwnerObject)
-				else
-					Details:Msg("DebugPets|ActorContainer|Pet Is Orphan|petContainer.GetOwner(", actorSerial, actorName, ") == nil")
-				end
-			end
-
-		--this actor isn't in the pet cache
-		elseif (not petBlackList[actorSerial]) then --check if is a pet
-			--try to find the owner
-			if (actorFlags and bitBand(actorFlags, OBJECT_TYPE_PETGUARDIAN) ~= 0) then
+		if not detailsFramework.IsAddonApocalypseWow() then
+			--check if this actor is a pet and the pet is in the pet cache
+			if (petContainer.IsPetInCache(actorSerial)) then --this is a registered pet
 				--hashName is "petName <ownerName>"
-				local hashName, ownerName, ownerGuid, ownerFlags = petContainer.GetOwner(actorSerial, actorName) --hashName, ownerName, ownerGuid, ownerFlags
-				if (ownerName and ownerGuid) then
-					--don't pass ownerFlags just in case the cached owner happens to be an enemy from last combat, but ally now.
-					local newPetName, ownerObject = petOwnerFound(ownerName, actorSerial, actorName, actorFlags, self, ownerGuid)
-					if (newPetName and ownerObject) then
-						actorName, petOwnerObject = newPetName, ownerObject
+				--actorSerial: petGuid, actorName: petName
+				local hashName, ownerName, ownerGuid, ownerFlag = petContainer.GetOwner(actorSerial, actorName) --hashName, ownerName, ownerGuid, ownerFlags
+
+				if (hashName and ownerName and ownerGuid and ownerGuid ~= actorSerial and ownerFlag) then
+					actorName = hashName
+					petOwnerObject = self:PegarCombatente(ownerGuid, ownerName, ownerFlag, true)
+				end
+
+				if (Details222.Debug.DebugPets or Details222.Debug.DebugPlayerPets) then
+					Details:Msg("DebugPets|ActorContainer|petContainer.IsPetInCache(actorSerial) = true")
+					if (hashName) then
+						Details:Msg("DebugPets|ActorContainer|Owner Found In Pet Cache|OwnerName:", ownerName, "Actor Hash:", hashName, "petOwnerObject:", petOwnerObject)
+					else
+						Details:Msg("DebugPets|ActorContainer|Pet Is Orphan|petContainer.GetOwner(", actorSerial, actorName, ") == nil")
 					end
 				end
-			end
 
-			petBlackList[actorSerial] = true
+			--this actor isn't in the pet cache
+			elseif ( (issecretvalue and not issecretvalue(actorSerial)) and not petBlackList[actorSerial]) then --check if is a pet
+				--try to find the owner
+				if (actorFlags and bitBand(actorFlags, OBJECT_TYPE_PETGUARDIAN) ~= 0) then
+					--hashName is "petName <ownerName>"
+					local hashName, ownerName, ownerGuid, ownerFlags = petContainer.GetOwner(actorSerial, actorName) --hashName, ownerName, ownerGuid, ownerFlags
+					if (ownerName and ownerGuid) then
+						--don't pass ownerFlags just in case the cached owner happens to be an enemy from last combat, but ally now.
+						local newPetName, ownerObject = petOwnerFound(ownerName, actorSerial, actorName, actorFlags, self, ownerGuid)
+						if (newPetName and ownerObject) then
+							actorName, petOwnerObject = newPetName, ownerObject
+						end
+					end
+				end
+
+				petBlackList[actorSerial] = true
+			end
 		end
 
 		--get the actor index in the hash map

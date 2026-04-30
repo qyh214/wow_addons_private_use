@@ -184,8 +184,7 @@ L["STRING_DODGE"] = "Ausweichen"
 L["STRING_DOT"] = "(DoT)"
 L["STRING_DPS"] = "DPS"
 L["STRING_EMPTY_SEGMENT"] = "Leeres Segment"
---[[Translation missing --]]
-L["STRING_ENABLE_DO_NOT_DISTURB"] = "Enable Do Not Disturb"
+L["STRING_ENABLE_DO_NOT_DISTURB"] = "„Nicht stören“ aktivieren"
 L["STRING_ENABLED"] = "Aktiviert"
 L["STRING_ENVIRONMENTAL_DROWNING"] = "Umgebung: (Ertrinken)"
 L["STRING_ENVIRONMENTAL_FALLING"] = "Umgebung: (Fallen)"
@@ -306,27 +305,20 @@ L["STRING_KEYBIND_TOGGLE_WINDOWS"] = "Alle umschalten"
 L["STRING_KEYBIND_WINDOW_CONTROL"] = "Fenster"
 L["STRING_KEYBIND_WINDOW_REPORT"] = "Bericht aus Fenster #%s."
 L["STRING_KEYBIND_WINDOW_REPORT_HEADER"] = "Berichtsdaten"
---[[Translation missing --]]
-L["STRING_KEYSTONE_ADD_TO_FRIENDS_TOOLTIP"] = "Add to friends list as character (not battlenet friend request)."
---[[Translation missing --]]
-L["STRING_KEYSTONE_CLICK_TO_VIEW_SCOREBOARD"] = "Click to view the scoreboard."
---[[Translation missing --]]
-L["STRING_KEYSTONE_DND_TOOLTIP"] = "Your key won't be sent to your guild or friends. While in a group, it will still be sent."
---[[Translation missing --]]
-L["STRING_KEYSTONE_LIFETIME_LIKES_YOU_GAVE"] = [=[Life-time likes you gave for this player through the 'GG' button in the |cFFFFFF00Details! Damage Meter Mythic+|r addon.
-
-View run breakdown by selecting a Mythic+ run you did with this player.]=]
---[[Translation missing --]]
-L["STRING_KEYSTONE_NO_MYTHICPLUS_ADDON"] = "Mythic+ addon not found."
---[[Translation missing --]]
-L["STRING_KEYSTONE_REQUEST_FROM_GUILD"] = "Request from Guild"
+L["STRING_KEYSTONE_ADD_TO_FRIENDS_TOOLTIP"] = "Als Charakter zur Freundesliste hinzufügen (keine Battle.net-Freundesanfrage)."
+L["STRING_KEYSTONE_CLICK_TO_VIEW_SCOREBOARD"] = "Klicke hier, um die Ergebnisliste anzuzeigen."
+L["STRING_KEYSTONE_DND_TOOLTIP"] = [=[Dein Schlüssel wird nicht an deine Gilde oder Freunde gesendet. 
+Innerhalb einer Gruppe wird er jedoch weiterhin versendet.]=]
+L["STRING_KEYSTONE_LIFETIME_LIKES_YOU_GAVE"] = [=[Alle Likes, die du diesem Spieler über den „GG“-Button im |cFFFFFF00Details! Damage Meter Mythic+|r Addon gegeben hast. 
+Sieh dir die Run-Aufschlüsselung an, indem du einen Mythic+ Run auswählst, den du mit diesem Spieler gespielt hast.]=]
+L["STRING_KEYSTONE_NO_MYTHICPLUS_ADDON"] = "Mythic+ Addon nicht gefunden."
+L["STRING_KEYSTONE_REQUEST_FROM_GUILD"] = "Anfrage von der Gilde"
 L["STRING_KILLED"] = "Getötet"
 L["STRING_LAST_COOLDOWN"] = "Letzter benutzter Cooldown"
 L["STRING_LEFT"] = "links"
 L["STRING_LEFT_CLICK_SHARE"] = "Linksklick, um zu berichten"
 L["STRING_LEFT_TO_RIGHT"] = "Links nach Rechts"
---[[Translation missing --]]
-L["STRING_LIKES_YOU_GAVE"] = "Likes you gave"
+L["STRING_LIKES_YOU_GAVE"] = "Likes, die du gegeben hast"
 L["STRING_LOCK_DESC"] = "Fenster fixieren/freigeben"
 L["STRING_LOCK_WINDOW"] = "fixieren"
 L["STRING_MASTERY"] = "Meisterschaft"
@@ -394,13 +386,11 @@ L["STRING_NEWS_REINSTALL"] = "Treten nach einem Update Fehler auf? Probier '/det
 L["STRING_NEWS_TITLE"] = "Was ist neu in dieser Version?"
 L["STRING_NO"] = "Nein"
 L["STRING_NO_DATA"] = "Daten wurden bereits bereinigt."
---[[Translation missing --]]
-L["STRING_NO_MYTHIC_PLUS_ADDON"] = "To track your Mythic+ runs including loot, score, damage, healing done, and who you played with, install the |cFFFFAA00Details! Damage Meter Mythic+|r addon on |cFFfff1c1Wago AddOns|r or |cFFfff1c1Curse Forge|r."
+L["STRING_NO_MYTHIC_PLUS_ADDON"] = "Um eure Mythic+ Läufe inklusive Beute, Punktzahl, Schaden, Heilung und euren Mitspielern zu verfolgen, installiert das Addon |cFFFFAA00Details! Damage Meter Mythic+|r auf |cFFfff1c1Wago AddOns|r oder |cFFfff1c1Curse Forge|r."
 L["STRING_NO_SPELL"] = "Kein Zauber wurde benutzt."
 L["STRING_NO_TARGET"] = "Kein Ziel gefunden."
 L["STRING_NO_TARGET_BOX"] = "Keine Ziele verfügbar"
---[[Translation missing --]]
-L["STRING_NO_TELEPORTER"] = "You don't have this teleporter"
+L["STRING_NO_TELEPORTER"] = "Du hast diesen Teleporter nicht."
 L["STRING_NOCLOSED_INSTANCES"] = [=[Es gibt keine geschlossenen Fenster,
 klicke, um ein neues zu erstellen.]=]
 L["STRING_NOLAST_COOLDOWN"] = "Kein Cooldown benutzt."
@@ -721,7 +711,7 @@ L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Externe Widgets"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "Diese Optionen bestimmen das Verhalten vieler fremder Widgets."
 L["STRING_OPTIONS_GENERAL"] = "Allgemeine Einstellungen"
 L["STRING_OPTIONS_GENERAL_ANCHOR"] = "Allgemein:"
-L["STRING_OPTIONS_GROUPING_HORIZONTAL_GAP"] = "Abstand zwischen den Fenstern"
+L["STRING_OPTIONS_GROUPING_HORIZONTAL_GAP"] = "Abstand zwischen den Fenstern "
 L["STRING_OPTIONS_HIDE_ICON"] = "Symbol verstecken"
 L["STRING_OPTIONS_HIDE_ICON_DESC"] = [=[Aktiviert: Das Symbol des entsprechenden Fensters wird nicht gezeigt.
 
@@ -857,24 +847,17 @@ L["STRING_OPTIONS_MINIMAP_DESC"] = "Minikartensymbol anzeigen/verstecken"
 L["STRING_OPTIONS_MISCTITLE"] = "Sonstige Einstellungen"
 L["STRING_OPTIONS_MISCTITLE2"] = "Dies kontrolliert etliche Optionen."
 L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME"] = "Zeit bis zum automatischen Schließen"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME_DESC"] = "Time to auto close the Show End of M+ Panel automatically."
+L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME_DESC"] = "Zeit, um automatisch das M+ Panel zu schließen."
 L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT"] = "Neuer Kampf bei Boss Pull"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT_DESC"] = "If a boss is pulled while in combat, this option closes the current combat encounter and initiates a new one for the boss."
-L["STRING_OPTIONS_MPLUS_DPS_ANCHOR"] = "DPS-Berechnung für das gesamte Segment"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_MERGETRASH"] = "Merge Trash"
---[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT_DESC"] = "Wenn ein Boss während eines Kampfes angegriffen wird, beendet diese Option die aktuelle Kampfbegegnung und startet eine neue für den Boss."
+L["STRING_OPTIONS_MPLUS_DPS_ANCHOR"] = "DPS-Berechnung für das gesamte Segment "
+L["STRING_OPTIONS_MPLUS_MERGETRASH"] = "Trash verbinden"
 L["STRING_OPTIONS_MPLUS_PANELS_ANCHOR"] = "Panels"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_SHOWENDPANEL"] = "Show End of M+ Panel"
+L["STRING_OPTIONS_MPLUS_SHOWENDPANEL"] = "Ende des M+ Panels anzeigen"
 L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT"] = "Zeit im Kampf"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT_DESC"] = "The overall segment for the Mythic+ run will use 'totalDamage / totalCombatTime' to calculate DPS."
+L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT_DESC"] = "Für den gesamten Mythic+ Durchlauf wird die DPS anhand der Formel „Gesamtschaden / Gesamtkampfzeit“ berechnet."
 L["STRING_OPTIONS_MPLUS_TIME_RUNTIME"] = "Dungeonlaufzeit"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_TIME_RUNTIME_DESC"] = "The overall segment for the Mythic+ run will calculate DPS using 'totalDamage / runTime'."
+L["STRING_OPTIONS_MPLUS_TIME_RUNTIME_DESC"] = "Der Gesamtabschnitt für den Mythic+ Lauf wird die DPS mit der Methode 'Gesamtschaden / Laufzeit' berechnen."
 L["STRING_OPTIONS_NICKNAME"] = "Spitzname:"
 L["STRING_OPTIONS_NICKNAME_DESC"] = [=[Lege deinen Spitznamen fest.
 
@@ -933,6 +916,12 @@ L["STRING_OPTIONS_PERFORMANCECAPTURES_DESC"] = "Diese Optionen sind verantwortli
 L["STRING_OPTIONS_PERFORMANCEPROFILES_ANCHOR"] = "Leistungsprofile:"
 L["STRING_OPTIONS_PICONS_DIRECTION"] = "Zusatzmodule rechts anordnen"
 L["STRING_OPTIONS_PICONS_DIRECTION_DESC"] = "Aktiviert: Zusatzmodulschaltflächen werden rechts von den Menüschaltflächen angezeigt."
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME"] = "Player Name"
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME_AUTO_WIDTH"] = "Length Auto"
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME_WIDTH"] = "Length"
 L["STRING_OPTIONS_PLUGINS"] = "Zusatzmodule"
 L["STRING_OPTIONS_PLUGINS_AUTHOR"] = "Autor"
 L["STRING_OPTIONS_PLUGINS_NAME"] = "Name"
@@ -1110,6 +1099,8 @@ L["STRING_OPTIONS_SEGMENTSSAVE"] = "Segmente gespeichert"
 L["STRING_OPTIONS_SEGMENTSSAVE_DESC"] = [=[Zeigt die Anzahl der zu speichernden Segmente nach Spielende.
 
 Ein hoher Wert kann das Ausloggen verzögern.]=]
+--[[Translation missing --]]
+L["STRING_OPTIONS_SELECT_TEMPLATE"] = "Select Template"
 L["STRING_OPTIONS_SENDFEEDBACK"] = "Rückmeldung"
 L["STRING_OPTIONS_SHOW_SIDEBARS"] = "Skin Rand anzeigen"
 L["STRING_OPTIONS_SHOW_SIDEBARS_DESC"] = "Zeigt oder versteckt Fensterrahmen."
@@ -1197,6 +1188,10 @@ L["STRING_OPTIONS_TEXT_OUTLINE"] = "Textumriss"
 L["STRING_OPTIONS_TEXT_RIGHT_ANCHOR"] = "Rechter Text:"
 L["STRING_OPTIONS_TEXT_ROUTILINE_DESC"] = "Aktiviert oder deaktiviert den Umriss des rechten Textes."
 L["STRING_OPTIONS_TEXT_ROWICONS_ANCHOR"] = "Symbole:"
+--[[Translation missing --]]
+L["STRING_OPTIONS_TEXT_SHADOWCOLOR"] = "Shadow Color"
+--[[Translation missing --]]
+L["STRING_OPTIONS_TEXT_SHADOWOFFSET"] = "Shadow Offset %s"
 L["STRING_OPTIONS_TEXT_SHOW_BRACKET"] = "Einklammern"
 L["STRING_OPTIONS_TEXT_SHOW_BRACKET_DESC"] = "Wähle das Zeichen, das den Pro-Sekunde- und Prozent-Block umschließt."
 L["STRING_OPTIONS_TEXT_SHOW_PERCENT"] = "Prozent zeigen"
@@ -1427,7 +1422,9 @@ L["STRING_OPTIONSMENU_TITLETEXT"] = "Titelleiste: Text"
 L["STRING_OPTIONSMENU_TOOLTIP"] = "Tooltips"
 L["STRING_OPTIONSMENU_WALLPAPER"] = "Fenster: Hintergrund"
 L["STRING_OPTIONSMENU_WINDOW"] = "Fenster: Allgemein"
-L["STRING_OPTIONSMENU_WINDOWBODY"] = "Fenster: Allgemein"
+L["STRING_OPTIONSMENU_WINDOWBODY"] = "Fenster: Allgemein "
+--[[Translation missing --]]
+L["STRING_OR"] = "Or"
 L["STRING_OVERALL"] = "Gesamt"
 L["STRING_OVERHEAL"] = "Überheilung"
 L["STRING_OVERHEALED"] = "überheilt"
@@ -1476,8 +1473,7 @@ L["STRING_QUERY_INSPECT_REFRESH"] = "Aktualisierung benötigt"
 L["STRING_RAID_WIDE"] = "[*] Schlachtzugsweite Abklingzeiten"
 L["STRING_RAIDCHECK_PLUGIN_DESC"] = "Zeigt innerhalb von Schlachtzugsinstanzen ein Symbol auf der Details!-Titelleiste, das Fläschchen-, Essen- und Voraustrank-Nutzung anzeigt."
 L["STRING_RAIDCHECK_PLUGIN_NAME"] = "Raid-Nachprüfung"
---[[Translation missing --]]
-L["STRING_RECENT_PLAYERS"] = "Recent Players:"
+L["STRING_RECENT_PLAYERS"] = "Kürzlich gesehene Spieler:"
 L["STRING_REPORT"] = "für"
 L["STRING_REPORT_BUTTON_TOOLTIP"] = "Klicke, um den Berichtsdialog zu öffnen"
 L["STRING_REPORT_FIGHT"] = "Kampf"
@@ -1548,6 +1544,26 @@ L["STRING_SEGMENTS_LIST_WASTED_TIME"] = "Nicht im Kampf"
 L["STRING_SHIELD_HEAL"] = "verhindert"
 L["STRING_SHIELD_OVERHEAL"] = "Vergeudet"
 L["STRING_SHORTCUT_RIGHTCLICK"] = "Rechtsklick, um zu schließen"
+L["STRING_SIMPLE_TEXT_FORMAT"] = "Einfache Textformatierung verwenden"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED"] = "Ausgerichteten Text verwenden"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_DESC"] = "Der Text wird in Spalten ausgerichtet, den Abstand zwischen den Spalten einstellen."
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_SPACE_BETWEEN"] = "Abstand zwischen Spalten"
+L["STRING_SIMPLE_TEXT_FORMAT_DESC"] = "Aktiviert die Verwendung der drei untenstehenden Regeln."
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE2"] = "Prozent nicht anzeigen"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE3"] = "Nur Gesamt anzeigen"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE4"] = "Trennen mit | als Trennzeichen"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE5"] = "Trennen mit [eckigen Klammern]"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE6"] = "Gesamt (DPS) Prozent"
+L["STRING_SIMPLE_TEXT_FORMAT_TITLE"] = "Text rechts: Einfach oder Ausgerichtet"
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE1"] = [=[Wenn die Zeile Informationen
+über Gesamt und Prozent enthält.
+|cFFAAAAAA%s Reihenfolge: Gesamt, Prozent.]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE2"] = [=[Wenn die Zeile Informationen
+über Gesamt und pro Sekunde enthält.
+|cFFAAAAAA%s Reihenfolge: Gesamt, pro Sekunde.]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE3"] = [=[Wenn die Zeile Informationen
+über Gesamt, pro Sekunde und Prozent enthält.
+|cFFAAAAAA%s Reihenfolge: Gesamt, pro Sekunde, Prozent.]=]
 L["STRING_SLASH_API_DESC"] = "Öffne das API-Menü zur Erzeugung von Zusatzmodulen, benutzerdefinierten Anzeigen, Auren etc."
 L["STRING_SLASH_CAPTURE_DESC"] = "Alle Datenerfassungen ein-/ausschalten."
 L["STRING_SLASH_CAPTUREOFF"] = "Jede Datenerfassung deaktiviert."
@@ -1596,16 +1612,15 @@ L["STRING_SWITCH_WARNING"] = "Rolle geändert. Wechsel: |cFFFFAA00%s|r "
 L["STRING_TARGET"] = "Ziel"
 L["STRING_TARGETS"] = "Ziele"
 L["STRING_TARGETS_OTHER1"] = "Begleiter und andere Ziele"
---[[Translation missing --]]
 L["STRING_TELEPORT"] = "Teleport"
---[[Translation missing --]]
-L["STRING_TELEPORTERS"] = "Teleporters"
+L["STRING_TELEPORTERS"] = "Teleporter"
 L["STRING_TEXTURE"] = "Textur"
 L["STRING_TIME_OF_DEATH"] = "Tod"
 L["STRING_TOOOLD"] = "konnte nicht installiert werden, weil deine Details!-Version zu alt ist."
 L["STRING_TOP"] = "oben"
 L["STRING_TOP_TO_BOTTOM"] = "Oben nach Unten"
 L["STRING_TOTAL"] = "Gesamt"
+L["STRING_TRAINING_DUMMY"] = "Trainingsattrappe"
 L["STRING_TRANSLATE_LANGUAGE"] = "Hilf mit bei der Details!-Übersetzung"
 L["STRING_TUTORIAL_FULLY_DELETE_WINDOW"] = [=[Du hast ein Fenster geschlossen, du kannst es jederzeit erneut öffnen.
 Um ein Fenster komplett zu löschen, gehe zu den Optionen  -> Fenster: Allgemein -> Löschen.]=]

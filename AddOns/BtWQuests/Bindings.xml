@@ -1,9 +1,0 @@
-<Bindings>
-	<Binding name="TOGGLE_BTWQUESTS" header="BTWQUESTS" category="ADDONS">
-        if BtWQuestsFrame:IsShown() then
-            BtWQuestsFrame:Hide()
-        else
-            BtWQuestsFrame:Show()
-        end
-	</Binding>
-</Bindings>

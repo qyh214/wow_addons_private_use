@@ -1,0 +1,126 @@
+local mod	= DBM:NewMod(2476, "DBM-Party-Dragonflight", 2, 1197)
+local L		= mod:GetLocalizedStrings()
+
+mod:SetRevision("20260315034941")
+mod:DisableHardcodedOptions()
+mod:SetCreatureID(184422)
+mod:SetEncounterID(2558)
+mod:SetHotfixNoticeRev(20230810000000)
+--mod:SetMinSyncRevision(20211203000000)
+--mod.respawnTime = 29
+mod.sendMainBossGUID = true
+
+mod:RegisterCombat("combat")
+
+mod:RegisterEventsInCombat(
+	"SPELL_CAST_START 368990 369110 369198 369061",
+	"SPELL_CAST_SUCCESS 369049 369033",
+	"SPELL_AURA_APPLIED 369110 369198 369043",
+	"SPELL_AURA_REMOVED 369110 369198 368990 369043"
+)
+
+--TODO, detect purging flames ending so timer for next one can start (assuming that is what it's based on)
+--TODO, target scan to warn warn for https://www.wowhead.com/beta/spell=369049/seeking-flame targets? doesn't seem like you can do much about it (no interrupts, no splash, just repheal)
+--TODO, verify timer resets on boss switching in and out of Puring Flames stage
+--TODO, timers were changed, but sine boss is so radically undertuned, don't see 2 of his major abilities literally at all anymore
+--[[
+(ability.id = 368990 or ability.id = 369110 or ability.id = 369198 or ability.id = 369061) and type = "begincast"
+ or ability.id = 369033 and type = "cast"
+ or ability.id = 368990 and type = "removebuff"
+ or (target.id = 186107 or target.id = 186173) and type = "death"
+ or type = "dungeonencounterstart" or type = "dungeonencounterend"
+ or ability.id = 369043
+--]]
+local warnKeepersRemaining						= mod:NewAddsLeftAnnounce(369033, 3)
+local warnUnstableEmbers						= mod:NewTargetNoFilterAnnounce(369110, 3)
+local warnSeekingFlame							= mod:NewYouAnnounce(369049, 3, nil, false)--In case you want to know, but not totally practical to enable by default
+
+local specWarnPurgingFlames						= mod:NewSpecialWarningDodgeCount(368990, nil, nil, nil, 2, 2)
+local specWarnUnstableEmbers					= mod:NewSpecialWarningMoveAway(369110, nil, nil, nil, 1, 2)
+local yellUnstableEmbers						= mod:NewYell(369110)
+local yellUnstableEmbersFades					= mod:NewShortFadesYell(369110)
+local specWarnSearingClap						= mod:NewSpecialWarningDefensive(369061, nil, nil, nil, 1, 2)
+
+local timerPurgingFlamesCD						= mod:NewCDCountTimer(35, 368990, nil, nil, nil, 6)--Maybe swap for activate keepers instead
+local timerUnstableEmbersCD						= mod:NewCDCountTimer(12, 369110, nil, nil, nil, 3)
+local timerSearingClapCD						= mod:NewCDCountTimer(23, 369061, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+
+mod.vb.addsRemaining = 0
+mod.vb.embersCount = 0
+mod.vb.purgingCount = 0
+mod.vb.tankCount = 0
+
+function mod:OnCombatStart(delay)
+	self.vb.addsRemaining = 0
+	self.vb.embersCount = 0
+	self.vb.purgingCount = 0
+	self.vb.tankCount = 0
+end
+
+function mod:SPELL_CAST_START(args)
+	local spellId = args.spellId
+	if spellId == 368990 then
+		self.vb.purgingCount = self.vb.purgingCount + 1
+		specWarnPurgingFlames:Show(self.vb.purgingCount)
+		specWarnPurgingFlames:Play("laserrun")
+
+		--Stop timers here as we enter intermissions.
+		timerUnstableEmbersCD:Stop()
+		timerSearingClapCD:Stop()
+	elseif spellId == 369110 or spellId == 369198 then--110 confirmed, 198 unknown
+		self.vb.embersCount = self.vb.embersCount + 1
+		timerUnstableEmbersCD:Start(12, self.vb.embersCount+1)
+	elseif spellId == 369061 then
+		self.vb.tankCount = self.vb.tankCount + 1
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnSearingClap:Show()
+			specWarnSearingClap:Play("defensive")
+		end
+		timerSearingClapCD:Start(nil, self.vb.tankCount+1)
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 369049 and args:IsPlayer() and self:AntiSpam(3, 1) then
+		warnSeekingFlame:Show()
+	elseif spellId == 369033 then--Activate Keepers, more accurate for starting timers after purging flames since it subtracks travel time
+		--As of Aug 10th hotfix, these are now same as pull, + travel time (so 0-2 sec variation)
+		--These also now replace pull timers since no point in not combining code together
+		timerSearingClapCD:Start(4.4, self.vb.tankCount+1)--Non resetting, for healer/tank CDs
+		timerUnstableEmbersCD:Start(12.2, 1)
+		timerPurgingFlamesCD:Start(39.7, self.vb.purgingCount+1)--40-42, due to travel time back to center of room
+	end
+end
+
+function mod:SPELL_AURA_APPLIED(args)
+	local spellId = args.spellId
+	if spellId == 369110 or spellId == 369198 then--110 confirmed, 198 unknown
+		warnUnstableEmbers:CombinedShow(0.5, args.destName)
+		if args:IsPlayer() then
+			specWarnUnstableEmbers:Show()
+			specWarnUnstableEmbers:Play("scatter")
+			yellUnstableEmbers:Yell()
+			yellUnstableEmbersFades:Countdown(spellId)
+		end
+	elseif spellId == 369043 then
+		self.vb.addsRemaining = self.vb.addsRemaining + 1
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 369110 or spellId == 369198 then
+		if args:IsPlayer() then
+			yellUnstableEmbersFades:Cancel()
+		end
+	elseif spellId == 368990 then--Purging Flames over
+		self.vb.embersCount = 0--Resetting since it's mostly for timer control
+		self.vb.addsRemaining = 0--Reset for good measure
+	elseif spellId == 369043 then
+		self.vb.addsRemaining = self.vb.addsRemaining - 1
+		if self.vb.addsRemaining > 0 then
+			warnKeepersRemaining:Show(self.vb.addsRemaining)
+		end
+	end
+end

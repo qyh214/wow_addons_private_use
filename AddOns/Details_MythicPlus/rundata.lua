@@ -1,15 +1,12 @@
 
 --this file is responsable to copy the necessary data from a details! combat into an object that can be used by the addon
-
----@type details
-local Details = _G.Details
 ---@type detailsframework
 local detailsFramework = _G.DetailsFramework
 local addonName, private = ...
 ---@type detailsmythicplus
 local addon = private.addon
 local _ = nil
-local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
+local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
 
 local CONST_MAX_DEATH_EVENTS = 3
 local CONST_LAST_RUN_TIMEOUT = 5 * 60
@@ -31,7 +28,7 @@ end
 function addon.CreateRunInfo(mythicPlusOverallSegment)
     local completionInfo = C_ChallengeMode.GetChallengeCompletionInfo()
     if (completionInfo.mapChallengeModeID == 0) then
-        private.log("Missing completionInfo.mapChallengeModeID, possibly due to and error or reload after the key completed")
+        private.log("MythicPlus Scoreboard M+ Missing completionInfo.mapChallengeModeID, possibly due to and error or reload after the key completed")
         return
     end
 
@@ -41,13 +38,13 @@ function addon.CreateRunInfo(mythicPlusOverallSegment)
 
     --debug
     if (not addon.profile.last_run_data.encounter_timeline) then
-        print("Details M+ addon.profile.last_run_data.encounter_timeline is nil")
-        private.log("Details M+ addon.profile.last_run_data.encounter_timeline is nil")
+        print("MythicPlus Scoreboard M+ addon.profile.last_run_data.encounter_timeline is nil")
+        private.log("MythicPlus Scoreboard M+ addon.profile.last_run_data.encounter_timeline is nil")
     end
 
     if (not addon.profile.last_run_data.incombat_timeline) then
-        print("Details M+ addon.profile.last_run_data.incombat_timeline is nil")
-        private.log("Details M+ addon.profile.last_run_data.incombat_timeline is nil")
+        print("MythicPlus Scoreboard M+ addon.profile.last_run_data.incombat_timeline is nil")
+        private.log("MythicPlus Scoreboard M+ addon.profile.last_run_data.incombat_timeline is nil")
     end
 
     addon.profile.last_run_id = addon.profile.last_run_id + 1
@@ -55,6 +52,7 @@ function addon.CreateRunInfo(mythicPlusOverallSegment)
     ---@type runinfo
     local runInfo = {
         runId = addon.profile.last_run_id,
+        seasonId = addon.GetCurrentSeasonId(),
         combatId = mythicPlusOverallSegment:GetCombatUID(),
         combatData = {
             groupMembers = {} --done
@@ -98,9 +96,9 @@ function addon.CreateRunInfo(mythicPlusOverallSegment)
     runInfo.dungeonTexture = texture
     runInfo.dungeonBackgroundTexture = backgroundTexture
 
-    local damageContainer = mythicPlusOverallSegment:GetContainer(DETAILS_ATTRIBUTE_DAMAGE)
-    local healingContainer = mythicPlusOverallSegment:GetContainer(DETAILS_ATTRIBUTE_HEAL)
-    local utilityContainer = mythicPlusOverallSegment:GetContainer(DETAILS_ATTRIBUTE_MISC)
+    local damageContainer = mythicPlusOverallSegment:GetContainer(DETAILS_ATTRIBUTE_DAMAGE or 1)
+    local healingContainer = mythicPlusOverallSegment:GetContainer(DETAILS_ATTRIBUTE_HEAL or 2)
+    local utilityContainer = mythicPlusOverallSegment:GetContainer(DETAILS_ATTRIBUTE_MISC or 4)
 
     for _, actorObject in damageContainer:ListActors() do
         ---@cast actorObject actordamage
@@ -115,25 +113,41 @@ function addon.CreateRunInfo(mythicPlusOverallSegment)
                 table.insert(damageTakenFromSpells, damageTaken)
             end
 
+            local avoidableDamageTakenFromSpells = {}
+            for _, spellTable in pairs(actorObject.spells_damage_avoidable._ActorTable) do
+            	table.insert(avoidableDamageTakenFromSpells, spellTable)
+            end
+            table.sort(avoidableDamageTakenFromSpells, function(a, b) return a.total > b.total end)
+
             local guid = actorObject:GetGUID()
+
+			local summary = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(unitName)
+			local currentScore = summary and summary.currentSeasonScore
+			local previousScore = addon.profile.last_run_data.player_ratings[unitName] or 0
+
+			if (previousScore == 0 and currentScore > 450) then
+				-- in case there's an issue and the actual score is incorrectly set to 0
+				-- it'll show "1530" instead of "1530 (+1530)"
+				previousScore = currentScore
+			end
 
             ---@type playerinfo
             local playerInfo = {
                 name = unitName,
                 class = actorObject:Class(),
-                spec = Details:GetSpecFromSerial(guid) or actorObject:Spec() or 0,
-                role = UnitGroupRolesAssigned(unitName),
+                spec = private.Details:GetSpecFromSerial(guid) or actorObject:Spec() or 0,
+                role = UnitGroupRolesAssigned(unitName) or "DAMAGER",
                 guid = guid,
                 loot = "",
                 score = 0,
                 playerOwns = UnitIsUnit(unitName, "player"),
                 activityTimeDamage = 0,
                 activityTimeHeal = 0,
-                scorePrevious = 0,
                 totalDeaths = 0,
                 totalDamage = actorObject.total,
                 totalHeal = 0,
                 totalDamageTaken = actorObject.damage_taken,
+                totalAvoidableDamageTaken = actorObject.damage_taken_avoidable,
                 totalHealTaken = 0,
                 totalDispels = 0,
                 totalInterrupts = 0,
@@ -141,36 +155,29 @@ function addon.CreateRunInfo(mythicPlusOverallSegment)
                 totalCrowdControlCasts = 0,
                 healDoneBySpells = {}, --done
                 damageTakenFromSpells = damageTakenFromSpells,
+                avoidableDamageTakenFromSpells = avoidableDamageTakenFromSpells,
                 damageDoneBySpells = {}, --done
                 dispelWhat = {}, --done
                 interruptWhat = {}, --done
                 interruptCastOverlapDone = addon.profile.last_run_data.interrupt_cast_overlap_done[unitName] or 0,
                 crowdControlSpells = {}, --done
-                ilevel = Details:GetItemLevelFromGuid(guid),
+                ilevel = private.Details:GetItemLevelFromGuid(guid),
                 deathEvents = {}, --information about when the player died
                 deathLastHits = {}, --information for the tooltip when the player died
                 likedBy = {},
+                score = currentScore,
+                scorePrevious = previousScore,
+                activityTimeDamage = actorObject:Tempo(),
+                totalDeaths = #mythicPlusOverallSegment:GetPlayerDeaths(unitName),
             }
 
             runInfo.combatData.groupMembers[unitName] = playerInfo
-
-            if (type(actorObject.mrating) == "table") then
-                actorObject.mrating = actorObject.mrating.currentSeasonScore
-            end
-            local score = actorObject.mrating or 0
-            playerInfo.score = score
-            playerInfo.scorePrevious = Details.PlayerRatings[unitName] or score
-
-            playerInfo.activityTimeDamage = actorObject:Tempo()
-
-            local playerDeaths = mythicPlusOverallSegment:GetPlayerDeaths(unitName)
-            playerInfo.totalDeaths = #playerDeaths
 
             local deathTable = mythicPlusOverallSegment:GetDeaths()
             for i = 1, #deathTable do
                 local thisDeathTable = deathTable[i]
                 --deathTime is time()
-                local playerName, playerClass, deathTime, deathCombatTime, deathTimeString, playerMaxHealth, deathEvents, lastCooldown, spec = Details:UnpackDeathTable(thisDeathTable)
+                local playerName, playerClass, deathTime, deathCombatTime, deathTimeString, playerMaxHealth, deathEvents, lastCooldown, spec = private.Segments.UnpackDeathTable(thisDeathTable)
                 if (playerName == unitName) then
                     playerInfo.deathEvents[#playerInfo.deathEvents+1] = {
                         type = addon.Enum.ScoreboardEventType.Death,
@@ -186,7 +193,7 @@ function addon.CreateRunInfo(mythicPlusOverallSegment)
                     for j = #deathEvents, 1, -1 do
                         ---@type deathtable
                         local thisEvent = deathEvents[j]
-                        local evType, spellId, amount, eventTime, heathPercent, sourceName, absorbed, spellSchool, friendlyFire, overkill, criticalHit, crushing = Details:UnpackDeathEvent(thisEvent)
+                        local evType, spellId, amount, eventTime, heathPercent, sourceName, absorbed, spellSchool, friendlyFire, overkill, criticalHit, crushing = private.Segments.UnpackDeathEvent(thisEvent)
 
                         if (evType == true) then --a boolean true means a damage event
                             ---@type death_last_hits
@@ -246,28 +253,34 @@ function addon.CreateRunInfo(mythicPlusOverallSegment)
                     local ccTotal = 0
                     local ccUsed = {}
 
-                    if (Details:GetCoreVersion() < 166) then
-                        for spellName, casts in pairs(mythicPlusOverallSegment:GetCrowdControlSpells(unitName)) do
-                            local spellInfo = C_Spell.GetSpellInfo(spellName)
-                            local spellId = spellInfo and spellInfo.spellID or openRaidLib.GetCCSpellIdBySpellName(spellName)
-                            if (spellId ~= 197214) then
-                                ccUsed[spellName] = casts
-                                ccTotal = ccTotal + casts
+                    if not detailsFramework.IsAddonApocalypseWow() then
+                        if (private.Details:GetCoreVersion() < 166) then
+                            for spellName, casts in pairs(mythicPlusOverallSegment:GetCrowdControlSpells(unitName)) do
+                                local spellInfo = C_Spell.GetSpellInfo(spellName)
+                                local spellId = spellInfo and spellInfo.spellID or (openRaidLib and openRaidLib.GetCCSpellIdBySpellName(spellName) or 0)
+                                if (spellId ~= 197214) then
+                                    ccUsed[spellName] = casts
+                                    ccTotal = ccTotal + casts
+                                end
                             end
-                        end
-                    else
-                        --at 166, Details! now uses the spellId instead of the spellName for crowd controls
-                        for spellId, casts in pairs(mythicPlusOverallSegment:GetCrowdControlSpells(unitName)) do
-                            if (spellId ~= 197214) then
-                                ccUsed[spellId] = casts
-                                ccTotal = ccTotal + casts
+                        else
+                            --at 166, Details! now uses the spellId instead of the spellName for crowd controls
+                            for spellId, casts in pairs(mythicPlusOverallSegment:GetCrowdControlSpells(unitName)) do
+                                if (spellId ~= 197214) then
+                                    ccUsed[spellId] = casts
+                                    ccTotal = ccTotal + casts
+                                end
                             end
                         end
                     end
 
                     playerInfo.totalDispels = utilityActorObject.dispell
                     playerInfo.totalInterrupts = utilityActorObject.interrupt
-                    playerInfo.totalInterruptsCasts = mythicPlusOverallSegment:GetInterruptCastAmount(unitName)
+
+                    if not detailsFramework.IsAddonApocalypseWow() then
+                        playerInfo.totalInterruptsCasts = mythicPlusOverallSegment:GetInterruptCastAmount(unitName)
+                    end
+
                     playerInfo.totalCrowdControlCasts = ccTotal
                     playerInfo.dispelWhat = detailsFramework.table.copy({}, utilityActorObject.dispell_oque or {})
                     playerInfo.interruptWhat = detailsFramework.table.copy({}, utilityActorObject.interrompeu_oque or {})
@@ -322,57 +335,6 @@ function addon.GetRunDate(runInfo)
     return date("%d/%b/%Y", runInfo.endTime)
 end
 
----return a table with data to be used in the dropdown menu to select which run to show in the scoreboard
----@param runInfo runinfo
----@return table dropdownData dungeonName, keyLevel, runTime, keyUpgradeLevels, timeString, mapId, dungeonId
-function addon.GetDropdownRunDescription(runInfo)
-    --Operation: Mechagon - Workshop (2) | 20:10 (+3) | 4 hours ago
-    local dungeonName = runInfo.dungeonName
-    local runTime = runInfo.endTime - runInfo.startTime
-    local secondsAgo = time() - runInfo.endTime
-
-    --if the run time is less than 1 hour, show the time in minutes
-    --if the run is less than 24 hours, show the time in hours
-    --if the run is more than 24 hours, show the time in days
-    --if the run is more than 7 days, show the data using addon.GetRunDate(runInfo)
-
-    local timeString = ""
-    if (secondsAgo < 3600) then
-        timeString = string.format("%d minutes ago", math.floor(secondsAgo / 60))
-    elseif (secondsAgo < 86400) then
-        timeString = string.format("%d hours ago", math.floor(secondsAgo / 3600))
-    elseif (secondsAgo < 604800) then
-        timeString = string.format("%d days ago", math.floor(secondsAgo / 86400))
-    else
-        timeString = addon.GetRunDate(runInfo)
-    end
-
-    local keyLevel = runInfo.completionInfo.level or 0
-    local keyUpgradeLevels = runInfo.completionInfo.keystoneUpgradeLevels or 0
-    local mapId = runInfo.mapId or 0
-    local dungeonId = runInfo.dungeonId or 0
-    local onTime = runInfo.completionInfo.onTime or false
-
-    --get the alt name, playerOwns is true when the player itself played the character when doing the run
-    local altName = "0" --can't be an empty string due to string.match pattern
-    local playerName = UnitName("player")
-
-    for unitName, playerInfo in pairs(runInfo.combatData.groupMembers) do
-        ---@cast playerInfo playerinfo
-        if (playerInfo.playerOwns and playerInfo.name ~= playerName) then
-            altName = playerInfo.name
-            altName = detailsFramework:AddClassColorToText(altName, playerInfo.class)
-            break
-        end
-    end
-
-    return {dungeonName, keyLevel, runTime, keyUpgradeLevels, timeString, mapId, dungeonId, onTime and 1 or 0, altName}
-end
-
-function addon.FormatRunDescription(runInfo)
-    return string.format("%s (%d) - %s", runInfo.dungeonName, runInfo.completionInfo.level, addon.GetRunDate(runInfo))
-end
-
 ---return a table with subtables of type death_last_hits which tells the last hits that killed the player
 ---@param runInfo runinfo
 ---@param unitName playername
@@ -393,10 +355,19 @@ end
 ---@return number
 function addon.GetRunAverageItemLevel(runInfo)
     local total = 0
+    local players = 0
     for _, playerInfo in pairs(runInfo.combatData.groupMembers) do
-        total = total + playerInfo.ilevel
+        if (playerInfo.ilevel > 0) then
+            total = total + playerInfo.ilevel
+            players = players + 1
+        end
     end
-    return total / 5
+
+    if (players == 0) then
+        return 0
+    end
+
+    return total / players
 end
 
 ---return the average damage per second
@@ -448,7 +419,6 @@ end
 ---@field GetRunHeader fun(headerIndex:number) : runinfocompressed_header? return the compressed header from the saved run
 ---@field GetRunHeaderById fun(runId:number) : runinfocompressed_header? return the header from the saved runId
 ---@field UncompressedRun fun(headerIndex:number) : runinfo? return the uncompressed run data from the compressed run data
----@field GetDropdownRunDescription fun(header:runinfocompressed_header) : table
 ---@field GetSelectedRun fun() : runinfo return the uncompressed run data from the compressed run data
 ---@field SetValue fun(headerIndex:number, path:string, value:any) : boolean
 ---@field CompressRun fun(runInfo:runinfo) : string? compresses the run info and returns the compressed data
@@ -629,6 +599,7 @@ function addon.Compress.CompressAndSaveRun(runInfo, atIndex)
         playerName = UnitName("player"),
         playerClass = select(2, UnitClass("player")),
         runId = runInfo.runId,
+        seasonId = runInfo.seasonId,
         instanceId = runInfo.instanceId,
         groupMembers = {},
         likesGiven = {}, --table<playername, true>
@@ -655,54 +626,6 @@ function addon.Compress.YeetRunsOverStorageLimit()
     end
 
     --TODO: erase the runId from the likes given to players in the addon.profile.likes_given
-end
-
----return a table with data to be used in the dropdown menu to select which run to show in the scoreboard
----@param header runinfocompressed_header
----@return table dropdownData dungeonName, keyLevel, runTime, keyUpgradeLevels, timeString, mapId, dungeonId
-function addon.Compress.GetDropdownRunDescription(header)
-    --Operation: Mechagon - Workshop (2) | 20:10 (+3) | 4 hours ago
-    local dungeonName = header.dungeonName
-    local runTime = header.endTime - header.startTime
-    local secondsAgo = time() - header.endTime
-
-    --if the run time is less than 1 hour, show the time in minutes
-    --if the run is less than 24 hours, show the time in hours
-    --if the run is more than 24 hours, show the time in days
-    --if the run is more than 7 days, show the data using addon.GetRunDate(runInfo)
-
-    local timeString = ""
-    if (secondsAgo < 3600) then
-        timeString = string.format("%d minutes ago", math.floor(secondsAgo / 60))
-    elseif (secondsAgo < 86400) then
-        timeString = string.format("%d hours ago", math.floor(secondsAgo / 3600))
-    elseif (secondsAgo < 604800) then
-        timeString = string.format("%d days ago", math.floor(secondsAgo / 86400))
-    else
-        timeString = addon.GetRunDate(header)
-    end
-
-    local keyLevel = header.keyLevel or 0
-    local keyUpgradeLevels = header.keyUpgradeLevels or 0
-    local mapId = header.mapId or 0
-    local dungeonId = header.dungeonId or 0
-    local onTime = header.onTime or false
-
-    --get the alt name, playerOwns is true when the player itself played the character when doing the run
-    local altName = "0" --can't be an empty string due to string.match pattern
-    local playerName = UnitName("player")
-
-    if (header.groupMembers) then
-        for unitName, class in pairs(header.groupMembers) do
-            if (header.playerName == unitName and unitName ~= playerName) then
-                altName = unitName
-                altName = detailsFramework:AddClassColorToText(altName, class)
-                break
-            end
-        end
-    end
-
-    return {dungeonName, keyLevel, runTime, keyUpgradeLevels, timeString, mapId, dungeonId, onTime and 1 or 0, altName}
 end
 
 ---uncompress the runInfo and return it
@@ -733,8 +656,8 @@ local stringuifyTableKeys = function(T)
     return newTable
 end
 
-function addon.ExportToJson(runId)
-    local runInfo = addon.Compress.UncompressedRun(runId)
+function addon.ExportToJson(headerIndex)
+    local runInfo = addon.Compress.UncompressedRun(headerIndex)
     if (not runInfo) then
         return
     end

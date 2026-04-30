@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -30,6 +30,9 @@ L["error.syntax"] = "|cffff0000필터 표현에 구문 오류|r\n\n이것은 당
 L["error.semantic"] = "|cffff0000필터 표현에 의미 오류|r\n\n이것은 당신의 필터 표현이 구문은 맞지만, 변수 이름의 철자가 틀린 것 같습니다, 예. tanks 대신 tansk라고 쓴 경우입니다.\n\n자세한 오류 메시지:\n|cffaaaaaa%s|r"
 L["error.semantic.protected"] = "|cffff0000필터 표현에 의미 오류|r\n\n'name' 및 'comment' 키워드는 더 이상 지원되지 않습니다. 고급 필터 표현식에서 필터를 제거하거나 재설정 버튼을 누르십시오.\n\nBattle for Azeroth Prepatch 로 시작한이 값은 이제 블리자드에 의해 보호되며 더 이상 애드온에서 읽을 수 없습니다.\n\n그룹 목록 위에있는 기본 검색 창을 사용하여 그룹 이름을 필터링하십시오.\n\n자세한 오류 메시지:\n|cffaaaaaa%s|r"
 L["message.settingsupgraded"] = "Premade Groups Filter: 버전 %s로 마이그레이션된 설정"
+L["message.sortingoverwritten"] = "Premade Groups Filter: 기본 파티 찾기 정렬 순서가 애드온 %s에 의해 덮어쓰기되었습니다."
+L["message.sortingrestored"] = "Premade Groups Filter: 기본 파티 찾기 정렬 순서가 애드온 %s에 의해 복원되었습니다."
+L["message.taint"] = "Premade Groups Filter: 애드온 제한이 현재 활성화되어 있습니다. 파티 찾기가 수정되어 Lua 오류가 발생할 수 있습니다. 이를 해결하려면 /reload를 권장합니다."
 
 L["dialog.settings"] = GAMEMENU_OPTIONS
 L["dialog.reset"] = "초기화"
@@ -150,3 +153,10 @@ L["settings.rioRatingColors.title"] = "Raider.IO 색상으로 평가"
 L["settings.rioRatingColors.tooltip"] = "Raider.IO 애드온이 로드된 경우, 신화+ 평가에 Raider.IO 색상 체계를 사용합니다."
 L["settings.cancelOldestApp.title"] = "가장 오래된 지원서 취소"
 L["settings.cancelOldestApp.tooltip"] = "대기 중인 지원서가 최대인 경우, 그룹을 클릭하여 가장 오래된 지원서를 먼저 취소하세요. 그런 다음 다시 클릭하여 지원하세요."
+L["settings.compactListEntries.title"] = "목록 항목 간소화"
+L["settings.compactListEntries.tooltip"] = "플레이 방식을 숨겨 그룹 목록의 항목이 세로 공간을 덜 차지하게 합니다(한밤 확장팩 사전 콘텐츠 업데이트 이전과 동일)."
+L["settings.info.reload"] = "* 이 옵션을 변경하면 설정을 닫을 때 자동으로 UI가 다시 로드됩니다."
+L["settings.warning.taint"] = "이 옵션은 레이드나 전투 중과 같은 제한된 상황에서 Lua 오류를 발생시킬 수 있습니다."
+
+L["dialog.restriction.text"] = "애드온 제한이 활성화되어 있습니다. 필터링 시 Lua 오류가 발생할 수 있습니다."
+L["dialog.restriction.ok"] = "그래도 필터링"

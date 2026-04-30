@@ -6,12 +6,12 @@ local _, app = ...;
 -- Encapsulates the functionality for handling the processing of a 'sym' link within ATT data
 
 -- Global Locals
-local select,tremove,unpack,ipairs,GetAchievementNumCriteria,tinsert,wipe,type
-	= select,tremove,unpack,ipairs,GetAchievementNumCriteria,tinsert,wipe,type
+local select,tremove,unpack,GetAchievementNumCriteria,type
+	= select,tremove,unpack,GetAchievementNumCriteria,type
 
 -- App locals
-local GetItemInfoInstant,SearchForObject,ArrayAppend,CloneArray,AssignChildren,SearchForField,GetRelativeValue
-= app.WOWAPI.GetItemInfoInstant,app.SearchForObject,app.ArrayAppend,app.CloneArray,app.AssignChildren,app.SearchForField,app.GetRelativeValue
+local GetItemInfoInstant,SearchForObject,ArrayAppend,CloneArray,AssignChildren,SearchForField,GetRelativeValue,wipearray
+= app.WOWAPI.GetItemInfoInstant,app.SearchForObject,app.ArrayAppend,app.CloneArray,app.AssignChildren,app.SearchForField,app.GetRelativeValue,app.wipearray
 
 -- Upgrade API Implementation
 -- Access via AllTheThings.Modules.Symlink
@@ -19,7 +19,7 @@ local api = {};
 app.Modules.Symlink = api;
 
 -- Module locals
-local ResolveSymbolicLink, FinalizeModID, PruneFinalized, FillFinalized, SelectMod, CreateObject, NestObject, NestObjects, MergeProperties, ExpandGroupsRecursively, MergeObjects, PriorityNestObjects, GetGroupItemIDWithModID, GetItemIDAndModID, FillGroups, NPCExpandHeaders
+local ResolveSymbolicLink, FinalizeModID, PruneFinalized, FillFinalized, SelectMod, CreateObject, NestObject, NestObjects, MergeProperties, MergeObjects, PriorityNestObjects, GetGroupItemIDWithModID, GetItemIDAndModID, FillGroups, NPCExpandHeaders
 
 app.AddEventHandler("OnLoad", function()
 	CreateObject = app.__CreateObject
@@ -47,10 +47,6 @@ app.AddEventHandler("OnLoad", function()
 	if not MergeProperties then
 		error("Symlink Module requires app.MergeProperties definition!")
 	end
-	ExpandGroupsRecursively = app.ExpandGroupsRecursively
-	if not ExpandGroupsRecursively then
-		error("Symlink Module requires app.ExpandGroupsRecursively definition!")
-	end
 	GetGroupItemIDWithModID = app.GetGroupItemIDWithModID
 	if not GetGroupItemIDWithModID then
 		error("Symlink Module requires app.GetGroupItemIDWithModID definition!")
@@ -65,31 +61,34 @@ app.AddEventHandler("OnLoad", function()
 	end
 end)
 
--- TODO: performance pass: tinsert, wipearray, ipairs
-
 -- Checks if any of the provided arguments can be found within the first array object
 local function ContainsAnyValue(arr, ...)
-	local value;
-	local vals = select("#", ...);
+	local value
+	local vals = select("#", ...)
 	for i=1,vals do
-		value = select(i, ...);
-		for _,v in ipairs(arr) do
-			if v == value then return true; end
+		value = select(i, ...)
+		for i=1,#arr do
+			if arr[i] == value then return true end
 		end
 	end
 end
 local function Resolve_Extract(results, group, field)
 	if group[field] then
 		results[#results + 1] = group
-	elseif group.g then
-		for _,o in ipairs(group.g) do
-			Resolve_Extract(results, o, field);
+	else
+		local g = group.g
+		if g then
+			for i=1,#g do
+				Resolve_Extract(results, g[i], field)
+			end
 		end
 	end
 end
 local function Resolve_Find(results, groups, field, val)
 	if groups then
-		for _,o in ipairs(groups) do
+		local o
+		for i=1,#groups do
+			o = groups[i]
 			if o[field] == val then
 				results[#results + 1] = o
 			else
@@ -154,33 +153,29 @@ local ResolveFunctions = {
 			end
 			if parent then
 				-- app.PrintDebug("selectparent-searched",level,parent.hash,parent.text)
-				tinsert(searchResults, parent);
+				searchResults[#searchResults + 1] = parent
 				return;
 			end
 		end
 		app.print("'selectparent' failed for",o.hash);
 	end,
-	-- Instruction to find all content marked with the specified 'requireSkill'
-	selectprofession = function(finalized, searchResults, o, cmd, requireSkill)
-		local search = app:BuildSearchResponse("requireSkill", requireSkill);
-		ArrayAppend(searchResults, search);
-	end,
 	-- Instruction to fill with identical content Sourced elsewhere for this group (no symlinks)
 	fill = function(finalized, searchResults, o)
-		local okey = o.key;
-		if okey then
-			local okeyval = o[okey];
-			if okeyval then
-				for _,result in ipairs(SearchForObject(okey, okeyval, "field", true)) do
-					ArrayAppend(searchResults, result.g);
-				end
-			end
+		local okey = o.key
+		if not okey then return end
+
+		local okeyval = o[okey]
+		if not okeyval then return end
+
+		local objs = SearchForObject(okey, okeyval, "field", true)
+		for i=1,#objs do
+			ArrayAppend(searchResults, objs[i].g)
 		end
 	end,
 	-- Instruction to finalize the current search results and prevent additional queries from affecting this selection
 	finalize = function(finalized, searchResults)
 		ArrayAppend(finalized, searchResults);
-		wipe(searchResults);
+		wipearray(searchResults);
 	end,
 	-- Instruction to take all of the finalized and non-finalized search results and merge them back in to the processing queue
 	merge = function(finalized, searchResults)
@@ -188,10 +183,10 @@ local ResolveFunctions = {
 		if #searchResults > 0 then
 			orig = CloneArray(searchResults);
 		end
-		wipe(searchResults);
+		wipearray(searchResults);
 		-- finalized first
 		ArrayAppend(searchResults, finalized);
-		wipe(finalized);
+		wipearray(finalized);
 		-- then any existing searchResults
 		ArrayAppend(searchResults, orig);
 	end,
@@ -201,7 +196,7 @@ local ResolveFunctions = {
 		if #searchResults > 0 then
 			orig = CloneArray(searchResults);
 		end
-		wipe(searchResults);
+		wipearray(searchResults);
 		local group = CreateObject({[field] = value });
 		NestObjects(group, orig);
 		searchResults[1] = group;
@@ -212,9 +207,11 @@ local ResolveFunctions = {
 		if #searchResults > 0 then
 			orig = CloneArray(searchResults);
 		end
-		wipe(searchResults);
+		wipearray(searchResults);
 		if orig then
-			for _,obj in ipairs(orig) do
+			local obj
+			for i=1,#orig do
+				obj = orig[i]
 				-- insert raw & symlinked Things from this group
 				ArrayAppend(searchResults, obj.g, ResolveSymbolicLink(obj));
 			end
@@ -231,9 +228,9 @@ local ResolveFunctions = {
 	end,
 	-- Instruction to include only search results where a key value is a value
 	whereany = function(finalized, searchResults, o, cmd, field, ...)
-		local hash = {};
-		for k,value in ipairs({...}) do
-			hash[value] = true;
+		local hash, vals = {}, {...}
+		for i=1,#vals do
+			hash[vals[i]] = true
 		end
 		for k=#searchResults,1,-1 do
 			local result = searchResults[k];
@@ -244,14 +241,14 @@ local ResolveFunctions = {
 	end,
 	-- Instruction to extract all nested results which contain a given field
 	extract = function(finalized, searchResults, o, cmd, field)
-		local orig;
+		local orig
 		if #searchResults > 0 then
-			orig = CloneArray(searchResults);
+			orig = CloneArray(searchResults)
 		end
-		wipe(searchResults);
+		wipearray(searchResults)
 		if orig then
-			for _,o in ipairs(orig) do
-				Resolve_Extract(searchResults, o, field);
+			for i=1,#orig do
+				Resolve_Extract(searchResults, orig[i], field)
 			end
 		end
 	end,
@@ -260,7 +257,7 @@ local ResolveFunctions = {
 		if #searchResults > 0 then
 			local resolved = {}
 			Resolve_Find(resolved, searchResults, field, val)
-			wipe(searchResults)
+			wipearray(searchResults)
 			ArrayAppend(searchResults, resolved)
 		end
 	end,
@@ -270,14 +267,14 @@ local ResolveFunctions = {
 		if #searchResults > 0 then
 			orig = CloneArray(searchResults);
 		end
-		wipe(searchResults);
+		wipearray(searchResults);
 		if orig then
 			local result, g;
 			for k=#orig,1,-1 do
 				result = orig[k];
 				g = result.g;
 				if g and index <= #g then
-					tinsert(searchResults, g[index]);
+					searchResults[#searchResults + 1] = g[index]
 				end
 			end
 		end
@@ -287,8 +284,8 @@ local ResolveFunctions = {
 		local values = {...};
 		if #values > 1 then
 			local matches = {};
-			for i,o in ipairs(values) do
-				matches[o] = true;
+			for i=1,#values do
+				matches[values[i]] = true;
 			end
 			for k=#searchResults,1,-1 do
 				local result = searchResults[k];
@@ -501,7 +498,7 @@ local ResolveFunctions = {
 		if onCurrent then
 			if #searchResults == 0 then return end
 			local orig = CloneArray(searchResults);
-			wipe(searchResults);
+			wipearray(searchResults);
 			local result
 			for k=1,#orig do
 				result = CreateObject(orig[k])
@@ -540,7 +537,9 @@ if GetAchievementNumCriteria then
 			then
 				local quests = app.SearchForField("questID", assetID)
 				if #quests > 0 then
-					for _,c in ipairs(quests) do
+					local c
+					for i=1,#quests do
+						c = quests[i]
 						-- criteria inherit their achievement data ONLY when the achievement data is actually referenced... this is required for proper caching
 						NestObject(c, criteriaObject);
 						AssignChildren(c);
@@ -603,7 +602,7 @@ if GetAchievementNumCriteria then
 				-- this criteria object may have been turned into a cost via costs/providers assignment, so make sure we update those respective costs via the Cost Runner
 				-- if settings are changed while this is running, it's ok because it refreshes costs from the cache
 				app.HandleEvent("OnSearchResultUpdate", criteriaObject)
-				tinsert(searchResults, criteriaObject);
+				searchResults[#searchResults + 1] = criteriaObject
 			end
 		end
 	end
@@ -728,16 +727,18 @@ local SubroutineCache = {
 		if #searchResults > 0 then
 			orig = CloneArray(searchResults);
 		end
-		wipe(searchResults);
+		wipearray(searchResults);
 		if orig then
-			for _,o in ipairs(orig) do
-				if not o.f then
-					if o.g then
+			local ob
+			for i=1,#orig do
+				ob = orig[i]
+				if not ob.f then
+					if ob.g then
 						-- no filter Item with sub-groups
-						ArrayAppend(searchResults, o.g)
+						ArrayAppend(searchResults, ob.g)
 					else
 						-- no filter Item without sub-groups, keep it directly in case it is a cost for the actual Tier pieces
-						tinsert(searchResults, o);
+						searchResults[#searchResults + 1] = ob
 					end
 				end
 			end
@@ -757,13 +758,15 @@ local SubroutineCache = {
 			if #searchResults > 0 then
 				orig = CloneArray(searchResults);
 			end
-			wipe(searchResults);
+			wipearray(searchResults);
 			local c;
 			if orig then
-				for _,o in ipairs(orig) do
-					c = o.c;
+				local ob
+				for i=1,#orig do
+					ob = orig[i]
+					c = ob.c;
 					if c and ContainsAnyValue(c, classID) then
-						tinsert(searchResults, o);
+						searchResults[#searchResults + 1] = ob
 					end
 				end
 			end
@@ -820,9 +823,10 @@ local NonSelectCommands = {
 	usemodID = true,
 }
 local HandleCommands = app.Debugging and function(finalized, searchResults, o, oSym)
-	local cmd, cmdFunc
+	local cmd, cmdFunc, sym
 	local debug = true
-	for _,sym in ipairs(oSym) do
+	for i=1,#oSym do
+		sym = oSym[i]
 		cmd = sym[1];
 		cmdFunc = ResolveFunctions[cmd];
 		-- app.PrintDebug("sym: '",cmd,"' for",o.hash,"with:",unpack(sym))
@@ -839,8 +843,9 @@ local HandleCommands = app.Debugging and function(finalized, searchResults, o, o
 		-- app.PrintDebug("Finalized",#finalized,"Results",#searchResults,"from",o.hash,"with:",unpack(sym))
 	end
 end or function(finalized, searchResults, o, oSym)
-	local cmd, cmdFunc
-	for _,sym in ipairs(oSym) do
+	local cmd, cmdFunc, sym
+	for i=1,#oSym do
+		sym = oSym[i]
 		cmd = sym[1];
 		cmdFunc = ResolveFunctions[cmd];
 		if cmdFunc then
@@ -903,8 +908,8 @@ ResolveSymbolicLink = function(o, refonly)
 				app.RefreshItemGroup(clone)
 			end
 			if PruneFinalized then
-				for _,field in ipairs(PruneFinalized) do
-					clone[field] = nil
+				for i=1,#PruneFinalized do
+					clone[PruneFinalized[i]] = nil
 				end
 			end
 			if FillFinalized then
@@ -933,6 +938,11 @@ ResolveSymbolicLink = function(o, refonly)
 end
 app.ResolveSymbolicLink = ResolveSymbolicLink
 
+-- Performance Tracking
+if app.__perf then
+	app.__perf.AutoCaptureTable(ResolveFunctions, "Symlink.ResolveFunctions");
+end
+
 local function ResolveSymlinkGroupAsync(group)
 	-- app.PrintDebug("RSGa",group.hash)
 	local groups = ResolveSymbolicLink(group);
@@ -945,7 +955,7 @@ local function ResolveSymlinkGroupAsync(group)
 		app.FillGroups(group);
 		AssignChildren(group);
 		-- auto-expand the symlink group
-		ExpandGroupsRecursively(group, true);
+		app.ExpandGroupsRecursively(group, true);
 		app.DirectGroupUpdate(group);
 	end
 end
@@ -1084,6 +1094,9 @@ app.AddEventHandler("OnLoad", function()
 	{
 		-- SettingsIcon = ,
 		SettingsTooltip = app.L.FILL_NPC_DATA_CHECKBOX_TOOLTIP,
+		SettingsDefaults = {
+			["LIST:NPC"] = false,
+		}
 	})
 
 	-- Pulls in Common drop content for specific Objects if any exists (e.g. mining/herbing/fishing nodes)

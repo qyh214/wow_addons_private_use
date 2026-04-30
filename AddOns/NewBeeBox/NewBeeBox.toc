@@ -1,9 +1,9 @@
-## Interface: 110200,110205
+## Interface: 120001, 120005
 ## Title:  新手盒子游戏助手
 ## Author: wclbox.com
 ## Notes: 用于新手盒子内角色数据识别同步的插件
 ## X-Website: https://www.wclbox.com
-## Version: 1.0.28
+## Version: 1.0.31
 ## DefaultState: Enabled
 ## SavedVariables: WclBoxGlobal
 ## SavedVariablesPerCharacter: WclBoxCharacter

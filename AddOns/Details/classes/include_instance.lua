@@ -184,6 +184,10 @@ _detalhes.instance_defaults = {
 			show_timer_bg = true, --show the timer within battleground, the timer is the elapsed battleground time
 			show_timer_arena = true, ---show the timer within arena, the timer is the elapsed time of the arena match
 		},
+
+		--don't show tooltip when mouse over the bars
+		line_no_tooltip = false,
+
 		--attribute icon size
 		attribute_icon_size = 0,
 	--auto hide window borders statusbar main menu
@@ -195,7 +199,22 @@ _detalhes.instance_defaults = {
 	--row animation when show
 		row_show_animation = {anim = "Fade", options = {}},
 
+		segmento = 0,
+		segmento_user = 0,
+		sessionId = 1,
+		sessionId_user = 1,
+		sessionType = 1,
+		sessionType_user = 1,
+		tempId = -1,
+		SegmentType = 1,
+
 		rounded_corner_enabled = false,
+
+		overallByUser = false,
+
+		automation = {
+			overall_mythic_plus = true,
+		},
 
 		--use one fontstring for each value in the lines, e.g. one fontstring to damage done, another fontstring to dps and another to percent amount
 		use_multi_fontstrings = true,
@@ -241,6 +260,7 @@ _detalhes.instance_defaults = {
 				textR_custom_text = "{data1} ({data2}, {data3}%)",
 			--right text show which infos
 				textR_show_data = {true, true, true},
+				show_percent = false, --dlc 12 and above
 				textR_bracket = "(",
 				textR_separator = ",",
 			--left text bar number
@@ -250,15 +270,24 @@ _detalhes.instance_defaults = {
 			--if text class color are false, this color will be used
 				fixed_text_color = {1, 1, 1},
 			--left text outline effect
-				textL_outline = true,
-				textL_outline_small = true,
-				textL_outline_small_color = {0, 0, 0, 1},
+				textL_outline = true, --deprecated
+				textL_outline_small = true, --deprecated
+				textL_outline_small_color = {0, 0, 0, 1}, --deprecated
+				textL_outline_mode = "",
+				textL_shadow_color = {0, 0, 0, 1},
+				textL_shadow_offset = {1, -1},
 			--right text outline effect
-				textR_outline = false,
-				textR_outline_small = true,
-				textR_outline_small_color = {0, 0, 0, 1},
+				textR_outline = false, --deprecated
+				textR_outline_small = true, --deprecated
+				textR_outline_small_color = {0, 0, 0, 1}, --deprecated
+				textR_outline_mode = "",
+				textR_shadow_color = {0, 0, 0, 1},
+				textR_shadow_offset = {1, -1},
         	-- left text offset
 				textL_offset = 0,
+			-- player name sizing
+				playername_size_auto = true,
+				playername_size = 80,
 		  	-- text y offset
 				text_yoffset = 0,
 			--bar height

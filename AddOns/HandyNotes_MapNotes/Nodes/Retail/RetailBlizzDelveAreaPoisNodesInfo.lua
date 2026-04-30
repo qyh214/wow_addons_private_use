@@ -21,6 +21,16 @@ local buildVersion = GetBuildInfo() -- buildVersion == "11.1.0"
     [8140] = 2423, -- Sidestreet Sluice
     [8274] = 2452, -- Archival Assault
     [8323] = 2484, -- Voidrazor Sanctuary
+    [8437] = 2502, -- Shadow Enclave    
+    [8441] = 2503, -- Twilight Crypts
+    [8435] = 2505, -- The Gulf of Memory    
+    [8431] = 2506, -- Shadowguard Point  
+    [8433] = 2510, -- The Grudge Pit    
+    [8439] = 2525, -- The Darkway    
+    [8429] = 2528, -- Sunkiller Sanctum    
+    [8443] = 2535, -- Atal'Aman
+    [8427] = 2545, -- Parhelion Plaza    
+    [8425] = 2547, -- Collegiate Calamity
   }
 
   ns.BlizzBountifulDelveAreaPoisInfoIDs = {
@@ -40,4 +50,14 @@ local buildVersion = GetBuildInfo() -- buildVersion == "11.1.0"
     [8181] = 2396, -- Excavation Site 9
     [8246] = 2423, -- Sidestreet Sluice
     [8273] = 2452, -- Archival Assault
+    [8444] = 2535, -- Atal'Aman
+    [8442] = 2503, -- Twilight Crypts
+    [8438] = 2502, -- Shadow Enclave
+    [8426] = 2547, -- Collegiate Calamity
+    [8440] = 2525, -- The Darkway
+    [8428] = 2545, -- Parhelion Plaza
+    [8432] = 2506, -- Shadowguard Point
+    [8430] = 2528, -- Sunkiller Sanctum
+    [8436] = 2505, -- The Gulf of Memory
+    [8434] = 2510, -- The Grudge Pit
   }

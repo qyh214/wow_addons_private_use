@@ -22,9 +22,10 @@ local function getDiagnostics()
     [3] = "Europe",
     [4] = "Taiwan",
     [5] = "China",
-    [72] = "PTR"
+    [72] = "PTR",
+    [90] = "BETA",
   }
-  local region = regions[regionId]
+  local region = regions[regionId] or "UNKNOWN"
   local combatState = InCombatLockdown() and "In combat" or "Out of combat"
   local mapID = C_Map.GetBestMapForUnit("player");
   local zoneInfo = format("Zone: %s (%d)", C_Map.GetMapInfo(C_Map.GetMapInfo(mapID or 0).parentMapID).name, mapID)
@@ -57,6 +58,9 @@ function MDT:DisplayErrors(force)
     editBox:HighlightText(0, slen(text))
     editBox:SetFocus()
     copyButton:SetDisabled(true)
+    if not MDT.copyHelper then
+      MDT:MakeCopyHelper(MDT.errorFrame.frame)
+    end
     MDT.copyHelper:SmartShow(MDT.errorFrame.frame, 0, 0)
   end
 
@@ -200,6 +204,10 @@ function MDT:DisplayErrors(force)
   end
 
   MDT.errorFrame.errorBox:SetText(errorBoxText)
+  if MDT.main_frame then
+    MDT.errorFrame.frame:SetParent(MDT.main_frame)
+  end
+  MDT.errorFrame.frame:SetFrameStrata("DIALOG")
   MDT.errorFrame:Show()
 end
 

@@ -95,6 +95,10 @@ local schemas = {
             type = "number"
           },
           {
+            name = "sizeMult",
+            type = "number"
+          },
+          {
             name = "textAnchor",
             type = "string"
           },
@@ -147,6 +151,52 @@ local schemas = {
           {
             name = "value3",
             type = "number"
+          },
+          {
+            name = "info",
+            type = "schemaArray",
+            fields = {
+              {
+                name = "name",
+                type = "string",
+              },
+              {
+                name = "description",
+                type = "string",
+              },
+              {
+                name = "texture",
+                type = "number",
+              },
+              {
+                name = "atlas",
+                type = "string",
+              },
+              {
+                name = "spellId",
+                type = "number",
+              },
+              {
+                name = "size",
+                type = "number",
+              },
+              {
+                name = "fontSize",
+                type = "number",
+              },
+              {
+                name = "textOffsetX",
+                type = "number",
+              },
+              {
+                name = "textOffsetY",
+                type = "number",
+              },
+              {
+                name = "desaturateIfUnassigned",
+                type = "boolean",
+              },
+            },
           },
         }
       }

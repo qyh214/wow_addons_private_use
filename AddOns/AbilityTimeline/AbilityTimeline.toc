@@ -1,0 +1,95 @@
+## Interface: 120001, 120005
+## Title: AbilityTimeline
+## Version: v0.28
+## Notes: Adds various improvements to blizzards encounter ability timeline.
+## SavedVariables: AbilityTimeline
+## Author: Jods
+## X-Curse-Project-ID: 1365171
+## X-Wago-ID: qGYMWpGg
+## OptionalDeps: Ace3, DevTool, CustomNames, ElvUI, DBM-Core, BigWigs, LibEditMode
+## AddonCompartmentFunc: AbilityTimeline_AddonCompartmentFunction
+## IconTexture: Interface\AddOns\AbilityTimeline\Media\Logo.tga
+## Category-enUS: Dungeons & Raids
+## Category-deDE: Dungeons & Schlachtzüge
+## Category-esES: Mazmorras y bandas
+## Category-esMX: Calabozos y bandas
+## Category-frFR: Donjons et raids
+## Category-itIT: Spedizioni e incursioni
+## Category-koKR: 던전 및 공격대
+## Category-ptBR: Masmorras e Raides
+## Category-ruRU: Подземелья и рейды
+## Category-zhCN: 地下城和团队副本
+## Category-zhTW: 地城與團隊
+
+#Libs
+embeds.xml
+
+#data
+Data\dungeons.xml
+Data\seasons.lua
+Data\constants.lua
+Data\specPosition.lua
+
+#util
+Util\Constants.lua
+Util\Debug.lua
+Util\EditMode.lua
+Util\ModernizeSettings.lua
+Util\Tooltip.lua
+Util\EncounterBrowser.lua
+Util\ImportUtil.lua
+Util\ChatTransmission.lua
+Util\Zoom.lua
+Util\EventColorisation.lua
+
+# Locales
+Locales\enUS.lua
+Locales\deDE.lua
+Locales\esES.lua
+Locales\itIT.lua
+Locales\frFR.lua
+Locales\esMX.lua
+Locales\koKR.lua
+Locales\ptBR.lua
+Locales\ruRU.lua
+Locales\zhCN.lua
+Locales\zhTW.lua
+ 
+Locales\Locales.lua
+
+#templates
+Templates\AtImportPopup.lua
+Templates\AtTextCopyFrame.lua
+Templates\AtReminderCreator.lua
+Templates\AtImportDialog.lua
+Templates\AtTimelineTick.lua
+Templates\AtEditorSpellIcon.lua
+Templates\AtTimingsEditorTimelineFrame.lua
+Templates\AtTimingsEditorDataFrame.lua
+Templates\ATTimingsEditorContainer.lua
+Templates\AtAbilitySpellIcon.lua
+Templates\AtTimelineFrame.lua
+Templates\AtBigIconFrame.lua
+Templates\AtTextHighlightFrame.lua
+Templates\AtBigIcon.lua
+Templates\AtTextHighlight.lua
+Templates\AtSpellIconSettingsFrame.lua
+
+#plugins
+Plugins\TextHighlight.lua
+Plugins\BigIcon.lua
+Plugins\SoundAlert.lua
+Plugins\Glow.lua
+Plugins\Reminders.lua
+Plugins\Dbm.lua
+Plugins\BigWigs.lua
+
+# Core
+Options\Options.lua
+Options\ImportDialogHandler.lua
+Options\TimingEditor.lua
+Options\SpellIconsSettings.lua
+Main.lua
+AbilityTimeline.lua
+
+

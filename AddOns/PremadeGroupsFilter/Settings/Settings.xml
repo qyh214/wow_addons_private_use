@@ -48,7 +48,7 @@
             <Layer level="BACKGROUND">
                 <Texture parentKey="Image">
                     <Anchors>
-                        <Anchor point="LEFT" relativePoint="CENTER" x="-30"/>
+                        <Anchor point="LEFT" relativePoint="CENTER" x="-20"/>
                     </Anchors>
                 </Texture>
             </Layer>
@@ -64,7 +64,40 @@
                 <CheckedTexture atlas="checkmark-minimal" useAtlasSize="true"/>
                 <DisabledCheckedTexture atlas="checkmark-minimal-disabled" useAtlasSize="true"/>
             </CheckButton>
+            <Frame parentKey="Warning" mixin="DefaultTooltipMixin">
+                <Size x="18" y="18"/>
+                <Anchors>
+                    <Anchor point="LEFT" relativePoint="CENTER" x="-45"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture parentKey="Icon" file="Interface\DialogFrame\UI-Dialog-Icon-AlertNew">
+                            <Size x="18" y="18"/>
+                            <Anchors>
+                                <Anchor point="CENTER" relativePoint="CENTER"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnLoad method="OnLoad"/>
+                </Scripts>
+            </Frame>
         </Frames>
+    </Frame>
+
+    <Frame name="PremadeGroupsFilterSettingsNoteTemplate" virtual="true">
+        <Size y="40"/>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString parentKey="Text" inherits="GameFontDisableSmall" justifyH="LEFT" justifyV="TOP" wordwrap="true">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="7" y="-10"/>
+                        <Anchor point="RIGHT" x="-7"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
     </Frame>
 
     <Frame name="PremadeGroupsFilterSettingsTemplate" virtual="true">

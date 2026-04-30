@@ -1,0 +1,277 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\..\..\..\..\WoW\Data\Interface\AddOns\Blizzard_SharedXML\UI.xsd">
+	<Script file="Stats.lua"/>
+
+    <Frame name="StatsFrameTemplate" virtual="true" mixin="StatsFrameMixin">
+        <Frames>
+			<Frame name="$parentStatsInset" inherits="InsetFrameTemplate" parentKey="StatsInset">
+				<Size x="450" y="225"/>
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+					<Anchor point="BOTTOMRIGHT"/>
+				</Anchors>
+			</Frame>
+
+			<Frame name="$parentStatsBorder" parentKey="statsBorder" frameStrata="HIGH">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentStatsInset" relativePoint="TOPLEFT" x="0" y="0"/>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentStatsInset" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture name="$parentTopLeft" atlas="PetJournal-BattleSlotFrame-Corner" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" x="-1" y="1"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentTopRight" atlas="PetJournal-BattleSlotFrame-Corner" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="TOPRIGHT" x="1" y="1"/>
+							</Anchors>
+							<TexCoords left="1.0" right="0.0" top="0.0" bottom="1.0"/>
+						</Texture>
+						<Texture name="$parentBottomLeft" atlas="PetJournal-BattleSlotFrame-Corner" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" x="-1" y="-1"/>
+							</Anchors>
+							<Size x="17" y="17"/>
+							<TexCoords left="0.0" right="1.0" top="1.0" bottom="0.0"/>
+						</Texture>
+						<Texture name="$parentBottomRight" atlas="PetJournal-BattleSlotFrame-Corner" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="BOTTOMRIGHT" x="1" y="-1"/>
+							</Anchors>
+							<Size x="17" y="17"/>
+							<TexCoords left="1.0" right="0.0" top="1.0" bottom="0.0"/>
+						</Texture>
+						<Texture name="$parentTop" atlas="_BattleSlotFrame-Top" horizTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentTopLeft" x="0" y="0"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" relativeTo="$parentTopRight" x="0" y="1"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentBottom" atlas="_BattleSlotFrame-Top" horizTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentBottomLeft" x="0" y="-1"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" relativeTo="$parentBottomRight" x="0" y="0"/>
+							</Anchors>
+							<TexCoords left="0.0" right="1.0" top="1.0" bottom="0.0" />
+						</Texture>
+						<Texture name="$parentLeft" file="Interface\PetBattles\!BattleSlotFrame-Left" vertTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentTopLeft" x="0" y="0"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeTo="$parentBottomLeft" x="-1" y="0"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentRight" file="Interface\PetBattles\!BattleSlotFrame-Left" vertTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentTopRight" x="1" y="0"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeTo="$parentBottomRight" x="0" y="0"/>
+							</Anchors>
+							<TexCoords left="1" right="0" top="0" bottom="1"/>
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY">
+						<FontString name="$parentSlotHeaderText" inherits="GameFontNormal" justifyH="CENTER" text="MURLOKEXPORT_CATEGORY_STATS">
+							<Size x="0" y="40"/>
+							<Anchors>
+								<Anchor point="CENTER" relativePoint="TOP" relativeTo="$parentTop" x="0" y="-4"/>
+							</Anchors>
+						</FontString>
+						<Texture name="$parentSlotHeaderBG" atlas="_BattleSlotTitle-BG" horizTile="true">
+							<Size y="24"/>
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parentSlotHeaderText" x="-10" y="0"/>
+								<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parentSlotHeaderText" x="10" y="0"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY" textureSubLevel="1">
+						<Texture name="$parentSlotHeaderF" atlas="_BattleSlotTitle-Mid" horizTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parentSlotHeaderText" x="0" y="0"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentSlotHeaderText" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentSlotHeaderLeft" atlas="PetJournal-BattleSlotTitle-Left" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentSlotHeaderF" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentSlotHeaderRight" atlas="PetJournal-BattleSlotTitle-Right" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentSlotHeaderF" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad>
+						self:SetFrameLevel(self:GetFrameLevel()+7);
+					</OnLoad>
+				</Scripts>
+			</Frame>
+
+            <Frame name="$parentStats" parentKey="stats">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentStatsInset" x="5" y="-5"/>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentStatsInset" x="-5" y="5"/>
+				</Anchors>
+				<Layers>     
+					<Layer level="OVERLAY" textureSubLevel="1">						
+						<FontString name="$parentSecStats" inherits="GameFontNormal" parentKey="secStats" text="MURLOKEXPORT_STATS_SECONDARY">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" x="10" y="-75"/>
+							</Anchors>
+						</FontString>
+
+						<Texture parentKey="secStatIcon1" file="Interface/AddOns/MurlokExport/Artwork/Attribute_mastery">
+							<Size x="50" y="50"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.secStats" x="75" y="-5"/>
+							</Anchors>
+						</Texture>
+						<FontString inherits="GameFontNormalSmall" parentKey="secStatName1" text="Stat 1">
+							<Anchors>
+								<Anchor point="TOP" relativeKey="$parent.secStatIcon1" relativePoint="BOTTOM" x="0" y="2"/>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="1"/>
+						</FontString>
+						<FontString inherits="GameFontNormalSmall" text=">">
+							<Anchors>
+								<Anchor point="LEFT" relativeKey="$parent.secStatIcon1" relativePoint="RIGHT" x="10" y="0"/>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="1"/>
+						</FontString>
+
+						<Texture parentKey="secStatIcon2" file="Interface/AddOns/MurlokExport/Artwork/Attribute_versatility">
+							<Size x="50" y="50"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.secStatIcon1" x="35"/>
+							</Anchors>							
+						</Texture>
+						<FontString inherits="GameFontNormalSmall" parentKey="secStatName2" text="Stat 2">
+							<Anchors>
+								<Anchor point="TOP" relativeKey="$parent.secStatIcon2" relativePoint="BOTTOM" x="0" y="2"/>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="1"/>
+						</FontString>
+						<FontString inherits="GameFontNormalSmall" text=">">
+							<Anchors>
+								<Anchor point="LEFT" relativeKey="$parent.secStatIcon2" relativePoint="RIGHT" x="10" y="0"/>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="1"/>
+						</FontString>
+
+						<Texture parentKey="secStatIcon3" file="Interface/AddOns/MurlokExport/Artwork/Attribute_haste">
+							<Size x="50" y="50"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.secStatIcon2" x="35"/>
+							</Anchors>
+						</Texture>
+						<FontString inherits="GameFontNormalSmall" parentKey="secStatName3" text="Stat 3">
+							<Anchors>
+								<Anchor point="TOP" relativeKey="$parent.secStatIcon3" relativePoint="BOTTOM" x="0" y="2"/>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="1"/>
+						</FontString>
+						<FontString inherits="GameFontNormalSmall" text=">">
+							<Anchors>
+								<Anchor point="LEFT" relativeKey="$parent.secStatIcon3" relativePoint="RIGHT" x="10" y="0"/>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="1"/>
+						</FontString>
+
+						<Texture parentKey="secStatIcon4" file="Interface/AddOns/MurlokExport/Artwork/Attribute_crit">
+							<Size x="50" y="50"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.secStatIcon3" x="35"/>
+							</Anchors>
+						</Texture>
+						<FontString inherits="GameFontNormalSmall" parentKey="secStatName4" text="Stat 4">
+							<Anchors>
+								<Anchor point="TOP" relativeKey="$parent.secStatIcon4" relativePoint="BOTTOM" x="0" y="2"/>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="1"/>
+						</FontString>
+
+						
+						<FontString name="$parentMinorStats" inherits="GameFontNormal" parentKey="minorStats" text="MURLOKEXPORT_STATS_MINOR">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" x="10" y="-200"/>
+							</Anchors>
+						</FontString>
+
+						<Texture parentKey="minorStatIcon1" file="Interface/AddOns/MurlokExport/Artwork/Attribute_leech">
+							<Size x="50" y="50"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.minorStats" x="75" y="-5"/>
+							</Anchors>
+						</Texture>
+						<FontString inherits="GameFontNormalSmall" parentKey="minorStatName1" text="Stat 1">
+							<Anchors>
+								<Anchor point="TOP" relativeKey="$parent.minorStatIcon1" relativePoint="BOTTOM" x="0" y="2"/>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="1"/>
+						</FontString>
+						<FontString inherits="GameFontNormalSmall" text=">">
+							<Anchors>
+								<Anchor point="LEFT" relativeKey="$parent.minorStatIcon1" relativePoint="RIGHT" x="10" y="0"/>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="1"/>
+						</FontString>
+
+						<Texture parentKey="minorStatIcon2" file="Interface/AddOns/MurlokExport/Artwork/Attribute_avoidance">
+							<Size x="50" y="50"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.minorStatIcon1" x="35"/>
+							</Anchors>
+						</Texture>
+						<FontString inherits="GameFontNormalSmall" parentKey="minorStatName2" text="Stat 2">
+							<Anchors>
+								<Anchor point="TOP" relativeKey="$parent.minorStatIcon2" relativePoint="BOTTOM" x="0" y="2"/>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="1"/>
+						</FontString>
+						<FontString inherits="GameFontNormalSmall" text=">">
+							<Anchors>
+								<Anchor point="LEFT" relativeKey="$parent.minorStatIcon2" relativePoint="RIGHT" x="10" y="0"/>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="1"/>
+						</FontString>
+
+						<Texture parentKey="minorStatIcon3" file="Interface/AddOns/MurlokExport/Artwork/Attribute_speed">
+							<Size x="50" y="50"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.minorStatIcon2" x="35"/>
+							</Anchors>
+						</Texture>
+						<FontString inherits="GameFontNormalSmall" parentKey="minorStatName3" text="Stat 3">
+							<Anchors>
+								<Anchor point="TOP" relativeKey="$parent.minorStatIcon3" relativePoint="BOTTOM" x="0" y="2"/>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="1"/>
+						</FontString>		
+						
+						<Texture parentKey="ratingStatIcon" atlas="honorsystem-icon-prestige-11">
+							<Size x="50" y="50"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.minorStatIcon3" x="35"/>
+							</Anchors>
+						</Texture>
+						<FontString name="$parentRatingStats" inherits="GameFontNormal" parentKey="ratingStats" text="MURLOKEXPORT_RATING">
+							<Anchors>
+								<Anchor point="TOP" relativeKey="$parent.ratingStatIcon" relativePoint="BOTTOM" y="-5"/>
+							</Anchors>
+						</FontString>
+						<FontString inherits="GameFontNormalSmall" parentKey="ratingStatName" text="-">
+							<Anchors>
+								<Anchor point="TOP" relativeKey="$parent.ratingStats" relativePoint="BOTTOM" y="-5"/>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="1"/>
+						</FontString>	
+					</Layer>
+				</Layers>	
+            </Frame>             
+        </Frames>
+    </Frame>
+</Ui>

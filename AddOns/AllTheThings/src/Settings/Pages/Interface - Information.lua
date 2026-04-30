@@ -2,10 +2,11 @@ local _, app = ...;
 local L, settings = app.L, app.Settings;
 
 -- Global locals
-local pairs, ipairs, tonumber, math_floor, select, type, tostring, tinsert, tremove, RETRIEVING_DATA
-	= pairs, ipairs, tonumber, math.floor, select, type, tostring, tinsert, tremove, RETRIEVING_DATA;
+local pairs, ipairs, tonumber, math_floor, math_min, select, type, tostring, tinsert, tremove, RETRIEVING_DATA
+	= pairs, ipairs, tonumber, math.floor, math.min, select, type, tostring, tinsert, tremove, RETRIEVING_DATA;
 local Colorize = app.Modules.Color.Colorize;
-local GetNumberWithZeros = app.Modules.Color.GetNumberWithZeros;
+local GetCoordString = app.Modules.Color.GetCoordString;
+local GetPatchString = app.Modules.Color.GetPatchString;
 local IsRetrieving = app.Modules.RetrievingData.IsRetrieving;
 local GetRelativeValue = app.GetRelativeValue;
 local wipearray = app.wipearray
@@ -23,13 +24,6 @@ local IsQuestFlaggedCompletedOnAccount = app.WOWAPI.IsQuestFlaggedCompletedOnAcc
 local child = settings:CreateOptionsPage(L.INFORMATION_PAGE, L.INTERFACE_PAGE)
 
 -- Conversion Methods for specific formats for a given Information Type.
-local function GetCoordString(x, y)
-	return GetNumberWithZeros(app.round(x, 1), 1) .. ", " .. GetNumberWithZeros(app.round(y, 1), 1);
-end
-local function GetPatchString(patch)
-	patch = tonumber(patch)
-	return patch and (math_floor(patch / 10000) .. "." .. (math_floor(patch / 100) % 100) .. "." .. (patch % 10))
-end
 local DefaultConversionMethod = function(value)
 	return value;
 end
@@ -126,8 +120,12 @@ local ConversionMethods = setmetatable({
 			return IsRetrievingConversionMethod(app.ObjectNames[objectID], reference)
 		end
 	end,
-	professionName = function(spellID, reference)
-		return IsRetrievingConversionMethod(GetSpellName(app.SkillDB.SkillToSpell[spellID] or 0), reference)
+	professionName = function(skillID, reference)
+		local skillName = app.WOWAPI.GetTradeSkillDisplayName(skillID)
+		if skillName then
+			return skillName
+		end
+		return IsRetrievingConversionMethod(GetSpellName(app.SkillDB.SkillToSpell[skillID] or 0), reference)
 	end,
 }, {
 	__index = function(t, key)
@@ -216,7 +214,7 @@ local CreateInformationType = app.CreateClass("InformationType", "informationTyp
 -- Known By / Completed By
 -- Types which have an ID which can be 'known' or 'completed' but is typically spammy to show when account-wide
 local KnownByIgnoredTypes = {
-	Achievement = app.IsRetail,
+	Achievement = true,
 	BattlePet = true,
 	BattlePetWithItem = true,
 	Illusion = true,
@@ -242,7 +240,11 @@ local function ProcessForCompletedBy(t, reference, tooltipInfo)
 	if reference.objectiveID then return end
 
 	-- Completed By for Quests
-	local id = reference.questID;
+	local id =
+		-- we now have Recipes which are linked to QuestID, so let's ignore showing questID completion for those since
+		-- the Recipe is shown in 'Known by'
+		not reference.recipeID
+		and reference.questID
 	if id and (not KnownByIgnoredTypes[reference.__type] or reference.perCharacter) then
 		-- Account-Wide Quests
 		if app.AccountWideQuestsDB[id] then
@@ -251,7 +253,9 @@ local function ProcessForCompletedBy(t, reference, tooltipInfo)
 			end
 		else
 			for _,character in pairs(ATTCharacterData) do
-				if character.Quests and character.Quests[id] then
+				if (character.Quests and character.Quests[id])
+					-- perhaps expand into a separate information type instead for previously-completed quests
+					or (character.PriorQuests and character.PriorQuests[id]) then
 					tinsert(knownBy, character);
 				end
 			end
@@ -260,6 +264,7 @@ local function ProcessForCompletedBy(t, reference, tooltipInfo)
 			end
 		end
 		BuildKnownByInfoForKind(tooltipInfo, L.COMPLETED_BY);
+		return
 	end
 
 	-- Completed By for Exploration
@@ -271,6 +276,31 @@ local function ProcessForCompletedBy(t, reference, tooltipInfo)
 			end
 		end
 		BuildKnownByInfoForKind(tooltipInfo, L.COMPLETED_BY);
+		return
+	end
+
+	-- Completed By for FirstCrafts
+	local id = reference.firstcraftID;
+	if id then
+		for _,character in pairs(ATTCharacterData) do
+			if character.FirstCrafts and character.FirstCrafts[id] then
+				tinsert(knownBy, character);
+			end
+		end
+		BuildKnownByInfoForKind(tooltipInfo, L.COMPLETED_BY);
+		return
+	end
+
+	-- Completed By for ProfessionNodes
+	local id = reference.professionnodeID;
+	if id then
+		for _,character in pairs(ATTCharacterData) do
+			if character.ProfessionNodes and character.ProfessionNodes[id] then
+				tinsert(knownBy, character);
+			end
+		end
+		BuildKnownByInfoForKind(tooltipInfo, L.COMPLETED_BY);
+		return
 	end
 
 	-- Pre-WOD Known By types
@@ -420,7 +450,7 @@ local GetFixedItemSpecInfo = GetSpecializationInfo and function(itemID)
 		if not specs or #specs < 1 then
 			specs = {};
 			-- Starting with Legion items, the API seems to return no spec information when the item is in fact lootable by ANY spec
-			local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, itemClassID, itemSubClassID, _, expacID, _, _ = GetItemInfo(itemID);
+			local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, itemClassID, _, _, expacID, _, _ = GetItemInfo(itemID);
 			-- only Armor items
 			if itemClassID and itemClassID == 4 then
 				-- unable to distinguish between Trinkets usable by all specs (Font of Power) and Role-Specific trinkets which do not apply to any Role of the current Character
@@ -557,9 +587,9 @@ local InformationTypes = {
 	-- Progress Fields (top most)
 	CreateInformationType("Progress", { text = L.SOCIAL_PROGRESS, priority = 1, HideCheckBox = true,
 		Process = function(t, reference, tooltipInfo)
-			local progressText = app.GetProgressTextForTooltip(reference);
-			if progressText then
-				tinsert(tooltipInfo, { progress = progressText });
+			local summaryText = app.GetProgressTextForTooltip(reference);
+			if summaryText then
+				tinsert(tooltipInfo, { summaryText = summaryText });
 				--[[
 				-- I don't remember what the original conditions for showing this were.
 				-- For now just disable it.
@@ -672,67 +702,47 @@ local InformationTypes = {
 			end
 		end,
 	}),
-	CreateInformationType("coords", { text = L.COORDINATES, priority = 2.1, ShouldDisplayInExternalTooltips = false,
+	CreateInformationType("coords", { text = L.COORDINATES, priority = 2.1, maxcoords = 10, ShouldDisplayInExternalTooltips = false,
 		Process = function(t, reference, tooltipInfo)
 			local coords = reference.coords;
-			if not coords then
-				coords = reference.coord;
-				if not coords then return; end
-				coords = { coords };
-			end
-
-			local coordCount = #coords;
-			if coordCount < 1 then return; end
-
-			local maxCoords = 10;
-			local currentMapID, j = app.CurrentMapID, 0
-			local othercoords
-			for i,coord in ipairs(coords) do
-				local mapID = coord[3] or currentMapID;
-				if mapID ~= currentMapID then
-					if not othercoords then othercoords = { coord }
-					else othercoords[#othercoords + 1] = coord end
-				else
-					local x, y = coord[1], coord[2];
-					tinsert(tooltipInfo, {
-						left = j == 0 and t.text,
-						right = GetCoordString(x, y),
-						r = 1, g = 1, b = 1
-					});
-					j = j + 1;
-					if j >= maxCoords then
-						tinsert(tooltipInfo, {
-							right = (L.AND_MORE):format(coordCount - maxCoords),
-							r = 1, g = 1, b = 1
-						});
-						break;
+			if coords then
+				local coordList = {};
+				local currentMapID = app.CurrentMapID;
+				if coords[currentMapID] then
+					for i,coord in ipairs(coords[currentMapID]) do
+						tinsert(coordList, { right = GetCoordString(coord[1], coord[2]) });
 					end
 				end
-			end
-			-- include coords from other maps if any and not at the limit
-			if othercoords and j < maxCoords then
-				local str
 				local showMapID = app.Settings:GetTooltipSetting("mapID");
-				for i,coord in ipairs(othercoords) do
-					local x, y = coord[1], coord[2];
-					local mapID = coord[3] or currentMapID;
-					str = app.GetMapName(mapID);
-					if showMapID then
-						str = str .. " (" .. mapID .. ")";
+				for mapID,coordsForMap in pairs(coords) do
+					if mapID ~= currentMapID then
+						for i,coord in ipairs(coordsForMap) do
+							local str = app.GetMapName(mapID);
+							if showMapID then str = str .. " (" .. mapID .. ")"; end
+							tinsert(coordList, { right = str .. ": " .. GetCoordString(coord[1], coord[2]) });
+						end
 					end
-					str = str .. ": ";
-					tinsert(tooltipInfo, {
-						left = j == 0 and t.text,
-						right = str .. GetCoordString(x, y),
-						r = 1, g = 1, b = 1
-					});
-					j = j + 1;
-					if j >= maxCoords then
+				end
+
+				local count = #coordList;
+				if count > 0 then
+					coordList[1].left = t.text;
+
+					-- Force white string entries.
+					for i=1,math_min(t.maxcoords, count) do
+						local coord = coordList[i];
+						coord.r = 1;
+						coord.g = 1;
+						coord.b = 1;
+						tinsert(tooltipInfo, coord);
+					end
+
+					local remainingCoords = count - t.maxcoords;
+					if remainingCoords > 0 then
 						tinsert(tooltipInfo, {
-							right = (L.AND_MORE):format(coordCount - maxCoords),
+							right = (L.AND_MORE):format(remainingCoords),
 							r = 1, g = 1, b = 1
 						});
-						break;
 					end
 				end
 			end
@@ -740,11 +750,11 @@ local InformationTypes = {
 	}),
 	CreateInformationType("playerCoord", { text = L.PLAYER_COORDINATES, priority = 2.1, ShouldDisplayInExternalTooltips = false,
 		Process = function(t, reference, tooltipInfo)
-			local coord = reference.playerCoord;
-			if coord then
+			local playerCoord = reference.playerCoord;
+			if playerCoord then
 				tinsert(tooltipInfo, {
 					left = t.text,
-					right = GetCoordString(coord[1], coord[2]),
+					right = GetCoordString(playerCoord[1], playerCoord[2]),
 					r = 1, g = 1, b = 1
 				});
 			end
@@ -794,15 +804,17 @@ local InformationTypes = {
 			end
 		end,
 	}),
-	CreateInformationType("maps", { text = L.MAPS, priority = 2.6,
+	CreateInformationType("maps", {
+		text = L.MAPS,
+		priority = 2.6,
+		ShouldDisplayInExternalTooltips = false,
 		Process = function(t, reference, tooltipInfo)
 			local maps = reference.maps or reference.maps_disp
 			if not maps or #maps == 0 then
-				local coords = reference.coords
-				if coords and #coords > 0 then
+				if reference.coords then
 					maps = {}
-					for _,coord in ipairs(coords) do
-						maps[#maps + 1] = coord[3]
+					for mapID,_ in pairs(reference.coords) do
+						maps[#maps + 1] = mapID;
 					end
 				end
 			end
@@ -937,7 +949,7 @@ local InformationTypes = {
 	CreateInformationType("rwp", { text = L.REMOVED_WITH_PATCH, isRecursive = true, priority = 3,
 		-- CRIEVE NOTE: Recursive is actually not true, some items get new sources later. The distinction for pre-Cata being non-recursive might be necessary, but since we're overriding the process function it should be fine this way.
 		Process = app.IsRetail and ProcessInformationType or function(t, reference, tooltipInfo)
-			local rwp = reference.rwp;	-- NOTE: For Retail, namely pre-Cata, this can't be recursive!
+			local rwp = t.GetValue(t, reference);
 			if rwp then
 				if app.GameBuildVersion < rwp then
 					tinsert(tooltipInfo, { left = Colorize(L.REMOVED_WITH_PATCH_CLASSIC_FORMAT:format(GetPatchString(rwp)), app.Colors.RemovedWithPatch)});
@@ -974,6 +986,7 @@ local InformationTypes = {
 	CreateInformationType("artID", { text = L.ART_ID, priority = 7 }),
 	CreateInformationType("campsiteID", { text = L.CAMPSITE_ID, priority = 7 }),
 	CreateInformationType("decorID", { text = L.DECOR_ID, priority = 7 }),
+	CreateInformationType("professionnodeID", { text = L.PROFESSION_NODE_ID, priority = 7 }),
 	CreateInformationType("iconPath", { text = L.ICON_PATH, ShouldDisplayInExternalTooltips = false, priority = 7 }),
 	CreateInformationType("visualID", { text = L.VISUAL_ID, priority = 7 }),
 
@@ -1073,6 +1086,7 @@ local InformationTypes = {
 	CreateInformationType("instanceID", { text = L.INSTANCE_ID }),
 	CreateInformationType("mapID", { text = L.MAP_ID }),
 	CreateInformationType("objectID", { text = L.OBJECT_ID }),
+	CreateInformationType("raceID", { text = L.RACE_ID }),
 	CreateInformationType("runeforgepowerID", { text = L.RUNEFORGE_POWER_ID }),
 	CreateInformationType("savedInstanceID", { text = L.SAVED_INSTANCE_ID }),
 	CreateInformationType("setID", { text = L.SET_ID }),
@@ -1156,7 +1170,7 @@ local InformationTypes = {
 	}),
 	CreateInformationType("requireSkill", { text = TRADE_SKILLS, priority = 8000,
 		Process = function(t, reference, tooltipInfo)
-			local requireSkill, learnedAt = reference.requireSkill, reference.learnedAt;
+			local requireSkill, learnedAt = reference.skillID or reference.requireSkill, reference.learnedAt;
 			if requireSkill then
 				local professionName = ConversionMethods.professionName(requireSkill, reference);
 				if learnedAt then professionName = professionName .. " (" .. learnedAt .. ")"; end
@@ -1181,7 +1195,7 @@ local InformationTypes = {
 		Process = function(t, reference, tooltipInfo)
 			if reference.cost then
 				if type(reference.cost) == "table" then
-					local _, name, icon, amount;
+					local _, name, icon
 					for k,v in pairs(reference.cost) do
 						_ = v[1];
 						if _ == "g" then
@@ -1205,7 +1219,7 @@ local InformationTypes = {
 							end
 							name = (icon and ("|T" .. icon .. ":0|t") or "") .. name;
 							_ = (v[3] or 1);
-							if _ > 1 then
+							if _ > 0 then
 								name = _ .. "x  " .. name;
 							end
 							tooltipInfo[#tooltipInfo + 1] = {

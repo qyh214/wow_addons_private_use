@@ -4,7 +4,7 @@ local M = B:RegisterModule("Misc")
 
 local _G = getfenv(0)
 local select, unpack, tonumber, gsub = select, unpack, tonumber, gsub
-local InCombatLockdown, IsModifiedClick, IsAltKeyDown = InCombatLockdown, IsModifiedClick, IsAltKeyDown
+local IsModifiedClick, IsAltKeyDown = IsModifiedClick, IsAltKeyDown
 local GetNumArchaeologyRaces = GetNumArchaeologyRaces
 local GetNumArtifactsByRace = GetNumArtifactsByRace
 local GetArtifactInfoByRace = GetArtifactInfoByRace
@@ -24,7 +24,6 @@ local GetSavedInstanceInfo = GetSavedInstanceInfo
 local SetSavedInstanceExtend = SetSavedInstanceExtend
 local RequestRaidInfo, RaidInfoFrame_Update = RequestRaidInfo, RaidInfoFrame_Update
 local IsGuildMember, C_BattleNet_GetGameAccountInfoByGUID, C_FriendList_IsFriend = IsGuildMember, C_BattleNet.GetGameAccountInfoByGUID, C_FriendList.IsFriend
-local C_Map_GetMapInfo, C_Map_GetBestMapForUnit = C_Map.GetMapInfo, C_Map.GetBestMapForUnit
 
 --[[
 	Miscellaneous 各种有用没用的小玩意儿
@@ -67,19 +66,7 @@ function M:OnLogin()
 	M:UpdateMaxZoomLevel()
 	M:HandleNDuiTitle()
 	M:ToggleAddOnProfiler()
-
-	-- Auto chatBubbles
-	if NDuiADB["AutoBubbles"] then
-		local function updateBubble()
-			local name, instType = GetInstanceInfo()
-			if name and instType == "raid" then
-				SetCVar("chatBubbles", 1)
-			else
-				SetCVar("chatBubbles", 0)
-			end
-		end
-		B:RegisterEvent("PLAYER_ENTERING_WORLD", updateBubble)
-	end
+	M:HideBlizzHelpTip()
 
 	-- Readycheck sound on master channel
 	B:RegisterEvent("READY_CHECK", function()
@@ -174,9 +161,13 @@ function M:ExtendInstance()
 end
 
 -- Reanchor Vehicle
+local mover = CreateFrame("Frame", "NDuiVehicleSeatMover", UIParent)
+mover:SetSize(125, 125)
+mover:SetPoint("BOTTOMRIGHT")
+
 function M:VehicleSeatMover()
-	local frame = CreateFrame("Frame", "NDuiVehicleSeatMover", UIParent)
-	frame:SetSize(125, 125)
+	local frame = _G["NDuiVehicleSeatMover"]
+	if not frame then return end
 	B.Mover(frame, L["VehicleSeat"], "VehicleSeat", {"BOTTOMRIGHT", UIParent, -400, 30})
 
 	hooksecurefunc(VehicleSeatIndicator, "SetPoint", function(self, _, parent)
@@ -295,6 +286,8 @@ function M:TradeTargetInfo()
 
 		local guid = UnitGUID("NPC")
 		if not guid then return end
+		if B:IsSecretValue(guid) then return end
+
 		local text = "|cffff0000"..L["Stranger"]
 		if C_BattleNet_GetGameAccountInfoByGUID(guid) or C_FriendList_IsFriend(guid) then
 			text = "|cffffff00"..FRIEND
@@ -402,12 +395,8 @@ do
 		end
 	end)
 
-	hooksecurefunc("UnitPowerBarAlt_SetUp", function(self)
-		local statusFrame = self.statusFrame
-		if statusFrame.enabled then
-			statusFrame:Show()
-			statusFrame.Hide = statusFrame.Show
-		end
+	hooksecurefunc(PlayerPowerBarAlt.statusFrame, "Hide", function(self)
+		self:Show()
 	end)
 
 	local altPowerInfo = {
@@ -616,90 +605,116 @@ function M:BaudErrorFrameHelpTip()
 end
 
 -- Buttons to enhance popup menu
-function M:CustomMenu_AddFriend(rootDescription, data, name)
-	rootDescription:CreateButton(DB.InfoColor..ADD_CHARACTER_FRIEND, function()
-		local fullName = data.server and data.name.."-"..data.server or data.name
-		C_FriendList.AddFriend(name or fullName)
-	end)
+function M:MenuFrame_Hide()
+	local menuFrame = M.MenuButtonFrame and M.MenuButtonFrame:GetParent()
+	if menuFrame and menuFrame.Hide then
+		menuFrame:Hide()
+	end
 end
 
-local guildInviteString = gsub(CHAT_GUILD_INVITE_SEND, HEADER_COLON, "")
-function M:CustomMenu_GuildInvite(rootDescription, data, name)
-	rootDescription:CreateButton(DB.InfoColor..guildInviteString, function()
-		local fullName = data.server and data.name.."-"..data.server or data.name
-		C_GuildInfo.Invite(name or fullName)
-	end)
+function M:MenuButton_AddFriend()
+	if not M.MenuButtonName then return end
+	C_FriendList.AddFriend(M.MenuButtonName)
+	M:MenuFrame_Hide()
 end
 
-function M:CustomMenu_CopyName(rootDescription, data, name)
-	rootDescription:CreateButton(DB.InfoColor..COPY_NAME, function()
-		local editBox = ChatEdit_ChooseBoxForSend()
-		local hasText = (editBox:GetText() ~= "")
-		ChatEdit_ActivateChat(editBox)
-		editBox:Insert(name or data.name)
-		if not hasText then editBox:HighlightText() end
-	end)
+function M:MenuButton_CopyName()
+	if not M.MenuButtonName then return end
+	local editBox = ChatEdit_ChooseBoxForSend()
+	local hasText = (editBox:GetText() ~= "")
+	ChatEdit_ActivateChat(editBox)
+	editBox:Insert(M.MenuButtonName)
+	if not hasText then editBox:HighlightText() end
+	M:MenuFrame_Hide()
 end
 
-function M:CustomMenu_Whisper(rootDescription, data)
-	rootDescription:CreateButton(DB.InfoColor..WHISPER, function()
-		ChatFrameUtil.SendTell(data.name)
-	end)
+function M:MenuButton_GuildInvite()
+	if not M.MenuButtonName then return end
+	GuildInvite(M.MenuButtonName)
+	M:MenuFrame_Hide()
+end
+
+function M:MenuButton_Whisper()
+	if not M.MenuButtonName then return end
+	ChatFrame_SendTell(M.MenuButtonName)
+	M:MenuFrame_Hide()
 end
 
 function M:QuickMenuButton()
 	if not C.db["Misc"]["MenuButton"] then return end
 
-	--hooksecurefunc(UnitPopupManager, "OpenMenu", function(_, which)
-	--	print("MENU_UNIT_"..which)
-	--end)
+	local menuList = {
+		{text = ADD_FRIEND, func = M.MenuButton_AddFriend, color = {0, .6, 1}},
+		{text = gsub(CHAT_GUILD_INVITE_SEND, HEADER_COLON, ""), func = M.MenuButton_GuildInvite, color = {0, .8, 0}},
+		{text = COPY_NAME, func = M.MenuButton_CopyName, color = {1, .8, 0}},
+		{text = WHISPER, func = M.MenuButton_Whisper, color = {1, .5, 1}},
+	}
 
-	Menu.ModifyMenu("MENU_UNIT_SELF", function(_, rootDescription, data)
-		M:CustomMenu_CopyName(rootDescription, data)
-		M:CustomMenu_Whisper(rootDescription, data)
+	local frame = CreateFrame("Frame", "NDuiMenuButtonFrame", UIParent)
+	frame:SetSize(10, 10)
+	frame:SetPoint("TOPLEFT")
+	frame:Hide()
+	frame.buttons = {}
+	for i = 1, 4 do
+		local button = CreateFrame("Button", nil, frame)
+		button:SetSize(25, 10)
+		button:SetPoint("TOPLEFT", frame, (i-1)*28 + 2, -2)
+		B.PixelIcon(button, nil, true)
+		button.Icon:SetColorTexture(unpack(menuList[i].color))
+		button:SetScript("OnClick", menuList[i].func)
+		B.AddTooltip(button, "ANCHOR_TOP", menuList[i].text)
+		frame.buttons[i] = button
+	end
+	M.MenuButtonFrame = frame
+
+	local visibleState = { -- friend, guild, copy, whisper
+		["SELF"] = {false, false, true, true},
+		["TARGET"] = {false, false, true, false},
+		["PLAYER"] = {true, true, true, true},
+		["FRIEND"] = {true, true, true, false},
+		["BN_FRIEND"] = {true, true, true, false},
+		["PARTY"] = {true, true, false, true},
+		["RAID"] = {true, true, false, true},
+		["RAID_PLAYER"] = {true, true, false, true},
+	}
+	hooksecurefunc(UnitPopupManager, "OpenMenu", function(_, which, contextData)
+		local shown = visibleState[which]
+		if not shown then frame:Hide() return end
+
+		if contextData and B:IsSecretValue(contextData.name) then
+			frame:Hide()
+			return
+		end
+
+		for i = 1, 4 do
+			frame.buttons[i]:SetShown(shown[i])
+		end
+
+		local gameAccountInfo = contextData.accountInfo and contextData.accountInfo.gameAccountInfo
+		if gameAccountInfo and gameAccountInfo.characterName and gameAccountInfo.realmName then
+			M.MenuButtonName = gameAccountInfo.characterName.."-"..gameAccountInfo.realmName
+		else
+			M.MenuButtonName = contextData.name.."-"..(contextData.server or DB.MyRealm)
+		end
+		frame:Show()
 	end)
 
-	Menu.ModifyMenu("MENU_UNIT_TARGET", function(_, rootDescription, data)
-		M:CustomMenu_CopyName(rootDescription, data)
-	end)
-
-	Menu.ModifyMenu("MENU_UNIT_PLAYER", function(_, rootDescription, data)
-		M:CustomMenu_GuildInvite(rootDescription, data)
-	end)
-
-	Menu.ModifyMenu("MENU_UNIT_FRIEND", function(_, rootDescription, data)
-		M:CustomMenu_AddFriend(rootDescription, data)
-		M:CustomMenu_GuildInvite(rootDescription, data)
-	end)
-
-	Menu.ModifyMenu("MENU_UNIT_BN_FRIEND", function(_, rootDescription, data)
-		local fullName
-		local gameAccountInfo = data.accountInfo and data.accountInfo.gameAccountInfo
-		if gameAccountInfo then
-			local characterName = gameAccountInfo.characterName
-			local realmName = gameAccountInfo.realmName
-			if characterName and realmName then
-				fullName = characterName.."-"..realmName
+	local menuManagerProxy = Menu.GetManager()
+	hooksecurefunc(menuManagerProxy, "OpenContextMenu", function(manager)
+		local menuFrame = manager:GetOpenMenu()
+		if menuFrame then
+			frame:SetParent(menuFrame)
+			frame:SetPoint("TOPLEFT", menuFrame, 0, 5)
+			for i = 1, 4 do
+				frame.buttons[i]:Hide()
 			end
 		end
-		M:CustomMenu_AddFriend(rootDescription, data, fullName)
-		M:CustomMenu_GuildInvite(rootDescription, data, fullName)
-		M:CustomMenu_CopyName(rootDescription, data, fullName)
 	end)
 
-	Menu.ModifyMenu("MENU_UNIT_PARTY", function(_, rootDescription, data)
-		M:CustomMenu_GuildInvite(rootDescription, data)
-	end)
-
-	Menu.ModifyMenu("MENU_UNIT_RAID", function(_, rootDescription, data)
-		M:CustomMenu_AddFriend(rootDescription, data)
-		M:CustomMenu_GuildInvite(rootDescription, data)
-		M:CustomMenu_CopyName(rootDescription, data)
-		M:CustomMenu_Whisper(rootDescription, data)
-	end)
-
-	Menu.ModifyMenu("MENU_UNIT_RAID_PLAYER", function(_, rootDescription, data)
-		M:CustomMenu_GuildInvite(rootDescription, data)
+	-- clear blocks on tracking menu
+	hooksecurefunc(menuManagerProxy, "OpenMenu", function()
+		M.MenuButtonName = nil
+		frame:Hide()
 	end)
 end
 
@@ -825,4 +840,15 @@ function M:ToggleAddOnProfiler()
 	bu:SetScript("OnClick", function()
 		NDuiADB["AddOnProfiler"] = bu:GetChecked()
 	end)
+end
+
+function M:HideBlizzHelpTip()
+	local function AcknowledgeTips()
+		for frame in HelpTip.framePool:EnumerateActive() do
+			frame:Acknowledge()
+		end
+	end
+
+	hooksecurefunc(HelpTip, "Show", AcknowledgeTips)
+	C_Timer.After(1, AcknowledgeTips)
 end

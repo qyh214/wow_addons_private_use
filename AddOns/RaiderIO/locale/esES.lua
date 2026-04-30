@@ -1,4 +1,4 @@
--- Generated from CurseForge on Thu Dec 11 09:02:34 UTC 2025
+-- Generated from CurseForge on Thu Apr 30 07:53:48 UTC 2026
 local ns = select(2, ...) ---@class ns @The addon namespace.
 
 if ns:IsSameLocale("esES") then
@@ -70,14 +70,12 @@ L["DPS"] = "DPS"
 L["DUNGEON_SHORT_NAME_AA"] = "Academia Algeth'ar - AA"
 L["DUNGEON_SHORT_NAME_AD"] = "Atal'Dazar - AD"
 L["DUNGEON_SHORT_NAME_ARAK"] = "Ara-Kara - ARAK"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_ARC"] = ""--]] 
+L["DUNGEON_SHORT_NAME_ARC"] = "La Arquería - ARC"
 L["DUNGEON_SHORT_NAME_AV"] = "Cámara Azur - AV"
 L["DUNGEON_SHORT_NAME_BH"] = "Hondonada Frondacuero - BH"
 L["DUNGEON_SHORT_NAME_BREW"] = "Lagar de Tragoceniza - BREW"
 L["DUNGEON_SHORT_NAME_BRH"] = "Torreón Grajo Negro - BRH"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_COEN"] = ""--]] 
+L["DUNGEON_SHORT_NAME_COEN"] = "Catedral de la Noche Eterna - CoEN"
 L["DUNGEON_SHORT_NAME_COS"] = "Corte de las Estrellas - COS"
 L["DUNGEON_SHORT_NAME_COT"] = "Ciudad Tejida - COT"
 L["DUNGEON_SHORT_NAME_DAWN"] = "El Rompealbas - DAWN"
@@ -86,8 +84,7 @@ L["DUNGEON_SHORT_NAME_DHT"] = "Arboleda Corazón Oscuro - DHT"
 L["DUNGEON_SHORT_NAME_DOS"] = "El Otro Lado - DOS"
 L["DUNGEON_SHORT_NAME_EB"] = "El Vergel Eterno - EB"
 L["DUNGEON_SHORT_NAME_EDA"] = "Ecodomo Al'dani - EDA"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_EOA"] = ""--]] 
+L["DUNGEON_SHORT_NAME_EOA"] = "Ojo de Azshara - EOA"
 L["DUNGEON_SHORT_NAME_FALL"] = [=[Amanecer: Caída de Galakrond - FALL
 ]=]
 L["DUNGEON_SHORT_NAME_FH"] = "Fuerte Libre - FH"
@@ -99,18 +96,20 @@ L["DUNGEON_SHORT_NAME_HOA"] = "Salas de la Expiación - HOA"
 L["DUNGEON_SHORT_NAME_HOI"] = "Salas de Infusión - HOI"
 L["DUNGEON_SHORT_NAME_HOV"] = "Cámaras del Valor - HOV"
 L["DUNGEON_SHORT_NAME_ID"] = "Puerto de Hierro - ID"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_KR"] = ""--]] 
+L["DUNGEON_SHORT_NAME_KR"] = "Reposo de los Reyes - KR"
 L["DUNGEON_SHORT_NAME_LOWR"] = "Karazhan: Inferior - LOWR"
+L["DUNGEON_SHORT_NAME_MC"] = "Cavernas de Maisara - MC"
 L["DUNGEON_SHORT_NAME_MISTS"] = "Nieblas de Tirna Scithe - MISTS"
 L["DUNGEON_SHORT_NAME_ML"] = "VETA MADRE - ML"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_MOS"] = ""--]] 
+L["DUNGEON_SHORT_NAME_MOS"] = "Acantilados Boca Infernal - MOS"
+L["DUNGEON_SHORT_NAME_MT"] = "Bancal del Magister - MT"
 L["DUNGEON_SHORT_NAME_NELT"] = "Neltharus - NELT"
 L["DUNGEON_SHORT_NAME_NL"] = "Guarida de Neltharion - NL"
 L["DUNGEON_SHORT_NAME_NO"] = "Ofensiva Nokhud - NO"
+L["DUNGEON_SHORT_NAME_NPX"] = "Punto de Nexo: Xenas - NPX"
 L["DUNGEON_SHORT_NAME_NW"] = "Estela Necrótica - NW "
 L["DUNGEON_SHORT_NAME_PF"] = "Bajapeste - PF"
+L["DUNGEON_SHORT_NAME_POS"] = "Foso de Saron - POS"
 L["DUNGEON_SHORT_NAME_PSF"] = "Priorato de la Llama Sagrada - PSF"
 L["DUNGEON_SHORT_NAME_RISE"] = [=[Amanecer: Ascenso de Murozond - RISE
 ]=]
@@ -118,20 +117,17 @@ L["DUNGEON_SHORT_NAME_RLP"] = "Estanques de Vida Rubí - RLP"
 L["DUNGEON_SHORT_NAME_ROOK"] = "El Grajero - ROOK"
 L["DUNGEON_SHORT_NAME_SBG"] = "Cementerio de Sombraluna - SBG"
 L["DUNGEON_SHORT_NAME_SD"] = "Cavernas Sanguinas - SD"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_SEAT"] = ""--]] 
+L["DUNGEON_SHORT_NAME_SEAT"] = "Trono del Triunvirato - SEAT"
 L["DUNGEON_SHORT_NAME_SIEGE"] = "Asedio de Boralus - SIEGE"
 L["DUNGEON_SHORT_NAME_SOA"] = "Agujas de Ascensión - SOA"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_SOTS"] = ""--]] 
+L["DUNGEON_SHORT_NAME_SOTS"] = "Altar de la Tormenta - SOTS"
+L["DUNGEON_SHORT_NAME_SR"] = "Trecho Celestial - SR"
 L["DUNGEON_SHORT_NAME_STRT"] = "Tazavesh: Calles - STRT"
 L["DUNGEON_SHORT_NAME_SV"] = "La Petrocámara - SV"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_TD"] = ""--]] 
+L["DUNGEON_SHORT_NAME_TD"] = "Tol Dagor - TD"
 L["DUNGEON_SHORT_NAME_TJS"] = "Templo del Dragón de Jade - TJS"
 L["DUNGEON_SHORT_NAME_TOP"] = "Teatro del Dolor - TOP"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_TOS"] = ""--]] 
+L["DUNGEON_SHORT_NAME_TOS"] = "El Sagrario Obsidiana - TOS"
 L["DUNGEON_SHORT_NAME_TOTT"] = "Trono de las Mareas - TOTT"
 L["DUNGEON_SHORT_NAME_ULD"] = "Uldaman - ULD"
 L["DUNGEON_SHORT_NAME_UNDR"] = "Catacumbas Putrefactas - UNDR"
@@ -140,12 +136,12 @@ L["DUNGEON_SHORT_NAME_VOTW"] = "Cámara de las Celadoras - VOTW"
 L["DUNGEON_SHORT_NAME_VP"] = "Cumbre del Vórtice - VP"
 L["DUNGEON_SHORT_NAME_WM"] = "Mansión Crestavía - WM"
 L["DUNGEON_SHORT_NAME_WORK"] = "Mechagon: Taller - WORK"
+L["DUNGEON_SHORT_NAME_WS"] = "Aguja Brisaveloz - WS"
 L["DUNGEON_SHORT_NAME_YARD"] = "Mechagon: Desguace - YARD"
 L["ENABLE_AUTO_FRAME_POSITION"] = "Posicionar automáticamente el marco de perfil de RaiderIO"
 L["ENABLE_AUTO_FRAME_POSITION_DESC"] = "Fija la ventana emergente de perfil de M+ junto al marco del buscador de grupos o la ventana emergente de jugador."
 L["ENABLE_DEBUG_MODE_RELOAD"] = "Estás activando el modo depuración. Esto es solo para fines de pruebas y desarrollo, y puede incurrir en un aumento del uso de memoria. Haz clic en confirmar para recargar la interfaz."
---[[Translation missing --]]
---[[ L["ENABLE_LFG_EXPORT_BUTTON"] = ""--]] 
+L["ENABLE_LFG_EXPORT_BUTTON"] = "Mostrar boton de exportar en LFG"
 --[[Translation missing --]]
 --[[ L["ENABLE_LFG_EXPORT_BUTTON_DESC"] = ""--]] 
 L["ENABLE_LOCK_PROFILE_FRAME"] = "Bloquear el marco de perfil de RaiderIO"
@@ -171,7 +167,7 @@ L["GUILD_LF_MPLUS_DEFAULT"] = "Reclutamiento para Míticas+"
 L["GUILD_LF_MPLUS_WITH_SCORE"] = "Reclutamiento %d+ jugadoras míticas+"
 L["GUILD_LF_PVP"] = "Reclutar jugadores PvP"
 L["GUILD_LF_RAID_DEFAULT"] = "Reclutar Raiders"
-L["GUILD_LF_RAID_HEROIC"] = "Reclutamiento para Raid Heroica"
+L["GUILD_LF_RAID_HEROIC"] = "Reclutar Raiders Heroico"
 L["GUILD_LF_RAID_MYTHIC"] = "Reclutar Raiders Mítico"
 L["GUILD_LF_RAID_NORMAL"] = "Reclutar Raiders Normal"
 L["GUILD_LF_SOCIAL"] = "Reclutar jugadores Sociales"
@@ -365,6 +361,8 @@ L["RAID_BOSS_CN_7"] = "El Consejo de Sangre"
 L["RAID_BOSS_CN_8"] = "Puñolodo"
 L["RAID_BOSS_CN_9"] = "Generales de la Legión Pétrea"
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_DR_1"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_DS_1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_DS_2"] = ""--]] 
@@ -494,6 +492,10 @@ L["RAID_BOSS_FSOD_9"] = "Kel'Thuzad"
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_MFO_8"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_MQD_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MQD_2"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_MSV_1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_MSV_2"] = ""--]] 
@@ -595,6 +597,34 @@ L["RAID_BOSS_TOTFW_2"] = "Al'Akir"
 --[[ L["RAID_BOSS_VOTI_7"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_VOTI_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_9"] = ""--]] 
 L["RAID_BOT"] = "Bastión del Crepúsculo - BOT"
 L["RAID_BRD"] = "Profundidades de Roca Negra - BRD"
 L["RAID_BWD"] = "Descenso de Alanegra - BWD"
@@ -612,25 +642,24 @@ L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = "M"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "N"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = "N10"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = "N25"
+L["RAID_DR"] = "Falla Onírica - DR"
 L["RAID_DS"] = "Alma de Dragón - DS"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Encuentros de banda derrotados"
 L["RAID_FL"] = "Tierras de Fuego - FL"
---[[Translation missing --]]
---[[ L["RAID_HOF"] = ""--]] 
+L["RAID_HOF"] = "Corazón del Miedo - HoF"
 L["RAID_ICC"] = "Ciudadela de la Corona de Hielo - ICC"
 L["RAID_LOU"] = "Liberación de Minahonda - LOU"
 L["RAID_MFO"] = "Forja de Maná Omega - MFO"
---[[Translation missing --]]
---[[ L["RAID_MSV"] = ""--]] 
+L["RAID_MQD"] = "Marcha a Quel'Danas - MQD"
+L["RAID_MSV"] = "Cámaras Mogu'shan"
 L["RAID_NP"] = "Palacio Nerub'ar - NP"
 L["RAID_RS"] = "El Sagrario Rubí - RS"
---[[Translation missing --]]
---[[ L["RAID_ToES"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_TOES"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_TOT"] = ""--]] 
+L["RAID_ToES"] = "Veranda de la Primavera Eterna - ToES"
+L["RAID_TOES"] = "Veranda de la Primavera Eterna"
+L["RAID_TOT"] = "Solio del Trueno - ToT"
 L["RAID_TOTFW"] = "Trono de los Cuatro Vientos - TOTFW"
+L["RAID_VS"] = "Aguja del Vacío - VS"
+L["RAID_VS_DR_MQD"] = "AV/FO/MQD"
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Puntuación media de +%s en tiempo"
 L["RAIDERIO_BEST_RUN"] = "Mejor resultado M+ de Raider.IO"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personalización del cliente de RaiderIO"
@@ -641,8 +670,7 @@ L["RAIDERIO_MP_SCORE"] = "Puntuación de M+"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Opciones de Raider.IO Mythic Plus"
 L["RAIDING_DATA_HEADER"] = "Progreso de banda de Raider.IO"
 L["RAIDING_DB_MODULES"] = "Raiding Database Modulos"
---[[Translation missing --]]
---[[ L["RECENT_RUNS_WITH_YOU"] = ""--]] 
+L["RECENT_RUNS_WITH_YOU"] = "Actividad reciente contigo"
 L["RECRUITMENT_DB_MODULES"] = "Módulos de bases de datos de reclutamiento"
 L["RELOAD_LATER"] = "La reiniciaré más tarde"
 L["RELOAD_NOW"] = "Reiniciarla ahora"
@@ -722,10 +750,16 @@ L["SHOW_LEADER_PROFILE"] = "Habilitar modificador del marco de perfil"
 L["SHOW_LEADER_PROFILE_DESC"] = "Permite mantener pulsado un modificador (mayús/ctrl/alt) para alternar el marco de perfil entre el personal y el del líder del grupo."
 L["SHOW_MAINS_SCORE"] = "Mostrar puntuación de personaje principal"
 L["SHOW_MAINS_SCORE_DESC"] = "Muestra la puntuación en la temporada actual del personaje principal del jugador inspeccionado. El jugador en cuestión debe estar registrado en Raider.IO y haber seleccionado su personaje principal."
+L["SHOW_MY_WARBAND_SCORE"] = "Mostrar mi puntuación de banda guerrera"
+--[[Translation missing --]]
+--[[ L["SHOW_MY_WARBAND_SCORE_DESC"] = ""--]] 
 L["SHOW_ON_GUILD_ROSTER"] = "Mostrar en lista de hermandad"
 L["SHOW_ON_GUILD_ROSTER_DESC"] = "Muestra la puntuación de M+ de los miembros de tu hermandad cuando pasas el ratón por encima de ellos en la lista de hermandad."
 L["SHOW_ON_PLAYER_UNITS"] = "Mostrar en marcos de jugador"
 L["SHOW_ON_PLAYER_UNITS_DESC"] = "Muestra la puntuación de M+ de los jugadores en su ventana emergente cuando pasas el ratón sobre ellos."
+L["SHOW_OTHER_WARBAND_SCORE"] = "Mostrar puntuación de banda guerrera de los demás"
+--[[Translation missing --]]
+--[[ L["SHOW_OTHER_WARBAND_SCORE_DESC"] = ""--]] 
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE"] = "Mostrar encuentros de banda en la ventana emergente de perfil"
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE_DESC"] = "Muestra el progreso de banda en la ventana emergente de perfil de RaiderIO."
 L["SHOW_RAIDERIO_BESTRUN_FIRST"] = "(Experimental) Priorizar Mostrar la Mejor piedra de Raider.IO"

@@ -358,7 +358,7 @@ RegisterShortcut("invite", L["Invite to Party"], {
 					_G.FriendsFrame_BattlenetInvite(nil, win.bn.id)
 				end
 			else
-				if isModernApi then
+				if _G.C_PartyInfo and _G.C_PartyInfo.InviteUnit then
 					_G.C_PartyInfo.InviteUnit(win.theUser)
 				else
 					_G.InviteUnit(win.theUser)
@@ -379,7 +379,7 @@ RegisterShortcut("ignore", L["Ignore User"], {
 		local win = self.parentWindow;
 		_G.StaticPopupDialogs["WIM_IGNORE"] = {
 		preferredIndex = STATICPOPUP_NUMDIALOGS,
-		text = _G.format(L["Are you sure you want to\nignore %s?"], "|cff69ccf0"..(win.isBN and win.toonName or win.theUser).."|r"),
+		text = _G.format(L["Are you sure you want to\nignore %s?"], (win.isBN and win.toonName or win.theUser)),
 		button1 = L["Yes"],
 		button2 = L["No"],
 		OnAccept = function()

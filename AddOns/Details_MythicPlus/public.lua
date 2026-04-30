@@ -62,22 +62,17 @@ end
 ---@param runId number
 ---@return string
 function DetailsMythicPlus.GetSimpleDescription(runId)
-    local runHeader = addon.Compress.GetRunHeaderById(runId)
-    if (runHeader) then
-        --{dungeonName, keyLevel, runTime, keyUpgradeLevels, timeString, mapId, dungeonId, onTime and 1 or 0, altName}
-        local descriptionTable = addon.Compress.GetDropdownRunDescription(runHeader)
-        local dungeonName = descriptionTable[1]
-
-        local dungeonNameAcronym = detailsFramework.string.Acronym(dungeonName)
-        local onTimeColor = descriptionTable[8] == 1 and "FFA8E7A8" or "FFD69A9A"
-        local when = runHeader.endTime
-        local whenString = when and detailsFramework.string.FormatDateByLocale(when) or ""
-
-        local simpleTitle = string.format("%s +%d, |c%s%s|r (" .. whenString .. ")", dungeonNameAcronym, descriptionTable[2], onTimeColor, detailsFramework:IntegerToTimer(descriptionTable[3]))
-
-        return simpleTitle
+    local header = addon.Compress.GetRunHeaderById(runId)
+    if (not header) then
+    	return ""
     end
-    return ""
+
+    local dungeonNameAcronym = detailsFramework.string.Acronym(header.dungeonName)
+    local onTimeColor = header.onTime and "FFA8E7A8" or "FFD69A9A"
+    local when = header.endTime
+    local whenString = when and detailsFramework.string.FormatDateByLocale(when) or ""
+
+    return string.format("%s +%d, |c%s%s|r (" .. whenString .. ")", dungeonNameAcronym, header.keyLevel, onTimeColor, detailsFramework:IntegerToTimer(header.endTime - header.startTime))
 end
 
 ---return the runId of the latest run
@@ -131,4 +126,12 @@ function DetailsMythicPlus.RegisterCallback(event, callbackFunction)
     callbacks[#callbacks + 1] = callbackFunction
 
     return true
+end
+
+function DetailsMythicPlus.TestApocalypse()
+    if detailsFramework.IsAddonApocalypseWow() then
+        if not private.Segments.IsServerInCombat() then
+            addon.OnMythicDungeonEnd()
+        end
+    end
 end

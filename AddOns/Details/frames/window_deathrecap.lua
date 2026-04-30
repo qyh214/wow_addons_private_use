@@ -163,6 +163,10 @@ local OpenDetailsDeathRecapAtSegment = function(segment)
 end
 
 function Details.BuildDeathTableFromRecap(recapID)
+    if detailsFramework.IsAddonApocalypseWow() then
+        return
+    end
+
 	local events = DeathRecap_GetEvents(recapID)
 
 	--check if it is a valid recap
@@ -218,13 +222,20 @@ function Details.GetDeathRecapFromChat()
 		for i = numLines, 1, -1 do
 			local text = chat1:GetMessageInfo(i)
 			if (text) then
-				if (text:find("Hdeath:%d")) then
-					local recapID = text:match("|Hdeath:(%d+)|h")
-					if (recapID) then
-						recapIDFromChat = tonumber(recapID)
-					end
-					break
-				end
+                local canReadText = true
+                if issecretvalue and issecretvalue(text) then
+                    canReadText = false
+                end
+
+                if canReadText then
+                    if (text:find("Hdeath:%d")) then
+                        local recapID = text:match("|Hdeath:(%d+)|h")
+                        if (recapID) then
+                            recapIDFromChat = tonumber(recapID)
+                        end
+                        break
+                    end
+                end
 			end
 		end
 	end
@@ -236,6 +247,10 @@ function Details.GetDeathRecapFromChat()
 end
 
 function Details.OpenDetailsDeathRecap(segment, RecapID, fromChat)
+    if detailsFramework.IsAddonApocalypseWow() then
+        return
+    end
+
     if (not Details.death_recap.enabled) then
         if (Details.DeathRecap and Details.DeathRecap.Lines) then
             for i = 1, 10 do
@@ -605,6 +620,10 @@ function Details.OpenDetailsDeathRecap(segment, RecapID, fromChat)
 end
 
 hooksecurefunc(_G, "DeathRecap_LoadUI", function()
+    if detailsFramework.IsAddonApocalypseWow() then
+        return
+    end
+
 	hooksecurefunc(_G, "DeathRecapFrame_OpenRecap", function(RecapID)
         local currentCombat = Details:GetCurrentCombat()
         --get the player current death and link the death table with the death recapID

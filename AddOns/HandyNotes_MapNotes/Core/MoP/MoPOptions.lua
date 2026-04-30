@@ -66,7 +66,7 @@ ns.options = {
           order = 1,
           },
         RestoreCapitalsDeletedIcons = {
-          disabled = function() return ns.dbChar.CapitalsDeletedIcons == nil or ns.Addon.db.profile.activate.HideMapNote end,
+          disabled = function() return ns.dbProfile.CapitalsDeletedIcons == nil or ns.Addon.db.profile.activate.HideMapNote end,
           type = "execute",
           name = L["Capitals"] .. " +",
           desc = "|cffffff00" .. L["Capitals"]  .. " - " .. MINIMAP_LABEL .."|r" .. "\n" .. "\n" .. L["Restore all deleted icons"] .. " " .. L["which you removed with the function"] .. " " .. ALT_KEY .. " + " .. KEY_BUTTON1,

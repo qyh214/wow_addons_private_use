@@ -11,7 +11,7 @@ do
     L["ADDON_MENU_ADDONS_TOOLTIP_OPEN_OPTIONS"] = "open options"
 
     L["COMMAND_OPEN_OPTIONS"] = "Open the options"
-    L["COMMAND_OPEN_OPTIONS_PRINT"] = "Opening Details! Mythic+ scoreboard options, for more information use %s"
+    L["COMMAND_OPEN_OPTIONS_PRINT"] = "Opening Details! Mythic+ Scoreboard options, for more information use %s"
     L["COMMAND_HELP"] = "Shows this list of commands"
     L["COMMAND_HELP_PRINT"] = "available commands"
     L["COMMAND_SHOW_VERSION"] = "Show the version in a popup"
@@ -20,7 +20,7 @@ do
     L["COMMAND_CLEAR_RUN_HISTORY"] = "Clear recent runs history"
     L["COMMAND_CLEAR_RUN_HISTORY_DONE"] = "Cleared the history of %s run(s)"
 
-    L["OPTIONS_WINDOW_TITLE"] = "Details! Mythic+ Options"
+    L["OPTIONS_WINDOW_TITLE"] = "Details! Mythic+ Scoreboard Options"
     L["OPTIONS_GENERAL_OPTIONS"] = "General Options"
     L["OPTIONS_SHOW_MINIMAP_ICON_LABEL"] = "Show minimap icon"
     L["OPTIONS_SHOW_MINIMAP_ICON_DESC"] = "The minimap icon lets you quickly open your scoreboard whenever you want"
@@ -42,6 +42,8 @@ do
     L["OPTIONS_SHOW_CC_CAST_TOOLTIP_PERCENTAGE_DESC"] = "The tooltip will also show the percentage of each crowd control cast"
     L["OPTIONS_SECTION_TIMELINE"] = "Timeline"
     L["OPTIONS_TRANSLIT_LABEL"] = "Translit"
+    L["OPTIONS_ONLY_SHOW_CURRENT_SEASON_LABEL"] = "Only show current season runs"
+    L["OPTIONS_ONLY_SHOW_CURRENT_SEASON_DESC"] = "When opening the dropdown on the scoreboard to see other runs, only show runs from the current season"
     L["OPTIONS_SAVING"] = "Saving"
     L["OPTIONS_HISTORY_RUNS_TO_KEEP_LABEL"] = "Runs to keep"
     L["OPTIONS_HISTORY_RUNS_TO_KEEP_DESC"] = "The amount of runs to save. Existing history larger than this amount will be removed upon next reload or login."
@@ -67,6 +69,7 @@ do
     L["SCOREBOARD_TITLE_LOOT"] = "Loot"
     L["SCOREBOARD_TITLE_DEATHS"] = "Deaths"
     L["SCOREBOARD_TITLE_DAMAGE_TAKEN"] = "Damage Taken"
+    L["SCOREBOARD_TITLE_AVOIDABLE_DAMAGE_TAKEN"] = "Avoidable"
     L["SCOREBOARD_TITLE_DPS"] = "DPS"
     L["SCOREBOARD_TITLE_HPS"] = "HPS"
     L["SCOREBOARD_TITLE_INTERRUPTS"] = "Interrupts"
@@ -78,6 +81,7 @@ do
     L["SCOREBOARD_TOOLTIP_INTERRUPT_SUCCESS_LABEL"] = "Success"
     L["SCOREBOARD_TOOLTIP_INTERRUPT_OVERLAP_LABEL"] = "Overlap"
     L["SCOREBOARD_TOOLTIP_INTERRUPT_MISSED_LABEL"] = "Missed"
+    L["SCOREBOARD_TOOLTIP_AVOIDABLE_DAMAGE_TAKEN_HEADER"] = "Highest"
     L["SCOREBOARD_TOOLTIP_DAMAGE_TAKEN_HEADER"] = "Highest"
     L["SCOREBOARD_TOOLTIP_DAMAGE_DONE_HEADER"] = "Highest"
     L["SCOREBOARD_TOOLTIP_HEALING_DONE_HEADER"] = "Highest"
@@ -90,6 +94,9 @@ do
     L["SCOREBOARD_BUTTON_GG_TOOLTIP_LINE_1"] = "Give an anonymous GG to this player"
     L["SCOREBOARD_BUTTON_GG_TOOLTIP_LINE_2"] = "GGs you give are saved for later references"
 
+    L["MINUTES_AGO"] = "%d minutes ago"
+    L["HOURS_AGO"] = "%d hours ago"
+    L["DAYS_AGO"] = "%d days ago"
     ------------------------------------------------------------
     L["ADDON_MENU_ADDONS_TITLE"] = "Mythic+ Scoreboard"
 L["ADDON_MENU_ADDONS_TOOLTIP_LEFT_CLICK"] = "left click"

@@ -135,18 +135,6 @@ function WorldQuestTracker.UpdateExtraMapTextures()
 			textureInfo.Pin:Hide()
 		end
 	end
-
-	--alternative way to deal with it:
-	--[=[
-	local map = WorldQuestTrackerDataProvider:GetMap()
-	for pin in map:EnumeratePinsByTemplate("WorldQuestTrackerWorldMapPinTemplate") do
-		if (pin.MapTextureInfo.MapID ~= WorldMapFrame.mapID) then
-			pin.Texture:Hide()
-		else
-			pin.Texture:Show()
-		end
-	end
-	--]=]
 end
 
 ---@param mapID number the mapID to show the texture, if the map does not match, the texture won't be shown
@@ -869,6 +857,8 @@ end
 local worldFramePOIs = CreateFrame ("frame", "WorldQuestTrackerWorldMapPOI", WorldMapFrame.ScrollContainer, "BackdropTemplate")
 worldFramePOIs:SetAllPoints()
 worldFramePOIs:SetFrameLevel(6701)
+
+--[=[
 local fadeInAnimation = worldFramePOIs:CreateAnimationGroup()
 local step1 = fadeInAnimation:CreateAnimation ("Alpha")
 step1:SetOrder (1)
@@ -879,6 +869,7 @@ worldFramePOIs.fadeInAnimation = fadeInAnimation
 fadeInAnimation:SetScript("OnFinished", function()
 	worldFramePOIs:SetAlpha(1)
 end)
+--]=]
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> tutorials
@@ -1176,7 +1167,7 @@ function SlashCmdList.WQTRACKER (msg, editbox)
 			local map = WorldQuestTrackerDataProvider:GetMap()
 
 			local dataProviderPinInUse = false
-			for pin in map:EnumeratePinsByTemplate ("WorldQuestTrackerWorldMapPinTemplate") do
+			for pin in map:EnumeratePinsByTemplate (WORLDQUESTTRACKER_PINNAME) do
 				if (pin.Child == widget) then
 					dataProviderPinInUse = true
 				end
@@ -1224,12 +1215,38 @@ function SlashCmdList.WQTRACKER (msg, editbox)
 			end
 
 
-			Details:DumpTable (info)
+			WorldQuestTracker:DumpTable (info)
 
 		end
 
 	else
-		WorldQuestTracker:Msg("version:", WQT_VERSION)
+		WorldQuestTracker.curseforgeVersion = C_AddOns and C_AddOns.GetAddOnMetadata and C_AddOns.GetAddOnMetadata("WorldQuestTracker", "Version")
+		if (not WorldQuestTracker.curseforgeVersion and GetAddOnMetadata) then
+			WorldQuestTracker.curseforgeVersion = GetAddOnMetadata("WorldQuestTracker", "Version")
+		end
+
+		pcall(function() WorldQuestTracker.version_alpha_id = tonumber(WorldQuestTracker.curseforgeVersion:match("%-(%d+)%-")) end)
+
+		WorldQuestTracker.gameVersionPrefix = "R"
+
+		--WD 10288 RELEASE 10.0.2
+		--WD 10288 ALPHA 21 10.0.2
+		function WorldQuestTracker.GetVersionString()
+			local curseforgeVersion = WorldQuestTracker.curseforgeVersion or ""
+			local alphaId = curseforgeVersion:match("%-(%d+)%-")
+
+			if (not alphaId) then
+				--this is a release version
+				alphaId = "RELEASE"
+			else
+				alphaId = "ALPHA " .. alphaId
+			end
+
+			local version, build, date, tvs = GetBuildInfo()
+			return WorldQuestTracker.gameVersionPrefix .. " " .. WorldQuestTracker.Version .. " " .. alphaId .. " " .. version .. ""
+		end
+
+		WorldQuestTracker:Msg("version:", WorldQuestTracker.GetVersionString())
 
 		if (not WorldQuestTracker.SetupStatusbarButton) then
 			WorldQuestTracker:Msg(L["S_SLASH_OPENMAP_FIRST"])

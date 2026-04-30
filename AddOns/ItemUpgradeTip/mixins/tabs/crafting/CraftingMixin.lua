@@ -19,10 +19,10 @@ local CRAFTING_DATA_PROVIDER_LAYOUT = {
     },
     {
         headerTemplate = "ItemUpgradeTipStringColumnHeaderTemplate",
-        headerText = _G["ITEMUPGRADETIP_L_REQUIRED_ITEM"],
-        headerParameters = { "itemNamePretty" },
+        headerText = _G["ITEMUPGRADETIP_L_CREST_TYPE"],
+        headerParameters = { "crestsRequired" },
         cellTemplate = "ItemUpgradeTipStringCellTemplate",
-        cellParameters = { "itemNamePretty" },
+        cellParameters = { "crestsRequired" }
     }
 }
 
@@ -38,15 +38,22 @@ function ItemUpgradeTipCraftingDataProviderMixin:Refresh()
     for index, craftingInfo in ipairs(ItemUpgradeTip:GetCraftingInfo()) do
         local crafting = {}
         if craftingInfo.itemLevel > 0 then
-            local icon = craftingInfo.iconPath and CreateAtlasMarkupWithAtlasSize(craftingInfo.iconPath, 0, 0, nil, nil, nil, 0.66) or ""
+            local itemIcon = craftingInfo.iconPath and CreateAtlasMarkupWithAtlasSize(craftingInfo.iconPath, 0, 0, nil, nil, nil, 0.66) or ""
+
+            local currencyInfo = ItemUpgradeTip:GetCurrencyInfo(craftingInfo.currency.currencyId)
+            local currencyIcon = currencyInfo.iconFileID and CreateTextureMarkup(currencyInfo.iconFileID, 64, 64, 0, 0, 0.1, 0.9, 0.1, 0.9) or ""
+            local crestsRequired = _G["ITEMUPGRADETIP_L_X_REQUIRED_Y"]:format(
+                craftingInfo.currencyAmount,
+                currencyIcon .. " " .. craftingInfo.currency.colorData.color:WrapTextInColorCode(currencyInfo.name)
+            )
 
             crafting = {
                 itemLevel = craftingInfo.itemLevel,
-                rank = icon or UPGRADE_TIER_FORMAT_STRING:format(craftingInfo.rank, 5),
+                rank = itemIcon or UPGRADE_TIER_FORMAT_STRING:format(craftingInfo.rank, 5),
                 index = index,
                 selected = self:IsSelected(index),
-                itemId = craftingInfo.itemId,
-                itemNamePrettyItemId = craftingInfo.itemId,
+                crestsRequired = crestsRequired,
+                crestsRequiredCurrencyId = craftingInfo.currency and craftingInfo.currency.currencyId or nil,
             }
         else
             crafting = {

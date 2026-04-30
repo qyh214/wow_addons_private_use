@@ -308,11 +308,7 @@ MDT.liveSessionPrefixes = {
   ["reqPre"] = "MDTLiveReqPre",
   ["difficulty"] = "MDTLiveLvl",
   ["poiAssignment"] = "MDTPOIAssignment",
-}
-
-MDT.dataCollectionPrefixes = {
-  ["request"] = "MDTDataReq",
-  ["distribute"] = "MDTDataDist",
+  ["focusMarkerAssignment"] = "MDTFocusMark",
 }
 
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -321,10 +317,8 @@ function MDTcommsObject:OnEnable()
   for _, prefix in pairs(MDT.liveSessionPrefixes) do
     self:RegisterComm(prefix)
   end
-  for _, prefix in pairs(MDT.dataCollectionPrefixes) do
-    self:RegisterComm(prefix)
-  end
   MDT.transmissionCache = {}
+  local ChatFrame_AddMessageEventFilter = ChatFrame_AddMessageEventFilter or ChatFrameUtil.AddMessageEventFilter
   ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", filterFunc)
   ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", filterFunc)
   ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", filterFunc)
@@ -434,17 +428,6 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
     end
   end
 
-  if prefix == MDT.dataCollectionPrefixes.request then
-    MDT.DataCollection:DistributeData()
-  end
-
-  if prefix == MDT.dataCollectionPrefixes.distribute then
-    if sender == UnitFullName("player") then return end
-    local package = MDT:StringToTable(message, false)
-    print("Received data package from "..fullName)
-    MDT.DataCollection:MergeReceiveData(package)
-  end
-
   if prefix == MDT.liveSessionPrefixes.enabled then
     if MDT.liveSessionRequested == true then
       MDT:LiveSession_SessionFound(fullName, message)
@@ -517,6 +500,12 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
           if poiFrame then UIFrameFlash(poiFrame, 0.5, 1, 1, true, 1, 0); end
         end
       end
+    end
+  end
+
+  if prefix == MDT.liveSessionPrefixes.focusMarkerAssignment then
+    if MDT.FocusMarker_OnCommReceived then
+      MDT:FocusMarker_OnCommReceived(message, fullName)
     end
   end
 
@@ -724,7 +713,7 @@ local function displaySendingProgress(userArgs, bytesSent, bytesToSend)
       name = UnitFullName(name)
 
       local fullName = name.."+"..realm
-      SendChatMessage(prefix..fullName.." - "..dungeon..": "..presetName.."]", distribution)
+      C_ChatInfo.SendChatMessage(prefix..fullName.." - "..dungeon..": "..presetName.."]", distribution)
     end
     numActiveTransmissions = numActiveTransmissions - 1
   end
@@ -780,6 +769,7 @@ function MDT:SendToGroup(distribution, silent, preset)
   preset = preset or MDT:GetCurrentPreset()
   --set unique id
   MDT:SetUniqueID(preset)
+  MDT:EnsurePresetCreatedBy(preset)
   --gotta encode difficulty into preset
   local db = MDT:GetDB()
   preset.difficulty = db.currentDifficulty

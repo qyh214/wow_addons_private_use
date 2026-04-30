@@ -1,6 +1,5 @@
 
 --mythic+ extension for Details! Damage Meter
-local Details = Details
 local detailsFramework = DetailsFramework
 local _
 
@@ -14,9 +13,73 @@ local addon = private.addon
 local L = detailsFramework.Language.GetLanguageTable(tocFileName)
 local Translit = LibStub("LibTranslit-1.0")
 
+-- required to be called at least once to ensure GetCurrentSeason has a value
+C_MythicPlus.RequestMapInfo()
+local seasonId = C_MythicPlus.GetCurrentSeason()
+
 function addon.PreparePlayerName(name)
     name = detailsFramework:RemoveRealmName(name)
     return addon.profile.translit and Translit:Transliterate(name, "!") or name
+end
+
+function addon.GetCurrentSeasonId()
+	if (seasonId == -1) then
+		C_MythicPlus.RequestMapInfo()
+		seasonId = C_MythicPlus.GetCurrentSeason()
+	end
+
+	return seasonId
+end
+
+local guessedPreviousSeason = nil
+local previousSeasonCutOffTime = time() - 1814400 -- 21 days, or 3 weeks max
+
+function addon.IsRunVisible(header)
+	if (header.seasonId == -1) then
+		header.seasonId = addon.GetCurrentSeasonId()
+	end
+
+    if (header.seasonId == nil or (header.seasonId > 0 and header.seasonId < 10)) then
+        header.seasonId = header.startTime > 1774224000 and 17 or 1 -- roughly the start of midnight season 1
+    end
+
+    if (seasonId == 0 and guessedPreviousSeason == nil and header.seasonId ~= 0 and header.startTime > previousSeasonCutOffTime) then
+        guessedPreviousSeason = header.seasonId
+    end
+
+    if (not addon.profile.only_show_current_season
+        or (addon.profile.only_show_current_season and (
+            header.seasonId == seasonId
+            or (seasonId == 0 and header.seasonId == guessedPreviousSeason)
+        ))
+    ) then
+    	return true
+    end
+
+	return false
+end
+
+function addon.ToTimeAgo(header)
+	local secondsAgo = time() - header.endTime
+
+    --if the run time is less than 1 hour, show the time in minutes
+    --if the run is less than 24 hours, show the time in hours
+    --if the run is more than 24 hours, show the time in days
+    --if the run is more than 7 days, show the data using addon.GetRunDate(runInfo)
+
+    if (secondsAgo < 3600) then
+        return string.format(L["MINUTES_AGO"], math.floor(secondsAgo / 60))
+    end
+
+    if (secondsAgo < 86400) then
+        return string.format(L["HOURS_AGO"], math.floor(secondsAgo / 3600))
+    end
+
+    if (secondsAgo < 604800) then
+        return string.format(L["DAYS_AGO"], math.floor(secondsAgo / 86400))
+    end
+
+    return addon.GetRunDate(header)
 end
 
 local LikePlayer = function (whoLiked, playerLiked)

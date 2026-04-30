@@ -15,8 +15,6 @@ if not L then
 end
 
 L["ANIMA_UPGRADES"] = "Anima Aufwertungen"
-L["ASPECT_CRESTS"] = "Wappen des Aspekts"
-L["ASPECT_CRESTS_SHORT"] = "Aspekt"
 L["AUTHOR"] = "Author"
 L["BOSS"] = "Boss"
 L["BOSS_X"] = "Boss #%s"
@@ -39,10 +37,6 @@ L["CURRENCY_REMAINING_AFTER_UPGRADING"] = "Verbleibende Währung nach dem Aufwer
 L["DELVE_REWARD_X_Y"] = "%s (%s)"
 L["DISABLED_INTEGRATIONS"] = "Integration deaktivieren"
 L["DISABLED_INTEGRATIONS_DESC"] = "Falls bestimmte Tooltip-Integrationen deaktiviert werden sollen, kann dies über die folgenden Optionen gemacht werden."
-L["DRAKE_CRESTS"] = "Wappen des Drachen"
-L["DRAKE_CRESTS_SHORT"] = "Drachen"
-L["FLIGHTSTONE_CREST_UPGRADES"] = "Flugstein / Wappen Aufwertung"
-L["FLIGHTSTONES"] = "Flugsteine"
 L["GENERAL"] = "Allgemein"
 L["GILDED_CRESTS"] = "Vergoldetes Vorbotenwappen"
 L["GILDED_CRESTS_SHORT"] = [=[Vergoldet
@@ -93,10 +87,6 @@ L["VAULT_REWARD"] = "Schatzkammer"
 L["VERSION"] = "Version"
 L["WEATHERED_CRESTS"] = "Verwittertes Vorbotenwappen"
 L["WEATHERED_CRESTS_SHORT"] = "Verwittert"
-L["WHELP_CRESTS"] = "Wappen des Welplings"
-L["WHELP_CRESTS_SHORT"] = "Welpling"
-L["WYRM_CRESTS"] = "Wappen des Wyrms"
-L["WYRM_CRESTS_SHORT"] = "Wyrm"
 L["X_RARE"] = "%d (Selten)"
 L["X_UPGRADES"] = "%s Aufwertungen"
 

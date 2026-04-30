@@ -30,8 +30,6 @@ local translations = {
     ["state_raid"] = "Grupo de banda",
     ["state_other"] = "Normal (otro)",
 
-    ["<Shift-Click> to close window."] = "<Mayús-clic> para cerrar la ventana",
-
     ["A new version of WIM is available!\nYou can download the latest version from curse"] = "¡Una nueva versión de WIM está disponible!\nPuedes descargar la última versión en Curse",
 
     ["Options"] = "Opciones",
@@ -100,7 +98,8 @@ local translations = {
     ["Sort alphabetically."] = "Ordenar alfabéticamente",
     ["Use <Escape> to close windows."] = "Usa <Escape> para cerrar ventanas.",
     ["Windows will close when opening the world map."] = "Ventanas se cerrarán al abrir el mapa del mundo.",
-    ["Intercept slash commands."] = "Interceptar comandos de barra diagonal.",
+    ["Intercept slash commands."] = "Interceptar comandos de barra diagonal",
+    ["Include sent messages in /REPLY."] = "Incluir mensajes enviados en /r",
     ["Ignore arrow keys while typing."] = "Ignora las teclas de flecha mientras escribes.",
     ["Requires using <Alt> to navigate text."] = "Requiere usar <Alt> para navegar por el texto.",
     ["Display emoticons."] = "Mostrar emoticonos.",
@@ -229,6 +228,7 @@ local translations = {
     ["Game"] = "Juego",
     ["Realm"] = "Reino",
     ["Character"] = "Personaje",
+	["Copy Name"] = "Copiar nombre",
 
     -- Tutorials.lua --
     ["Display WIM tips"] = "Mostrar consejos de WIM",
@@ -269,7 +269,7 @@ local translations = {
     ["Resizing Windows"] = "Redimensionar Ventanas",
     ["You can resize a window by holding <Shift> and dragging the bottom right corner of the window."] = "Puedes redimensionar una ventana manteniendo presionado <Mayús> y arrastrando la esquina inferior derecha de la ventana.",
     ["Demo Window"] = "Ventana de demonstración",
-    ["<Shift-Click> to close window."] = "<Mayús-clic> para cerrar ventana.",
+    ["<Shift-Click> to close window."] = "<Mayús-clic> para cerrar la ventana.",
     ["Message Window Hidden"] = "Ventana de mensaje oculta",
     ["WIM's message window has been hidden to WIM's Minimap Icon. If you want to end a conversation, you may do so by <Shift-Clicking> the close button."] = "La ventana de mensajes de WIM se ha ocultado al ícono de minimapa de WIM. Si deseas finalizar una conversación, puedes hacerlo presionando <Mayús-Clic> en el botón de cierre.",
     ["Default"] = "Predeterminado",
@@ -291,6 +291,7 @@ local translations = {
     ["Enable WIM"] = "Activar WIM",
     ["Display Minimap Icon"] = "Mostrar icono del minimapa",
     ["<Right-Click> to show unread messages."] = "<Haz clic derecho> para mostrar mensajes no leídos",
+	["Display Addon Compartment Icon"] = "Mostrar icono del compartimento de addons",
     ["Display Tutorials"] = "Mostrar tutoriales",
     ["Reset Tutorials"] = "Restablecer tutoriales",
     ["Credits"] = "Créditos",
@@ -400,11 +401,17 @@ local translations = {
     ["Play sound when a whisper is sent."] = "Reproducir sonido cuando se envía un susurro",
     ["Allow others to see my talent spec."] = "Permitir que otros vean mi especialización de talento",
     ["Window Strata:"] = "Estratos de ventana:",
+	["Background"] = BACKGROUND,
+	["Low"] = LOW,
+	["Medium"] = "Medio",
+	["High"] = "Alto",
+	["Dialog"] = ENABLE_DIALOG,
+	["Tooltip"] = true,
     ["Unlock from Minimap"] = "Desbloquear del minimapa",
     ["Press <Tab> to advance to next tell target."] = "Presionar <Tab> para avanzar al siguiente objetivo",
     ["Force sounds when game sound is disabled."] = "Forzar sonidos cuando el sonido del juego está desactivado",
     ["Colorize names."] = "Colorear nombres",
-    ["Clamp window to screen."] = "Sujetar la ventana a la pantalla",
+    ["Clamp window to screen."] = "Anclar la ventana a la pantalla",
     ["Group with whisper windows."] = "Agrupar con ventanas de susurros",
 
     -- TabManagement.lua --
@@ -516,7 +523,8 @@ local translations = {
     --Misc
     ["WIM has detected that you are playing on a private server. Some servers can not process ChatAddonMessages. Would you like to enable them anyway?"] = "WIM ha detectado que estás jugando en un servidor privado. Algunos servidores no pueden procesar ChatAddonMessages. ¿Quieres activarlos de todos modos?",
 
-	-- Whisper-Mode Warnings
+	-- Whisper Mode Warnings
+    ["Whisper Mode: In-line"] = "Modo de susurro: en línea",
 	["Set whispers to In-line"] = "Establecer susurros en línea",
 	["Message suppression requires whispers to be set to 'In-line'."] = "La supresión de mensajes requiere que los susurros estén configurados en 'en línea'.",
 	["It is recommended for whispers to be set to in-line in order to handle their behavior properly."] = "Se recomienda configurar los susurros en línea para manejar su comportamiento correctamente.",

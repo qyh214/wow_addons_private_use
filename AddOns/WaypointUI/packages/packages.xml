@@ -1,0 +1,21 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Include file="module-registry/index.xml"/>
+	<Include file="callback-registry\index.xml"/>
+	<Include file="cvar-util\index.xml"/>
+	<Include file="path\index.xml"/>
+	<Include file="react\index.xml"/>
+	<Include file="sound\index.xml"/>
+	<Include file="saved-variables\index.xml"/>
+	<Include file="utils\index.xml"/>
+	<Include file="lazy-timer\index.xml"/>
+	<Include file="pool\index.xml"/>
+	<Include file="struct\index.xml"/>
+	<Include file="slash-command\index.xml"/>
+	<Include file="wow-client\index.xml"/>
+	<Include file="ui-kit\index.xml"/>
+	<Include file="generic-enum\index.xml"/>
+	<Include file="ui-anim\index.xml"/>
+	<Include file="uic-sharedmixin\index.xml"/>
+	<Include file="ui-font\index.xml"/>
+	<Include file="uic-common\index.xml"/>
+</Ui>

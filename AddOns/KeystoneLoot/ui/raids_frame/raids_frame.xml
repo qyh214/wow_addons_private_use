@@ -1,0 +1,113 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\..\..\..\WoW\Data\Interface\AddOns\Blizzard_SharedXML\UI.xsd">
+    <DropdownButton name="KeystoneLootRaidDropdownTemplate" mixin="KeystoneLootRaidDropdownMixin" virtual="true">
+        <Size x="1" y="20"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture parentKey="RaidIcon" atlas="Raid">
+                    <Size x="20" y="20"/>
+                    <Anchors>
+                        <Anchor point="LEFT" x="1"/>
+                    </Anchors>
+                </Texture>
+                <FontString parentKey="Text" inherits="GameFontHighlight" JustifyH="LEFT" JustifyV="MIDDLE">
+                    <Anchors>
+                        <Anchor point="LEFT" relativeKey="$parent.RaidIcon" relativePoint="RIGHT" x="1" y="-1"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <NormalTexture parentKey="NormalTexture" atlas="common-dropdown-c-button-hover-arrow">
+            <Size x="12" y="5"/>
+            <Anchors>
+                <Anchor point="RIGHT"/>
+            </Anchors>
+        </NormalTexture>
+        <HighlightTexture parentKey="HighlightTexture" atlas="common-dropdown-c-button-hover-arrow" alphaMode="ADD">
+            <Size x="12" y="5"/>
+            <Anchors>
+                <Anchor point="RIGHT"/>
+            </Anchors>
+        </HighlightTexture>
+        <Scripts>
+            <OnMouseDown method="OnMouseDown"/>
+            <OnMouseUp method="OnMouseUp"/>
+        </Scripts>
+    </DropdownButton>
+
+    <Frame name="KeystoneLootRaidBlockTemplate" mixin="KeystoneLootRaidBlockMixin" hidden="true" virtual="true">
+        <Size x="500" y="92"/>
+        <Anchors>
+            <Anchor point="TOPLEFT"/>
+        </Anchors>
+        <Frames>
+            <Frame parentKey="Container" inherits="VerticalLayoutFrame">
+                <KeyValues>
+                    <KeyValue key="topPadding" value="4" type="number"/>
+                    <KeyValue key="bottomPadding" value="4" type="number"/>
+                    <KeyValue key="leftPadding" value="4" type="number"/>
+                    <KeyValue key="rightPadding" value="4" type="number"/>
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="TOPRIGHT" x="-4" y="-4"/>
+                    <Anchor point="BOTTOMLEFT" x="4" y="24"/>
+                </Anchors>
+            </Frame>
+            <Frame parentKey="Inset" inherits="InsetFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.Container"/>
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Container"/>
+                </Anchors>
+            </Frame>
+            <Frame parentKey="BorderFrame" inherits="QuestLogBorderFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.Inset"/>
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset"/>
+                </Anchors>
+            </Frame>
+        </Frames>
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture parentKey="RaidIcon" atlas="Raid">
+                    <Size x="20" y="20"/>
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" relativeKey="$parent.Container" relativePoint="TOPLEFT" x="1"/>
+                    </Anchors>
+                </Texture>
+                <FontString parentKey="TitleText" inherits="GameFontHighlight" JustifyH="LEFT" JustifyV="MIDDLE">
+                    <Size x="0" y="20"/>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeKey="$parent.RaidIcon" relativePoint="RIGHT" x="1"/>
+                    </Anchors>
+                </FontString>
+                <Texture parentKey="Divider" atlas="delves-companion-divider" alpha="0.8">
+                    <Size x="260" y="3"/>
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" relativeKey="$parent.RaidIcon" relativePoint="TOPLEFT" x="-3" y="-1"/>
+                    </Anchors>
+                    <TexCoords left="0.5" right="1" top="0" bottom="1"/>
+                    <Color color="NORMAL_FONT_COLOR"/>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </Frame>
+
+    <Frame name="KeystoneLootRaidsFrameTemplate" mixin="KeystoneLootRaidsFrameMixin" hidden="true" virtual="true">
+        <Size x="500" y="92"/>
+        <Anchors>
+            <Anchor point="TOPLEFT"/>
+        </Anchors>
+        <Frames>
+            <DropdownButton parentKey="DropdownButton" inherits="KeystoneLootRaidDropdownTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="4" y="-63"/>
+                </Anchors>
+            </DropdownButton>
+        </Frames>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </Frame>
+</Ui>

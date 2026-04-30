@@ -329,6 +329,32 @@ function MDT:CreateDevPanel(frame)
           MDT:ExportString(export)
         end,
       },
+      [14] = {
+        text = "Export Current Zone ID",
+        func = function()
+          local currentZoneId = C_Map.GetBestMapForUnit("player")
+          if not currentZoneId then
+            print("MDT DevMode: Unable to determine current zone ID")
+            return
+          end
+          local zones, includedZones = {}, {}
+          local function addZone(zoneId)
+            zoneId = tonumber(zoneId)
+            if zoneId and not includedZones[zoneId] then
+              tinsert(zones, zoneId)
+              includedZones[zoneId] = true
+            end
+          end
+          for zoneId, dungeonIdx in pairs(MDT.zoneIdToDungeonIdx) do
+            if dungeonIdx == db.currentDungeonIdx then
+              addZone(zoneId)
+            end
+          end
+          addZone(currentZoneId)
+          table.sort(zones)
+          MDT:ExportString(("local zones = { %s }"):format(table.concat(zones, ", ")))
+        end,
+      },
     }
     for buttonIdx, buttonData in ipairs(buttons) do
       local button = AceGUI:Create("Button")
@@ -371,39 +397,6 @@ function MDT:CreateDevPanel(frame)
       if devBlip then MDT:ShowEnemyInfoFrame(devBlip) else print("MDT DevMode: Please select a blip") end
     end)
     container:AddChild(enemyInfoButton)
-
-    local collectedSpellsButton = AceGUI:Create("Button")
-    collectedSpellsButton:SetText("Add collected spells")
-    collectedSpellsButton:SetCallback("OnClick", function()
-      MDT.DataCollection:AddCollectedDataToEnemyTable(db.currentDungeonIdx, false, true)
-    end)
-    container:AddChild(collectedSpellsButton)
-
-    local collectedCharacteristicsButton = AceGUI:Create("Button")
-    collectedCharacteristicsButton:SetText("Add collected characteristics")
-    collectedCharacteristicsButton:SetCallback("OnClick", function()
-      MDT.DataCollection:AddCollectedDataToEnemyTable(db.currentDungeonIdx, true, false)
-    end)
-    container:AddChild(collectedCharacteristicsButton)
-
-    local collectedHealthButton = AceGUI:Create("Button")
-    collectedHealthButton:SetText("Add collected Health Values")
-    collectedHealthButton:SetCallback("OnClick", function()
-      if db.newDataCollectionActive then
-        MDT:ProcessHealthTrack()
-      else
-        print("MDT DevMode: Cant process Health Track, reload to enable Data Collection first!")
-        MDT:ToggleDataCollection()
-      end
-    end)
-    container:AddChild(collectedHealthButton)
-
-    local cleanSpellDataButton = AceGUI:Create("Button")
-    cleanSpellDataButton:SetText("Clean spells")
-    cleanSpellDataButton:SetCallback("OnClick", function()
-      MDT:CleanEnemyInfoSpells()
-    end)
-    container:AddChild(cleanSpellDataButton)
 
     local findCloneIssuesButton = AceGUI:Create("Button")
     findCloneIssuesButton:SetText("Find Clone Issues")
@@ -755,8 +748,6 @@ function MDT:CreateDevPanel(frame)
     clearCacheButton:SetText("Clear Cache + DC")
     clearCacheButton:SetCallback("OnClick", function()
       MDT:ResetDataCache()
-      db.dataCollection = {}
-      db.dataCollectionCC = {}
     end)
     container:AddChild(clearCacheButton)
 
@@ -775,13 +766,6 @@ function MDT:CreateDevPanel(frame)
       DevTool:AddData(db)
     end)
     container:AddChild(vdtDbButton)
-
-    local leechButton = AceGUI:Create("Button")
-    leechButton:SetText("Leech Data")
-    leechButton:SetCallback("OnClick", function()
-      MDT:RequestDataCollectionUpdate()
-    end)
-    container:AddChild(leechButton)
   end
 
   -- Callback function for OnGroupSelected

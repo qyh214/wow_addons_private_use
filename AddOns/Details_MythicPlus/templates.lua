@@ -24,9 +24,9 @@ addon.templates = {}
 
 --activity timeline in the scoreboard
 local activityTimelineTemplate = {
-    deathMarker_Size = 24,
-    deathMarker_RoleIconScale = 0.75, --scale from the deathMarkerSize
-    deathMarker_PortraitDesaturation = 1, --full black and white
+    deathMarker_Size = 28,
+    deathMarker_RoleIconScale = 0.7, --scale from the deathMarkerSize
+    deathMarker_PortraitDesaturation = 0.6, --full black and white
     deathMarker_RoleIconDesaturation = 0.6,
     deathMarker_DefaultClassTexture = "Interface\\TargetingFrame\\UI-Classes-Circles",
     deathMarker_TooltipWidth = 250,
@@ -41,7 +41,7 @@ addon.templates.activityTimeline = activityTimelineTemplate
 ---@field dropdownHeight number height of the dropdown when opened
 
 local dropdownRunSelector = {
-    width = 250,
+    width = 260,
     height = 20,
     dropdownHeight = 400,
 }

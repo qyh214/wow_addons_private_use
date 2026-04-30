@@ -3,6 +3,7 @@ local B, C, L, DB = unpack(ns)
 
 C.themes["Blizzard_MajorFactions"] = function()
 	local frame = _G.MajorFactionRenownFrame
+	if not frame then return end
 
 	B.StripTextures(frame)
 	B.SetBD(frame)

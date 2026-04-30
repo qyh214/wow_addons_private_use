@@ -1,0 +1,69 @@
+Release 2.5.1
+* Bump interface version
+
+Release 2.5.0
+* Add ms precision to finished dungeon timer
+* Add exception for Syling Tracker
+* Fix remaining forces after pull showing 0 when not in pull
+* Add "missing count" text
+* Update ruRU.lua
+
+Release 2.4.0
+* Add glow when forces hit 100%
+* Add German translations
+
+Release 2.2.5
+* Fix bar frame height scaling
+
+Release 2.2.5
+* Fix bar padding
+
+Release 2.2.4
+* Improve debug mode
+* Improve layouting code
+* Merge "bars" and "timers" options
+* Extend bar height options, add padding options
+
+Release 2.1.4
+* Bump interface version
+
+Release 2.1.3
+* Update localization
+
+Release 2.1.2
+* Remove duplicate forces bar option
+* Fix font wrapping/ellipsis for large font sizes
+
+Release 2.1.1
+* Update russian localization
+
+Release 2.1.0
+* Add alignment options
+* Fix Blizzard UI sometimes not being hidden when reconnecting
+
+Release 2.0.0
+* Update API usage for WoW 10.0.2
+* Add missing SharedMediaWidget Lib to allow functioning without ElvUI
+* Fix demo mode toggle through chat command
+* Update translations
+* Remove pride glow
+
+Release 1.1.1
+* Switched to combat log party member death detection
+
+Release 1.1.0
+* Implemented death logs and tooltip display
+* Updated count tooltip to appear on separate line
+* Improved options menu structure
+* Added configuration for automatic keystone insertion
+* Added configuration for pride glow
+* Fixed a bug where main timer would not have the configured color
+* Added configuration for bar size
+
+Release 1.0.2
+* Fixed objective parsing on objective completion time sync
+
+Release 1.0.1
+* Fixed a bug where completion times would not be joined correctly when syncing with other players
+
+Release 1.0.0 - Initial Release

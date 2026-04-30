@@ -172,25 +172,26 @@ end
 
 function Details:CreatePanicWarning()
 	Details.instance_load_failed = CreateFrame("frame", "DetailsPanicWarningFrame", UIParent,"BackdropTemplate")
-	Details.instance_load_failed:SetHeight(80)
+	Details.instance_load_failed:SetHeight(130)
 	--tinsert(UISpecialFrames, "DetailsPanicWarningFrame")
 	Details.instance_load_failed.text = Details.instance_load_failed:CreateFontString(nil, "overlay", "GameFontNormal")
 	Details.instance_load_failed.text:SetPoint("center", Details.instance_load_failed, "center")
 	Details.instance_load_failed.text:SetTextColor(1, 0.6, 0)
 	Details.instance_load_failed:SetBackdrop({bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
-	Details.instance_load_failed:SetBackdropColor(1, 0, 0, 0.2)
+	Details.instance_load_failed:SetBackdropColor(0.7, 0.3, 0.3, 0.9)
 	Details.instance_load_failed:SetPoint("topleft", UIParent, "topleft", 0, -250)
 	Details.instance_load_failed:SetPoint("topright", UIParent, "topright", 0, -250)
 end
 
 local safe_load = function(func, param1, ...)
-	local okey, errortext = pcall(func, param1, ...)
-	if (not okey) then
+	--local okey, errortext = pcall(func, param1, ...)
+	local okey, errortext = xpcall(func, geterrorhandler(), param1, ...)
+	if (false and not okey) then
 		if (not Details.instance_load_failed) then
 			Details:CreatePanicWarning()
 		end
 		Details.do_not_save_skins = true
-		Details.instance_load_failed.text:SetText("Failed to load a Details! window.\n/reload or reboot the game client may fix the problem.\nIf the problem persist, try /details reinstall.\nError: " .. errortext .. "")
+		Details.instance_load_failed.text:SetText("Failed to load a Details! window.\n/reload or reboot the game client may fix the problem.\nIf the problem persist, try /details reinstall.\nError: " .. errortext)
 	end
 	return okey
 end
@@ -563,6 +564,7 @@ local default_profile = {
 	class_specs_coords = {
 		[577] = {128/512, 192/512, 256/512, 320/512}, --havoc demon hunter
 		[581] = {192/512, 256/512, 256/512, 320/512}, --vengeance demon hunter
+		[1480] = {448/512, 512/512, 256/512, 320/512}, --devourer demon hunter
 
 		[250] = {0, 64/512, 0, 64/512}, --blood dk
 		[251] = {64/512, 128/512, 0, 64/512}, --frost dk
@@ -855,6 +857,16 @@ local default_profile = {
 		},
 	},
 
+	righttext_simple_formatting = {
+		enabled = true,
+		format_tsp = "%s (%s, %s)",
+		format_ts = "%s (%s)",
+		format_tp = "%s (%s)",
+		use_alignment = false,
+		alignment_space = 60,
+		first_run = false,
+	},
+
 	death_log_colors = {
 		damage = "red",
 		heal = "green",
@@ -866,6 +878,9 @@ local default_profile = {
 
 	fade_speed = 0.15,
 	use_self_color = false,
+
+	damage_meter_type = 0,
+	damage_meter_position = {},
 
 	--minimap
 		minimap = {hide = false, radius = 160, minimapPos = 220, onclick_what_todo = 1, text_type = 1, text_format = 3},
@@ -1141,6 +1156,8 @@ local default_profile = {
 			tooltip_max_targets = 2,
 			tooltip_max_pets = 2,
 
+			grow_direction = "down",
+
 			--menus_bg_coords = {331/512, 63/512, 109/512, 143/512}, --with gradient on right side
 			menus_bg_coords = {0.309777336120606, 0.924000015258789, 0.213000011444092, 0.279000015258789},
 			menus_bg_color = {.8, .8, .8, 0.2},
@@ -1153,6 +1170,15 @@ local default_profile = {
 			line_height = 17,
 
 			show_border_shadow = true, --from spell tooltips from the main window
+
+			--apocalypse
+			show_header = true,
+			show_percent_column = true,
+			show_dps_column = true,
+			show_help = true,
+			show_help_count = 0, --when reaches MAX_TOOLTIP_HELP, set show_help to false
+			apocalypse_width = 300,
+			apocalypse_width_useline = false,
 		},
 
 	--new window system
@@ -1164,6 +1190,7 @@ local default_profile = {
 
 Details.default_profile = default_profile
 
+
 -- aqui fica as propriedades do jogador que n�o ser�o armazenadas no profile
 local default_player_data = {
 		coach = {
@@ -1171,6 +1198,8 @@ local default_player_data = {
 			welcome_panel_pos = {},
 			last_coach_name = false,
 		},
+
+		apocalypse_savedsegments = {},
 
 		arena_data_headers = {},
 		arena_data_compressed = {}, --store data for arena the character did
@@ -1357,6 +1386,10 @@ local default_player_data = {
 
 	--death panel buttons
 		on_death_menu = false,
+	--damage meter sessions
+		damage_meter_sessions = {},
+	--misc data about a session
+		damage_meter_session_info = {},
 }
 
 Details.default_player_data = default_player_data
@@ -1365,6 +1398,7 @@ local default_global_data = {
 
 	--profile pool
 		__profiles = {},
+		__char_profiles = {}, --table<name or guid> = profile name
 		latest_news_saw = "",
 		always_use_profile = false,
 		always_use_profile_name = "",
@@ -1406,6 +1440,8 @@ local default_global_data = {
 		installed_skins_cache = {},
 		last_10days_cache_cleanup = 0,
 		recent_players = {},
+
+		appocalypse_mode = 0,
 
 		slashk_dnd = false,
 		slashk_addon = "bigwigs",
@@ -1497,6 +1533,17 @@ local default_global_data = {
 
 	frame_background_color = {0.0549, 0.0549, 0.0549, 0.934},
 
+	breakdown_midnight = {
+		players = {width = 200, height = 296},
+		segments = {width = 200, height = 228},
+		spells = {width = 464, height = 400},
+		targets = {width = 300, height = 170},
+		spelldetails = {width = 231, height = 261},
+		compare = {width = 231, height = 200},
+		headers_width = {},
+		headers_shown = {},
+	},
+
 --/run Details.breakdown_spell_tab.spellcontainer_height = 311 --352
 	--breakdown spell tab
 	breakdown_spell_tab = {
@@ -1547,6 +1594,7 @@ local default_global_data = {
 		genericcontainer_right_height = 460,
 
 		spellbar_background_alpha = 0.92,
+		section_background_color = {0.1, 0.1, 0.1, 0.4},
 
 		spellcontainer_headers = {}, --store information about active headers and their sizes (spells)
 		targetcontainer_headers = {}, --store information about active headers and their sizes (target)
@@ -1569,12 +1617,14 @@ local default_global_data = {
 		show_totalhitdamage_on_overkill = false,
 
 	--switch tables
+		switch_missing_type = 0,
 		switchSaved = {slots = 4, table = {
 			{["atributo"] = 1, ["sub_atributo"] = 1}, --damage done
 			{["atributo"] = 2, ["sub_atributo"] = 1}, --healing done
 			{["atributo"] = 1, ["sub_atributo"] = 6}, --enemies
 			{["atributo"] = 4, ["sub_atributo"] = 5}, --deaths
 		}},
+		switch_post_apoc = false,
 		report_pos = {1, 1},
 
 	--tutorial
@@ -1881,7 +1931,7 @@ function Details:RestoreState_CurrentMythicDungeonRun()
 				print("D! (debug) mythic level isn't equal.", mythicLevel, savedTable.level)
 			end
 		else
-			print("D! (debug) zone name or zone Id isn't the same:", zoneName, savedTable.dungeon_name, currentZoneID, savedTable.dungeon_zone_id)
+			--print("D! (debug) zone name or zone Id isn't the same:", zoneName, savedTable.dungeon_name, currentZoneID, savedTable.dungeon_zone_id)
 		end
 
 		--mythic run is over
@@ -1894,7 +1944,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 --~export ~ import ~profile
-
+--these are keys in the profile that should not be exported
 local exportProfileBlacklist = {
 	custom = true,
 	cached_specs = true,
@@ -1937,15 +1987,41 @@ local exportProfileBlacklist = {
 	trinket_data = true,
 	keystone_cache = true,
 	performance_profiles = true,
+	coach = true,
+	apocalypse_savedsegments = true,
+	arena_data_headers = true,
+	arena_data_compressed = true, --store data for arena the character did
+	arena_data_index_selected = true, --index of the arena data selected to be shown in the arena data panel
+	player_stats = true,
+	combat_log = true,
+	data_harvest_for_charsts = true,
+	data_harvested_for_charts = true,
+	ocd_tracker = true,
+	mythic_plus_log = true,
+	cached_roles = true,
+	last_day = true,
+	last_instance_id = true,
+	last_instance_time = true,
+	mythic_dungeon_id = true,
+	local_instances_config = true,
+	on_death_menu = true,
+	damage_meter_sessions = true,
+	damage_meter_session_info = true,
+	current_exp_raid_encounters = true,
+	savedCustomSpells = true,
+	recent_players = true,
+	third_party = true,
 }
 
 --transform the current profile into a string which can be shared in the internet
-function Details:ExportCurrentProfile()
+---@param self details
+---@param profileName string|nil if passing nil it export the current profile
+function Details:ExportCurrentProfile(profileName)
 	--save the current profile
 	Details:SaveProfile()
 
 	--data saved inside the profile
-	local profileObject = Details:GetProfile (Details:GetCurrentProfileName())
+	local profileObject = Details:GetProfile(profileName or Details:GetCurrentProfileName(), false)
 	if (not profileObject) then
 		Details:Msg("fail to get the current profile.")
 		return false
@@ -1985,7 +2061,8 @@ function Details:ExportCurrentProfile()
 		version = 1,
 	}
 
-	local compressedData = Details:CompressData (exportedData, "print")
+	local bUseBlizzardEncoding = true
+	local compressedData = Details:CompressData (exportedData, "print", bUseBlizzardEncoding)
 	return compressedData
 end
 
@@ -2007,7 +2084,6 @@ function Details:ImportProfile (profileString, newProfileName, bImportAutoRunCod
 
 	local dataTable = Details:DecompressData (profileString, "print")
 	if (dataTable) then
-
 		local profileObject = Details:GetProfile (newProfileName, false)
 		local nameWasDuplicate = false
     if not overwriteExisting then
@@ -2103,7 +2179,8 @@ function Details:ImportProfile (profileString, newProfileName, bImportAutoRunCod
 		--transfer instance data to the new created profile
 		profileObject.instances = DetailsFramework.table.copy({}, profileData.instances)
 
-		Details:ApplyProfile (newProfileName)
+		local shouldSkipSave = overwriteExisting and Details:GetCurrentProfileName() == newProfileName
+		Details:ApplyProfile (newProfileName, shouldSkipSave)
 
 		--reset automation settings (due to user not knowing why some windows are disappearing)
 		for instanceId, instance in Details:ListInstances() do

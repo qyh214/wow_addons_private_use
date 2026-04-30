@@ -8,6 +8,7 @@ local HALF_WIDTH = 1.5
 -------------------------------------------------------------------------
 
 -- UVARINFO was made local in patch 8.2.0
+-- FIXME: These globals don't seem to exist in 12.0.0
 local uvars = {
   removeChatDelay = "REMOVE_CHAT_DELAY",
   lockActionBars = "LOCK_ACTIONBAR",
@@ -48,10 +49,41 @@ local function BlizzardOptionsPanel_UpdateCombatText()
   end
 end
 
-local function FCT_SetValue(cvar, checked)
-  _G[uvars[cvar]] = checked and "1" or "0"
-  BlizzardOptionsPanel_UpdateCombatText()
+local function FCT_SetValue(cvar, value)
+  if uvars[cvar] and _G[uvars[cvar]] then
+    _G[uvars[cvar]] = value and "1" or "0"
+    BlizzardOptionsPanel_UpdateCombatText()
+  end
 end
+
+-- For 12.0: Append "_v2" to any cvars that need it while supporting backwards compatibility
+local function GetCVarBool_v2(cvar)
+  if addon:CVarExists(cvar .. "_v2") then
+    cvar = cvar .. "_v2"
+  end
+  return C_CVar.GetCVarBool(cvar)
+end
+
+local function GetCVar_v2(cvar)
+  if addon:CVarExists(cvar .. "_v2") then
+    cvar = cvar .. "_v2"
+  end
+  return C_CVar.GetCVar(cvar)
+end
+
+local function SetCVar_v2(cvar, value)
+  if addon:CVarExists(cvar .. "_v2") then
+    cvar = cvar .. "_v2"
+  end
+  local result = addon:SetCVar(cvar, value)
+  -- FIXME: Required to get combat text settings to actually apply when changed
+  if C_CVar.GetCVarBool("enableFloatingCombatText") then
+    addon:SetCVar("enableFloatingCombatText", 0)
+    addon:SetCVar("enableFloatingCombatText", 1)
+  end
+  return result
+end
+
 
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
@@ -79,10 +111,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = SHOW_DAMAGE_TEXT,
         desc = OPTION_TOOLTIP_SHOW_DAMAGE,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextCombatDamage")
+          return GetCVarBool_v2("floatingCombatTextCombatDamage")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextCombatDamage", value)
+          SetCVar_v2("floatingCombatTextCombatDamage", value)
         end,
         width = HALF_WIDTH,
         order = 11,
@@ -92,10 +124,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = LOG_PERIODIC_EFFECTS_TEXT or LOG_PERIODIC_EFFECTS,
         desc = OPTION_TOOLTIP_LOG_PERIODIC_EFFECTS,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextCombatLogPeriodicSpells")
+          return GetCVarBool_v2("floatingCombatTextCombatLogPeriodicSpells")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextCombatLogPeriodicSpells", value)
+          SetCVar_v2("floatingCombatTextCombatLogPeriodicSpells", value)
         end,
         width = HALF_WIDTH,
         order = 12,
@@ -105,11 +137,11 @@ function addon:CreateFloatingCombatTextOptions()
         name = SHOW_PET_MELEE_DAMAGE_TEXT or SHOW_PET_MELEE_DAMAGE,
         desc = OPTION_TOOLTIP_SHOW_PET_MELEE_DAMAGE,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextPetMeleeDamage")
+          return GetCVarBool_v2("floatingCombatTextPetMeleeDamage")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextPetMeleeDamage", value)
-          self:SetCVar("floatingCombatTextPetSpellDamage", value)
+          SetCVar_v2("floatingCombatTextPetMeleeDamage", value)
+          SetCVar_v2("floatingCombatTextPetSpellDamage", value)
         end,
         width = HALF_WIDTH,
         order = 13,
@@ -119,10 +151,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = "Directional Scale",
         desc = "Directional damage numbers movement scale (disabled = no directional numbers)",
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextCombatDamageDirectionalScale")
+          return GetCVarBool_v2("floatingCombatTextCombatDamageDirectionalScale")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextCombatDamageDirectionalScale", value)
+          SetCVar_v2("floatingCombatTextCombatDamageDirectionalScale", value)
         end,
         width = HALF_WIDTH,
         order = 14,
@@ -132,10 +164,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = SHOW_COMBAT_HEALING_TEXT or SHOW_COMBAT_HEALING,
         desc = OPTION_TOOLTIP_SHOW_COMBAT_HEALING,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextCombatHealing")
+          return GetCVarBool_v2("floatingCombatTextCombatHealing")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextCombatHealing", value)
+          SetCVar_v2("floatingCombatTextCombatHealing", value)
         end,
         width = HALF_WIDTH,
         order = 15,
@@ -145,40 +177,41 @@ function addon:CreateFloatingCombatTextOptions()
         name = SHOW_COMBAT_HEALING_ABSORB_TARGET .. " " .. "(Target)",
         desc = OPTION_TOOLTIP_SHOW_COMBAT_HEALING_ABSORB_TARGET,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextCombatHealingAbsorbTarget")
+          return GetCVarBool_v2("floatingCombatTextCombatHealingAbsorbTarget")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextCombatHealingAbsorbTarget", value)
+          SetCVar_v2("floatingCombatTextCombatHealingAbsorbTarget", value)
         end,
         width = HALF_WIDTH,
         order = 16,
       },
-      floatingCombatTextSpellMechanics = {
-        type = "toggle",
-        name = SHOW_TARGET_EFFECTS,
-        desc = OPTION_TOOLTIP_SHOW_TARGET_EFFECTS,
-        get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextSpellMechanics")
-        end,
-        set = function(_, value)
-          self:SetCVar("floatingCombatTextSpellMechanics", value)
-        end,
-        width = HALF_WIDTH,
-        order = 17,
-      },
-      floatingCombatTextSpellMechanicsOther = {
-        type = "toggle",
-        name = SHOW_OTHER_TARGET_EFFECTS,
-        desc = OPTION_TOOLTIP_SHOW_OTHER_TARGET_EFFECTS,
-        get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextSpellMechanicsOther")
-        end,
-        set = function(_, value)
-          self:SetCVar("floatingCombatTextSpellMechanicsOther", value)
-        end,
-        width = HALF_WIDTH,
-        order = 18,
-      },
+      -- FIXME: Removed in 12.0, but we should show for other versions of the game
+      -- floatingCombatTextSpellMechanics = {
+      --   type = "toggle",
+      --   name = SHOW_TARGET_EFFECTS,
+      --   desc = OPTION_TOOLTIP_SHOW_TARGET_EFFECTS,
+      --   get = function()
+      --     return GetCVarBool("floatingCombatTextSpellMechanics")
+      --   end,
+      --   set = function(_, value)
+      --     SetCVarV2("floatingCombatTextSpellMechanics", value)
+      --   end,
+      --   width = HALF_WIDTH,
+      --   order = 17,
+      -- },
+      -- floatingCombatTextSpellMechanicsOther = {
+      --   type = "toggle",
+      --   name = SHOW_OTHER_TARGET_EFFECTS,
+      --   desc = OPTION_TOOLTIP_SHOW_OTHER_TARGET_EFFECTS,
+      --   get = function()
+      --     return GetCVarBool("floatingCombatTextSpellMechanicsOther")
+      --   end,
+      --   set = function(_, value)
+      --     SetCVarV2("floatingCombatTextSpellMechanicsOther", value)
+      --   end,
+      --   width = HALF_WIDTH,
+      --   order = 18,
+      -- },
       WorldTextScale = {
         type = "range",
         name = "World Text Scale",
@@ -187,10 +220,10 @@ function addon:CreateFloatingCombatTextOptions()
         max = 2.5,
         step = 0.1,
         get = function()
-          return tonumber(C_CVar.GetCVar("WorldTextScale"))
+          return tonumber(GetCVar_v2("WorldTextScale"))
         end,
         set = function(_, value)
-          self:SetCVar("WorldTextScale", value)
+          SetCVar_v2("WorldTextScale", value)
         end,
         width = THIRD_WIDTH,
         order = 19,
@@ -206,6 +239,7 @@ function addon:CreateFloatingCombatTextOptions()
         name = SHOW_COMBAT_TEXT_TEXT,
         desc = OPTION_TOOLTIP_SHOW_COMBAT_TEXT,
         get = function()
+          -- No 'v2' version of this
           return C_CVar.GetCVarBool("enableFloatingCombatText")
         end,
         set = function(_, value)
@@ -230,10 +264,10 @@ function addon:CreateFloatingCombatTextOptions()
           "3",
         },
         get = function()
-          return C_CVar.GetCVar("floatingCombatTextFloatMode")
+          return GetCVar_v2("floatingCombatTextFloatMode")
         end,
         set = function(_, value)
-          addon:SetCVar("floatingCombatTextFloatMode", value)
+          SetCVar_v2("floatingCombatTextFloatMode", value)
           BlizzardOptionsPanel_UpdateCombatText()
         end,
         width = THIRD_WIDTH,
@@ -244,10 +278,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = COMBAT_TEXT_SHOW_DODGE_PARRY_MISS_TEXT,
         desc = OPTION_TOOLTIP_COMBAT_TEXT_SHOW_DODGE_PARRY_MISS,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextDodgeParryMiss")
+          return GetCVarBool_v2("floatingCombatTextDodgeParryMiss")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextDodgeParryMiss", value)
+          SetCVar_v2("floatingCombatTextDodgeParryMiss", value)
           FCT_SetValue("floatingCombatTextDodgeParryMiss", value)
         end,
         width = HALF_WIDTH,
@@ -258,10 +292,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = COMBAT_TEXT_SHOW_RESISTANCES_TEXT,
         desc = OPTION_TOOLTIP_COMBAT_TEXT_SHOW_RESISTANCES,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextDamageReduction")
+          return GetCVarBool_v2("floatingCombatTextDamageReduction")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextDamageReduction", value)
+          SetCVar_v2("floatingCombatTextDamageReduction", value)
           FCT_SetValue("floatingCombatTextDamageReduction", value)
         end,
         width = HALF_WIDTH,
@@ -272,10 +306,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = COMBAT_TEXT_SHOW_REPUTATION_TEXT,
         desc = OPTION_TOOLTIP_COMBAT_TEXT_SHOW_REPUTATION,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextRepChanges")
+          return GetCVarBool_v2("floatingCombatTextRepChanges")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextRepChanges", value)
+          SetCVar_v2("floatingCombatTextRepChanges", value)
           FCT_SetValue("floatingCombatTextRepChanges", value)
         end,
         width = HALF_WIDTH,
@@ -286,10 +320,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = COMBAT_TEXT_SHOW_REACTIVES_TEXT,
         desc = OPTION_TOOLTIP_COMBAT_TEXT_SHOW_REACTIVES,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextReactives")
+          return GetCVarBool_v2("floatingCombatTextReactives")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextReactives", value)
+          SetCVar_v2("floatingCombatTextReactives", value)
           FCT_SetValue("floatingCombatTextReactives", value)
         end,
         width = HALF_WIDTH,
@@ -300,10 +334,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = COMBAT_TEXT_SHOW_FRIENDLY_NAMES_TEXT,
         desc = OPTION_TOOLTIP_COMBAT_TEXT_SHOW_FRIENDLY_NAMES,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextFriendlyHealers")
+          return GetCVarBool_v2("floatingCombatTextFriendlyHealers")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextFriendlyHealers", value)
+          SetCVar_v2("floatingCombatTextFriendlyHealers", value)
           FCT_SetValue("floatingCombatTextFriendlyHealers", value)
         end,
         width = HALF_WIDTH,
@@ -314,10 +348,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = COMBAT_TEXT_SHOW_COMBAT_STATE_TEXT,
         desc = OPTION_TOOLTIP_COMBAT_TEXT_SHOW_COMBAT_STATE,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextCombatState")
+          return GetCVarBool_v2("floatingCombatTextCombatState")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextCombatState", value)
+          SetCVar_v2("floatingCombatTextCombatState", value)
           FCT_SetValue("floatingCombatTextCombatState", value)
         end,
         width = HALF_WIDTH,
@@ -328,10 +362,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = SHOW_COMBAT_HEALING_ABSORB_SELF .. " " .. "(Self)",
         desc = OPTION_TOOLTIP_COMBAT_TEXT_SHOW_COMBAT_STATE,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextCombatHealingAbsorbSelf")
+          return GetCVarBool_v2("floatingCombatTextCombatHealingAbsorbSelf")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextCombatHealingAbsorbSelf", value)
+          SetCVar_v2("floatingCombatTextCombatHealingAbsorbSelf", value)
         end,
         width = HALF_WIDTH,
         order = 29,
@@ -341,10 +375,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = COMBAT_TEXT_SHOW_LOW_HEALTH_MANA_TEXT,
         desc = OPTION_TOOLTIP_COMBAT_TEXT_SHOW_LOW_HEALTH_MANA,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextLowManaHealth")
+          return GetCVarBool_v2("floatingCombatTextLowManaHealth")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextLowManaHealth", value)
+          SetCVar_v2("floatingCombatTextLowManaHealth", value)
           FCT_SetValue("floatingCombatTextLowManaHealth", value)
         end,
         width = HALF_WIDTH,
@@ -355,10 +389,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = COMBAT_TEXT_SHOW_ENERGIZE_TEXT,
         desc = OPTION_TOOLTIP_COMBAT_TEXT_SHOW_ENERGIZE,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextEnergyGains")
+          return GetCVarBool_v2("floatingCombatTextEnergyGains")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextEnergyGains", value)
+          SetCVar_v2("floatingCombatTextEnergyGains", value)
           FCT_SetValue("floatingCombatTextEnergyGains", value)
         end,
         width = HALF_WIDTH,
@@ -369,10 +403,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = COMBAT_TEXT_SHOW_COMBO_POINTS_TEXT,
         desc = OPTION_TOOLTIP_COMBAT_TEXT_SHOW_COMBO_POINTS,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextComboPoints")
+          return GetCVarBool_v2("floatingCombatTextComboPoints")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextComboPoints", value)
+          SetCVar_v2("floatingCombatTextComboPoints", value)
           FCT_SetValue("floatingCombatTextComboPoints", value)
         end,
         width = HALF_WIDTH,
@@ -383,10 +417,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = COMBAT_TEXT_SHOW_PERIODIC_ENERGIZE_TEXT,
         desc = OPTION_TOOLTIP_COMBAT_TEXT_SHOW_PERIODIC_ENERGIZE,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextPeriodicEnergyGains")
+          return GetCVarBool_v2("floatingCombatTextPeriodicEnergyGains")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextPeriodicEnergyGains", value)
+          SetCVar_v2("floatingCombatTextPeriodicEnergyGains", value)
           FCT_SetValue("floatingCombatTextPeriodicEnergyGains", value)
         end,
         width = HALF_WIDTH,
@@ -397,10 +431,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = COMBAT_TEXT_SHOW_HONOR_GAINED_TEXT,
         desc = OPTION_TOOLTIP_COMBAT_TEXT_SHOW_HONOR_GAINED,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextHonorGains")
+          return GetCVarBool_v2("floatingCombatTextHonorGains")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextHonorGains", value)
+          SetCVar_v2("floatingCombatTextHonorGains", value)
           FCT_SetValue("floatingCombatTextHonorGains", value)
         end,
         width = HALF_WIDTH,
@@ -411,10 +445,10 @@ function addon:CreateFloatingCombatTextOptions()
         name = COMBAT_TEXT_SHOW_AURAS_TEXT,
         desc = OPTION_TOOLTIP_COMBAT_TEXT_SHOW_AURAS,
         get = function()
-          return C_CVar.GetCVarBool("floatingCombatTextAuras")
+          return GetCVarBool_v2("floatingCombatTextAuras")
         end,
         set = function(_, value)
-          self:SetCVar("floatingCombatTextAuras", value)
+          SetCVar_v2("floatingCombatTextAuras", value)
           FCT_SetValue("floatingCombatTextAuras", value)
         end,
         width = HALF_WIDTH,

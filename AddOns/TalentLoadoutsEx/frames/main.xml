@@ -459,7 +459,7 @@
 									<CheckButton parentArray="CategoryCheckButtons" inherits="TalentLoadoutExCheckButtonTemplate">
 										<KeyValues>
 											<KeyValue key="CheckButtonText" value="Mythic+"/>
-											<KeyValue key="category" value="mm+"/>
+											<KeyValue key="category" value="m+"/>
 										</KeyValues>
 									</CheckButton>
 									<CheckButton parentArray="CategoryCheckButtons" inherits="TalentLoadoutExCheckButtonTemplate">

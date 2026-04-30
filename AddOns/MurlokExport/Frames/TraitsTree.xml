@@ -1,0 +1,277 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\..\..\..\..\WoW\Data\Interface\AddOns\Blizzard_SharedXML\UI.xsd">
+	<Script file="TraitsTree.lua"/>
+
+	<Button name="PvPTraitsButtonTemplate" mixin="PvPTraitsButtonMixin" virtual="true">
+		<Size x="300" y="30"/>
+		<Layers>
+			<Layer level="BORDER" textureSubLevel="1">
+				<Texture parentKey="Icon">
+					<Size x="26" y="26"/>
+					<Anchors>
+						<Anchor point="LEFT" x="2" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="1">
+				<Texture parentKey="Selected" atlas="talents-node-pvpflyout-yellow">
+					<Size x="26" y="26"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="2" y="-2"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="SpendTextShadow1" inherits="SystemFont16_Shadow_ThickOutline" justifyH="CENTER" parentArray="spendTextShadows">
+					<Color r="0" g="0" b="0"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.SpendText" relativePoint="CENTER" x="-1" y="1"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="SpendTextShadow2" inherits="SystemFont16_Shadow_ThickOutline" justifyH="CENTER" parentArray="spendTextShadows">
+					<Color r="0" g="0" b="0"/>
+					<Anchors>
+							<Anchor point="CENTER" relativeKey="$parent.SpendText" relativePoint="CENTER" x="1" y="1"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="SpendTextShadow3" inherits="SystemFont16_Shadow_ThickOutline" justifyH="CENTER" parentArray="spendTextShadows">
+					<Color r="0" g="0" b="0"/>
+					<Anchors>
+							<Anchor point="CENTER" relativeKey="$parent.SpendText" relativePoint="CENTER" x="-1" y="-1"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="SpendTextShadow4" inherits="SystemFont16_Shadow_ThickOutline" justifyH="CENTER" parentArray="spendTextShadows">
+					<Color r="0" g="0" b="0"/>
+					<Anchors>
+							<Anchor point="CENTER" relativeKey="$parent.SpendText" relativePoint="CENTER" x="1" y="-1"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="2">
+				<FontString parentKey="SpendText" inherits="SystemFont16_Shadow_ThickOutline" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativeKey="$parent.Icon" relativePoint="BOTTOMRIGHT" x="-15" y="5"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="3">
+				<FontString parentKey="Name" inherits="GameFontHighlightSmall" justifyH="LEFT">
+					<Size x="250" y="12"/>
+					<Anchors>
+						<Anchor point="LEFT"  relativeKey="$parent.Icon" relativePoint="RIGHT" x="20" y="0"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter method="OnEnter"/>
+			<OnLeave function="GameTooltip_Hide"/>
+		</Scripts>
+	</Button>
+
+    <Frame name="TraitsTreeFrameTemplate" virtual="true" mixin="TraitsTreeFrameMixin">
+        <Frames>
+            <Frame name="$parentTraitsInset" useParentLevel="true" inherits="InsetFrameTemplate" parentKey="TraitsInset">
+                <Size x="450" y="520"/>
+                <Anchors>
+					<Anchor point="TOPLEFT"/>
+					<Anchor point="BOTTOMLEFT"/>
+                </Anchors>
+            </Frame>
+
+			<Button name="$parentTalentImportButton" inherits="UIPanelButtonTemplate" parentKey="TalentImportButton" mixin="TalentImportButtonMixin">
+				<Size x="28" y="36"/>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentTraitsInset" relativePoint="BOTTOMRIGHT" x="-5" y="5"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+					<OnClick method="OnClick"/>
+				</Scripts>
+			</Button>
+
+			<Frame name="$parentTraitsBorder" parentKey="traitsBorder" frameStrata="HIGH">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentTraitsInset" relativePoint="TOPLEFT" x="0" y="0"/>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentTraitsInset" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture name="$parentTopLeft" atlas="PetJournal-BattleSlotFrame-Corner" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" x="-1" y="1"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentTopRight" atlas="PetJournal-BattleSlotFrame-Corner" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="TOPRIGHT" x="1" y="1"/>
+							</Anchors>
+							<Size x="17" y="17"/>
+							<TexCoords left="1.0" right="0.0" top="0.0" bottom="1.0"/>
+						</Texture>
+						<Texture name="$parentBottomLeft" atlas="PetJournal-BattleSlotFrame-Corner" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" x="-1" y="-1"/>
+							</Anchors>
+							<Size x="17" y="17"/>
+							<TexCoords left="0.0" right="1.0" top="1.0" bottom="0.0"/>
+						</Texture>
+						<Texture name="$parentBottomRight" atlas="PetJournal-BattleSlotFrame-Corner" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="BOTTOMRIGHT" x="1" y="-1"/>
+							</Anchors>
+							<Size x="17" y="17"/>
+							<TexCoords left="1.0" right="0.0" top="1.0" bottom="0.0"/>
+						</Texture>
+						<Texture name="$parentTop" atlas="_BattleSlotFrame-Top" horizTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentTopLeft" x="0" y="0"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" relativeTo="$parentTopRight" x="0" y="1"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentBottom" atlas="_BattleSlotFrame-Top" horizTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentBottomLeft" x="0" y="-1"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" relativeTo="$parentBottomRight" x="0" y="0"/>
+							</Anchors>
+							<TexCoords left="0.0" right="1.0" top="1.0" bottom="0.0" />
+						</Texture>
+						<Texture name="$parentLeft" file="Interface\PetBattles\!BattleSlotFrame-Left" vertTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentTopLeft" x="0" y="0"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeTo="$parentBottomLeft" x="-1" y="0"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentRight" file="Interface\PetBattles\!BattleSlotFrame-Left" vertTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentTopRight" x="1" y="0"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeTo="$parentBottomRight" x="0" y="0"/>
+							</Anchors>
+							<TexCoords left="1" right="0" top="0" bottom="1"/>
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY">
+						<FontString name="$parentSlotHeaderText" inherits="GameFontNormal" justifyH="CENTER" text="MURLOKEXPORT_CATEGORY_TRAITS">
+							<Size x="0" y="40"/>
+							<Anchors>
+								<Anchor point="CENTER" relativePoint="TOP" relativeTo="$parentTop" x="0" y="-4"/>
+							</Anchors>
+						</FontString>
+						<Texture name="$parentSlotHeaderBG" atlas="_BattleSlotTitle-BG" horizTile="true">
+							<Size y="24"/>
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parentSlotHeaderText" x="-10" y="0"/>
+								<Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parentSlotHeaderText" x="10" y="0"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY" textureSubLevel="1">
+						<Texture name="$parentSlotHeaderF" atlas="_BattleSlotTitle-Mid" horizTile="true">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parentSlotHeaderText" x="0" y="0"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentSlotHeaderText" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentSlotHeaderLeft" atlas="PetJournal-BattleSlotTitle-Left" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentSlotHeaderF" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+						<Texture name="$parentSlotHeaderRight" atlas="PetJournal-BattleSlotTitle-Right" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentSlotHeaderF" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad>
+						self:SetFrameLevel(self:GetFrameLevel()+7);
+					</OnLoad>
+				</Scripts>
+			</Frame>
+            
+            <Frame name="$parentTraits" parentKey="traits" inherits="TalentFrameBaseTemplate" mixin="TalentFrameBaseMixin, TraitsFrameMixin">		
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentTraitsInset" x="5" y="15"/>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentTraitsInset" x="-5" y="5"/>
+				</Anchors>	
+				<Frames>
+					<Button parentKey="ReloadButton" hidden="true">
+						<Size x="40" y="40"/>
+						<Anchors>
+							<Anchor point="CENTER" relativeKey="$parent.HeroSpecButton"/>
+						</Anchors>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<Texture parentKey="Background" atlas="UI-QuestPoiRecurring-QuestBang" setAllPoints="true">
+								</Texture>
+							</Layer>
+						</Layers>						
+						<Scripts>
+							<OnClick>
+								self:GetParent():GetParent():SelectedTabOnClick()
+							</OnClick>
+						</Scripts>		
+					</Button>
+					<Frame parentKey="HeroTalentsContainer">
+						<Size x="200" y="800"/>
+						<Anchors>
+							<Anchor point="TOP" relativeKey="$parent.ButtonsParent" x="0"/>
+						</Anchors>
+						<Frames>
+							<Button parentKey="HeroSpecButton">
+								<Size x="108" y="108"/>
+								<Anchors>
+									<Anchor point="TOP" x="5" y="-75"/>
+								</Anchors>
+								<Layers>
+									<Layer level="ARTWORK">
+										<Texture parentKey="Icon" setAllPoints="true"/>
+									</Layer>
+								</Layers>
+							</Button>	
+							<Frame parentKey="ExpandedContainer" frameLevel="100" hidden="false">
+								<Size x="300" y="362"/>
+								<Anchors>
+									<Anchor point="TOP" relativeKey="$parent.HeroSpecButton" relativePoint="BOTTOM" y="34"/>
+								</Anchors>
+								<Layers>
+									<Layer level="BACKGROUND">
+										<Texture parentKey="Background" atlas="talents-heroclass-backplate-full" setAllPoints="true">
+										</Texture>
+									</Layer>
+								</Layers>
+							</Frame>							
+						</Frames>
+					</Frame>
+					<Frame parentKey="PvPTraits" mixin="PvPTraitsMixin" hidden="true">
+						<Size x="300" y="404"/>
+						<Anchors>
+							<Anchor point="CENTER" relativeKey="$parent.ButtonsParent"/>
+						</Anchors>
+						<Frames>
+							<Frame parentKey="ScrollBox" inherits="WowScrollBoxList" frameStrata="HIGH">
+								<Anchors>
+									<Anchor point="TOPLEFT"  x="0" y="0"/>
+									<Anchor point="BOTTOMRIGHT"  x="0" y="0"/>
+								</Anchors>
+							</Frame>
+						</Frames>
+						<Scripts>
+							<OnLoad method="OnLoad"/>
+							<OnShow method="OnShow"/>
+						</Scripts>
+					</Frame>
+				</Frames>	
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+					<OnShow method="OnShow"/>
+					<OnHide method="OnHide"/>
+					<OnEvent method="OnEvent"/>
+				</Scripts>		
+			</Frame>
+
+        </Frames>
+		<Scripts>
+			<OnShow method="OnShow"/>
+		</Scripts>		
+    </Frame>
+</Ui>

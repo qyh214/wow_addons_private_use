@@ -1,0 +1,1489 @@
+---@class DBMCoreNamespace
+local private = select(2, ...)
+
+local L = DBM_CORE_L
+local CL = DBM_COMMON_L
+
+---@class DBM
+local DBM = private:GetPrototype("DBM")
+
+---@class DBMMod
+local bossModPrototype = private:GetPrototype("DBMMod")
+
+local scheduler = private:GetModule("DBMScheduler")
+local tableUtils = private:GetPrototype("TableUtils")
+local test = private:GetPrototype("DBMTest")
+
+---@type table<string, DBMMod>
+local modsById = setmetatable({}, {__mode = "v"})
+local mt = {__index = bossModPrototype}
+
+-- The definition of DBM mods is unfortunately spread out across multiple files and functions.
+-- This class definition defines some fields that are either expected to be set by a mod implementation directly
+-- or are set by helper functions in DBM.
+
+---@class DBMMod
+---@field OnCombatStart fun(self: DBMMod, delay: number, startedByCastOrRegenDisabledOrMessage: boolean, startedByEncounter: boolean)
+---@field OnLimitedCombatStart fun(self: DBMMod, delay: number, startedByCastOrRegenDisabledOrMessage: boolean, startedByEncounter: boolean)
+---@field OnCombatEnd fun(self: DBMMod, wipe: boolean, delayedSecondCall: boolean?)
+---@field StartEngageTimers fun(self: DBMMod, guid: string, cid: number, delay: number, uID: string)
+---@field OnLeavingCombat fun()
+---@field EnteringZoneCombat fun(self: DBMMod)
+---@field LeavingZoneCombat fun(self: DBMMod)
+---@field OnSync fun(self: DBMMod, event: string, ...: string)
+---@field OnBWSync fun(self: DBMMod, msg: string, extra: string, sender: string) Used to Snoop Bigwigs comms when maintaining compat between DBM and BW on boss fights
+---@field OnTranscriptorSync fun(self: DBMMod, msg: string, sender: string) Used to snoop RAID_BOSS_WHISPER event syncs sent by both DBM and BigWigs
+---@field OnInitialize fun(self: DBMMod, mod: DBMMod)
+---@field OnTimerRecovery fun(self: DBMMod)
+---@field CustomHealthUpdate fun(self: DBMMod): string
+---@field stats ModStats
+---@field registeredUnitEvents table<string, boolean>?
+---@field bossHealthUpdateTime number?
+---@field isTrashModBossFightAllowed boolean? Used to flag a trash mod that is continue firing events during a boss fight (should be true in all M+ mods)
+---@field respawnTime number? Time until the boss respawns after ENCOUNTER_END event
+---@field noStatistics boolean? Used in modules that should not have stats panels such as trash mods
+---@field statTypes string?
+---@field upgradedMPlus boolean? Used to flag a dungeon that used to be a challenge mode in MoP or WoD but has since upgraded to M+
+---@field onlyHighest boolean?
+---@field soloChallenge boolean?
+---@field disableHealthCombat boolean?
+---@field isCustomMod boolean?
+---@field sendMainBossGUID boolean? Used to force enable nameplate timers for main boss
+---@field paSounds table<number, number[]>?
+---@field pendingPASoundsByZone table<number, table<integer, table>>?
+
+---@param name string|number Name of mod is usually journalID for auto translation or a unique string
+---@param modId string? Must match parent module name (ie DBM-Party-Classic) or it won't appear in GUI
+---@param modSubTab number? Defines sub tab for mod in GUI
+---@param instanceId number? Encounter Journal Instance ID
+---@param nameModifier number|function?
+function DBM:NewMod(name, modId, modSubTab, instanceId, nameModifier)
+	name = tostring(name) -- the name should never be a number of something as it confuses sync handlers that just receive some string and try to get the mod from it
+	if name == "DBM-ProfilesDummy" then return {} end
+	if modsById[name] then error("DBM:NewMod(): Mod names are used as IDs and must therefore be unique.", 2) end
+	---@type table?
+	local addon = nil
+	for _, v in ipairs(self.AddOns) do
+		if v.modId == modId then
+			addon = v
+			break
+		end
+	end
+	---@class DBMMod
+	local obj = setmetatable(
+		{
+			Options = {
+				Enabled = true,
+			},
+			---@type table<string, any>
+			DefaultOptions = {
+				Enabled = true,
+			},
+			subTab = modSubTab,
+			optionCategories = {
+			},
+			categorySort = {"announce", "announceother", "announcepersonal", "announcerole", "specialannounce", "timer", "sound", "yell", "nameplate", "paura", "icon", "misc"},
+			id = name,
+			announces = {},
+			specwarns = {},
+			timers = {},
+			yells = {},
+			vb = {},
+			iconRestore = {},
+			modId = modId,
+			instanceId = instanceId,
+			revision = 0,
+			SyncThreshold = 8,
+			localization = self:GetModLocalization(name),
+			groupSpells = {},
+			groupOptions = tableUtils.orderedTable(),
+			addon = addon,
+			inCombat = false,
+			isTrashMod = false,
+			isDummyMod = false,
+		},
+		mt
+	)
+	test:Trace(obj, "NewMod", name, modId)
+	if test.testRunning and test.Mocks and test.Mocks.SetModEnvironment then
+		test.Mocks:SetModEnvironment(2)
+	end
+
+	local encounterId = tonumber(name)
+	if encounterId and EJ_GetEncounterInfo and EJ_GetEncounterInfo(encounterId) then
+		local t = EJ_GetEncounterInfo(encounterId)
+		if type(nameModifier) == "number" then--Get name form EJ_GetCreatureInfo
+			t = select(2, EJ_GetCreatureInfo(nameModifier, tonumber(name)))
+		elseif type(nameModifier) == "function" then--custom name modify function
+			t = nameModifier(t or name)
+		else--default name modify
+			t = tostring(t)
+			t = string.split(",", t or name)
+		end
+		obj.localization.general.name = t or name
+		obj.modelId = select(4, EJ_GetCreatureInfo(1, tonumber(name)))
+	elseif name:match("z%d+") then
+		local t = GetRealZoneText(tonumber(string.sub(name, 2)))
+		if type(nameModifier) == "number" then--do nothing
+		elseif type(nameModifier) == "function" then--custom name modify function
+			t = nameModifier(t or name)
+		else--default name modify
+			t = string.split(",", t or name)
+		end
+		obj.localization.general.name = t or name
+	elseif name:match("m%d+") then
+		local t = C_Map.GetMapInfo(tonumber(name:sub(2)) or 0)
+		local nameStr = t and t.name
+		if type(nameModifier) == "number" then--do nothing
+		elseif type(nameModifier) == "function" then--custom name modify function
+			nameStr = nameModifier(nameStr or name)
+		else--default name modify
+			nameStr = string.split(",", nameStr or name)
+		end
+		obj.localization.general.name = nameStr or name
+	elseif name:match("d%d+") then
+		local t = self:GetDungeonInfo(string.sub(name, 2))
+		if type(nameModifier) == "number" then--do nothing
+		elseif type(nameModifier) == "function" then--custom name modify function
+			t = nameModifier(t or name)
+		else--default name modify
+			t = string.split(",", t or obj.localization.general.name or name)
+		end
+		obj.localization.general.name = t or name
+	elseif not rawget(obj.localization.general, "name") then
+		obj.localization.general.name = name
+	end
+	tinsert(self.Mods, obj)
+	if modId then
+		self.ModLists[modId] = self.ModLists[modId] or {}
+		tinsert(self.ModLists[modId], name)
+	end
+	modsById[name] = obj
+	obj:SetZone()
+	return obj
+end
+
+---@param name string|number
+---@return DBMMod
+function DBM:GetModByName(name)
+	return modsById[tostring(name)]
+end
+
+
+bossModPrototype.RegisterEvents = DBM.RegisterEvents
+bossModPrototype.RegisterSafeEvents = DBM.RegisterSafeEvents
+bossModPrototype.UnregisterInCombatEvents = DBM.UnregisterInCombatEvents
+bossModPrototype.AddMsg = DBM.AddMsg
+bossModPrototype.RegisterShortTermEvents = DBM.RegisterShortTermEvents
+bossModPrototype.UnregisterShortTermEvents = DBM.UnregisterShortTermEvents
+
+function bossModPrototype:SetZone(...)
+	if select("#", ...) == 0 then
+		self.zones = {}
+		if self.addon and self.addon.mapId then
+			for _, v in ipairs(self.addon.mapId) do
+				self.zones[v] = true
+			end
+		end
+	elseif select(1, ...) ~= DBM_DISABLE_ZONE_DETECTION then
+		self.zones = {}
+		for i = 1, select("#", ...) do
+			self.zones[select(i, ...)] = true
+		end
+	else -- disable zone detection
+		self.zones = nil
+	end
+end
+
+function bossModPrototype:Toggle()
+	if self.Options.Enabled then
+		self:DisableMod()
+	else
+		self:EnableMod()
+	end
+end
+
+function bossModPrototype:EnableMod()
+	self.Options.Enabled = true
+	private.updateFunctionsDirty = true
+	-- Ensure scheduler is running if this mod has an update handler
+	if private.updateFunctions[self] then
+		scheduler:StartScheduler()
+	end
+end
+
+function bossModPrototype:DisableMod()
+	self:Stop()
+	self.Options.Enabled = false
+	private.updateFunctionsDirty = true
+end
+
+---@param killNameplates boolean? Should only be called by trash mods. Bosses should never call this
+function bossModPrototype:Stop(killNameplates)
+	for _, v in ipairs(self.timers) do
+		v:Stop()
+	end
+	if killNameplates then
+		DBM:FireEvent("DBM_NameplateStopAll")
+	end
+	self:Unschedule()
+end
+
+function bossModPrototype:SetUsedIcons(...)
+	self.usedIcons = {}
+	for i = 1, select("#", ...) do
+		self.usedIcons[select(i, ...)] = true
+	end
+end
+
+function bossModPrototype:RegisterOnUpdateHandler(func, interval)
+	if type(func) ~= "function" then return end
+	DBM:Debug("Registering RegisterOnUpdateHandler")
+	scheduler:StartScheduler()
+	self.elapsed = 0
+	self.updateInterval = interval or 0
+	private.updateFunctions[self] = func
+	private.updateFunctionsDirty = true
+end
+
+function bossModPrototype:UnregisterOnUpdateHandler()
+	self.elapsed = nil
+	self.updateInterval = nil
+	private.updateFunctions[self] = nil
+	private.updateFunctionsDirty = true
+end
+
+---Set the stage number.
+---<br>Use 0 to auto increment by 1
+---<br>Use 0.5 to auto increment by 0.5
+---@param stage number
+function bossModPrototype:SetStage(stage)
+	if stage == 0 then--Increment request instead of hard value
+		if not self.vb.phase then return end--Person DCed mid fight and somehow managed to perfectly time running SetStage with a value of 0 before getting variable recovery
+		self.vb.phase = self.vb.phase + 1
+	elseif stage == 0.5 then--Half Increment request instead of hard value
+		self.vb.phase = self.vb.phase + 0.5
+	else
+		self.vb.phase = stage
+	end
+	--Separate variable to use SetStage totality for very niche weak aura practices
+	if not self.vb.stageTotality then
+		self.vb.stageTotality = 0
+	end
+	self.vb.stageTotality = self.vb.stageTotality + 1
+	if self.inCombat then--Safety, in event mod manages to run any phase change calls out of combat/during a wipe we'll just safely ignore it
+		DBM:FireEvent("DBM_SetStage", self, self.id, self.vb.phase, self.multiEncounterPullDetection and self.multiEncounterPullDetection[1] or self.encounterId, self.vb.stageTotality)--Mod, modId, Stage, Encounter Id (if available), total number of times SetStage has been called since combat start
+		--Note, some encounters have more than one encounter Id, for these encounters, the first ID from mod is always returned regardless of actual engage ID triggered fight
+		DBM:Debug("DBM_SetStage: " .. self.vb.phase .. "/" .. self.vb.stageTotality, nil, nil, nil, true)
+		test:Trace(self, "SetStage", self.vb.phase, self.vb.stageTotality)
+	end
+end
+
+---If args are passed, returns true or false for specific Stage
+---<br>If no args given, just returns current stage and stage total
+---@meta
+---@alias stageChecks
+---|0: 0 or nil for current stage match
+---|1: 1 for less than check
+---|2: 2 for greater than check
+---|3: 3 not equal check
+---@param stage number? stage value to checkf or true/false rules
+---@param checkType stageChecks|nil
+---@param useTotal boolean? uses stage total instead of current
+function bossModPrototype:GetStage(stage, checkType, useTotal)
+	local currentStage, currentTotal = self.vb.phase or 0, self.vb.stageTotality or 0
+	if stage then
+		checkType = checkType or 0--Optional pass if just an exact match check
+		if (checkType == 0) and (useTotal and currentTotal or currentStage) == stage then
+			return true
+		elseif (checkType == 1) and (useTotal and currentTotal or currentStage) < stage then
+			return true
+		elseif (checkType == 2) and (useTotal and currentTotal or currentStage) > stage then
+			return true
+		elseif (checkType == 3) and (useTotal and currentTotal or currentStage) ~= stage then
+			return true
+		end
+		return false
+	else
+		return currentStage, currentTotal--This api doesn't need encounter Id return, since this is the local mod prototype version, which means it's already linked to specific encounter
+	end
+end
+
+---Used to flag an event during a boss fight that affects Raid affixes
+---@param eventType number 0 = Stop, 1 = Start, 2 = extend due to spell queue/delay
+---@param stage number?
+---@param timeAdjust number? Used to define extend amount for eventType 2
+---@param spellDebit boolean? The extended timer is debited from next cast
+function bossModPrototype:AffixEvent(eventType, stage, timeAdjust, spellDebit)
+	if self.inCombat then--Safety, in event mod manages to run any phase change calls out of combat/during a wipe we'll just safely ignore it
+		DBM:FireEvent("DBM_AffixEvent", self, self.id, eventType, self.multiEncounterPullDetection and self.multiEncounterPullDetection[1] or self.encounterId, stage or 1, timeAdjust, spellDebit)--Mod, modId, type (0 end, 1, begin, 2, timerExtend), Encounter Id (if available), stage, amount of time to extend to, spellDebit, whether to subtrack the previous extend arg from next timer
+	end
+end
+
+local function addIdsToExistingEvent(event, ...)
+	for i = 1, select("#", ...) do
+		local id = select(i, ...)
+		if not event:match(" " .. id .. " ") and not event:match(" " .. id .. "$") then
+			event = event .. " " .. id
+		end
+	end
+	return event
+end
+
+---@param ... DBMEvent|string
+function bossModPrototype:RegisterEventsInCombat(...)
+	test:Trace(self, "RegisterEvents", "InCombat", ...)
+	if self.inCombatOnlyEvents and select("#", ...) > 1 then
+		geterrorhandler()("combat events already set")
+	end
+	if self.inCombatOnlyEvents then
+		-- Special case: allow registrating additional events if you do it one-by-one (check in the abort above)
+		-- FIXME: allow this in general if we end up keeping the new event handlers
+		local event = ...
+		local prefix, ids = string.split(" ", event, 2)
+		for i, v in ipairs(self.inCombatOnlyEvents) do
+			if string.split(" ", v, 2) == prefix then
+				-- Warning: Registering an event twice with different spell IDs will not work -- it will trigger the handler twice for both IDs
+				-- This is kinda annoying to fix in the handler, so we instead modify the existing event definition here.
+				self.inCombatOnlyEvents[i] = addIdsToExistingEvent(v, string.split(" ", ids))
+				return
+			end
+		end
+		self.inCombatOnlyEvents[#self.inCombatOnlyEvents + 1] = event
+	else
+		self.inCombatOnlyEvents = {...}
+	end
+	for k, v in ipairs(self.inCombatOnlyEvents) do
+		if v:sub(0, 5) == "UNIT_" and v:sub(-11) ~= "_UNFILTERED" and not v:find(" ") and v ~= "UNIT_DIED" and v ~= "UNIT_DESTROYED" then
+			-- legacy event, oh noes
+			self.inCombatOnlyEvents[k] = v .. " boss1 boss2 boss3 boss4 boss5 target focus"
+		end
+	end
+end
+
+---@param ... DBMEvent|string
+function bossModPrototype:RegisterSafeEventsInCombat(...)
+	test:Trace(self, "RegisterEvents", "InCombat", ...)
+	if self.inCombatOnlySafeEvents and select("#", ...) > 1 then
+		geterrorhandler()("combat events already set")
+	end
+	if self.inCombatOnlySafeEvents then
+		-- Special case: allow registrating additional events if you do it one-by-one (check in the abort above)
+		-- FIXME: allow this in general if we end up keeping the new event handlers
+		local event = ...
+		local prefix, ids = string.split(" ", event, 2)
+		for i, v in ipairs(self.inCombatOnlySafeEvents) do
+			if string.split(" ", v, 2) == prefix then
+				-- Warning: Registering an event twice with different spell IDs will not work -- it will trigger the handler twice for both IDs
+				-- This is kinda annoying to fix in the handler, so we instead modify the existing event definition here.
+				self.inCombatOnlySafeEvents[i] = addIdsToExistingEvent(v, string.split(" ", ids))
+				return
+			end
+		end
+		self.inCombatOnlySafeEvents[#self.inCombatOnlySafeEvents + 1] = event
+	else
+		self.inCombatOnlySafeEvents = {...}
+	end
+	for k, v in ipairs(self.inCombatOnlySafeEvents) do
+		if v:sub(0, 5) == "UNIT_" and v:sub(-11) ~= "_UNFILTERED" and not v:find(" ") and v ~= "UNIT_DIED" and v ~= "UNIT_DESTROYED" then
+			-- legacy event, oh noes
+			self.inCombatOnlySafeEvents[k] = v .. " boss1 boss2 boss3 boss4 boss5 target focus"
+		end
+	end
+end
+
+---Used to filter casts from non combat units
+---@param sourceGUID string
+---@param customunitID string? if provided, makes check require GUID match this unitID (such as "target")
+---@param loose boolean? In a loose check, this just checks if we're in combat and alone. Designed for solo runs like torghast or delves
+---@param allowFriendly boolean?
+---@param strict boolean? Used for even more strict filtering that makes it also require player themselves are in combat (usually used in outdoor world such as timeless isle)
+---@return boolean
+function bossModPrototype:IsValidWarning(sourceGUID, customunitID, loose, allowFriendly, strict)
+	if self:MidRestrictionsActive() then return true end--GUID checks not allowed in Midnight+ during combat
+	if loose and InCombatLockdown() and GetNumGroupMembers() < 2 then return true end
+	if customunitID then
+		if UnitExists(customunitID) and UnitGUID(customunitID) == sourceGUID and UnitAffectingCombat(customunitID) and (allowFriendly or not UnitIsFriend("player", customunitID)) then return true end
+	else
+		local unitId = DBM:GetUnitIdFromGUID(sourceGUID)
+		if unitId and UnitExists(unitId) and UnitAffectingCombat(unitId) and (allowFriendly or not UnitIsFriend("player", unitId)) then
+			if strict and not InCombatLockdown() then
+				return false
+			else
+				return true
+			end
+		end
+	end
+	return false
+end
+
+function bossModPrototype:IsCriteriaCompleted(criteriaIDToCheck)
+	if not private.isRetail and not private.isMop then
+		print("bossModPrototype:IsCriteriaCompleted should not be called in classic, report this message")
+		return false
+	end
+	if not criteriaIDToCheck then
+		error("usage: mod:IsCriteriaComplected(criteriaId)")
+		return false
+	end
+	local _, _, numCriteria = C_Scenario.GetStepInfo()
+	local GetCriteriaInfo = C_ScenarioInfo.GetCriteriaInfo or C_Scenario.GetCriteriaInfo
+	for i = 1, numCriteria do
+		local info, _, criteriaCompleted, _, _, _, _, _, criteriaID = GetCriteriaInfo(i)
+		--Quick/lazy fix for War Within. Cleanup later when all clients are updated
+		if type(info) == "table" then
+			criteriaCompleted = info.completed
+			criteriaID = info.criteriaID
+		end
+		if criteriaID and criteriaID == criteriaIDToCheck and criteriaCompleted then
+			return true
+		end
+	end
+	return false
+end
+
+---Used to restrict enclosed code to only run if player is under a certain latency threshold
+---@param custom number? Custom latency threshold to check against, otherwise global threshold is used
+---@return boolean
+function bossModPrototype:LatencyCheck(custom)
+	return select(4, GetNetStats()) < (custom or DBM.Options.LatencyThreshold)
+end
+
+bossModPrototype.IconNumToString = DBM.IconNumToString
+bossModPrototype.IconNumToTexture = DBM.IconNumToTexture
+bossModPrototype.AntiSpam = DBM.AntiSpam
+bossModPrototype.HasMapRestrictions = DBM.HasMapRestrictions
+bossModPrototype.GetUnitCreatureId = DBM.GetUnitCreatureId
+bossModPrototype.GetCIDFromGUID = DBM.GetCIDFromGUID
+bossModPrototype.IsCreatureGUID = DBM.IsCreatureGUID
+bossModPrototype.GetUnitIdFromCID = DBM.GetUnitIdFromCID
+bossModPrototype.GetUnitIdFromGUID = DBM.GetUnitIdFromGUID
+bossModPrototype.CheckNearby = DBM.CheckNearby
+bossModPrototype.GetGossipID = DBM.GetGossipID
+bossModPrototype.SelectMatchingGossip = DBM.SelectMatchingGossip
+bossModPrototype.SelectGossip = DBM.SelectGossip
+
+do
+	local bossCache = {}
+	local lastTank
+
+	---Returns current name and unitID of person tanking requested target if possible, false otherwise
+	---@param cidOrGuid number|string
+	function bossModPrototype:GetCurrentTank(cidOrGuid)
+		if self:MidRestrictionsActive() then return false end--GUID checks not allowed in Midnight+ during combat
+		if lastTank and GetTime() - (bossCache[cidOrGuid] or 0) < 2 then -- return last tank within 2 seconds of call
+			return lastTank
+		else
+			cidOrGuid = cidOrGuid or self.creatureId--GetBossTarget supports GUID or CID and it will automatically return correct values with EITHER ONE
+			local uId
+			local _, fallbackuId, mobuId = self:GetBossTarget(cidOrGuid)
+			if mobuId then--Have a valid mob unit ID
+				--First, use trust threat more than fallbackuId and see what we pull from it first.
+				--This is because for GetCurrentTank we want to know who is tanking it, not who it's targeting.
+				local unitId = (IsInRaid() and "raid") or "party"
+				for i = 0, GetNumGroupMembers() do
+					local id = (i == 0 and "target") or unitId .. i
+					local tanking, status = UnitDetailedThreatSituation(id, mobuId)--Tanking may return 0 if npc is temporarily looking at an NPC (IE fracture) but status will still be 3 on true tank
+					if tanking or (status == 3) then uId = id end--Found highest threat target, make them uId
+					if uId then break end
+				end
+				--Did not get anything useful from threat, so use who the boss was looking at, at time of cast (ie fallbackuId)
+				if fallbackuId and not uId then
+					uId = fallbackuId
+				end
+			end
+			if uId then--Now we have a valid uId
+				bossCache[cidOrGuid] = GetTime()
+				lastTank = UnitName(uId)
+				return lastTank, uId
+			end
+			return false
+		end
+	end
+end
+
+--Now this function works perfectly. But have some limitation due to DBM.RangeCheck:GetDistance() function.
+--Unfortunely, DBM.RangeCheck:GetDistance() function cannot reflects altitude difference. This makes range unreliable.
+--So, we need to cafefully check range in difference altitude (Especially, tower top and bottom)
+do
+	local rangeCache = {}
+	local rangeUpdated = {}
+	local IsItemInRange = C_Item and C_Item.IsItemInRange or IsItemInRange
+
+	---Used when we want to alert or filter based on proximity to the casting boss
+	---@param cidOrGuid number|string
+	---@param onlyBoss boolean? Used when you only need to check "boss" unitids
+	---@param itemId number? Used to define which item (range) is used. 32698 (48) is used if empty
+	---@param distance number? Used for tank distance fallback if item api is restricted (Deprecated)
+	---@param defaultReturn boolean? Fallback return if all checks fail (whether a failure returns true or false)
+	---@return boolean
+	function bossModPrototype:CheckBossDistance(cidOrGuid, onlyBoss, itemId, distance, defaultReturn)
+		if not DBM.Options.DontShowFarWarnings then return true end--Global disable.
+		if self:MidRestrictionsActive() then return true end--GUID checks not allowed in Midnight+ during combat
+		cidOrGuid = cidOrGuid or self.creatureId
+		local uId
+		if type(cidOrGuid) == "number" then--CID passed
+			uId = DBM:GetUnitIdFromCID(cidOrGuid, onlyBoss)
+		else--GUID
+			uId = DBM:GetUnitIdFromGUID(cidOrGuid, onlyBoss)
+		end
+		if uId then
+			if not UnitIsFriend("player", uId) then--API only allowed on hostile unit
+				itemId = itemId or 32698
+				--/dump IsItemInRange(32698, "target")
+				local inRange = IsItemInRange(itemId, uId)
+				if inRange ~= nil then--IsItemInRange was a success if it returned true or false, if it failed it returns nil
+					return inRange
+				else--IsItemInRange doesn't work on all bosses/npcs, but tank checks do
+					DBM:Debug("CheckBossDistance failed on IsItemInRange due to bad check/unitId: " .. cidOrGuid, 2)
+					return self:CheckTankDistance(cidOrGuid, distance, onlyBoss, defaultReturn)--Return tank distance check fallback
+				end
+			else--Non hostile, immediately forward to very gimped TankDistance check (43 yards within tank target)
+				DBM:Debug("CheckBossDistance failed on IsItemInRange due to friendly unit: " .. cidOrGuid, 2)
+				return self:CheckTankDistance(cidOrGuid, distance, onlyBoss, defaultReturn)--Return tank distance check fallback
+			end
+		end
+		DBM:Debug("CheckBossDistance failed on uId for: " .. cidOrGuid, 2)
+		return (defaultReturn == nil) or defaultReturn--When we simply can't figure anything out, return true and allow warnings using this filter to fire
+	end
+
+	---This is still restricted because it uses friendly api, which isn't available to us in combat
+	---@param cidOrGuid number|string
+	---@param onlyBoss boolean? Used when you only need to check "boss" unitids
+	---@param defaultReturn boolean? Fallback return if all checks fail (whether a failure returns true or false)
+	---@return boolean
+	function bossModPrototype:CheckTankDistance(cidOrGuid, _, onlyBoss, defaultReturn)--distance
+		if not DBM.Options.DontShowFarWarnings then return true end--Global disable.
+		--distance = distance or 43--Basically unused
+		if rangeCache[cidOrGuid] and (GetTime() - (rangeUpdated[cidOrGuid] or 0)) < 2 then -- return same range within 2 sec call
+			return rangeCache[cidOrGuid]
+		else
+			cidOrGuid = cidOrGuid or self.creatureId--GetBossTarget supports GUID or CID and it will automatically return correct values with EITHER ONE
+			local uId
+			local _, fallbackuId, mobuId = self:GetBossTarget(cidOrGuid, onlyBoss)
+			if mobuId then--Have a valid mob unit ID
+				--First, use trust threat more than fallbackuId and see what we pull from it first.
+				--This is because for CheckTankDistance we want to know who is tanking it, not who it's targeting.
+				local unitId = (IsInRaid() and "raid") or "party"
+				for i = 0, GetNumGroupMembers() do
+					local id = (i == 0 and "target") or unitId .. i
+					local tanking, status = UnitDetailedThreatSituation(id, mobuId)--Tanking may return 0 if npc is temporarily looking at an NPC (IE fracture) but status will still be 3 on true tank
+					if tanking or (status == 3) then uId = id end--Found highest threat target, make them uId
+					if uId then break end
+				end
+				--Did not get anything useful from threat, so use who the boss was looking at, at time of cast (ie fallbackuId)
+				if fallbackuId and not uId then
+					uId = fallbackuId
+				end
+			end
+			if uId then--Now we have a valid uId
+				if UnitIsUnit("player", uId) then return true end--If "player" is target, avoid doing any complicated stuff
+				if not UnitIsPlayer(uId) then
+					local inRange2, checkedRange = UnitInRange(uId)--43
+					if checkedRange then--checkedRange only returns true if api worked, so if we get false, true then we are not near npc
+						rangeCache[cidOrGuid] = inRange2
+						return inRange2
+					else--Its probably a totem or just something we can't assess. Fall back to no filtering
+						rangeCache[cidOrGuid] = true
+						return true
+					end
+				end
+				--Return true as safety
+				rangeCache[cidOrGuid] = true
+				return true
+			end
+			DBM:Debug("CheckTankDistance failed on uId for: " .. cidOrGuid, 2)
+			return (defaultReturn == nil) or defaultReturn--When we simply can't figure anything out, return true and allow warnings using this filter to fire. But some spells will prefer not to fire(i.e : Galakras tower spell), we can define it on this function calling.
+		end
+	end
+end
+
+-----------------------
+--  Filter Methods  --
+-----------------------
+
+do
+	local interruptSpells = {
+		[1766] = true,--Rogue Kick
+		[2139] = true,--Mage Counterspell
+		[6552] = true,--Warrior Pummel
+		[15487] = true,--Priest Silence
+		[19647] = true,--Warlock pet Spell Lock
+		[47528] = true,--Death Knight Mind Freeze
+		[57994] = true,--Shaman Wind Shear
+		[78675] = true,--Druid Solar Beam
+		[89766] = true,--Warlock Pet Axe Toss
+		[96231] = true,--Paldin Rebuke
+		[106839] = true,--Druid Skull Bash
+		[116705] = true,--Monk Spear Hand Strike
+		[147362] = true,--Hunter Countershot
+		[183752] = true,--Demon Hunter Disrupt
+		[202137] = true,--Demon Hunter Sigil of Silence (Not uncommented because CheckInterruptFilter doesn't properly handle dual interrupts for single class yet)
+		[351338] = true,--Evoker Quell
+	}
+	if private.isClassic then
+		interruptSpells[8042] = true -- Shaman Earth Shock
+	end
+	---@param sourceGUID string source GUID of the caster
+	---@param checkOnlyTandF boolean? is used when CheckInterruptFilter is actually being used for a simpe target/focus check and nothing more.
+	---@param checkCooldown boolean? should always be passed true except for special rotations like count warnings when you should be alerted it's your turn even if you dropped ball and put it on CD at wrong time
+	---@param ignoreTandF boolean? is usually used when interrupt is on a main boss or event that is global to entire raid and should always be alerted regardless of targetting.
+	---@return boolean
+	function bossModPrototype:CheckInterruptFilter(sourceGUID, checkOnlyTandF, checkCooldown, ignoreTandF)
+		if self:IsPostMidnight() then return true end--No filtering during post midnight since CD checks and GUID checks not allowed
+		-- Check healer spec filter
+		if not checkOnlyTandF and self:IsHealer() and (self.isTrashMod and DBM.Options.FilterTInterruptHealer or not self.isTrashMod and DBM.Options.FilterBInterruptHealer) then
+			return false
+		end
+
+		-- Check if cooldown check is required
+		if checkCooldown and (self.isTrashMod and DBM.Options.FilterTInterruptCooldown or not self.isTrashMod and DBM.Options.FilterBInterruptCooldown) then
+			local hasInterrupt = false
+			for spellID, _ in pairs(interruptSpells) do
+				-- Spell isn't on cooldown, and is known
+				if (DBM:GetSpellCooldown(spellID)) == 0 and DBMExtraGlobal:IsSpellKnown(spellID) then
+					hasInterrupt = true
+					break
+				end
+			end
+			if not hasInterrupt then
+				return false
+			end
+		end
+
+		local unitID
+		-- Always assume we are currently targeting the unit in question in tests
+		if UnitGUID("target") == sourceGUID or test.testRunning then
+			unitID = "target"
+		elseif not private.isClassic and (UnitGUID("focus") == sourceGUID) then
+			unitID = "focus"
+		elseif private.isRetail and (UnitGUID("softenemy") == sourceGUID) then
+			unitID = "softenemy"
+		end
+		--Check if target/focus is required (or if checkOnlyTandF is used, meaning this isn't actually an interrupt API check)
+		if checkOnlyTandF or (self.isTrashMod and DBM.Options.FilterTTargetFocus or not self.isTrashMod and DBM.Options.FilterBTargetFocus) then
+			--Just return false if source isn't our target or focus, no need to do further checks
+			if not ignoreTandF and not unitID then
+				return false
+			end
+		end
+
+		--Check if it's casting something that's not interruptable at the moment
+		--needed for torghast since many mobs can have interrupt immunity with same spellIds as other mobs that can be interrupted
+		if not checkOnlyTandF and private.isRetail and unitID then
+			if UnitCastingInfo(unitID) then
+				local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(unitID)
+				if notInterruptible then return false end
+			elseif UnitChannelInfo(unitID) then
+				local _, _, _, _, _, _, notInterruptible = UnitChannelInfo(unitID)
+				if notInterruptible then return false end
+			end
+		end
+		return true
+	end
+end
+
+do
+	--Only checks spells relevant for the dispel type
+	---@enum (key) DispelType
+	local typeCheck = {
+		["magic"] = {
+			[88423] = true,--Druid: Nature's Cure (Dps: Magic only. Healer: Magic, Curse, Poison)
+			[115450] = true,--Monk: Detox (Healer) (Magic, Poison, and Disease)
+			[527] = true,--Priest: Purify (Magic and Disease)
+			[4987] = true,--Paladin: Cleanse ( Dps/Healer: Magic. Healer Only: Poison, Disease)
+			[77130] = true,--Shaman: Purify Spirit (Magic and Curse)
+			[89808] = true,--Warlock: Singe Magic (Magic)
+			[360823] = true,--Evoker: Naturalize (Magic and Poison)
+		},
+		["curse"] = {
+			[88423] = true,--Druid: Nature's Cure (Dps: Magic only. Healer: Magic, Curse, Poison)
+			[2782] = true,--Druid: Remove Corruption (Curse and Poison)
+			[51886] = true,--Shaman: Cleanse Spirit (Curse)
+			[77130] = true,--Shaman: Purify Spirit (Magic and Curse)
+			[475] = true,--Mage: Remove Curse (Curse)
+			[374251] = true,--Evoker: Cauterizing Flame (Bleed, Poison, Curse, and Disease)
+		},
+		["poison"] = {
+			[88423] = true,--Druid: Nature's Cure (Dps: Magic only. Healer: Magic, Curse, Poison)
+			[2782] = true,--Druid: Remove Corruption (Curse and Poison)
+			[115450] = true,--Monk: Detox (Healer) (Magic, Poison, and Disease)
+			[218164] = true,--Monk: Detox (non Healer) (Poison and Disease)
+			[4987] = true,--Paladin: Cleanse ( Dps/Healer: Magic. Healer Only: Poison, Disease)
+			[360823] = true,--Evoker: Naturalize (Magic and Poison)
+			[374251] = true,--Evoker: Cauterizing Flame (Bleed, Poison, Curse, and Disease)
+			[365585] = true,--Evoker: Expunge (Poison)
+		},
+		["disease"] = {
+			[115450] = true,--Monk: Detox (Healer) (Magic, Poison, and Disease)
+			[218164] = true,--Monk: Detox (non Healer) (Poison and Disease)
+			[527] = true,--Priest: Purify (Magic and Disease)
+			[213634] = true,--Priest: Purify Disease (Disease)
+			[4987] = true,--Paladin: Cleanse ( Dps/Healer: Magic. Healer Only: Poison, Disease)
+			[374251] = true,--Evoker: Cauterizing Flame (Bleed, Poison, Curse, and Disease)
+		},
+		["bleed"] = {
+			[374251] = true,--Evoker: Cauterizing Flame (Bleed, Poison, Curse, and Disease)
+		},
+	}
+	local lastCheck, lastReturn = 0, true
+	---Smart alert filtering based on cooldown check for dispel type
+	---@param dispelType DispelType
+	function bossModPrototype:CheckDispelFilter(dispelType)
+		if not DBM.Options.FilterDispel or self:IsPostMidnight() then return true end
+		-- Retail - Druid: Nature's Cure (88423), Remove Corruption (2782), Monk: Detox (115450) Monk: Detox (218164), Priest: Purify (527) Priest: Purify Disease (213634), Paladin: Cleanse (4987), Shaman: Cleanse Spirit (51886), Purify Spirit (77130), Mage: Remove Curse (475), Warlock: Singe Magic (89808)
+		-- Classic - Druid: Remove Curse (2782), Priest: Purify (527), Paladin: Cleanse (4987), Mage: Remove Curse (475)
+		--start, duration, enable = GetSpellCooldown
+		--start & duration == 0 if spell not on cd
+		if UnitIsDeadOrGhost("player") then return false end--if dead, can't dispel
+		if GetTime() - lastCheck < 0.1 then--Recently returned status, return same status to save cpu from aggressive api checks caused by CheckDispelFilter running on multiple raid members getting debuffed at once
+			return lastReturn
+		end
+		if dispelType then
+			--Singe magic requires checking if pet is out
+			if dispelType == "magic" and (DBM:GetSpellCooldown(89808)) == 0 and (UnitExists("pet") and self:GetCIDFromGUID(UnitGUID("pet")) == 416) then
+				lastCheck = GetTime()
+				lastReturn = true
+				return true
+			end
+			--We cannot do inverse check here because some classes actually have two dispels for same type (such as evoker)
+			--Therefor, we can't go false if only one of them are on cooldown. We have to go true of any of them aren't on CD instead
+			--As such, we have to check if a spell is known in addition to it not being on cooldown
+			for spellID, _ in pairs(typeCheck[dispelType]) do
+				if typeCheck[dispelType][spellID] and DBMExtraGlobal:IsSpellKnown(spellID) and (DBM:GetSpellCooldown(spellID)) == 0 then--Spell is known and not on cooldown
+					lastCheck = GetTime()
+					if (spellID == 4987 or spellID == 88423) and not DBM:IsHealer() then--These spellIds can only dispel if healer specced
+						lastReturn = false
+					else--We trust the table return
+						lastReturn = true
+					end
+					return lastReturn
+				end
+			end
+		else--use lazy check until all mods are migrated to define type
+			error("DBM CheckDispelFilter must provide dispel type")
+		end
+		lastCheck = GetTime()
+		lastReturn = false
+		return false
+	end
+end
+
+do
+	--Spell tables likely missing stuff
+	---@enum (key) CCType
+	local typeCheck = {
+		["disrupt"] = {--used for abilities that any CC will break (except root and slow type spells since they don't stop casts)
+			[107570] = true,--Warrior: Storm Bolt (Stun)
+			[46968] = true,--Warrior: Shockwave (Stun)
+			[221562] = true,--DK: Asphyxiate (Stun)
+			[179057] = true,--DH: Chaos Nova (Stun)
+		},
+		["stun"] = {
+			[107570] = true,--Warrior: Storm Bolt (Stun)
+			[46968] = true,--Warrior: Shockwave (Stun)
+			[221562] = true,--DK: Asphyxiate (Stun)
+			[5211] = true,--Druid: Mighty Bash (Stun)
+			[408] = true,--Rogue: Kidney Shot (Stun)
+			[1833] = true,--Rogue: Cheap Shot (Stun)
+			[192058] = true,--Shaman: Capacitor Totem (Stun)
+		},
+		["knock"] = {
+			[132469] = true,--Druid: Typhoon
+			--[102793] = true,--Druid: Ursol's Vortex
+			[108199] = true,--DK: Gorefiends Grasp
+			[49576] = true,--DK: Death Grip (!Also a taunt!)
+			[157981] = true,--Mage: Blast Wave
+			[51490] = true,--Shaman: Thunderstorm
+		},
+		["disorient"] = {
+			[5246] = true,--Warrior: Intimidating Shout
+			[33786] = true,--Druid: Cyclone
+			[2094] = true,--Rogue: Blind
+			[31661] = true,--Mage: Dragon's Breath
+		},
+		["incapacitate"] = {
+			[99] = true,--Druid: Incapacitating Roar
+			[217832] = true,--DH: Imprison
+			[118] = true,--Mage: Polymorph (Should be shared CD with all variants, so only need one ID)
+			[383121] = true,--Mage: Mass Polymorph
+			[197214] = true,--Shaman: Sundering
+			[51514] = true,--Shaman: Hex
+		},
+		["root"] = {
+			[339] = true,--Druid: Entangling roots
+			[122] = true,--Mage: Frost Nova
+			[51485] = true,--Shaman: Earthgrab Totem
+		},
+		--Many slows are spamable abilities, but can still be used in inverse CD filter
+		--Since this filter checks if it's available, not if it isn't
+		--So can still also be used as an "Is a slow spell known" check :D
+		["slow"] = {
+			[1715] = true,--Warrior: Hamstring
+			[45524] = true,--DK: Chains of Ice
+			[202138] = true,--DH: Sigil of Chains (also a knock?)
+			[120] = true,--Mage: Cone of Cold
+			[2484] = true,--Shaman: Earthbind Totem
+		},
+		["sleep"] = {
+			[2637] = true,--Druid: Hibernate
+		},
+	}
+	local lastCheck, lastReturn = 0, true
+	---Smart alert filtering based on cooldown check for cc type
+	---@param ccType CCType
+	function bossModPrototype:CheckCCFilter(ccType)
+		if not DBM.Options.FilterCrowdControl or DBM:IsPostMidnight() then return true end
+		--start, duration, enable = GetSpellCooldown
+		--start & duration == 0 if spell not on cd
+		if UnitIsDeadOrGhost("player") then return false end--if dead, can't crowd control
+		if GetTime() - lastCheck < 0.1 then--Recently returned status, return same status to save cpu from aggressive api checks caused by CheckCCFilter running from multiple mobs casting at once
+			return lastReturn
+		end
+		--We cannot do inverse check here because some classes actually have two ccs for same type (such as warrior)
+		--Therefor, we can't go false if only one of them are on cooldown. We have to go true of any of them aren't on CD instead
+		--As such, we have to check if a spell is known in addition to it not being on cooldown
+		for spellID, _ in pairs(typeCheck[ccType]) do
+			if typeCheck[ccType][spellID] and DBMExtraGlobal:IsSpellKnown(spellID) and (DBM:GetSpellCooldown(spellID)) == 0 then--Spell is known and not on cooldown
+				lastCheck = GetTime()
+				lastReturn = true
+				return lastReturn
+			end
+		end
+		lastCheck = GetTime()
+		lastReturn = false
+		return false
+	end
+end
+
+---Automatic parsing of allTimers tables in boss mods
+---@param table table the table name that contains all the data
+---@param difficultyName string|boolean string for difficulty name, false otherwise
+---@param phase number|boolean number for phase number, false otherwise
+---@param spellId number
+---@param count number|boolean? cast count if count object, false/nil otherwise
+---@param subcount number|boolean? sub count if subcount object, false/nil otherwise
+function bossModPrototype:GetFromTimersTable(table, difficultyName, phase, spellId, count, subcount)
+	local prev = table
+
+	if difficultyName ~= false then
+		if not difficultyName or not prev[difficultyName] then
+			DBM:Debug("difficultyName is missing from table")
+			return
+		end
+		prev = prev[difficultyName]
+	end
+
+	if phase ~= false then
+		if not phase or not prev[phase] then
+			DBM:Debug("phase is missing from table")
+			return
+		end
+		prev = prev[phase]
+	end
+
+	if not prev[spellId] then
+		DBM:Debug("spellId is missing from table")
+		return
+	end
+	prev = prev[spellId]
+
+	if count then
+		prev = prev[count]
+	end
+
+	if subcount and count then
+		prev = prev[subcount]
+	end
+
+	return prev
+end
+
+---Returns true when timer matches expected value within rounding variance.
+---@param timer number
+---@param expected number
+---@param variance number? Defaults to 1 second.
+---@return boolean
+function bossModPrototype:IsRoundedTimer(timer, expected, variance)
+	variance = variance or 1
+	return timer >= (expected - variance) and timer <= (expected + variance)
+end
+
+do
+	local function getTLCountState(self)
+		if not self.tlCountState then
+			self.tlCountState = {
+				events = {},
+				pending = {},
+			}
+		end
+		return self.tlCountState
+	end
+
+	local function removePendingEvent(pendingEvents, eventID)
+		if not pendingEvents then return end
+		for i = 1, #pendingEvents do
+			if pendingEvents[i] == eventID then
+				table.remove(pendingEvents, i)
+				return
+			end
+		end
+	end
+
+	local function reindexPendingCounts(self, state, eventType)
+		local pendingEvents = state.pending[eventType]
+		if not pendingEvents then return end
+		for i, pendingEventID in ipairs(pendingEvents) do
+			local eventInfo = state.events[pendingEventID]
+			if eventInfo and eventInfo.countKey then
+				local currentCount = self.vb[eventInfo.countKey]
+				if type(currentCount) == "number" then
+					eventInfo.count = currentCount + i - 1
+				end
+			end
+		end
+	end
+
+	local function cleanupTLCountState(self, state, eventType)
+		local pendingEvents = eventType and state.pending[eventType]
+		if pendingEvents and #pendingEvents == 0 then
+			state.pending[eventType] = nil
+		end
+		if not next(state.events) and not next(state.pending) then
+			self.tlCountState = nil
+		end
+	end
+
+	---Reserve a timeline count for a hardcoded event.
+	---@param eventID number
+	---@param eventType string Name of event type checked in mod for ENCOUNTER_TIMELINE_EVENT_STATE_CHANGED
+	---@param countKey string? Name of the vb count field to reserve against. Omit for non-count events.
+	---@return number? count
+	function bossModPrototype:TLCountStart(eventID, eventType, countKey)
+		local state = getTLCountState(self)
+		if state.events[eventID] then
+			self:TLCountCancel(eventID)
+			state = getTLCountState(self)
+		end
+		local eventInfo = {
+			eventType = eventType,
+			countKey = countKey,
+		}
+		if countKey then
+			local currentCount = self.vb[countKey]
+			if type(currentCount) ~= "number" then
+				DBM:Debug("|cffff0000TLCountStart received invalid count key '" .. tostring(countKey) .. "' for eventType '" .. tostring(eventType) .. "'|r", 2, nil, nil, true)
+				currentCount = 1
+			end
+			local pendingEvents = state.pending[eventType]
+			if not pendingEvents then
+				pendingEvents = {}
+				state.pending[eventType] = pendingEvents
+			end
+			eventInfo.count = currentCount + #pendingEvents
+			pendingEvents[#pendingEvents + 1] = eventID
+		end
+		state.events[eventID] = eventInfo
+		return eventInfo.count
+	end
+
+	---Commit a reserved timeline count when an event finishes.
+	---@param eventID number
+	---@return string? eventType Returns eventType cached by TLCountStart in TLStart
+	---@return number? count Returns event count before incrementing the vb countKey
+	function bossModPrototype:TLCountFinish(eventID)
+		local state = self.tlCountState
+		if not state then return nil, nil end
+		local eventInfo = state.events[eventID]
+		if not eventInfo then return nil, nil end
+		state.events[eventID] = nil
+		local eventType = eventInfo.eventType
+		local eventCount = eventInfo.count
+		if eventInfo.countKey then
+			local currentCount = self.vb[eventInfo.countKey]
+			if type(currentCount) == "number" then
+				eventCount = eventCount or currentCount
+				if eventCount >= currentCount then
+					self.vb[eventInfo.countKey] = eventCount + 1
+				end
+			else
+				DBM:Debug("|cffff0000TLCountFinish received invalid count key '" .. tostring(eventInfo.countKey) .. "' for eventType '" .. tostring(eventType) .. "'|r", 2, nil, nil, true)
+			end
+			removePendingEvent(state.pending[eventType], eventID)
+			reindexPendingCounts(self, state, eventType)
+		end
+		cleanupTLCountState(self, state, eventType)
+		return eventType, eventCount
+	end
+
+	---Discard a reserved timeline count when an event is canceled.
+	---@param eventID number
+	---@return string? eventType
+	function bossModPrototype:TLCountCancel(eventID)
+		local state = self.tlCountState
+		if not state then return nil end
+		local eventInfo = state.events[eventID]
+		if not eventInfo then return nil end
+		state.events[eventID] = nil
+		if eventInfo.countKey then
+			removePendingEvent(state.pending[eventInfo.eventType], eventID)
+			reindexPendingCounts(self, state, eventInfo.eventType)
+		end
+		cleanupTLCountState(self, state, eventInfo.eventType)
+		return eventInfo.eventType
+	end
+
+	---Reset all reserved timeline count state for this mod.
+	function bossModPrototype:TLCountReset()
+		self.tlCountState = nil
+	end
+
+	---Reset recent hardcoded timeline resolver context.
+	function bossModPrototype:TLResolveReset()
+		self.tlResolveState = nil
+	end
+
+	---Push latest resolved hardcoded timeline event context.
+	---@param eventType string
+	---@param timer number
+	---@param maxEntries number? default 4
+	function bossModPrototype:TLResolvePush(eventType, timer, maxEntries)
+		if not self.tlResolveState then
+			self.tlResolveState = {}
+		end
+		local state = self.tlResolveState
+		state[#state + 1] = {
+			eventType = eventType,
+			timer = timer,
+		}
+		maxEntries = maxEntries or 4
+		if #state > maxEntries then
+			table.remove(state, 1)
+		end
+	end
+
+	---Peek previously resolved hardcoded timeline context.
+	---@param offset number? 0 = latest, 1 = one before latest, etc.
+	---@return string? eventType
+	---@return number? timer
+	function bossModPrototype:TLResolvePeek(offset)
+		local state = self.tlResolveState
+		if not state then return nil, nil end
+		local entry = state[#state - (offset or 0)]
+		if not entry then return nil, nil end
+		return entry.eventType, entry.timer
+	end
+end
+
+
+----------------------------------
+--  Private/Secret API Methods  --
+----------------------------------
+do
+	local wowToC = DBM:GetTOC()
+
+	-- Helper function to register a private aura sound for a single spell ID
+	---@param self DBMMod
+	---@param optionId number
+	---@param spellId number
+	---@param media number|string
+	local function registerPrivateAuraSound(self, optionId, spellId, media)
+		local soundSetting = DBM.Options.UseSoundChannel or "Master"
+		if not self.paSounds then
+			self.paSounds = {}
+		end
+		if not self.paSounds[optionId] then
+			self.paSounds[optionId] = {}
+		end
+		local privateAuraSoundId
+		--Absolute media path is still a number, so at this point we know it's file data Id, we need to set soundFileID
+		if type(media) == "number" then
+			privateAuraSoundId = C_UnitAuras.AddPrivateAuraAppliedSound({
+				spellID = spellId,
+				unitToken = "player",
+				soundFileID = media,
+				outputChannel = soundSetting,
+			})
+		else--It's a string, so it's not an ID, we need to set soundFileName instead
+			privateAuraSoundId = C_UnitAuras.AddPrivateAuraAppliedSound({
+				spellID = spellId,
+				unitToken = "player",
+				--Another cause of LuaLS being stupid for some reason
+				---@diagnostic disable-next-line: assign-type-mismatch
+				soundFileName = media,
+				outputChannel = soundSetting,
+			})
+		end
+		self.paSounds[optionId][#self.paSounds[optionId] + 1] = privateAuraSoundId
+	end
+
+	---@param self DBMMod
+	---@param optionId number
+	local function disablePrivateAuraSoundOption(self, optionId)
+		if not self.paSounds or not self.paSounds[optionId] then return end
+		for _, id in ipairs(self.paSounds[optionId]) do
+			C_UnitAuras.RemovePrivateAuraAppliedSound(id)
+		end
+		self.paSounds[optionId] = nil
+		if not next(self.paSounds) then
+			self.paSounds = nil
+		end
+	end
+
+	---Function to check valid voice pack sound
+	---@param self DBMMod
+	---@param optionType string "SpecialWarningSound" or "PrivateAuraSound"
+	---@param optionId number
+	---@param voice VPSound voice pack media path
+	---@param voiceVersion number
+	---@param customOption string? Used when event supports hardcoded warnings and needs different option table lookup
+	---@param notSpecial boolean? Used to determine if this is for a special warning or not
+	---@return number|string
+	local function checkValidVPSound(self, optionType, optionId, voice, voiceVersion, customOption, notSpecial)
+		local soundId = customOption and self.Options[customOption .. "SWSound"] or self.Options[optionType .. optionId .. "SWSound"] or DBM.Options.SpecialWarningSound--Shouldn't be nil value, but just in case options fail to load, fallback to default SW1 sound
+		local mediaPath
+		local chosenVoice = DBM.Options.ChosenVoicePack2
+		if chosenVoice ~= "None" and not private.voiceSessionDisabled and voiceVersion <= private.swFilterDisabled then
+			local isVoicePackUsed
+			--Vet if user has voice pack enabled by sound ID
+			if notSpecial or type(soundId) == "number" and soundId < 5 then--Value 1-4 are SW1 defaults, otherwise it's file data ID and handled by Custom
+				isVoicePackUsed = DBM.Options.VPReplacesSADefault
+			end
+			if isVoicePackUsed then
+				mediaPath = "Interface\\AddOns\\DBM-VP" .. chosenVoice .. "\\" .. voice .. ".ogg"
+			else
+				mediaPath = type(soundId) == "number" and DBM.Options["SpecialWarningSound" .. (soundId == 1 and "" or soundId)] or soundId
+			end
+		else
+			mediaPath = type(soundId) == "number" and DBM.Options["SpecialWarningSound" .. (soundId == 1 and "" or soundId)] or soundId
+		end
+		--LuaLS does some bullshit where it thinks it can an impossible bool, so we have to force set it here
+		---@cast mediaPath number|string
+		return mediaPath
+	end
+
+	--Internal function for zone-based registration of a single pending PA sound entry
+	---@param mod DBMMod
+	---@param auraspellId number|number[] ID(s) of the private aura(s) to register sound for
+	---@param voice VPSound voice pack media path
+	---@param voiceVersion number Required voice pack version (if not met, falls back to default special warning sounds)
+	local function enablePrivateAuraSound(mod, auraspellId, voice, voiceVersion)
+		local optionId
+		if type(auraspellId) == "table" then
+			optionId = auraspellId[1]
+		else
+			optionId = auraspellId
+		end
+		if type(optionId) ~= "number" then
+			DBM:Debug("Attempting to register private aura sound failed due to invalid optionId type for mod " .. mod.id, 2)
+			return
+		end
+		if InCombatLockdown() then
+			DBM:Debug("Attempting to register private aura sound for spell ID " .. optionId .. " failed due to combat restriction. This sound will not be registered.", 2)
+			return
+		end
+		if not C_UnitAuras.AuraIsPrivate(optionId) then
+			DBM:Debug("Attempting to register private aura sound for spell ID " .. optionId .. " which is not a private aura. This sound will not be registered.", 2)
+			return
+		end
+		if DBM.Options.DontPlayPrivateAuraSound then return end
+		if optionId and mod.Options["PrivateAuraSound" .. optionId] then
+			local mediaPath = checkValidVPSound(mod, "PrivateAuraSound", optionId, voice, voiceVersion)
+			if mediaPath == "None" then return end--Don't register if media path is none, even if option is enabled
+			if type(auraspellId) == "table" then
+				for _, spellId in ipairs(auraspellId) do
+					registerPrivateAuraSound(mod, optionId, spellId, mediaPath)
+				end
+			else
+				registerPrivateAuraSound(mod, optionId, auraspellId, mediaPath)
+			end
+		end
+	end
+
+	---Called by DBM-Core's SecondaryLoadCheck when entering a zone.
+	---Registers only the pending private aura sounds stored for the current zone.
+	---@param mapID number
+	function bossModPrototype:RegisterZonePASounds(mapID)
+		if not self.pendingPASoundsByZone then return end
+		local zoneEntries = self.pendingPASoundsByZone[mapID]
+		if not zoneEntries then return end
+		for _, entry in ipairs(zoneEntries) do
+			enablePrivateAuraSound(self, entry[1], entry[2], entry[3])
+		end
+	end
+
+	---Refresh a single currently active private aura sound option for this mod using the player's current zone.
+	---@param optionId number
+	---@return boolean refreshed Returns false if the refresh could not be performed safely.
+	function bossModPrototype:RefreshPrivateAuraSound(optionId)
+		if InCombatLockdown() then
+			return false
+		end
+		disablePrivateAuraSoundOption(self, optionId)
+		local mapID = DBM:GetCurrentArea()
+		if not mapID or mapID <= 0 or not self.pendingPASoundsByZone then
+			return true
+		end
+		local zoneEntries = self.pendingPASoundsByZone[mapID]
+		if not zoneEntries then
+			return true
+		end
+		for _, entry in ipairs(zoneEntries) do
+			local entryOptionId = type(entry[1]) == "table" and entry[1][1] or entry[1]
+			if entryOptionId == optionId then
+				enablePrivateAuraSound(self, entry[1], entry[2], entry[3])
+			end
+		end
+		return true
+	end
+
+	---Refresh currently active private aura sounds for this mod using the player's current zone.
+	---@return boolean refreshed Returns false if the refresh could not be performed safely.
+	function bossModPrototype:RefreshPrivateAuraSounds()
+		--Restriction must remain because adding sounds still combat restricted
+		if InCombatLockdown() then
+			return false
+		end
+		self:DisablePrivateAuraSounds()
+		local mapID = DBM:GetCurrentArea()
+		if mapID and mapID > 0 then
+			self:RegisterZonePASounds(mapID)
+		end
+		return true
+	end
+
+	function bossModPrototype:DisablePrivateAuraSounds()
+		--Removal doesn't have same restrictions as adding (allowed in combat)
+		while self.paSounds do
+			local optionId = next(self.paSounds)
+			if not optionId then
+				break
+			end
+			disablePrivateAuraSoundOption(self, optionId)
+		end
+	end
+
+	---Event for registering timeline options to encounter events
+	---@param optionId number spellId or JournalId that must match option ID
+	---@param encounterEventId number|table EncounterEventID from EncounterEvent.db2 that matches event we're targetting
+	---@param customOption string? Used when event supports hardcoded timers and needs different option table lookup
+	function bossModPrototype:EnableTimelineOptions(optionId, encounterEventId, customOption)
+		if DBM.Options.HideDBMBars then return end
+		--Set Color (done outside option check since right now option check isnt supported until a future patch
+		--And we want to set colors on any bar even if it's "disabled" for now
+		if not DBM.Options.DontSetTimelineColors then
+			local colorType = customOption and self.Options[customOption .. "TColor"] or self.Options["CustomTimerOption" .. optionId .. "TColor"] or 0
+			local timerRed, timerGreen, timerBlue = DBT:GetColorForType(colorType, true)
+			if type(encounterEventId) == "table" then
+				for _, id in ipairs(encounterEventId) do
+					C_EncounterEvents.SetEventColor(id, {r = timerRed, g = timerGreen, b = timerBlue})
+				end
+			else
+				C_EncounterEvents.SetEventColor(encounterEventId, {r = timerRed, g = timerGreen, b = timerBlue})
+			end
+		end
+		if optionId and (customOption and self.Options[customOption] or self.Options["CustomTimerOption" .. optionId]) then
+			--Set Countdown
+			local timerCountdown = not DBM.Options.DontPlayCountdowns and (customOption and self.Options[customOption .. "CVoice"] or self.Options["CustomTimerOption" .. optionId .. "CVoice"]) or 0
+			if timerCountdown ~= 0 then
+				if not self.tlTimerEvents then self.tlTimerEvents = {} end
+				local maxCount = DBM:GetCountMaxCountForVoice(timerCountdown)
+				local countSizePath = (maxCount == 3 or DBM.Options.CountSize == 3) and "threecount.ogg" or "fivecount.ogg"
+				if type(timerCountdown) == "string" then
+					path = timerCountdown..countSizePath
+				elseif timerCountdown == 2 then
+					path = "Interface\\AddOns\\DBM-Core\\Sounds\\Kolt\\" .. countSizePath
+				elseif timerCountdown == 3 then
+					path = "Interface\\AddOns\\DBM-Core\\Sounds\\Smooth\\" .. countSizePath
+				elseif timerCountdown == 1 then
+					path = "Interface\\AddOns\\DBM-Core\\Sounds\\Corsica\\" .. countSizePath
+				end
+				--Unlike private aura sounds, this api accepts both file data ID AND path
+				local soundSetting = DBM.Options.UseSoundChannel or "Master"
+				if type(encounterEventId) == "table" then
+					for _, id in ipairs(encounterEventId) do
+						if not self.tlTimerEvents[id] then
+							--Another ignore that has to be added due to wow API extension bugs
+							---@diagnostic disable-next-line: assign-type-mismatch
+							C_EncounterEvents.SetEventSound(id, 2, {file = path, channel = soundSetting, volume = 1})
+							self.tlTimerEvents[id] = true
+						else
+							DBM:Debug("|cffff0000Timeline option for " .. optionId .. " already set for encounter event id: " .. id .. "|r", 1)
+						end
+					end
+				else
+					if not self.tlTimerEvents[encounterEventId] then
+						---@diagnostic disable-next-line: assign-type-mismatch
+						C_EncounterEvents.SetEventSound(encounterEventId, 2, {file = path, channel = soundSetting, volume = 1})
+						self.tlTimerEvents[encounterEventId] = true
+					else
+						DBM:Debug("|cffff0000Timeline option for " .. optionId .. " already set for encounter event id: " .. encounterEventId .. "|r", 1)
+					end
+				end
+			end
+		end
+	end
+
+	--Called automatically on combat end to clear any custom timeline countdown sounds
+	---@param specificEvent table? Used to clear only custom events instead of all events.
+	function bossModPrototype:DisableTimelineOptions(specificEvent)
+		--Note. Currently this doesn't wipe color since we don't want to wipe default generic colors until blizzard
+		--adds function that lets us set a default color to use when a custom one isn't set since we set defaults
+		--for ALL events on login as a workaround right now
+		if self.tlTimerEvents then
+			if specificEvent then
+				for encounterEventId in next, specificEvent do
+					C_EncounterEvents.SetEventSound(encounterEventId, 2, nil)
+					self.tlTimerEvents[encounterEventId] = nil
+				end
+				return
+			else
+				for encounterEventId in next, self.tlTimerEvents do
+					C_EncounterEvents.SetEventSound(encounterEventId, 2, nil)
+				end
+			end
+			self.tlTimerEvents = nil
+		end
+	end
+
+	---Event for registering timeline options to encounter events
+	---@param optionId number spellId or JournalId that must match option ID
+	---@param encounterEventId number|table EncounterEventID from EncounterEvent.db2 that matches event we're targetting
+	---@param voice VPSound voice pack media path
+	---@param voiceVersion number Required voice pack verion (if not met, falls back to default special warning sounds)
+	---@param color warningColorType? ColorId 1-4
+	---@param overrideType number? Used when we explicitely need to set sound to play on a specific type of event (0 - Text Event, 1 - Timer Finished, 2 - 5 seconds before Timer Finished)
+	---@param customOption string? Used when event supports hardcoded warnings and needs different option table lookup
+	---@param notSpecial boolean? Used to determine if this is for a special warning or not
+	function bossModPrototype:EnableAlertOptions(optionId, encounterEventId, voice, voiceVersion, color, overrideType, customOption, notSpecial)
+		--Use same global disable as special warning sounds (since UI is indistinguishable between custom alert sounds and special warning sounds, might as well just have one global disable for both)
+		if DBM.Options.HideDBMWarnings or DBM.Options.DontPlaySpecialWarningSound then return end
+		--Filter tank specific voice alerts for non tanks if tank filter enabled
+		if (voice == "changemt" or voice == "tauntboss") and not self:IsTank() then return end
+		if optionId then
+			--if optionId and (customOption and self.Options[customOption] or self.Options["CustomTimerOption" .. optionId]) then
+			local enabled = customOption and self.Options[customOption] or self.Options["CustomAlertOption" .. optionId]
+			local mediaPath = checkValidVPSound(self, "CustomAlertOption", optionId, voice, voiceVersion, customOption, notSpecial)
+			if enabled and mediaPath ~= "None" then
+				if not self.tlSoundEvents then
+					self.tlSoundEvents = {}
+					self:DisableSpecialWarningSounds()
+				end
+				local soundSetting = DBM.Options.UseSoundChannel or "Master"
+				--Unlike private aura sounds, this api accepts both file data ID AND path
+				if type(encounterEventId) == "table" then
+					for _, id in ipairs(encounterEventId) do
+						--Once again working around bugs in Wow Api extension
+						---@diagnostic disable-next-line: assign-type-mismatch
+						C_EncounterEvents.SetEventSound(id, overrideType or 1, {file = mediaPath, channel = soundSetting, volume = 1})
+						self.tlSoundEvents[id] = true
+					end
+				else
+					--Once again working around bugs in Wow Api extension
+					---@diagnostic disable-next-line: assign-type-mismatch
+					C_EncounterEvents.SetEventSound(encounterEventId, overrideType or 1, {file = mediaPath, channel = soundSetting, volume = 1})
+					self.tlSoundEvents[encounterEventId] = true
+				end
+				--TODO, add color api when blizzard adds it. Right now it's unused but still setup in mods.
+			end
+		end
+	end
+
+	--Called automatically on combat end to clear any custom timeline/warning alert sounds
+	---@param specificEvent table? Used to clear only custom events instead of all events.
+	function bossModPrototype:DisableAlertOptions(specificEvent)
+		if self.tlSoundEvents then
+			if specificEvent then
+				for encounterEventId in next, specificEvent do
+					C_EncounterEvents.SetEventSound(encounterEventId, 1, nil)
+					C_EncounterEvents.SetEventSound(encounterEventId, 0, nil)
+					self.tlSoundEvents[encounterEventId] = nil
+				end
+			else
+				for encounterEventId in next, self.tlSoundEvents do
+					C_EncounterEvents.SetEventSound(encounterEventId, 1, nil)
+					C_EncounterEvents.SetEventSound(encounterEventId, 0, nil)
+				end
+				self.tlSoundEvents = nil
+			end
+		end
+	end
+end
+
+---@param t number
+---@param f function
+---@param ... any?
+function bossModPrototype:Schedule(t, f, ...)
+	return scheduler:Schedule(t, f, self, ...)
+end
+
+---@param f function? If nil, all schedules for this mod are unscheduled
+---@param ... any?
+function bossModPrototype:Unschedule(f, ...)
+	return scheduler:Unschedule(f, self, ...)
+end
+
+---@param t number
+---@param method string
+---@param ... any?
+function bossModPrototype:ScheduleMethod(t, method, ...)
+	if not self[method] then
+		error(("Method %s does not exist"):format(tostring(method)), 2)
+	end
+	local id = self:Schedule(t, self[method], self, ...)
+	test:Trace(self, "SetScheduleMethodName", id, self, method, ...)
+	return id
+end
+bossModPrototype.ScheduleEvent = bossModPrototype.ScheduleMethod
+
+---@param method string
+---@param ... any?
+function bossModPrototype:UnscheduleMethod(method, ...)
+	if not self[method] then
+		error(("Method %s does not exist"):format(tostring(method)), 2)
+	end
+	return self:Unschedule(self[method], self, ...)
+end
+bossModPrototype.UnscheduleEvent = bossModPrototype.UnscheduleMethod
+
+-----------------------
+--  Model Functions  --
+-----------------------
+function bossModPrototype:SetModelScale(scale)
+	self.modelScale = scale
+end
+
+function bossModPrototype:SetModelOffset(x, y, z)
+	self.modelOffsetX = x
+	self.modelOffsetY = y
+	self.modelOffsetZ = z
+end
+
+function bossModPrototype:SetModelRotation(r)
+	self.modelRotation = r
+end
+
+function bossModPrototype:SetModelSequence(v)
+	self.modelSequence = v
+end
+
+function bossModPrototype:SetModelID(id)
+	self.modelId = id
+end
+
+function bossModPrototype:SetModelSound(long, short)--PlaySoundFile prototype for model viewer, long is long sound, short is a short clip, configurable in UI, both sound paths defined in boss mods.
+	self.modelSoundLong = long
+	self.modelSoundShort = short
+end
+
+function bossModPrototype:GetLocalizedStrings()
+	self.localization.miscStrings.name = self.localization.general.name
+	return self.localization.miscStrings
+end
+
+
+-- Test support
+
+function bossModPrototype:TestTrace(...)
+	test:Trace(self, "ModTrace", ...)
+end

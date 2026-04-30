@@ -1,0 +1,29 @@
+## Interface: 120000, 120001, 120005
+## Title: MythicPlusPageExtension
+## Version: 12.0.B4
+## Author: CN2714
+## IconTexture: Interface\AddOns\MythicPlusPageExtension\icon.tga
+## Notes: Mythic Plus Page Extension: This addon enhances the Mythic+ interface by displaying your best score and highest completed level for each dungeon. It features one-click dungeon teleport usage with raid announcements, automatic Keystone information sharing within your party, and provides a weekly Mythic+ summary report.
+## Notes-zhCN: 史诗钥石地下城界面扩展工具，显示单本最佳分数、最高通关层数、点击使用传送门并通报、小队信息展示及钥石共享，大秘境周报。
+## SavedVariables: MythicPlusPageExtensionDB
+
+
+Lib\LibStub\LibStub.lua
+Lib\LibDeflate\lib.xml
+Lib\LibOpenRaid\lib.xml
+Lib\LibKeystone\LibKeystone.lua
+
+MythicPlusPageExtension.lua
+
+Locales\enUS.lua
+Locales\zhCN.lua
+Locales\zhTW.lua
+
+Settings.lua
+Database.lua
+
+PartyEvent.lua
+
+ScoreNTeleport.lua
+PartyInfo.lua
+WeeklyReport.lua

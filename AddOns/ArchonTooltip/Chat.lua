@@ -76,4 +76,8 @@ local function OnChatMessage(self, event, text, ...)
 	return false, text .. " - " .. profileString, ...
 end
 
-ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", OnChatMessage)
+if ChatFrameUtil and ChatFrameUtil.AddMessageEventFilter then
+	ChatFrameUtil.AddMessageEventFilter("CHAT_MSG_SYSTEM", OnChatMessage)
+else
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", OnChatMessage)
+end

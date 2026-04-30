@@ -159,10 +159,7 @@ L["STRING_CUSTOM_SPELLID_DESC"] = "Facoltativo, l'incantesimo viene utilizzato d
 L["STRING_CUSTOM_TARGET"] = "Bersaglio:"
 L["STRING_CUSTOM_TARGET_DESC"] = "Questo è il bersaglio della sorgente. Il pulsante in basso a destra mostra una lista degli npcs dagli incontri raid."
 L["STRING_CUSTOM_TEMPORARILY"] = "(|cFFFFC000temporaneo|r)"
---[[Translation missing --]]
-L["STRING_CUSTOM_TEXTURE_GUIDE"] = [=[To load a texture file in the World of Warcraft client you need a file in .TGA format and its width and height must be multiples of 8.
-
-Place the texture inside /WoW Install Folder/retail/Interface/]=]
+L["STRING_CUSTOM_TEXTURE_GUIDE"] = "Per caricare un file di texture nel client di World of Warcraft, è necessario un file in formato .TGA e le sue dimensioni (larghezza e altezza) devono essere multipli di 8. Inserisci la texture nella cartella /WoW Install Folder/retail/Interface/"
 L["STRING_DAMAGE"] = "Danno"
 L["STRING_DAMAGE_DPS_IN"] = "DPS ricevuto da"
 L["STRING_DAMAGE_FROM"] = "Ha subito danni da"
@@ -177,8 +174,7 @@ L["STRING_DODGE"] = "Schivata"
 L["STRING_DOT"] = "(DoT)"
 L["STRING_DPS"] = "DPS"
 L["STRING_EMPTY_SEGMENT"] = "Segmento Vuoto"
---[[Translation missing --]]
-L["STRING_ENABLE_DO_NOT_DISTURB"] = "Enable Do Not Disturb"
+L["STRING_ENABLE_DO_NOT_DISTURB"] = "Abilita Non Disturbare"
 L["STRING_ENABLED"] = "Abilitato"
 L["STRING_ENVIRONMENTAL_DROWNING"] = "Ambiente (Annegamento)"
 L["STRING_ENVIRONMENTAL_FALLING"] = "Ambiente (Caduta)"
@@ -299,27 +295,18 @@ L["STRING_KEYBIND_TOGGLE_WINDOWS"] = "Muovi Tutto"
 L["STRING_KEYBIND_WINDOW_CONTROL"] = "Finestre"
 L["STRING_KEYBIND_WINDOW_REPORT"] = "Riporta i dati mostrati su finestra #%s."
 L["STRING_KEYBIND_WINDOW_REPORT_HEADER"] = "Riporta Data"
---[[Translation missing --]]
-L["STRING_KEYSTONE_ADD_TO_FRIENDS_TOOLTIP"] = "Add to friends list as character (not battlenet friend request)."
---[[Translation missing --]]
-L["STRING_KEYSTONE_CLICK_TO_VIEW_SCOREBOARD"] = "Click to view the scoreboard."
---[[Translation missing --]]
-L["STRING_KEYSTONE_DND_TOOLTIP"] = "Your key won't be sent to your guild or friends. While in a group, it will still be sent."
---[[Translation missing --]]
-L["STRING_KEYSTONE_LIFETIME_LIKES_YOU_GAVE"] = [=[Life-time likes you gave for this player through the 'GG' button in the |cFFFFFF00Details! Damage Meter Mythic+|r addon.
-
-View run breakdown by selecting a Mythic+ run you did with this player.]=]
---[[Translation missing --]]
-L["STRING_KEYSTONE_NO_MYTHICPLUS_ADDON"] = "Mythic+ addon not found."
---[[Translation missing --]]
-L["STRING_KEYSTONE_REQUEST_FROM_GUILD"] = "Request from Guild"
+L["STRING_KEYSTONE_ADD_TO_FRIENDS_TOOLTIP"] = "Aggiungi alla lista amici come personaggio (non come richiesta amici Battle.net)"
+L["STRING_KEYSTONE_CLICK_TO_VIEW_SCOREBOARD"] = "Clicca per visualizzare la classifica"
+L["STRING_KEYSTONE_DND_TOOLTIP"] = "La tua chiave non verrà inviata alla gilda o agli amici. Quando sei in un gruppo, verrà comunque inviata."
+L["STRING_KEYSTONE_LIFETIME_LIKES_YOU_GAVE"] = "Mi piace totali che hai dato a questo giocatore tramite il pulsante 'GG' nell’addon |cFFFFFF00Details! Damage Meter Mitica+|r. Visualizza il dettaglio della run selezionando una run Mitica+ che hai fatto con questo giocatore."
+L["STRING_KEYSTONE_NO_MYTHICPLUS_ADDON"] = "Addon Mitica+ non trovato"
+L["STRING_KEYSTONE_REQUEST_FROM_GUILD"] = "Richiesta dalla gilda"
 L["STRING_KILLED"] = "Ucciso"
 L["STRING_LAST_COOLDOWN"] = "ultimo cooldown utilizzato"
 L["STRING_LEFT"] = "sinistra"
 L["STRING_LEFT_CLICK_SHARE"] = "Tasto sinistro per reportare."
 L["STRING_LEFT_TO_RIGHT"] = "Sinistra a Destra"
---[[Translation missing --]]
-L["STRING_LIKES_YOU_GAVE"] = "Likes you gave"
+L["STRING_LIKES_YOU_GAVE"] = "Mi piace che hai dato"
 L["STRING_LOCK_DESC"] = "Blocca o sblocca la finestra"
 L["STRING_LOCK_WINDOW"] = "blocca"
 L["STRING_MASTERY"] = "Maestria"
@@ -381,13 +368,11 @@ L["STRING_NEWS_REINSTALL"] = "Trovato un problema dopo un aggiornamento? Prova i
 L["STRING_NEWS_TITLE"] = "Novità In Questa Versione"
 L["STRING_NO"] = "No"
 L["STRING_NO_DATA"] = "i dati sono già stati puliti"
---[[Translation missing --]]
-L["STRING_NO_MYTHIC_PLUS_ADDON"] = "To track your Mythic+ runs including loot, score, damage, healing done, and who you played with, install the |cFFFFAA00Details! Damage Meter Mythic+|r addon on |cFFfff1c1Wago AddOns|r or |cFFfff1c1Curse Forge|r."
+L["STRING_NO_MYTHIC_PLUS_ADDON"] = "Per tracciare le tue run Mitica+ includendo bottino, punteggio, danni, cure effettuate e con chi hai giocato, installa l’addon |cFFFFAA00Details! Damage Meter Mitica+|r su |cFFfff1c1Wago AddOns|r o |cFFfff1c1Curse Forge|r."
 L["STRING_NO_SPELL"] = "nessun incantesimo è stato usato"
 L["STRING_NO_TARGET"] = "Nessun bersaglio trovato"
 L["STRING_NO_TARGET_BOX"] = "Nessun Bersaglio Disponibile"
---[[Translation missing --]]
-L["STRING_NO_TELEPORTER"] = "You don't have this teleporter"
+L["STRING_NO_TELEPORTER"] = "Non possiedi questo teletrasportatore"
 L["STRING_NOCLOSED_INSTANCES"] = "Non ci sono finestre chiuse, premi per aprirne una nuova."
 L["STRING_NOLAST_COOLDOWN"] = "nessun cooldown usato"
 L["STRING_NOMORE_INSTANCES"] = "Numero massimo di finestre raggiunto. Cambia il limite nel pannello opzioni."
@@ -409,20 +394,13 @@ L["STRING_OPTIONS_3D_UANCHOR"] = "Modello 3D Superiore:"
 L["STRING_OPTIONS_3D_UENABLED_DESC"] = "Attiva o Disattiva l'uso di un frame di un modello 3d sopra le barre."
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "Scegli quale modello verrà utilizzato sulla barra del modello superiore."
 L["STRING_OPTIONS_ADVANCED"] = "Avanzate"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "Aligned Text Columns"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = "Auto Alignment"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "The alignment is done automatically based on the length of each text"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = "Disable brackets and separators and align bars texts in vertical columns"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = "Text %d Offset"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "Offset from right border"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = "is enabled, separators and brackets aren't used"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "Colonne di testo allineate"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = "Allineamento automatico"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "L’allineamento viene eseguito automaticamente in base alla lunghezza di ciascun testo"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = "Disabilita parentesi e separatori e allinea i testi delle barre in colonne verticali"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = "Offset del testo %d"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "Distanza dal bordo destro"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = "È abilitato, separatori e parentesi non vengono utilizzati"
 L["STRING_OPTIONS_ALPHAMOD_ANCHOR"] = "Nascondimento Automatico:"
 L["STRING_OPTIONS_ALWAYS_USE"] = "Usa Su Tutti i Personaggi"
 L["STRING_OPTIONS_ALWAYS_USE_DESC"] = "Lo stesso profilo viene usato su tutti i personaggi. Potresti dover sovrascrivere questo su tutti i personaggi selezionando un altro profilo esistente."
@@ -606,20 +584,17 @@ L["STRING_OPTIONS_ED_DESC"] = "|cFFFFFF00Manualmente|r: l'utente deve premere su
 L["STRING_OPTIONS_ED1"] = "Manualmente"
 L["STRING_OPTIONS_ED2"] = "Prompt"
 L["STRING_OPTIONS_ED3"] = "Auto"
---[[Translation missing --]]
-L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = "Edit Custom Text"
+L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = "Modifica testo personalizzato"
 L["STRING_OPTIONS_EDITIMAGE"] = "Modifica Immagine"
 L["STRING_OPTIONS_EDITINSTANCE"] = "Modifica Finestra:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "Cancella Grafici"
 L["STRING_OPTIONS_ERASECHARTDATA_DESC"] = "Durante il logout, tutti i dati di combattimento raccolti per creare i grafici vengono cancellati."
---[[Translation missing --]]
-L["STRING_OPTIONS_EXPORT_PROFILE"] = "Export Profile"
+L["STRING_OPTIONS_EXPORT_PROFILE"] = "Esporta profilo"
 L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Widget Esterni"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "Queste opzioni controllano il comportamento di molti widget esterni."
 L["STRING_OPTIONS_GENERAL"] = "Impostazioni Generali"
 L["STRING_OPTIONS_GENERAL_ANCHOR"] = "Generale:"
---[[Translation missing --]]
-L["STRING_OPTIONS_GROUPING_HORIZONTAL_GAP"] = "\"Space Between Windows\""
+L["STRING_OPTIONS_GROUPING_HORIZONTAL_GAP"] = "Spazio tra le finestre"
 L["STRING_OPTIONS_HIDE_ICON"] = "Nascondi Icona"
 L["STRING_OPTIONS_HIDE_ICON_DESC"] = "Quando attivo, l'icona che rappresenta il display selezionato non viene mostrata. |cFFFFFF00Importante|r: dopo aver abilitato l'icona, si consiglia di regolare la posizione del testo del titolo."
 L["STRING_OPTIONS_HIDECOMBATALPHA_DESC"] = "Cambia la trasparenza in questo valore quando il tuo personaggio corrisponde alla regola scelta. |cFFFFFF00Zero|r: completamente nascosto, non può interagire all'interno della finestra. |cFFFFFF001 - 100|r: completamente nascosto, non può interagire all'interno della finestra."
@@ -637,12 +612,9 @@ L["STRING_OPTIONS_IGNORENICKNAME_DESC"] = "Quando è abilitato, i nickname e gli
 L["STRING_OPTIONS_ILVL_TRACKER"] = "Tracker del Livello Oggetti:"
 L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = "Quando attivo e fuori dal combattimento, l'addon indaga e traccia il livello oggetti dei giocatori nell'incursione. Se disattivato, esso leggerà comunque il livello oggetti dai queries degli altri addon o quando ispezioni manualmente un altro player."
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "Attivato"
---[[Translation missing --]]
-L["STRING_OPTIONS_IMPORT_PROFILE"] = "Import Profile"
---[[Translation missing --]]
-L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = "Insert a Name for the New Profile"
---[[Translation missing --]]
-L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = "Details! Import Profile (paste string)"
+L["STRING_OPTIONS_IMPORT_PROFILE"] = "Importa profilo"
+L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = "Inserisci un nome per il nuovo profilo"
+L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = "Details! Importa profilo (incolla la stringa)"
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "Texture di Sfondo"
 L["STRING_OPTIONS_INSTANCE_BACKDROP_DESC"] = "Seleziona la texture di sfondo usata da questa finestra. Sfondo |cFFFFFF00Predefinito|r: Details."
 L["STRING_OPTIONS_INSTANCE_CURRENT"] = "Auto Scambio Ad Attuale"
@@ -730,36 +702,23 @@ L["STRING_OPTIONS_MINIMAP_ANCHOR"] = "Minimappa:"
 L["STRING_OPTIONS_MINIMAP_DESC"] = "Mostra o Nascondi le icone minimappa"
 L["STRING_OPTIONS_MISCTITLE"] = "Impostazioni varie"
 L["STRING_OPTIONS_MISCTITLE2"] = "Questi controllano diverse opzioni."
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME"] = "Time To Auto Close"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME_DESC"] = "Time to auto close the Show End of M+ Panel automatically."
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT"] = "New Combat on Boss Pull"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT_DESC"] = "If a boss is pulled while in combat, this option closes the current combat encounter and initiates a new one for the boss."
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_DPS_ANCHOR"] = "Overall Segment DPS Calculation"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_MERGETRASH"] = "Merge Trash"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_PANELS_ANCHOR"] = "Panels"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_SHOWENDPANEL"] = "Show End of M+ Panel"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT"] = "Time in Combat"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT_DESC"] = "The overall segment for the Mythic+ run will use 'totalDamage / totalCombatTime' to calculate DPS."
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_TIME_RUNTIME"] = "Dungeon Run Time"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_TIME_RUNTIME_DESC"] = "The overall segment for the Mythic+ run will calculate DPS using 'totalDamage / runTime'."
+L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME"] = "Tempo per chiusura automatica"
+L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME_DESC"] = "Tempo per chiudere automaticamente il pannello Fine M+"
+L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT"] = "Nuovo combattimento all’inizio del boss"
+L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT_DESC"] = "Se un boss viene agganciato mentre sei in combattimento, questa opzione chiude l’incontro attuale e ne avvia uno nuovo per il boss."
+L["STRING_OPTIONS_MPLUS_DPS_ANCHOR"] = "Calcolo del DPS complessivo del segmento"
+L["STRING_OPTIONS_MPLUS_MERGETRASH"] = "Unisci Trash"
+L["STRING_OPTIONS_MPLUS_PANELS_ANCHOR"] = "Pannelli"
+L["STRING_OPTIONS_MPLUS_SHOWENDPANEL"] = "Mostra il pannello di fine M+"
+L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT"] = "Tempo in combattimento"
+L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT_DESC"] = "Il segmento complessivo per la run Mitica+ utilizzerà 'totalDamage / totalCombatTime' per calcolare il DPS."
+L["STRING_OPTIONS_MPLUS_TIME_RUNTIME"] = "Durata della Spedizione"
+L["STRING_OPTIONS_MPLUS_TIME_RUNTIME_DESC"] = "Il segmento complessivo per la run Mitica+ calcolerà il DPS usando 'totalDamage / runTime'."
 L["STRING_OPTIONS_NICKNAME"] = "NIckname"
 L["STRING_OPTIONS_NICKNAME_DESC"] = "Imposta un nickname per te. I nickname vengono inviati ai membri della gilda e ai dettagli! lo usa al posto del nome del tuo personaggio."
 L["STRING_OPTIONS_OPEN_ROWTEXT_EDITOR"] = "Editor Righe di Testo"
 L["STRING_OPTIONS_OPEN_TEXT_EDITOR"] = "Apri Editor di Testo"
---[[Translation missing --]]
-L["STRING_OPTIONS_OPENBROKER"] = "Open Broker Text Editor"
+L["STRING_OPTIONS_OPENBROKER"] = "Apri l’editor di testo del Broker"
 L["STRING_OPTIONS_OVERALL_ALL"] = "Tutti i Segmenti"
 L["STRING_OPTIONS_OVERALL_ALL_DESC"] = "Tutti i segmenti vengono aggiunti ai dati complessivi."
 L["STRING_OPTIONS_OVERALL_ANCHOR"] = "Dati Complessivi:"
@@ -806,6 +765,12 @@ L["STRING_OPTIONS_PERFORMANCECAPTURES_DESC"] = "Queste opzioni sono responsabili
 L["STRING_OPTIONS_PERFORMANCEPROFILES_ANCHOR"] = "Profili Prestazioni:"
 L["STRING_OPTIONS_PICONS_DIRECTION"] = "Plugin ancorati a destra"
 L["STRING_OPTIONS_PICONS_DIRECTION_DESC"] = "Quando è selezionato, i pulsanti del plugin vengono visualizzati sul lato destro dei pulsanti del menu."
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME"] = "Player Name"
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME_AUTO_WIDTH"] = "Length Auto"
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME_WIDTH"] = "Length"
 L["STRING_OPTIONS_PLUGINS"] = "Plugin"
 L["STRING_OPTIONS_PLUGINS_AUTHOR"] = "Autore"
 L["STRING_OPTIONS_PLUGINS_NAME"] = "Nome"
@@ -937,6 +902,8 @@ L["STRING_OPTIONS_SCROLLBAR"] = "Barra di Scorrimento"
 L["STRING_OPTIONS_SCROLLBAR_DESC"] = "Attiva o disattiva la barra di scorrimento. Per impostazione predefinita, le barre di scorrimento di Details! sono sostituite da un meccanismo che allunga la finestra. Il |cFFFFFF00tasto movibile|r si trova oltre la finestra pulsanti/menu (a sinistra del pulsante di chiusura)."
 L["STRING_OPTIONS_SEGMENTSSAVE"] = "Segmenti Salvati"
 L["STRING_OPTIONS_SEGMENTSSAVE_DESC"] = "Quanti segmenti vuoi salvare tra le sessioni di gioco. Valori alti possono aumentare il tempo impiegato dal tuo personaggio per disconnettersi."
+--[[Translation missing --]]
+L["STRING_OPTIONS_SELECT_TEMPLATE"] = "Select Template"
 L["STRING_OPTIONS_SENDFEEDBACK"] = "Feedback"
 L["STRING_OPTIONS_SHOW_SIDEBARS"] = "Mostra Bordi"
 L["STRING_OPTIONS_SHOW_SIDEBARS_DESC"] = "Mostra o nascondi i bordi finestra"
@@ -1010,11 +977,14 @@ L["STRING_OPTIONS_TEXT_LPOSITION"] = "Mostra Numero"
 L["STRING_OPTIONS_TEXT_LPOSITION_DESC"] = "Mostra la posizione del numero sul lato sinistro del nome del player."
 L["STRING_OPTIONS_TEXT_LTRANSLIT"] = "Translit"
 L["STRING_OPTIONS_TEXT_LTRANSLIT_DESC"] = "Rendi quelle lettere russe che nessuno capisce da presentare come lettere occidentali."
---[[Translation missing --]]
-L["STRING_OPTIONS_TEXT_OUTLINE"] = "Text Outline"
+L["STRING_OPTIONS_TEXT_OUTLINE"] = "Contorno del testo"
 L["STRING_OPTIONS_TEXT_RIGHT_ANCHOR"] = "Testo Destro:"
 L["STRING_OPTIONS_TEXT_ROUTILINE_DESC"] = "Attiva o Disattiva il contorno per il testo a destra."
 L["STRING_OPTIONS_TEXT_ROWICONS_ANCHOR"] = "Icone"
+--[[Translation missing --]]
+L["STRING_OPTIONS_TEXT_SHADOWCOLOR"] = "Shadow Color"
+--[[Translation missing --]]
+L["STRING_OPTIONS_TEXT_SHADOWOFFSET"] = "Shadow Offset %s"
 L["STRING_OPTIONS_TEXT_SHOW_BRACKET"] = "Parentesi"
 L["STRING_OPTIONS_TEXT_SHOW_BRACKET_DESC"] = "Scegli il carattere da utilizzare per aprire e chiudere il blocco al secondo e percentuale."
 L["STRING_OPTIONS_TEXT_SHOW_PERCENT"] = "Mostra Percentuale"
@@ -1046,8 +1016,7 @@ L["STRING_OPTIONS_TEXTEDITOR_TOK"] = "ToK"
 L["STRING_OPTIONS_TEXTEDITOR_TOK_TOOLTIP"] = "Aggiungi una funzione per formattare i numeri abbreviando i suoi valori. Esempio: 1500000 a 1,5kk."
 L["STRING_OPTIONS_TIMEMEASURE"] = "Misura del Tempo"
 L["STRING_OPTIONS_TIMEMEASURE_DESC"] = "|cFFFFFF00Attività|r: il timer di ogni membro dell'istanza viene messo in attesa se la loro attività viene interrotta e torna a contare quando riprende, modo comune di misurare DPS e HPS.|cFFFFFF00Effettivo|r: utilizzato nelle classifiche, questo metodo utilizza il tempo di combattimento trascorso per misurare il DPS e l'HPS di tutti i membri del raid."
---[[Translation missing --]]
-L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = "Buttons and Menu Settings"
+L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = "Impostazioni dei pulsanti e del menu"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS"] = "Impostazioni dei Pulsanti della Barra del Titolo"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS_DESC"] = "Queste opzioni modificano il menu principale nella parte superiore della finestra."
 L["STRING_OPTIONS_TOOLBARSIDE"] = "Barra del Titolo nella Lato Superiore"
@@ -1144,20 +1113,12 @@ L["STRING_OPTIONS_WINDOW"] = "Pannello Opzioni"
 L["STRING_OPTIONS_WINDOW_ANCHOR_ANCHORS"] = "Ancore:"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE"] = "Ignora il Toggle di Massa"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE_DESC"] = "Quando è abilitata, questa finestra non viene influenzata quando si nascondono, mostrano o si alternano tutte le finestre."
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = "\"Row's Area Color\""
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "Set the background color of the area when the rows are shown."
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = "Colore dell’area delle righe"
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "Imposta il colore di sfondo dell’area quando le righe vengono visualizzate."
 L["STRING_OPTIONS_WINDOW_SCALE"] = "Scala"
 L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = "Regola la scala della finestra. |cFFFFFF00Consiglio|r: tasto destro per scrivere il tipo di valore. |cFFFFFF00Attuale|r: %s"
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "Skin Color"
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = [=[Modifies the color of the skin applied into this window.
-
-|cFFFFFF00Important|r: the alpha chosen here is overwritten with |cFFFFFF00Auto Transparency|r values when enabled.
-
-|cFFFFFF00Important|r: selecting the skin color overwrites any color customization applied to statusbar.]=]
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "Colore della skin"
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = "Modifica il colore della skin applicata a questa finestra. |cFFFFFF00Importante|r: l’alpha selezionata qui viene sovrascritta dai valori di |cFFFFFF00Trasparenza Automatica|r quando è abilitata. |cFFFFFF00Importante|r: selezionare il colore della skin sovrascrive qualsiasi personalizzazione del colore applicata alla barra di stato."
 L["STRING_OPTIONS_WINDOW_TITLE"] = "Titolo mostrato nell'intestazione di Finestre: Impostazioni generali"
 L["STRING_OPTIONS_WINDOW_TITLE_DESC"] = "Queste opzioni controllano l'aspetto della finestra della finestra selezionata."
 L["STRING_OPTIONS_WINDOWSPEED"] = "Intervallo Aggiornamento"
@@ -1201,6 +1162,8 @@ L["STRING_OPTIONSMENU_TOOLTIP"] = "Tooltips"
 L["STRING_OPTIONSMENU_WALLPAPER"] = "Sfondo"
 L["STRING_OPTIONSMENU_WINDOW"] = "Finestra: Generale"
 L["STRING_OPTIONSMENU_WINDOWBODY"] = "Impostazioni Finestra"
+--[[Translation missing --]]
+L["STRING_OR"] = "Or"
 L["STRING_OVERALL"] = "Complessivamente"
 L["STRING_OVERHEAL"] = "Sovraccura"
 L["STRING_OVERHEALED"] = "Sovraccurato"
@@ -1249,8 +1212,7 @@ L["STRING_QUERY_INSPECT_REFRESH"] = "richiede aggiornamento"
 L["STRING_RAID_WIDE"] = "[*] raid wide cooldown"
 L["STRING_RAIDCHECK_PLUGIN_DESC"] = "Mentre sei all'interno di un'istanza d'incursione, mostra l'icona su Details! barra del titolo che mostra fiaschetta, cibo, uso della pre-pozione."
 L["STRING_RAIDCHECK_PLUGIN_NAME"] = "Controllo Incursione"
---[[Translation missing --]]
-L["STRING_RECENT_PLAYERS"] = "Recent Players:"
+L["STRING_RECENT_PLAYERS"] = "Giocatori recenti:"
 L["STRING_REPORT"] = "per"
 L["STRING_REPORT_BUTTON_TOOLTIP"] = "Fare clic per aprire la finestra di dialogo del Rapporto"
 L["STRING_REPORT_FIGHT"] = "combattimento"
@@ -1264,8 +1226,7 @@ L["STRING_REPORT_SINGLE_BUFFUPTIME"] = "buff durato per"
 L["STRING_REPORT_SINGLE_COOLDOWN"] = "cooldowns usati da"
 L["STRING_REPORT_SINGLE_DEATH"] = "Morte di"
 L["STRING_REPORT_SINGLE_DEBUFFUPTIME"] = "debuff durato per"
---[[Translation missing --]]
-L["STRING_REPORT_TEXT"] = "Report"
+L["STRING_REPORT_TEXT"] = "Rapporto"
 L["STRING_REPORT_TOOLTIP"] = "Condividi Risultati"
 L["STRING_REPORTFRAME_COPY"] = "Copia & Incolla"
 L["STRING_REPORTFRAME_CURRENT"] = "Corrente"
@@ -1319,6 +1280,26 @@ L["STRING_SEGMENTS_LIST_WASTED_TIME"] = "Non In Combattimento"
 L["STRING_SHIELD_HEAL"] = "Prevenuto"
 L["STRING_SHIELD_OVERHEAL"] = "Sprecato"
 L["STRING_SHORTCUT_RIGHTCLICK"] = "tasto destro per chiudere"
+L["STRING_SIMPLE_TEXT_FORMAT"] = "Usa formattazione testo semplice"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED"] = "Usa testo allineato"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_DESC"] = "Il testo è allineato in colonne, imposta la spaziatura tra le colonne."
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_SPACE_BETWEEN"] = "Spazio tra le colonne"
+L["STRING_SIMPLE_TEXT_FORMAT_DESC"] = "Abilita l'uso delle tre regole sottostanti."
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE2"] = "Non mostrare percentuale"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE3"] = "Mostra solo totale"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE4"] = "Separare con | come separatore"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE5"] = "Separare con [parentesi quadre]"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE6"] = "Totale (DPS) Percentuale"
+L["STRING_SIMPLE_TEXT_FORMAT_TITLE"] = "Testo a destra: Semplice o Allineato"
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE1"] = [=[Quando la riga contiene informazioni
+su totale e percentuale.
+|cFFAAAAAA%s ordine: totale, percentuale.]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE2"] = [=[Quando la riga contiene informazioni
+su totale e al secondo.
+|cFFAAAAAA%s ordine: totale, al secondo.]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE3"] = [=[Quando la riga contiene informazioni
+su totale, al secondo e percentuale.
+|cFFAAAAAA%s ordine: totale, al secondo, percentuale.]=]
 L["STRING_SLASH_API_DESC"] = "apri il pannello API per creare plug-in, visualizzazioni personalizzate, aure, ecc."
 L["STRING_SLASH_CAPTURE_DESC"] = "attivare o disattivare tutte le acquisizioni di dati."
 L["STRING_SLASH_CAPTUREOFF"] = "tutte le acquisizioni sono state disattivate."
@@ -1363,16 +1344,15 @@ L["STRING_SWITCH_WARNING"] = "Ruolo cambiato. Cambiando: |cFFFFAA00%s|r"
 L["STRING_TARGET"] = "Bersaglio"
 L["STRING_TARGETS"] = "Bersagli"
 L["STRING_TARGETS_OTHER1"] = "Compagni e Altri Bersagli"
---[[Translation missing --]]
-L["STRING_TELEPORT"] = "Teleport"
---[[Translation missing --]]
-L["STRING_TELEPORTERS"] = "Teleporters"
+L["STRING_TELEPORT"] = "Teletrasporto"
+L["STRING_TELEPORTERS"] = "Teletrasportatori"
 L["STRING_TEXTURE"] = "Texture"
 L["STRING_TIME_OF_DEATH"] = "Morte"
 L["STRING_TOOOLD"] = "non può essere installato perché il tuo Details! ha la versione troppo vecchia."
 L["STRING_TOP"] = "alto"
 L["STRING_TOP_TO_BOTTOM"] = "Dall'alto al basso"
 L["STRING_TOTAL"] = "Totale"
+L["STRING_TRAINING_DUMMY"] = "Manichino d'Allenamento"
 L["STRING_TRANSLATE_LANGUAGE"] = "Aiuta a Tradurre Details!"
 L["STRING_TUTORIAL_FULLY_DELETE_WINDOW"] = "Hai chiuso una finestra e puoi riaprirla in qualsiasi momento. Per eliminare completamente una finestra, vai su Opzioni -> Finestra: Generale -> Elimina."
 L["STRING_TUTORIAL_OVERALL1"] = "I dati generali si aggiornano solo al termine del combattimento, se desideri aggiornamenti regolari fai clic con il pulsante destro del mouse sulla barra del titolo e seleziona \"Dati generali dinamici\"."

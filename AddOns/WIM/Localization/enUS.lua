@@ -30,8 +30,6 @@ WIM.AddLocale("enUS", {
     ["state_raid"] = "Raid Instance",
     ["state_other"] = "Normal (Other)",
 
-    ["<Shift-Click> to close window."] = true,
-
     ["A new version of WIM is available!\nYou can download the latest version from curse"] = true,
 
     ["Options"] = true,
@@ -101,6 +99,7 @@ WIM.AddLocale("enUS", {
     ["Use <Escape> to close windows."] = true,
     ["Windows will close when opening the world map."] = true,
     ["Intercept slash commands."] = true,
+	["Include sent messages in /REPLY."] = true,
     ["Ignore arrow keys while typing."] = true,
     ["Requires using <Alt> to navigate text."] = true,
     ["Display emoticons."] = true,
@@ -229,6 +228,7 @@ WIM.AddLocale("enUS", {
 	["Game"] = true,
 	["Realm"] = true,
 	["Character"] = true,
+	["Copy Name"] = true,
 
     -- Tutorials.lua --
     ["Display WIM tips"] = true,
@@ -291,6 +291,7 @@ WIM.AddLocale("enUS", {
     ["Enable WIM"] = true,
     ["Display Minimap Icon"] = true,
     ["<Right-Click> to show unread messages."] = true,
+	["Display Addon Compartment Icon"] = true,
     ["Display Tutorials"] = true,
     ["Reset Tutorials"] = true,
     ["Credits"] = true,
@@ -399,6 +400,12 @@ WIM.AddLocale("enUS", {
     ["Play sound when a whisper is sent."] = true,
     ["Allow others to see my talent spec."] = true,
     ["Window Strata:"] = true,
+	["Background"] = BACKGROUND,
+	["Low"] = LOW,
+	["Medium"] = true,
+	["High"] = true,
+	["Dialog"] = ENABLE_DIALOG,
+	["Tooltip"] = true,
     ["Unlock from Minimap"] = true,
 	["Press <Tab> to advance to next tell target."] = true,
 	["Force sounds when game sound is disabled."] = true,
@@ -518,6 +525,7 @@ WIM.AddLocale("enUS", {
     ["WIM has detected that you are playing on a private server. Some servers can not process ChatAddonMessages. Would you like to enable them anyway?"] = true,
 
 	-- Whisper Mode Warnings
+	["Whisper Mode: In-line"] = true,
 	["Set whispers to In-line"] = true,
 	["Message suppression requires whispers to be set to 'In-line'."] = true,
 	["It is recommended for whispers to be set to in-line in order to handle their behavior properly."] = true,

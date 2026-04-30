@@ -58,7 +58,7 @@ function Addon:InitTextPopupFrame()
 		function()
 			local text = Addon.frame.TextPopupFrame.Main.ScrollFrame.ScrollText:GetText();
 			Addon:ImportDataText(text);
-			Addon:UpdateScrollBox();
+			Addon:UpdateScrollBox(true);
 			Addon.frame.TextPopupFrame:Hide();
 		end
 	);
@@ -86,7 +86,7 @@ function Addon:InitPresetPopupFrame()
 		"OnClick",
 		function(button)
 			option.isCombineGroups = button:GetChecked();
-			Addon:UpdateScrollBox();
+			Addon:UpdateScrollBox(true);
 		end
 	);
 
@@ -99,7 +99,7 @@ function Addon:InitPresetPopupFrame()
 				"OnClick",
 				function(button)
 					presetAddonOptions[category] = button:GetChecked();
-					Addon:UpdateScrollBox();
+					Addon:UpdateScrollBox(true);
 				end
 			);
 		end
@@ -183,7 +183,7 @@ local function InitPvpFrame()
 		"OnClick",
 		function(self)
 			TalentLoadoutEx.Option.IsEnabledPvp = self:GetChecked();
-			Addon:UpdateScrollBox();
+			Addon:UpdateScrollBox(true);
 		end
 	);
 end
@@ -229,7 +229,7 @@ function Addon:InitFrame()
 	SetMoveParentFrame();
 	InitPvpFrame();
 
-	Addon.TalentsFrame = Addon.ParentFrame.TalentsTab or Addon.ParentFrame.TalentsFrame;
+	Addon.TalentsFrame = Addon.ParentFrame.TalentsFrame;
 	hooksecurefunc(Addon.TalentsFrame, "SetShown", SetShown);
 	hooksecurefunc(Addon.TalentsFrame.ApplyButton, "SetShown", SetShown);
 
@@ -246,7 +246,7 @@ function Addon:InitFrame()
 	Addon:InitPresetPopupFrame();
 	Addon:InitScrollBox();
 
-	Addon:RequestUpdate();
+	Addon:UpdateScrollBox(true);
 	Addon:RegisterUpdateEvent();
 
 	Addon:InitIconSelector();

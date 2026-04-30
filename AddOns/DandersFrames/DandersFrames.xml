@@ -1,0 +1,43 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+
+    <!-- ============================================================
+         DANDERSFRAMES UNIT BUTTON TEMPLATE
+         Used by SecureGroupHeaderTemplate to create child frames.
+         All visual elements are created in Lua via OnLoad.
+         ============================================================ -->
+    
+    <Button name="DandersUnitButtonTemplate" inherits="SecureUnitButtonTemplate,SecureHandlerEnterLeaveTemplate" virtual="true">
+        <Attributes>
+            <!-- Vehicle support - automatically switch unit when entering vehicle -->
+            <Attribute name="toggleForVehicle" type="boolean" value="true"/>
+        </Attributes>
+        <Scripts>
+            <OnLoad>
+                -- Initialize frame when header creates it
+                local DF = DandersFrames
+                if DF and DF.InitializeHeaderChild then
+                    DF:InitializeHeaderChild(self)
+                end
+            </OnLoad>
+        </Scripts>
+    </Button>
+    
+    <!-- ============================================================
+         PET BUTTON TEMPLATE (for SecureGroupPetHeaderTemplate)
+         ============================================================ -->
+    
+    <Button name="DandersPetButtonTemplate" inherits="SecureUnitButtonTemplate,SecureHandlerEnterLeaveTemplate" virtual="true">
+        <Attributes>
+            <Attribute name="toggleForVehicle" type="boolean" value="false"/>
+        </Attributes>
+        <Scripts>
+            <OnLoad>
+                local DF = DandersFrames
+                if DF and DF.InitializePetHeaderChild then
+                    DF:InitializePetHeaderChild(self)
+                end
+            </OnLoad>
+        </Scripts>
+    </Button>
+
+</Ui>

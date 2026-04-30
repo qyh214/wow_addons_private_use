@@ -98,7 +98,7 @@ function tsv:OnInitialize()
         "OnShow"
     };
 
-	C_Timer.After(0.2,function()
+	C_Timer.After(0.5,function()
 		for k,v in ipairs(tooltipEvents) do
 			GameTooltip:HookScript(v,function(tooltip,...)
 				tsv:OnTooltip(v,tooltip,...)

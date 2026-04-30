@@ -1,0 +1,39 @@
+local mod = DBM:NewMod(544, "DBM-Party-BC", 10, 253)
+local L = mod:GetLocalizedStrings()
+
+mod:SetRevision("20260315034941")
+mod:DisableHardcodedOptions()
+
+mod:SetCreatureID(18731)
+mod:SetEncounterID(1908)
+mod:SetZone(555)
+
+mod:RegisterCombat("combat")
+
+if not mod:IsRetail() then
+	mod:SetModelID(18821)
+	mod:SetModelScale(0.7)
+end
+
+mod:RegisterEventsInCombat(
+	"SPELL_CAST_SUCCESS 33547"
+)
+
+local warnFear      = mod:NewSpellAnnounce(33547, 3)
+
+local timerFear     = mod:NewNextTimer(25, 33547, nil, nil, nil, 2)
+
+local enrageTimer	= mod:NewBerserkTimer(180)
+
+function mod:OnCombatStart(delay)
+	if self:IsDifficulty("heroic5", "timewalker") then
+        enrageTimer:Start(-delay)
+    end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 33547 then
+		warnFear:Show()
+		timerFear:Start()
+	end
+end

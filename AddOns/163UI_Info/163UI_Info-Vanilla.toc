@@ -1,10 +1,10 @@
 ## Interface: 11505,11506,11507,11508
 ## Title: |cff880303[163UI]|r Info
-## Version: r20241009
+## Version: r20260414164119
 ## Author: NetEase Inc.
 ## IconTexture: Interface\AddOns\!!!163UI!!!\Media\Textures\UI2-logo
-## SavedVariables: DDPFGlobal
-## SavedVariablesPerCharacter: 
+## SavedVariables: MythicArchiveDB, DDPFGlobal
+## SavedVariablesPerCharacter: MythicArchive_CharacterDB
 
 load.xml
 

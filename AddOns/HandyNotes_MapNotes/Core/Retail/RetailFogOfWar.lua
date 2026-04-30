@@ -81,8 +81,9 @@ end
 local mapData = ns.FogOfWarDataRetail or {}
 
 function ns.FogOfWar:MapExplorationPin_RefreshOverlays(pin, fullUpdate)
-  local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile 
-  if not (db and (db.activate.FogOfWar or db.activate.MistOfTheUnexplored)) then return end
+  local db = ns.Addon and ns.Addon.db and ns.Addon.db.profile
+  local activate = db and db.activate
+  if not (activate and (activate.FogOfWar or activate.MistOfTheUnexplored)) then return end
 
   for overlay in pin.overlayTexturePool:EnumerateActive() do
     overlay:SetVertexColor(1,1,1)
@@ -101,7 +102,8 @@ function ns.FogOfWar:MapExplorationPin_RefreshOverlays(pin, fullUpdate)
   local exploredMapTextures = C_MapExplorationInfo.GetExploredMapTextures(mapID)
   if exploredMapTextures then
     for _, info in ipairs(exploredMapTextures) do
-      local key = info.textureWidth * 2 ^ 39 + info.textureHeight * 2 ^ 26 + info.offsetX * 2 ^ 13 + info.offsetY exploredTilesKeyed[key] = true
+      local key = info.textureWidth * 2 ^ 39 + info.textureHeight * 2 ^ 26 + info.offsetX * 2 ^ 13 + info.offsetY 
+      exploredTilesKeyed[key] = true
     end
   end
 

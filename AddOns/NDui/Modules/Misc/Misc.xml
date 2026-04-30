@@ -3,6 +3,8 @@
 	<Script file="BlizzFix.lua"/>
 	<Script file="AlertFrames.lua"/>
 	<Script file="Animation.lua"/>
+	<Script file="AttachedMeters.lua"/>
+	<Script file="EnhancedCDM.lua"/>
 	<Script file="ExpRep.lua"/>
 	<Script file="Focuser.lua"/>
 	<Script file="IgnoreNote.lua"/>
@@ -11,7 +13,6 @@
 	<Script file="MDGuildBest.lua"/>
 	<Script file="MissingStats.lua"/>
 	<Script file="Notifications.lua"/>
-	<Script file="OrderHallIcon.lua"/>
 	<Script file="PetFilterTab.lua"/>
 	<Script file="QuestNotification.lua"/>
 	<Script file="QuestTool.lua"/>

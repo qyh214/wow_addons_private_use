@@ -7,18 +7,18 @@ local info = module:RegisterInfobar("Gold", C.Infobar.GoldPos)
 
 local format, pairs, wipe, unpack = string.format, pairs, table.wipe, unpack
 local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
-local GetMoney, GetNumWatchedTokens, Ambiguate = GetMoney, GetNumWatchedTokens, Ambiguate
+local GetMoney, Ambiguate = GetMoney, Ambiguate
 local C_Timer_After, IsControlKeyDown, IsShiftKeyDown = C_Timer.After, IsControlKeyDown, IsShiftKeyDown
 local C_CurrencyInfo_GetCurrencyInfo = C_CurrencyInfo.GetCurrencyInfo
 local C_CurrencyInfo_GetBackpackCurrencyInfo = C_CurrencyInfo.GetBackpackCurrencyInfo
 local CalculateTotalNumberOfFreeBagSlots = CalculateTotalNumberOfFreeBagSlots
-local C_TransmogCollection_GetItemInfo = C_TransmogCollection.GetItemInfo
 local C_Container_UseContainerItem = C_Container.UseContainerItem
 local C_Container_GetContainerNumSlots = C_Container.GetContainerNumSlots
 local C_Container_GetContainerItemInfo = C_Container.GetContainerItemInfo
 
 local slotString = L["Bags"]..": %s%d"
 local showGoldGap = 100 * 1e4
+local TIER_CHARGE_ID = 3378 -- 12.0 S1
 
 local profit, spent, oldMoney = 0, 0, 0
 local myName, myRealm = DB.MyName, DB.MyRealm
@@ -218,7 +218,7 @@ info.onEnter = function(self)
 	GameTooltip:AddDoubleLine(TOTAL..":", module:GetMoneyString(totalGold + accountmoney), .6,.8,1, 1,1,1)
 
 	title = false
-	local chargeInfo = C_CurrencyInfo_GetCurrencyInfo(3269) -- Tier charges
+	local chargeInfo = C_CurrencyInfo_GetCurrencyInfo(TIER_CHARGE_ID) -- Tier charges
 	if chargeInfo then
 		if not title then
 			GameTooltip:AddLine(" ")
@@ -270,10 +270,9 @@ local function startSelling()
 			if stop then return end
 			local info = C_Container_GetContainerItemInfo(bag, slot)
 			if info then
-				if not cache["b"..bag.."s"..slot] and info.hyperlink and not info.hasNoValue
+				if not cache["b"..bag.."s"..slot] and not info.hasNoValue
 				and (info.quality == 0 or NDuiADB["CustomJunkList"][info.itemID])
-				and (not BAG:IsPetTrashCurrency(info.itemID))
-				and (not C_TransmogCollection_GetItemInfo(info.hyperlink) or not B.IsUnknownTransmog(bag, slot)) then
+				and (not BAG:IsPetTrashCurrency(info.itemID)) then
 					cache["b"..bag.."s"..slot] = true
 					C_Container_UseContainerItem(bag, slot)
 					C_Timer_After(.15, startSelling)

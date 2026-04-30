@@ -7,7 +7,11 @@ local _G = getfenv(0)
 local format, floor, strmatch, select, unpack, tonumber = format, floor, strmatch, select, unpack, tonumber
 local GetTime = GetTime
 local GetInventoryItemQuality, GetInventoryItemTexture, GetWeaponEnchantInfo = GetInventoryItemQuality, GetInventoryItemTexture, GetWeaponEnchantInfo
-local C_UnitAuras_GetAuraDataByIndex = C_UnitAuras.GetAuraDataByIndex
+local GetAuraApplicationDisplayCount = C_UnitAuras.GetAuraApplicationDisplayCount
+local GetAuraDataByIndex = C_UnitAuras.GetAuraDataByIndex
+local GetAuraDuration = C_UnitAuras.GetAuraDuration
+local MIN_SPELL_COUNT, MAX_SPELL_COUNT = 2, 999
+local FALLBACK_COLOR = {r=0, g=0, b=0}
 
 function A:OnLogin()
 	A:HideBlizBuff()
@@ -48,6 +52,14 @@ function A:BuildBuffFrame()
 			reverseGrow = C.db["Auras"]["ReverseDebuff"],
 		},
 	}
+
+	A.DispelColorCurve = C_CurveUtil.CreateColorCurve()
+	A.DispelColorCurve:SetType(Enum.LuaCurveType.Step)
+	for _, dispelIndex in next, oUF.Enum.DispelType do
+		if(oUF.colors.dispel[dispelIndex]) then
+			A.DispelColorCurve:AddPoint(dispelIndex, oUF.colors.dispel[dispelIndex])
+		end
+	end
 
 	-- Movers
 	A.BuffFrame = A:CreateAuraHeader("HELPFUL")
@@ -110,17 +122,12 @@ function A:UpdateTimer(elapsed)
 	if onTooltip then A:Button_SetTooltip(self) end
 end
 
-function A:GetSpellStat(arg16, arg17, arg18)
-	if not arg16 then return end
-	return (arg16 > 0 and L["Versa"]) or (arg17 > 0 and L["Mastery"]) or (arg18 > 0 and L["Haste"]) or L["Crit"]
-end
-
 function A:UpdateAuras(button, index)
 	local unit, filter = button.header:GetAttribute("unit"), button.filter
-	local auraData = C_UnitAuras_GetAuraDataByIndex(unit, index, filter)
+	local auraData = GetAuraDataByIndex(unit, index, filter)
 	if not auraData then return end
-
-	if auraData.duration > 0 and auraData.expirationTime then
+--[[
+	if auraData.duration and auraData.expirationTime then
 		local timeLeft = auraData.expirationTime - GetTime()
 		if not button.timeLeft then
 			button.nextUpdate = -1
@@ -135,29 +142,35 @@ function A:UpdateAuras(button, index)
 		button.timeLeft = nil
 		button.timer:SetText("")
 	end
+]]
+	local auraDuration = unit and GetAuraDuration(unit, auraData.auraInstanceID)
+	if auraDuration then
+		button.Cooldown:SetCooldownFromDurationObject(auraDuration)
+		button.Cooldown:Show()
+	else
+		button.Cooldown:Hide()
+	end
 
 	local count = auraData.applications
-	if count and count > 1 then
-		button.count:SetText(count)
+	if B:IsSecretValue(count) then
+		button.count:SetText(GetAuraApplicationDisplayCount(unit, auraData.auraInstanceID, MIN_SPELL_COUNT, MAX_SPELL_COUNT))
 	else
-		button.count:SetText("")
+		local hideCount = not count or (count < MIN_SPELL_COUNT or count > MAX_SPELL_COUNT)
+		button.count:SetText(hideCount and "" or count)
 	end
 
 	if filter == "HARMFUL" then
-		local color = oUF.colors.debuff[auraData.dispelName or "none"]
-		button:SetBackdropBorderColor(color[1], color[2], color[3])
+		local color = C_UnitAuras.GetAuraDispelTypeColor(unit, auraData.auraInstanceID, A.DispelColorCurve) or FALLBACK_COLOR
+		button:SetBackdropBorderColor(color.r, color.g, color.b)
 	else
 		button:SetBackdropBorderColor(0, 0, 0)
-	end
-
-	-- Show spell stat for 'Soleahs Secret Technique'
-	if auraData.spellId == 368512 then
-		button.count:SetText(A:GetSpellStat(unpack(auraData.points)))
 	end
 
 	button.spellID = auraData.spellId
 	button.icon:SetTexture(auraData.icon)
 	button.expiration = nil
+	button.timeLeft = nil
+	button.timer:SetText("")
 end
 
 function A:UpdateTempEnchant(button, index)
@@ -229,6 +242,7 @@ function A:UpdateHeader(header)
 
 		B.SetFontSize(child.count, fontSize)
 		B.SetFontSize(child.timer, fontSize)
+		B.SetFontSize(child.CooldownText, fontSize)
 
 		--Blizzard bug fix, icons arent being hidden when you reduce the amount of maximum buttons
 		if index > (cfg.maxWraps * cfg.wrapAfter) and child:IsShown() then
@@ -327,12 +341,25 @@ function A:CreateAuraIcon(button)
 	button.highlight:SetColorTexture(1, 1, 1, .25)
 	button.highlight:SetInside()
 
+	local cd = CreateFrame("Cooldown", "$parentCooldown", button, "CooldownFrameTemplate")
+	cd:SetReverse(true)
+	cd:SetEdgeTexture(DB.bgTex)
+	cd:SetDrawSwipe(C.db["Auras"]["CDAnimation"])
+	cd:SetDrawBling(false)
+	button.Cooldown = cd
+
+	local text = cd:GetRegions()
+	B.SetFontSize(text, fontSize)
+	text:ClearAllPoints()
+	text:SetPoint("TOP", button, "BOTTOM", 1, 2)
+	button.CooldownText = text
+
 	B.CreateBD(button, .25)
 	B.CreateSD(button)
 
 	--button:RegisterForClicks("RightButtonUp", "RightButtonDown")
 	button:SetScript("OnAttributeChanged", A.OnAttributeChanged)
-	button:HookScript("OnMouseDown", A.RemoveSpellFromIgnoreList)
+	--button:HookScript("OnMouseDown", A.RemoveSpellFromIgnoreList)
 	button:SetScript("OnEnter", A.Button_OnEnter)
 	button:SetScript("OnLeave", B.HideTooltip)
 end

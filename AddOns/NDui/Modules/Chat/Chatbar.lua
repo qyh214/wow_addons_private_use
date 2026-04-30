@@ -48,43 +48,74 @@ function module:Chatbar()
 		return bu
 	end
 
+	local function SaveOpenChat(...)
+		if C_ChatInfo.InChatMessagingLockdown() then return end
+		return ChatFrameUtil.OpenChat(...)
+	end
+
 	-- Create Chatbars
 	local buttonInfo = {
 		{1, 1, 1, SAY.."/"..YELL, function(_, btn)
-			if btn == "RightButton" then
-				ChatFrame_OpenChat("/y ", chatFrame)
-			else
-				ChatFrame_OpenChat("/s ", chatFrame)
+			local editBox = ChatEdit_ChooseBoxForSend()
+			if editBox then
+				editBox:Show()
+				editBox:SetFocus()
+				if btn == "RightButton" then
+					editBox:SetAttribute("chatType", "YELL")
+				else
+					editBox:SetAttribute("chatType", "SAY")
+				end
+				ChatEdit_UpdateHeader(editBox)
 			end
 		end},
 		{1, .5, 1, WHISPER, function(_, btn)
 			if btn == "RightButton" then
 				ChatFrame_ReplyTell(chatFrame)
 				if not editBox:IsVisible() or editBox:GetAttribute("chatType") ~= "WHISPER" then
-					ChatFrame_OpenChat("/w ", chatFrame)
+					SaveOpenChat("/w ", chatFrame)
 				end
 			else
 				if UnitExists("target") and UnitName("target") and UnitIsPlayer("target") and GetDefaultLanguage("player") == GetDefaultLanguage("target") then
 					local name = GetUnitName("target", true)
-					ChatFrame_OpenChat("/w "..name.." ", chatFrame)
+					SaveOpenChat("/w "..name.." ", chatFrame)
 				else
-					ChatFrame_OpenChat("/w ", chatFrame)
+					SaveOpenChat("/w ", chatFrame)
 				end
 			end
 		end},
-		{.65, .65, 1, PARTY, function() ChatFrame_OpenChat("/p ", chatFrame) end},
+		{.65, .65, 1, PARTY, function()
+			local editBox = ChatEdit_ChooseBoxForSend()
+			if editBox then
+				editBox:Show()
+				editBox:SetFocus()
+				editBox:SetAttribute("chatType", "PARTY")
+				ChatEdit_UpdateHeader(editBox)
+			end
+		end},
 		{1, .5, 0, INSTANCE.."/"..RAID, function()
-			if IsPartyLFG() or C_PartyInfo.IsPartyWalkIn() then
-				ChatFrame_OpenChat("/i ", chatFrame)
-			else
-				ChatFrame_OpenChat("/raid ", chatFrame)
+			local editBox = ChatEdit_ChooseBoxForSend()
+			if editBox then
+				editBox:Show()
+				editBox:SetFocus()
+				if IsPartyLFG() or C_PartyInfo.IsPartyWalkIn() then
+					editBox:SetAttribute("chatType", "INSTANCE_CHAT")
+				else
+					editBox:SetAttribute("chatType", "RAID")
+				end
+				ChatEdit_UpdateHeader(editBox)
 			end
 		end},
 		{.25, 1, .25, GUILD.."/"..OFFICER, function(_, btn)
-			if btn == "RightButton" and C_GuildInfo_IsGuildOfficer() then
-				ChatFrame_OpenChat("/o ", chatFrame)
-			else
-				ChatFrame_OpenChat("/g ", chatFrame)
+			local editBox = ChatEdit_ChooseBoxForSend()
+			if editBox then
+				editBox:Show()
+				editBox:SetFocus()
+				if btn == "RightButton" and C_GuildInfo_IsGuildOfficer() then
+					editBox:SetAttribute("chatType", "OFFICER")
+				else
+					editBox:SetAttribute("chatType", "GUILD")
+				end
+				ChatEdit_UpdateHeader(editBox)
 			end
 		end},
 	}
@@ -134,11 +165,18 @@ function module:Chatbar()
 					print("|cffFF7F50"..QUIT.."|r "..DB.InfoColor..L["World Channel"])
 					module.InWorldChannel = false
 				elseif module.WorldChannelID then
-					ChatFrame_OpenChat("/"..module.WorldChannelID, chatFrame)
+					local editBox = ChatEdit_ChooseBoxForSend()
+					if editBox then
+						editBox:Show()
+						editBox:SetFocus()
+						editBox:SetAttribute("chatType", "CHANNEL")
+						editBox:SetAttribute("channelTarget", module.WorldChannelID)
+						ChatEdit_UpdateHeader(editBox)
+					end
 				end
 			else
 				JoinPermanentChannel(channelName, nil, 1)
-				ChatFrame_AddChannel(ChatFrame1, channelName)
+				ChatFrame1:AddChannel(channelName)
 				print("|cff00C957"..JOIN.."|r "..DB.InfoColor..L["World Channel"])
 				module.InWorldChannel = true
 			end

@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ end
 
 function PGF.AddRatingInfo(self, searchResultInfo)
     local frame = PGF.GetOrCreateRatingInfoFrame(self)
-    local activityInfo = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID)
+    local activityInfo = PGF.GetActivityInfoTable(searchResultInfo.activityID)
 
     -- reset
     frame:Hide()

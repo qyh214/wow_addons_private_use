@@ -1,0 +1,7 @@
+Place your custom sound file here as:
+predator_click.ogg
+
+Expected full path:
+Interface/AddOns/Preydator/sounds/predator_click.ogg
+
+After adding the file, run /reload in-game.

@@ -1,0 +1,10 @@
+tag 009b3f28185ddc705c05175ccb2a6c8bf7ea7835 v2.42
+Author:	Elvenbane <elvenbane@clanyawa.com>
+Date:	Sun Mar 15 03:16:25 2026 -0500
+
+commit eb0f5313d24b7a09c2bf37d2df1f2d20e70ad3c2
+Author: Elvenbane <elvenbane@clanyawa.com>
+Date:   Sun Mar 15 03:16:13 2026 -0500
+
+    Fix #13
+

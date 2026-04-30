@@ -91,6 +91,13 @@
 -- ----------------------------------------------------------------------------
 -- Upgrade Table Data
 -- ----------------------------------------------------------------------------
+---@class UpgradeCostData
+---@field adventurerCrests integer
+---@field veteranCrests integer
+---@field championCrests integer
+---@field heroCrests integer
+---@field mythCrests integer
+
 ---@class UpgradeData
 ---@field name string
 ---@field shortName string
@@ -132,7 +139,8 @@
 -- ----------------------------------------------------------------------------
 ---@class CraftingInfo
 ---@field itemLevel integer
----@field itemId integer
+---@field currency UpgradeData?
+---@field currencyAmount integer
 ---@field rank integer
 ---@field iconPath string
 ---@field itemInfo table?

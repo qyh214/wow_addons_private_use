@@ -16,6 +16,7 @@ local frames = {
 	["ChannelFrame"] = false,
 	["ChatConfigFrame"] = false,
 	["CommunitiesFrame"] = false, -- needs review
+	["CooldownViewerSettings"] = false,
 	["DressUpFrame"] = false,
 	["FriendsFrame"] = false,
 	["GossipFrame"] = false,
@@ -40,7 +41,7 @@ local frames = {
 	["TabardFrame"] = false,
 	["TaxiFrame"] = false,
 	["TokenFrame"] = true,
-	["TradeFrame"] = false,
+	--["TradeFrame"] = false,
 	["TutorialFrame"] = false,
 	["SettingsPanel"] = false,
 }

@@ -58,9 +58,15 @@ ham.denseEmbersilkBandage = ham.Item.new(53051, "Dense Embersilk Bandage")
 ham.windwoolBandage = ham.Item.new(72985, "Windwool Bandage")
 ham.heavyWindwoolBandage = ham.Item.new(72986, "Heavy Windwool Bandage")
 
--- Retail (Dragonflight)
-ham.wilderclothBandage = ham.Item.new(194041, "Wildercloth Bandage")
-ham.denseWilderclothBandage = ham.Item.new(194207, "Dense Wildercloth Bandage")
+-- Dragonflight
+ham.wilderclothBandageR3 = ham.Item.new(194050, "Wildercloth Bandage")
+ham.wilderclothBandageR2 = ham.Item.new(194049, "Wildercloth Bandage")
+ham.wilderclothBandageR1 = ham.Item.new(194048, "Wildercloth Bandage")
+
+-- The War Within
+ham.weaverclothBandageR3 = ham.Item.new(224442, "Weavercloth Bandage")
+ham.weaverclothBandageR2 = ham.Item.new(224441, "Weavercloth Bandage")
+ham.weaverclothBandageR1 = ham.Item.new(224440, "Weavercloth Bandage")
 
 -- Return a prioritized list of bandage items for the current client
 function ham.getBandages()
@@ -203,8 +209,12 @@ function ham.getBandages()
 
   -- Retail (include modern first, then legacy in case they exist)
   return {
-    ham.denseWilderclothBandage,
-    ham.wilderclothBandage,
+    ham.weaverclothBandageR3,
+    ham.weaverclothBandageR2,
+    ham.weaverclothBandageR1,
+    ham.wilderclothBandageR3,
+    ham.wilderclothBandageR2,
+    ham.wilderclothBandageR1,
     ham.heavyWindwoolBandage,
     ham.windwoolBandage,
     ham.denseEmbersilkBandage,

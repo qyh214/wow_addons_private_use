@@ -50,7 +50,7 @@ StaticPopupDialogs["TalentLoadoutEx_CONFIRM_SAVE"] = {
 	button2 = "No",
 	OnAccept = function()
 		Addon:SaveConfig();
-		Addon:RequestUpdate();
+		Addon:UpdateScrollBox(true);
 	end,
 	OnShow = function() Addon:Lock() end,
 	OnHide = function() Addon:Unlock() end,
@@ -75,7 +75,7 @@ StaticPopupDialogs["TalentLoadoutEx_CONFIRM_DELETE"] = {
 	OnAccept = function()
 		Addon:Unlock();
 		Addon:DeleteData();
-		Addon:RequestUpdate();
+		Addon:UpdateScrollBox(true);
 	end,
 	OnShow = function() Addon:Lock() end,
 	OnHide = function() Addon:Unlock() end,

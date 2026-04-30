@@ -184,7 +184,7 @@ local function recordWhisper(inbound, ...)
             inbound = inbound or false,
             from = inbound and from or env.character,
             msg = msg,
-            time = _G.time();
+            time = select(29, ...) or _G.time();
         }, ...));
         if(WIM.db.history.maxPer) then
             while(WIM.db.history.maxCount < #history) do
@@ -269,38 +269,37 @@ end
 
 function History:OnWindowCreated(win)
     if(db.history.preview) then
-		NextTick(function () -- process next tick so all data is loaded into the object first.
-			local user = win.theUser;
-			local bnId = win.isBN and win.bn.id;
-			if (bnId) then
-				local _, _, btag, _, toonName = GetBNGetFriendInfoByID(bnId);
-				user = btag or toonName or user
-			end
 
-			local history = history[env.realm] and history[env.realm][env.character] and history[env.realm][env.character][user];
-			if(history) then
-				local type = win.type == "whisper" and 1;
-				for i=#history, 1, -1 do
-					table.insert(tmpTable, 1, history[i]);
-					if(#tmpTable >= db.history.previewCount) then
-						break;
-					end
+		local user = win.theUser;
+		local bnId = win.isBN and win.bn.id;
+		if (bnId) then
+			local _, _, btag, _, toonName = GetBNGetFriendInfoByID(bnId);
+			user = btag or toonName or user
+		end
+
+		local history = history[env.realm] and history[env.realm][env.character] and history[env.realm][env.character][user];
+		if(history) then
+			local type = win.type == "whisper" and 1;
+			for i=#history, 1, -1 do
+				table.insert(tmpTable, 1, history[i]);
+				if(#tmpTable >= db.history.previewCount) then
+					break;
 				end
-				if(#tmpTable > 0) then
-					win.isHistory = true;
-					win.widgets.history:SetHistory(true);
-					for i=1, #tmpTable do
-						local color = db.displayColors[tmpTable[i].inbound and "historyIn" or "historyOut"];
-						win.nextStamp = tmpTable[i].time;
-						win.nextStampColor = db.displayColors.historyOut;
-						win:AddMessage(applyMessageFormatting(win.widgets.chat_display, "CHAT_MSG_WHISPER", tmpTable[i].msg, tmpTable[i].from,
-										nil, nil, nil, nil, nil, nil, nil, nil, -i, "0x0300000000000000"), color.r, color.g, color.b);
-					end
-					win.widgets.chat_display:AddMessage(" ");
-				end
-				clearTmpTable();
 			end
-		end);
+			if(#tmpTable > 0) then
+				win.isHistory = true;
+				win.widgets.history:SetHistory(true);
+				for i=1, #tmpTable do
+					local color = db.displayColors[tmpTable[i].inbound and "historyIn" or "historyOut"];
+					win.nextStamp = tmpTable[i].time;
+					win.nextStampColor = db.displayColors.historyOut;
+					win:AddMessage(applyMessageFormatting(win.widgets.chat_display, "CHAT_MSG_WHISPER", tmpTable[i].msg, tmpTable[i].from,
+									nil, nil, nil, nil, nil, nil, nil, nil, -i, "0x0300000000000000"), color.r, color.g, color.b);
+				end
+				win.widgets.chat_display:AddMessage(" ");
+			end
+			clearTmpTable();
+		end
     end
 end
 
@@ -360,7 +359,7 @@ local function recordChannelChat(recordAs, ChannelType, ...)
             type = 2, -- chat
             from = from,
             msg = msg,
-            time = _G.time();
+            time = select(29, ...) or _G.time();
         }, ...));
         if(WIM.db.history.chat.maxPer) then
             while(WIM.db.history.chat.maxCount < #history) do
@@ -406,7 +405,7 @@ function ChatHistory:PostEvent_ChatMessage(event, ...)
         elseif((event == "PARTY" or event == "PARTY_LEADER") and db.history.chat.party) then
             recordAs = _G.PARTY;
             chatType = "party";
-        elseif((event == "RAID" or event == "RAID_LEADER") and db.history.chat.raid) then
+        elseif((event == "RAID" or event == "RAID_LEADER" or event == "RAID_WARNING") and db.history.chat.raid) then
             recordAs = _G.RAID;
             chatType = "raid";
         elseif((event == "INSTANCE_CHAT" or event == "INSTANCE_CHAT_LEADER") and db.history.chat.battleground) then

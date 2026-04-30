@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -165,7 +165,7 @@ function PGF.PutEncounterNames(resultID, env)
     encounterToBoolMeta.__index = function (table, key) return false end
     setmetatable(encounterToBool, encounterToBoolMeta)
 
-    local encounterInfo = C_LFGList.GetSearchResultEncounterInfo(resultID); -- list of localized boss names
+    local encounterInfo = PGF.GetSearchResultEncounterInfo(resultID); -- list of localized boss names
     if encounterInfo then
         for _, val in pairs(encounterInfo) do
             encounterToBool[val] = true
@@ -179,9 +179,6 @@ end
 function PGF.DoFilterSearchResults(results)
     --print(debugstack())
     --print("filtering, size is "..#results)
-
-    if not PGF.Dialog:GetEnabled() then return results end
-    if not results or #results == 0 then return results end
 
     local exp = PGF.Dialog:GetFilterExpression()
     PGF.Logger:Debug("Main: exp = "..exp)
@@ -208,10 +205,11 @@ function PGF.DoFilterSearchResults(results)
             --                      └─▶ timedout
             -- pendingStatus flow (used for role check if in a group before transition of appStatus to applied):
             --   <nil> ◀──▶ applied ──▶ cancelled
-            local memberCounts = C_LFGList.GetSearchResultMemberCounts(resultID)
+            -- Copy to avoid tainting the original Blizzard data
+            local memberCounts = PGF.GetSearchResultMemberCounts(resultID)
             local numGroupDefeated, numPlayerDefeated, maxBosses,
             matching, groupAhead, groupBehind = PGF.GetLockoutInfo(searchResultInfo.activityID, resultID)
-            local activityInfo = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID)
+            local activityInfo = PGF.GetActivityInfoTable(searchResultInfo.activityID)
 
             local difficulty = C.ACTIVITY[searchResultInfo.activityID].difficulty
 
@@ -263,11 +261,13 @@ function PGF.DoFilterSearchResults(results)
             env.declined = env.harddeclined or env.softdeclined
             env.canceled = PGF.IsCanceledGroup(searchResultInfo)
             env.warmode = searchResultInfo.isWarMode or false
-            env.playstyle = searchResultInfo.playstyle
-            env.earnconq  = searchResultInfo.playstyle == 1
-            env.learning  = searchResultInfo.playstyle == 2
-            env.beattimer = searchResultInfo.playstyle == 3
-            env.push      = searchResultInfo.playstyle == 3
+            if Enum and Enum.LFGEntryGeneralPlaystyle then
+                env.playstyle   = searchResultInfo.generalPlaystyle
+                env.learning    = env.playstyle == Enum.LFGEntryGeneralPlaystyle.Learning   -- 1
+                env.relaxed     = env.playstyle == Enum.LFGEntryGeneralPlaystyle.FunRelaxed -- 2
+                env.competitive = env.playstyle == Enum.LFGEntryGeneralPlaystyle.FunSerious -- 3
+                env.carry       = env.playstyle == Enum.LFGEntryGeneralPlaystyle.Expert     -- 4
+            end
             env.mprating = searchResultInfo.leaderOverallDungeonScore or 0
             env.mpmaprating = 0
             env.mpmapname   = ""
@@ -437,6 +437,10 @@ end
 
 function PGF.FilterSearchResults()
     PGF.Logger:Debug("PGF.FilterSearchResults")
+    -- exit early before tainting any variables if disabled or restricted
+    if not PGF.Dialog:GetEnabled() then return end
+    if not PGF.currentSearchResults or #PGF.currentSearchResults == 0 then return end
+
     local copy = PGF.Table_Copy_Shallow(PGF.currentSearchResults)
     local results = PGF.DoFilterSearchResults(copy)
     -- publish

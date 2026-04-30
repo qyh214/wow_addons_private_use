@@ -152,5 +152,5 @@ function TalentLoadoutExEditPopupMixin:OkayButton_OnClick()
 	end
 
 	IconSelectorPopupFrameTemplateMixin.OkayButton_OnClick(self);
-	Addon:RequestUpdate();
+	Addon:UpdateScrollBox(true);
 end

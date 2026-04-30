@@ -1,0 +1,151 @@
+local mod	= DBM:NewMod(2734, "DBM-Raids-Midnight", 3, 1307)
+--local L		= mod:GetLocalizedStrings()--Nothing to localize for blank mods
+
+mod:SetRevision("20260428075631")
+mod:SetCreatureID(240434)
+mod:SetEncounterID(3177)
+--mod:SetHotfixNoticeRev(20250823000000)
+--mod:SetMinSyncRevision(20250823000000)
+mod:SetZone(2912)
+
+mod:RegisterCombat("combat")
+
+--TODO< https://www.wowhead.com/spell=1244346/colossal-throw has an event ID but doesn't exist on encounter?
+--TODO, probably drop either 59 or 60 for eventIDs, one is for parent activation and one is for the additional slams we probably want to ignore/filter
+--Hardcoded Objects that use Blizz api as fallback
+local specWarnShadowclawSlam			= mod:NewSpecialWarningCount(1241836, nil, 182557, nil, 2, 2)
+local specWarnVoidBreath				= mod:NewSpecialWarningDodgeCount(1243853, nil, 17088, nil, 2, 2)
+local specWarnParasiteExpulsion			= mod:NewSpecialWarningDodgeCount(1254199, nil, nil, DBM_COMMON_L.ADDS, 2, 2)
+local specWarnPrimordialRoar			= mod:NewSpecialWarningCount(1260046, nil, 140459, nil, 2, 2)
+--local specWarnFixateParasite			= mod:NewSpecialWarningYou(1254112, nil, nil, nil, 1, 2)
+
+local timerShadowclawSlamCD				= mod:NewCDCountTimer("d20.5", 1241836, 182557, nil, 2, 5, nil, DBM_COMMON_L.TANK_ICON)--Shortname "Slam"
+--local timerVoidBreathCD				= mod:NewCDCountTimer(20.5, 1243853, 17088, nil, nil, 3)--Shortname "Breath"
+local timerParasiteExpulsionCD			= mod:NewCDCountTimer(20.5, 1254199, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1)
+local timerPrimordialRoarCD				= mod:NewCDCountTimer(20.5, 1260046, 140459, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--Shortname "Roar"
+
+mod:AddPrivateAuraSoundOption(1243270, true, 1243270, 1, 2, "watchfeet", 8)--Dark Goo
+mod:AddPrivateAuraSoundOption(1241844, false, 1241836, 1, 3, "debuffyou", 17)--Smashed (debuff from shadowclaw slam)
+mod:AddPrivateAuraSoundOption(1272527, false, 1272527, 1, 1, "debuffyou", 17)--Creep Spit
+mod:AddPrivateAuraSoundOption(1259186, true, 1259186, 1, 1, "debuffyou", 17)--Blisterburst
+mod:AddPrivateAuraSoundOption(1254113, true, 1254113, 1, 2, "fixateyou", 19)--Fixate
+
+mod.vb.clawCount = 0
+mod.vb.breathCount = 0
+mod.vb.expulsionCount = 0
+mod.vb.roarCount = 0
+local badStateDetected = false
+local slamEventCounts = {}--Simple eventID to count mapping for slam, since both spellids share a unified count and bars never cancel on this boss
+
+---@param self DBMMod
+	---@param dontSetAlerts boolean? Called when user has disabled DBM bars and is only using timeline, therefore we must still enable SetTimeline calls even in hardcodes
+local function setFallback(self, dontSetAlerts)
+	--Blizz API fallbacks
+	if not dontSetAlerts then
+		specWarnShadowclawSlam:SetAlert({59, 60}, "slamincoming", 19, 2)
+		specWarnParasiteExpulsion:SetAlert(62, "watchstep", 2, 2)
+		specWarnPrimordialRoar:SetAlert(133, "pullin", 12, 3)
+	end
+	timerShadowclawSlamCD:SetTimeline({59, 60})
+--	timerVoidBreathCD:SetTimeline(61)
+	timerParasiteExpulsionCD:SetTimeline(62)
+	timerPrimordialRoarCD:SetTimeline(133)
+--	specWarnFixateParasite:SetAlert(557, "fixateyou", 19, 3, 0)
+end
+
+function mod:OnLimitedCombatStart()
+	self:TLCountReset()
+	table.wipe(slamEventCounts)
+	self.vb.clawCount = 1
+	self.vb.breathCount = 1
+	self.vb.expulsionCount = 1
+	self.vb.roarCount = 1
+	if DBM.Options.HardcodedTimer and not badStateDetected then
+		self:IgnoreBlizzardAPI()
+		self:RegisterShortTermEvents(
+			"ENCOUNTER_TIMELINE_EVENT_ADDED",
+			"ENCOUNTER_TIMELINE_EVENT_STATE_CHANGED"
+		)
+		if DBM.Options.HideDBMBars then
+			setFallback(self, true)
+		end
+	else
+		setFallback(self)
+	end
+	specWarnVoidBreath:SetAlert(61, "breathsoon", 2, 4, 0)--Doesn't have a timeline event, so we still use blizz api regardless if hardcode enabled or not
+end
+
+function mod:OnCombatEnd()
+	self:TLCountReset()
+	table.wipe(slamEventCounts)
+	self:UnregisterShortTermEvents()
+end
+
+do
+	---@param self DBMMod
+	---@param timer number
+	---@param timerExact number
+	---@param eventID number
+	local function timersAll(self, timer, timerExact, eventID)
+		--Logic confirmed against LFR, normal, heroic, and mythic
+		if timer == 6 or timer == 120 then--Primordial Roar
+			timerPrimordialRoarCD:TLStart(timerExact, eventID, self:TLCountStart(eventID, "roar", "roarCount"))
+		elseif timer == 57 or timer == 123 then--Parasite Expulsion
+			timerParasiteExpulsionCD:TLStart(timerExact, eventID, self:TLCountStart(eventID, "expulsion", "expulsionCount"))
+		elseif timer == 16 or timer == 136 or timer == 240 then--Shadowclaw Slam
+			--Blizzard schedules two concurrent Slam timers (two different spellids alternating)
+			--Assign unified count immediately and store per-eventID since bars never cancel on this boss
+			local count = self.vb.clawCount
+			self.vb.clawCount = count + 1
+			slamEventCounts[eventID] = count
+			timerShadowclawSlamCD:TLStart(timerExact, eventID, count)
+		else--Reached end of chain without finding a valid timer, this means hardcode mod has failed, so we need to disable hardcoded features and fall back to blizz API
+			badStateDetected = true
+			self:ResumeBlizzardAPI()
+			self:UnregisterShortTermEvents()
+			setFallback(self)
+			DBM:Debug("|cffff0000Failed to match encounter timeline events to expected timers, falling back to Blizzard API|r", nil, nil, nil, true)
+		end
+	end
+	--Note, bar state changing and canceling is handled by core
+	function mod:ENCOUNTER_TIMELINE_EVENT_ADDED(eventInfo)
+		if eventInfo.source ~= 0 then return end
+		local eventID = eventInfo.id
+		local timerExact = eventInfo.duration
+		local timer = math.floor(timerExact + 0.5)
+		if not badStateDetected then
+			timersAll(self, timer, timerExact, eventID)
+		end
+	end
+
+	function mod:ENCOUNTER_TIMELINE_EVENT_STATE_CHANGED(eventID)
+		local eventState = C_EncounterTimeline.GetEventState(eventID)
+		if not eventID or not eventState then return end
+		if eventState == 2 then
+			--Check slam first via local map (bypasses TLCount since slam bars never cancel)
+			local slamCount = slamEventCounts[eventID]
+			if slamCount then
+				slamEventCounts[eventID] = nil
+				specWarnShadowclawSlam:Show(slamCount)
+				specWarnShadowclawSlam:Play("slamincoming")
+			else
+				local eventType, eventCount = self:TLCountFinish(eventID)
+				if eventType and eventCount then
+					if eventType == "roar" then
+						specWarnPrimordialRoar:Show(eventCount)
+						specWarnPrimordialRoar:Play("pullin")
+					elseif eventType == "expulsion" then
+						specWarnParasiteExpulsion:Show(eventCount)
+						specWarnParasiteExpulsion:Play("watchstep")
+					end
+				end
+			end
+		elseif eventState == 3 then
+			if slamEventCounts[eventID] then
+				slamEventCounts[eventID] = nil
+			else
+				self:TLCountCancel(eventID)
+			end
+		end
+	end
+end

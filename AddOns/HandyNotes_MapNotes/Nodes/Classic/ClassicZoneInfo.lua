@@ -56,14 +56,14 @@ local nodes = ns.nodes
 
                     if self.faction == "Alliance" or db.activate.EnemyFaction then
                     
-                        nodes[1438][27385702] = { mnID = 1457, name = "", type = "AIcon", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Darnassus"] .. " - " .. FACTION_ALLIANCE }
+                        nodes[1438][27385702] = { mnID = 1457, name = "", type = "AIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Darnassus"] .. " - " .. FACTION_ALLIANCE }
                     
                     end
 
                     if self.faction == "Horde" or db.activate.EnemyFaction then
 
-                        nodes[1411][45600899] = { mnID = 1454, name = "", type = "HIcon", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = DUNGEON_FLOOR_ORGRIMMAR0 .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. CALENDAR_TYPE_DUNGEON .. "\n" .. " => " .. DUNGEON_FLOOR_RAGEFIRE1 } 
-                        nodes[1412][41112765] = { mnID = 1456, name = "", type = "HIcon", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Thunder Bluff"] .. " - " .. FACTION_HORDE } 
+                        nodes[1411][45600899] = { mnID = 1454, name = "", type = "HIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = DUNGEON_FLOOR_ORGRIMMAR0 .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. CALENDAR_TYPE_DUNGEON .. "\n" .. " => " .. DUNGEON_FLOOR_RAGEFIRE1 } 
+                        nodes[1412][41112765] = { mnID = 1456, name = "", type = "HIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Thunder Bluff"] .. " - " .. FACTION_HORDE } 
 
                     end
 
@@ -73,8 +73,8 @@ local nodes = ns.nodes
             -- Portal
                 if self.db.profile.showZonePortals then
 
-                    nodes[1438][23285521] = { mnID = 1438, name = "", type = "Portal", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Portal"] .. "\n" .. " => " .. L["Rut'theran"] }
-                    nodes[1438][55639075] = { mnID = 1438, name = "", type = "Portal", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Portal"] .. "\n" .. " => " .. L["Darnassus"] }
+                    nodes[1438][23285521] = { mnID = 1438, name = "", type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Portal"] .. "\n" .. " => " .. L["Rut'theran"] }
+                    nodes[1438][55639075] = { mnID = 1438, name = "", type = "Portal", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Portal"] .. "\n" .. " => " .. L["Darnassus"] }
                 
                 end
 
@@ -84,8 +84,8 @@ local nodes = ns.nodes
 
                     if self.faction == "Horde" or db.activate.EnemyFaction then
 
-                        nodes[1411][50281195] = { mnID = 1434, name = "", type = "HZeppelin", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Zeppelin"] .. " - " .. FACTION_HORDE .. "\n" .. " => " .. L["Grom'gol, Stranglethorn Vale"] }
-                        nodes[1411][50771406] = { mnID = 1420, name = "", type = "HZeppelin", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Zeppelin"] .. " - " .. FACTION_HORDE .. "\n" .. " => " .. L["Tirisfal Glades"] .. " - " .. L["Undercity"] }
+                        nodes[1411][50281195] = { mnID = 1434, name = "", type = "HZeppelin", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Zeppelin"] .. " - " .. FACTION_HORDE .. "\n" .. " => " .. L["Grom'gol, Stranglethorn Vale"] }
+                        nodes[1411][50771406] = { mnID = 1420, name = "", type = "HZeppelin", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Zeppelin"] .. " - " .. FACTION_HORDE .. "\n" .. " => " .. L["Tirisfal Glades"] .. " - " .. L["Undercity"] }
 
                     end
                     
@@ -95,15 +95,17 @@ local nodes = ns.nodes
             -- Ships
                 if self.db.profile.showZoneShips then
 
-                    nodes[1413][63803771] = { mnID = 1434, name = "", type = "Ship", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Ratchet"] .. " - " .. FACTION_NEUTRAL .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. POSTMASTER_LETTER_STRANGLETHORNVALE } -- 
+                    nodes[1413][63803771] = { mnID = 1434, name = "", type = "Ship", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Ratchet"] .. " - " .. FACTION_NEUTRAL .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. POSTMASTER_LETTER_STRANGLETHORNVALE } -- 
                 
 
                     if self.faction == "Alliance" or db.activate.EnemyFaction then
 
-                        nodes[1439][33273982] = { mnID = 1438, name = "", type = "AShip", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Auberdine"] .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. L["Teldrassil"] } -- 
-                        nodes[1439][32294340] = { mnID = 1437, name = "", type = "AShip", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Auberdine"] .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. POSTMASTER_LETTER_WETLANDS } -- 
-                        nodes[1438][55039414] = { mnID = 1439, name = "", type = "AShip", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Teldrassil"] .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. L["Auberdine"] } -- 
-                        nodes[1445][71835683] = { mnID = 1437, name = "", type = "AShip", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Theramore Isle"] .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. POSTMASTER_LETTER_WETLANDS } -- Ship from Dustwallow Marsh to Menethil Harbor
+                        nodes[1439][33273982] = { mnID = 1438, name = "", type = "AShip", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Auberdine"] .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. L["Teldrassil"] } -- 
+                        nodes[1439][32294340] = { mnID = 1437, name = "", type = "AShip", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Auberdine"] .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. POSTMASTER_LETTER_WETLANDS } -- 
+                        nodes[1438][55039414] = { mnID = 1439, name = "", type = "AShip", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Teldrassil"] .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. L["Auberdine"] } -- 
+                        nodes[1445][71835683] = { mnID = 1437, name = "", type = "AShip", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Theramore Isle"] .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. POSTMASTER_LETTER_WETLANDS } -- Ship from Dustwallow Marsh to Menethil Harbor
+                        nodes[1444][43334275] = { name = "", type = "AShip", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = DUNGEON_FLOOR_NIGHTMARERAID9 .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. L["Feathermoon Stronghold"] } -- Ship from Feralas to Feathermoon
+                        nodes[1444][31023982] = { name = "", type = "AShip", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Feathermoon Stronghold"] .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. DUNGEON_FLOOR_NIGHTMARERAID9 } -- Ship from Feathermoon to Feralas 
 
                     end
 
@@ -160,12 +162,12 @@ local nodes = ns.nodes
                 if self.db.profile.activate.RemoveBlizzPOIs then
 
                     if self.faction == "Horde" or db.activate.EnemyFaction then
-                      nodes[1420][61806939] = { mnID = 1458, name = "", type = "HIcon", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Undercity"] .. " - " .. FACTION_HORDE }
+                      nodes[1420][61806939] = { mnID = 1458, name = "", type = "HIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Undercity"] .. " - " .. FACTION_HORDE }
                     end
         
                     if self.faction == "Alliance" or db.activate.EnemyFaction then
-                      nodes[1426][54353411] = { mnID = 1455, name = "", type = "AIcon", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Ironforge"] .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. DUNGEON_FLOOR_DEEPRUNTRAM1 .. "\n" .. " => " .. L["Stormwind"] } -- Transport to Ironforge Carriage 
-                      nodes[1429][24793263] = { mnID = 1453, name = "", type = "AIcon", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Stormwind"] .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. DUNGEON_FLOOR_DEEPRUNTRAM1 .. "\n" .. " => " .. L["Ironforge"] .. "\n" .. "\n" .. CALENDAR_TYPE_DUNGEON .. "\n" .. " => " .. DUNGEON_FLOOR_THESTOCKADE1 }
+                      nodes[1426][54353411] = { mnID = 1455, name = "", type = "AIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Ironforge"] .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. DUNGEON_FLOOR_DEEPRUNTRAM1 .. "\n" .. " => " .. L["Stormwind"] } -- Transport to Ironforge Carriage 
+                      nodes[1429][24793263] = { mnID = 1453, name = "", type = "AIcon", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Stormwind"] .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. DUNGEON_FLOOR_DEEPRUNTRAM1 .. "\n" .. " => " .. L["Ironforge"] .. "\n" .. "\n" .. CALENDAR_TYPE_DUNGEON .. "\n" .. " => " .. DUNGEON_FLOOR_THESTOCKADE1 }
                     end
 
                 end
@@ -185,10 +187,10 @@ local nodes = ns.nodes
 
                     if self.faction == "Horde" or db.activate.EnemyFaction then
 
-                        nodes[1420][60565871] = { mnID = 1411, name = "", type = "HZeppelin", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Tirisfal Glades"] .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Zeppelin"] .. "\n" .. " => " .. L["Durotar"] }
-                        nodes[1420][62025913] = { mnID = 1415, name = "", type = "HZeppelin", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Tirisfal Glades"] .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Zeppelin"] .. "\n" .. " => " .. L["Grom'gol, Stranglethorn Vale"]}
-                        nodes[1434][31552891] = { mnID = 1420, name = "", type = "HZeppelin", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Grom'gol, Stranglethorn Vale"] .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Zeppelin"] .. "\n" .. " => " .. L["Tirisfal Glades"] .. " - " .. L["Undercity"] }
-                        nodes[1434][31223030] = { mnID = 1411, name = "", type = "HZeppelin", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = L["Grom'gol, Stranglethorn Vale"] .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Zeppelin"] .. "\n" .. " => " .. DUNGEON_FLOOR_ORGRIMMAR0 }
+                        nodes[1420][60565871] = { mnID = 1411, name = "", type = "HZeppelin", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Tirisfal Glades"] .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Zeppelin"] .. "\n" .. " => " .. L["Durotar"] }
+                        nodes[1420][62025913] = { mnID = 1415, name = "", type = "HZeppelin", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Tirisfal Glades"] .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Zeppelin"] .. "\n" .. " => " .. L["Grom'gol, Stranglethorn Vale"]}
+                        nodes[1434][31552891] = { mnID = 1420, name = "", type = "HZeppelin", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Grom'gol, Stranglethorn Vale"] .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Zeppelin"] .. "\n" .. " => " .. L["Tirisfal Glades"] .. " - " .. L["Undercity"] }
+                        nodes[1434][31223030] = { mnID = 1411, name = "", type = "HZeppelin", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = L["Grom'gol, Stranglethorn Vale"] .. " - " .. FACTION_HORDE .. "\n" .. "\n" .. L["Zeppelin"] .. "\n" .. " => " .. DUNGEON_FLOOR_ORGRIMMAR0 }
 
                     end
 
@@ -197,11 +199,11 @@ local nodes = ns.nodes
             -- Ships
                 if self.db.profile.showZoneShips then
 
-                    nodes[1434][25677301] = { mnID = 1413, name = "", type = "Ship", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = POSTMASTER_LETTER_STRANGLETHORNVALE .. " - " .. FACTION_NEUTRAL .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. L["Ratchet"] } -- 
+                    nodes[1434][25677301] = { mnID = 1413, name = "", type = "Ship", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = POSTMASTER_LETTER_STRANGLETHORNVALE .. " - " .. FACTION_NEUTRAL .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. L["Ratchet"] } -- 
                     
                     if self.faction == "Alliance" or db.activate.EnemyFaction then
-                        nodes[1437][04896329] = { mnID = 1445, name = "", type = "AShip", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = POSTMASTER_LETTER_WETLANDS .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. L["Theramore Isle"] } -- Ship from Menethil Harbor to Howling Fjord and Dustwallow Marsh
-                        nodes[1437][04455693] = { mnID = 1445, name = "", type = "AShip", showInZone = true,showOnContinent = false, showOnMinimap = false, TransportName = POSTMASTER_LETTER_WETLANDS .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. L["Auberdine"] } -- Ship from Menethil Harbor to Howling Fjord and Dustwallow Marsh
+                        nodes[1437][04896329] = { mnID = 1445, name = "", type = "AShip", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = POSTMASTER_LETTER_WETLANDS .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. L["Theramore Isle"] } -- Ship from Menethil Harbor to Howling Fjord and Dustwallow Marsh
+                        nodes[1437][04455693] = { mnID = 1445, name = "", type = "AShip", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = POSTMASTER_LETTER_WETLANDS .. " - " .. FACTION_ALLIANCE .. "\n" .. "\n" .. L["Ship"] .. "\n" .. " => " .. L["Auberdine"] } -- Ship from Menethil Harbor to Howling Fjord and Dustwallow Marsh
 
                     end
 

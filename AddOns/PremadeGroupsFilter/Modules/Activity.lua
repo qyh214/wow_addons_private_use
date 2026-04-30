@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -681,6 +681,7 @@ C.ACTIVITY = {
     [1793] = { difficulty = 4, category =   2, mapID = 1651, cmID = 234 }, -- Upper Karazhan (Mythic Keystone)
     [1794] = { difficulty = 4, category =   2, mapID = 1651, cmID = 234 }, -- Lower Karazhan (Mythic Keystone)
     [1795] = { difficulty = 4, category =   2, mapID = 1493, cmID = 207 }, -- Vault of the Wardens (Mythic Keystone)
+    [1945] = { difficulty = 4, category =   2, mapID = 1677, cmID = 233 }, -- Cathedral of Eternal Night (Mythic Keystone)
 }
 
 -- Return a default set if activity not found

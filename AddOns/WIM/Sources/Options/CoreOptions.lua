@@ -19,8 +19,8 @@ db_defaults.stats = {
 
 local credits = {
     "Pazza <Bronzebeard-US>\n\n",
-    "MysicalOS\nHumfras\nSylvaanar\n\nStewarta <Emerald Dream - EU>\n\nAstaldo <Bronzebeard - EU>\nZeke <Coilfang - US>\nMorphieus <Spinebreaker>\nNachonut <Bronzebeard - US>\n\nChiaki <Frostwolf - EU> - deDE\n"..
-    "BlueNyx <bluenyx@gmail.com> - koKR\nStingerSoft <stingersoft@iti.lt> - ruRU\nJunxian <junxian1121@hotmail.com> - zhCN & zhTW\nWoopy <Loatheb - NA> - esES & esMX\n\n\nAstrosloth and Zezerat are noobs! ;-p"
+    "MysticalOS\nHumfras\nSylvaanar\n\nStewarta <Emerald Dream - EU>\n\nAstaldo <Bronzebeard - EU>\nZeke <Coilfang - US>\nMorphieus <Spinebreaker>\nNachonut <Bronzebeard - US>\n\nChiaki <Frostwolf - EU> - deDE\n"..
+    "BlueNyx <bluenyx@gmail.com> - koKR\nStingerSoft <stingersoft@iti.lt> - ruRU\nJunxian <junxian1121@hotmail.com> - zhCN & zhTW\nWoopy <Woopy#1685 - NA> - esES & esMX\n\n\nAstrosloth and Zezerat are noobs! ;-p"
 };
 
 local states = {"arena", "combat", "pvp", "raid", "party", "resting", "other"};
@@ -36,7 +36,15 @@ local function General_Main()
     frame.welcome.cb2 = frame.welcome:CreateCheckButton(L["Display Minimap Icon"], WIM.modules.MinimapIcon, "enabled", nil, function(self, button) EnableModule("MinimapIcon", self:GetChecked()); end);
     frame.welcome.cb2:CreateCheckButton(L["Unlock from Minimap"], db.minimap, "free", nil, function(self, button) modules.MinimapIcon:OnEnable() end);
     frame.welcome.cb2:CreateCheckButton(L["<Right-Click> to show unread messages."], db.minimap, "rightClickNew");
-    frame.welcome.nextOffSetY = -75;
+
+	frame.welcome.nextOffSetY = -75;
+
+	if _G.AddonCompartmentFrame then
+		frame.welcome.nextOffSetY = -60;
+		frame.welcome.ac = frame.welcome:CreateCheckButton(L["Display Addon Compartment Icon"], WIM.modules.AddonCompartment, "enabled", nil, function(self, button) EnableModule("AddonCompartment", self:GetChecked()); end);
+		frame.welcome.nextOffSetY = -25;
+	end
+
     frame.welcome.tabFun = frame.welcome:CreateCheckButton(L["Press <Tab> to advance to next tell target."], WIM.db, "tabAdvance");
 
     local sensitivity = {};
@@ -170,6 +178,12 @@ local function createPopRuleFrame(winType)
     frame.main = frame:CreateSection((winType == "chat" and _G.CHAT..": " or "")..L["Window Behavior"], L["You can control how windows behave while you are in different situations."]);
  --   frame.main.nextOffSetY = -20;
     frame.main.intercept = frame.main:CreateCheckButton(L["Intercept Slash Commands"], db.pop_rules[frame.type], "intercept");
+
+	if (winType == "whisper") then
+		frame.main.replyIncludesSent = frame.main.intercept:CreateCheckButton(L["Include sent messages in /REPLY."], db.pop_rules[frame.type], "replyIncludesSent");
+		frame.main.nextOffSetY = -20;
+	end
+
 	frame.main.obeyAutoFocusRules = frame.main:CreateCheckButton(L["Obey autofocus rules when opening frames via the menu. (autofocus if unchecked)"], db.pop_rules[frame.type], "obeyAutoFocusRules");
  --   frame.main.nextOffSetY = -20;
     frame.main.alwaysOther = frame.main:CreateCheckButton(L["Use the same rules for all states."], db.pop_rules[frame.type], "alwaysOther", nil, function(self)
@@ -302,12 +316,13 @@ local function General_WindowSettings()
 
     -- window strata
     local stratas = {"BACKGROUND", "LOW", "MEDIUM", "HIGH", "DIALOG", "TOOLTIP"};
+	local strataNames = {L["Background"], L["Low"], L["Medium"], L["High"], L["Dialog"], L["Tooltip"]};
     local strataList = {};
     frame.menu.strataText = frame.menu:CreateText();
     frame.menu.strataText:SetText(L["Window Strata:"]);
     for i=1, #stratas do
         table.insert(strataList, {
-            text = stratas[i],
+            text = strataNames[i],
             value = stratas[i],
             justifyH = "LEFT",
             func = function(self)

@@ -743,11 +743,13 @@ function A.AuraWatch_OnEvent(event, ...)
 		A:AuraWatch_UpdateInt(event, ...)
 	end
 end
+--[[ disabled in 12.0
 B:RegisterEvent("UNIT_AURA", A.AuraWatch_OnEvent)
 B:RegisterEvent("PLAYER_TARGET_CHANGED", A.AuraWatch_OnEvent)
 B:RegisterEvent("PLAYER_ENTERING_WORLD", A.AuraWatch_OnEvent)
 B:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", A.AuraWatch_OnEvent)
 B:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", A.AuraWatch_OnEvent)
+]]
 
 function A:AuraWatch_Centralize(force)
 	if not hasCentralize then return end

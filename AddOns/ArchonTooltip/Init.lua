@@ -1,10 +1,18 @@
+---@type string
+local AddonName = ...
+
+---@class Private
+local Private = select(2, ...)
+
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local IsWrath = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 local IsCata = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
 local IsMists = WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC
+local IsTBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 
-if not IsRetail and not IsClassic and not IsWrath and not IsCata and not IsMists then
+if not IsRetail and not IsClassic and not IsWrath and not IsCata and not IsMists and not IsTBC then
+	print(string.format("%s: this game version is unsupported. WOW_PROJECT_ID is %d", Private.GetAddOnNameWithIcon(), WOW_PROJECT_ID))
 	return
 end
 
@@ -12,15 +20,9 @@ end
 ---@field name string
 ---@field abbreviation string
 
----@type string
-local AddonName = ...
-
----@class Private
-local Private = select(2, ...)
-
 Private.L = {}
 Private.IsRetail = IsRetail
-Private.IsClassicEra = IsClassic
+Private.IsClassicEra = IsClassic or IsTBC
 Private.IsWrath = IsWrath
 Private.IsCata = IsCata
 Private.IsMists = IsMists

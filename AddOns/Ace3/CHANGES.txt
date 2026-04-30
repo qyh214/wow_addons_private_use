@@ -1,0 +1,26 @@
+------------------------------------------------------------------------
+r1394 | funkehdude | 2026-04-22 07:51:15 +0000 (Wed, 22 Apr 2026) | 1 line
+Changed paths:
+   M /trunk/Ace3.toc
+
+Bump toc
+------------------------------------------------------------------------
+r1393 | funkehdude | 2026-04-10 01:52:49 +0000 (Fri, 10 Apr 2026) | 1 line
+Changed paths:
+   M /trunk/Ace3.toc
+
+Bump toc
+------------------------------------------------------------------------
+r1392 | funkehdude | 2026-03-16 00:15:39 +0000 (Mon, 16 Mar 2026) | 1 line
+Changed paths:
+   M /trunk/Ace3.toc
+
+Bump toc
+------------------------------------------------------------------------
+r1391 | funkehdude | 2026-03-06 14:48:32 +0000 (Fri, 06 Mar 2026) | 1 line
+Changed paths:
+   M /trunk/AceGUI-3.0/widgets/AceGUIWidget-Slider.lua
+
+AceGUI-3.0/widgets/AceGUIWidget-Slider: Workaround font loading issue sometimes making freshly created editboxes blank until the text is changed.
+------------------------------------------------------------------------
+

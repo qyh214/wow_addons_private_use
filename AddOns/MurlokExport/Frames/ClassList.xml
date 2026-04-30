@@ -1,0 +1,119 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\..\..\..\..\WoW\Data\Interface\AddOns\Blizzard_SharedXML\UI.xsd">
+	<Script file="ClassList.lua"/>
+
+	<Button name="ClassListButtonTemplate" virtual="true" mixin="ClassListItemMixin">
+		<Size x="200" y="50"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="background" atlas="PetList-ButtonBackground"/>
+			</Layer>       
+			<Layer level="BORDER">
+				<Texture parentKey="classIcon">
+					<Size x="40" y="40"/>
+					<Anchors>
+						<Anchor point="LEFT" x="-84" y="0"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="specIcon">
+					<Size x="40" y="40"/>
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeKey="$parent.classIcon" x="2" y="0"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="heroIcon" alpha="0.3">
+					<Anchors>
+						<Anchor point="RIGHT"/>
+					</Anchors>
+					<Size x="40" y="40"/>
+				</Texture>
+			</Layer>     
+			<Layer level="OVERLAY">
+				<Texture atlas="PetJournal-LevelBubble" useAtlasSize="true" parentKey="countBG">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.classIcon" x="3" y="-3"/>
+					</Anchors>
+				</Texture>
+				<FontString name="$parentCount" inherits="GameFontNormalSmall" justifyH="CENTER" parentKey="count">
+					<Size x="0" y="12"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.countBG" x="1" y="-1"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture atlas="PetList-ButtonSelect" parentKey="selectedTexture" hidden="true"/>
+			</Layer>			   
+			<Layer level="ARTWORK">
+				<FontString inherits="GameFontNormalSmall" justifyH="LEFT" parentKey="className">
+					<Size x="120" y="10"/>
+					<FontHeight val="9"/>
+					<Color r="1" g="1" b="1"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.specIcon" x="10" y="-3"/>
+					</Anchors>
+				</FontString>				
+				<FontString inherits="GameFontNormalSmall" justifyH="LEFT" parentKey="specName">
+					<Size x="120" y="10"/>
+					<FontHeight val="9"/>
+					<Color r="1" g="1" b="1"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.className" x="0" y="0"/>
+					</Anchors>
+				</FontString>
+				<FontString inherits="GameFontNormal" justifyH="LEFT" parentKey="name">
+					<Size x="120" y="15"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.specName" x="0" y="0"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame parentKey="hilightFrame">
+				<Size x="40" y="40"/>
+				<Anchors>
+					<Anchor point="CENTER" relativeKey="$parent.specIcon" x="0" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture file="Interface\Buttons\CheckButtonHilight" parentKey="ActiveTexture" alphaMode="ADD"/>
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
+		<HighlightTexture atlas="PetList-ButtonHighlight"/>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForClicks("LeftButtonUp");
+			</OnLoad>
+			<OnUpdate method="OnUpdate"/>
+			<OnClick method="OnClick"/>
+		</Scripts>
+	</Button>
+
+    <Frame name="ClassListFrameTemplate" virtual="true" mixin="ClassListFrameMixin">
+        <Frames>
+			<Frame name="$parentClassInset" inherits="InsetFrameTemplate" parentKey="ClassInset">
+				<Size x="250" y="520"/>
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+					<Anchor point="BOTTOMLEFT"/>
+				</Anchors>
+			</Frame>
+
+			<Frame parentKey="ClassScrollBox" inherits="WowScrollBoxList" frameStrata="HIGH">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.ClassInset" x="3" y="-3"/>
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.ClassInset" x="-2" y="3"/>
+				</Anchors>
+			</Frame>
+
+			<EventFrame parentKey="ClassScrollBar" inherits="MinimalScrollBar" frameStrata="HIGH">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.ClassScrollBox" relativePoint="TOPRIGHT" x="10" y="2"/>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.ClassScrollBox" relativePoint="BOTTOMRIGHT" x="10" y="-1"/>
+				</Anchors>
+			</EventFrame>
+        </Frames>
+    </Frame>
+</Ui>

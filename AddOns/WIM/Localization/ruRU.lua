@@ -30,8 +30,6 @@ WIM.AddLocale("ruRU", {
 	["state_raid"] = "В рейдовом инстансе",
 	["state_other"] = "Обычный (Другое)",
 
-	["<Shift-Click> to close window."] = "<Shift-Клик> для закрытия окна.",
-
 	["A new version of WIM is available!\nYou can download the latest version by going to:\n\n http://www.wimaddon.com"] = "Доступна новая версия WIM!\nВы можете скачать её с сайта:\n\n http://www.wimaddon.com",
 
 	["Options"] = "Настройки",
@@ -111,6 +109,8 @@ WIM.AddLocale("ruRU", {
 	["Direction:"] = "Направление",
 	["Tabs"] = "Закладки",
 	["Sort tabs by:"] = "Сортировка закладок:",
+	["Window Created"] = "По созданию окна",
+	["Last Activity"] = "По последней активности",
 	["Alphabetical"] = "По алфавиту",
 	["Recent Activity"] = "По активности",
 	["Keep windows on top of your UI."] = "Сохранять окно поверх вашего UI.",
@@ -217,6 +217,8 @@ WIM.AddLocale("ruRU", {
 	["Are you sure you want to\nignore %s?"] = "Вы уверены что вы хотите добавить\nперсонажа %s в черный список?",
     ["Right-Click for profile links..."] = "[Правый-Клик] - ссылка на профиль...",
     ["Profile Links"] = "Ссылка на профиль",
+	["Location"] = "Зона",
+	["Copy Name"] = "Копировать имя",
 
     -- Tutorials.lua --
 	["Display WIM tips"] = "Отображать подсказки WIMа",
@@ -280,6 +282,7 @@ WIM.AddLocale("ruRU", {
 	["Enable WIM"] = "Включить WIM",
 	["Display Minimap Icon"] = "Отображать иконку у мини-карты",
 	["<Right-Click> to show unread messages."] = "<Правый-Клик> открывает непрочитанные сообщения.",
+	["Display Addon Compartment Icon"] = "Показывать значок панели аддонов",
 	["Display Tutorials"] = "Показывать руководство",
 	["Reset Tutorials"] = "Сброс руководства",
 	["Credits"] = "Титры",
@@ -388,6 +391,12 @@ WIM.AddLocale("ruRU", {
 	["Play sound when a whisper is sent."] = "Проиграть звук при отправке сообщения.",
 	["Allow others to see my talent spec."] = "Позволить другим видеть мои таланты.",
 	["Window Strata:"] = "Слой окна",
+	["Background"] = BACKGROUND,
+	["Low"] = LOW,
+	["Medium"] = "Средняя",
+	["High"] = "Высокая",
+	["Dialog"] = ENABLE_DIALOG,
+	["Tooltip"] = "Подсказка",
 	["Unlock from Minimap"] = "Открепить от мини-карты",
     ["Press <Tab> to advance to next tell target."] = "Нажмите <Tab> чтобы перейти к следующему собеседнику.",
     ["Colorize names."] = "Окраска имён.",
@@ -496,8 +505,4 @@ WIM.AddLocale("ruRU", {
 
 	--Misc
     ["WIM has detected that you are playing on a private server. Some servers can not process ChatAddonMessages. Would you like to enable them anyway?"] = "WIM обнаружил, что вы играете на частном сервере. Некоторые серверы не могут обрабатывать ChatAddonMessages. Хотите включить их все равно?",
-
-	["Last Activity"] = "По последней активности",
-	["Window Created"] = "По созданию окна",
-
 });

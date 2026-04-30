@@ -1,0 +1,6 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="src\enum.lua"/>
+    <Script file="src\customFont.lua"/>
+    <Script file="src\fontUtil.lua"/>
+    <Script file="index.lua"/>
+</Ui>

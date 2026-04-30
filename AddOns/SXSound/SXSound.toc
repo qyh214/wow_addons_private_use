@@ -1,0 +1,11 @@
+## Interface: 11507, 11508, 20504, 20505, 30405, 38000, 40401, 40402, 50502, 50503, 110105, 110107, 110200, 120001, 110207, 120000
+## Author:Ranran - 然然
+## Version: 202603082
+## SavedVariables:ReSet
+## Title:|cFFFF0000嗜|r|cFFFF2A2A血|r|cFFFF5555音|r|cFFFF8080效|r|cFFFFAAAA语|r|cFFFFD5D5音|r|cFFFFFFFF包|r
+## IconTexture: Interface\AddOns\SXSound\logo.tga
+## Notes:SXSound is a sound pack for casting Bloodlust, Heroism, Time Warp, and more.SXSound是一个施放嗜血、英勇、时间扭曲等技能的语音包。
+## X-Curse-Project-ID: 1326078
+
+
+SXSound.lua

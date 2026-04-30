@@ -58,7 +58,7 @@ tinsert(C.defaultThemes, function()
 	bg:SetInside()
 	bg:SetPoint("TOPLEFT", 1, 6)
 	B.Reskin(frame.Container.SettingsList.Header.DefaultsButton)
-	B.ReskinTrimScroll(frame.Container.SettingsList.ScrollBar)
+	B.ReskinTrimScroll(frame.Container.SettingsList.ScrollBar, true) -- taint while in combat
 
 	local function ReskinDropdown(option)
 		B.Reskin(option.Dropdown)
@@ -143,7 +143,9 @@ tinsert(C.defaultThemes, function()
 						child.__texture = bg:CreateTexture(nil, "OVERLAY")
 						child.__texture:SetPoint("RIGHT", -10, 0)
 						UpdateHeaderExpand(child, false)
-						hooksecurefunc(child, "EvaluateVisibility", UpdateHeaderExpand)
+						if child.EvaluateVisibility then -- some silly addons override this function
+							hooksecurefunc(child, "EvaluateVisibility", UpdateHeaderExpand)
+						end
 					end
 				end
 				if child.ToggleTest then

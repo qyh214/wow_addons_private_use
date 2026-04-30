@@ -125,52 +125,52 @@ local function ArcwayMapVariation()
 	return ret
 end
 
-function Mod:CHALLENGE_MODE_COMPLETED()
-	if not challengeMapID then return end
-	local mapID, level, timeElapsed, onTime, keystoneUpgradeLevels = C_ChallengeMode.GetCompletionInfo()
-	local name, _, timeLimit = C_ChallengeMode.GetMapUIInfo(challengeMapID)
-	local _, affixes, wasEnergized = C_ChallengeMode.GetActiveKeystoneInfo()
-	local splits = Mod.splits
-	if not splits then return end
+-- function Mod:CHALLENGE_MODE_COMPLETED()
+-- 	if not challengeMapID then return end
+-- 	local info = C_ChallengeMode.GetChallengeCompletionInfo()
+-- 	local name, _, timeLimit = C_ChallengeMode.GetMapUIInfo(info.mapChallengeModeID)
+-- 	local _, affixes, wasEnergized = C_ChallengeMode.GetActiveKeystoneInfo()
+-- 	local splits = Mod.splits
+-- 	if not splits then return end
 
-	local missingCount = 0
-	for index,elapsed in pairs(splits) do
-		if elapsed == false then
-			splits[index] = floor(timeElapsed / 1000)
-			missingCount = missingCount + 1
-		elseif elapsed == true then
-			missingCount = missingCount + 1
-		end
-	end
+-- 	local missingCount = 0
+-- 	for index,elapsed in pairs(splits) do
+-- 		if elapsed == false then
+-- 			splits[index] = floor(timeElapsed / 1000)
+-- 			missingCount = missingCount + 1
+-- 		elseif elapsed == true then
+-- 			missingCount = missingCount + 1
+-- 		end
+-- 	end
 
-	splits.date = time()
-	splits.level = level
-	splits.mapID = mapID
-	splits.wasEnergized = wasEnergized
-	splits.timeElapsed = timeElapsed / 1000
-	splits.timeLimit = timeLimit
-	splits.affixes1 = affixes[1]
-	splits.affixes2 = affixes[2]
-	splits.affixes3 = affixes[3]
-	splits.mapVariation = Mod.mapVariation
-	splits.patch = GetBuildInfo()
+-- 	splits.date = time()
+-- 	splits.level = level
+-- 	splits.mapID = mapID
+-- 	splits.wasEnergized = wasEnergized
+-- 	splits.timeElapsed = timeElapsed / 1000
+-- 	splits.timeLimit = timeLimit
+-- 	splits.affixes1 = affixes[1]
+-- 	splits.affixes2 = affixes[2]
+-- 	splits.affixes3 = affixes[3]
+-- 	splits.mapVariation = Mod.mapVariation
+-- 	splits.patch = GetBuildInfo()
 
-	local unitTokens = { "player", "party1", "party2", "party3", "party4" }
-	for i = 1, #unitTokens do
-		local u = unitTokens[i]
-		if UnitExists(u) then
-			splits["party"..i.."Name"] = UnitName(u)
-			splits["party"..i.."Class"] = UnitClass(u)
-			splits["party"..i.."Role"] = UnitGroupRolesAssigned(u)
-			-- splits["party"..i.."Spec"] = u == "player" and GetSpecializationInfo(GetSpecialization() or 0) or GetInspectSpecialization(u)
-		end
-	end
+-- 	local unitTokens = { "player", "party1", "party2", "party3", "party4" }
+-- 	for i = 1, #unitTokens do
+-- 		local u = unitTokens[i]
+-- 		if UnitExists(u) then
+-- 			splits["party"..i.."Name"] = UnitName(u)
+-- 			splits["party"..i.."Class"] = UnitClass(u)
+-- 			splits["party"..i.."Role"] = UnitGroupRolesAssigned(u)
+-- 			-- splits["party"..i.."Spec"] = u == "player" and GetSpecializationInfo(GetSpecialization() or 0) or GetInspectSpecialization(u)
+-- 		end
+-- 	end
 
-	if Addon.Config.recordSplits then
-		if not AngryKeystones_Data.splits[mapID] then AngryKeystones_Data.splits[mapID] = {} end
-		table.insert(AngryKeystones_Data.splits[mapID], splits)
-	end
-end
+-- 	if Addon.Config.recordSplits then
+-- 		if not AngryKeystones_Data.splits[mapID] then AngryKeystones_Data.splits[mapID] = {} end
+-- 		table.insert(AngryKeystones_Data.splits[mapID], splits)
+-- 	end
+-- end
 
 function Mod:SCENARIO_UPDATE()
 	local scenarioType = select(10, C_Scenario.GetInfo())
@@ -252,7 +252,7 @@ function Mod:Startup()
 	self:RegisterEvent("SCENARIO_CRITERIA_UPDATE")
 	self:RegisterEvent("CHALLENGE_MODE_START")
 	self:RegisterEvent("CHALLENGE_MODE_RESET")
-	self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+	-- self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
 	self:RegisterEvent("SCENARIO_UPDATE")
 	self:SCENARIO_UPDATE()
 	hooksecurefunc(ScenarioObjectiveTracker, "UpdateCriteria", UpdateSplits)

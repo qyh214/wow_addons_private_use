@@ -12,6 +12,15 @@ local UnitGUID = UnitGUID
 
 ---@alias profileid string the profile id is the name of the profile, by default it has the name "default"
 
+---@class addon_savedvariables : table
+---@field GetCurrentProfileName fun(addonObject: df_addon): profileid
+---@field GetSavedVariables fun(addonObject: df_addon): table
+---@field GetProfile fun(addonObject: df_addon, bCreateIfNotFound?: boolean, profileToCopyFrom?: profile): profile
+---@field SetProfile fun(addonObject: df_addon, profileName: profileid, bCopyFromCurrentProfile?: boolean)
+---@field SaveProfile fun(addonObject: df_addon)
+---@field CreateProfilePanel fun(addonObject: df_addon, frameName: string, parentFrame: frame, options?: table): df_profilepanel
+---@field RefreshProfilePanel fun(profilePanel: df_profilepanel)
+
 --create namespace
 detailsFramework.SavedVars = {}
 
@@ -49,8 +58,24 @@ function detailsFramework.SavedVars.GetSavedVariables(addonObject)
                 savedVariablesTable = {}
             end
 
+            --ensure profile_ids exists
+            if not savedVariablesTable.profile_ids then
+                savedVariablesTable.profile_ids = {}
+            end
+            if not savedVariablesTable.profiles then
+                savedVariablesTable.profiles = {}
+            end
+
             --set the table to be global savedVariables
             _G[addonObject.__savedGlobalVarsName] = savedVariablesTable
+        end
+
+        --ensure profile_ids exists (in case the saved variables was created before the implementation of profile_ids)
+        if not savedVariablesTable.profile_ids then
+            savedVariablesTable.profile_ids = {}
+        end
+        if not savedVariablesTable.profiles then
+            savedVariablesTable.profiles = {}
         end
 
 		return savedVariablesTable

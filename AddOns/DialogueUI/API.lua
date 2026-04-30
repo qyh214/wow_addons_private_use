@@ -30,10 +30,12 @@ local function AlwaysZero(arg)
     return 0
 end
 
+--12.0 Secrets
 local issecurevalue = issecurevalue or AlwaysFalse;
 local canaccessvalue = canaccessvalue or AlwaysTrue;
 API.issecurevalue = issecurevalue;
 API.canaccessvalue = canaccessvalue;
+API.ShouldUnitIdentityBeSecret = C_Secrets and C_Secrets.ShouldUnitIdentityBeSecret or AlwaysFalse;
 
 function API.DoesValueExist(v)
     if canaccessvalue(v) then
@@ -774,13 +776,17 @@ do  -- NPC Interaction
     local function EvaluateUnitSize(unit)
         CreateModelScene();
 
+        if API.ShouldUnitIdentityBeSecret(unit) then
+            return false
+        end
+
         if not NPCActor then
             NPCActor = ModelScene:CreateActor(nil, "DUIUtilityActorTemplate");
             NPCActor.onModelLoadedCallback = NPCActor.EvaluateNPCHeight;
         end
 
-        local success = NPCActor:SetModelByUnit(unit);
-        return success
+        NPCActor:SetModelByUnit(unit);
+        return true
     end
 
     local function EvaluateNPCSize()
@@ -1528,12 +1534,18 @@ do  -- Quest
         local TextModifier = TextModifier_None;
 
         local function GetModifiedQuestText(method)
-            return TextModifier(GetQuestText(method))
+            local text = GetQuestText(method);
+            if text then
+                return TextModifier(text)
+            end
         end
         API.GetModifiedQuestText = GetModifiedQuestText;
 
         local function GetModifiedGossipText()
-            return TextModifier(GetGossipText());
+            local text = GetGossipText();
+            if text then
+                return TextModifier(text)
+            end
         end
         API.GetModifiedGossipText = GetModifiedGossipText;
 
@@ -1541,6 +1553,11 @@ do  -- Quest
             TextModifier = modifierFunc or TextModifier_None;
         end
         addon.SetDialogueTextModifier = SetDialogueTextModifier;
+
+        addon.SetChatTextModifier = function(modifierFunc)
+            modifierFunc("test");
+            CallbackRegistry:Trigger("SetChatTextModifier", modifierFunc or TextModifier_None);
+        end
     end
 
 
@@ -2276,6 +2293,9 @@ do  -- Faction -- Reputation
 end
 
 do  -- Chat Message
+    local StripHyperlinks = C_StringUtil and C_StringUtil.StripHyperlinks or StripHyperlinks;
+    API.StripHyperlinks = StripHyperlinks;
+
     local ADDON_ICON = "|TInterface\\AddOns\\DialogueUI\\Art\\Icons\\Logo:0:0|t";
     local function PrintMessage(header, msg)
         if not msg then
@@ -2913,6 +2933,7 @@ end
 do  -- Items
     local IsEquippableItem = C_Item.IsEquippableItem or IsEquippableItem or AlwaysFalse;
     local IsCosmeticItem = C_Item.IsCosmeticItem or IsCosmeticItem or AlwaysFalse;
+    local IsDecorItem = C_Item.IsDecorItem or AlwaysFalse;
     local GetTransmogItemInfo = (C_TransmogCollection and C_TransmogCollection.GetItemInfo) or AlwaysFalse;
     local GetItemLevel = C_Item.GetDetailedItemLevelInfo or GetDetailedItemLevelInfo or AlwaysZero;
     local GetItemInfoInstant = C_Item.GetItemInfoInstant;
@@ -2986,6 +3007,10 @@ do  -- Items
         local toyItemID = GetToyInfo(itemID);
         if toyItemID then
             return "toy"
+        end
+
+        if IsDecorItem (itemID) then
+            return "decor"
         end
     end
     API.GetItemClassification = GetItemClassification;

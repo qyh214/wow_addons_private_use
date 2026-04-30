@@ -8,6 +8,11 @@ local CONST_MAX_LOGLINES = 100
 ---@type string, private
 local tocFileName, private = ...
 
+local _, _, _, buildVersion = GetBuildInfo()
+_ = nil
+private.buildVersion = buildVersion
+private.buildVersionCutOff = 50000 --the addon will take cautions for versions before this build
+
 --localization
 local L = detailsFramework.Language.GetLanguageTable(tocFileName)
 
@@ -24,6 +29,7 @@ local defaultSettings = {
     saved_runs_compressed = {},
     saved_runs_compressed_headers = {},
     saved_runs_limit = 500,
+    only_show_current_season = true,
     saved_runs_selected_index = 1,
     scoreboard_scale = 1.0,
     translit = GetLocale() ~= "ruRU",
@@ -84,7 +90,7 @@ function addon.GetVersionString()
 end
 
 function addon.GetFullVersionString()
-    return Details.GetVersionString() .. " | " .. addon.GetVersionString()
+    return (Details and Details.GetVersionString() or "") .. " | " .. addon.GetVersionString()
 end
 
 function addon.OnInit(self, profile) --PLAYER_LOGIN
@@ -94,19 +100,10 @@ function addon.OnInit(self, profile) --PLAYER_LOGIN
     end
     self:SetLogoutLogTable(profile.logout_logs)
 
-    local detailsCoreVersion = Details:GetCoreVersion()
-    if (detailsCoreVersion < 164) then
-        print("Details! Mythic+: Update Details!, NOW!.")
-        print("Details! Mythic+: Update Details!, NOW!.")
-    end
-
     addon.data = {}
     addon.recentLikes = {}
     addon.LikesAmountFontString = {}
     addon.temporaryTimers = {}
-
-    local detailsEventListener = Details:CreateEventListener()
-    addon.detailsEventListener = detailsEventListener
 
     function private.log(...)
         local str = ""
@@ -125,14 +122,25 @@ function addon.OnInit(self, profile) --PLAYER_LOGIN
     end
 
     --register details! events
-    detailsEventListener:RegisterEvent("COMBAT_MYTHICDUNGEON_START")
-    detailsEventListener:RegisterEvent("COMBAT_MYTHICDUNGEON_END")
-    detailsEventListener:RegisterEvent("COMBAT_MYTHICDUNGEON_CONTINUE")
-    detailsEventListener:RegisterEvent("COMBAT_MYTHICPLUS_OVERALL_READY")
-    detailsEventListener:RegisterEvent("COMBAT_ENCOUNTER_START")
-    detailsEventListener:RegisterEvent("COMBAT_ENCOUNTER_END")
-    detailsEventListener:RegisterEvent("COMBAT_PLAYER_ENTER")
-    detailsEventListener:RegisterEvent("COMBAT_PLAYER_LEAVE")
+    if Details then
+        local detailsEventListener = Details:CreateEventListener()
+        addon.detailsEventListener = detailsEventListener
+
+        local detailsCoreVersion = Details:GetCoreVersion()
+        if (detailsCoreVersion < 164) then
+            print("Details! Mythic+: Update Details!, NOW!.")
+            print("Details! Mythic+: Update Details!, NOW!.")
+        end
+
+        detailsEventListener:RegisterEvent("COMBAT_MYTHICDUNGEON_START")
+        detailsEventListener:RegisterEvent("COMBAT_MYTHICDUNGEON_END")
+        detailsEventListener:RegisterEvent("COMBAT_MYTHICDUNGEON_CONTINUE")
+        detailsEventListener:RegisterEvent("COMBAT_MYTHICPLUS_OVERALL_READY")
+        detailsEventListener:RegisterEvent("COMBAT_ENCOUNTER_START")
+        detailsEventListener:RegisterEvent("COMBAT_ENCOUNTER_END")
+        detailsEventListener:RegisterEvent("COMBAT_PLAYER_ENTER")
+        detailsEventListener:RegisterEvent("COMBAT_PLAYER_LEAVE")
+    end
 
     --initialize enums
     addon.Enum = {
@@ -154,7 +162,13 @@ function addon.OnInit(self, profile) --PLAYER_LOGIN
     addon.Comm.Initialize()
     addon.Comm.Register("L", addon.ProcessLikePlayer)
     addon.RegisterAddonCompartment()
-    Details.SafeRun(addon.RegisterMinimap, "Register Minimap Icon", addon)
+    local _, error = pcall(function()
+        addon.RegisterMinimap(addon)
+    end)
+
+    if (error) then
+    	print("Details! M+ Extension error registering the minimap icon: ", error)
+    end
 
     -- always show the last run first
     addon.profile.saved_runs_selected_index = 1
@@ -199,6 +213,10 @@ local HandleMinimapTooltip = function(tooltip)
 end
 
 function addon.RegisterAddonCompartment()
+    if not AddonCompartmentFrame then
+        return
+    end
+
     AddonCompartmentFrame:RegisterAddon({
         text = L["ADDON_MENU_ADDONS_TITLE"],
         icon = "4352494",

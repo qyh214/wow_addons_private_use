@@ -1,0 +1,22 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+<Script file="D4Output.lua"/>
+
+<Script file="D4Lib.lua"/>
+
+<Script file="D4Math.lua"/>
+
+<Script file="D4DB.lua"/>
+
+<Script file="D4Frames.lua"/>
+<Script file="D4Grid.lua"/>
+<Script file="D4MinimapButtons.lua"/>
+<Script file="D4SlashCmds.lua"/>
+<Script file="D4Translations.lua"/>
+
+<Script file="D4Versions.lua"/>
+
+<Script file="D4Realms.lua"/>
+
+</Ui>

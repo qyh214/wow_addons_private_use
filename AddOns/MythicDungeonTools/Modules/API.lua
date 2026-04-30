@@ -7,9 +7,12 @@ do
 
   --- Usage: local count, maxCountNormal = MDT:GetEnemyForces(npcId)
   --- Prefers to find the npc in the current dungeon of the player
-  --- @param npcId number
+  --- @param npcId number | any
   --- @return number | nil, number | nil, number | nil, number | nil
   function MDT:GetEnemyForces(npcId)
+    if not npcId or issecretvalue(npcId) then return end
+    npcId = tonumber(npcId)
+    if not npcId then return end
     local zoneId = C_Map.GetBestMapForUnit("player")
     local dungeonIdx = self.zoneIdToDungeonIdx[zoneId]
 

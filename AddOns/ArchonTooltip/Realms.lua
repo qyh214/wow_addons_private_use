@@ -1134,19 +1134,22 @@ table.insert(Private.LoginFnQueue, function()
     Private.Realms[5843] = { name = "孤狼", slug = "孤狼", region = "TW", database = "TW_10236" }
     Private.Realms[5844] = { name = "生命烈焰", slug = "生命烈焰", region = "TW", database = "TW_10235" }
     Private.Realms[5845] = { name = "十字軍聖擊", slug = "十字軍聖擊", region = "TW", database = "TW_10234" }
-    Private.Realms[0] = { name = "无情", slug = "无情", region = "CN", database = "5211" }
-    Private.Realms[0] = { name = "铁血II", slug = "铁血II", region = "CN", database = "5222" }
-    Private.Realms[0] = { name = "铁血", slug = "铁血", region = "CN", database = "5210" }
-    Private.Realms[6103] = { name = "Dreamscythe", slug = "dreamscythe", region = "US", database = "US_5212" }
-    Private.Realms[6104] = { name = "Nightslayer", slug = "nightslayer", region = "US", database = "US_5213" }
-    Private.Realms[6107] = { name = "몰다르의투지", slug = "몰다르의-투지", region = "KR", database = "KR_5218" }
-    Private.Realms[6108] = { name = "펜구스의흉포", slug = "펜구스의-흉포", region = "KR", database = "KR_5219" }
-    Private.Realms[6111] = { name = "Thunderstrike", slug = "thunderstrike", region = "EU", database = "EU_5215" }
-    Private.Realms[6112] = { name = "Spineshatter", slug = "spineshatter", region = "EU", database = "EU_5216" }
-    Private.Realms[6115] = { name = "摩爾達的勇氣", slug = "摩爾達的勇氣", region = "TW", database = "TW_5220" }
-    Private.Realms[6116] = { name = "芬古斯的狂暴", slug = "芬古斯的狂暴", region = "TW", database = "TW_5221" }
-    Private.Realms[6122] = { name = "Годовщина", slug = "Годовщина", region = "EU", database = "EU_5217" }
-    Private.Realms[6131] = { name = "Maladath(AU)", slug = "maladath-au", region = "US", database = "US_5214" }
+    Private.Realms[6379] = { name = "时光I", slug = "时光I", region = "CN", database = "5233" }
+    Private.Realms[6380] = { name = "时光III", slug = "时光III", region = "CN", database = "5235" }
+    Private.Realms[6382] = { name = "时光II", slug = "时光II", region = "CN", database = "5234" }
+    Private.Realms[6383] = { name = "时光IV", slug = "时光IV", region = "CN", database = "5236" }
+    Private.Realms[6384] = { name = "时光V", slug = "时光V", region = "CN", database = "5237" }
+    Private.Realms[6385] = { name = "时光VI", slug = "时光VI", region = "CN", database = "5238" }
+    Private.Realms[6064] = { name = "Dreamscythe", slug = "dreamscythe", region = "US", database = "US_5212" }
+    Private.Realms[6065] = { name = "Nightslayer", slug = "nightslayer", region = "US", database = "US_5213" }
+    Private.Realms[6265] = { name = "몰다르의투지", slug = "몰다르의-투지", region = "KR", database = "KR_5218" }
+    Private.Realms[6266] = { name = "펜구스의흉포", slug = "펜구스의-흉포", region = "KR", database = "KR_5219" }
+    Private.Realms[6409] = { name = "Thunderstrike", slug = "thunderstrike", region = "EU", database = "EU_5215" }
+    Private.Realms[6412] = { name = "Spineshatter", slug = "spineshatter", region = "EU", database = "EU_5216" }
+    Private.Realms[6440] = { name = "摩爾達的勇氣", slug = "摩爾達的勇氣", region = "TW", database = "TW_5220" }
+    Private.Realms[6441] = { name = "芬古斯的狂暴", slug = "芬古斯的狂暴", region = "TW", database = "TW_5221" }
+    Private.Realms[6539] = { name = "Maladath", slug = "maladath", region = "US", database = "US_5214" }
+    Private.Realms[6540] = { name = "Годовщина", slug = "Годовщина", region = "EU", database = "EU_5217" }
 
     local realmId = GetRealmID()
     local realm = Private.Realms[realmId]

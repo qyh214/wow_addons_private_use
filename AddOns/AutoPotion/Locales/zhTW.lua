@@ -5,6 +5,7 @@ if not L then return end
 L["Addon Behaviour"] = "插件功能"
 L["Auto Potion Settings"] = "自動藥水 設定"
 L["Cavedweller's Delight"] = "穴居者之喜"
+L["Refreshing Serum"] = "提神藥水"
 L["Class/Racial Spells"] = "職業/種族技能"
 L["Configure the behavior of the addon. IE: if you want to include class spells"] = "這裡可以調整插件的功能，例如也能使用職業法術。"
 L["Current Priority"] = "目前的優先順序"

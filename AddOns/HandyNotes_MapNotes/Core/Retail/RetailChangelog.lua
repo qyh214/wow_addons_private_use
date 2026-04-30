@@ -7,11 +7,7 @@ local edge = 19 -- = 0.5cm left and right
 local LEFT, RIGHT = 12, 12 -- distance textframe to outer frame
 
 function ns.ShowLoginChangelogWindow()
-  if (MapNotesChangelogFrame and MapNotesChangelogFrame:IsShown()) 
-    or (MapNotesChangelogFrameMenu and MapNotesChangelogFrameMenu:IsShown()) 
-    then
-    return
-  end
+  if (MapNotesChangelogFrame and MapNotesChangelogFrame:IsShown()) or (MapNotesChangelogFrameMenu and MapNotesChangelogFrameMenu:IsShown()) then return end
 
   C_Timer.After(0.01, function()
     local LoginChangeLogFrame = CreateFrame("Frame", "MapNotesChangelogFrame", UIParent, "BasicFrameTemplateWithInset")
@@ -61,24 +57,38 @@ function ns.ShowLoginChangelogWindow()
     end)
     LoginChangeLogFrame.scrollFrame:SetScrollChild(content)
     LoginChangeLogFrame.checkbox = CreateFrame("CheckButton", nil, LoginChangeLogFrame, "ChatConfigCheckButtonTemplate")
-    LoginChangeLogFrame.checkbox:SetPoint("BOTTOMLEFT", 10, 10)
-    LoginChangeLogFrame.checkbox.Text:SetText("|cffff0000" .. L["Do not show again until next version"])
+    LoginChangeLogFrame.checkbox:SetPoint("BOTTOMLEFT", 15, 13)
+    LoginChangeLogFrame.checkbox.Text:SetText("|cffffff00" .. L["Do not show again until next version"])
     LoginChangeLogFrame.closeButton = CreateFrame("Button", nil, LoginChangeLogFrame, "GameMenuButtonTemplate")
     LoginChangeLogFrame.closeButton:SetPoint("BOTTOMRIGHT", -10, -10)
     LoginChangeLogFrame.closeButton:SetSize(100, 25)
     LoginChangeLogFrame.closeButton:SetText(CLOSE)
 
+    LoginChangeLogFrame.permanentCheckbox = CreateFrame("CheckButton", nil, LoginChangeLogFrame, "ChatConfigCheckButtonTemplate")
+    LoginChangeLogFrame.permanentCheckbox:SetPoint("BOTTOMRIGHT", -300, 13)
+    LoginChangeLogFrame.permanentCheckbox.Text:SetText("|cffff0000" .. L["permanently hide changelog"])
+    LoginChangeLogFrame.permanentCheckbox:SetChecked(ns.Addon.db.global.hideChangeLogPermanently)
+
     LoginChangeLogFrame.closeButton:SetScript("OnClick", function()
       if LoginChangeLogFrame.checkbox:GetChecked() then
-        HandyNotes_MapNotesRetailChangelogDB.lastChangelogVersion = ns.CurrentAddonVersion
+        HandyNotes_MapNotesRetailChangelogDB.lastChangelogVersion = ns.PreviousAddonVersion
         print(ns.COLORED_ADDON_NAME .. " " .. (ns.CHANGE_LOG_CONFIRMED[ns.locale] or ns.CHANGE_LOG_CONFIRMED.enUS))
       end
+
+      if LoginChangeLogFrame.permanentCheckbox:GetChecked() then
+        ns.Addon.db.global.hideChangeLogPermanently = true
+      end
+
       LoginChangeLogFrame:Hide()
     end)
 
     LoginChangeLogFrame:SetScript("OnHide", function()
       if LoginChangeLogFrame.checkbox:GetChecked() then
-        HandyNotes_MapNotesRetailChangelogDB.lastChangelogVersion = ns.CurrentAddonVersion
+        HandyNotes_MapNotesRetailChangelogDB.lastChangelogVersion = ns.PreviousAddonVersion
+      end
+
+      if LoginChangeLogFrame.permanentCheckbox:GetChecked() then
+        ns.Addon.db.global.hideChangeLogPermanently = true
       end
     end)
 
@@ -88,11 +98,7 @@ function ns.ShowLoginChangelogWindow()
 end
 
 function ns.ShowMenuChangelogWindow()
-  if (MapNotesChangelogFrame and MapNotesChangelogFrame:IsShown()) 
-    or (MapNotesChangelogFrameMenu and MapNotesChangelogFrameMenu:IsShown()) 
-    then
-    return
-  end
+  if (MapNotesChangelogFrame and MapNotesChangelogFrame:IsShown()) or (MapNotesChangelogFrameMenu and MapNotesChangelogFrameMenu:IsShown()) then return end
 
   local ChangeLogFrameMenu = CreateFrame("Frame", "MapNotesChangelogFrameMenu", UIParent, "BasicFrameTemplateWithInset")
   ChangeLogFrameMenu:SetSize(frameWidths, frameHeights)
@@ -113,7 +119,7 @@ function ns.ShowMenuChangelogWindow()
 
   ChangeLogFrameMenu.fixedVersionText = ChangeLogFrameMenu:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   ChangeLogFrameMenu.fixedVersionText:SetPoint("TOPLEFT", 10, -5)
-  ChangeLogFrameMenu.fixedVersionText:SetText("|cffffd700" .. GAME_VERSION_LABEL .. ":|r " .. "|cffff0000" .. ns.PreviousAddonVersion_1 .. " + " .. PREVIOUS)
+  ChangeLogFrameMenu.fixedVersionText:SetText("|cffffd700" .. GAME_VERSION_LABEL .. ":|r " .. "|cffff0000" .. ns.CurrentAddonVersion .. " + " .. PREVIOUS)
 
   ChangeLogFrameMenu.scrollFrame = CreateFrame("ScrollFrame", nil, ChangeLogFrameMenu, "UIPanelScrollFrameTemplate")
   ChangeLogFrameMenu.scrollFrame:SetPoint("TOPLEFT", 10, -40)
@@ -158,23 +164,25 @@ function ns.ShowMenuChangelogWindow()
   table.insert(UISpecialFrames, "MapNotesChangelogFrameMenu")
 end
 
-local DBFrame = CreateFrame("Frame")
-DBFrame:RegisterEvent("ADDON_LOADED")
-DBFrame:SetScript("OnEvent", function(_, event, addonName)
-  if addonName == "HandyNotes_MapNotes" then
-    if not HandyNotes_MapNotesRetailChangelogDB then
-      HandyNotes_MapNotesRetailChangelogDB = {}
-    end
+function ns.CheckRetailChangelog()
 
-    if not HandyNotes_MapNotesRetailChangelogDB.lastChangelogVersion then
-      HandyNotes_MapNotesRetailChangelogDB.lastChangelogVersion = ns.PreviousAddonVersion_1
-    end
+  if not HandyNotes_MapNotesRetailChangelogDB then
+    HandyNotes_MapNotesRetailChangelogDB = {}
+  end
 
-    if HandyNotes_MapNotesRetailChangelogDB.lastChangelogVersion ~= ns.CurrentAddonVersion then
+  if not HandyNotes_MapNotesRetailChangelogDB.lastChangelogVersion then
+    HandyNotes_MapNotesRetailChangelogDB.lastChangelogVersion = ns.PreviousAddonVersion
+    return
+  end
+
+  if HandyNotes_MapNotesRetailChangelogDB.lastChangelogVersion ~= ns.PreviousAddonVersion then
+
+    if not ns.Addon.db.global.hideChangeLogPermanently then
       ns.ShowLoginChangelogWindow()
     end
+
   end
-end)
+end
 
 local function MN_GetLocaleText(localeTable)
   if type(localeTable) ~= "table" then return "" end
@@ -183,14 +191,8 @@ local function MN_GetLocaleText(localeTable)
   if not text or text == "" then
     text = localeTable["enUS"] or ""
   end
-  
-  return text
-end
 
-local function MN_FormatVersionBlock(version, localeTable)
-  local text = MN_GetLocaleText(localeTable)
-  if not text or text == "" then return "" end
-  return string.format("|cffffd700%s %s:|r\n\n%s", GAME_VERSION_LABEL, tostring(version or ""), text)
+  return text
 end
 
 function ns.BuildAllChangelogText()
@@ -198,9 +200,30 @@ function ns.BuildAllChangelogText()
   local allVersionTexts = {}
 
   for _, entry in ipairs(ns.LOCALE_CHANGELOGS) do
-    local t = entry.table or ns["LOCALE_CHANGELOG_" .. entry.version:gsub("%.", "_")]
-    local versionText = MN_FormatVersionBlock(entry.version, t)
-    if versionText ~= "" then
+    local combinedText = ""
+
+    local tablesToShow = {}
+    if type(entry.table) == "table" and (#entry.table > 0 and (type(entry.table[1]) == "string" or type(entry.table[1]) == "table")) then
+      tablesToShow = entry.table
+    else
+      tablesToShow = { entry.table or ns["LOCALE_CHANGELOG_" .. entry.version:gsub("%.", "_")] }
+    end
+
+    for _, t in ipairs(tablesToShow) do
+      if type(t) == "string" then
+        t = ns[t]
+      end
+      if type(t) == "table" then
+        local text = MN_GetLocaleText(t)
+        if text and text ~= "" then
+          if combinedText ~= "" then combinedText = combinedText .. "\n" end
+          combinedText = combinedText .. text
+        end
+      end
+    end
+
+    if combinedText ~= "" then
+      local versionText = string.format("|cffffd700%s %s:|r\n\n%s", GAME_VERSION_LABEL, tostring(entry.version or ""), combinedText)
       table.insert(allVersionTexts, versionText)
     end
   end

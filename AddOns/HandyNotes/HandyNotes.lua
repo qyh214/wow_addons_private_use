@@ -181,18 +181,23 @@ local continentZoneList = WoWClassic and {
 	[1415] = true, -- Eastern Kingdoms
 	[1945] = true, -- Outlands
 	[113] = true, -- Northrend
+	[424] = true, -- Pandaria
 
 	-- mapFile compat entries
 	["Kalimdor"]              = 1414,
 	["Azeroth"]               = 1415,
 	["Expansion01"]           = 1945,
 	["Northrend"]             = 113,
+	["TheMaelstromContinent"] = 948,
+	["Vashjir"]               = 203,
+	["Pandaria"]              = 424,
 }
 or {
 	[12]  = true, -- Kalimdor
 	[13]  = true, -- Azeroth
 	[101] = true, -- Outlands
 	[113] = true, -- Northrend
+	[203] = true, -- Vashjir
 	[424] = true, -- Pandaria
 	[572] = true, -- Draenor
 	[619] = true, -- Broken Isles
@@ -201,6 +206,7 @@ or {
 	[1550] = true, -- Shadowlands
 	[1978] = true, -- Dragon Isles
 	[2274] = true, -- Khaz Algar
+	[2537] = true, -- Quel'thalas (Midnight)
 
 	-- mapFile compat entries
 	["Kalimdor"]              = 12,

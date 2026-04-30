@@ -102,9 +102,11 @@ P.DefaultSettings = {
 		BtWLoadouts = true,
 		BtWQuests = true,
 		ButtonForge = true,
+		Clique = true,
 		Immersion = true,
 		InboxMailBag = true,
 		ls_Toasts = true,
+		KeystoneLoot = true,
 		MeetingStone = true,
 		RareScanner = true,
 		ShadowDancer = true,
@@ -129,7 +131,7 @@ P.DefaultSettings = {
 		HideCreator = false,
 	},
 	Misc = {
-		LootSpecManager = false,
+		LootSpecManager = true,
 		TalentManager = true,
 		QuestHelper = true,
 		CopyMog = true,
@@ -141,7 +143,7 @@ P.DefaultSettings = {
 		AuctionEnhanced = true,
 		GuildBankItemLevel = true,
 		ExtVendorUI = true,
-		ExtMacroUI =  false,
+		ExtMacroUI = true,
 		WormholeHelper = true,
 		TrainAll = true,
 		AutoRoll = 3,
@@ -417,9 +419,6 @@ loader:SetScript("OnEvent", function(self, event, addon)
 					P:CallLoadedAddonEarly(addonName, object)
 				end
 			end
-
-			P:BuildTextureTable()
-			P:ReplaceTexture()
 
 			self.loaded = true
 		end

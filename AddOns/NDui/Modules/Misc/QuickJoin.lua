@@ -10,13 +10,12 @@ local TT = B:GetModule("Tooltip")
 	3.自动邀请申请
 	4.显示队长分数，并简写集市钥石
 ]]
-local select, gsub, tremove = select, gsub, tremove
+local select, gsub = select, gsub
 local StaticPopup_Hide, HideUIPanel, GetTime = StaticPopup_Hide, HideUIPanel, GetTime
 local UnitIsGroupLeader = UnitIsGroupLeader
 local C_Timer_After, IsAltKeyDown = C_Timer.After, IsAltKeyDown
 local C_LFGList_GetSearchResultInfo = C_LFGList.GetSearchResultInfo
 local C_LFGList_GetActivityInfoTable = C_LFGList.GetActivityInfoTable
-local C_ChallengeMode_GetMapUIInfo = C_ChallengeMode.GetMapUIInfo
 local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
 local HEADER_COLON = _G.HEADER_COLON
@@ -76,17 +75,10 @@ function M:AddAutoAcceptButton()
 	bu:SetPoint("BOTTOMLEFT", ApplicationViewerFrame.InfoBackground, 12, 5)
 	B.CreateFS(bu, 14, _G.LFG_LIST_AUTO_ACCEPT, "system", "LEFT", 24, 0)
 
-	local isCN = GetCVar("portal") == "CN"
 	local lastTime = 0
 	local function clickInviteButton(button)
 		if button.applicantID and button.InviteButton:IsEnabled() then
-			if C.db["Chat"]["Freedom"] and isCN then
-				ConsoleExec("portal CN")
-			end
 			C_LFGList.InviteApplicant(button.applicantID)
-			if C.db["Chat"]["Freedom"] and isCN then
-				ConsoleExec("portal TW")
-			end
 		end
 	end
 
@@ -117,7 +109,7 @@ local factionStr = {
 function M:ShowLeaderOverallScore()
 	local resultID = self.resultID
 	local searchResultInfo = resultID and C_LFGList_GetSearchResultInfo(resultID)
-	if searchResultInfo then
+	if searchResultInfo and B:NotSecretValue(searchResultInfo.activityIDs) then
 		local activityInfo = C_LFGList_GetActivityInfoTable(searchResultInfo.activityIDs[1], nil, searchResultInfo.isWarMode)
 		if activityInfo then
 			local showScore = activityInfo.isMythicPlusActivity and searchResultInfo.leaderOverallDungeonScore
@@ -221,36 +213,6 @@ function M:AddPGFSortingExpression()
 	end
 end
 
-function M:FixListingTaint() -- From PremadeGroupsFilter
-	if IsAddOnLoaded("PremadeGroupsFilter") then return end
-
-    local activityIdOfArbitraryMythicPlusDungeon = 1160 -- Algeth'ar Academy
-    if not C_LFGList.IsPlayerAuthenticatedForLFG(activityIdOfArbitraryMythicPlusDungeon) then
-        return
-    end
-
-    C_LFGList.GetPlaystyleString = function(playstyle, activityInfo)
-        if not ( activityInfo and playstyle and playstyle ~= 0
-                and C_LFGList.GetLfgCategoryInfo(activityInfo.categoryID).showPlaystyleDropdown ) then
-            return nil
-        end
-        local globalStringPrefix
-        if activityInfo.isMythicPlusActivity then
-            globalStringPrefix = "GROUP_FINDER_PVE_PLAYSTYLE"
-        elseif activityInfo.isRatedPvpActivity then
-            globalStringPrefix = "GROUP_FINDER_PVP_PLAYSTYLE"
-        elseif activityInfo.isCurrentRaidActivity then
-            globalStringPrefix = "GROUP_FINDER_PVE_RAID_PLAYSTYLE"
-        elseif activityInfo.isMythicActivity then
-            globalStringPrefix = "GROUP_FINDER_PVE_MYTHICZERO_PLAYSTYLE"
-        end
-        return globalStringPrefix and _G[globalStringPrefix .. tostring(playstyle)] or nil
-    end
-
-    -- Disable automatic group titles to prevent tainting errors
-    LFGListEntryCreation_SetTitleFromActivityInfo = function(_) end
-end
-
 function M:QuickJoin()
 	if not C.db["Misc"]["QuickJoin"] then return end
 
@@ -279,6 +241,5 @@ function M:QuickJoin()
 	M:AddAutoAcceptButton()
 	M:ReplaceFindGroupButton()
 	M:AddPGFSortingExpression()
-	M:FixListingTaint()
 end
 M:RegisterMisc("QuickJoin", M.QuickJoin)

@@ -9,7 +9,7 @@ local newString = "0:0:64:64:5:59:5:59"
 function TT:SetupTooltipIcon(icon)
 	local title = icon and _G[self:GetName().."TextLeft1"]
 	local titleText = title and title:GetText()
-	if titleText and not strfind(titleText, ":20:20:") then
+	if titleText and B:NotSecretValue(titleText) and not strfind(titleText, ":20:20:") then
 		title:SetFormattedText("|T%s:20:20:"..newString..":%d|t %s", icon, 20, titleText)
 	end
 
@@ -17,7 +17,7 @@ function TT:SetupTooltipIcon(icon)
 		local line = _G[self:GetName().."TextLeft"..i]
 		if not line then break end
 		local text = line:GetText()
-		if text and text ~= " " then
+		if text and B:NotSecretValue(text) and text ~= " " then
 			local newText, count = gsub(text, "|T([^:]-):[%d+:]+|t", "|T%1:14:14:"..newString.."|t")
 			if count > 0 then line:SetText(newText) end
 		end
@@ -54,13 +54,20 @@ local GetTooltipTextureByType = {
 }
 
 function TT:ReskinTooltipIcons()
+	local tooltips = {
+		[GameTooltip] = true,
+		[ItemRefTooltip] = true,
+		[ShoppingTooltip1] = true,
+		[ShoppingTooltip2] = true,
+	}
 	-- Add Icons
-	TT.HookTooltipMethod(GameTooltip)
-	TT.HookTooltipMethod(ItemRefTooltip)
+	for tooltip in pairs(tooltips) do
+		TT.HookTooltipMethod(tooltip)
+	end
 
 	for tooltipType, getTex in next, GetTooltipTextureByType do
 		TooltipDataProcessor.AddTooltipPostCall(tooltipType, function(self)
-			if self == GameTooltip or self == ItemRefTooltip then
+			if tooltips[self] then
 				local data = self:GetTooltipData()
 				local id = data and data.id
 				if id then

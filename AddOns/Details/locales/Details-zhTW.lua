@@ -185,8 +185,7 @@ L["STRING_DODGE"] = "閃避"
 L["STRING_DOT"] = "持續性傷害 (DoT)"
 L["STRING_DPS"] = "每秒傷害 (DPS)"
 L["STRING_EMPTY_SEGMENT"] = "空的戰鬥記錄"
---[[Translation missing --]]
-L["STRING_ENABLE_DO_NOT_DISTURB"] = "Enable Do Not Disturb"
+L["STRING_ENABLE_DO_NOT_DISTURB"] = "啟用請勿打擾"
 L["STRING_ENABLED"] = "啟用"
 L["STRING_ENVIRONMENTAL_DROWNING"] = "環境 (溺水)"
 L["STRING_ENVIRONMENTAL_FALLING"] = "環境 (墜落)"
@@ -311,27 +310,18 @@ L["STRING_KEYBIND_TOGGLE_WINDOWS"] = "切換顯示全部"
 L["STRING_KEYBIND_WINDOW_CONTROL"] = "視窗"
 L["STRING_KEYBIND_WINDOW_REPORT"] = "報告視窗 #%s 的資料"
 L["STRING_KEYBIND_WINDOW_REPORT_HEADER"] = "報告資料"
---[[Translation missing --]]
-L["STRING_KEYSTONE_ADD_TO_FRIENDS_TOOLTIP"] = "Add to friends list as character (not battlenet friend request)."
---[[Translation missing --]]
-L["STRING_KEYSTONE_CLICK_TO_VIEW_SCOREBOARD"] = "Click to view the scoreboard."
---[[Translation missing --]]
-L["STRING_KEYSTONE_DND_TOOLTIP"] = "Your key won't be sent to your guild or friends. While in a group, it will still be sent."
---[[Translation missing --]]
-L["STRING_KEYSTONE_LIFETIME_LIKES_YOU_GAVE"] = [=[Life-time likes you gave for this player through the 'GG' button in the |cFFFFFF00Details! Damage Meter Mythic+|r addon.
-
-View run breakdown by selecting a Mythic+ run you did with this player.]=]
---[[Translation missing --]]
-L["STRING_KEYSTONE_NO_MYTHICPLUS_ADDON"] = "Mythic+ addon not found."
---[[Translation missing --]]
-L["STRING_KEYSTONE_REQUEST_FROM_GUILD"] = "Request from Guild"
+L["STRING_KEYSTONE_ADD_TO_FRIENDS_TOOLTIP"] = "以角色身份加入好友列表（非Battlenet好友邀請）。"
+L["STRING_KEYSTONE_CLICK_TO_VIEW_SCOREBOARD"] = "點擊查看計分板。"
+L["STRING_KEYSTONE_DND_TOOLTIP"] = "你的鑰石不會發送給公會或朋友。當在隊伍中時該訊息仍會被傳送。"
+L["STRING_KEYSTONE_LIFETIME_LIKES_YOU_GAVE"] = "你透過 |cFFFFFF00Details! Damage Meter Mythic+|r插件的「GG」按鈕給這位玩家的終身讚！。透過選擇你用這名玩家完成的 Mythic+副本來查看遊戲解析。"
+L["STRING_KEYSTONE_NO_MYTHICPLUS_ADDON"] = "傳奇+插件未找到。"
+L["STRING_KEYSTONE_REQUEST_FROM_GUILD"] = "來自公會請求"
 L["STRING_KILLED"] = "擊殺"
 L["STRING_LAST_COOLDOWN"] = "最後的冷卻時間"
 L["STRING_LEFT"] = "左"
 L["STRING_LEFT_CLICK_SHARE"] = "點一下左鍵來報告。"
 L["STRING_LEFT_TO_RIGHT"] = "由左到右"
---[[Translation missing --]]
-L["STRING_LIKES_YOU_GAVE"] = "Likes you gave"
+L["STRING_LIKES_YOU_GAVE"] = "你給的讚"
 L["STRING_LOCK_DESC"] = "鎖定或解鎖視窗"
 L["STRING_LOCK_WINDOW"] = "鎖定"
 L["STRING_MASTERY"] = "精通"
@@ -399,13 +389,11 @@ L["STRING_NEWS_REINSTALL"] = "更新後有問題嗎? 請試試輸入指令 /deta
 L["STRING_NEWS_TITLE"] = "更新資訊"
 L["STRING_NO"] = "否"
 L["STRING_NO_DATA"] = "資料已被清空"
---[[Translation missing --]]
-L["STRING_NO_MYTHIC_PLUS_ADDON"] = "To track your Mythic+ runs including loot, score, damage, healing done, and who you played with, install the |cFFFFAA00Details! Damage Meter Mythic+|r addon on |cFFfff1c1Wago AddOns|r or |cFFfff1c1Curse Forge|r."
+L["STRING_NO_MYTHIC_PLUS_ADDON"] = "追蹤你的傳奇+副本，包括戰利品、分數、傷害、治療等，以及你和誰一起玩，安裝 |cFFFFAA00Details! Damage Meter Mythic+|r插件，位於 |cFFfff1c1Wago AddOns|r 或 |cFFfff1c1Curse Forge|r。"
 L["STRING_NO_SPELL"] = "沒有已使用的法術"
 L["STRING_NO_TARGET"] = "沒有找到目標。"
 L["STRING_NO_TARGET_BOX"] = "沒有可用目標"
---[[Translation missing --]]
-L["STRING_NO_TELEPORTER"] = "You don't have this teleporter"
+L["STRING_NO_TELEPORTER"] = "你沒有這個傳送門"
 L["STRING_NOCLOSED_INSTANCES"] = [=[沒有已關閉的視窗，
 點一下建立新視窗。]=]
 L["STRING_NOLAST_COOLDOWN"] = "沒有已使用的冷卻"
@@ -935,6 +923,12 @@ L["STRING_OPTIONS_PERFORMANCECAPTURES_DESC"] = "這些是分析和收集戰鬥�
 L["STRING_OPTIONS_PERFORMANCEPROFILES_ANCHOR"] = "效能分析:"
 L["STRING_OPTIONS_PICONS_DIRECTION"] = "外掛套件附加到右側"
 L["STRING_OPTIONS_PICONS_DIRECTION_DESC"] = "勾選時，外掛套件的按鈕會顯示在選單按鈕的右方。"
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME"] = "Player Name"
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME_AUTO_WIDTH"] = "Length Auto"
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME_WIDTH"] = "Length"
 L["STRING_OPTIONS_PLUGINS"] = "外掛套件"
 L["STRING_OPTIONS_PLUGINS_AUTHOR"] = "作者"
 L["STRING_OPTIONS_PLUGINS_NAME"] = "名稱"
@@ -1107,6 +1101,8 @@ Details! 的捲軸預設會由拉伸視窗的功能來取代。
 |cFFFFFF00拉伸點|r在視窗按鈕/選單 (關閉按鈕左側) 的上方。]=]
 L["STRING_OPTIONS_SEGMENTSSAVE"] = "戰鬥記錄保存"
 L["STRING_OPTIONS_SEGMENTSSAVE_DESC"] = "每次登入遊戲的期間要保存多少個戰鬥記錄片段。數值愈高，角色登出時所花的時間就愈久。"
+--[[Translation missing --]]
+L["STRING_OPTIONS_SELECT_TEMPLATE"] = "Select Template"
 L["STRING_OPTIONS_SENDFEEDBACK"] = "回饋"
 L["STRING_OPTIONS_SHOW_SIDEBARS"] = "顯示邊框"
 L["STRING_OPTIONS_SHOW_SIDEBARS_DESC"] = "顯示或隱藏視窗邊框。"
@@ -1192,6 +1188,10 @@ L["STRING_OPTIONS_TEXT_OUTLINE"] = "文字外框"
 L["STRING_OPTIONS_TEXT_RIGHT_ANCHOR"] = "右側文字:"
 L["STRING_OPTIONS_TEXT_ROUTILINE_DESC"] = "啟用或停用右側文字的外框。"
 L["STRING_OPTIONS_TEXT_ROWICONS_ANCHOR"] = "圖示:"
+--[[Translation missing --]]
+L["STRING_OPTIONS_TEXT_SHADOWCOLOR"] = "Shadow Color"
+--[[Translation missing --]]
+L["STRING_OPTIONS_TEXT_SHADOWOFFSET"] = "Shadow Offset %s"
 L["STRING_OPTIONS_TEXT_SHOW_BRACKET"] = "括號"
 L["STRING_OPTIONS_TEXT_SHOW_BRACKET_DESC"] = "選擇每秒和百分比的開始和結束括號要使用哪個字元。"
 L["STRING_OPTIONS_TEXT_SHOW_PERCENT"] = "顯示百分比"
@@ -1426,6 +1426,8 @@ L["STRING_OPTIONSMENU_TOOLTIP"] = "浮動提示資訊"
 L["STRING_OPTIONSMENU_WALLPAPER"] = "背景圖案"
 L["STRING_OPTIONSMENU_WINDOW"] = "視窗: 一般"
 L["STRING_OPTIONSMENU_WINDOWBODY"] = "視窗設定"
+--[[Translation missing --]]
+L["STRING_OR"] = "Or"
 L["STRING_OVERALL"] = "整場"
 L["STRING_OVERHEAL"] = "過量治療"
 L["STRING_OVERHEALED"] = "已造成過量治療"
@@ -1474,8 +1476,7 @@ L["STRING_QUERY_INSPECT_REFRESH"] = "需要重新整理"
 L["STRING_RAID_WIDE"] = "[*] 團隊冷卻時間"
 L["STRING_RAIDCHECK_PLUGIN_DESC"] = "在團隊副本內時，在 Details! 的標題列顯示圖示，表示精煉、食物和偷爆發藥水的使用狀態。"
 L["STRING_RAIDCHECK_PLUGIN_NAME"] = "準備確認"
---[[Translation missing --]]
-L["STRING_RECENT_PLAYERS"] = "Recent Players:"
+L["STRING_RECENT_PLAYERS"] = "近期玩家："
 L["STRING_REPORT"] = "來自"
 L["STRING_REPORT_BUTTON_TOOLTIP"] = "點一下打開報告對話框"
 L["STRING_REPORT_FIGHT"] = "戰鬥"
@@ -1543,6 +1544,23 @@ L["STRING_SEGMENTS_LIST_WASTED_TIME"] = "非戰鬥中"
 L["STRING_SHIELD_HEAL"] = "阻擋"
 L["STRING_SHIELD_OVERHEAL"] = "浪費"
 L["STRING_SHORTCUT_RIGHTCLICK"] = "點右鍵關閉"
+L["STRING_SIMPLE_TEXT_FORMAT"] = "使用簡單文字格式"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED"] = "使用對齊文字"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_DESC"] = "文字以欄位對齊，設定欄位之間的間距。"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_SPACE_BETWEEN"] = "欄位間距"
+L["STRING_SIMPLE_TEXT_FORMAT_DESC"] = "啟用下面三條規則。"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE2"] = "不顯示百分比"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE3"] = "僅顯示總計"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE4"] = "使用 | 作為分隔符"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE5"] = "使用 [方括號] 分隔"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE6"] = "總計 (DPS) 百分比"
+L["STRING_SIMPLE_TEXT_FORMAT_TITLE"] = "右側文字：簡單或對齊"
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE1"] = [=[當該行包含總計與百分比資訊時。
+|cFFAAAAAA%s 順序：總計，百分比。]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE2"] = [=[當該行包含總計與每秒資訊時。
+|cFFAAAAAA%s 順序：總計，每秒。]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE3"] = [=[當該行包含總計、每秒與百分比資訊時。
+|cFFAAAAAA%s 順序：總計，每秒，百分比。]=]
 L["STRING_SLASH_API_DESC"] = "打開 API 面板來建立外掛套件、自訂顯示內容、提醒效果...等。"
 L["STRING_SLASH_CAPTURE_DESC"] = "打開或關閉所有資料擷取。"
 L["STRING_SLASH_CAPTUREOFF"] = "全部的資料擷取都已關閉。"
@@ -1587,16 +1605,15 @@ L["STRING_SWITCH_WARNING"] = "角色職責已變更，切換成: |cFFFFAA00%s|r 
 L["STRING_TARGET"] = "目標"
 L["STRING_TARGETS"] = "目標"
 L["STRING_TARGETS_OTHER1"] = "寵物和其他目標"
---[[Translation missing --]]
-L["STRING_TELEPORT"] = "Teleport"
---[[Translation missing --]]
-L["STRING_TELEPORTERS"] = "Teleporters"
+L["STRING_TELEPORT"] = "傳送"
+L["STRING_TELEPORTERS"] = "傳送門"
 L["STRING_TEXTURE"] = "材質"
 L["STRING_TIME_OF_DEATH"] = "死亡"
 L["STRING_TOOOLD"] = "無法安裝，因為你的 Details! 版本太舊。"
 L["STRING_TOP"] = "上"
 L["STRING_TOP_TO_BOTTOM"] = "從上到下"
 L["STRING_TOTAL"] = "總計"
+L["STRING_TRAINING_DUMMY"] = "訓練假人"
 L["STRING_TRANSLATE_LANGUAGE"] = "請幫忙翻譯 Details!"
 L["STRING_TUTORIAL_FULLY_DELETE_WINDOW"] = [=[你關閉了視窗，任何時候都可以再次將它打開。
 

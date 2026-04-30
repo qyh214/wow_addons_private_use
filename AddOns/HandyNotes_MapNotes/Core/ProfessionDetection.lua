@@ -145,444 +145,547 @@ function ns.AutomaticProfessionDetection()
             or IsSpellKnown(271664) -- Draenor
             or IsSpellKnown(271660) -- Cataclysm
 
+    local detectedMainProfessionCount = 0
+    if alchemy then detectedMainProfessionCount = detectedMainProfessionCount + 1 end
+    if blacksmith then detectedMainProfessionCount = detectedMainProfessionCount + 1 end
+    if enchanting then detectedMainProfessionCount = detectedMainProfessionCount + 1 end
+    if engineer then detectedMainProfessionCount = detectedMainProfessionCount + 1 end
+    if herbalism then detectedMainProfessionCount = detectedMainProfessionCount + 1 end
+    if inscription then detectedMainProfessionCount = detectedMainProfessionCount + 1 end
+    if jewelcrafting then detectedMainProfessionCount = detectedMainProfessionCount + 1 end
+    if mining then detectedMainProfessionCount = detectedMainProfessionCount + 1 end
+    if leatherworking then detectedMainProfessionCount = detectedMainProfessionCount + 1 end
+    if skinning then detectedMainProfessionCount = detectedMainProfessionCount + 1 end
+    if tailoring then detectedMainProfessionCount = detectedMainProfessionCount + 1 end
+
+    local detectedSecondaryProfessionCount = 0
+    if archaeology then detectedSecondaryProfessionCount = detectedSecondaryProfessionCount + 1 end
+    if cooking then detectedSecondaryProfessionCount = detectedSecondaryProfessionCount + 1 end
+    if firstAid then detectedSecondaryProfessionCount = detectedSecondaryProfessionCount + 1 end
+    if fishing then detectedSecondaryProfessionCount = detectedSecondaryProfessionCount + 1 end
+
     if ns.Addon.db.profile.showCapitalsProfessionDetection then
+        local showAllCapitalsMainProfessions = detectedMainProfessionCount < 2
+        local showAllCapitalsSecondaryProfessions = detectedSecondaryProfessionCount < 2
 
-        if alchemy and ns.Addon.db.profile.showCapitalsAlchemy == false then
+        if showAllCapitalsMainProfessions then
             ns.Addon.db.profile.showCapitalsAlchemy = true
-        end
-        if not alchemy then
-            ns.Addon.db.profile.showCapitalsAlchemy = false
-        end
-
-        if archaeology and ns.Addon.db.profile.showCapitalsArchaeology == false then
-            ns.Addon.db.profile.showCapitalsArchaeology = true
-        end
-        if not archaeology then
-            ns.Addon.db.profile.showCapitalsArchaeology = false
-        end
-
-        if blacksmith and ns.Addon.db.profile.showCapitalsBlacksmith == false then
             ns.Addon.db.profile.showCapitalsBlacksmith = true
-        end
-        if not blacksmith then
-            ns.Addon.db.profile.showCapitalsBlacksmith = false
-        end
-
-        if enchanting and ns.Addon.db.profile.showCapitalsEnchanting == false then
             ns.Addon.db.profile.showCapitalsEnchanting = true
-        end
-        if not enchanting then
-            ns.Addon.db.profile.showCapitalsEnchanting = false
-        end
-
-        if engineer and ns.Addon.db.profile.showCapitalsEngineer == false then
             ns.Addon.db.profile.showCapitalsEngineer = true
-        end
-        if not engineer then
-            ns.Addon.db.profile.showCapitalsEngineer = false
-        end
-
-        if herbalism and ns.Addon.db.profile.showCapitalsHerbalism == false then
             ns.Addon.db.profile.showCapitalsHerbalism = true
-        end
-        if not herbalism then
-            ns.Addon.db.profile.showCapitalsHerbalism = false
-        end
-
-        if inscription and ns.Addon.db.profile.showCapitalsInscription == false then
             ns.Addon.db.profile.showCapitalsInscription = true
-        end
-        if not inscription then
-            ns.Addon.db.profile.showCapitalsInscription = false
-        end
-
-        if jewelcrafting and ns.Addon.db.profile.showCapitalsJewelcrafting == false then
             ns.Addon.db.profile.showCapitalsJewelcrafting = true
-        end
-        if not jewelcrafting then
-            ns.Addon.db.profile.showCapitalsJewelcrafting = false
-        end
-
-        if mining and ns.Addon.db.profile.showCapitalsMining == false then
             ns.Addon.db.profile.showCapitalsMining = true
-        end
-        if not mining then
-            ns.Addon.db.profile.showCapitalsMining = false
-        end
-
-        if leatherworking and ns.Addon.db.profile.showCapitalsLeatherworking == false then
             ns.Addon.db.profile.showCapitalsLeatherworking = true
-        end
-        if not leatherworking then
-            ns.Addon.db.profile.showCapitalsLeatherworking = false
-        end
-
-        if skinning and ns.Addon.db.profile.showCapitalsSkinning == false then
             ns.Addon.db.profile.showCapitalsSkinning = true
-        end
-        if not skinning then
-            ns.Addon.db.profile.showCapitalsSkinning = false
-        end
-
-        if tailoring and ns.Addon.db.profile.showCapitalsTailoring == false then
             ns.Addon.db.profile.showCapitalsTailoring = true
-        end
-        if not tailoring then
-            ns.Addon.db.profile.showCapitalsTailoring = false
+        else
+            if alchemy and ns.Addon.db.profile.showCapitalsAlchemy == false then
+                ns.Addon.db.profile.showCapitalsAlchemy = true
+            end
+            if not alchemy then
+                ns.Addon.db.profile.showCapitalsAlchemy = false
+            end
+
+            if blacksmith and ns.Addon.db.profile.showCapitalsBlacksmith == false then
+                ns.Addon.db.profile.showCapitalsBlacksmith = true
+            end
+            if not blacksmith then
+                ns.Addon.db.profile.showCapitalsBlacksmith = false
+            end
+
+            if enchanting and ns.Addon.db.profile.showCapitalsEnchanting == false then
+                ns.Addon.db.profile.showCapitalsEnchanting = true
+            end
+            if not enchanting then
+                ns.Addon.db.profile.showCapitalsEnchanting = false
+            end
+
+            if engineer and ns.Addon.db.profile.showCapitalsEngineer == false then
+                ns.Addon.db.profile.showCapitalsEngineer = true
+            end
+            if not engineer then
+                ns.Addon.db.profile.showCapitalsEngineer = false
+            end
+
+            if herbalism and ns.Addon.db.profile.showCapitalsHerbalism == false then
+                ns.Addon.db.profile.showCapitalsHerbalism = true
+            end
+            if not herbalism then
+                ns.Addon.db.profile.showCapitalsHerbalism = false
+            end
+
+            if inscription and ns.Addon.db.profile.showCapitalsInscription == false then
+                ns.Addon.db.profile.showCapitalsInscription = true
+            end
+            if not inscription then
+                ns.Addon.db.profile.showCapitalsInscription = false
+            end
+
+            if jewelcrafting and ns.Addon.db.profile.showCapitalsJewelcrafting == false then
+                ns.Addon.db.profile.showCapitalsJewelcrafting = true
+            end
+            if not jewelcrafting then
+                ns.Addon.db.profile.showCapitalsJewelcrafting = false
+            end
+
+            if mining and ns.Addon.db.profile.showCapitalsMining == false then
+                ns.Addon.db.profile.showCapitalsMining = true
+            end
+            if not mining then
+                ns.Addon.db.profile.showCapitalsMining = false
+            end
+
+            if leatherworking and ns.Addon.db.profile.showCapitalsLeatherworking == false then
+                ns.Addon.db.profile.showCapitalsLeatherworking = true
+            end
+            if not leatherworking then
+                ns.Addon.db.profile.showCapitalsLeatherworking = false
+            end
+
+            if skinning and ns.Addon.db.profile.showCapitalsSkinning == false then
+                ns.Addon.db.profile.showCapitalsSkinning = true
+            end
+            if not skinning then
+                ns.Addon.db.profile.showCapitalsSkinning = false
+            end
+
+            if tailoring and ns.Addon.db.profile.showCapitalsTailoring == false then
+                ns.Addon.db.profile.showCapitalsTailoring = true
+            end
+            if not tailoring then
+                ns.Addon.db.profile.showCapitalsTailoring = false
+            end
         end
 
-        if cooking and ns.Addon.db.profile.showCapitalsCooking == false then
+        if showAllCapitalsSecondaryProfessions then
+            ns.Addon.db.profile.showCapitalsArchaeology = true
             ns.Addon.db.profile.showCapitalsCooking = true
-        end
-        if not cooking then
-            ns.Addon.db.profile.showCapitalsCooking = false
-        end
-
-        if firstAid and ns.Addon.db.profile.showCapitalsFirstAid == false then
             ns.Addon.db.profile.showCapitalsFirstAid = true
-        end
-        if not firstAid then
-            ns.Addon.db.profile.showCapitalsFirstAid = false
-        end
-
-        if fishing and ns.Addon.db.profile.showCapitalsFishing == false then
             ns.Addon.db.profile.showCapitalsFishing = true
-        end
-        if not fishing then
-            ns.Addon.db.profile.showCapitalsFishing = false
-        end
+        else
+            if archaeology and ns.Addon.db.profile.showCapitalsArchaeology == false then
+                ns.Addon.db.profile.showCapitalsArchaeology = true
+            end
+            if not archaeology then
+                ns.Addon.db.profile.showCapitalsArchaeology = false
+            end
 
+            if cooking and ns.Addon.db.profile.showCapitalsCooking == false then
+                ns.Addon.db.profile.showCapitalsCooking = true
+            end
+            if not cooking then
+                ns.Addon.db.profile.showCapitalsCooking = false
+            end
+
+            if firstAid and ns.Addon.db.profile.showCapitalsFirstAid == false then
+                ns.Addon.db.profile.showCapitalsFirstAid = true
+            end
+            if not firstAid then
+                ns.Addon.db.profile.showCapitalsFirstAid = false
+            end
+
+            if fishing and ns.Addon.db.profile.showCapitalsFishing == false then
+                ns.Addon.db.profile.showCapitalsFishing = true
+            end
+            if not fishing then
+                ns.Addon.db.profile.showCapitalsFishing = false
+            end
+        end
     end
 
-
     if ns.Addon.db.profile.showMinimapCapitalsProfessionDetection then
+        local showAllMinimapCapitalsMainProfessions = detectedMainProfessionCount < 2
+        local showAllMinimapCapitalsSecondaryProfessions = detectedSecondaryProfessionCount < 2
 
-        if alchemy and ns.Addon.db.profile.showMinimapCapitalsAlchemy == false then
+        if showAllMinimapCapitalsMainProfessions then
             ns.Addon.db.profile.showMinimapCapitalsAlchemy = true
-        end
-        if not alchemy then
-            ns.Addon.db.profile.showMinimapCapitalsAlchemy = false
-        end
-
-        if archaeology and ns.Addon.db.profile.showMinimapCapitalsArchaeology == false then
-            ns.Addon.db.profile.showMinimapCapitalsArchaeology = true
-        end
-        if not archaeology then
-            ns.Addon.db.profile.showMinimapCapitalsArchaeology = false
-        end
-
-        if blacksmith and ns.Addon.db.profile.showMinimapCapitalsBlacksmith == false then
             ns.Addon.db.profile.showMinimapCapitalsBlacksmith = true
-        end
-        if not blacksmith then
-            ns.Addon.db.profile.showMinimapCapitalsBlacksmith = false
-        end
-
-        if enchanting and ns.Addon.db.profile.showMinimapCapitalsEnchanting == false then
             ns.Addon.db.profile.showMinimapCapitalsEnchanting = true
-        end
-        if not enchanting then
-            ns.Addon.db.profile.showMinimapCapitalsEnchanting = false
-        end
-
-        if engineer and ns.Addon.db.profile.showMinimapCapitalsEngineer == false then
             ns.Addon.db.profile.showMinimapCapitalsEngineer = true
-        end
-        if not engineer then
-            ns.Addon.db.profile.showMinimapCapitalsEngineer = false
-        end
-
-        if herbalism and ns.Addon.db.profile.showMinimapCapitalsHerbalism == false then
             ns.Addon.db.profile.showMinimapCapitalsHerbalism = true
-        end
-        if not herbalism then
-            ns.Addon.db.profile.showMinimapCapitalsHerbalism = false
-        end
-
-        if inscription and ns.Addon.db.profile.showMinimapCapitalsInscription == false then
             ns.Addon.db.profile.showMinimapCapitalsInscription = true
-        end
-        if not inscription then
-            ns.Addon.db.profile.showMinimapCapitalsInscription = false
-        end
-
-        if jewelcrafting and ns.Addon.db.profile.showMinimapCapitalsJewelcrafting == false then
             ns.Addon.db.profile.showMinimapCapitalsJewelcrafting = true
-        end
-        if not jewelcrafting then
-            ns.Addon.db.profile.showMinimapCapitalsJewelcrafting = false
-        end
-
-        if mining and ns.Addon.db.profile.showMinimapCapitalsMining == false then
             ns.Addon.db.profile.showMinimapCapitalsMining = true
-        end
-        if not mining then
-            ns.Addon.db.profile.showMinimapCapitalsMining = false
-        end
-
-        if leatherworking and ns.Addon.db.profile.showMinimapCapitalsLeatherworking == false then
             ns.Addon.db.profile.showMinimapCapitalsLeatherworking = true
-        end
-        if not leatherworking then
-            ns.Addon.db.profile.showMinimapCapitalsLeatherworking = false
-        end
-
-        if skinning and ns.Addon.db.profile.showMinimapCapitalsSkinning == false then
             ns.Addon.db.profile.showMinimapCapitalsSkinning = true
-        end
-        if not skinning then
-            ns.Addon.db.profile.showMinimapCapitalsSkinning = false
-        end
-
-        if tailoring and ns.Addon.db.profile.showMinimapCapitalsTailoring == false then
             ns.Addon.db.profile.showMinimapCapitalsTailoring = true
-        end
-        if not tailoring then
-            ns.Addon.db.profile.showMinimapCapitalsTailoring = false
+        else
+            if alchemy and ns.Addon.db.profile.showMinimapCapitalsAlchemy == false then
+                ns.Addon.db.profile.showMinimapCapitalsAlchemy = true
+            end
+            if not alchemy then
+                ns.Addon.db.profile.showMinimapCapitalsAlchemy = false
+            end
+
+            if blacksmith and ns.Addon.db.profile.showMinimapCapitalsBlacksmith == false then
+                ns.Addon.db.profile.showMinimapCapitalsBlacksmith = true
+            end
+            if not blacksmith then
+                ns.Addon.db.profile.showMinimapCapitalsBlacksmith = false
+            end
+
+            if enchanting and ns.Addon.db.profile.showMinimapCapitalsEnchanting == false then
+                ns.Addon.db.profile.showMinimapCapitalsEnchanting = true
+            end
+            if not enchanting then
+                ns.Addon.db.profile.showMinimapCapitalsEnchanting = false
+            end
+
+            if engineer and ns.Addon.db.profile.showMinimapCapitalsEngineer == false then
+                ns.Addon.db.profile.showMinimapCapitalsEngineer = true
+            end
+            if not engineer then
+                ns.Addon.db.profile.showMinimapCapitalsEngineer = false
+            end
+
+            if herbalism and ns.Addon.db.profile.showMinimapCapitalsHerbalism == false then
+                ns.Addon.db.profile.showMinimapCapitalsHerbalism = true
+            end
+            if not herbalism then
+                ns.Addon.db.profile.showMinimapCapitalsHerbalism = false
+            end
+
+            if inscription and ns.Addon.db.profile.showMinimapCapitalsInscription == false then
+                ns.Addon.db.profile.showMinimapCapitalsInscription = true
+            end
+            if not inscription then
+                ns.Addon.db.profile.showMinimapCapitalsInscription = false
+            end
+
+            if jewelcrafting and ns.Addon.db.profile.showMinimapCapitalsJewelcrafting == false then
+                ns.Addon.db.profile.showMinimapCapitalsJewelcrafting = true
+            end
+            if not jewelcrafting then
+                ns.Addon.db.profile.showMinimapCapitalsJewelcrafting = false
+            end
+
+            if mining and ns.Addon.db.profile.showMinimapCapitalsMining == false then
+                ns.Addon.db.profile.showMinimapCapitalsMining = true
+            end
+            if not mining then
+                ns.Addon.db.profile.showMinimapCapitalsMining = false
+            end
+
+            if leatherworking and ns.Addon.db.profile.showMinimapCapitalsLeatherworking == false then
+                ns.Addon.db.profile.showMinimapCapitalsLeatherworking = true
+            end
+            if not leatherworking then
+                ns.Addon.db.profile.showMinimapCapitalsLeatherworking = false
+            end
+
+            if skinning and ns.Addon.db.profile.showMinimapCapitalsSkinning == false then
+                ns.Addon.db.profile.showMinimapCapitalsSkinning = true
+            end
+            if not skinning then
+                ns.Addon.db.profile.showMinimapCapitalsSkinning = false
+            end
+
+            if tailoring and ns.Addon.db.profile.showMinimapCapitalsTailoring == false then
+                ns.Addon.db.profile.showMinimapCapitalsTailoring = true
+            end
+            if not tailoring then
+                ns.Addon.db.profile.showMinimapCapitalsTailoring = false
+            end
         end
 
-
-        if cooking and ns.Addon.db.profile.showMinimapCapitalsCooking == false then
+        if showAllMinimapCapitalsSecondaryProfessions then
+            ns.Addon.db.profile.showMinimapCapitalsArchaeology = true
             ns.Addon.db.profile.showMinimapCapitalsCooking = true
-        end
-        if not cooking then
-            ns.Addon.db.profile.showMinimapCapitalsCooking = false
-        end
-
-
-        if firstAid and ns.Addon.db.profile.showMinimapCapitalsFirstAid == false then
             ns.Addon.db.profile.showMinimapCapitalsFirstAid = true
-        end
-        if not firstAid then
-            ns.Addon.db.profile.showMinimapCapitalsFirstAid = false
-        end
-
-
-        if fishing and ns.Addon.db.profile.showMinimapCapitalsFishing == false then
             ns.Addon.db.profile.showMinimapCapitalsFishing = true
+        else
+            if archaeology and ns.Addon.db.profile.showMinimapCapitalsArchaeology == false then
+                ns.Addon.db.profile.showMinimapCapitalsArchaeology = true
+            end
+            if not archaeology then
+                ns.Addon.db.profile.showMinimapCapitalsArchaeology = false
+            end
+
+            if cooking and ns.Addon.db.profile.showMinimapCapitalsCooking == false then
+                ns.Addon.db.profile.showMinimapCapitalsCooking = true
+            end
+            if not cooking then
+                ns.Addon.db.profile.showMinimapCapitalsCooking = false
+            end
+
+            if firstAid and ns.Addon.db.profile.showMinimapCapitalsFirstAid == false then
+                ns.Addon.db.profile.showMinimapCapitalsFirstAid = true
+            end
+            if not firstAid then
+                ns.Addon.db.profile.showMinimapCapitalsFirstAid = false
+            end
+
+            if fishing and ns.Addon.db.profile.showMinimapCapitalsFishing == false then
+                ns.Addon.db.profile.showMinimapCapitalsFishing = true
+            end
+            if not fishing then
+                ns.Addon.db.profile.showMinimapCapitalsFishing = false
+            end
         end
-        if not fishing then
-            ns.Addon.db.profile.showMinimapCapitalsFishing = false
-        end
-        
     end
 
     if ns.Addon.db.profile.showZoneProfessionDetection then
+        local showAllZoneMainProfessions = detectedMainProfessionCount < 2
+        local showAllZoneSecondaryProfessions = detectedSecondaryProfessionCount < 2
         
-        if alchemy and ns.Addon.db.profile.showZoneAlchemy == false then
+        if showAllZoneMainProfessions then
             ns.Addon.db.profile.showZoneAlchemy = true
-        end
-        if not alchemy then
-            ns.Addon.db.profile.showZoneAlchemy = false
-        end
-
-        if archaeology and ns.Addon.db.profile.showZoneArchaeology == false then
-            ns.Addon.db.profile.showZoneArchaeology = true
-        end
-        if not archaeology then
-            ns.Addon.db.profile.showZoneArchaeology = false
-        end
-
-        if blacksmith and ns.Addon.db.profile.showZoneBlacksmith == false then
             ns.Addon.db.profile.showZoneBlacksmith = true
-        end
-        if not blacksmith then
-            ns.Addon.db.profile.showZoneBlacksmith = false
-        end
-
-        if enchanting and ns.Addon.db.profile.showZoneEnchanting == false then
             ns.Addon.db.profile.showZoneEnchanting = true
-        end
-        if not enchanting then
-            ns.Addon.db.profile.showZoneEnchanting = false
-        end
-
-        if engineer and ns.Addon.db.profile.showZoneEngineer == false then
             ns.Addon.db.profile.showZoneEngineer = true
-        end
-        if not engineer then
-            ns.Addon.db.profile.showZoneEngineer = false
-        end
-
-        if herbalism and ns.Addon.db.profile.showZoneHerbalism == false then
             ns.Addon.db.profile.showZoneHerbalism = true
-        end
-        if not herbalism then
-            ns.Addon.db.profile.showZoneHerbalism = false
-        end
-
-        if inscription and ns.Addon.db.profile.showZoneInscription == false then
             ns.Addon.db.profile.showZoneInscription = true
-        end
-        if not inscription then
-            ns.Addon.db.profile.showZoneInscription = false
-        end
-
-        if jewelcrafting and ns.Addon.db.profile.showZoneJewelcrafting == false then
             ns.Addon.db.profile.showZoneJewelcrafting = true
-        end
-        if not jewelcrafting then
-            ns.Addon.db.profile.showZoneJewelcrafting = false
-        end
-
-        if mining and ns.Addon.db.profile.showZoneMining == false then
             ns.Addon.db.profile.showZoneMining = true
-        end
-        if not mining then
-            ns.Addon.db.profile.showZoneMining = false
-        end
-
-        if leatherworking and ns.Addon.db.profile.showZoneLeatherworking == false then
             ns.Addon.db.profile.showZoneLeatherworking = true
-        end
-        if not leatherworking then
-            ns.Addon.db.profile.showZoneLeatherworking = false
-        end
-
-        if skinning and ns.Addon.db.profile.showZoneSkinning == false then
             ns.Addon.db.profile.showZoneSkinning = true
-        end
-        if not skinning then
-            ns.Addon.db.profile.showZoneSkinning = false
-        end
-
-        if tailoring and ns.Addon.db.profile.showZoneTailoring == false then
             ns.Addon.db.profile.showZoneTailoring = true
-        end
-        if not tailoring then
-            ns.Addon.db.profile.showZoneTailoring = false
+        else
+            if alchemy and ns.Addon.db.profile.showZoneAlchemy == false then
+                ns.Addon.db.profile.showZoneAlchemy = true
+            end
+            if not alchemy then
+                ns.Addon.db.profile.showZoneAlchemy = false
+            end
+
+            if blacksmith and ns.Addon.db.profile.showZoneBlacksmith == false then
+                ns.Addon.db.profile.showZoneBlacksmith = true
+            end
+            if not blacksmith then
+                ns.Addon.db.profile.showZoneBlacksmith = false
+            end
+
+            if enchanting and ns.Addon.db.profile.showZoneEnchanting == false then
+                ns.Addon.db.profile.showZoneEnchanting = true
+            end
+            if not enchanting then
+                ns.Addon.db.profile.showZoneEnchanting = false
+            end
+
+            if engineer and ns.Addon.db.profile.showZoneEngineer == false then
+                ns.Addon.db.profile.showZoneEngineer = true
+            end
+            if not engineer then
+                ns.Addon.db.profile.showZoneEngineer = false
+            end
+
+            if herbalism and ns.Addon.db.profile.showZoneHerbalism == false then
+                ns.Addon.db.profile.showZoneHerbalism = true
+            end
+            if not herbalism then
+                ns.Addon.db.profile.showZoneHerbalism = false
+            end
+
+            if inscription and ns.Addon.db.profile.showZoneInscription == false then
+                ns.Addon.db.profile.showZoneInscription = true
+            end
+            if not inscription then
+                ns.Addon.db.profile.showZoneInscription = false
+            end
+
+            if jewelcrafting and ns.Addon.db.profile.showZoneJewelcrafting == false then
+                ns.Addon.db.profile.showZoneJewelcrafting = true
+            end
+            if not jewelcrafting then
+                ns.Addon.db.profile.showZoneJewelcrafting = false
+            end
+
+            if mining and ns.Addon.db.profile.showZoneMining == false then
+                ns.Addon.db.profile.showZoneMining = true
+            end
+            if not mining then
+                ns.Addon.db.profile.showZoneMining = false
+            end
+
+            if leatherworking and ns.Addon.db.profile.showZoneLeatherworking == false then
+                ns.Addon.db.profile.showZoneLeatherworking = true
+            end
+            if not leatherworking then
+                ns.Addon.db.profile.showZoneLeatherworking = false
+            end
+
+            if skinning and ns.Addon.db.profile.showZoneSkinning == false then
+                ns.Addon.db.profile.showZoneSkinning = true
+            end
+            if not skinning then
+                ns.Addon.db.profile.showZoneSkinning = false
+            end
+
+            if tailoring and ns.Addon.db.profile.showZoneTailoring == false then
+                ns.Addon.db.profile.showZoneTailoring = true
+            end
+            if not tailoring then
+                ns.Addon.db.profile.showZoneTailoring = false
+            end
         end
 
-        if cooking and ns.Addon.db.profile.showZoneCooking == false then
+        if showAllZoneSecondaryProfessions then
+            ns.Addon.db.profile.showZoneArchaeology = true
             ns.Addon.db.profile.showZoneCooking = true
-        end
-        if not cooking then
-            ns.Addon.db.profile.showZoneCooking = false
-        end
-
-        if firstAid and ns.Addon.db.profile.showZoneFirstAid == false then
             ns.Addon.db.profile.showZoneFirstAid = true
-        end
-        if not firstAid then
-            ns.Addon.db.profile.showZoneFirstAid = false
-        end
-
-        if fishing and ns.Addon.db.profile.showZoneFishing == false then
             ns.Addon.db.profile.showZoneFishing = true
-        end
-        if not fishing then
-            ns.Addon.db.profile.showZoneFishing = false
-        end
+        else
+            if archaeology and ns.Addon.db.profile.showZoneArchaeology == false then
+                ns.Addon.db.profile.showZoneArchaeology = true
+            end
+            if not archaeology then
+                ns.Addon.db.profile.showZoneArchaeology = false
+            end
 
+            if cooking and ns.Addon.db.profile.showZoneCooking == false then
+                ns.Addon.db.profile.showZoneCooking = true
+            end
+            if not cooking then
+                ns.Addon.db.profile.showZoneCooking = false
+            end
+
+            if firstAid and ns.Addon.db.profile.showZoneFirstAid == false then
+                ns.Addon.db.profile.showZoneFirstAid = true
+            end
+            if not firstAid then
+                ns.Addon.db.profile.showZoneFirstAid = false
+            end
+
+            if fishing and ns.Addon.db.profile.showZoneFishing == false then
+                ns.Addon.db.profile.showZoneFishing = true
+            end
+            if not fishing then
+                ns.Addon.db.profile.showZoneFishing = false
+            end
+        end
     end
 
     if ns.Addon.db.profile.showMiniMapProfessionDetection then
+        local showAllMiniMapMainProfessions = detectedMainProfessionCount < 2
+        local showAllMiniMapSecondaryProfessions = detectedSecondaryProfessionCount < 2
         
-        if alchemy and ns.Addon.db.profile.showMiniMapAlchemy == false then
+        if showAllMiniMapMainProfessions then
             ns.Addon.db.profile.showMiniMapAlchemy = true
-        end
-        if not alchemy then
-            ns.Addon.db.profile.showMiniMapAlchemy = false
-        end
-
-        if archaeology and ns.Addon.db.profile.showMiniMapArchaeology == false then
-            ns.Addon.db.profile.showMiniMapArchaeology = true
-        end
-        if not archaeology then
-            ns.Addon.db.profile.showMiniMapArchaeology = false
-        end
-
-        if blacksmith and ns.Addon.db.profile.showMiniMapBlacksmith == false then
             ns.Addon.db.profile.showMiniMapBlacksmith = true
-        end
-        if not blacksmith then
-            ns.Addon.db.profile.showMiniMapBlacksmith = false
-        end
-
-        if enchanting and ns.Addon.db.profile.showMiniMapEnchanting == false then
             ns.Addon.db.profile.showMiniMapEnchanting = true
-        end
-        if not enchanting then
-            ns.Addon.db.profile.showMiniMapEnchanting = false
-        end
-
-        if engineer and ns.Addon.db.profile.showMiniMapEngineer == false then
             ns.Addon.db.profile.showMiniMapEngineer = true
-        end
-        if not engineer then
-            ns.Addon.db.profile.showMiniMapEngineer = false
-        end
-
-        if herbalism and ns.Addon.db.profile.showMiniMapHerbalism == false then
             ns.Addon.db.profile.showMiniMapHerbalism = true
-        end
-        if not herbalism then
-            ns.Addon.db.profile.showMiniMapHerbalism = false
-        end
-
-        if inscription and ns.Addon.db.profile.showMiniMapInscription == false then
             ns.Addon.db.profile.showMiniMapInscription = true
-        end
-        if not inscription then
-            ns.Addon.db.profile.showMiniMapInscription = false
-        end
-
-        if jewelcrafting and ns.Addon.db.profile.showMiniMapJewelcrafting == false then
             ns.Addon.db.profile.showMiniMapJewelcrafting = true
-        end
-        if not jewelcrafting then
-            ns.Addon.db.profile.showMiniMapJewelcrafting = false
-        end
-
-        if mining and ns.Addon.db.profile.showMiniMapMining == false then
             ns.Addon.db.profile.showMiniMapMining = true
-        end
-        if not mining then
-            ns.Addon.db.profile.showMiniMapMining = false
-        end
-
-        if leatherworking and ns.Addon.db.profile.showMiniMapLeatherworking == false then
             ns.Addon.db.profile.showMiniMapLeatherworking = true
-        end
-        if not leatherworking then
-            ns.Addon.db.profile.showMiniMapLeatherworking = false
-        end
-
-        if skinning and ns.Addon.db.profile.showMiniMapSkinning == false then
             ns.Addon.db.profile.showMiniMapSkinning = true
-        end
-        if not skinning then
-            ns.Addon.db.profile.showMiniMapSkinning = false
-        end
-
-        if tailoring and ns.Addon.db.profile.showMiniMapTailoring == false then
             ns.Addon.db.profile.showMiniMapTailoring = true
-        end
-        if not tailoring then
-            ns.Addon.db.profile.showMiniMapTailoring = false
+        else
+            if alchemy and ns.Addon.db.profile.showMiniMapAlchemy == false then
+                ns.Addon.db.profile.showMiniMapAlchemy = true
+            end
+            if not alchemy then
+                ns.Addon.db.profile.showMiniMapAlchemy = false
+            end
+
+            if blacksmith and ns.Addon.db.profile.showMiniMapBlacksmith == false then
+                ns.Addon.db.profile.showMiniMapBlacksmith = true
+            end
+            if not blacksmith then
+                ns.Addon.db.profile.showMiniMapBlacksmith = false
+            end
+
+            if enchanting and ns.Addon.db.profile.showMiniMapEnchanting == false then
+                ns.Addon.db.profile.showMiniMapEnchanting = true
+            end
+            if not enchanting then
+                ns.Addon.db.profile.showMiniMapEnchanting = false
+            end
+
+            if engineer and ns.Addon.db.profile.showMiniMapEngineer == false then
+                ns.Addon.db.profile.showMiniMapEngineer = true
+            end
+            if not engineer then
+                ns.Addon.db.profile.showMiniMapEngineer = false
+            end
+
+            if herbalism and ns.Addon.db.profile.showMiniMapHerbalism == false then
+                ns.Addon.db.profile.showMiniMapHerbalism = true
+            end
+            if not herbalism then
+                ns.Addon.db.profile.showMiniMapHerbalism = false
+            end
+
+            if inscription and ns.Addon.db.profile.showMiniMapInscription == false then
+                ns.Addon.db.profile.showMiniMapInscription = true
+            end
+            if not inscription then
+                ns.Addon.db.profile.showMiniMapInscription = false
+            end
+
+            if jewelcrafting and ns.Addon.db.profile.showMiniMapJewelcrafting == false then
+                ns.Addon.db.profile.showMiniMapJewelcrafting = true
+            end
+            if not jewelcrafting then
+                ns.Addon.db.profile.showMiniMapJewelcrafting = false
+            end
+
+            if mining and ns.Addon.db.profile.showMiniMapMining == false then
+                ns.Addon.db.profile.showMiniMapMining = true
+            end
+            if not mining then
+                ns.Addon.db.profile.showMiniMapMining = false
+            end
+
+            if leatherworking and ns.Addon.db.profile.showMiniMapLeatherworking == false then
+                ns.Addon.db.profile.showMiniMapLeatherworking = true
+            end
+            if not leatherworking then
+                ns.Addon.db.profile.showMiniMapLeatherworking = false
+            end
+
+            if skinning and ns.Addon.db.profile.showMiniMapSkinning == false then
+                ns.Addon.db.profile.showMiniMapSkinning = true
+            end
+            if not skinning then
+                ns.Addon.db.profile.showMiniMapSkinning = false
+            end
+
+            if tailoring and ns.Addon.db.profile.showMiniMapTailoring == false then
+                ns.Addon.db.profile.showMiniMapTailoring = true
+            end
+            if not tailoring then
+                ns.Addon.db.profile.showMiniMapTailoring = false
+            end
         end
 
-        if cooking and ns.Addon.db.profile.showMiniMapCooking == false then
+        if showAllMiniMapSecondaryProfessions then
+            ns.Addon.db.profile.showMiniMapArchaeology = true
             ns.Addon.db.profile.showMiniMapCooking = true
-        end
-        if not cooking then
-            ns.Addon.db.profile.showMiniMapCooking = false
-        end
-
-        if firstAid and ns.Addon.db.profile.showMiniMapFirstAid == false then
             ns.Addon.db.profile.showMiniMapFirstAid = true
-        end
-        if not firstAid then
-            ns.Addon.db.profile.showMiniMapFirstAid = false
-        end
-
-        if fishing and ns.Addon.db.profile.showMiniMapFishing == false then
             ns.Addon.db.profile.showMiniMapFishing = true
-        end
-        if not fishing then
-            ns.Addon.db.profile.showMiniMapFishing = false
-        end
+        else
+            if archaeology and ns.Addon.db.profile.showMiniMapArchaeology == false then
+                ns.Addon.db.profile.showMiniMapArchaeology = true
+            end
+            if not archaeology then
+                ns.Addon.db.profile.showMiniMapArchaeology = false
+            end
 
+            if cooking and ns.Addon.db.profile.showMiniMapCooking == false then
+                ns.Addon.db.profile.showMiniMapCooking = true
+            end
+            if not cooking then
+                ns.Addon.db.profile.showMiniMapCooking = false
+            end
+
+            if firstAid and ns.Addon.db.profile.showMiniMapFirstAid == false then
+                ns.Addon.db.profile.showMiniMapFirstAid = true
+            end
+            if not firstAid then
+                ns.Addon.db.profile.showMiniMapFirstAid = false
+            end
+
+            if fishing and ns.Addon.db.profile.showMiniMapFishing == false then
+                ns.Addon.db.profile.showMiniMapFishing = true
+            end
+            if not fishing then
+                ns.Addon.db.profile.showMiniMapFishing = false
+            end
+        end
     end
 
     if not ns.Addon.db.profile.showZoneProfessionDetection then
@@ -606,7 +709,6 @@ function ns.AutomaticProfessionDetection()
     ns.Addon:FullUpdate()
     HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
 end
-
 
 local function ProfessionDetectionHook()
     C_Timer.After(0.2, ns.AutomaticProfessionDetection)

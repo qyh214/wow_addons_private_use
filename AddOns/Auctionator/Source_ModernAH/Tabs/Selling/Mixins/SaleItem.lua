@@ -316,13 +316,13 @@ end
 -- The exact item name is only loaded when needed as it slows down loading the
 -- bag items too much to do in BagDataProvider.
 function AuctionatorSaleItemMixin:SetItemName()
-  local reagentQuality
+  local reagentQualityInfo
   if Auctionator.Constants.IsRetail then
-    reagentQuality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(self.itemInfo.itemID)
+    reagentQualityInfo = C_TradeSkillUI.GetItemReagentQualityInfo(self.itemInfo.itemID)
   end
   local itemName = self.itemInfo.itemName
-  if reagentQuality then
-    itemName = itemName .. " " .. C_Texture.GetCraftingReagentQualityChatIcon(reagentQuality)
+  if reagentQualityInfo then
+    itemName = itemName .. " " .. CreateAtlasMarkup(reagentQualityInfo.iconChat, 17, 17)
   elseif self.itemInfo.itemLevel then
     itemName = AUCTIONATOR_L_ITEM_NAME_X_ITEM_LEVEL_X:format(itemName, self.itemInfo.itemLevel)
   elseif self.itemInfo.itemLink:find("battlepet", nil, true) then
@@ -400,8 +400,10 @@ function AuctionatorSaleItemMixin:DoSearch(itemInfo, ...)
     sortingOrder = Auctionator.Constants.ItemResultsSorts
   end
 
+  local comparisonKey
   if IsEquipment(itemInfo) then
     self.expectedItemKey = {itemID = itemInfo.itemID, itemLevel = 0, itemSuffix = 0, battlePetSpeciesID = 0}
+    comparisonKey = {itemID = itemInfo.itemID, itemLevel = itemInfo.itemLevel, itemSuffix = 0, battlePetSpeciesID = 0}
     Auctionator.AH.SendSellSearchQueryByItemKey(self.expectedItemKey, {sortingOrder}, true)
   else
     local battlePetID = itemInfo.itemLink:match("battlepet:(%d+)")
@@ -411,9 +413,14 @@ function AuctionatorSaleItemMixin:DoSearch(itemInfo, ...)
     else
       self.expectedItemKey = C_AuctionHouse.MakeItemKey(itemInfo.itemID)
     end
+    comparisonKey = self.expectedItemKey
     Auctionator.AH.SendSearchQueryByItemKey(self.expectedItemKey, {sortingOrder}, true)
   end
-  Auctionator.EventBus:Fire(self, Auctionator.Selling.Events.SellSearchStart, self.expectedItemKey, itemInfo.itemLink)
+  local originalKey = IsValidItem(itemInfo) and C_AuctionHouse.GetItemKeyFromItem(itemInfo.location) or comparisonKey
+  if originalKey.itemLevel == 0 then
+    originalKey = comparisonKey
+  end
+  Auctionator.EventBus:Fire(self, Auctionator.Selling.Events.SellSearchStart, self.expectedItemKey, itemInfo.itemLink, originalKey)
 end
 
 function AuctionatorSaleItemMixin:Reset()
@@ -534,9 +541,10 @@ end
 
 function AuctionatorSaleItemMixin:GetItemResult(itemKey)
   local itemInfo = self.itemInfo or self.lastItemInfo
-  for i = 1, C_AuctionHouse.GetItemSearchResultsQuantity(itemKey) do
+  local compareKey = IsValidItem(itemInfo) and C_AuctionHouse.GetItemKeyFromItem(itemInfo.location) or itemKey
+  for i = 1, C_AuctionHouse.GetNumItemSearchResults(itemKey) do
     local resultInfo = C_AuctionHouse.GetItemSearchResultInfo(itemKey, i)
-    if Auctionator.Selling.DoesItemMatchFromLink(itemInfo.itemLink, resultInfo.itemKey, resultInfo.itemLink) then
+    if Auctionator.Selling.DoesItemMatchFromKey(compareKey, itemInfo.itemLink, resultInfo.itemKey, resultInfo.itemLink) then
       return resultInfo
     end
   end

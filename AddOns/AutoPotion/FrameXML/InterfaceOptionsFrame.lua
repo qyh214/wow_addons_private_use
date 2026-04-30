@@ -146,39 +146,41 @@ function ham.settingsFrame:updatePrio()
 		frame:Hide()
 	end
 
-	-- Add spells to priority frames
-	--if next(ham.spellIDs) ~= nil then
+	-- Add spells to priority frames (skip Recuperate in instanced PvP - not allowed)
 	if next(ham.mySpells) ~= nil then
-		--for i, id in ipairs(ham.spellIDs) do
 		for i, spell in ipairs(ham.mySpells) do
-			local iconTexture, originalIconTexture
-			if isRetail == true then
-				iconTexture, originalIconTexture = C_Spell.GetSpellTexture(spell.getId())
+			if spell.getId() == ham.recuperate.getId() and ham.isInInstancedPvP and ham.isInInstancedPvP() then
+				-- Recuperate not shown in instanced PvP
 			else
-				iconTexture = GetSpellTexture(spell.getId())
+				local iconTexture, originalIconTexture
+				if isRetail == true then
+					iconTexture, originalIconTexture = C_Spell.GetSpellTexture(spell.getId())
+				else
+					iconTexture = GetSpellTexture(spell.getId())
+				end
+				spellCounter = spellCounter + 1
+				local currentFrame = prioFrames[spellCounter]
+				local currentTexture = prioTextures[spellCounter]
+				if currentFrame ~= nil then
+					currentFrame:SetScript("OnEnter", nil)
+					currentFrame:SetScript("OnLeave", nil)
+					currentFrame:HookScript("OnEnter", function(_, btn, down)
+						GameTooltip:SetOwner(currentFrame, "ANCHOR_TOPRIGHT")
+						GameTooltip:SetSpellByID(spell.getId())
+						GameTooltip:Show()
+					end)
+					currentFrame:HookScript("OnLeave", function(_, btn, down)
+						GameTooltip:Hide()
+					end)
+					currentTexture:SetTexture(iconTexture)
+					currentTexture:SetAllPoints(currentFrame)
+					currentFrame.texture = currentTexture
+					currentFrame:Show()
+				else
+					local positionx = (spellCounter - 1) * (ICON_SIZE + (ICON_SIZE / 2))
+					self:createPrioFrame(spell.getId(), iconTexture, positionx, true, false)
+				end
 			end
-			local currentFrame = prioFrames[i]
-			local currentTexture = prioTextures[i]
-			if currentFrame ~= nil then
-				currentFrame:SetScript("OnEnter", nil)
-				currentFrame:SetScript("OnLeave", nil)
-				currentFrame:HookScript("OnEnter", function(_, btn, down)
-					GameTooltip:SetOwner(currentFrame, "ANCHOR_TOPRIGHT")
-					GameTooltip:SetSpellByID(spell.getId())
-					GameTooltip:Show()
-				end)
-				currentFrame:HookScript("OnLeave", function(_, btn, down)
-					GameTooltip:Hide()
-				end)
-				currentTexture:SetTexture(iconTexture)
-				currentTexture:SetAllPoints(currentFrame)
-				currentFrame.texture = currentTexture
-				currentFrame:Show()
-			else
-				self:createPrioFrame(id, iconTexture, positionx, true, false)
-				positionx = positionx + (ICON_SIZE + (ICON_SIZE / 2))
-			end
-			spellCounter = spellCounter + 1
 		end
 	end
 
@@ -291,6 +293,15 @@ function ham.settingsFrame:InitializeOptions()
 		Settings.RegisterAddOnCategory(category)
 		self.panel.categoryID = category:GetID() -- for OpenToCategory use
 	end
+
+	-- Refresh priority preview when panel is shown (e.g. when opening settings in BG/Arena)
+	self.panel:SetScript("OnShow", function()
+		ham.checkTinker()
+		ham.updateHeals()
+		ham.updateMacro()
+		ham.settingsFrame:updatePrio()
+		ham.settingsFrame:updateBandagePrio()
+	end)
 
 	-- inset frame to provide some padding
 	self.content = CreateFrame("Frame", nil, self.panel)
@@ -413,18 +424,18 @@ function ham.settingsFrame:InitializeOptions()
 		end)
 		witheringDreamsPotionButton:SetChecked(HAMDB.witheringDreamsPotion)
 
-		---Cavedwellers Delight---
+		---Refreshing Serum buttons could be renamed---
 		cavedwellerDelightButton = CreateFrame("CheckButton", nil, self.content, "InterfaceOptionsCheckButtonTemplate")
 		cavedwellerDelightButton:SetPoint("TOPLEFT", itemsTitle, PADDING_HORIZONTAL * 2, -PADDING)
 		---@diagnostic disable-next-line: undefined-field
-		cavedwellerDelightButton.Text:SetText(L["Cavedweller's Delight"])
+		cavedwellerDelightButton.Text:SetText(L["Refreshing Serum"])
 		cavedwellerDelightButton:HookScript("OnClick", function(_, btn, down)
 			ham.settingsFrame:updateConfig("cavedwellerDelight", cavedwellerDelightButton:GetChecked())
 		end)
 		cavedwellerDelightButton:HookScript("OnEnter", function(_, btn, down)
 			---@diagnostic disable-next-line: param-type-mismatch
 			GameTooltip:SetOwner(cavedwellerDelightButton, "ANCHOR_TOPRIGHT")
-			GameTooltip:SetItemByID(ham.cavedwellersDelightR3.getId())
+			GameTooltip:SetItemByID(ham.refreshingSerumR2.getId())
 			GameTooltip:Show()
 		end)
 		cavedwellerDelightButton:HookScript("OnLeave", function(_, btn, down)

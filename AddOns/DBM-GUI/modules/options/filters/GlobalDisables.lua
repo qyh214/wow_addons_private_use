@@ -1,0 +1,111 @@
+local L = DBM_GUI_L
+
+--Centralized space to disable any feature from any other panel. Many options are duplicated here, but that's fine
+--It's a one stop shop for disabling any DBM core feature
+local spamPanel = DBM_GUI.Cat_Filters:CreateNewPanel(L.Panel_SpamFilter, "option")
+
+local spamFeatureToggles = spamPanel:CreateArea(L.Area_Global_Toggles)
+spamFeatureToggles:CreateCheckButton(L.NoWarnings, true, nil, "HideDBMWarnings")
+spamFeatureToggles:CreateCheckButton(L.NoTimers, true, nil, "HideDBMBars")
+
+local spamSpecAnnounceFeat = spamPanel:CreateArea(L.Area_SpamFilter_SpecFeatures)
+spamSpecAnnounceFeat:CreateCheckButton(L.SpamBlockNoShowAnnounce, true, nil, "DontShowBossAnnounces")
+spamSpecAnnounceFeat:CreateCheckButton(L.SpamBlockNoSpecWarnText, true, nil, "DontShowSpecialWarningText")
+spamSpecAnnounceFeat:CreateCheckButton(L.SpamBlockNoSpecWarnFlash, true, nil, "DontShowSpecialWarningFlash")
+spamSpecAnnounceFeat:CreateCheckButton(L.SpamBlockNoSpecWarnVibrate, true, nil, "DontDoSpecialWarningVibrate")
+spamSpecAnnounceFeat:CreateCheckButton(L.SpamBlockNoSpecWarnSound, true, nil, "DontPlaySpecialWarningSound")
+
+if DBM:IsPostMidnight() then
+	local spamPrivateAuras = spamPanel:CreateArea(L.Area_Private_Aura_Features)
+	spamPrivateAuras:CreateCheckButton(L.SpamBlockNoPrivateAuraFrame, true, nil, "DontShowPrivateAuraFrame")
+	spamPrivateAuras:CreateCheckButton(L.SpamBlockNoPrivateAuraSound, true, nil, "DontPlayPrivateAuraSound")
+end
+
+local spamTimers = spamPanel:CreateArea(L.Area_SpamFilter_Timers)
+spamTimers:CreateCheckButton(L.SpamBlockNoShowBossTimers, true, nil, "DontShowBossTimers")
+spamTimers:CreateCheckButton(L.SpamBlockNoShowEventTimers, true, nil, "DontShowEventTimers")
+spamTimers:CreateCheckButton(L.SpamBlockNoShowUTimers, true, nil, "DontShowUserTimers")
+spamTimers:CreateCheckButton(L.SpamBlockNoCountdowns, true, nil, "DontPlayCountdowns")
+local NoTLButton = spamTimers:CreateCheckButton(L.SpamBlockNoTLColors, true, nil, "DontSetTimelineColors")
+NoTLButton:SetScript("OnClick", function()
+	DBM.Options.DontSetTimelineColors = not DBM.Options.DontSetTimelineColors
+	if DBM.Options.DontSetTimelineColors then
+		--Apply user bar color to all bars by default, since blizzard applies white (or red) to all of them by default now
+		local timerRed, timerGreen, timerBlue = DBT:GetColorForType(0)
+		--https://wago.tools/db2/EncounterEvent?page=25
+		for i = 1, 733 do
+			C_EncounterEvents.SetEventColor(i, {r = timerRed, g = timerGreen, b = timerBlue})
+		end
+	else
+		for i = 1, 688 do
+			C_EncounterEvents.SetEventColor(i, nil)
+		end
+	end
+end)
+if not DBM:IsPostMidnight() then
+	spamTimers:CreateCheckButton(L.SpamBlockNoShowTrashTimers, true, nil, "DontShowTrashTimers")
+end
+
+if not DBM:IsPostMidnight() then
+	local spamNameplates = spamPanel:CreateArea(L.Area_SpamFilter_Nameplates)
+	local Plater = _G["Plater"]
+	local ThreatPlates = _G["TidyPlatesThreatDBM"] and _G["TidyPlatesThreat"]
+	if Plater then--Plater button disabled for now
+		local platerButton = spamNameplates:CreateButton(L.Plater_Config, 100, 25)
+		platerButton:SetPoint("CENTER", spamNameplates.frame, "CENTER", 0, 0)
+		platerButton:SetNormalFontObject(GameFontNormal)
+		platerButton:SetHighlightFontObject(GameFontNormal)
+		platerButton:SetScript("OnClick", function()
+			Plater.OpenOptionsPanel(28)--Open Plater boss mod options
+			local optionsFrame = _G["DBM_GUI_OptionsFrame"]
+			optionsFrame:Hide()--Close DBM GUI (cause it has higher strata than plater
+		end)
+		platerButton.myheight = 25
+	elseif ThreatPlates then--Threat Plates button disabled for now
+		local tpButton = spamNameplates:CreateButton(L.ThreatPlates_Config, 100, 25)
+		tpButton:SetPoint("CENTER", spamNameplates.frame, "CENTER", 0, 0)
+		tpButton:SetNormalFontObject(GameFontNormal)
+		tpButton:SetHighlightFontObject(GameFontNormal)
+		tpButton:SetScript("OnClick", function()
+			ThreatPlates:OpenOptionsDialog("BossMods")--Open Threat Plates boss mod options
+			local optionsFrame = _G["DBM_GUI_OptionsFrame"]
+			optionsFrame:Hide()--Close DBM GUI (cause it has higher strata than ThreatPlates
+		end)
+		tpButton.myheight = 25
+	else
+		spamNameplates:CreateCheckButton(L.SpamBlockNoNameplate, true, nil, "DontShowNameplateIcons")
+		spamNameplates:CreateCheckButton(L.SpamBlockNoNameplateCD, true, nil, "DontShowNameplateIconsCD")
+		spamNameplates:CreateCheckButton(L.SpamBlockNoNameplateCasts, true, nil, "DontShowNameplateIconsCast")
+		spamNameplates:CreateCheckButton(L.SpamBlockNoBossGUIDs, true, nil, "DontSendBossGUIDs")
+	end
+end
+
+local spamMisc = spamPanel:CreateArea(L.Area_SpamFilter_Misc)
+if not DBM:IsPostMidnight() then
+	spamMisc:CreateCheckButton(L.SpamBlockNoYells, true, nil, "DontSendYells")
+	spamMisc:CreateCheckButton(L.SpamBlockNoSetIcon, true, nil, "DontSetIcons")
+	spamMisc:CreateCheckButton(L.SpamBlockNoRangeFrame, true, nil, "DontShowRangeFrame")
+	spamMisc:CreateCheckButton(L.SpamBlockNoInfoFrame, true, nil, "DontShowInfoFrame")
+end
+spamMisc:CreateCheckButton(L.SpamBlockNoHudMap, true, nil, "DontShowHudMap2")
+spamMisc:CreateCheckButton(L.SpamBlockNoNoteSync, true, nil, "BlockNoteShare")
+spamMisc:CreateCheckButton(L.SpamBlockAutoGossip, true, nil, "DontAutoGossip")
+
+if not DBM:IsPostMidnight() then
+	local spamRestoreArea = spamPanel:CreateArea(L.Area_Restore)
+	spamRestoreArea:CreateCheckButton(L.SpamBlockNoIconRestore, true, nil, "DontRestoreIcons")
+	spamRestoreArea:CreateCheckButton(L.SpamBlockNoRangeRestore, true, nil, "DontRestoreRange")
+end
+
+local spamPTArea = spamPanel:CreateArea(L.Area_PullTimer)
+spamPTArea:CreateCheckButton(L.DontShowPTNoID, true, nil, "DontShowPTNoID")
+spamPTArea:CreateCheckButton(L.DontShowPT, true, nil, "DontShowPT2")
+spamPTArea:CreateCheckButton(L.DontShowPTText, true, nil, "DontShowPTText")
+local SPTCDA = spamPTArea:CreateCheckButton(L.DontPlayPTCountdown, true, nil, "DontPlayPTCountdown")
+
+local PTSlider = spamPTArea:CreateSlider(L.PT_Threshold, 1, 10, 1, 300)
+PTSlider:SetPoint("BOTTOMLEFT", SPTCDA, "BOTTOMLEFT", 80, -40)
+PTSlider:SetValue(math.floor(DBM.Options.PTCountThreshold2))
+PTSlider:HookScript("OnValueChanged", function(self)
+	DBM.Options.PTCountThreshold2 = math.floor(self:GetValue())
+end)

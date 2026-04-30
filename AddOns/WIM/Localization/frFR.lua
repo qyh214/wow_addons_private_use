@@ -31,11 +31,9 @@ WIM.AddLocale("frFR", {
     ["state_raid"] = "Groupe de raid",
     ["state_other"] = "Normal (Divers)",
 
-    ["<Shift-Click> to close window."] = "<Maj-Clic> pour fermer la fenêtre.",
-
     ["A new version of WIM is available!\nYou can download the latest version from curse"] = "Une nouvelle version de WIM est disponible !\nVous pouvez télécharger la dernière version sur Curse.",
 
-    ["Options"] = "Options",
+    ["Options"] = true,
 
     ["Icon Position"] = "Position de l'icône",
     ["Font Size"] = "Taille de la police",
@@ -228,6 +226,7 @@ WIM.AddLocale("frFR", {
 	["Game"] = "Jeu",
 	["Realm"] = "Royaume",
 	["Character"] = "Personnage",
+	["Copy Name"] = "Copier le nom",
 
     -- Tutorials.lua --
     ["Display WIM tips"] = "Afficher les astuces",
@@ -290,6 +289,7 @@ WIM.AddLocale("frFR", {
     ["Enable WIM"] = "Activer WIM",
     ["Display Minimap Icon"] = "Afficher l'icône sur la minicarte",
     ["<Right-Click> to show unread messages."] = "<Clic-droit> Pour afficher les messages non lus",
+	["Display Addon Compartment Icon"] = "Afficher l’icône du compartiment des addons",
     ["Display Tutorials"] = "Afficher le tutorial",
     ["Reset Tutorials"] = "Réinitialiser le tutorial",
     ["Credits"] = "Crédits",
@@ -305,6 +305,7 @@ WIM.AddLocale("frFR", {
     ["Window Behavior"] = "Comportement",
     ["You can control how windows behave while you are in different situations."] = "Vous pouvez contrôler la façon dont se comportent les fenêtres lorsque vous êtes dans des situations différentes.",
     ["Intercept Slash Commands"] = "Intercepter les commandes slash",
+    ["Include sent messages in /REPLY."] = "Inclure les messages envoyés dans /r",
 	["Obey autofocus rules when opening frames via the menu. (autofocus if unchecked)"] = "Respecter les règles d'autofocus lors de l'ouverture des fenêtres",
     ["Use the same rules for all states."] = "Utilisez les mêmes règles pour tous les etats",
     ["Behaviors for state:"] = "Comportements pour l'etat :",
@@ -400,6 +401,12 @@ WIM.AddLocale("frFR", {
     ["Play sound when a whisper is sent."] = "Jouer un son lorsqu'un chuchotement est envoyé",
     ["Allow others to see my talent spec."] = "Permettre aux autres de voir mes talents",
     ["Window Strata:"] = "Strate de la fenêtre :",
+	["Background"] = BACKGROUND,
+	["Low"] = LOW,
+	["Medium"] = "Moyenne",
+	["High"] = "Élevée",
+	["Dialog"] = ENABLE_DIALOG,
+	["Tooltip"] = "Infobulle",
     ["Unlock from Minimap"] = "Déverrouiller de la minicarte",
 	["Press <Tab> to advance to next tell target."] = "Appuyer sur <Tab> pour passer à la prochaine cible",
     ["Force sounds when game sound is disabled."] = "Forcer les sons lorsque le son du jeu est désactivé",
@@ -511,7 +518,8 @@ WIM.AddLocale("frFR", {
 	["WIM has detected that you are playing on a private server. Some servers can not process ChatAddonMessages. Would you like to enable them anyway?"] = "WIM a détecté que vous jouez sur un serveur privé. Certains serveurs ne peuvent pas traiter les ChatAddonMessages. Voulez-vous les activer quand même ?",
 
 	-- Whisper Mode Warnings
-	["Set whispers to In-line"] = "Régler les chuchotements sur En ligne",
+    ["Whisper Mode: In-line"] = "Mode de chuchotement : en ligne",
+	["Set whispers to In-line"] = "Régler les chuchotements sur en ligne",
 	["Message suppression requires whispers to be set to 'In-line'."] = "La suppression des messages nécessite que les chuchotements soient réglés sur 'En ligne'.",
 	["It is recommended for whispers to be set to in-line in order to handle their behavior properly."] = "Il est recommandé de régler les chuchotements sur En ligne afin de gérer correctement leur comportement.",
 });

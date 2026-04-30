@@ -1,0 +1,44 @@
+## Interface: 120001, 120005
+## Title: Preydator
+## Notes: Tracks Prey Hunt progress with customizable visuals and sounds.
+## Author: RagingAltoholic
+## Category-enUS: Quests
+## Category-koKR: 퀘스트
+## Category-zhCN: 任务
+## Version: 2.2.10
+## AddonCompartmentFunc: Preydator_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: Preydator_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: Preydator_OnAddonCompartmentLeave
+## IconTexture: Interface\AddOns\Preydator\media\Preydator_64.png
+## SavedVariables: PreydatorDB, PreydatorDebugDB
+## OptionalDeps: Blizzard_Settings, LibStub, LibDataBroker-1.1, LibDBIcon-1.0
+
+Locales\Locales.lua
+Locales\enUS.lua
+Locales\deDE.lua
+Locales\frFR.lua
+Locales\esES.lua
+Locales\esMX.lua
+Locales\ptBR.lua
+Locales\itIT.lua
+Locales\ruRU.lua
+Locales\koKR.lua
+Locales\zhCN.lua
+Locales\zhTW.lua
+
+Preydator.lua
+Core\SettingsRuntime.lua
+Core\SoundsRuntime.lua
+Core\PreyContextRuntime.lua
+Core\BarRuntime.lua
+Core\EventRuntime.lua
+Core\DebugRuntime.lua
+Modules\ProfileManager.lua
+Modules\SlashCommands.lua
+Core\Alerts.lua
+Modules\Settings.lua
+Modules\EditMode.lua
+Modules\DebugInspect.lua
+Modules\CurrencyTracker.lua
+Modules\PreyQuestData.lua
+Modules\HuntScanner.lua

@@ -6,22 +6,22 @@ local rowCount = 3
 local requestPartyKeystones
 
 -- 1:Overflowing, 2:Skittish, 3:Volcanic, 4:Necrotic, 5:Teeming, 6:Raging, 7:Bolstering, 8:Sanguine, 9:Tyrannical, 10:Fortified, 11:Bursting, 12:Grievous, 13:Explosive, 14:Quaking, 16:Infested, 117: Reaping, 119:Beguiling 120:Awakened, 121:Prideful, 122:Inspiring, 123:Spiteful, 124:Storming
--- 134:Entangling, 135：Afflicted, 136:Incorporeal
+-- 134:Entangling, 135:Afflicted, 136:Incorporeal
 -- TWW 
--- 147:Xal’atath’s Guile, 148:Xal’atath’s Bargain: Ascendant,158:Xal'atath's Bargain: Voidbound, 159:Xal'atath's Bargain: Oblivion, 160:Xal’atath’s Bargain: Devour, 162:Xal’atath’s Bargain: Pulsar
--- Season 2  
--- 9, 10, 147, 148, 158, 160, 162,
+-- 147:Xal'atath's Guile, 148:Xal'atath's Bargain: Ascendant, 158:Xal'atath's Bargain: Voidbound, 159:Xal'atath's Bargain: Oblivion, 160:Xal'atath's Bargain: Devour, 162:Xal'atath's Bargain: Pulsar, 165:Lindormi's Guidance
+-- Midnight Season 1
+-- 165, 148, 158, 160, 162, 9, 10, 147 
 local affixSchedule = {
-	-- TWW Season 3 (Sort:[1](Level 4+);[2](Level 7+);[3](Level 10+);[4](Level 12+))
-	-- Information from(资料来自)：https://www.wowhead.com/guide/mythic-plus-dungeons/the-war-within-season-3/overview
-	{ [1]=148, [2] =9 , [3]=10, [4]=147, }, -- (1) Xal’atath’s Bargain: Ascendant | Tyrannical | Fortified  | Xal’atath’s Guile
-	{ [1]=162, [2] =10, [3]=9 , [4]=147, }, -- (2) Xal’atath’s Bargain: Pulsar    | Fortified  | Tyrannical | Xal’atath’s Guile
-	{ [1]=158, [2] =9 , [3]=10, [4]=147, }, -- (3) Xal’atath’s Bargain: Voidbound | Tyrannical | Fortified  | Xal’atath’s Guile
-	{ [1]=160, [2] =10, [3]=9 , [4]=147, }, -- (4) Xal’atath’s Bargain: Devour    | Fortified  | Tyrannical | Xal’atath’s Guile
-	{ [1]=162, [2] =9 , [3]=10, [4]=147, }, -- (5) Xal’atath’s Bargain: Pulsar    | Tyrannical | Fortified  | Xal’atath’s Guile
-	{ [1]=148, [2] =10, [3]=9 , [4]=147, }, -- (6) Xal’atath’s Bargain: Ascendant | Fortified  | Tyrannical | Xal’atath’s Guile
-	{ [1]=160, [2] =9 , [3]=10, [4]=147, }, -- (7) Xal’atath’s Bargain: Devour    | Tyrannical | Fortified  | Xal’atath’s Guile
-	{ [1]=158, [2] =10, [3]=9 , [4]=147, }, -- (8) Xal’atath’s Bargain: Voidbound | Fortified  | Tyrannical | Xal’atath’s Guile
+	-- Midnight Season 1 (Sort:[1](Level 2+);[2](Level 5+);[3](Level 7+);[4](Level 10+);[5](Level 12+))
+	-- Information from(资料来自)：https://www.wowhead.com/guide/midnight/mythic-plus-season-1-overview
+	{ [1] = 165, [2] = 162, [3] = 10, [4] = 9 , [5] = 147, }, -- (1) Lindormi's Guidance | Xal'atath's Bargain: Pulsar    | Fortified  | Tyrannical | Xal'atath's Guile
+	{ [1] = 165, [2] = 158, [3] = 9 , [4] = 10, [5] = 147, }, -- (2) Lindormi's Guidance | Xal'atath's Bargain: Voidbound | Tyrannical | Fortified  | Xal'atath's Guile
+	{ [1] = 165, [2] = 160, [3] = 10, [4] = 9 , [5] = 147, }, -- (3) Lindormi's Guidance | Xal'atath's Bargain: Devour    | Fortified  | Tyrannical | Xal'atath's Guile
+	{ [1] = 165, [2] = 148, [3] = 9 , [4] = 10, [5] = 147, }, -- (4) Lindormi's Guidance | Xal'atath's Bargain: Ascendant | Tyrannical | Fortified  | Xal'atath's Guile
+	{ [1] = 165, [2] = 158, [3] = 10, [4] = 9 , [5] = 147, }, -- (5) Lindormi's Guidance | Xal'atath's Bargain: Voidbound | Fortified  | Tyrannical | Xal'atath's Guile
+	{ [1] = 165, [2] = 162, [3] = 9 , [4] = 10, [5] = 147, }, -- (6) Lindormi's Guidance | Xal'atath's Bargain: Pulsar    | Tyrannical | Fortified  | Xal'atath's Guile
+	{ [1] = 165, [2] = 148, [3] = 10, [4] = 9 , [5] = 147, }, -- (7) Lindormi's Guidance | Xal'atath's Bargain: Ascendant | Fortified  | Tyrannical | Xal'atath's Guile
+	{ [1] = 165, [2] = 160, [3] = 9 , [4] = 10, [5] = 147, }, -- (8) Lindormi's Guidance | Xal'atath's Bargain: Devour    | Tyrannical | Fortified  | Xal'atath's Guile
 }
 
 local scheduleEnabled = true
@@ -220,7 +220,7 @@ function Mod:Blizzard_ChallengesUI()
 
 		local affixes = {}
 		local prevAffix
-		for j = 4, 1, -1 do
+		for j = 5, 1, -1 do
 			local affix = makeAffix(entry)
 			if prevAffix then
 				affix:SetPoint("RIGHT", prevAffix, "LEFT", -4, 0)
@@ -331,7 +331,7 @@ function Mod:CheckAffixes()
 
 	if currentAffixes then
 		for index, affixes in ipairs(affixSchedule) do
-			if affixes[1] == currentAffixes[1].id and affixes[2] == currentAffixes[2].id and affixes[3] == currentAffixes[3].id and affixes[4] == currentAffixes[4].id then
+			if #affixes == #currentAffixes and affixes[1] == currentAffixes[1].id and affixes[2] == currentAffixes[2].id and affixes[3] == currentAffixes[3].id and affixes[4] == currentAffixes[4].id and affixes[5] == currentAffixes[5].id then
 				currentWeek = index
 				affixScheduleUnknown = false
 				break
@@ -451,7 +451,7 @@ function Mod:Startup()
 	self:RegisterAddOnLoaded("Blizzard_ChallengesUI")
 	self:RegisterEvent("GROUP_ROSTER_UPDATE", "SetPartyKeystoneRequest")
 	self:RegisterEvent("BAG_UPDATE")
-	self:RegisterEvent("CHAT_MSG_LOOT")
+	-- self:RegisterEvent("CHAT_MSG_LOOT")
 	self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
 	self:RegisterEvent("CHALLENGE_MODE_START")
 	self:RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE", "CHALLENGE_MODE_UPDATED")

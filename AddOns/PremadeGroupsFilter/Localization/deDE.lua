@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2025 Bernhard Saumweber
+-- Copyright (C) 2026 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ L["error.semantic.protected"] = "|cffff0000Semantischer Fehler im Filterausdruck
 L["message.settingsupgraded"] = "Premade Groups Filter: Einstellungen auf Version %s migriert"
 L["message.sortingoverwritten"] = "Premade Groups Filter: Die standardmäßige Sortierreihenfolge organisierter Gruppen wurde durch das Addon %s überschrieben."
 L["message.sortingrestored"] = "Premade Groups Filter: Die standardmäßige Sortierreihenfolge organisierter Gruppen wurde durch das Addon %s wiederhergestellt."
+L["message.taint"] = "Premade Groups Filter: Addon-Einschränkungen sind jetzt aktiv. Die Gruppensuche wurde verändert, was zu Lua-Fehlern führen kann. Ein /reload wird empfohlen, um dies zu beheben."
 
 L["dialog.settings"] = GAMEMENU_OPTIONS
 L["dialog.reset"] = "Zurücksetzen"
@@ -156,3 +157,10 @@ L["settings.rioRatingColors.title"] = "Wertung in Raider.IO-Farben"
 L["settings.rioRatingColors.tooltip"] = "Benutzt das Raider.IO-Farbschema für Mythisch+ Wertungen, falls das Raider.IO-Addon geladen ist."
 L["settings.cancelOldestApp.title"] = "Älteste Anmeldung abbrechen"
 L["settings.cancelOldestApp.tooltip"] = "Wenn Ihr die maximale Anzahl an Gruppenanmeldungen laufen habt, klickt auf eine Gruppe, um Eure älteste Anfrage abzubrechen. Klickt dann erneut, um Euch zu bewerben."
+L["settings.compactListEntries.title"] = "Kompakte Listeneinträge"
+L["settings.compactListEntries.tooltip"] = "Blendet die Spielstil-Zeile aus, damit Einträge in der Gruppensuche weniger vertikalen Platz benötigen (wie vor dem Midnight-Prepatch)."
+L["settings.info.reload"] = "* Änderungen an diesen Optionen führen beim Schließen der Einstellungen automatisch zu einem UI-Reload."
+L["settings.warning.taint"] = "Diese Option kann in eingeschränkten Situationen wie Raids oder im Kampf zu Lua-Fehlermeldungen führen."
+
+L["dialog.restriction.text"] = "Addon-Einschränkungen sind aktiv. Das Filtern kann zu Lua-Fehlern führen."
+L["dialog.restriction.ok"] = "Trotzdem filtern"

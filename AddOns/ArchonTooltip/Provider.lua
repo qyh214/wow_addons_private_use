@@ -7,6 +7,7 @@ local Private = select(2, ...)
 ---@field realm string
 ---@field date string
 ---@field data table<string, ProviderProfileV2>
+---@field getChunk fun(characterName: string): string|nil
 
 ---@type table<string, Provider>
 local providers = {}
@@ -305,25 +306,31 @@ function ArchonTooltip.AddProviderV2(lookup, provider)
 					return cache[key]
 				end
 
-				local prefix
-
-				-- string.sub works with byte indexes, but UTF8 strings can be multi-byte (like Lâ), so we find the byte index where the second character ends and sub up to that
-				local startOfThirdUtf8Character = Private.Utf8Offset(key, 3)
-
-				-- characters don't necessarily have 3 utf8 bytes
-				if startOfThirdUtf8Character == nil then
-					prefix = key
+				local chunk
+				if provider.getChunk then
+					chunk = provider.getChunk(key)
 				else
-					local endOfSecondUtf8Character = startOfThirdUtf8Character - 1
-					prefix = string.sub(key, 1, endOfSecondUtf8Character)
+					local prefix
+
+					-- string.sub works with byte indexes, but UTF8 strings can be multi-byte (like Lâ), so we find the byte index where the second character ends and sub up to that
+					local startOfThirdUtf8Character = Private.Utf8Offset(key, 3)
+
+					-- characters don't necessarily have 3 utf8 bytes
+					if startOfThirdUtf8Character == nil then
+						prefix = key
+					else
+						local endOfSecondUtf8Character = startOfThirdUtf8Character - 1
+						prefix = string.sub(key, 1, endOfSecondUtf8Character)
+					end
+
+					if prefix == nil then
+						return nil
+					end
+					chunk = rawData[prefix]
 				end
 
-				if prefix == nil then
-					return nil
-				end
-
-				if rawData[prefix] then
-					local name, b64_contents = v2_find(rawData[prefix], key)
+				if chunk then
+					local name, b64_contents = v2_find(chunk, key)
 					local result = nil
 					if name ~= nil then
 						local bin_contents = Private.base64.decode(b64_contents)

@@ -1,0 +1,130 @@
+local ADDON_NAME, mppe = ...
+local Translate = mppe.Translate
+-- -- MythicPlusPageExtension
+-- Translate['Wrong.SettingsMenu not be loaded.'] = '';
+-- Translate['Veteran'] = '';
+-- Translate['Champion'] = '';
+-- Translate['Hero'] = '';
+-- Translate['Myth'] = '';
+-- Translate['There are no records for this week yet!'] = '';
+-- Translate['Top 8 Weekly Mythic+ Runs:'] = '';
+-- Translate['Weekly Mythic+ Total Runs:'] = ''
+-- Translate['Left-Click:Settings'] = ''
+-- Translate['Right-Click:Refresh(Score&Teleport/PartyInfo/WeeklyReport)'] = ''
+-- Translate['Shift + Right-Click:Display Demo'] = ''
+-- Translate['I have used %s and am heading to [%s]!'] = ''
+-- -- ScoreNTeleport
+-- Translate['Click To Teleport'] = '';
+-- Translate['MapID is Null'] = '';
+-- -- Settings
+-- Translate['Mythic Plus Page Extension'] = 'Mythic Plus Page Extension'..' - ' -- Localized name
+-- Translate['Hide MPPE Weekly Report Frame'] = ''
+-- Translate['Hide RaiderIO Frame When Mythic+ Page Opens'] = ''
+-- Translate['Send a message to the party channel after using teleport.'] = ''
+-- Translate['Dungeon Shortname Font Size'] = ''
+-- Translate['The number of characters per line of the Dungeon Shortname'] = ''
+-- Translate['Dungeon Highest Level Font Size'] = ''
+-- Translate['Dungeon Highest Score Font Size'] = ''
+-- Translate['Weekly Report Font Size'] = ''
+-- Translate['Weekly Report Frame Width'] = ''
+-- Translate['References:  KeystoneLoot BugSack WA:uPxmk1k-L WA:ud2YBS4WC\n(and DeepSeek)'] = ''
+-- -- Dungeons Shorname
+-- Vanilla
+--Translate[''] = '';
+-- The Burning Crusade
+--Translate[''] = '';
+-- Wrath Of The Lich King
+-- Translate['PitofSaron'] = '';
+-- -- Cataclysm
+-- Translate['TheVortexPinnacle'] = '';
+-- Translate['ThroneoftheTides'] = '';
+-- Translate['GrimBatol'] = '';
+-- Translate['TheStonecore'] = '';
+-- -- Mists of Pandaria
+-- Translate['TempleoftheJadeSerpent'] = '';
+-- Translate['StormstoutBrewery'] = '';
+-- Translate['GateoftheSettingSun'] = '';
+-- Translate['ShadoPanMonastery'] = '';
+-- Translate['SiegeofNiuzaoTemple'] = '';
+-- Translate['MogushanPalace'] = '';
+-- Translate['Scholomance'] = '';
+-- Translate['ScarletHalls'] = '';
+-- Translate['ScarletMonastery'] = '';
+-- -- Warlords of Draenor
+-- Translate['Skyreach'] = '';
+-- Translate['BloodmaulSlagMines'] = '';
+-- Translate['Auchindoun'] = '';
+-- Translate['ShadowmoonBurialGrounds'] = '';
+-- Translate['GrimrailDepot'] = '';
+-- Translate['UpperBlackrockSpire'] = '';
+-- Translate['TheEverbloom'] = '';
+-- Translate['IronDocks'] = '';
+-- -- Legion
+-- Translate['EyeofAzshara'] = '';
+-- Translate['DarkheartThicket'] = '';
+-- Translate['BlackRookHold'] = '';
+-- Translate['HallsofValor'] = '';
+-- Translate['NeltharionsLair'] = '';
+-- Translate['VaultoftheWardens'] = '';
+-- Translate['MawofSouls'] = '';
+-- Translate['TheArcway'] = '';
+-- Translate['CourtofStars'] = '';
+-- Translate['ReturntoKarazhanLower'] = '';
+-- Translate['CathedralofEternalNight'] = '';
+-- Translate['ReturntoKarazhanUpper'] = '';
+-- Translate['SeatoftheTriumvirate'] = '';
+-- -- Battle for Azeroth
+-- Translate['AtalDazar'] = '';
+-- Translate['Freehold'] = '';
+-- Translate['TolDagor'] = '';
+-- Translate['TheMOTHERLODE'] = '';
+-- Translate['WaycrestManor'] = '';
+-- Translate['KingsRest'] = '';
+-- Translate['TempleofSethraliss'] = '';
+-- Translate['TheUnderrot'] = '';
+-- Translate['ShrineoftheStorm'] = '';
+-- Translate['SiegeofBoralus'] = '';
+-- Translate['OperationMechagonJunkyard'] = '';
+-- Translate['OperationMechagonWorkshop'] = '';
+-- -- Shadowlands
+-- Translate['MistsofTirnaScithe'] = '';
+-- Translate['TheNecroticWake'] = '';
+-- Translate['DeOtherSide'] = '';
+-- Translate['HallsofAtonement'] = '';
+-- Translate['Plaguefall'] = '';
+-- Translate['SanguineDepths'] = '';
+-- Translate['SpiresofAscension'] = '';
+-- Translate['TheaterofPain'] = '';
+-- Translate['TazaveshStreetsofWonder'] = '';
+-- Translate['TazaveshSoleahsGambit'] = '';
+-- -- Dragonflight
+-- Translate['RubyLifePools'] = '';
+-- Translate['TheNokhudOffensive'] = '';
+-- Translate['TheAzureVault'] = '';
+-- Translate['AlgetharAcademy'] = '';
+-- Translate['UldamanLegacyofTyr'] = '';
+-- Translate['Neltharus'] = '';
+-- Translate['BrackenhideHollow'] = '';
+-- Translate['HallsofInfusion'] = '';
+-- Translate['DawnoftheInfiniteGalakrondsFall'] = '';
+-- Translate['DawnoftheInfiniteMurozondsRise'] = '';
+-- -- The War Within
+-- --Translate['PrioryoftheSacredFlame'] = '';
+-- Translate['TheRookery'] = '';
+-- Translate['TheStonevault'] = '';
+-- Translate['CityofThreads'] = '';
+-- Translate['AraKaraCityofEchoes'] = '';
+-- Translate['DarkflameCleft'] = '';
+-- Translate['TheDawnbreaker'] = '';
+-- Translate['CinderbrewMeadery'] = '';
+-- Translate['OperationFloodgate'] = '';
+-- Translate['EcoDomeAldani'] = '';
+-- -- Midnight
+-- Translate['WindrunnerSpire'] = '';
+-- Translate['MagistersTerrace'] = '';
+-- Translate['NexusPointXenas'] = '';
+-- Translate['MaisaraCaverns'] = '';
+-- Translate['MurderRow'] = '';
+-- Translate['DenofNalorakk'] = '';
+-- Translate['BlindingVale'] = '';
+-- Translate['VoidscarArena'] = '';

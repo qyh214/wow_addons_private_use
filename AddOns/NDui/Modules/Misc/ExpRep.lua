@@ -5,17 +5,16 @@ local M = B:GetModule("Misc")
 --[[
 	一个工具条用来替代系统的经验条、声望条、神器经验等等
 ]]
-local format, pairs, select = string.format, pairs, select
+local format, pairs = string.format, pairs
 local min, mod, floor = math.min, mod, math.floor
 local MAX_REPUTATION_REACTION = MAX_REPUTATION_REACTION
 local FACTION_BAR_COLORS = FACTION_BAR_COLORS
-local NUM_FACTIONS_DISPLAYED = NUM_FACTIONS_DISPLAYED
 local REPUTATION_PROGRESS_FORMAT = REPUTATION_PROGRESS_FORMAT
 local HONOR, LEVEL, TUTORIAL_TITLE26, SPELLBOOK_AVAILABLE_AT = HONOR, LEVEL, TUTORIAL_TITLE26, SPELLBOOK_AVAILABLE_AT
 local ARTIFACT_POWER, ARTIFACT_RETIRED = ARTIFACT_POWER, ARTIFACT_RETIRED
 
 local UnitLevel, UnitXP, UnitXPMax, GetXPExhaustion, IsXPUserDisabled = UnitLevel, UnitXP, UnitXPMax, GetXPExhaustion, IsXPUserDisabled
-local BreakUpLargeNumbers, GetNumFactions, GetFactionInfo = BreakUpLargeNumbers, GetNumFactions, GetFactionInfo
+local BreakUpLargeNumbers = BreakUpLargeNumbers
 local HasArtifactEquipped, ArtifactBarGetNumArtifactTraitsPurchasableFromXP = HasArtifactEquipped, ArtifactBarGetNumArtifactTraitsPurchasableFromXP
 local IsWatchingHonorAsXP, UnitHonor, UnitHonorMax, UnitHonorLevel = IsWatchingHonorAsXP, UnitHonor, UnitHonorMax, UnitHonorLevel
 local IsPlayerAtEffectiveMaxLevel = IsPlayerAtEffectiveMaxLevel
@@ -60,7 +59,11 @@ function M:ExpBar_Update()
 		local barMax = factionData.nextReactionThreshold
 		local value = factionData.currentStanding
 		local factionID = factionData.factionID
-		if factionID and C_Reputation_IsMajorFaction(factionID) then
+		local currentValue, threshold = C_Reputation_GetFactionParagonInfo(factionID)
+		if C_Reputation_IsFactionParagon(factionID) and currentValue and currentValue > 0 then
+			currentValue = mod(currentValue, threshold)
+			barMin, barMax, value = 0, threshold, currentValue
+		elseif factionID and C_Reputation_IsMajorFaction(factionID) then
 			local majorFactionData = C_MajorFactions.GetMajorFactionData(factionID)
 			local isMaxRenown = C_MajorFactions.HasMaximumRenown(factionID)
 			if isMaxRenown then
@@ -72,11 +75,7 @@ function M:ExpBar_Update()
 		else
 			local repInfo = C_GossipInfo_GetFriendshipReputation(factionID)
 			local friendID, friendRep, friendThreshold, nextFriendThreshold = repInfo.friendshipFactionID, repInfo.standing, repInfo.reactionThreshold, repInfo.nextThreshold
-			if C_Reputation_IsFactionParagon(factionID) then
-				local currentValue, threshold = C_Reputation_GetFactionParagonInfo(factionID)
-				currentValue = mod(currentValue, threshold)
-				barMin, barMax, value = 0, threshold, currentValue
-			elseif friendID and friendID ~= 0 then
+			if friendID and friendID ~= 0 then
 				if nextFriendThreshold then
 					barMin, barMax, value = friendThreshold, nextFriendThreshold, friendRep
 				else
@@ -92,6 +91,17 @@ function M:ExpBar_Update()
 		self:SetMinMaxValues(barMin, barMax)
 		self:SetValue(value)
 		self:Show()
+	elseif C_Housing and C_Housing.GetTrackedHouseGuid() then
+		local current, minBar, maxBar, level = 0, 0, 1, 1
+		if M.houseLevelFavor then
+			current = M.houseLevelFavor.houseFavor
+			level = M.houseLevelFavor.houseLevel
+			minBar = C_Housing.GetHouseLevelFavorForLevel(level)
+			maxBar = C_Housing.GetHouseLevelFavorForLevel(level + 1)
+			self:SetStatusBarColor(1, .8, 0)
+			self:SetBarValues(current, minBar, maxBar, level)
+			self:Show()
+		end
 	elseif IsWatchingHonorAsXP() then
 		local current, barMax = UnitHonor("player"), UnitHonorMax("player")
 		self:SetStatusBarColor(1, .24, 0)
@@ -190,9 +200,11 @@ function M:ExpBar_UpdateTooltip()
 
 		if C_Reputation_IsFactionParagon(factionID) then
 			local currentValue, threshold = C_Reputation_GetFactionParagonInfo(factionID)
-			local paraCount = floor(currentValue/threshold)
-			currentValue = mod(currentValue, threshold)
-			GameTooltip:AddDoubleLine(L["Paragon"]..paraCount, currentValue.." / "..threshold.." ("..floor(currentValue/threshold*100).."%)", .6,.8,1, 1,1,1)
+			if currentValue > 0 then
+				local paraCount = floor(currentValue/threshold)
+				currentValue = mod(currentValue, threshold)
+				GameTooltip:AddDoubleLine(L["Paragon"]..paraCount, currentValue.." / "..threshold.." ("..floor(currentValue/threshold*100).."%)", .6,.8,1, 1,1,1)
+			end
 		end
 
 		if factionID == 2465 then -- 荒猎团
@@ -211,6 +223,20 @@ function M:ExpBar_UpdateTooltip()
 			local m = currencyInfo.maxQuantity
 			local name = C_CurrencyInfo.GetCurrencyInfo(2777).name
 			GameTooltip:AddDoubleLine(name, q.." / "..m.." ("..floor(q/m*100).."%)", .6,.8,1, 1,1,1)
+		end
+	end
+
+	if C_Housing.GetTrackedHouseGuid() then
+		local current, maxBar, level = 0, 1, 1
+		if M.houseLevelFavor then
+			current = M.houseLevelFavor.houseFavor
+			level = M.houseLevelFavor.houseLevel
+			maxBar = C_Housing.GetHouseLevelFavorForLevel(level + 1)
+		end
+		if maxBar ~= 0 then
+			GameTooltip:AddLine(" ")
+			GameTooltip:AddLine(HOUSING_DASHBOARD_HOUSEINFO_TOOLTIP, 0,.6,1)
+			GameTooltip:AddDoubleLine(LEVEL.." "..level, current.." / "..maxBar, .6,.8,1, 1,1,1)
 		end
 	end
 
@@ -284,6 +310,21 @@ function M:SetupScript(bar)
 	hooksecurefunc(StatusTrackingBarManager, "UpdateBarsShown", function()
 		M.ExpBar_Update(bar)
 	end)
+
+	-- Housing, fixme: unable to toggle on without reload
+	M.houseLevelFavor = nil
+	B:RegisterEvent("TRACKED_HOUSE_CHANGED", function()
+		M.ExpBar_Update(bar)
+	end)
+	B:RegisterEvent("HOUSE_LEVEL_FAVOR_UPDATED", function(_, houseLevelFavor)
+		if houseLevelFavor.houseGUID == C_Housing.GetTrackedHouseGuid() then
+			M.houseLevelFavor = houseLevelFavor
+			M.ExpBar_Update(bar)
+		end
+	end)
+	if C_Housing.GetTrackedHouseGuid() then
+		C_Housing.GetCurrentHouseLevelFavor(C_Housing.GetTrackedHouseGuid())
+	end
 end
 
 function M:Expbar()

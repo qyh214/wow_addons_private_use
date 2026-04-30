@@ -1,4 +1,4 @@
--- Generated from CurseForge on Thu Dec 11 09:02:36 UTC 2025
+-- Generated from CurseForge on Thu Apr 30 07:53:50 UTC 2026
 local ns = select(2, ...) ---@class ns @The addon namespace.
 
 if ns:IsSameLocale("frFR") then
@@ -46,7 +46,7 @@ L["CHARACTER_LF_GUILD_SOCIAL"] = "Cherche une guilde pour discuter"
 L["CHARACTER_LF_TEAM_MPLUS_DEFAULT"] = "Cherche une équipe Mythique+"
 L["CHARACTER_LF_TEAM_MPLUS_WITH_SCORE"] = "Recherche de %d+ équipe(s) Mythique+"
 L["CHECKBOX_DISPLAY_WEEKLY"] = "Hebdomadaire"
-L["CHOOSE_HEADLINE_HEADER"] = "Titre de l'info-bulle Mythique+"
+L["CHOOSE_HEADLINE_HEADER"] = "Titre de l'infobulle Mythique+"
 L["CONFIG_WHERE_TO_SHOW_TOOLTIPS"] = "Où afficher la progression Mythique+ et de Raid"
 L["CONFIRM"] = "Confirmer"
 L["COPY_RAIDERIO_PROFILE_URL"] = "Copier le profil Raider.IO"
@@ -63,7 +63,7 @@ L["DISABLE_RWF_MODE_BUTTON"] = "Désactiver"
 L["DISABLE_RWF_MODE_BUTTON_TOOLTIP"] = "Cliquez pour désactiver le mode « Course au World First ». Cela entraînera le rechargement de votre interface."
 L["DISABLE_RWF_MODE_RELOAD"] = "Vous désactivez le mode « Course au World First ». En cliquant sur Confirmer, vous rechargerez votre interface."
 L["DPS"] = "DPS"
-L["DUNGEON_SHORT_NAME_AA"] = "AA"
+L["DUNGEON_SHORT_NAME_AA"] = "Académie"
 L["DUNGEON_SHORT_NAME_AD"] = "AD"
 L["DUNGEON_SHORT_NAME_ARAK"] = "AraK"
 --[[Translation missing --]]
@@ -104,16 +104,20 @@ L["DUNGEON_SHORT_NAME_HOV"] = "SdI"
 --[[ L["DUNGEON_SHORT_NAME_KR"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_LOWR"] = ""--]] 
+L["DUNGEON_SHORT_NAME_MC"] = "Cavernes"
 L["DUNGEON_SHORT_NAME_MISTS"] = "Brumes"
 L["DUNGEON_SHORT_NAME_ML"] = "Filon"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_MOS"] = ""--]] 
+L["DUNGEON_SHORT_NAME_MT"] = "Terrasse"
 L["DUNGEON_SHORT_NAME_NELT"] = "NELT"
 L["DUNGEON_SHORT_NAME_NL"] = "RdN"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_NO"] = ""--]] 
+L["DUNGEON_SHORT_NAME_NPX"] = "Nexus"
 L["DUNGEON_SHORT_NAME_NW"] = "SN"
 L["DUNGEON_SHORT_NAME_PF"] = "MP"
+L["DUNGEON_SHORT_NAME_POS"] = "Fosse"
 L["DUNGEON_SHORT_NAME_PSF"] = "Prieuré"
 L["DUNGEON_SHORT_NAME_RISE"] = "AdIcdM"
 --[[Translation missing --]]
@@ -122,12 +126,13 @@ L["DUNGEON_SHORT_NAME_ROOK"] = "Colonie"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_SBG"] = ""--]] 
 L["DUNGEON_SHORT_NAME_SD"] = "PS"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_SEAT"] = ""--]] 
+L["DUNGEON_SHORT_NAME_SEAT"] = [=[Siège
+]=]
 L["DUNGEON_SHORT_NAME_SIEGE"] = "SIEGE"
 L["DUNGEON_SHORT_NAME_SOA"] = "FdA"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_SOTS"] = ""--]] 
+L["DUNGEON_SHORT_NAME_SR"] = "Orée"
 L["DUNGEON_SHORT_NAME_STRT"] = "Rues"
 L["DUNGEON_SHORT_NAME_SV"] = "CAVE"
 --[[Translation missing --]]
@@ -149,10 +154,11 @@ L["DUNGEON_SHORT_NAME_ULD"] = "ULD"
 --[[ L["DUNGEON_SHORT_NAME_VP"] = ""--]] 
 L["DUNGEON_SHORT_NAME_WM"] = "MM"
 L["DUNGEON_SHORT_NAME_WORK"] = "Mécagone"
+L["DUNGEON_SHORT_NAME_WS"] = "Flèche"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_YARD"] = ""--]] 
 L["ENABLE_AUTO_FRAME_POSITION"] = "Positionner automatiquement le cadre de profil Raider.IO"
-L["ENABLE_AUTO_FRAME_POSITION_DESC"] = "L'activation de cette option conservera l'info-bulle du profil M+ à côté du cadre de Recherche de groupe ou de l'info-bulle du joueur."
+L["ENABLE_AUTO_FRAME_POSITION_DESC"] = "Activer cette option permettra de conserver l'infobulle du profil Mythique+ à côté du cadre de l'outil de recherche de donjon ou de l'infobulle du joueur."
 L["ENABLE_DEBUG_MODE_RELOAD"] = "Vous activez le mode débogage. Ceci est destiné uniquement à des fins de test et de développement et entraînera une utilisation supplémentaire de la mémoire. En cliquant sur Confirmer, vous rechargerez votre interface."
 L["ENABLE_LFG_EXPORT_BUTTON"] = "Afficher le bouton d'export dans la Recherche de groupe"
 L["ENABLE_LFG_EXPORT_BUTTON_DESC"] = "Affiche un bouton en forme de loupe en bas de la fenêtre de Recherche de groupe. Il va exporter votre groupe actuel ainsi que les postulants en file d'attente pour pouvoir les coller dans Raider.IO et pour inspecter le profil de chacun."
@@ -171,7 +177,7 @@ L["ENABLE_SIMPLE_SCORE_COLORS"] = "Utiliser des couleurs simples pour le score M
 L["ENABLE_SIMPLE_SCORE_COLORS_DESC"] = "Affiche uniquement les scores avec des couleurs standard (rare, épique, etc.). Cela peut permettre aux personnes daltoniennes de distinguer plus facilement les niveaux de score."
 L["ENTER_REALM_AND_CHARACTER"] = "Entrez le serveur et le nom du personnage :"
 L["EXPORTJSON_COPY_TEXT"] = "Copiez ce qui suit et collez-le n'importe où sur |cff00C8FFhttps://raider.io|r pour rechercher tous les joueurs."
-L["GENERAL_TOOLTIP_OPTIONS"] = "Options générales des info-bulles"
+L["GENERAL_TOOLTIP_OPTIONS"] = "Options générales des infobulles"
 L["GUILD_BEST_SEASON"] = "Guilde : Meilleure saison"
 L["GUILD_BEST_TITLE"] = "Enregistrements Raider.IO"
 L["GUILD_BEST_WEEKLY"] = "Guilde : Meilleure semaine"
@@ -184,10 +190,11 @@ L["GUILD_LF_RAID_MYTHIC"] = "Recrutement de joueur pour raid mythique"
 L["GUILD_LF_RAID_NORMAL"] = "Recrutement de joueur pour raid normal"
 L["GUILD_LF_SOCIAL"] = "Recrutement de joueur"
 L["HEALER"] = "Soigneur"
-L["HIDE_OWN_PROFILE"] = "Masquer l’info-bulle du profil personnel Raider.IO"
-L["HIDE_OWN_PROFILE_DESC"] = "Une fois défini, cela n'affichera pas votre propre info-bulle de profil Raider.IO, mais pourra afficher celle des autres joueurs s'ils en ont une."
-L["INVERSE_PROFILE_MODIFIER"] = "Inverser le modificateur d'info-bulle du profil Raider.IO"
-L["INVERSE_PROFILE_MODIFIER_DESC"] = "Activer cette option inversera le comportement du modificateur d'info-bulle du profil Raider.IO (Maj / Ctrl / Alt) : maintenez-le enfoncé pour basculer la vue entre le profil Personnel / Leader ou le profil Leader / Personnel."
+L["HIDE_OWN_PROFILE"] = "Masquer l’infobulle du profil personnel Raider.IO"
+L["HIDE_OWN_PROFILE_DESC"] = "Une fois défini, cela n'affichera pas votre propre infobulle de profil Raider.IO, mais pourra afficher celle des autres joueurs s'ils en ont une."
+L["INVERSE_PROFILE_MODIFIER"] = "Inverser le modificateur d'infobulle du profil Raider.IO"
+L["INVERSE_PROFILE_MODIFIER_DESC"] = [=[Activer cette option inversera le comportement du modificateur d'infobulle du profil Raider.IO (Maj / Ctrl / Alt) : maintenez-le enfoncé pour basculer la vue entre le profil Personnel / Leader ou le profil Leader / Personnel.
+Activer cette option inversera le comportement du modificateur d'infobulle de profil Raider.IO (Maj / Ctrl / Alt) : maintenez la touche enfoncée pour basculer entre le profil personnel / de leader ou le profil de leader / personnel.]=]
 --[[Translation missing --]]
 --[[ L["LOCALE_NAME"] = ""--]] 
 L["LOCKING_PROFILE_FRAME"] = "Raider.IO : Verrouillage du cadre de profil M+."
@@ -309,6 +316,8 @@ L["RAID_BOSS_CN_6"] = "Dame Inerva Sombreveine"
 L["RAID_BOSS_CN_7"] = "Le Conseil du Sang"
 L["RAID_BOSS_CN_8"] = "Fangepoing"
 L["RAID_BOSS_CN_9"] = "Généraux de la Légion de Pierre"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_DR_1"] = ""--]] 
 L["RAID_BOSS_DS_1"] = "Morchok"
 L["RAID_BOSS_DS_2"] = "Seigneur de guerre Zon’ozz"
 L["RAID_BOSS_DS_3"] = "Yor’sahj l’Insomniaque"
@@ -389,6 +398,9 @@ L["RAID_BOSS_MFO_5"] = "Chasseurs d’âmes"
 L["RAID_BOSS_MFO_6"] = "Fractillus"
 L["RAID_BOSS_MFO_7"] = "Roi-nexus Salhadaar"
 L["RAID_BOSS_MFO_8"] = "Dimensius l’Omni-dévoreur"
+L["RAID_BOSS_MQD_1"] = "Belo’ren, enfant d’Al’ar"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MQD_2"] = ""--]] 
 L["RAID_BOSS_MSV_1"] = "La garde de pierre"
 L["RAID_BOSS_MSV_2"] = "Feng le Maudit"
 L["RAID_BOSS_MSV_3"] = "Gara’jal le Lieur d’esprit"
@@ -456,6 +468,34 @@ L["RAID_BOSS_VOTI_5"] = "Dathéa, transcendée"
 L["RAID_BOSS_VOTI_6"] = "Kurog Totem-Sinistre"
 L["RAID_BOSS_VOTI_7"] = "Garde-couvée Diurna"
 L["RAID_BOSS_VOTI_8"] = "Raszageth la Mange-tempêtes"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_VS_DR_MQD_9"] = ""--]] 
 L["RAID_BOT"] = "Le bastion du Crépuscule"
 L["RAID_BRD"] = "Profondeurs de Rochenoire"
 L["RAID_BWD"] = "Descente de l’Aile noire"
@@ -473,6 +513,8 @@ L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = "M"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "N"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = "N10"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = "N25"
+--[[Translation missing --]]
+--[[ L["RAID_DR"] = ""--]] 
 L["RAID_DS"] = "L’Âme des dragons"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Rencontres de Raid vaincues"
 L["RAID_FL"] = "Terres de Feu"
@@ -480,6 +522,8 @@ L["RAID_HOF"] = "Cœur de la peur"
 L["RAID_ICC"] = "Citadelle de la Couronne de glace"
 L["RAID_LOU"] = "Libération de Terremine"
 L["RAID_MFO"] = "Manaforge Oméga"
+--[[Translation missing --]]
+--[[ L["RAID_MQD"] = ""--]] 
 L["RAID_MSV"] = "Caveaux Mogu’shan"
 L["RAID_NP"] = "Palais des Nérub’ar"
 L["RAID_RS"] = "Le sanctum Rubis"
@@ -487,6 +531,10 @@ L["RAID_ToES"] = "Terrasse Printanière"
 L["RAID_TOES"] = "Terrasse Printanière"
 L["RAID_TOT"] = "Trône du tonnerre"
 L["RAID_TOTFW"] = "Trône des quatre vents"
+--[[Translation missing --]]
+--[[ L["RAID_VS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_VS_DR_MQD"] = ""--]] 
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Moy. de score Raider.IO sur des +%s"
 L["RAIDERIO_BEST_RUN"] = "Meilleur donjon M+ Raider.IO"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personnalisation du client Raider.IO"
@@ -550,20 +598,20 @@ L["SEASON_LABEL_1"] = "S1"
 L["SEASON_LABEL_2"] = "S2"
 L["SEASON_LABEL_3"] = "S3"
 L["SEASON_LABEL_4"] = "S4"
-L["SHOW_AVERAGE_PLAYER_SCORE_INFO"] = "Afficher le score moyen des joueurs pour une clé dans les temps"
-L["SHOW_AVERAGE_PLAYER_SCORE_INFO_DESC"] = "Afficher la moyenne des scores Raider.IO des joueurs ayant fini une clé dans les temps. Cela est visible sur l'infobulle de la clé ainsi que des joueurs dans la recherche de groupe."
-L["SHOW_BEST_MAINS_SCORE"] = "Afficher le score Mythique+ de la meilleure saison du personnage principal"
-L["SHOW_BEST_MAINS_SCORE_DESC"] = "Affiche le score Mythique+ de la meilleure saison du personnage principal d'un joueur et la progression du raid dans l'info-bulle. Les joueurs doivent s'être inscrits sur Raider.IO et avoir déclaré un personnage comme personnage principal."
-L["SHOW_BEST_RUN"] = "Afficher la meilleure clé Mythique+ dans le titre"
-L["SHOW_BEST_RUN_DESC"] = "Affiche la meilleure clé Mythique+ du joueur de la saison en cours sous forme de titre de l'info-bulle."
-L["SHOW_BEST_SEASON"] = "Afficher le meilleur score Mythique+ de la saison dans le titre"
-L["SHOW_BEST_SEASON_DESC"] = "Affiche le meilleur score de la saison Mythique+ du joueur sous forme de titre dans l'info-bulle. Si le score provient d'une saison précédente, la saison sera indiquée dans le titre de l'info-bulle."
+L["SHOW_AVERAGE_PLAYER_SCORE_INFO"] = "Afficher les scores moyens des clés réalisées dans les temps"
+L["SHOW_AVERAGE_PLAYER_SCORE_INFO_DESC"] = "Afficher le score Raider.IO moyen des joueurs ayant réussi les clés dans les temps. Ce score est visible dans les infobulles des clés et des joueurs de l'explorateur de donjons."
+L["SHOW_BEST_MAINS_SCORE"] = "Afficher le score M+ de la meilleure saison du personnage principal"
+L["SHOW_BEST_MAINS_SCORE_DESC"] = "Afficher dans l'infobulle le meilleur score Mythique+ et la progression en raid du personnage principal du joueur durant la saison. Les joueurs doivent être inscrits sur Raider.IO et avoir désigné un personnage comme personnage principal."
+L["SHOW_BEST_RUN"] = "Afficher la meilleure clé M+"
+L["SHOW_BEST_RUN_DESC"] = "Afficher la meilleure clé Mythique+ du joueur de la saison en cours sous forme de titre de l'infobulle."
+L["SHOW_BEST_SEASON"] = "Afficher le meilleur score M+ de la saison"
+L["SHOW_BEST_SEASON_DESC"] = "Afficher le meilleur score de la saison Mythique+ du joueur sous forme de titre dans l'infobulle. Si le score provient d'une saison précédente, la saison sera indiquée dans le titre de l'infobulle."
 L["SHOW_CHESTS_AS_MEDALS"] = "Afficher les icônes de médaille Mythique+"
-L["SHOW_CHESTS_AS_MEDALS_DESC"] = "Affiche les clés réussies sous forme d'icônes au lieu des signes plus (+)."
+L["SHOW_CHESTS_AS_MEDALS_DESC"] = "Afficher les clés réussies sous forme d'icônes au lieu des signes plus (+)."
 L["SHOW_CLIENT_GUILD_BEST"] = "Afficher les meilleurs records dans l'outil de Recherche de groupe pour les donjons mythiques"
 L["SHOW_CLIENT_GUILD_BEST_DESC"] = "L'activation de cette option affichera les 5 meilleures session de votre guilde (saison ou semaine) dans l'onglet des donjons mythiques de la fenêtre de Recherche de groupe."
-L["SHOW_CURRENT_SEASON"] = "Afficher le score Mythique+ de la saison actuelle dans le titre"
-L["SHOW_CURRENT_SEASON_DESC"] = "Affiche le score actuel du joueur de la saison Mythique+ sous forme de titre de l'info-bulle."
+L["SHOW_CURRENT_SEASON"] = "Afficher le score M+ pour la saison actuelle dans le titre"
+L["SHOW_CURRENT_SEASON_DESC"] = "Afficher le score actuel du joueur pour la saison Mythique+ en tant que titre de l'infobulle."
 L["SHOW_IN_FRIENDS"] = "Afficher dans la liste d'amis"
 L["SHOW_IN_FRIENDS_DESC"] = "Afficher le score Mythique+ lorsqu'on survole un ami."
 L["SHOW_IN_LFD"] = "Afficher dans la recherche de donjons"
@@ -573,31 +621,35 @@ L["SHOW_IN_SLASH_WHO_RESULTS"] = "Afficher les résultats de la commande « /who
 L["SHOW_IN_SLASH_WHO_RESULTS_DESC"] = "Affichez le score Mythique+ lorsque vous tapez « /who » d'un joueur un en particulier."
 L["SHOW_IN_WHO_UI"] = "Afficher dans la fenêtre \"Qui\""
 L["SHOW_IN_WHO_UI_DESC"] = "Affichez la progression lorsque vous passez la souris dans la boîte de dialogue de la fenêtre « Qui »."
-L["SHOW_KEYSTONE_INFO"] = "Affiche les informations de la clé"
-L["SHOW_KEYSTONE_INFO_DESC"] = "Ajoute des informations sur l'info-bulle de la clé. Propose un score Mythique+ pour le groupe."
-L["SHOW_LEADER_PROFILE"] = "Autoriser le modificateur d'info-bulle du profil Raider.IO"
-L["SHOW_LEADER_PROFILE_DESC"] = "Maintenez enfoncé un modificateur (maj / ctrl / alt) pour basculer l'info-bulle de profil entre le profil personnel / leader."
+L["SHOW_KEYSTONE_INFO"] = "Afficher le score de base Raider.IO pour les clés"
+L["SHOW_KEYSTONE_INFO_DESC"] = "Ajoute le score Raider.IO de base pour les clés mythiques dans leurs infobulles. Affiche également le meilleur score enregistré pour chaque joueur du groupe."
+L["SHOW_LEADER_PROFILE"] = "Autoriser le modificateur d'infobulle du profil Raider.IO"
+L["SHOW_LEADER_PROFILE_DESC"] = "Maintenez une touche de modification (Maj / Ctrl / Alt) enfoncée pour basculer l'infobulle du profil entre le profil personnel et le profil du leader."
 L["SHOW_MAINS_SCORE"] = "Afficher le score du personnage principal"
 L["SHOW_MAINS_SCORE_DESC"] = "Afficher le score du personnage principal du joueur pour la saison actuelle. Ces joueurs doivent avoir un compte sur Raider.IO où il a définit un personnage comme son personnage principal."
+L["SHOW_MY_WARBAND_SCORE"] = "Afficher mon propre score M+ de Bataillon"
+L["SHOW_MY_WARBAND_SCORE_DESC"] = "Afficher le score Mythique+ de Bataillon du joueur dans son infobulle."
 L["SHOW_ON_GUILD_ROSTER"] = "Afficher dans l'onglet guilde"
 L["SHOW_ON_GUILD_ROSTER_DESC"] = "Afficher le score Mythique+ lorsqu'on survole un joueur dans la liste des membres de la guilde."
 L["SHOW_ON_PLAYER_UNITS"] = "Afficher sur les cadres d'unité"
 L["SHOW_ON_PLAYER_UNITS_DESC"] = "Afficher le score Mythique+ lorsqu'on survole le cadre d'un joueur. "
+L["SHOW_OTHER_WARBAND_SCORE"] = "Afficher aux autres le score M+ de Bataillon"
+L["SHOW_OTHER_WARBAND_SCORE_DESC"] = "Afficher le score Mythique+ de Bataillon dans les infobulles des autres joueurs."
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE"] = "Afficher les rencontres de raid dans l'infobulle du joueur"
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE_DESC"] = "Une fois défini, cela affichera la progression de raid dans les infobulles du profil Raider.IO."
 L["SHOW_RAIDERIO_BESTRUN_FIRST"] = "(Expérimental) Prioriser l'affichage de la meilleure clé de Raider.IO"
 L["SHOW_RAIDERIO_BESTRUN_FIRST_DESC"] = "Il s'agit d'une fonctionnalité expérimentale. Au lieu d'afficher le score Raider.IO comme première ligne, affichez la meilleure clé du joueur."
-L["SHOW_RAIDERIO_PROFILE"] = "Afficher le Profil Raider.IO dans la recherche de donjon"
-L["SHOW_RAIDERIO_PROFILE_DESC"] = "Afficher le Profil Raider.IO en Info-Bulle dans la recherche de donjon"
+L["SHOW_RAIDERIO_PROFILE"] = "Afficher l'infobulle du profil Raider.IO"
+L["SHOW_RAIDERIO_PROFILE_DESC"] = "Afficher l'infobulle du profil Raider.IO"
 L["SHOW_RAIDERIO_PROFILE_OPTION"] = "Afficher le profil Raider.IO"
 L["SHOW_ROLE_ICONS"] = "Afficher les icônes de rôle dans les infobulles"
 L["SHOW_ROLE_ICONS_DESC"] = "Une fois activée, cette option affichera les meilleurs rôles Mythique+ du joueur dans les infosbulles."
 L["SHOW_SCORE_IN_COMBAT"] = "Afficher le score en combat"
 L["SHOW_SCORE_IN_COMBAT_DESC"] = "Désactivez-le pour minimiser l'impact sur les performances lorsque vous survolez les joueurs pendant le combat."
-L["SHOW_SCORE_WITH_MODIFIER"] = "Afficher les informations de l'info-bulle de Raider.IO avec un modificateur"
-L["SHOW_SCORE_WITH_MODIFIER_DESC"] = "Désactivez l'affichage des données lors du survol des joueurs, sauf si une touche de modification est maintenue enfoncée."
-L["SHOW_WARBAND_SCORE"] = "Afficher le score et la progression M+ de votre Bataillon dans les infobulles"
-L["SHOW_WARBAND_SCORE_DESC"] = "Affiche le score Mythique+ de votre Bataillon pour la saison en cours ainsi que la progression du raid dans l'info-bulle. Les joueurs doivent s'être inscrits sur Raider.IO et avoir synchronisé leur compte Battle.net pour que la progression de Bataillon fonctionne."
+L["SHOW_SCORE_WITH_MODIFIER"] = "Afficher les informations de l'infobulle de Raider.IO avec un modificateur"
+L["SHOW_SCORE_WITH_MODIFIER_DESC"] = "Désactiver l'affichage des données lors du survol des joueurs, sauf si une touche de modification est maintenue enfoncée."
+L["SHOW_WARBAND_SCORE"] = "Afficher le score M+ de Bataillon dans les infobulles"
+L["SHOW_WARBAND_SCORE_DESC"] = "Afficher le score Mythique+ de votre Bataillon pour la saison en cours ainsi que la progression du raid dans l'infobulle. Les joueurs doivent s'être inscrits sur Raider.IO et avoir synchronisé leur compte Battle.net pour que la progression de Bataillon fonctionne."
 L["TANK"] = "Tank"
 L["TEAM_LF_MPLUS_DEFAULT"] = "Recrutement de joueurs Mythique+"
 L["TEAM_LF_MPLUS_WITH_SCORE"] = "Recrutement de %d joueurs Mythique+"
@@ -607,11 +659,11 @@ L["TIMED_20_RUNS"] = "20+ dans les temps"
 L["TIMED_5_RUNS"] = "5-9+ dans les temps"
 L["TIMED_RUNS_MINIMUM"] = "%d+ dans les temps"
 L["TIMED_RUNS_RANGE"] = "+%d-%d dans les temps"
-L["TOOLTIP_PROFILE"] = "Personnalisation de l'info-bulle du profil Raider.IO"
+L["TOOLTIP_PROFILE"] = "Personnalisation de l'infobulle du profil Raider.IO"
 L["UNKNOWN_SERVER_FOUND"] = "|cffFFFFFF%s|r a rencontré un nouveau serveur. Veuillez noter ces informations |cffFF9999{|r |cffFFFFFF%s|r |cffFF9999,|r |cffFFFFFF%s|r |cffFF9999}|r et les signaler aux développeurs. Merci!"
 L["UNLOCKING_PROFILE_FRAME"] = "Raider.IO : Déverrouillage du cadre de profil M+."
 L["USE_ENGLISH_ABBREVIATION"] = "Forcer les abréviations anglaises pour les donjons"
-L["USE_ENGLISH_ABBREVIATION_DESC"] = "Une fois défini, cela remplacera les abréviations utilisées pour les instances par les versions anglaises, plutôt que par votre langue actuelle."
+L["USE_ENGLISH_ABBREVIATION_DESC"] = "Une fois activée, cette option remplacera les abréviations utilisées pour les instances par leurs versions anglaises, plutôt que par votre langue actuelle. "
 L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS"] = "Autoriser le client Raider.IO à contrôler le Journal de combat"
 L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS_DESC"] = "Autorisez le client Raider.IO (le cas échéant) à contrôler automatiquement vos paramètres du Journal de combat."
 L["WARBAND_BEST_SCORE_BEST_SEASON"] = "Meilleur score M+ de votre Bataillon (%s)"

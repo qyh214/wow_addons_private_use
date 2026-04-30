@@ -17,12 +17,12 @@
 		end
 		local addonName, Details222 = ...
 		local version, build, date, tvs = GetBuildInfo()
-		Details.build_counter = 13857
-		Details.alpha_build_counter = 13857 --if this is higher than the regular counter, use it instead
+		Details.build_counter = 15038
+		Details.alpha_build_counter = 15038 --if this is higher than the regular counter, use it instead
 		Details.dont_open_news = true
 		Details.game_version = version
 		Details.userversion = version .. " " .. Details.build_counter
-		Details.realversion = 166 --core version, this is used to check API version for scripts and plugins (see alias below)
+		Details.realversion = 172 --core version, this is used to check API version for scripts and plugins (see alias below)
 		Details.gametoc = tvs
 		Details.APIVersion = Details.realversion --core version
 		Details.version = Details.userversion .. " (core " .. Details.realversion .. ")" --simple stirng to show to players
@@ -40,11 +40,13 @@
 		Details.BFACORE = 131 --core version on BFA launch
 		Details.SHADOWLANDSCORE = 143 --core version on Shadowlands launch
 		Details.DRAGONFLIGHT = 147 --core version on Dragonflight launch
+		Details.TBCANNIVERSARY = 166
 		Details.V11CORE = 160 --core version on V11 launch
+		Details.V12CORE = 166 --core version on V12 launch
 
 		Details = Details
 
-		local gameVersionPrefix = "VPT" --v1, v5, v11
+		local gameVersionPrefix = "VCPM" --v1, v2 v5, v12
 
 		Details.gameVersionPrefix = gameVersionPrefix
 
@@ -66,7 +68,18 @@
 			return Details.gameVersionPrefix .. " " .. Details.build_counter .. " " .. alphaId .. " " .. Details.game_version .. ""
 		end
 
+		Details.DM = C_DamageMeter
 		Details.DefaultTooltipIconSize = 20
+		local isWowApocalypse = (tvs >= 120000)
+
+		function Details222.UpdateIsAllowed()
+			if (isWowApocalypse) then
+				if InCombatLockdown() then
+					return false
+				end
+			end
+			return true
+		end
 
 		--namespace for the player breakdown window
 		Details.PlayerBreakdown = {}
@@ -77,6 +90,26 @@
 		Details222.StartUp = {}
 
 		Details222.Unknown = _G["UNKNOWN"]
+
+		Details222.IsPTR = function()
+			local _, _, _, a = GetBuildInfo()
+			if a >= 120005 then
+				return true
+			end
+		end
+
+		Details222.IsTOCBiggerOrEqualTo = function(tocNumber)
+			if tvs >= tocNumber then
+				return true
+			end
+		end
+
+		function Details222.IsPTR1205()
+			local _, _, _, a = GetBuildInfo()
+			if tvs >= 120005 then
+				return true
+			end
+		end
 
 		--namespace color
 		Details222.ColorScheme = {
@@ -110,7 +143,16 @@
 			[114840] = true, --orgrimmar
 			[114832] = true, --stormwind
 			[153292] = true, --stormwind
+			[225982] = true, --dornogal
+			[225977] = true, --dornogal
+			[225983] = true, --dornogal
+			[225978] = true, --dornogal
+			[219250] = true, --dornogal
+			[225985] = true, --dornogal
+			[225976] = true, --dornogal
+			[225984] = true, --dornogal
 		}
+
 
 		---@type details_storage_feature
 		---@diagnostic disable-next-line: missing-fields
@@ -172,18 +214,21 @@
 		Details222.BarIconSetList = {}
 		Details222.Instances = {}
 		Details222.Combat = {}
+		Details222.BParser = {}
 		Details222.MythicPlus = {
 			Charts = {},
 			Frames = {},
 		}
 		Details222.Notes = {}
 		Details222.MythicPlusBreakdown = {}
+		Details222.MythicKeys = {}
 		Details222.EJCache = {}
 		Details222.Segments = {}
 		Details222.Tables = {}
 		Details222.Mixins = {}
 		Details222.Cache = {}
 		Details222.Perf = {}
+		Details222.Recap = {}
 		Details222.Cooldowns = {}
 		Details222.GarbageCollector = {}
 		Details222.BreakdownWindow = {}
@@ -228,6 +273,191 @@
 		--aura scanner
 		Details222.AuraScan = {}
 
+		Details222.B = {}
+
+		Details222.Apocalypse = {
+			ServerInCombat = false,
+			TypeDetails = 0,
+			TypeGame = 1,
+			segmentType = 1,
+			GetType = function() --addon wide segment type
+				return Details222.Apocalypse.segmentType
+			end,
+			SetType = function(newType)
+				Details222.Apocalypse.segmentType = newType
+			end,
+			IsServerInCombat = function(forceCheckOverall)
+				if (forceCheckOverall) then
+					local s = Details222.B.GetSegment("Type", 0, 0)
+					if s and s.combatSources and s.combatSources[1] and issecretvalue(s.combatSources[1].name) then
+						return true
+					else
+						local e = Details222.B.GetSegment("Type", 0, 10)
+						if e and e.combatSources and e.combatSources[1] and issecretvalue(e.combatSources[1].name) then
+							return true
+						end
+						return false
+					end
+				end
+				return Details222.Apocalypse.ServerInCombat
+			end
+		}
+
+		--simplify and reduce the amount of functions to work with
+		local mainFName = "GetCombatSession"
+		local getSegmentFName = mainFName .. "From"
+		local getSpellFname = mainFName .. "SourceFrom"
+
+		function Details222.B.GetEmptySegment()
+			return {
+				combatSources = {},
+				totalAmount = 0,
+				maxAmount = 0,
+				durationSeconds = 0,
+			}
+		end
+
+		---return a segment
+		---@param type string
+		---@param identifier number
+		---@param attribute number
+		---@return damagemeter_combat_session
+		function Details222.B.GetSegment(type, identifier, attribute)
+			if attribute < 0 then
+				local result = Details222.BParser.GetCustomDataForWindow(nil, attribute, type, identifier)
+				return result
+			else
+				local result = Details.DM[(getSegmentFName .. type)](identifier, attribute)
+				return result
+			end
+		end
+
+		---return a spell container
+		---@param type string
+		---@param identifier number
+		---@param attribute number
+		---@param guid string
+		---@return damagemeter_combat_session_source
+		function Details222.B.GetSpells(type, identifier, attribute, guid, x)
+			if Details222.B.IsSegmentType(type) then
+				return Details.DM[(getSpellFname .. DETAILS_SEGMENTTYPE_TYPE)](identifier, attribute, guid, x)
+			else
+				return Details.DM[(getSpellFname .. type)](identifier, attribute, guid, x)
+			end
+		end
+
+		function Details222.B.GetCombatTime(type)
+			return C_DamageMeter.GetSessionDurationSeconds(type)
+		end
+
+		---usage: local actorList, amountOfActors, totalAmount, combatTime = Details222.B.GetSegmentInfo(segment)
+		---@param s damagemeter_combat_session
+		---@return damagemeter_combat_source[] actorList
+		---@return number amountOfActors
+		---@return number totalAmount
+		---@return number combatTime
+		function Details222.B.GetSegmentInfo(s)
+			return s.combatSources, #s.combatSources, s.totalAmount, s.durationSeconds
+		end
+
+		---usage: local spellList, amountOfSpells, totalAmount, maxAmount = Details222.B.GetSpellContainerInfo(spellContainer)
+		---@param s damagemeter_combat_session_source
+		---@return damagemeter_combat_spell[] spells
+		---@return number totalSpells
+		---@return number totalAmount
+		---@return number maxAmount
+		function Details222.B.GetSpellContainerInfo(s)
+			return s.combatSpells, #s.combatSpells, s.totalAmount, s.maxAmount
+		end
+
+		---usage: local spellId, total, perSecond, creatureName, overkill, isAvoidable, isDeadly, spellDetails = Details222.B.GetSpellInfo(spell)
+		---@param s damagemeter_combat_spell
+		---@return number spellID
+		---@return number totalAmount
+		---@return number amountPerSecond
+		---@return string creatureName
+		---@return number overkillAmount
+		---@return boolean isAvoidable
+		---@return boolean isDeadly
+		---@return damagemeter_combat_spell_unit_details[] combatSpellDetails
+		function Details222.B.GetSpellDetails(s)
+			return s.spellID, s.totalAmount, s.amountPerSecond, s.creatureName, s.overkillAmount, s.isAvoidable, s.isDeadly, s.combatSpellDetails
+		end
+
+		---usage: local actorName, actorGUID, total, perSecond, icon, class, deathId, deathTime, creatureId, classification, isLocalPlayer = Details222.B.GetActorDetails(actor)
+		---@param s damagemeter_combat_source
+		---@return string actorName
+		---@return string actorGUID
+		---@return number totalAmount
+		---@return number amountPerSecond
+		---@return number specIconID
+		---@return string classFilename
+		---@return number deathRecapID
+		---@return number deathTimeSeconds
+		---@return number sourceCreatureID
+		---@return string classification
+		---@return boolean isLocalPlayer
+		function Details222.B.GetActorDetails(s)
+			return s.name, s.sourceGUID, s.totalAmount, s.amountPerSecond, s.specIconID,
+			s.classFilename, s.deathRecapID, s.deathTimeSeconds, s.sourceCreatureID, s.classification, s.isLocalPlayer
+		end
+
+		function Details222.B.GetAllCombatTypes(type, identifier)
+			local result = {}
+			for i = 0, 10 do
+				local segment = Details222.B.GetSegment(type, identifier, i)
+				if segment then
+					result[#result + 1] = segment
+				end
+			end
+			return result
+		end
+
+		function Details222.B.IsSegmentType(id)
+			if type(id) == "number" and id <= 1 then
+				return true
+			end
+			return false
+		end
+
+		---return the amount of segments available in Details!
+		---usage: local amountOfSegments = Details222.B.GetAmountOfSegments()
+		---@return number
+		function Details222.B.GetAmountOfSegments()
+			return #Details.DM.GetAvailableCombatSessions()
+		end
+
+		---usage: local allSegments = Details222.B.GetAllSegments()
+		function Details222.B.GetAllSegments()
+			return Details.DM.GetAvailableCombatSessions()
+		end
+
+		function Details222.B.GetSegmentIdFromCurrent()
+			local s = Details222.B.GetAllSegments()
+			if s[#s] then
+				return s[#s].sessionID
+			end
+			return 1
+		end
+
+		function Details222.B.GetCombatTime(id)
+			return Details222.B.GetSegment("ID", id, 0).durationSeconds
+		end
+
+		function Details222.B.GetCurrentTime(segmentType)
+			return Details222.B.GetSegment("Type", segmentType, 0).durationSeconds
+		end
+
+		function Details222.B.GetOverallTime()
+			return  C_DamageMeter.GetSessionDurationSeconds(0)
+		end
+
+		function Details:BleachFontString(fontString)
+			fontString:SetToDefaults()
+			fontString:SetFontObject("GameFontHighlight")
+			fontString:SetText("")
+		end
+
 		---@type instancedifficulty
 		Details222.InstanceDifficulty = {
 			["DungeonNormal"] = 1,
@@ -267,6 +497,9 @@
 		---@field CheckContextInterest function
 		---@field FinishContext function
 		---@field GetContext function
+
+		DAMAGE_METER_SESSIONPARAMETER_TYPE = "type"
+		DAMAGE_METER_SESSIONPARAMETER_ID = "id"
 
 		--tells what is the activity the player is doing
 		Details222.ContextManager = {
@@ -505,6 +738,9 @@
 		local UnitDebuff = C_UnitAuras and C_UnitAuras.GetDebuffDataByIndex or UnitDebuff
 		Details222.UnitDebuff = UnitDebuff
 
+		local dr = C_DeathRecap
+		Details.DR = dr
+
         if (C_Spell and C_Spell.GetSpellInfo) then
             Details222.GetSpellInfo = function(...)
                 local result = GetSpellInfo(...)
@@ -584,6 +820,8 @@ do
 
 		--store functions to create options frame
 		Details.optionsSection = {}
+
+		Details.ilevel = {}
 
 	--containers
 		--armazenas as fun��es do parser - All parse functions
@@ -958,7 +1196,7 @@ do
 		--constants
 
 		if (DetailsFramework.IsWotLKWow()) then
-			--[[global]] DETAILS_HEALTH_POTION_ID = 33447 -- Runic Healing Potion
+			--[[global]] DETAILS_HEALTH_POTION1_ID = 33447 -- Runic Healing Potion
 			--[[global]] DETAILS_HEALTH_POTION2_ID = 41166 -- Runic Healing Injector
 			--[[global]] DETAILS_REJU_POTION_ID = 40087 -- Powerful Rejuvenation Potion
 			--[[global]] DETAILS_REJU_POTION2_ID = 40077 -- Crazy Alchemist's Potion
@@ -974,7 +1212,7 @@ do
 			--[[global]] DETAILS_STR_POTION_ID = 307164
 			--[[global]] DETAILS_STAMINA_POTION_ID = 40093 --Indestructible Potion
 			--[[global]] DETAILS_HEALTH_POTION_LIST = {
-					[DETAILS_HEALTH_POTION_ID] = true, -- Runic Healing Potion
+					[DETAILS_HEALTH_POTION1_ID] = true, -- Runic Healing Potion
 					[DETAILS_HEALTH_POTION2_ID] = true, -- Runic Healing Injector
 					[DETAILS_HEALTHSTONE_ID] = true, --Warlock's Healthstone
 					[DETAILS_HEALTHSTONE2_ID] = true, --Warlock's Healthstone (1/2 Talent)
@@ -986,8 +1224,10 @@ do
 				}
 
 		else
-			--[[global]] DETAILS_HEALTH_POTION_ID = 307192 -- spiritual healing potion
-			--[[global]] DETAILS_HEALTH_POTION2_ID = 359867 --cosmic healing potion
+			--[[global]] DETAILS_HEALTH_POTION1_ID = 307192 -- spiritual healing potion
+			--[[global]] DETAILS_HEALTH_POTION2_ID = 1234768 --cosmic healing potion
+			--[[global]] DETAILS_HEALTH_POTION3_ID = 1262857 --Potent Healing Potion
+
 			--[[global]] DETAILS_REJU_POTION_ID = 307194
 			--[[global]] DETAILS_MANA_POTION_ID = 307193
 			--[[global]] DETAILS_FOCUS_POTION_ID = 307161
@@ -998,7 +1238,7 @@ do
 			--[[global]] DETAILS_STR_POTION_ID = 307164
 			--[[global]] DETAILS_STAMINA_POTION_ID = 307163
 			--[[global]] DETAILS_HEALTH_POTION_LIST = {
-					[DETAILS_HEALTH_POTION_ID] = true, --Healing Potion
+					[DETAILS_HEALTH_POTION1_ID] = true, --Healing Potion
 					[DETAILS_HEALTHSTONE_ID] = true, --Warlock's Healthstone
 					[DETAILS_REJU_POTION_ID] = true, --Rejuvenation Potion
 					[DETAILS_MANA_POTION_ID] = true, --Mana Potion
@@ -1006,6 +1246,10 @@ do
 					[DETAILS_HEALTH_POTION2_ID] = true,
 				}
 		end
+
+		Details.HealingPotions = {
+			[1262857] = true
+		}
 
 		--[[global]] DETAILS_MODE_GROUP = 2
 		--[[global]] DETAILS_MODE_ALL = 3
@@ -1099,6 +1343,23 @@ do
 			current_standard = Loc ["STRING_CURRENTFIGHT"],
 			past = Loc ["STRING_FIGHTNUMBER"]
 		}
+
+		if DetailsFramework.IsAddonApocalypseWow() then
+			Details.ApocalypseAttributeNames = {
+				[Enum.DamageMeterType.DamageDone] = DAMAGE_METER_TYPE_DAMAGE_DONE,
+				[Enum.DamageMeterType.Dps] = DAMAGE_METER_TYPE_DPS,
+				[Enum.DamageMeterType.HealingDone] = DAMAGE_METER_TYPE_HEALING_DONE,
+				[Enum.DamageMeterType.Hps] = DAMAGE_METER_TYPE_HPS,
+				[Enum.DamageMeterType.Absorbs] = DAMAGE_METER_TYPE_ABSORBS,
+				[Enum.DamageMeterType.Interrupts] = DAMAGE_METER_TYPE_INTERRUPTS,
+				[Enum.DamageMeterType.Dispels] = DAMAGE_METER_TYPE_DISPELS,
+				[Enum.DamageMeterType.DamageTaken] = DAMAGE_METER_TYPE_DAMAGE_TAKEN,
+				[Enum.DamageMeterType.AvoidableDamageTaken] = DAMAGE_METER_TYPE_AVOIDABLE_DAMAGE_TAKEN,
+				[Enum.DamageMeterType.Deaths] = DAMAGE_METER_TYPE_DEATHS,
+				[Enum.DamageMeterType.EnemyDamageTaken] = DAMAGE_METER_TYPE_ENEMY_DAMAGE_TAKEN,
+			};
+		end
+
 
 		Details._detalhes_props["modo_nome"] = {
 				[_detalhes._detalhes_props["MODO_ALONE"]] = Loc ["STRING_MODE_SELF"],
@@ -1346,7 +1607,7 @@ do
                                 if (tooltipData.hyperlink) then
                                     local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType,
                                     itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType,
-                                    expacID, setID, isCraftingReagent = GetItemInfo(tooltipData.hyperlink)
+                                    expacID, setID, isCraftingReagent = C_Item.GetItemInfo(tooltipData.hyperlink)
 
                                     local itemInfo = {
                                         itemName = itemName,
@@ -1447,11 +1708,11 @@ do
 		end
 
 	--print messages
-		function _detalhes:Msg(str, arg1, arg2, arg3, arg4)
+		function _detalhes:Msg(str, arg1, arg2, arg3, arg4, arg5)
 			if (self.__name) then
-				print("|cffffaeae" .. self.__name .. "|r |cffcc7c7c(plugin)|r: " .. (str or ""), arg1 or "", arg2 or "", arg3 or "", arg4 or "")
+				print("|cffffaeae" .. self.__name .. "|r |cffcc7c7c(plugin)|r: " .. (str or ""), arg1 or "", arg2 or "", arg3 or "", arg4 or "", arg5 or "")
 			else
-				print(Loc ["STRING_DETAILS1"] .. (str or ""), arg1 or "", arg2 or "", arg3 or "", arg4 or "")
+				print(Loc ["STRING_DETAILS1"] .. (str or ""), arg1 or "", arg2 or "", arg3 or "", arg4 or "", arg5 or "")
 			end
 		end
 
@@ -1474,7 +1735,7 @@ do
 			Details.Schedules.After(5, _detalhes.wipe_combat_after_failed_load)
 		end
 
-		Details.failed_to_load = C_Timer.NewTimer(1, function() Details.Schedules.NewTimer(20, _detalhes.WelcomeMsgLogon) end)
+		--Details.failed_to_load = C_Timer.NewTimer(1, function() Details.Schedules.NewTimer(20, _detalhes.WelcomeMsgLogon) end)
 
 	--key binds
 	--[=
@@ -1751,10 +2012,10 @@ function Details:DestroyActor(actorObject, actorContainer, combatObject, callSta
 
 	--remove the actor from the parser cache
 	local c1, c2, c3, c4 = Details222.Cache.GetParserCacheTables()
-	c1[actorObject.serial] = nil
-	c2[actorObject.serial] = nil
-	c3[actorObject.serial] = nil
-	c4[actorObject.serial] = nil
+	c1[actorObject.serial or "a"] = nil
+	c2[actorObject.serial or "a"] = nil
+	c3[actorObject.serial or "a"] = nil
+	c4[actorObject.serial or "a"] = nil
 
 	if (not actorObject.ownerName) then --not a pet
 		if (containerType == 1 or containerType == 2) then --damage|healing done
@@ -1882,3 +2143,67 @@ end
 C_Timer.After(5, function()
 --TutorialPointerFrame_1:HookScript("OnShow", function(self) self:Hide() end) --remove on v11 launch
 end)
+
+-- Support for wago addon packs
+DetailsAPI = DetailsAPI or {}
+---@param profileKey string --the name of the profile to be exported
+---@return string --the encoded profile string that can be imported by other users
+function DetailsAPI:ExportProfile(profileKey)
+    local profileString = Details:ExportCurrentProfile(profileKey)
+	return profileString
+end
+
+---@param profileString string --the encoded profile string to be imported
+---@param profileKey string --the name of the profile to be imported
+function DetailsAPI:ImportProfile(profileString, profileKey)
+	local bImportAutoRunCode = false
+	local bIsFromImportPrompt = false
+	local overwriteExisting = true
+	Details:ImportProfile(profileString, profileKey, bImportAutoRunCode, bIsFromImportPrompt, overwriteExisting)
+end
+
+---@param profileString string --the profile string to decode
+---@return table --the decoded profile data as a table
+function DetailsAPI:DecodeProfileString(profileString)
+    local profileTable = Details:DecompressData(profileString, "print")
+	return profileTable
+end
+
+---@param profileName string -- profileKey of an existing profile
+function DetailsAPI:SetProfile(profileName)
+	Details:ApplyProfile(profileName)
+end
+
+---@return table<string, boolean>  -- a table of all available profile keys in the format [profileKey] = true
+function DetailsAPI:GetProfileKeys()
+    local profileList = Details:GetProfileList()
+    local profileKeys = {}
+    for index, key in ipairs(profileList) do
+        profileKeys[key] = true
+    end
+    return profileKeys
+end
+
+---@return string --the profileKey of the currently active profile
+function DetailsAPI:GetCurrentProfileKey()
+    local currentProfileName = Details:GetCurrentProfileName()
+	return currentProfileName
+end
+
+function DetailsAPI:OpenConfig()
+    Details_OpenDefaultOptionsWindow()
+end
+
+function DetailsAPI:CloseConfig()
+    if (DetailsPluginContainerWindow and DetailsPluginContainerWindow:IsShown()) then
+        DetailsPluginContainerWindow:Hide()
+    end
+end
+
+---return a ready only table with which profile is assigned to other characters of the account.
+---@param self details
+---@return table<charname, profilekey> --a table in the format [charName] = profileKey
+function DetailsAPI:GetProfileAssignments()
+	local result = DetailsFramework.table.copy({}, _detalhes_global.__char_profiles)
+	return result
+end

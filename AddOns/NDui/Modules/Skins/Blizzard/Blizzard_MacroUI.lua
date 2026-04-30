@@ -17,6 +17,8 @@ C.themes["Blizzard_MacroUI"] = function()
 	B.ReskinTrimScroll(MacroFrame.MacroSelector.ScrollBar)
 
 	local function handleMacroButton(button)
+		if button.styled then return end
+		button.styled = true
 		local bg = B.ReskinIcon(button.Icon)
 		button:DisableDrawLayer("BACKGROUND")
 		button.SelectedTexture:SetColorTexture(1, .8, 0, .5)
@@ -27,14 +29,15 @@ C.themes["Blizzard_MacroUI"] = function()
 	end
 	handleMacroButton(MacroFrameSelectedMacroButton)
 
-	hooksecurefunc(MacroFrame.MacroSelector.ScrollBox, "Update", function(self)
-		for i = 1, self.ScrollTarget:GetNumChildren() do
-			local child = select(i, self.ScrollTarget:GetChildren())
-			if not child.styled then
-				handleMacroButton(child)
-
-				child.styled = true
+	C_Timer.After(0, function() -- add delay to avoid taint
+		local scrollBox = MacroFrame.MacroSelector.ScrollBox
+		hooksecurefunc(scrollBox, "Update", function(self)
+			if self.view then
+				self:ForEachFrame(handleMacroButton)
 			end
+		end)
+		if scrollBox.view then
+			scrollBox:ForEachFrame(handleMacroButton)
 		end
 	end)
 

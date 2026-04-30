@@ -925,6 +925,12 @@ local function instantiateWindow(obj)
     widgets.msg_box:EnableMouse(true);
     widgets.msg_box.widgetName = "msg_box";
 
+	-- because we're pretending to be the default chat edit box at times, we need to make sure that any calls are covered.
+	local _ghostFun = function() end;
+	for _, slug in pairs({"Deactivate"}) do
+		widgets.msg_box[slug] = _ghostFun;
+	end
+
     -- Addmessage functions
     obj.AddMessage = function(self, msg, ...)
 		-- check that msg exists
@@ -945,42 +951,39 @@ local function instantiateWindow(obj)
 
 		nextColor.r, nextColor.g, nextColor.b = r, g, b;
 
+		self.nextStamp = select(29, ...) or self.nextStamp;
+
+		local spreadArgs = {select(2, ...)}
 		local messageFormatter = function (msg)
-			return applyMessageFormatting(self.widgets.chat_display, event, msg or arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17);
+			return applyMessageFormatting(self.widgets.chat_display, event, msg or arg1, unpack(spreadArgs));
 		end
 
 		local str = messageFormatter();
 
 		-- if censoring is supported by client
 		if (
+			arg11 and
 			_G.C_ChatInfo and
 			_G.C_ChatInfo.IsChatLineCensored and
-			_G.ChatHistory_GetAccessID and
-			_G.ChatHistory_GetAccessID and
-			_G.Chat_GetChatCategory
+			_G.C_ChatInfo.IsChatLineCensored(arg11)
 		) then
 
 			local infoType = strsub(event, 10);
-			local chatGroup = _G.Chat_GetChatCategory(infoType);
 			local info = _G.ChatTypeInfo[infoType];
 
-			local chatTarget;
-			if chatType == 'CHANNEL' then
-				chatTarget = infoType .. arg8;
-			elseif chatType == 'WHISPER' then
-				chatTarget = arg2;
-			end
-
 			local isChatLineCensored = _G.C_ChatInfo.IsChatLineCensored(arg11);
-			local accessID = _G.ChatHistory_GetAccessID(chatGroup, chatTarget);
-			local typeID = _G.ChatHistory_GetAccessID(infoType, chatTarget, arg12 or arg13);
+
+			-- deferred events that are censored will not have a message, so we need to check for that and use the default censored message if needed.
+			if not msg and isChatLineCensored then
+				str = messageFormatter(_G.CENSORED_MESSAGE_HIDDEN:format(arg2, arg11));
+			end
 
 			local eventArgs;
 			if isChatLineCensored then
 				eventArgs = packTable(...)
 			end
 
-			self:AddMessage(str, r, g, b, info.id, accessID, typeID, event, eventArgs, messageFormatter);
+			self:AddMessage(str, r, g, b, info.id, undef, undef, event, eventArgs, messageFormatter);
 		else
 			-- otherwise use old method
 			self:AddMessage(str, r, g, b);
@@ -988,8 +991,9 @@ local function instantiateWindow(obj)
 
 		self.msgWaiting = true;
 		self.lastActivity = _G.GetTime();
-        if(self.tabStrip) then
-                self.tabStrip:UpdateTabs();
+
+		if(self.tabStrip) then
+            self.tabStrip:UpdateTabs();
         end
     end
 
@@ -1102,6 +1106,9 @@ local function instantiateWindow(obj)
 					self.bn.hasFocus = hasFocus;
 					self.bn.id = id;
 					-- self.widgets.from:SetText(self.theUser.." - "..toonName);
+					if (toonName and toonName ~= "") then
+                        self.widgets.from:SetText(GetReadableName(self.theUser).." ("..toonName..")");
+                    end
 					self:UpdateIcon();
 					if (client == _G.BNET_CLIENT_WOW) then
 						self:UpdateCharDetails();
@@ -1270,6 +1277,20 @@ local function instantiateWindow(obj)
                                 self.widgets.msg_box:SetFocus();
                         end
 		end
+	end
+
+	-- update/swap window name
+	obj.Rename = function (self, name)
+		for i=1,#WindowSoupBowl.windows do
+			if(WindowSoupBowl.windows[i].user == self.theUser) then
+				WindowSoupBowl.windows[i].user = name;
+				break;
+			end
+		end
+
+		self.user = name
+		self.theUser = name
+		self.widgets.from:SetText(GetReadableName(name))
 	end
 
 	-- at this state the message is no longer classified as a new window, reset flag.
@@ -1486,7 +1507,7 @@ end
 
 -- Create (recycle if available) message window. Returns object.
 -- (wtype == "whisper", "chat" or "w2w")
-local function createWindow(userName, wtype)
+local function createWindow(userName, wtype, onBeforeReturn)
     if(type(userName) ~= "string") then
         return;
     end
@@ -1515,6 +1536,9 @@ local function createWindow(userName, wtype)
         obj.type = wtype;
         loadWindowDefaults(obj); -- clear contents of window and revert back to it's initial state.
         dPrint("Window recycled '"..obj:GetName().."'");
+		if (type(onBeforeReturn) == "function") then
+			onBeforeReturn(obj);
+		end
 		CallModuleFunction("OnWindowCreated", obj);
         table.insert(windowsByAge, obj);
         table.sort(windowsByAge, function(a, b) return a.age > b.age; end);
@@ -1539,7 +1563,10 @@ local function createWindow(userName, wtype)
         -- f.icon.theUser = userName;
         loadWindowDefaults(f);
         dPrint("Window created '"..f:GetName().."'");
-	CallModuleFunction("OnWindowCreated", f);
+		if (type(onBeforeReturn) == "function") then
+			onBeforeReturn(f);
+		end
+		CallModuleFunction("OnWindowCreated", f);
         table.insert(windowsByAge, f);
         table.sort(windowsByAge, function(a, b) return a.age > b.age; end);
         return f;
@@ -1565,7 +1592,7 @@ local function destroyWindow(userNameOrObj)
     if(type(userNameOrObj) == "string") then
         obj, index = getWindowByName(userNameOrObj);
     else
-	obj, index = getWindowByName(userNameOrObj.theUser);
+		obj, index = getWindowByName(userNameOrObj.theUser);
     end
 
     if(obj) then
@@ -1617,16 +1644,16 @@ function GetWindowSoupBowl()
     return WindowSoupBowl;
 end
 
-function CreateWhisperWindow(playerName)
-    return createWindow(playerName, "whisper");
+function CreateWhisperWindow(playerName, onBeforeReturn)
+    return createWindow(playerName, "whisper", onBeforeReturn);
 end
 
-function CreateChatWindow(chatName)
-    return createWindow(chatName, "chat");
+function CreateChatWindow(chatName, onBeforeReturn)
+    return createWindow(chatName, "chat", onBeforeReturn);
 end
 
-function CreateW2WWindow(chatName)
-    return createWindow(chatName, "w2w");
+function CreateW2WWindow(chatName, onBeforeReturn)
+    return createWindow(chatName, "w2w", onBeforeReturn);
 end
 
 function DestroyWindow(playerNameOrObject)
@@ -2039,19 +2066,7 @@ end
 local myself = _G.UnitName("player")
 RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkClick", function(self, link, text, button)
 	local t,n,i = string.split(":", link)
-
-	if n == myself then
-		return
-    end
-
-	if t == 'player' then
-		if (_G.ChatFrameMixin and _G.ChatFrameMixin.OnHyperlinkClick) then
-			_G.ChatFrameMixin.OnHyperlinkClick(_G.DEFAULT_CHAT_FRAME, link, text, button);
-		else
-			_G.ChatFrame_OnHyperlinkShow(_G.DEFAULT_CHAT_FRAME, link, text, button);
-		end
-		return;
-	end
+	local winType = self:GetParent().type
 
 	if t == 'censoredmessage' then
 		local hyperlinkLineID = _G.tonumber(n);
@@ -2074,19 +2089,18 @@ RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkClick", fu
 			local text = _G.C_ChatInfo.GetChatLineText(lineID);
 
 			-- The displayed message
-			local formattedText = MessageFormatter(text);
+			local formattedText = MessageFormatter(applyStringModifiers(text, self));
 
 			-- Report hyperlink is appended to the display message.
-			local reportHyperlink = _G.CENSORED_MESSAGE_REPORT:format(lineID);
-			formattedText = formattedText..reportHyperlink;
+			local formattedTextReport = _G.CENSORED_MESSAGE_REPORT:format(formattedText, lineID);
 
 			-- edit history entry.
 			if (modules.History and modules.History.ReplaceCensoredMessage) then
-				modules.History:ReplaceCensoredMessage(lineID, formattedText);
+				modules.History:ReplaceCensoredMessage(lineID, text);
 			end
 
 			eventArgs[1] = text
-			return formattedText, r, g, b, infoID, accessID, typeID, event, eventArgs, MessageFormatter, ...;
+			return formattedTextReport, r, g, b, infoID, accessID, typeID, event, eventArgs, MessageFormatter, ...;
 		end
 
 		self:TransformMessages(DoesMessageLineIDMatch, SetMessage)
@@ -2102,11 +2116,24 @@ RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkClick", fu
 		end
 	end
 
-	if (_G.ChatFrameMixin and _G.ChatFrameMixin.OnHyperlinkClick) then
-		_G.ChatFrameMixin.OnHyperlinkClick(self, link, text, button);
-	else
-		_G.ChatFrame_OnHyperlinkShow(self, link, text, button);
+	if t == 'player' then
+		-- allow player click if shit-clicking to insert into WIM
+		if EditBoxInFocus and button == "LeftButton" and _G.IsModifiedClick() then
+			EditBoxInFocus:Insert(n);
+			return;
+
+		-- or if shift-clicking into another editbox or doing a who lookup
+		elseif not _G.IsModifiedClick() and button == "LeftButton" and winType == "whisper" then
+			return;
+
+		elseif button == "RightButton" and n == myself then
+			return;
+		end
+
 	end
+
+	-- pass all other clicks to SetItemRef
+	_G.SetItemRef(link, text, button);
 end);
 --RegisterWidgetTrigger("chat_display", "whisper,chat,w2w","OnMessageScrollChanged", function(self) updateScrollBars(self:GetParent()); end);
 
@@ -2187,7 +2214,9 @@ RegisterWidgetTrigger("msg_box", "whisper,chat,w2w", "OnEditFocusGained", functi
 RegisterWidgetTrigger("msg_box", "whisper,chat,w2w", "OnEditFocusLost", function(self)
 								_EditBoxInFocus = EditBoxInFocus -- temporary reference
                                 EditBoxInFocus = nil;
-                                -- _G.ACTIVE_CHAT_EDIT_BOX = nil;
+								-- if _G.ACTIVE_CHAT_EDIT_BOX == self then
+	                            --     _G.ACTIVE_CHAT_EDIT_BOX = nil;
+								-- end
                 end);
 RegisterWidgetTrigger("msg_box", "whisper,chat,w2w", "OnMouseUp", function(self, button)
                                 libs.DropDownMenu.CloseDropDownMenus();

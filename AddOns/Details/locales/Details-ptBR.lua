@@ -318,7 +318,7 @@ L["STRING_LEFT_CLICK_SHARE"] = "Clique para enviar relatório."
 L["STRING_LEFT_TO_RIGHT"] = "Esquerda para Direita"
 L["STRING_LIKES_YOU_GAVE"] = "Curtidas que você deu"
 L["STRING_LOCK_DESC"] = "Travar ou destravar esta janela"
-L["STRING_LOCK_WINDOW"] = "travar"
+L["STRING_LOCK_WINDOW"] = "Travar"
 L["STRING_MASTERY"] = "Maestria"
 L["STRING_MAXIMUM"] = "Máximo"
 L["STRING_MAXIMUM_SHORT"] = "Máx"
@@ -917,6 +917,12 @@ L["STRING_OPTIONS_PERFORMANCECAPTURES_DESC"] = "Esta opção controla quais info
 L["STRING_OPTIONS_PERFORMANCEPROFILES_ANCHOR"] = "Perfis de performance:"
 L["STRING_OPTIONS_PICONS_DIRECTION"] = "Direção dos ícones de plugin"
 L["STRING_OPTIONS_PICONS_DIRECTION_DESC"] = "Muda a direção dos ícones dos plugins que são exibidos na barra de ferramentas."
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME"] = "Player Name"
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME_AUTO_WIDTH"] = "Length Auto"
+--[[Translation missing --]]
+L["STRING_OPTIONS_PLAYERNAME_WIDTH"] = "Length"
 L["STRING_OPTIONS_PLUGINS"] = "Plugins"
 L["STRING_OPTIONS_PLUGINS_AUTHOR"] = "Autor"
 L["STRING_OPTIONS_PLUGINS_NAME"] = "Nome"
@@ -1088,6 +1094,8 @@ L["STRING_OPTIONS_SEGMENTSSAVE_DESC"] = [=[Esta opção controla quantos segment
 Valores altos podem fazer o tempo de logoff do seu personagem demorar mais.
 
 Se você raramente olha os dados da raide do dia anterior, eh muito recomendado deixar esta opção em 1|cFFFFFFFF1|r.]=]
+--[[Translation missing --]]
+L["STRING_OPTIONS_SELECT_TEMPLATE"] = "Select Template"
 L["STRING_OPTIONS_SENDFEEDBACK"] = "Feedback"
 L["STRING_OPTIONS_SHOW_SIDEBARS"] = "Mostrar Bordas Laterais"
 L["STRING_OPTIONS_SHOW_SIDEBARS_DESC"] = "Mostrar ou esconder as barras laterais na esquerda e direita da janela."
@@ -1184,6 +1192,10 @@ L["STRING_OPTIONS_TEXT_OUTLINE"] = "Contorno do Texto."
 L["STRING_OPTIONS_TEXT_RIGHT_ANCHOR"] = "Texto a Direita:"
 L["STRING_OPTIONS_TEXT_ROUTILINE_DESC"] = "Quando ativado o texto da direita ganhara um efeito de sombra ao seu redor."
 L["STRING_OPTIONS_TEXT_ROWICONS_ANCHOR"] = "Ícones:"
+--[[Translation missing --]]
+L["STRING_OPTIONS_TEXT_SHADOWCOLOR"] = "Shadow Color"
+--[[Translation missing --]]
+L["STRING_OPTIONS_TEXT_SHADOWOFFSET"] = "Shadow Offset %s"
 L["STRING_OPTIONS_TEXT_SHOW_BRACKET"] = "Tipo do Colchete"
 L["STRING_OPTIONS_TEXT_SHOW_BRACKET_DESC"] = "Tipo de carácter usado para abrir e fechar o bloco do DPS e porcentagem."
 L["STRING_OPTIONS_TEXT_SHOW_PERCENT"] = "Mostrar Porcentagem"
@@ -1331,9 +1343,7 @@ L["STRING_OPTIONS_WC_CLOSE_DESC"] = "Fecha esta janela. Quando fechada, a janela
 L["STRING_OPTIONS_WC_CREATE"] = "Criar Janela"
 L["STRING_OPTIONS_WC_CREATE_DESC"] = "Cria uma nova janela."
 L["STRING_OPTIONS_WC_LOCK"] = "Travar"
-L["STRING_OPTIONS_WC_LOCK_DESC"] = [=[Trava ou Destrava a janela.
-
-Quando travada, a janela não pode ser movida.]=]
+L["STRING_OPTIONS_WC_LOCK_DESC"] = "Trava ou Destrava a janela. Quando travada, a janela não pode ser movida."
 L["STRING_OPTIONS_WC_REOPEN"] = "Reabrir"
 L["STRING_OPTIONS_WC_UNLOCK"] = "Destravar"
 L["STRING_OPTIONS_WC_UNSNAP"] = "Desagrupar"
@@ -1407,6 +1417,8 @@ L["STRING_OPTIONSMENU_TOOLTIP"] = "Tooltips"
 L["STRING_OPTIONSMENU_WALLPAPER"] = "Janela: Papel de Parede"
 L["STRING_OPTIONSMENU_WINDOW"] = "Janela: Configurações"
 L["STRING_OPTIONSMENU_WINDOWBODY"] = "Configurações de janela"
+--[[Translation missing --]]
+L["STRING_OR"] = "Or"
 L["STRING_OVERALL"] = "Dados Gerais"
 L["STRING_OVERHEAL"] = "Sobrecura"
 L["STRING_OVERHEALED"] = "Sobrecura"
@@ -1528,6 +1540,26 @@ L["STRING_SEGMENTS_LIST_WASTED_TIME"] = "Fora de Combate"
 L["STRING_SHIELD_HEAL"] = "Prevenido"
 L["STRING_SHIELD_OVERHEAL"] = "Desperdiçado"
 L["STRING_SHORTCUT_RIGHTCLICK"] = "Menu de Atalho (botão direito para fechar)"
+L["STRING_SIMPLE_TEXT_FORMAT"] = "Usar formatação de texto simples"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED"] = "Usar texto alinhado"
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_DESC"] = "O texto é alinhado em colunas, configure o espaçamento entre colunas."
+L["STRING_SIMPLE_TEXT_FORMAT_ASLIGNED_SPACE_BETWEEN"] = "Espaço entre colunas"
+L["STRING_SIMPLE_TEXT_FORMAT_DESC"] = "Habilita o uso das três regras abaixo."
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE2"] = "Não mostrar porcentagem"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE3"] = "Mostrar apenas total"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE4"] = "Separar com | como separador"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE5"] = "Separar com [colchetes]"
+L["STRING_SIMPLE_TEXT_FORMAT_TEMPLATE6"] = "Total (DPS) Porcentagem"
+L["STRING_SIMPLE_TEXT_FORMAT_TITLE"] = "Texto à Direita: Simples ou Alinhado"
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE1"] = [=[Quando a linha possui informações
+sobre total e porcentagem.
+|cFFAAAAAA%s ordem: total, porcentagem.]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE2"] = [=[Quando a linha possui informações
+sobre total e por segundo.
+|cFFAAAAAA%s ordem: total, por segundo.]=]
+L["STRING_SIMPLE_TEXT_FORMAT_TYPE3"] = [=[Quando a linha possui informações
+sobre total, por segundo e porcentagem.
+|cFFAAAAAA%s ordem: total, por segundo, porcentagem.]=]
 L["STRING_SLASH_API_DESC"] = "abre o painel da API (em inglês) para construir plugins, displays customizados, auras, etc."
 L["STRING_SLASH_CAPTURE_DESC"] = "liga ou desliga toda captura de dados."
 L["STRING_SLASH_CAPTUREOFF"] = "todas as capturas foram desligadas."
@@ -1584,14 +1616,14 @@ L["STRING_TOOOLD"] = "não pode ser instalado pois sua versão do Details! e mui
 L["STRING_TOP"] = "topo"
 L["STRING_TOP_TO_BOTTOM"] = "Cima para Baixo"
 L["STRING_TOTAL"] = "Total"
+L["STRING_TRAINING_DUMMY"] = "Boneco de Treinamento"
 L["STRING_TRANSLATE_LANGUAGE"] = "Ajude a traduzir o Details!"
 L["STRING_TUTORIAL_FULLY_DELETE_WINDOW"] = [=[Você fechou uma janela e pode reabri-la quando quiser.
 Para deleta-la por completo, vá nas opções -> Janela: Geral -> Deletar.]=]
 L["STRING_TUTORIAL_OVERALL1"] = "A Data Overall atualiza apenas após o combate, clique com o botão direito na barra de título e escolha 'Dynamic Overall Damage' se você desejar atualizações regulares. "
 L["STRING_UNKNOW"] = "Desconhecido"
 L["STRING_UNKNOWSPELL"] = "Magia Desconhecida"
-L["STRING_UNLOCK"] = [=[Separe as janelas
-neste botão]=]
+L["STRING_UNLOCK"] = "Separe as janelas neste botão"
 L["STRING_UNLOCK_WINDOW"] = "Destravar"
 L["STRING_UPTADING"] = "atualizando"
 L["STRING_VERSION_AVAILABLE"] = "uma nova versão está disponível. Baixe pelo aplicativo da Curse Forge ou pelo site da Curse."

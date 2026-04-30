@@ -122,13 +122,16 @@ function Private.GetProfileUrl(name, realmNameOrId, projectId)
 	---@type string|nil
 	local subdomain = nil
 	if projectId == WOW_PROJECT_CLASSIC then
-		if C_Seasons.GetActiveSeason() == Enum.SeasonID.Fresh then
-			subdomain = "fresh"
-		else
+		local season = C_Seasons.GetActiveSeason()
+		if season == Enum.SeasonID.SeasonOfDiscovery then
 			subdomain = "sod"
+		elseif season == Enum.SeasonID.Fresh then
+			subdomain = "fresh"
 		end
 	elseif projectId == WOW_PROJECT_WRATH_CLASSIC or projectId == WOW_PROJECT_CATACLYSM_CLASSIC or projectId == WOW_PROJECT_MISTS_CLASSIC then
 		subdomain = "classic"
+	elseif projectId == WOW_PROJECT_BURNING_CRUSADE_CLASSIC and C_Seasons.GetActiveSeason() == 125 then
+		subdomain = "fresh"
 	end
 
 	---@type table<number, string>

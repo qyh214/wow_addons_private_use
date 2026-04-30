@@ -5,6 +5,8 @@
 	local Loc = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
 	local addonName, Details222 = ...
 	local _
+	---@type detailsframework
+	local detailsFramework = DetailsFramework
 
 	local upper = string.upper --lua local
 	local ipairs = ipairs --lua local
@@ -74,7 +76,263 @@
 	---@field GetNumericalSystem fun(self:details):number
 	---@field SelectNumericalSystem fun(self:details, system:number)
 	---@field UpdateToKFunctions fun(self:details)
+	---@field ArePlayersInCombat fun(self:details):boolean
 
+	---rule 3: show total, dps and percent
+	---rule 2: show total and dps
+	---rule 1: show total and percent
+	---rule -1: show only total
+	function Details:SimpleFormat(fontString2, fontString3, fontString4, total, perSecond, perCent, ruleToUse)
+		if Details.righttext_simple_formatting.enabled then
+			if (ruleToUse == 3) then
+				local string = Details.righttext_simple_formatting.format_tsp
+				fontString4:SetText(string.format(string, total, perSecond, perCent))
+
+			elseif (ruleToUse == 2) then
+				local string = Details.righttext_simple_formatting.format_ts
+				fontString4:SetText(string.format(string, total, perSecond))
+				return
+
+			elseif (ruleToUse == 1) then
+				local string = Details.righttext_simple_formatting.format_tp
+				fontString4:SetText(string.format(string, total, perCent))
+			else -- -1 default to just show total
+				fontString4:SetText(total)
+			end
+
+		elseif (Details.righttext_simple_formatting.use_alignment) then
+			if (ruleToUse == 3) then
+				fontString2:SetText(total)
+				fontString3:SetText(perSecond)
+				fontString4:SetText(perCent)
+
+			elseif (ruleToUse == 2) then
+				fontString2:SetText("")
+				fontString3:SetText(total)
+				fontString4:SetText(perSecond)
+
+			elseif (ruleToUse == 1) then
+				fontString2:SetText("")
+				fontString3:SetText(total)
+				fontString4:SetText(perCent)
+
+			else -- -1 default to just show total
+				fontString2:SetText("")
+				fontString3:SetText("")
+				fontString4:SetText(total)
+			end
+		end
+	end
+
+	---@class adaptersettings : table
+	---@field sessionId number
+	---@field sessionType number
+	---@field sourceData damagemeter_combat_source
+	---@field actorName string
+	---@field actorGUID string
+	---@field classFilename string
+	---@field damageMeterType number
+	---@field specIconID number
+	---@field spec number
+	---@field isPlayer boolean
+	---@field mainDisplay number
+	---@field subDisplay number
+	---@field blzSpecIcon number
+
+	---@param instance instance
+	function Details:MakeActorAdaptersForSession(instance)
+		local sources = instance:GetSources()
+		local adapters = {}
+		for i = 1, #sources do
+			---@type damagemeter_combat_source
+			local sourceData = sources[i]
+			local actorName = sourceData.name
+			---@type adaptersettings
+			local adapterSettings = Details:MakeSettingsForAdapter(instance, actorName, sourceData)
+			local adapter = Details:MakeActorAdapter(adapterSettings)
+			table.insert(adapters, adapter)
+		end
+		return adapters
+	end
+
+	---@param instance instance
+	---@param actorName string
+	---@return adaptersettings
+	function Details:MakeSettingsForAdapter(instance, actorName, sourceData)
+		local sessionId = instance:GetNewSegmentId()
+		local sessionType = instance:GetSegmentType()
+		local mainDisplay, subDisplay = instance:GetDisplay()
+		---@type damagemeter_combat_source
+		sourceData = sourceData or instance:GetSourceActorFromName(actorName) --attempt to index local 'sourceData' (a nil value) after finish a dungeon
+		actorName = actorName or sourceData.name
+		local actorGUID = sourceData.sourceGUID --util.lua:168: attempt to index local 'sourceData' (a nil value)
+		local classFilename = sourceData.classFilename
+		local damageMeterType = instance:GetAttributeType()
+		local blzSpecIcon = sourceData.specIconID
+		local specInfo = detailsFramework:GetSpecInfoFromSpecIcon(blzSpecIcon)
+		local adapterSettings = {
+			sessionId = sessionId,
+			sessionType = sessionType,
+			sourceData = sourceData,
+			actorName = actorName,
+			actorGUID = actorGUID,
+			classFilename = classFilename,
+			damageMeterType = damageMeterType,
+			specIconID = blzSpecIcon,
+			mainDisplay = mainDisplay,
+			subDisplay = subDisplay,
+			blzSpecIcon = blzSpecIcon,
+			spec = specInfo and specInfo.specId,
+			isPlayer = sourceData.isLocalPlayer,
+		}
+		return adapterSettings
+	end
+
+	---@class adapter : actor
+	---@field __is_adapter boolean
+	---@field session damagemeter_combat_session
+	---@field isPlayer boolean
+
+	---@param self details
+	---@param settingsTable adaptersettings
+	---@return adapter
+	function Details:MakeActorAdapter(settingsTable)
+		local segmentType = settingsTable.sessionType
+		local segmentId = settingsTable.sessionId
+		local attributeId = settingsTable.damageMeterType
+		local adapter = {
+			__is_adapter = true,
+			custom = 0,
+			damage_from = {},
+			pets = {},
+			raid_targets = {},
+			friendlyfire_total = 0,
+			friendlyfire = {},
+			targets = {},
+			avoidable_damage = 0,
+			avoidable_damage_sources = {},
+			isPlayer = settingsTable.isPlayer,
+		}
+		local session
+
+		detailsFramework:Mixin(adapter, Details222.Mixins.ActorMixin)
+
+		if Details222.B.IsSegmentType(segmentType) then
+			session = Details222.B.GetSegment("Type", segmentType, attributeId)
+		else
+			session = Details222.B.GetSegment("ID", segmentId, attributeId)
+		end
+
+		if not session then return {} end
+
+		local sourceData = settingsTable.sourceData
+
+		adapter.nome = settingsTable.actorName
+		adapter.serial = settingsTable.actorGUID
+		adapter.classe = settingsTable.classFilename
+		adapter.specIconID = settingsTable.specIconID
+		adapter.total_extra = 0
+		adapter.totalabsorbed = 0
+		adapter.grupo = true
+		adapter.specIcon = settingsTable.blzSpecIcon
+		adapter.session = session
+		adapter.spec = settingsTable.spec
+
+		adapter.damage_taken = 0
+		adapter.total = sourceData.totalAmount
+		adapter.total_without_pet = sourceData.totalAmount
+		adapter.last_dps = sourceData.amountPerSecond
+
+		local spellContainerClass	= 	Details.container_habilidades
+		local damageClass	=	Details.atributo_damage
+		local healingClass =	Details.atributo_heal
+		local energyClass =		Details.atributo_energy
+		local utilityClass		=	Details.atributo_misc
+
+		if settingsTable.isPlayer then
+			adapter.serial = UnitGUID("player")
+		end
+
+		if (attributeId >= 0 and attributeId <= 3) then
+			if attributeId >= 0 and attributeId <= 1 then
+				adapter.spells = spellContainerClass:NovoContainer(Details.container_type.CONTAINER_DAMAGE_CLASS)
+				adapter.total = sourceData.totalAmount
+				setmetatable(adapter, damageClass)
+
+				--spells
+				local spells = Details222.BParser.GetSpells(segmentType, segmentId, attributeId, adapter.serial)
+
+				for j = 1, #spells.combatSpells do
+					local thisSpell = spells.combatSpells[j]
+					local bCanCreateSpellIfMissing = true
+					local spellTable = adapter.spells:GetOrCreateSpell(thisSpell.spellID, bCanCreateSpellIfMissing, "SPELL_DAMAGE")
+					spellTable.total = thisSpell.totalAmount
+					spellTable.id = thisSpell.spellID
+					spellTable.counter = 1
+				end
+
+			elseif attributeId >= 2 and attributeId <= 3 then
+				setmetatable(adapter, healingClass)
+				adapter.spells = spellContainerClass:NovoContainer(Details.container_type.CONTAINER_HEAL_CLASS)
+				adapter.total = sourceData.totalAmount
+
+				--spells
+				local spells = Details222.BParser.GetSpells(segmentType, segmentId, attributeId, adapter.serial)
+				for j = 1, #spells.combatSpells do
+					local thisSpell = spells.combatSpells[j]
+					local bCanCreateSpellIfMissing = true
+					local spellTable = adapter.spells:GetOrCreateSpell(thisSpell.spellID, bCanCreateSpellIfMissing, "SPELL_HEAL")
+					spellTable.total = thisSpell.totalAmount
+					spellTable.id = thisSpell.spellID
+					spellTable.counter = 1
+				end
+			end
+
+		elseif attributeId == 8 then
+			adapter.avoidable_damage = sourceData.totalAmount
+			adapter.avoidable_damage_dps = sourceData.amountPerSecond
+			adapter.avoidable_damage_sources = {}
+
+		elseif attributeId == 4 then
+			setmetatable(adapter, utilityClass)
+			adapter.interrupt = sourceData.totalAmount
+			adapter.interrupt_cast_overlap = 0
+			adapter.interrupt_targets = {}
+			adapter.interrompeu_oque = {}
+			adapter.interrupt_spells = spellContainerClass:CreateSpellContainer(Details.container_type.CONTAINER_MISC_CLASS)
+
+			--spells
+			local spells = Details222.BParser.GetSpells(segmentType, segmentId, attributeId, adapter.serial)
+			for j = 1, #spells.combatSpells do
+				local thisSpell = spells.combatSpells[j]
+				local bCanCreateSpellIfMissing = true
+				local spellTable = adapter.interrupt_spells:GetOrCreateSpell(thisSpell.spellID, bCanCreateSpellIfMissing, "SPELL_INTERRUPT")
+				spellTable.total = thisSpell.totalAmount
+				spellTable.id = thisSpell.spellID
+				spellTable.counter = 1
+			end
+
+		elseif attributeId == 6 then
+			setmetatable(adapter, utilityClass)
+			adapter.dispell = sourceData.totalAmount
+			adapter.dispell_targets = {}
+			adapter.dispell_spells = spellContainerClass:CreateSpellContainer(Details.container_type.CONTAINER_MISC_CLASS)
+			adapter.dispell_oque = {}
+
+			--spells
+			local spells = Details222.BParser.GetSpells(segmentType, segmentId, attributeId, adapter.serial)
+			for j = 1, #spells.combatSpells do
+				local thisSpell = spells.combatSpells[j]
+				local bCanCreateSpellIfMissing = true
+				local spellTable = adapter.dispell_spells:GetOrCreateSpell(thisSpell.spellID, bCanCreateSpellIfMissing, "SPELL_DISPEL")
+				spellTable.total = thisSpell.totalAmount
+				spellTable.id = thisSpell.spellID
+				spellTable.counter = 1
+			end
+		end
+
+		return adapter
+	end
 
 	local playerRealmName = GetRealmName()
 
@@ -266,6 +524,10 @@
 		frame.fading_out = nil
 		frame.fading_in = true
 
+		if Details.no_fade_animation then
+			totalTime = 0
+		end
+
 		Details.FadeHandler.frames[frame] = {
 			totalTime = totalTime or Details.fade_speed,
 			startAlpha = startAlpha or frame:GetAlpha(),
@@ -280,6 +542,10 @@
 		frame.fading_in = nil
 		frame.fading_out = true
 
+		if Details.no_fade_animation then
+			totalTime = 0
+		end
+
 		Details.FadeHandler.frames[frame] = {
 			totalTime = totalTime or Details.fade_speed,
 			startAlpha = startAlpha or frame:GetAlpha() or 0,
@@ -293,6 +559,10 @@
 		if (frame == nil) then
 			frame, animationType, speed, hideType = animationType, speed, hideType, param5
 		end
+
+		--print(debugstack())
+		--if animationType == "OUT" then
+		--end
 
 		--if is a table, might be passed an instance object
 		if (type(frame) == "table") then
@@ -512,6 +782,76 @@
 		return playerName, playerClass, deathTime, deathCombatTime, deathTimeString, playerMaxHealth, deathEvents, lastCooldown, spec
 	end
 
+	function Details:CreateDeathLogTable(actorName, actorClass, specIcon, deathRecap, maxHealth)
+		local firstEvent = deathRecap[1] or {timestamp = time()}
+		local timeOfDeath = firstEvent.timestamp
+		local minutes, seconds = floor(timeOfDeath/60), floor(timeOfDeath%60)
+		local deathTimeString = minutes .. "m " .. seconds .. "s"
+		local deathEvents = {}
+		local deathLog = {
+			deathEvents, --1
+			firstEvent.timestamp, --2
+			actorName, --3
+			actorClass, --4
+			maxHealth, --5
+			deathTimeString, --6
+			["dead"] = true,
+			["last_cooldown"] = nil,
+			["dead_at"] = timeOfDeath,
+			["spec"] = detailsFramework:GetSpecIdFromSpecIcon(specIcon),
+		}
+
+		for i = 1, #deathRecap do
+			local deathEvent = deathRecap[i]
+			deathEvents[#deathEvents+1] = {
+				deathEvent.event, --evType
+				deathEvent.spellId, --spellId
+				deathEvent.amount, --amount
+				deathEvent.timestamp, --eventTime
+				deathEvent.currentHP / maxHealth, --heathPercent
+				deathEvent.sourceName, --sourceName
+				deathEvent.absorbed, --absorbed
+				deathEvent.spellSchool, --spellSchool
+				0, --deathEvent.friendlyFire, --friendlyFire
+				deathEvent.overkill, --overkill
+				deathEvent.critical, --criticalHit
+				deathEvent.crushing --crushing
+			}
+		end
+
+		return deathLog
+	end
+
+	---@param self details
+	---@param actorName string
+	---@param deathRecap deathrecapeventinfo[]
+	---@param maxHealth number
+	---@return adapter
+	function Details:MakeDeathLogAdapter(instance, actorName, deathRecap, maxHealth)
+		local settingsTable = Details:MakeSettingsForAdapter(instance, actorName) --831: in function 'MakeDeathLogAdapter'
+		local adapter = Details:MakeActorAdapter(settingsTable)
+		local thisDeathLog = Details:CreateDeathLogTable(actorName, adapter.classe, adapter.specIcon, deathRecap, maxHealth)
+		adapter.deathLog = thisDeathLog
+
+		--[=[
+			school number
+			sourceGUID string
+			sourceFlags number
+			sourceRaidFlags number
+			destName string
+			destGUID string
+			destFlags number
+			destRaidFlags number
+			spellName string
+			avoided boolean
+			isOffHand boolean
+			hideCaster boolean
+			glancing boolean
+		--]=]
+
+		return adapter
+	end
+
 	function Details:UnpackDeathEvent(deathEvent)
 		local evType = deathEvent[1]
 		local spellId = deathEvent[2]
@@ -553,6 +893,87 @@
 
 	--krKR by @yuk6196 (http://wow.curseforge.com/profiles/yuk6196)
 	function Details:UseEastAsianNumericalSystem()
+		if detailsFramework.IsAddonApocalypseWow() then
+			local abbreviateOptionsDamage = {
+				{
+					breakpoint = 1000000000,
+					abbreviation = "THIRD_NUMBER_CAP_NO_SPACE",
+					significandDivisor = 10000000,
+					fractionDivisor = 100,
+					abbreviationIsGlobal = true
+				},
+				{
+					breakpoint = 100000000,
+					abbreviation = "SECOND_NUMBER_CAP_NO_SPACE",
+					significandDivisor = 1000000,
+					fractionDivisor = 100,
+					abbreviationIsGlobal = true
+				},
+				{
+					breakpoint = 10000,
+					abbreviation = "FIRST_NUMBER_CAP_NO_SPACE",
+					significandDivisor = 100,
+					fractionDivisor = 100,
+					abbreviationIsGlobal = true,
+				},
+				{
+					breakpoint = 1000,
+					abbreviation = "",
+					significandDivisor = 1,
+					fractionDivisor = 1,
+					abbreviationIsGlobal = false,
+				},
+				{
+					breakpoint = 1,
+					abbreviation = "",
+					significandDivisor = 1,
+					fractionDivisor = 1,
+					abbreviationIsGlobal = false
+				},
+			}
+
+			local abbreviateOptionsDPS = {
+				{
+					breakpoint = 1000000000,
+					abbreviation = "THIRD_NUMBER_CAP_NO_SPACE",
+					significandDivisor = 10000000,
+					fractionDivisor = 100,
+					abbreviationIsGlobal = true
+				},
+				{
+					breakpoint = 100000000,
+					abbreviation = "SECOND_NUMBER_CAP_NO_SPACE",
+					significandDivisor = 1000000,
+					fractionDivisor = 100,
+					abbreviationIsGlobal = true
+				},
+				{
+					breakpoint = 10000,
+					abbreviation = "FIRST_NUMBER_CAP_NO_SPACE",
+					significandDivisor = 100,
+					fractionDivisor = 100,
+					abbreviationIsGlobal = true,
+				},
+				{
+					breakpoint = 1,
+					abbreviation = "",
+					significandDivisor = 1,
+					fractionDivisor = 1,
+					abbreviationIsGlobal = false
+				},
+			}
+
+			local abbreviateSettingsDamage
+			local abbreviateSettingsDPS
+
+			abbreviateSettingsDamage = CreateAbbreviateConfig(abbreviateOptionsDamage)
+			abbreviateSettingsDamage = {config = abbreviateSettingsDamage}
+			Details.abbreviateOptionsDamage = abbreviateSettingsDamage
+
+			abbreviateSettingsDPS = CreateAbbreviateConfig(abbreviateOptionsDPS)
+			abbreviateSettingsDPS = {config = abbreviateSettingsDPS}
+			Details.abbreviateOptionsDPS = abbreviateSettingsDPS
+		end
 
 		--try to auto detect the language
 		local symbol_1K, symbol_10K, symbol_1B
@@ -731,6 +1152,92 @@
 	end
 
 	function Details:UseWestNumericalSystem()
+		if detailsFramework.IsAddonApocalypseWow() then
+			local useAsianAbbreviations = false
+
+			local abbreviateOptionsDamage =
+			{
+				{
+					breakpoint = 1000000000,
+					abbreviation = useAsianAbbreviations and "THIRD_NUMBER_CAP_NO_SPACE" or "B",
+					significandDivisor = 10000000,
+					fractionDivisor = 100,
+					abbreviationIsGlobal = useAsianAbbreviations
+				},
+				{
+					breakpoint = 1000000,
+					abbreviation = useAsianAbbreviations and "SECOND_NUMBER_CAP_NO_SPACE" or "M",
+					significandDivisor = 10000,
+					fractionDivisor = 100,
+					abbreviationIsGlobal = useAsianAbbreviations
+				},
+				{
+					breakpoint = 10000,
+					abbreviation = useAsianAbbreviations and "FIRST_NUMBER_CAP_NO_SPACE" or "K",
+					significandDivisor = 1000,
+					fractionDivisor = 1,
+					abbreviationIsGlobal = useAsianAbbreviations,
+				},
+				{
+					breakpoint = 1000,
+					abbreviation = useAsianAbbreviations and "FIRST_NUMBER_CAP_NO_SPACE" or "K",
+					significandDivisor = 100,
+					fractionDivisor = 10,
+					abbreviationIsGlobal = useAsianAbbreviations,
+				},
+				{
+					breakpoint = 1,
+					abbreviation = "",
+					significandDivisor = 1,
+					fractionDivisor = 1,
+					abbreviationIsGlobal = false
+				},
+			}
+
+			local abbreviateOptionsDPS =
+			{
+				{
+					breakpoint = 1000000000,
+					abbreviation = useAsianAbbreviations and "THIRD_NUMBER_CAP_NO_SPACE" or "B",
+					significandDivisor = 10000000,
+					fractionDivisor = 100,
+					abbreviationIsGlobal = useAsianAbbreviations
+				},
+				{
+					breakpoint = 1000000,
+					abbreviation = useAsianAbbreviations and "SECOND_NUMBER_CAP_NO_SPACE" or "M",
+					significandDivisor = 10000,
+					fractionDivisor = 100,
+					abbreviationIsGlobal = useAsianAbbreviations
+				},
+				{
+					breakpoint = 1000,
+					abbreviation = useAsianAbbreviations and "FIRST_NUMBER_CAP_NO_SPACE" or "K",
+					significandDivisor = 100,
+					fractionDivisor = 10,
+					abbreviationIsGlobal = useAsianAbbreviations,
+				},
+				{
+					breakpoint = 1,
+					abbreviation = "",
+					significandDivisor = 1,
+					fractionDivisor = 1,
+					abbreviationIsGlobal = false
+				},
+			}
+
+			local abbreviateSettingsDamage
+			local abbreviateSettingsDPS
+
+			abbreviateSettingsDamage = CreateAbbreviateConfig(abbreviateOptionsDamage)
+			abbreviateSettingsDamage = {config = abbreviateSettingsDamage}
+			Details.abbreviateOptionsDamage = abbreviateSettingsDamage
+
+			abbreviateSettingsDPS = CreateAbbreviateConfig(abbreviateOptionsDPS)
+			abbreviateSettingsDPS = {config = abbreviateSettingsDPS}
+			Details.abbreviateOptionsDPS = abbreviateSettingsDPS
+		end
+
 		--short numbers
 		function Details:ToK (numero)
 			if (numero > 999999999) then
@@ -1249,7 +1756,12 @@ end
 
 	--font outline
 	function Details:SetFontOutline (fontString, outline)
+		if outline == nil then
+			outline = ""
+		end
+
 		local fonte, size = fontString:GetFont()
+
 		if (outline) then
 			if (type(outline) == "boolean" and outline) then
 				outline = "OUTLINE"
@@ -1270,6 +1782,7 @@ end
 			end
 		end
 
+		outline = outline or ""
 		fontString:SetFont(fonte, size, outline)
 	end
 
@@ -1289,27 +1802,31 @@ end
 --internal functions
 
 	function Details:HealthTick()
-		if (UnitExists("boss1") and IsInRaid() and IsInInstance()) then
-			local health = (UnitHealth ("boss1") or 0) / (UnitHealthMax ("boss1") or 0)
-			if (Details.boss1_health_percent) then
-				if (Details.boss1_health_percent < health) then
-					return
+		if not detailsFramework.IsAddonApocalypseWow() then
+			if (UnitExists("boss1") and IsInRaid() and IsInInstance()) then
+				local health = (UnitHealth ("boss1") or 0) / (UnitHealthMax ("boss1") or 0)
+				if (Details.boss1_health_percent) then
+					if (Details.boss1_health_percent < health) then
+						return
+					end
 				end
+				Details.boss1_health_percent = health
 			end
-			Details.boss1_health_percent = health
 		end
 	end
 
 	function Details:PlayerHealthTick()
-		for i = 1, #Details.cache_damage_group do
-			local actor = Details.cache_damage_group[i]
-			if (actor) then
-				local health = UnitHealth(actor.nome)
-				if (health) then
-					Details.HealthCache[actor.serial] = health
-					local healthmax = UnitHealthMax(actor.nome)
-					if (healthmax) then
-						Details.HealthMaxCache[actor.serial] = healthmax
+		if not detailsFramework.IsAddonApocalypseWow() then
+			for i = 1, #Details.cache_damage_group do
+				local actor = Details.cache_damage_group[i]
+				if (actor) then
+					local health = UnitHealth(actor.nome)
+					if (health) then
+						Details.HealthCache[actor.serial] = health
+						local healthmax = UnitHealthMax(actor.nome)
+						if (healthmax) then
+							Details.HealthMaxCache[actor.serial] = healthmax
+						end
 					end
 				end
 			end
@@ -1386,11 +1903,13 @@ end
 
 		--check if the player is a rogue and has the aura Vanish
 		if (Details.playerclass == "ROGUE") then
-			--if the player has vanish aura, skip this check
-			---@type aurainfo
-			local auraInfo = C_UnitAuras.GetPlayerAuraBySpellID(11327)
-			if (auraInfo) then
-				return true
+			if not DetailsFramework.IsAddonApocalypseWow() then
+				--if the player has vanish aura, skip this check
+				---@type aurainfo
+				local auraInfo = C_UnitAuras.GetPlayerAuraBySpellID(11327)
+				if (auraInfo) then
+					return true
+				end
 			end
 		end
 
@@ -1399,11 +1918,38 @@ end
 		return false
 	end
 
+	function Details:ArePlayersInCombat()
+		if (UnitAffectingCombat("player")) then
+			return true
+
+		elseif (IsInRaid()) then
+			local unitIdCache = Details222.UnitIdCache.Raid
+			for i = 1, GetNumGroupMembers() do
+				if (UnitAffectingCombat(unitIdCache[i])) then
+					return true
+				end
+			end
+
+		elseif (IsInGroup()) then
+			local unitIdCache = Details222.UnitIdCache.Party
+			for i = 1, GetNumGroupMembers() do
+				if (UnitAffectingCombat(unitIdCache[i])) then
+					return true
+				end
+			end
+		end
+
+		return false
+	end
+
 	function Details:StartCombatTicker()
 		if (Details.CombatTicker) then
 			Details.CombatTicker:Cancel()
 		end
-		Details.CombatTicker = Details.Schedules.NewTicker(1, combatTicker)
+
+		if not detailsFramework.IsAddonApocalypseWow() then
+			Details.CombatTicker = Details.Schedules.NewTicker(1, combatTicker)
+		end
 	end
 
 	function Details:StopCombatTicker()

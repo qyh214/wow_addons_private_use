@@ -15,6 +15,8 @@ local wipe = table.wipe
 local insert = table.insert
 local max = math.max
 
+local issecretvalue = issecretvalue or function() return false end
+
 local GetSpellInfo = GetSpellInfo or function(spellID) if not spellID then return nil end local si = C_Spell.GetSpellInfo(spellID) if si then return si.name, nil, si.iconID, si.castTime, si.minRange, si.maxRange, si.spellID, si.originalIconID end end
 local SPELLBOOK_BANK_PLAYER = Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player or "player"
 local IsPassiveSpell = IsPassiveSpell or C_Spell.IsSpellPassive
@@ -28,7 +30,7 @@ end
 
 --api locals
 local PixelUtil = PixelUtil or DFPixelUtil
-local version = 31
+local version = 33
 
 local CONST_MENU_TYPE_MAINMENU = "main"
 local CONST_MENU_TYPE_SUBMENU = "sub"
@@ -257,6 +259,20 @@ function DF:CreateCoolTip()
 		border_color = {.3, .3, .3, 1},
 		roundness = 8,
 	}
+
+	local parseFont = function(font)
+		local fontFile = SharedMedia:Fetch("font", font)
+		if fontFile then
+			return fontFile
+		end
+
+		local isFontObejct = type(font) == "table" and _G[font] and _G[font].GetFont and _G[font]:GetFont()
+		if isFontObejct then
+			return _G[font]:GetFont()
+		end
+
+		return font
+	end
 
 	--create frames, self is frame1 or frame2
 	local createTooltipFrames = function(self)
@@ -1082,7 +1098,7 @@ function DF:CreateCoolTip()
 
 			if (menuButton.leftText.requiredFont) then --the language detector require this font to be used
 				local _, size, flags = menuButton.leftText:GetFont()
-				menuButton.leftText:SetFont(menuButton.leftText.requiredFont, size, flags)
+				DF:SetFont(menuButton.leftText, menuButton.leftText.requiredFont, size, flags)
 
 			elseif (gameCooltip.OptionsTable.TextFont and not leftTextSettings[7]) then --font
 				if (_G[gameCooltip.OptionsTable.TextFont]) then
@@ -1092,7 +1108,10 @@ function DF:CreateCoolTip()
 					local _, size, flags = menuButton.leftText:GetFont()
 					flags = leftTextSettings[8] or gameCooltip.OptionsTable.TextShadow or nil
 					size = leftTextSettings[6] or gameCooltip.OptionsTable.TextSize or size
-					menuButton.leftText:SetFont(font, size, flags)
+
+					DF:SetFontFace(menuButton.leftText, font)
+					DF:SetFontSize(menuButton.leftText, size)
+					DF:SetFontOutline(menuButton.leftText, flags)
 				end
 
 			--font settings
@@ -1102,17 +1121,20 @@ function DF:CreateCoolTip()
 					local fontFace, fontSize, fontFlags = menuButton.leftText:GetFont()
 					fontFlags = leftTextSettings[8] or gameCooltip.OptionsTable.TextShadow or nil
 					fontSize = leftTextSettings[6] or gameCooltip.OptionsTable.TextSize or fontSize
-					menuButton.leftText:SetFont(fontFace, fontSize, fontFlags)
+					DF:SetFont(menuButton.leftText, fontFace, fontSize, fontFlags)
 				else
 					local font = SharedMedia:Fetch("font", leftTextSettings[7])
 					local fontFace, fontSize, fontFlags = menuButton.leftText:GetFont()
 					--fontFace = font or fontFace
 					fontFlags = leftTextSettings[8] or gameCooltip.OptionsTable.TextShadow or nil
 					fontSize = leftTextSettings[6] or gameCooltip.OptionsTable.TextSize or fontSize
-					menuButton.leftText:SetFont(fontFace, fontSize, fontFlags)
+					DF:SetFont(menuButton.leftText, fontFace, fontSize, fontFlags)
 				end
 			else
-				menuButton.leftText:SetFont(gameCooltip.defaultFont, leftTextSettings[6] or gameCooltip.OptionsTable.TextSize or 10, leftTextSettings[8] or gameCooltip.OptionsTable.TextShadow)
+				--if Details222.IsPTR() then
+				--	print (gameCooltip.defaultFont, leftTextSettings[6] or gameCooltip.OptionsTable.TextSize or 10, leftTextSettings[8] or gameCooltip.OptionsTable.TextShadow)
+				--end
+				DF:SetFont(menuButton.leftText, parseFont(gameCooltip.defaultFont), leftTextSettings[6] or gameCooltip.OptionsTable.TextSize or 10, leftTextSettings[8] or gameCooltip.OptionsTable.TextShadow or "")
 			end
 
 			--text shadow color
@@ -1195,7 +1217,7 @@ function DF:CreateCoolTip()
 
 			if (menuButton.rightText.requiredFont) then --the language detector require this font to be used
 				local _, size, flags = menuButton.rightText:GetFont()
-				menuButton.rightText:SetFont(menuButton.rightText.requiredFont, size, flags)
+				DF:SetFont(menuButton.rightText, menuButton.rightText.requiredFont, size, flags)
 
 			elseif (gameCooltip.OptionsTable.TextFont and not rightTextSettings[7]) then
 				if (_G[gameCooltip.OptionsTable.TextFont]) then
@@ -1205,7 +1227,7 @@ function DF:CreateCoolTip()
 					local _, fontSize, fontFlags = menuButton.rightText:GetFont()
 					fontFlags = rightTextSettings[8] or gameCooltip.OptionsTable.TextShadow or nil
 					fontSize = rightTextSettings[6] or gameCooltip.OptionsTable.TextSize or fontSize
-					menuButton.rightText:SetFont(fontFace, fontSize, fontFlags)
+					DF:SetFont(menuButton.rightText, fontFace, fontSize, fontFlags)
 				end
 
 			elseif (rightTextSettings[7]) then
@@ -1214,16 +1236,18 @@ function DF:CreateCoolTip()
 					local fontFace, fontSize, fontFlags = menuButton.rightText:GetFont()
 					fontFlags = rightTextSettings[8] or gameCooltip.OptionsTable.TextShadow or nil
 					fontSize = rightTextSettings[6] or gameCooltip.OptionsTable.TextSize or fontSize
-					menuButton.rightText:SetFont(fontFace, fontSize, fontFlags)
+					DF:SetFont(menuButton.rightText, fontFace, fontSize, fontFlags)
 				else
 					local font = SharedMedia:Fetch("font", rightTextSettings[7])
 					local fontFace, fontSize, fontFlags = menuButton.rightText:GetFont()
 					fontFlags = rightTextSettings[8] or gameCooltip.OptionsTable.TextShadow or nil
 					fontSize = rightTextSettings[6] or gameCooltip.OptionsTable.TextSize or fontSize
-					menuButton.rightText:SetFont(fontFace, fontSize, fontFlags)
+					DF:SetFont(menuButton.rightText, fontFace, fontSize, fontFlags)
 				end
 			else
-				menuButton.rightText:SetFont(gameCooltip.defaultFont, rightTextSettings[6] or gameCooltip.OptionsTable.TextSize or 10, rightTextSettings[8] or gameCooltip.OptionsTable.TextShadow)
+				DF:SetFontFace(menuButton.rightText, parseFont(gameCooltip.defaultFont))
+				DF:SetFontSize(menuButton.rightText, rightTextSettings[6] or gameCooltip.OptionsTable.TextSize or 10)
+				DF:SetFontOutline(menuButton.rightText, rightTextSettings[8] or gameCooltip.OptionsTable.TextShadow or "")
 			end
 
 			--text shadow color
@@ -1389,34 +1413,52 @@ function DF:CreateCoolTip()
 			menuButton.rightText:SetHeight(gameCooltip.OptionsTable.RightTextHeight)
 		end
 
-		--string length
-		if (not isSecondFrame) then --main frame
-			if (not gameCooltip.OptionsTable.FixedWidth) then
-				if (gameCooltip.Type == 1 or gameCooltip.Type == 2) then
-					local stringWidth = menuButton.leftText:GetStringWidth() + menuButton.rightText:GetStringWidth() + menuButton.leftIcon:GetWidth() + menuButton.rightIcon:GetWidth() + 10
-					if (stringWidth > frame.w) then
-						frame.w = stringWidth
-					end
-				end
-			else
-				menuButton.leftText:SetWidth(gameCooltip.OptionsTable.FixedWidth - menuButton.leftIcon:GetWidth() - menuButton.rightText:GetStringWidth() - menuButton.rightIcon:GetWidth() - 22)
-			end
-		else
-			if (not gameCooltip.OptionsTable.FixedWidthSub) then
-				if (gameCooltip.Type == 1 or gameCooltip.Type == 2) then
-					local stringWidth = menuButton.leftText:GetStringWidth() + menuButton.rightText:GetStringWidth() + menuButton.leftIcon:GetWidth() + menuButton.rightIcon:GetWidth()
-					if (stringWidth > frame.w) then
-						frame.w = stringWidth
-					end
-				end
-			else
-				menuButton.leftText:SetWidth(gameCooltip.OptionsTable.FixedWidthSub - menuButton.leftIcon:GetWidth() - 12)
-			end
-		end
+		local leftTextWidth = menuButton.leftText:GetStringWidth()
+		local rightTextWidth = menuButton.rightText:GetStringWidth()
+		local leftTextHeight = menuButton.leftText:GetStringHeight()
+		local rightTextHeight = menuButton.rightText:GetStringHeight()
+		local leftIconWidth = menuButton.leftIcon:GetWidth()
+		local rightIconWidth = menuButton.rightIcon:GetWidth()
 
-		local height = max(menuButton.leftIcon:GetHeight(), menuButton.rightIcon:GetHeight(), menuButton.leftText:GetStringHeight(), menuButton.rightText:GetStringHeight())
-		if (height > frame.hHeight) then
-			frame.hHeight = height
+		--print("is secret: leftTextWidth", issecretvalue(leftTextWidth))
+		--print("is secret: rightTextWidth", issecretvalue(rightTextWidth))
+		--print("is secret: leftIconWidth", issecretvalue(leftIconWidth))
+		--print("is secret: rightIconWidth", issecretvalue(rightIconWidth))
+		--print("is secret: leftTextHeight", issecretvalue(leftTextHeight))
+		--print("is secret: rightTextHeight", issecretvalue(rightTextHeight))
+
+		local lengthIsSecret = issecretvalue(leftTextWidth) or issecretvalue(rightTextWidth) or issecretvalue(leftIconWidth) or issecretvalue(rightIconWidth) or issecretvalue(leftTextHeight) or issecretvalue(rightTextHeight)
+
+		if not lengthIsSecret then
+			--string length
+			if (not isSecondFrame) then --main frame
+				if (not gameCooltip.OptionsTable.FixedWidth) then
+					if (gameCooltip.Type == 1 or gameCooltip.Type == 2) then
+						local stringWidth = leftTextWidth + rightTextWidth + leftIconWidth + rightIconWidth + 10
+						if (stringWidth > frame.w) then
+							frame.w = stringWidth
+						end
+					end
+				else
+					menuButton.leftText:SetWidth(gameCooltip.OptionsTable.FixedWidth - leftIconWidth - rightTextWidth - rightIconWidth - 22)
+				end
+			else
+				if (not gameCooltip.OptionsTable.FixedWidthSub) then
+					if (gameCooltip.Type == 1 or gameCooltip.Type == 2) then
+						local stringWidth = leftTextWidth + rightTextWidth + leftIconWidth + rightIconWidth
+						if (stringWidth > frame.w) then
+							frame.w = stringWidth
+						end
+					end
+				else
+					menuButton.leftText:SetWidth(gameCooltip.OptionsTable.FixedWidthSub - leftIconWidth - 12)
+				end
+			end
+
+			local height = max(menuButton.leftIcon:GetHeight(), menuButton.rightIcon:GetHeight(), leftTextHeight, rightTextHeight)
+			if (height > frame.hHeight) then
+				frame.hHeight = height
+			end
 		end
 
 		--override the text width if this line has a custom width
@@ -1458,7 +1500,9 @@ function DF:CreateCoolTip()
 
 	function gameCooltip:StatusBar(menuButton, statusBarSettings)
 		if (statusBarSettings) then
-			menuButton.statusbar:SetValue(Clamp(statusBarSettings[1], 0, maxStatusBarValue))
+			if not issecretvalue or not issecretvalue(statusBarSettings[1]) then
+				menuButton.statusbar:SetValue(Clamp(statusBarSettings[1], 0, maxStatusBarValue))
+			end
 			menuButton.statusbar:SetStatusBarColor(statusBarSettings[2], statusBarSettings[3], statusBarSettings[4], statusBarSettings[5])
 			menuButton.statusbar:SetHeight(20 + (gameCooltip.OptionsTable.StatusBarHeightMod or 0))
 
@@ -3061,6 +3105,77 @@ function DF:CreateCoolTip()
 	end
 
 ----------------------------------------------------------------------
+	function gameCooltip:AddStatusBar_MaxValue(statusbarValue, statusbarMaxValue, menuType, colorRed, colorGreen, colorBlue, colorAlpha, statusbarGlow, backgroundBar, barTexture)
+		--need a previous line
+		if (gameCooltip.Indexes == 0) then
+			return gameCooltip:PrintDebug("AddStatusBar() requires an already added line (Cooltip:AddLine()).")
+		end
+
+		--check data integrity
+		if (type(statusbarValue) ~= "number") then
+			return
+		end
+
+		menuType = gameCooltip:ParseMenuType(menuType)
+
+		if (type(colorRed) == "table" or type(colorRed) == "string") then
+			statusbarGlow, backgroundBar, colorRed, colorGreen, colorBlue, colorAlpha = colorGreen, colorBlue, DF:ParseColors(colorRed)
+
+		elseif (type(colorRed) == "boolean") then
+			backgroundBar = colorGreen
+			statusbarGlow = colorRed
+			colorRed, colorGreen, colorBlue, colorAlpha = 1, 1, 1, 1
+		end
+
+		local frameTable
+		local statusbarTable
+
+		if (menuType == CONST_MENU_TYPE_MAINMENU) then
+			frameTable = gameCooltip.StatusBarTable
+			if (gameCooltip.isSpecial) then
+				statusbarTable = {}
+				insert(frameTable, gameCooltip.Indexes, statusbarTable)
+			else
+				statusbarTable = frameTable[gameCooltip.Indexes]
+				if (not statusbarTable) then
+					statusbarTable = {}
+					insert(frameTable, gameCooltip.Indexes, statusbarTable)
+				end
+			end
+
+		elseif (menuType == CONST_MENU_TYPE_SUBMENU) then
+			frameTable = gameCooltip.StatusBarTableSub
+			local subMenuContainerStatusBar = frameTable[gameCooltip.Indexes]
+			if (not subMenuContainerStatusBar) then
+				subMenuContainerStatusBar = {}
+				frameTable[gameCooltip.Indexes] = subMenuContainerStatusBar
+			end
+
+			if (gameCooltip.isSpecial) then
+				statusbarTable = {}
+				insert(subMenuContainerStatusBar, gameCooltip.SubIndexes, statusbarTable)
+			else
+				statusbarTable = subMenuContainerStatusBar[gameCooltip.SubIndexes]
+				if (not statusbarTable) then
+					statusbarTable = {}
+					insert(subMenuContainerStatusBar, gameCooltip.SubIndexes, statusbarTable)
+				end
+			end
+		else
+			return gameCooltip:PrintDebug("AddStatusBar() unknown menuType.", menuType)
+		end
+
+		statusbarTable[1] = statusbarValue
+		statusbarTable[2] = colorRed
+		statusbarTable[3] = colorGreen
+		statusbarTable[4] = colorBlue
+		statusbarTable[5] = colorAlpha
+		statusbarTable[6] = statusbarGlow
+		statusbarTable[7] = backgroundBar
+		statusbarTable[8] = barTexture
+		statusbarTable[9] = statusbarMaxValue
+	end
+
 	--adds a statusbar to the last line added.
 	--only works with cooltip type2 (tooltip with bars)
 	--parameters: value [, color red, color green, color blue, color alpha [, glow]]

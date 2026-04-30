@@ -40,8 +40,6 @@ WIM.AddLocale("deDE", {
     ["state_raid"] = "Schlachtzuginstanz",
     ["state_other"] = "Normal (Sonstiges)",
 
-    ["<Shift-Click> to close window."] = "<Shift-Klick> zum Schlie\195\159en des Fensters.",
-
     ["A new version of WIM is available!\nYou can download the latest version by going to:\n\n http://www.wimaddon.com"] = "Eine neue Version von WIM ist verf\195\188gbar!\nDu kannst die neueste Version auf http://www.wimaddon.com/ herunterladen.",
 
     ["Options"] = "Einstellungen",
@@ -223,6 +221,7 @@ WIM.AddLocale("deDE", {
     ["Add Friend"] = "Freund hinzuf\195\188gen",
     ["Ignore User"] = "Spieler ignorieren",
     ["Are you sure you want to\nignore %s?"] = "Bist du sicher, dass du \n %s ignorieren willst?",
+	["Copy Name"] = "Namen kopieren",
 
     -- Tutorials.lua --
     ["Display WIM tips"] = "WIM Tipps anzeigen",
@@ -261,7 +260,7 @@ WIM.AddLocale("deDE", {
     ["Resizing Windows"] = "Gr\195\182\195\159enanpassung von Fenstern",
     ["You can resize a window by holding <Shift> and dragging the bottom right corner of the window."] = "Du kannst die Gr\195\182\195\159e eines Fensters anpassen, indem du <Shift> gedr\195\188ckt h\195\164ltst und die obere rechte Ecke des Fensters ziehst.",
     ["Demo Window"] = "Demonstrationsfenster",
-    ["<Shift-Click> to close window."] = "<Shift-Klicken> um Fenster zu schlie\195\159en.",
+    ["<Shift-Click> to close window."] = "<Shift-Klick> zum Schlie\195\159en des Fensters.",
     ["Message Window Hidden"] = "Nachrichtenfenster versteckt",
     ["WIM's message window has been hidden to WIM's Minimap Icon. If you want to end a conversation, you may do so by <Shift-Clicking> the close button."] = "WIMs Nachrichtenfenster wurde im WIM Minimap-Symbol versteckt. Wenn du eine Konversation beenden m\195\182chtest, kannst du das durch einen <Shift-Klick> auf den Schlie\195\159en-Button tun.",
     ["Default"] = "Standard",
@@ -280,9 +279,10 @@ WIM.AddLocale("deDE", {
     ["Enable WIM"] = "WIM aktivieren",
     ["Display Minimap Icon"] = "Minimap-Symbol anzeigen",
     ["<Right-Click> to show unread messages."] = "<Rechts-Klick> um ungelesene Nachrichten anzuzeigen.",
+	["Display Addon Compartment Icon"] = "Icon des Addon-Fachs anzeigen",
     ["Display Tutorials"] = "Tutorials anzeigen",
     ["Reset Tutorials"] = "Tutorials zur\195\188cksetzen",
-    ["Credits"] = true,
+    ["Credits"] = "Danksagungen",
     ["This is a long message which contains both emoticons and urls 8). WIM's home is www.WIMAddon.com."] = "Dies ist eine lange Nachricht, die sowohl Emoticons/Smileys, als auch Internetadressen enth\195\164lt 8). WIMs Homepage ist www.WIMAddon.com.",
     ["Message Formatting"] = "Nachrichtenformatierung",
     ["Manipulate how WIM displays messages."] = "Stelle ein, wie WIM Nachrichten darstellen soll.",
@@ -378,6 +378,12 @@ WIM.AddLocale("deDE", {
     ["General"] = "Allgemein",
     ["User Level"] = "Spielerlevel",
     ["Windows will also be hidden when frames such as the world map are shown."] = "Fenster werden ebenfalls versteckt, sobald andere Fenster, wie etwa die Weltkarte, angezeigt werden.",
+	["Background"] = BACKGROUND,
+	["Low"] = LOW,
+	["Medium"] = "Mittel",
+	["High"] = "Hoch",
+	["Dialog"] = ENABLE_DIALOG,
+	["Tooltip"] = true,
 
     -- TabManagement.lua --
     ["Tab Management"] = true,
@@ -421,5 +427,4 @@ WIM.AddLocale("deDE", {
     ["Show Unread Messages"] = "Zeige ungelesene Nachrichten",
     ["Show All Windows"] = "Zeige alle Fenster",
     ["Hide All Windows"] = "Verberge alle Fenster",
-
 });

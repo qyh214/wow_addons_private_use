@@ -64,11 +64,67 @@ function ns.AreaMap()
   ns.AreaMapIcons = AreaMapIcons
   ns.AreaMapIconPool = AreaMapIconPool
 
-  ns.childMapIDs = { -- Child IDs
-    88, 84, 87, 89, 103, 85, 90, 86, 110, 111, 125, 126,
-    391, 392, 393, 394, 407, 503, 582, 590, 622, 624, 626,
-    627, 628, 629, 1161, 1163, 1164, 1165, 1670, 1671, 1672,
-    1673, 2112, 2339, 499, 500, 2266
+  -- Child IDs (capitals and special zones)  
+  ns.childMapIDs = {
+    24,   -- Light's Hope Chapel (Paladin Class Hall)
+    626,  -- Dalaran - Halls of Shadows (Rogue Class Hall)
+    627,  -- Dalaran
+    628,  -- Dalaran Shadowside
+    646,  -- Broken Shore
+    647,  -- Heart of Acherus (Death Knight Class Hall)
+    648,  -- Acherus (Death Knight Class Hall)
+    695,  -- Skyhold (Warrior Class Hall)
+    720,  -- Mardum Upper (Demon Hunter)
+    702,  -- Netherlight Temple (Priest Class Hall)
+    709,  -- The Wandering Isle (Monk Class Hall)
+    717,  -- Dreadscar Rift (Warlock Class Hall)
+    721,  -- Mardum Lower (Demon Hunter)
+    726,  -- Heart of Azeroth - Maelstrom (Shaman Class Hall)
+    739,  -- Trueshot Lodge (Hunter Class Hall)
+    734,  -- Hall of the Guardian (Mage Class Hall)
+    735,  -- The Guardian's Library (Mage Class Hall)
+    747,  -- The Dreamgrove (Druid Class Hall)
+
+    88,   -- Thunder Bluff
+    84,   -- Stormwind City
+    87,   -- Ironforge
+    89,   -- Teldrassil / Darnassus
+    103,  -- Exodar
+    85,   -- Orgrimmar
+    90,   -- Undercity (old)
+    86,   -- Ragefire Chasm
+    110,  -- Silvermoon City
+    111,  -- Shattrath
+    125,  -- Dalaran (Northrend)
+    126,  -- Dalaran (Sewer/Basement)
+    391,  -- Shrine of Two Moons (1st floor)
+    392,  -- Shrine of Two Moons (2nd floor)
+    393,  -- Shrine of Seven Stars (1st floor)
+    394,  -- Shrine of Seven Stars (2nd floor)
+    407,  -- Darkmoon Island
+    503,  -- Shlae'gar Arena
+    582,  -- Moonrise
+    590,  -- Frostwall (Garrison Horde)
+    622,  -- Stormshield (Garrison Alliance)
+    624,  -- Warspear (Ashran Horde Hub)
+    626,  -- Dalaran - Rogue Class Hall (duplicate)
+    629,  -- Dalaran Inner Circle
+    1161, -- Boralus
+    1163, -- Dazar'alor (inside)
+    1164, -- Dazar'alor (upper floor)
+    1165, -- Dazar'alor
+    1670, -- Oribos
+    1671, -- Oribos (upper)
+    1672, -- Oribos Keller
+    1673, -- Schmelztiegel
+    2112, -- Valdrakken
+    2339, -- Dornogal
+    499,  -- Bizmo's Boxbar (Entrance/Path)
+    500,  -- Bizmo's Boxbar
+    2266, -- The Timeways - Millenia's Threshold
+    2351, -- Razorwind Shores (Housing)
+    2352, -- Founder's Point (Housing)
+    2393  -- Silvermoon (Midnight)
   }
 
   local function LoadAreaMapSetting()

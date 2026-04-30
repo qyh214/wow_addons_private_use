@@ -1,0 +1,25 @@
+## Interface: 120000, 120001, 120005
+## Title: Statsplus (Stats+)
+## Notes: Use /st or /stats to open Options
+## Author: AleksS
+## Version: 1.55
+## SavedVariables: StatsDB
+## OptionalDeps: CallbackHandler-1.0, LibSharedMedia-3.0, AceGUI-3.0
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceDB-3.0\AceDB-3.0.lua
+Libs\AceDBOptions-3.0\AceDBOptions-3.0.lua
+Libs\LibDualSpec-1.0\LibDualSpec-1.0.lua
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\lib.xml
+Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
+Libs\AceGUI-3.0-SharedMediaWidgets\widget.xml
+
+Locales.lua
+Stats.lua
+SpecPriority.lua
+Changelog.lua

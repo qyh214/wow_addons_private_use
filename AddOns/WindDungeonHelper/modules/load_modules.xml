@@ -1,9 +1,0 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Include file="AvoidableDamage.lua"/>
-	<Include file="AvoidableDamageData\Load_Data.xml"/>
-	<Include file="EnemyProgress.lua"/>
-	<Include file="GroupInfo.lua"/>
-	<Include file="KeystoneTooltip.lua"/>
-	<Include file="MDTHelper.lua"/>
-	<Include file="QuickKeystone.lua"/>
-</Ui>

@@ -13,7 +13,7 @@ function Private.GetProfile(name, maybeRealm)
 
 	local profile = Private.GetProviderProfile(name, realm)
 
-	Private.Print(profile or {}, "loading profile for " .. name .. "-" .. realm)
+	Private.Print(profile, "loading profile for " .. name .. "-" .. realm)
 
 	return profile
 end

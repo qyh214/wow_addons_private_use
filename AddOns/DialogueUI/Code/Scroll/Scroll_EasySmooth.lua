@@ -153,7 +153,7 @@ do
     end
 
     function ScrollFrameMixin:ResetScroll()
-        self:SnapTo(0);
+        self:SnapTo(0, true);
     end
 
     function ScrollFrameMixin:GetScrollTarget()
@@ -222,6 +222,13 @@ do
             self.recycleTimer = 0;
             self.paginationTimer = 0;
             self:SetScript("OnUpdate", self.OnUpdate_SteadyScroll);
+        end
+    end
+
+    function ScrollFrameMixin:StopSteadScroll()
+        if self.isSteadyScrolling then
+            self:SetScript("OnUpdate", nil);
+            self.isSteadyScrolling = nil;
         end
     end
 

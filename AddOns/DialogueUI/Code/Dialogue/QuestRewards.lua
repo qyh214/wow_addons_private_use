@@ -213,6 +213,7 @@ local function BuildRewardList(questComplete)
 	end
 
 	local anyPreviousHeader = false;
+	local alsoRecieveHeaderAdded = false;
 
 	-- Setup spell rewards
 	local spellIndex = 100;		--order_spell
@@ -228,8 +229,9 @@ local function BuildRewardList(questComplete)
 						local header = QUEST_INFO_SPELL_REWARD_TO_HEADER[spellBucketType];
 						if header then
 							anyPreviousHeader = true;
-						elseif anyPreviousHeader then
+						elseif anyPreviousHeader or (numQuestChoices > 0 and not alsoRecieveHeaderAdded) then
 							anyPreviousHeader = false;
+							alsoRecieveHeaderAdded = true;
 							header = REWARD_ITEMS;	--You will also receive
 						end
 						if header then
@@ -254,8 +256,12 @@ local function BuildRewardList(questComplete)
 		end
 	end
 
-	if anyPreviousHeader then
-		anyPreviousHeader = false;
+	local hasChanceForQuestSessionBonusReward = QuestHasQuestSessionBonus(questID);  --Party Sync
+	local anyGenericAward = playerTitle or numQuestRewards > 0 or numQuestCurrencies > 0 or money > 0 or xp > 0 or honor > 0 or majorFactionRepRewards or hasChanceForQuestSessionBonusReward;
+
+	if (anyPreviousHeader or numQuestChoices > 0) and anyGenericAward and not alsoRecieveHeaderAdded then	--numQuestChoices > 0
+		anyPreviousHeader = true;
+		alsoRecieveHeaderAdded = true;
 		local header = REWARD_ITEMS;	--You will also receive
 		if header and totalRewards > 0 then		--totalRewards don't include Spell rewards
 			spellIndex = spellIndex + 1;
@@ -263,13 +269,11 @@ local function BuildRewardList(questComplete)
 		end
 	end
 
-	if playerTitle then
-		tinsert(rewardList, {"SetRewardTitle", playerTitle, order = 200});
-	end
+	if anyGenericAward then
+		if playerTitle then
+			tinsert(rewardList, {"SetRewardTitle", playerTitle, order = 200});
+		end
 
-	local hasChanceForQuestSessionBonusReward = QuestHasQuestSessionBonus(questID);  --Party Sync
-
-	if ( numQuestRewards > 0 or numQuestCurrencies > 0 or money > 0 or xp > 0 or honor > 0 or majorFactionRepRewards or hasChanceForQuestSessionBonusReward ) then
 		-- Money rewards
 		if ( money > 0 ) then
 			tinsert(rewardList, {"SetMoney", money, small = true, order = 2});

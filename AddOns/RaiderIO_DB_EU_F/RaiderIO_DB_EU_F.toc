@@ -1,0 +1,13 @@
+## Interface: 110207, 120000
+## Title: Raider.IO |cffFFFFFFRecruitment|r (Europe)
+## Author: Vladinator (Vladinator-TarrenMill), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
+## Version: 12.0.0 (v202601222107)
+## IconTexture: Interface\AddOns\RaiderIO\icons\logo
+## Dependencies: RaiderIO
+## DefaultState: enabled
+## X-Type: Recruitment
+## X-Region: Europe
+## X-Faction: Both
+## X-Website: https://raider.io
+../RaiderIO/db/db_recruitment_eu_characters.lua
+../RaiderIO/db/db_recruitment_eu_lookup.lua

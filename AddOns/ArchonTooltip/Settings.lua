@@ -183,7 +183,8 @@ table.insert(Private.LoginFnQueue, function()
 				end))
 			end
 
-			name = Capitalize(name)
+			-- different capitalize due to problems with special characters in the function above
+			name = name:gsub("^%l", string.upper)
 			local realm = Capitalize(realmParts)
 
 			local profile = Private.GetProfile(name, realm)

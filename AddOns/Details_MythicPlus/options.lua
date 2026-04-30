@@ -1,11 +1,8 @@
 
---mythic+ extension for Details! Damage Meter
 --[[
     This file is responsible for the options windows
 ]]
 
----@type details
-local Details = _G.Details
 ---@type detailsframework
 local detailsFramework = _G.DetailsFramework
 local addonName, private = ...
@@ -108,11 +105,26 @@ local function GetOptionsTable()
             name = L["OPTIONS_TRANSLIT_LABEL"],
             desc = L["OPTIONS_TRANSLIT_DESC"],
         },
+        {
+            type = "toggle",
+            get = function () return addon.profile.only_show_current_season end,
+            set = function (_, _, value)
+                addon.profile.only_show_current_season = value
+                addon.RefreshOpenScoreBoard()
+            end,
+            name = L["OPTIONS_ONLY_SHOW_CURRENT_SEASON_LABEL"],
+            desc = L["OPTIONS_ONLY_SHOW_CURRENT_SEASON_DESC"],
+        },
 
         ---
         --- Tooltips
         ---
-        {type = "label", get = function() return L["OPTIONS_TOOLTIPS"] end, text_template = orange_font_template},
+        {
+        	type = "label",
+        	get = function() return L["OPTIONS_TOOLTIPS"] end,
+        	text_template = orange_font_template,
+        	hidden = DetailsFramework.IsAddonApocalypseWow(),
+        },
         {
             type = "toggle",
             get = function () return addon.profile.show_interrupt_tooltip_percentage end,
@@ -122,6 +134,7 @@ local function GetOptionsTable()
             end,
             name = L["OPTIONS_SHOW_INTERRUPT_TOOLTIP_PERCENTAGE_LABEL"],
             desc = L["OPTIONS_SHOW_INTERRUPT_TOOLTIP_PERCENTAGE_DESC"],
+        	hidden = DetailsFramework.IsAddonApocalypseWow(),
         },
         {
             type = "toggle",
@@ -132,6 +145,7 @@ local function GetOptionsTable()
             end,
             name = L["OPTIONS_SHOW_CC_CAST_TOOLTIP_PERCENTAGE_LABEL"],
             desc = L["OPTIONS_SHOW_CC_CAST_TOOLTIP_PERCENTAGE_DESC"],
+        	hidden = DetailsFramework.IsAddonApocalypseWow(),
         },
 
         ---

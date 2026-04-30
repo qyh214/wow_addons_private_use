@@ -121,6 +121,8 @@ local function POI_SetOptions(frame, type, poi)
   frame.defaultSublevel = nil
   frame.animatedLine = nil
   frame.npcId = nil
+  frame.setAssigned = nil
+  frame.setUnassigned = nil
   if frame.HighlightTexture then
     frame.HighlightTexture:SetDrawLayer("HIGHLIGHT")
     frame.HighlightTexture:Show()
@@ -904,7 +906,6 @@ local function POI_SetOptions(frame, type, poi)
       GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
       GameTooltip:SetSpellByID(itemSpellId)
       GameTooltip:AddLine(" ")
-      GameTooltip:AddLine(itemDescription, 1, 1, 1)
       GameTooltip:Show()
       frame.HighlightTexture:Show()
     end)
@@ -1111,14 +1112,147 @@ local function POI_SetOptions(frame, type, poi)
       frame.HighlightTexture:Hide()
     end)
   end
+  if type == "genericItem" then
+    local info = poi.info
+    frame.Texture:SetTexture(info.texture)
+    frame.HighlightTexture:SetAtlas("bags-innerglow")
+
+    frame:SetSize(info.size, info.size)
+    frame.Texture:SetSize(info.size, info.size)
+    frame.HighlightTexture:SetSize(info.size, info.size)
+
+    local formattedDescription
+    if info.description then
+      local localizedDescription = L[info.description]
+      -- count literal "%s" occurrences
+      local _, count = localizedDescription:gsub("%%s", "")
+      -- build args (one "\n" per "%s")
+      local args = {}
+      for i = 1, count do
+        args[i] = "\n"
+      end
+      formattedDescription = string.format(localizedDescription, unpack(args))
+    end
+
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      if info.spellId then
+        GameTooltip:SetSpellByID(info.spellId)
+      else
+        GameTooltip_SetTitle(GameTooltip, L[info.name])
+        GameTooltip:AddTexture(info.texture)
+      end
+      if formattedDescription then
+        GameTooltip:AddLine(" ", 1, 1, 1, true)
+        GameTooltip:AddLine(formattedDescription, 1, 1, 1, true)
+      end
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
+  if type == "genericAssignablePOI" then
+    local info = poi.info
+    local assignment = MDT:POI_GetPOIAssignment(MDT:GetCurrentSubLevel(), frame.poiIdx)
+    local size = info.size or 12
+
+    if info.atlas then
+      frame.Texture:SetAtlas(info.atlas)
+      frame.HighlightTexture:SetAtlas(info.atlas)
+    else
+      frame.Texture:SetTexture(info.texture)
+      frame.HighlightTexture:SetAtlas("bags-innerglow")
+    end
+
+    frame:SetSize(size, size)
+    frame.Texture:SetSize(size, size)
+    frame.HighlightTexture:SetSize(size, size)
+
+    if info.desaturateIfUnassigned then
+      frame.setAssigned = function()
+        frame.Texture:SetDesaturated(false)
+        frame.HighlightTexture:SetDesaturated(false)
+      end
+
+      frame.setUnassigned = function()
+        frame.Texture:SetDesaturated(true)
+        frame.HighlightTexture:SetDesaturated(true)
+      end
+
+      if assignment then
+        frame.setAssigned()
+      else
+        frame.setUnassigned()
+      end
+    end
+
+    frame.playerAssignmentString = frame.playerAssignmentString or frame:CreateFontString()
+    frame.playerAssignmentString:ClearAllPoints()
+    frame.playerAssignmentString:SetFontObject("GameFontNormalSmall")
+    local textAnchor = poi.textAnchor or "LEFT"
+    local justifyH = textAnchor
+    if justifyH ~= "LEFT" and justifyH ~= "CENTER" and justifyH ~= "RIGHT" then
+      justifyH = "CENTER"
+    end
+    frame.playerAssignmentString:SetJustifyH(justifyH)
+    frame.playerAssignmentString:SetJustifyV("MIDDLE")
+    frame.playerAssignmentString:SetFont(frame.playerAssignmentString:GetFont(), info.fontSize or 10, "OUTLINE", "")
+    frame.playerAssignmentString:SetPoint(textAnchor, frame, poi.textAnchorTo or "RIGHT", info.textOffsetX or 0, info.textOffsetY or 0)
+    frame.playerAssignmentString:SetTextColor(1, 1, 1, 1)
+    frame.playerAssignmentString:SetText(assignment)
+    frame.playerAssignmentString:SetScale(1)
+    frame.playerAssignmentString:Show()
+
+    local formattedDescription
+    if info.description then
+      local localizedDescription = L[info.description]
+      local _, count = localizedDescription:gsub("%%s", "")
+      local args = {}
+      for i = 1, count do
+        args[i] = "\n"
+      end
+      formattedDescription = string.format(localizedDescription, unpack(args))
+    end
+
+    frame:SetScript("OnClick", function()
+      createPlayerAssignmentContextMenu(frame)
+    end)
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      local title = info.name and (L[info.name] or info.name) or ""
+      if poi.index then
+        title = title.." "..poi.index
+      end
+      if info.spellId then
+        GameTooltip:SetSpellByID(info.spellId)
+      else
+        GameTooltip_SetTitle(GameTooltip, title)
+      end
+      if formattedDescription then
+        GameTooltip:AddLine(" ", 1, 1, 1, true)
+        GameTooltip:AddLine(formattedDescription, 1, 1, 1, true)
+      end
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine(L["Click to assign player"], 1, 1, 1)
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
   if type == "dungeonEntrance" then
     frame.HighlightTexture:SetAtlas("Dungeon")
     frame.Texture:SetAtlas("Dungeon")
-
-    frame:SetSize(32, 32)
-    frame.Texture:SetSize(32, 32)
-    frame.HighlightTexture:SetSize(32, 32)
-
+    local sizeMult = poi.sizeMult or 1
+    local size = 32 * sizeMult
+    frame:SetSize(size, size)
+    frame.Texture:SetSize(size, size)
+    frame.HighlightTexture:SetSize(size, size)
     frame:SetScript("OnEnter", function()
       GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
       GameTooltip_SetTitle(GameTooltip, L["Dungeon Entrance"])
@@ -1220,9 +1354,8 @@ function MDT:POI_UpdateAll()
   if not pois then return end
   local preset = MDT:GetCurrentPreset()
   local scale = MDT:GetScale()
-  local week = MDT:GetEffectivePresetWeek(preset)
   for poiIdx, poi in pairs(pois) do
-    local poiFrame = MDT.GetFramePool(poi.template):Acquire()
+    local poiFrame = MDT.GetFramePool(poi.template or "MapLinkPinTemplate"):Acquire()
     if poiFrame.playerAssignmentString then poiFrame.playerAssignmentString:Hide() end
     poiFrame.poiIdx = poiIdx
     POI_SetOptions(poiFrame, poi.type, poi)

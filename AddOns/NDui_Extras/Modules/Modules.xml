@@ -1,7 +1,0 @@
-<Ui>
-	<Script file="Extras.lua"/>
-	<!--<Script file="ActionBarGlow.lua"/>
-	<Script file="LightLoot.lua"/>-->
-	<Script file="LootMonitor.lua"/>
-	<!--<Script file="MDEnhance.lua"/>-->
-</Ui>

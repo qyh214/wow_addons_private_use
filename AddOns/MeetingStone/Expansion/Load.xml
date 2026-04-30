@@ -1,6 +1,0 @@
-<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
-    <Script file="CheckBox.lua"/>
-    <Script file="Expansion.lua"/>
-	  <Script file="IgnoreListPanel.lua"/>
-	  <Script file="LocomotiveIntroduce.lua"/>
-</Ui>

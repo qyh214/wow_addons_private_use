@@ -1,0 +1,10 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="SupportedAddons.lua"/>
+	<Script file="WorldQuestsList.lua"/>
+	<Script file="UnlimitedMapPinDistance.lua"/>
+	<Script file="MapPinEnhanced.lua"/>
+	<Script file="TomTom.lua"/>
+	<Script file="DugisGuideViewerZ.lua"/>
+	<Script file="SilverDragon.lua"/>
+	<Script file="APR.lua"/>
+</Ui>

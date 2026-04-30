@@ -1,11 +1,11 @@
-## Interface: 110205
+## Interface: 120005
 ## Title: Details! Damage Meter
 ## Notes: Essential tool to impress that chick in your raid.
 ## Notes-ruRU: Анализирует сражение в реальном времени, предоставляя игрокам чистые визуальные данные
 ## SavedVariables: _detalhes_global, __details_backup, __details_debug
 ## SavedVariablesPerCharacter: _detalhes_database
 ## OptionalDeps: Ace3, LibSharedMedia-3.0, LibWindow-1.1, LibDBIcon-1.0, NickTag-1.0, LibDataBroker-1.1, LibGraph-2.0
-## Version: #Details.20251105.13857.166
+## Version: #Details.20260430.15038.171
 ## IconTexture: Interface\AddOns\Details\images\minimap
 ## AddonCompartmentFunc: Details_OpenDefaultOptionsWindow
 
@@ -15,6 +15,8 @@
 #@no-lib-strip@
 Libs\libs.xml
 #@end-no-lib-strip@
+
+core\parser_nocleu.xml
 
 locales\Details-enUS.lua
 locales\Details-deDE.lua
@@ -79,6 +81,8 @@ functions\chat_embed.lua
 functions\storage.lua
 functions\swapper\swapper.lua
 
+core\parser_nocleu.lua
+
 core\aura_scan.lua
 core\timemachine.lua
 
@@ -92,6 +96,25 @@ frames\window_options2.lua
 frames\window_options2_sections.lua
 frames\window_api.lua
 frames\window_cdtracker.lua
+
+frames\window_breakdown_midnight\breakdown_mainwindow.lua
+frames\window_breakdown_midnight\breakdown_dataprovider.lua
+frames\window_breakdown_midnight\window_headers.lua
+frames\window_breakdown_midnight\mixin.lua
+frames\window_breakdown_midnight\breakdown_sections.lua
+frames\window_breakdown_midnight\breakdown_enums.lua
+frames\window_breakdown_midnight\section_spells.lua
+frames\window_breakdown_midnight\section_players.lua
+frames\window_breakdown_midnight\section_segments.lua
+frames\window_breakdown_midnight\section_spelldetails.lua
+frames\window_breakdown_midnight\section_targets.lua
+frames\window_breakdown_midnight\section_compare.lua
+frames\window_breakdown_midnight\options.lua
+
+frames\segments\window_segmentselection.lua
+frames\segments\segments_dataprovider.lua
+frames\segments\segments_functions.lua
+
 frames\window_breakdown\window_playerbreakdown.lua
 frames\window_breakdown\window_playerbreakdown_list.lua
 frames\window_breakdown\window_playerbreakdown_compare.lua
@@ -137,6 +160,7 @@ frames\window_nestspells.lua
 frames\window_deathrecap.lua
 frames\window_transcriptor.lua
 frames\window_arenasummary.lua
+frames\window_mythickeys.lua
 
 classes\class_error.lua
 classes\class_spelltable.lua
@@ -155,6 +179,9 @@ classes\class_instance.lua
 classes\class_custom.lua
 classes\custom_damagedone.lua
 classes\custom_healingdone.lua
+
+core\parser_nocleu1.lua
+core\parser_nocleu_tp.lua
 
 frames\window2\header_data.lua
 frames\window2\frames.lua
@@ -181,6 +208,7 @@ core\gears.lua
 core\windows.lua
 core\meta.lua
 core\network.lua
+core\inspect.lua
 
 core\parser.lua
 
@@ -190,3 +218,4 @@ functions\loaddata.lua
 startup.lua
 
 functions\api2.lua
+

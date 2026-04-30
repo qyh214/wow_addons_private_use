@@ -6,6 +6,9 @@
 ---@class private : table
 ---@field addon detailsmythicplus
 ---@field log fun(...) log a message to the addon logs
+---@field buildVersion number the current wow build version
+---@field buildVersionCutOff number the build version cutoff to apply certain code paths
+---@field Segments segments namespace for functions related to segments
 
 ---@class combattimetype : table
 ---@field RunTime number
@@ -32,6 +35,15 @@
 ---@class minimap : table
 ---@field hide boolean whether or not to hide the minimap icon
 
+---@class segments : table
+---@field serverTicker table|nil
+---@field CreateOBFS fun()
+---@field CreateDetailsCombat fun() : combat
+---@field GetAllCombatTypes fun() : table[]
+---@field GetActorSpells fun(damageMeterType:number, sourceGUID:string) : table
+---@field IsServerInCombat fun() : boolean
+---@field WaitServerDropCombat fun()
+
 ---@class profile : table
 ---@field has_last_run boolean whether or not there's a last run. This run will be cleared when the next one starts.
 ---@field is_run_ongoing boolean whether or not there's a current run going
@@ -39,6 +51,7 @@
 ---@field saved_runs_compressed string[] store the compressed saved runs, this is used to save memory and speed up the loading time of the addon
 ---@field saved_runs_compressed_headers table[] store the headers of the saved runs, this is used to show the run history in the dropdown menu
 ---@field saved_runs_limit number limit of saved runs
+---@field only_show_current_season boolean Only show runs for the current season
 ---@field saved_runs_selected_index number index of the selected run
 ---@field when_to_automatically_open_scoreboard string which method to use to automatically open? can be LOOT_CLOSED or COMBAT_MYTHICPLUS_OVERALL_READY
 ---@field delay_to_open_mythic_plus_breakdown_big_frame number seconds to wait to open the big frame panel
@@ -115,7 +128,6 @@
 ---@field SetSelectedRunIndex fun(index:number) set the selected run index
 ---@field GetSelectedRunIndex fun() : number get the selected run index
 ---@field GetRunIndexById fun(runId:number) : number|nil get the index of the run by its ID
----@field GetDropdownRunDescription fun(runInfo:runinfo) : table indexed table containing: [1] dungeonName, [2] keyLevel, [3] runTime, [4] keyUpgradeLevels, [5] timeString, [6] onTime [7] mapId [8] dungeonId
 ---@field GetPlayerDeathReason fun(runInfo:runinfo, unitName:playername, deathIndex:number) : death_last_hits[]|nil return a table with subtables of type death_last_hits which tells the last hits that killed the player
 ---@field GetRegisteredColumns fun() : scoreboard_column[] return a table with all registered columns
 ---@field SignalHeadersChanged fun() signal that the headers have changed and the scoreboard should be updated
@@ -141,6 +153,7 @@
 
 ---@class runinfo : table
 ---@field runId number a number that can be used to identify a run, can be used to map external data to (e.g. by other addons)
+---@field seasonId ?number nil for older runs that did not record this yet see https://warcraft.wiki.gg/wiki/API_C_MythicPlus.GetCurrentSeason
 ---@field combatId number the dungeon overall data unique combat id from details!
 ---@field combatData combatdata stores the required combat data for the score board, hence the scoreboard can function even if the combat isn't available in details!
 ---@field encounters detailsmythicplus_encounterinfo[] the encounters timeline
@@ -196,6 +209,7 @@
 ---@field totalDamage number total damage done
 ---@field totalHeal number total damage done
 ---@field totalDamageTaken number total damage taken
+---@field totalAvoidableDamageTaken number total avoidable damage taken
 ---@field totalHealTaken number total damage taken
 ---@field totalDispels number total dispels
 ---@field totalInterrupts number total of sucessful interrupts
@@ -204,6 +218,7 @@
 ---@field healDoneBySpells table<spellid, number>[] heal done by spells, a table with indexed subtables where the first index is the spellid and the second is the total heal done by that spell
 ---@field damageDoneBySpells table<spellid, number>[] damage done by spells, a table with indexed subtables where the first index is the spellid and the second is the total damage done by that spell
 ---@field damageTakenFromSpells spell_hit_player[] damage taken from spells
+---@field avoidableDamageTakenFromSpells avoidable_spell_hit_player[] avoidable damage taken from spells
 ---@field dispelWhat table<spellid, number> which debuffs the player dispelled
 ---@field interruptWhat table<spellid, number> which spells the player interrupted
 ---@field interruptCastOverlapDone number how many times the player attempted to interrupt a spell with another player
@@ -238,6 +253,7 @@
 ---@field interrupt_overlaps table<string, number> count the interrupt overlaps for each player
 ---@field interrupt_spells_cast table<string, table>
 ---@field interrupt_cast_overlap_done table<string, number> interrupts per player
+---@field player_ratings table<string, number> ratings per player
 ---@field reloaded boolean whether or not the run had a reload in-between
 
 ---@class detailsmythicplus_encounterinfo : table
@@ -290,6 +306,7 @@
 ---@field playerName string
 ---@field playerClass string
 ---@field runId number
+---@field seasonId ?number nil for older runs that did not record this yet see https://warcraft.wiki.gg/wiki/API_C_MythicPlus.GetCurrentSeason
 ---@field instanceId number
 ---@field groupMembers table<playername, class>
 ---@field likesGiven table<playername, table<playername, boolean>>

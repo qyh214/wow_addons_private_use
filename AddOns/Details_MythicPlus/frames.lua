@@ -1,7 +1,5 @@
 
 --functions to create frames, use to keep clean the main files
----@type details
-local Details = _G.Details
 ---@type detailsframework
 local detailsFramework = _G.DetailsFramework
 local addonName, private = ...
@@ -60,10 +58,10 @@ function addon.CreateBossPortraitTexture(parent, index)
         GameCooltip:Preset(2)
         GameCooltip:AddLine(self.EncounterInfo.name, detailsFramework:IntegerToTimer(duration), nil, nil, nil, nil, 1, "darkorange")
         GameCooltip:AddIcon("worldquest-icon-boss", 1, 1, 16, 16)
-        GameCooltip:AddIcon([[Interface\AddOns\Details\images\end_of_mplus.png]], 1, 2, 14, 14, 172/512, 235/512, 84/512, 150/512)
+        GameCooltip:AddIcon([[Interface\AddOns\Details_MythicPlus\Assets\Textures\end_of_mplus.png]], 1, 2, 14, 14, 172/512, 235/512, 84/512, 150/512)
         GameCooltip:SetOwner(self, "bottom", "top", 0, -4)
-        GameCooltip:SetOption("TextSize", Details.tooltip.fontsize)
-        GameCooltip:SetOption("TextFont",  Details.tooltip.fontface)
+        GameCooltip:SetOption("TextSize", private.Details.tooltip.fontsize)
+        GameCooltip:SetOption("TextFont",  private.Details.tooltip.fontface)
         GameCooltip:SetOption("LeftPadding", -3)
         GameCooltip:SetOption("RightPadding", 2)
         GameCooltip:SetOption("LinePadding", -2)

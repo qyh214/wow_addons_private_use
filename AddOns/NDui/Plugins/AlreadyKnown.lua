@@ -1,11 +1,10 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
-local TT = B:GetModule("Tooltip")
 
 local mod, strmatch, strfind, format = mod, strmatch, strfind, format
 local SetItemButtonTextureVertexColor = SetItemButtonTextureVertexColor
 local GetCurrentGuildBankTab, GetGuildBankItemInfo, GetGuildBankItemLink = GetCurrentGuildBankTab, GetGuildBankItemInfo, GetGuildBankItemLink
-local GetMerchantNumItems, GetMerchantItemInfo, GetMerchantItemLink = GetMerchantNumItems, GetMerchantItemInfo, GetMerchantItemLink
+local GetMerchantNumItems, GetMerchantItemLink = GetMerchantNumItems, GetMerchantItemLink
 local GetNumBuybackItems, GetBuybackItemInfo, GetBuybackItemLink = GetNumBuybackItems, GetBuybackItemInfo, GetBuybackItemLink
 local C_PetJournal_GetNumCollectedInfo = C_PetJournal.GetNumCollectedInfo
 
@@ -35,7 +34,7 @@ local function IsAlreadyKnown(link, index)
 	if linkType == "battlepet" then
 		return isPetCollected(linkID)
 	elseif linkType == "item" then
-		local name, _, _, level, _, _, _, _, _, _, _, itemClassID = C_Item.GetItemInfo(link)
+		local name, _, _, _, _, _, _, _, _, _, _, itemClassID = C_Item.GetItemInfo(link)
 		if not name then return end
 
 		if itemClassID == Enum.ItemClass.Battlepet and index then
@@ -73,7 +72,9 @@ local function Hook_UpdateMerchantInfo()
 
 		local button = _G["MerchantItem"..i.."ItemButton"]
 		if button and button:IsShown() then
-			local _, _, _, _, numAvailable, isUsable = GetMerchantItemInfo(index)
+			local info = C_MerchantFrame.GetItemInfo(index)
+			local numAvailable = info and info.numAvailable
+			local isUsable = info and info.isUsable
 			if isUsable and IsAlreadyKnown(GetMerchantItemLink(index)) then
 				local r, g, b = COLOR.r, COLOR.g, COLOR.b
 				if numAvailable == 0 then

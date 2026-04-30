@@ -1,12 +1,16 @@
-## Interface: 110205,110200
+## Interface: 110205,110207,110200,120000,120001
 ## Title: |cff880303[163UI]|r Info
-## Version: r20251017
+## Version: r20260414164119
 ## Author: NetEase Inc.
 ## IconTexture: Interface\AddOns\!!!163UI!!!\Media\Textures\UI2-logo
-## SavedVariables: DDPFGlobal
-## SavedVariablesPerCharacter: 
+## SavedVariables: MythicArchiveDB, DDPFGlobal, ddInfoDB
+## SavedVariablesPerCharacter: MythicArchive_CharacterDB, ddInfoCharDB
 
 load.xml
+MythicPlus.lua
+retail_ui/Data.lua
+retail_ui/InstallData.lua
+retail_ui/Main.lua
 
 ## Title: DD Broker
 ## Title-zhCN: DD数据同步插件

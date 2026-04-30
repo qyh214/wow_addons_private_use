@@ -83,7 +83,7 @@ function activity.UpdateBossWidgets(activityFrame, runData, multiplier)
             bossWidget:SetFrameLevel(5000 + i)
 
             bossWidget.TimeText:SetText(detailsFramework:IntegerToTimer(killTimeRelativeToStart))
-            local encounterInfo = Details:GetEncounterInfo(encounter.dungeonEncounterId)
+            local encounterInfo = private.EncounterJournal.GetEncounterInfo(encounter.dungeonEncounterId)
             if (encounterInfo and encounterInfo.creatureIcon) then
                 bossWidget.EncounterInfo = encounterInfo
                 bossWidget.EncounterData = encounter
@@ -140,7 +140,7 @@ function activity.RenderDeathMarker(frame, event, marker, runData)
     ---@cast playerPortrait playerportrait
     if (not marker.SubFrames.playerPortrait) then
         --player portrait
-        playerPortrait = Details:CreatePlayerPortrait(marker, "$parentPortrait")
+        playerPortrait = private.Details:CreatePlayerPortrait(marker, "$parentPortrait")
         ---@cast playerPortrait playerportrait
         playerPortrait:ClearAllPoints()
         playerPortrait:SetPoint("center", marker, "center", 0, 0)
@@ -175,14 +175,14 @@ function activity.RenderDeathMarker(frame, event, marker, runData)
             --get the class icon
             local left, right, top, bottom, classIcon = detailsFramework:GetClassTCoordsAndTexture(playerInfo.class)
             GameCooltip:AddIcon(classIcon, 1, 1, 18, 18, left, right, top, bottom)
-            GameCooltip:AddIcon([[Interface\AddOns\Details\images\end_of_mplus.png]], 1, 2, 14, 14, 172/512, 235/512, 84/512, 150/512)
+            GameCooltip:AddIcon([[Interface\AddOns\Details_MythicPlus\Assets\Textures\end_of_mplus.png]], 1, 2, 14, 14, 172/512, 235/512, 84/512, 150/512)
 
             GameCooltip:AddLine("")
 
             for i = #deathReason, 1, -1 do --first index is the spell that killed the player
                 local thisDeathReason = deathReason[i]
-                local spellName, _, spellIcon = Details.GetSpellInfo(thisDeathReason.spellId)
-                GameCooltip:AddLine(i .. ". " .. spellName, Details:Format(thisDeathReason.totalDamage))
+                local spellName, _, spellIcon = private.Details.GetSpellInfo(thisDeathReason.spellId)
+                GameCooltip:AddLine(i .. ". " .. spellName, private.Details:Format(thisDeathReason.totalDamage))
                 GameCooltip:AddIcon(spellIcon, 1, 1, 18, 18, 0.1, 0.9, 0.1, 0.9)
 
                 local side = nil
@@ -191,22 +191,22 @@ function activity.RenderDeathMarker(frame, event, marker, runData)
 
                 if (i == 1) then
                     local statusBarColor = {0.5, 0.1, 0.1, 0.3}
-                    Details:AddTooltipBackgroundStatusbar(side, value, useSpark, statusBarColor)
+                    private.Details:AddTooltipBackgroundStatusbar(side, value, useSpark, statusBarColor)
                     GameCooltip:AddIcon("poi-graveyard-neutral", 1, 2, 12, 16)
                 else
                     local statusBarColor = {0.1, 0.1, 0.1, 0.2}
-                    Details:AddTooltipBackgroundStatusbar(side, value, useSpark, statusBarColor)
+                    private.Details:AddTooltipBackgroundStatusbar(side, value, useSpark, statusBarColor)
                 end
             end
 
-            GameCooltip:SetOption("TextSize", Details.tooltip.fontsize)
-            GameCooltip:SetOption("TextFont",  Details.tooltip.fontface)
+            GameCooltip:SetOption("TextSize", private.Details.tooltip.fontsize)
+            GameCooltip:SetOption("TextFont",  private.Details.tooltip.fontface)
             GameCooltip:SetOption("LeftPadding", -3)
             GameCooltip:SetOption("RightPadding", 2)
             GameCooltip:SetOption("LinePadding", -2)
             GameCooltip:SetOption("LineYOffset", 0)
             GameCooltip:SetOption("FixedWidth", addon.templates.activityTimeline.deathMarker_TooltipWidth)
-            GameCooltip:SetOption("StatusBarTexture", Details.death_tooltip_texture)
+            GameCooltip:SetOption("StatusBarTexture", private.Details.death_tooltip_texture)
             GameCooltip:SetOption("UseTrilinearRight", true) --cooltip version 31 /dump _G.GameCooltip2.version
 
             GameCooltip:SetOwner(self)
